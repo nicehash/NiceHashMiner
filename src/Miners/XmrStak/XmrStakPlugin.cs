@@ -1,7 +1,6 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Algorithm;
@@ -26,6 +25,8 @@ namespace XmrStak
             // https://github.com/nicehash/xmr-stak/releases (fork of https://github.com/fireice-uk/xmr-stak/releases) current nhm-2.10.7
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "nhm-2.10.7",
+                ExePath = new List<string> { "xmr-stak.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.7/xmr-stak_2.10.7_73102cc.7z", // nh fork of original
@@ -35,7 +36,7 @@ namespace XmrStak
 
         public override string PluginUUID => "3d4e56b0-7238-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(3, 0);
         public override string Name => "XmrStak";
 
         public override string Author => "stanko@nicehash.com";
@@ -305,9 +306,7 @@ namespace XmrStak
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "concrt140.dll", "libeay32.dll", "msvcp140.dll", "msvcp140_1.dll",
                 "msvcp140_2.dll", "nvrtc-builtins64_100.dll", "nvrtc-builtins64_90.dll", "nvrtc64_100_0.dll", "nvrtc64_90.dll", "ssleay32.dll", "vccorlib140.dll", "vcruntime140.dll",
                 "xmr-stak.exe", "xmrstak_cuda_backend.dll", "xmrstak_cuda_backend_cuda10_0.dll", "xmrstak_opencl_backend.dll"

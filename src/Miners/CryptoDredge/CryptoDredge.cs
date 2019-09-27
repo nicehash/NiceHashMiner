@@ -1,20 +1,15 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using NHM.Common.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static NHM.Common.StratumServiceHelpers;
 using System.Globalization;
 using System.Linq;
-using System.IO;
-using NHM.Common;
 using System.Collections.Generic;
+using NHM.Common;
+using NHM.Common.Enums;
+using static NHM.Common.StratumServiceHelpers;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.CCMinerCommon;
-using System.Net.Sockets;
-using System.Text;
-using NHM.Common.Device;
 
 namespace CryptoDredge
 {
@@ -197,15 +192,6 @@ namespace CryptoDredge
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "CryptoDredge_0.21.0");
-            var binPath = Path.Combine(pluginRootBins, "CryptoDredge.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()

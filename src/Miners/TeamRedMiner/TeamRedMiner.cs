@@ -1,16 +1,15 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using NHM.Common.Enums;
+using MinerPluginToolkitV1.SgminerCommon;
+using MinerPluginToolkitV1.Configs;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using static NHM.Common.StratumServiceHelpers;
-using System.IO;
 using NHM.Common;
-using MinerPluginToolkitV1.SgminerCommon;
-using MinerPluginToolkitV1.Configs;
+using NHM.Common.Enums;
+using static NHM.Common.StratumServiceHelpers;
 
 namespace TeamRedMiner
 {
@@ -169,15 +168,6 @@ namespace TeamRedMiner
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "teamredminer-v0.5.7-win");
-            var binPath = Path.Combine(pluginRootBins, "teamredminer.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()

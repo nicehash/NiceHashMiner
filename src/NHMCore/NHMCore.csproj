@@ -292,7 +292,7 @@
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
       <Name>ClaymoreDual14</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\CPUMinerOpt\CPUMinerOpt.csproj">
+    <ProjectReference Include="..\Miners\CPUMinerOpt\CPUMinerOpt.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CpuMinerOpt_PLUGIN'))">
       <Project>{bce045f8-ceaa-48a6-b10b-8f539f68d7b6}</Project>
       <Name>CPUMinerOpt</Name>
     </ProjectReference>

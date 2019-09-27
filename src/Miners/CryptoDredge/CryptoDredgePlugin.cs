@@ -1,6 +1,5 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -19,6 +18,8 @@ namespace CryptoDredge
             // https://github.com/technobyl/CryptoDredge/releases | https://cryptodredge.org/ | https://bitcointalk.org/index.php?topic=4807821.0 current 0.21.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "0.21.0",
+                ExePath = new List<string> { "CryptoDredge_0.21.0", "CryptoDredge.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/technobyl/CryptoDredge/releases/download/v0.21.0/CryptoDredge_0.21.0_cuda_10.1_windows.zip", // original source
@@ -26,7 +27,7 @@ namespace CryptoDredge
             };
         }
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(3, 0);
         public override string Name => "CryptoDredge";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";
@@ -70,9 +71,7 @@ namespace CryptoDredge
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "CryptoDredge.exe" });
         }
 

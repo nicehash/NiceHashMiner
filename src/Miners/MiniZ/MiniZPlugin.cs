@@ -7,7 +7,6 @@ using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MiniZ
@@ -22,6 +21,8 @@ namespace MiniZ
             // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version current v1.5q2
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v1.5q2",
+                ExePath = new List<string> { "miniZ.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/miniZ.zip",
@@ -31,7 +32,7 @@ namespace MiniZ
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(1,3);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "MiniZ";
 
@@ -83,9 +84,7 @@ namespace MiniZ
         {
             if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-ci");
             var mappedDevs = DevicesListParser.ParseMiniZOutput(output, devices.ToList());
 
@@ -99,9 +98,7 @@ namespace MiniZ
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miniZ.exe" });
         }
 

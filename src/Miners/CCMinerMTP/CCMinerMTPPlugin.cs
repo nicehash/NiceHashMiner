@@ -1,6 +1,5 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -21,6 +20,8 @@ namespace CCMinerMTP
             // https://github.com/nicehash/ccminer/releases current 1.1.14
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "1.1.14",
+                ExePath = new List<string> { "ccminer.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/ccminer/releases/download/1.1.14/ccminer_mtp.7z", // original (nh fork)
@@ -30,7 +31,7 @@ namespace CCMinerMTP
 
         //public override string PluginUUID => "MISSING";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(3, 0);
         public override string Name => "CCMinerMTP";
 
         public override string Author => "stanko@nicehash.com";
@@ -65,9 +66,7 @@ namespace CCMinerMTP
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "ccminer.exe" });
         }
 

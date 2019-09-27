@@ -21,6 +21,8 @@ namespace BMiner
             // https://www.bminer.me/releases/ current v 15.7.6
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "15.7.6",
+                ExePath = new List<string> { "bminer-lite-v15.7.6-f585663", "bminer.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12/bminer-lite-v15.7.6-f585663.zip",
@@ -31,7 +33,7 @@ namespace BMiner
 
         public override string PluginUUID => "e5fbd330-7235-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 3);
+        public override Version Version => new Version(3, 0);
         public override string Name => "BMiner";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";
@@ -93,9 +95,7 @@ namespace BMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "bminer.exe" });
         }
 

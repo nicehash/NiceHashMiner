@@ -1,6 +1,5 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -19,6 +18,8 @@ namespace CCMinerTpruvot
             // https://github.com/tpruvot/ccminer/releases current 2.3.1
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "2.3.1",
+                ExePath = new List<string> { "ccminer-x64.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/tpruvot/ccminer/releases/download/2.3.1-tpruvot/ccminer-2.3.1-cuda10.7z", // original
@@ -28,7 +29,7 @@ namespace CCMinerTpruvot
 
         //public override string PluginUUID => "MISSING";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(3, 0);
         public override string Name => "CCMinerTpruvot";
 
         public override string Author => "stanko@nicehash.com";
@@ -64,9 +65,7 @@ namespace CCMinerTpruvot
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "ccminer-x64.exe" });
         }
 

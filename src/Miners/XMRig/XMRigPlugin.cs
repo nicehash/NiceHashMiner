@@ -1,6 +1,5 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -19,6 +18,8 @@ namespace XMRig
             // https://github.com/xmrig/xmrig current 3.1.3
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "3.1.3-msvc-win64",
+                ExePath = new List<string> { "xmrig-3.1.3", "xmrig.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/xmrig/xmrig/releases/download/v3.1.3/xmrig-3.1.3-msvc-win64.zip" // original
@@ -28,7 +29,7 @@ namespace XMRig
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(2, 1);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "XMRig";
 
@@ -54,9 +55,7 @@ namespace XMRig
         }
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "xmrig.exe" });
         }
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)

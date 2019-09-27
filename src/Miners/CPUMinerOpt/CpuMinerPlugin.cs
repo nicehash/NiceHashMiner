@@ -21,6 +21,7 @@ namespace CpuMinerOpt
             // https://bitcointalk.org/index.php?topic=1326803.0 | https://github.com/JayDDee/cpuminer-opt/releases current v3.9.7
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+#warning PATH is currently broken
                 Urls = new List<string>
                 {
                     "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.9.7/cpuminer-opt-3.9.7-windows.zip", // original
@@ -65,9 +66,7 @@ namespace CpuMinerOpt
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> {
                 "cpuminer-avx2.exe", "cpuminer-zen.exe",
                 "libcrypto-1_1-x64.dll", "libcurl-4.dll", "libgcc_s_seh-1.dll", "libstdc++-6.dll", "libwinpthread-1.dll", "zlib1.dll"
