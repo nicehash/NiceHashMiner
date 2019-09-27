@@ -32,10 +32,10 @@ namespace GMinerPlugin
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "NVIDIA and AMD miner. Requires NVIDIA CUDA9+ capable drivers (384.0+).", // TODO blabla
+                PluginDescription = "GMiner - High-performance miner for AMD/Nvidia GPUs.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    // TODO NVIDIA
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.GrinCuckatoo31, AlgorithmType.CuckooCycle, AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 } },
                     { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CuckooCycle, AlgorithmType.BeamV2 } }
                 }
             };

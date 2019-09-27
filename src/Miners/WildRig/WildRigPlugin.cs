@@ -27,6 +27,14 @@ namespace WildRig
                     "https://github.com/andru-kun/wildrig-multi/releases/download/0.18.0/wildrig-multi-windows-0.18.0-beta.7z", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "WildRig is multi algo miner for AMD devices.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.X16R } }
+                }
+            };
         }
 
         public override string PluginUUID => "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";

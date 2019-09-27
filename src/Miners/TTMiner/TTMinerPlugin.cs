@@ -30,6 +30,14 @@ namespace TTMiner
                     "https://tradeproject.de/download/Miner/TT-Miner-3.0.5.zip" // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "TT-Miner is mining software for NVIDIA devices.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.MTP } }
+                }
+            };
         }
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";

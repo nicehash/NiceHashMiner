@@ -29,6 +29,14 @@ namespace ZEnemy
                     "https://mega.nz/#!dCxxWYDB!p_hB7TWebB1ysOMkf5mv0OU1Awb9iEJ7vjPk6Niu-aY" // original source
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Zealot/Enemy (z-enemy) NVIDIA GPU miner.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.X16R } }
+                }
+            };
         }
 
         public override Version Version => new Version(3, 0);

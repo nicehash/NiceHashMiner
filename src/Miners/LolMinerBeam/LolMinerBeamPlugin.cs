@@ -28,6 +28,15 @@ namespace LolMinerBeam
                     "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.8.8/lolMiner_v088_Win64.zip", // original source
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Miner for AMD and NVIDIA gpus.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 } }
+                }
+            };
         }
 
         public override Version Version => new Version(3, 0);

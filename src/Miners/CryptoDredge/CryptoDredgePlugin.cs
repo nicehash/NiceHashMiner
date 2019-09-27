@@ -25,6 +25,14 @@ namespace CryptoDredge
                     "https://github.com/technobyl/CryptoDredge/releases/download/v0.21.0/CryptoDredge_0.21.0_cuda_10.1_windows.zip", // original source
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Simple in use and highly optimized cryptocurrency mining software with stable power consumption.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.X16R, AlgorithmType.MTP } }
+                }
+            };
         }
 
         public override Version Version => new Version(3, 0);

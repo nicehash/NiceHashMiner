@@ -31,6 +31,15 @@ namespace Phoenix
                     "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?2ZMgGaJS" // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "hoenixMiner is fast Ethash miner that supports both AMD and Nvidia cards(including in mixed mining rigs).",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } }
+                }
+            };
         }
 
         public override string PluginUUID => "ac9c763f-c901-41ef-9df1-c80099c9f942";

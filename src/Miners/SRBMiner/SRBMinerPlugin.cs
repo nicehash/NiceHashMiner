@@ -29,6 +29,14 @@ namespace SRBMiner
                     "https://mega.nz/#F!qVIgxAwB!kKmgCDICmQwbdVvMb-tAag?WQggXSQa", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "SRBMiner AMD GPU Miner is a Windows software made for mining cryptocurrencies based on Cryptonight algorithm.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CryptoNightR } }
+                }
+            };
         }
 
         public override Version Version => new Version(3,0);

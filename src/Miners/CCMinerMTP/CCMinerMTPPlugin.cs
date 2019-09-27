@@ -27,6 +27,14 @@ namespace CCMinerMTP
                     "https://github.com/nicehash/ccminer/releases/download/1.1.14/ccminer_mtp.7z", // original (nh fork)
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Nvidia miner for MTP algorithm.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{AlgorithmType.MTP} }
+                }
+            };
         }
 
         //public override string PluginUUID => "MISSING";

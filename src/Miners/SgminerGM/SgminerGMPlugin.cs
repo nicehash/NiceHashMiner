@@ -27,6 +27,14 @@ namespace SgminerGM
                     "https://github.com/nicehash/sgminer-gm/releases/download/5.5.5-8/sgminer-5.5.5-gm-nicehash-8-windows-amd64.zip",
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "This is a multi-threaded multi-pool GPU miner with ATI GPU monitoring.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } }
+                }
+            };
         }
 
         //public override string PluginUUID => "MISSING";

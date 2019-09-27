@@ -30,6 +30,14 @@ namespace NBMiner
                     "https://github.com/NebuTech/NBMiner/releases/download/v25.2/NBMiner_25.2_Win.zip", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "GPU Miner for GRIN and AE mining.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.CuckooCycle } }
+                }
+            };
         }
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";

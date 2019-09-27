@@ -25,6 +25,14 @@ namespace CCMinerTpruvot
                     "https://github.com/tpruvot/ccminer/releases/download/2.3.1-tpruvot/ccminer-2.3.1-cuda10.7z", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "NVIDIA miner for Lyra2REv3 and X16R.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.X16R } }
+                }
+            };
         }
 
         //public override string PluginUUID => "MISSING";

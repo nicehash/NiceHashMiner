@@ -29,6 +29,14 @@ namespace MiniZ
                     "https://miniz.ch/?smd_process_download=1&download_id=2874", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "miniZ is a fast and friendly Equihash miner.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.Beam, AlgorithmType.BeamV2 } }
+                }
+            };
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
 

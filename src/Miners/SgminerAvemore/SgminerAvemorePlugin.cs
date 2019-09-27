@@ -27,6 +27,14 @@ namespace SgminerAvemore
                     "https://github.com/brian112358/avermore-miner/releases/download/v1.4.1/avermore-v1.4.1-windows.zip", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "This is a multi-threaded multi-pool GPU miner.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.X16R } }
+                }
+            };
         }
 
         //public override string PluginUUID => "MISSING";
