@@ -17,14 +17,14 @@ namespace TeamRedMiner
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://github.com/todxx/teamredminer/releases current v0.5.7
+            // https://github.com/todxx/teamredminer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v0.5.7",
-                ExePath = new List<string> { "teamredminer-v0.5.7-win", "teamredminer.exe" },
+                BinVersion = "0.5.9",
+                ExePath = new List<string> { "teamredminer-v0.5.9-win", "teamredminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/todxx/teamredminer/releases/download/0.5.7/teamredminer-v0.5.7-win.zip", // original
+                    "https://github.com/todxx/teamredminer/releases/download/0.5.9/teamredminer-v0.5.9-win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -85,7 +85,8 @@ namespace TeamRedMiner
                 new Algorithm(PluginUUID, AlgorithmType.X16R),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29)
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
+                new Algorithm(PluginUUID, AlgorithmType.X16Rv2)
             };
 
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);

@@ -18,15 +18,15 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://bitcointalk.org/index.php?topic=3378390.0 current 2-1-cuda10.1 // TODO update
+            // https://bitcointalk.org/index.php?topic=3378390.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "2-1-cuda10.1",
+                BinVersion = "2-2-cuda10.1", // fix version if wrong
                 ExePath = new List<string> { "z-enemy.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/z-enemy.zip",
-                    "https://mega.nz/#!dCxxWYDB!p_hB7TWebB1ysOMkf5mv0OU1Awb9iEJ7vjPk6Niu-aY" // original source
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/z-enemy-2.2-cuda10.1.zip",
+                    "https://mega.nz/#!EPJHRY4D!WyCjfcOZnDof8FuclXoEYB1BXsjX8DbvTWrCNbpzECM" // original source
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -67,7 +67,8 @@ namespace ZEnemy
         {
             var algorithms = new List<Algorithm>
             {
-                new Algorithm(PluginUUID, AlgorithmType.X16R)
+                new Algorithm(PluginUUID, AlgorithmType.X16R),
+                new Algorithm(PluginUUID, AlgorithmType.X16Rv2)
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;

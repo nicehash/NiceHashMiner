@@ -151,7 +151,7 @@ namespace MinerPluginToolkitV1
         #region IGetPluginMetaInfo
         public PluginMetaInfo GetPluginMetaInfo()
         {
-            return MetaInfo;
+            return PluginMetaInfo;
         }
         #endregion IGetPluginMetaInfo
     }
