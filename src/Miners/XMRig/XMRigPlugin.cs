@@ -25,6 +25,14 @@ namespace XMRig
                     "https://github.com/xmrig/xmrig/releases/download/v3.1.3/xmrig-3.1.3-msvc-win64.zip" // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "CryptoNight CPU miner",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.CPU, new List<AlgorithmType>{ AlgorithmType.CryptoNightR } }
+                }
+            };
         }
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";

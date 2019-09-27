@@ -27,6 +27,14 @@ namespace TRex
                     "https://github.com/trexminer/T-Rex/releases/download/0.14.4/t-rex-0.14.4-win-cuda10.0.zip", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "T-Rex is a versatile cryptocurrency mining software for NVIDIA devices.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2Z, AlgorithmType.X16R, AlgorithmType.MTP } }
+                }
+            };
         }
 
         public override string PluginUUID => "d47d9b00-7237-11e9-b20c-f9f12eb6d835";

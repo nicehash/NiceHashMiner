@@ -32,6 +32,16 @@ namespace XmrStak
                     "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.7/xmr-stak_2.10.7_73102cc.7z", // nh fork of original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "XMR-Stak is a universal open source stratum pool miner. This miner supports x86-64 CPUs, AMD and NVIDIA GPUs.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.CPU, new List<AlgorithmType>{ AlgorithmType.CryptoNightR } },
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.CryptoNightR } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CryptoNightR } }
+                }
+            };
         }
 
         public override string PluginUUID => "3d4e56b0-7238-11e9-b20c-f9f12eb6d835";

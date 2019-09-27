@@ -26,6 +26,14 @@ namespace EWBF
                     "https://mega.nz/#F!fsAlmZQS!CwVgFfBDduQI-CbwVkUEpQ?Tlp22YKT" // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "EWBF is Cuda Equihash Miner.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash } }
+                }
+            };
         }
 
         public override string PluginUUID => "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835";

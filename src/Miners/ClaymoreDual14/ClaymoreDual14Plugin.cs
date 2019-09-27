@@ -30,6 +30,15 @@ namespace ClaymoreDual14
                     "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?64RGzCIb" // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Miner for AMD and NVIDIA cards, supporting Dual mining.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto, AlgorithmType.Decred, AlgorithmType.Blake2s, AlgorithmType.Keccak } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto, AlgorithmType.Decred, AlgorithmType.Blake2s, AlgorithmType.Keccak } }
+                }
+            };
         }
 
         public override string PluginUUID => "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76";

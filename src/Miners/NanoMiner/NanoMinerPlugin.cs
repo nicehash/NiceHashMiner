@@ -27,6 +27,15 @@ namespace NanoMiner
                     "https://github.com/nanopool/nanominer/releases/download/v1.5.3/nanominer-windows-1.5.3.zip", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Nanominer is a versatile tool for mining cryptocurrencies which are based on Ethash, Ubqhash, Cuckaroo29, CryptoNight (v6, v7, v8, R, ReverseWaltz) and RandomHash (PascalCoin) algorithms.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.GrinCuckarood29, AlgorithmType.CryptoNightR } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.GrinCuckarood29, AlgorithmType.CryptoNightR } }
+                }
+            };
         }
 
         public override string PluginUUID => "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4";

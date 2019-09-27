@@ -29,6 +29,15 @@ namespace BMiner
                     "https://www.bminercontent.com/releases/bminer-lite-v15.7.6-f585663-amd64.zip" // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Bminer is a cryptocurrency miner that runs on modern AMD / NVIDIA GPUs.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.DaggerHashimoto, AlgorithmType.Beam, AlgorithmType.GrinCuckaroo29, AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29 } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.Beam } }
+                }
+            };
         }
 
         public override string PluginUUID => "e5fbd330-7235-11e9-b20c-f9f12eb6d835";
