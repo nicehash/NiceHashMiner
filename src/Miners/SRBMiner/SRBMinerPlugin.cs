@@ -8,7 +8,6 @@ using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SRBMiner
@@ -22,6 +21,8 @@ namespace SRBMiner
             // https://www.srbminer.com/download.html current v1.9.3
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v1.9.3",
+                ExePath = new List<string> { "SRBMiner-CN-V1-9-3", "SRBMiner-CN.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/SRBMiner-CN-V1-9-3.7z",                                                 
@@ -30,7 +31,7 @@ namespace SRBMiner
             };
         }
 
-        public override Version Version => new Version(1,0);
+        public override Version Version => new Version(3,0);
 
         public override string Name => "SRBMiner";
 
@@ -87,9 +88,7 @@ namespace SRBMiner
         {
             if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--listdevices");
             var mappedDevs = DevicesListParser.ParseSRBMinerOutput(output, devices.ToList());
 
@@ -103,9 +102,7 @@ namespace SRBMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "SRBMiner-CN.exe", "WinIo64.sys" });
         }
 
