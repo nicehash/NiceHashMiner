@@ -27,6 +27,7 @@ namespace ZEnemy
             switch (algorithmType)
             {
                 case AlgorithmType.X16R: return "x16r";
+                case AlgorithmType.X16Rv2: return "x16rv2";
             }
             return "";
         }
