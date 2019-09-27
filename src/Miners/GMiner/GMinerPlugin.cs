@@ -1,3 +1,4 @@
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -5,10 +6,9 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NHM.Common;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.Interfaces;
 
 namespace GMinerPlugin
 {
@@ -23,6 +23,8 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.66
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "1.66",
+                ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/develsoftware/GMinerRelease/releases/download/1.66/gminer_1_66_windows64.zip", // original
@@ -32,7 +34,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 8);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -140,10 +142,7 @@ namespace GMinerPlugin
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedDeviceIds.Count == 0) return;
-            // TODO will block
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices");
             var mappedDevs = DevicesListParser.ParseGMinerOutput(output, devices.ToList());
 
@@ -157,9 +156,7 @@ namespace GMinerPlugin
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe" });
         }
 
