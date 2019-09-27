@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NHMCore.Mining.Plugins
+namespace MinerPluginToolkitV1
 {
     [Serializable]
     public class PluginPackageInfo
@@ -35,7 +35,7 @@ namespace NHMCore.Mining.Plugins
         /// A list of supported devices. 
         /// </summary>
         public Dictionary<string, List<string>> SupportedDevicesAlgorithms { get; set; }
-        
+
         ///// <summary>
         ///// A list of supported devices. 
         ///// </summary>

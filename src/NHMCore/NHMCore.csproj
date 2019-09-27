@@ -171,7 +171,6 @@
     <Compile Include="Stats\Models\LoginMessage.cs" />
     <Compile Include="Stats\Models\DeviceStatusMessage.cs" />
     <Compile Include="Stats\Models\RpcException.cs" />
-    <Compile Include="Mining\Plugins\PluginPackageInfo.cs" />
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />

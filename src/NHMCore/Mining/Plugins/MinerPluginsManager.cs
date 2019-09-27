@@ -14,6 +14,7 @@ using NHM.MinersDownloader;
 using NHMCore.Utils;
 using System.Globalization;
 using System.Collections.Concurrent;
+using MinerPluginToolkitV1;
 
 namespace NHMCore.Mining.Plugins
 {
