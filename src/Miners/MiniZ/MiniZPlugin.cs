@@ -13,7 +13,6 @@ namespace MiniZ
 {
     public class MiniZPlugin : PluginBase, IDevicesCrossReference
     {
-        // TODO CROSS REFF ko developerji fixanjo svoj --cuda-info output
         public MiniZPlugin()
         {
             // set default internal settings
