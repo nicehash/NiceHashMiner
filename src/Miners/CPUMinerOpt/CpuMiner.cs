@@ -141,28 +141,28 @@ namespace CpuMinerOpt
             return await t;
         }
 
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
-            var binPath = "";
-            if (_miningPairs != null)
-            {
-#warning Implement in CPUDevice instruction set support checks. For now assume avx2
-                var intelCPU = _miningPairs.Where(pair => pair.Device.Name.ToLower().Contains("core") || pair.Device.Name.ToLower().Contains("intel"));
-                if (intelCPU.Count() > 0)
-                {
-                    binPath = Path.Combine(pluginRootBins, "cpuminer-avx2.exe");
-                }
-                else // it can only be AMD
-                {
-                    binPath = Path.Combine(pluginRootBins, "cpuminer-zen.exe");
-                }
-            }
+//        public override Tuple<string, string> GetBinAndCwdPaths()
+//        {
+//            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
+//            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+//            var binPath = "";
+//            if (_miningPairs != null)
+//            {
+//#warning Implement in CPUDevice instruction set support checks. For now assume avx2
+//                var intelCPU = _miningPairs.Where(pair => pair.Device.Name.ToLower().Contains("core") || pair.Device.Name.ToLower().Contains("intel"));
+//                if (intelCPU.Count() > 0)
+//                {
+//                    binPath = Path.Combine(pluginRootBins, "cpuminer-avx2.exe");
+//                }
+//                else // it can only be AMD
+//                {
+//                    binPath = Path.Combine(pluginRootBins, "cpuminer-zen.exe");
+//                }
+//            }
 
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
-        }
+        //    var binCwd = pluginRootBins;
+        //    return Tuple.Create(binPath, binCwd);
+        //}
 
         protected override string MiningCreateCommandLine()
         {
