@@ -18,7 +18,6 @@ namespace NHM.Wpf.Views
 
         private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
         {
-
             var drawingBrushFromResources = this.FindResource("drawingBrush_NightCircleNH") as DrawingBrush;
             drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
             this.Background = new SolidColorBrush(Color.FromRgb(1, 13, 21));
