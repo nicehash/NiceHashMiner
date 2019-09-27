@@ -23,6 +23,8 @@ namespace Phoenix
             // https://bitcointalk.org/index.php?topic=2647654.0 current 4.6c
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "4.6c",
+                ExePath = new List<string> { "PhoenixMiner_4.6c_Windows", "PhoenixMiner.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12/PhoenixMiner_4.6c_Windows.7z",
@@ -33,7 +35,7 @@ namespace Phoenix
 
         public override string PluginUUID => "ac9c763f-c901-41ef-9df1-c80099c9f942";
 
-        public override Version Version => new Version(2, 3);
+        public override Version Version => new Version(3, 0);
         public override string Name => "Phoenix";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";
@@ -114,9 +116,7 @@ namespace Phoenix
             var containsAMD = devices.Any(dev => dev.DeviceType == DeviceType.AMD);
             var containsNVIDIA = devices.Any(dev => dev.DeviceType == DeviceType.NVIDIA);
 
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
 
             if (containsAMD)
             {
@@ -144,9 +144,7 @@ namespace Phoenix
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "PhoenixMiner.exe" });
         }
 

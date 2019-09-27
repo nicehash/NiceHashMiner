@@ -2,6 +2,7 @@
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
 using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.Configs;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;
@@ -10,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MinerPluginToolkitV1.Configs;
 
 namespace Phoenix
 {
@@ -103,15 +103,6 @@ namespace Phoenix
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "PhoenixMiner_4.6c_Windows");
-            var binPath = Path.Combine(pluginRootBins, "PhoenixMiner.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         private static HashSet<string> _deleteConfigs = new HashSet<string> { "config.txt", "dpools.txt", "epools.txt" };
