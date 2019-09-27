@@ -57,9 +57,10 @@ namespace NiceHashMiner.Forms
 
         private void setPluginInfoItem(PluginInfoItem pluginInfoItem, PluginPackageInfoCR plugin)
         {
+            pluginInfoItem.Enabled = plugin.CompatibleNHPluginVersion;
             pluginInfoItem.PluginUUID = plugin.PluginUUID;
             pluginInfoItem.Description = plugin.PluginDescription;
-            pluginInfoItem.PluginName = plugin.PluginName;
+            pluginInfoItem.PluginName = Tr($"{plugin.PluginName} [NOT COMPATIBLE. Update NiceHash Miner]");
             pluginInfoItem.PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}");
             pluginInfoItem.PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor);
 

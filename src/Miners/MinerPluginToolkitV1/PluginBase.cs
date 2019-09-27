@@ -14,7 +14,7 @@ using NHM.Common.Enums;
 namespace MinerPluginToolkitV1
 {
     // TODO add documentation
-    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion
+    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo
     {
         protected abstract MinerBase CreateMinerBase();
 
@@ -56,6 +56,8 @@ namespace MinerPluginToolkitV1
 
         public abstract Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
 
+
+        protected PluginMetaInfo PluginMetaInfo { get; set; } = null;
 
         #region IInitInternals
         public virtual void InitInternals()
@@ -145,5 +147,12 @@ namespace MinerPluginToolkitV1
             return MinersBinsUrlsSettings.BinVersion;
         }
         #endregion IGetMinerBinaryVersion
+
+        #region IGetPluginMetaInfo
+        public PluginMetaInfo GetPluginMetaInfo()
+        {
+            return MetaInfo;
+        }
+        #endregion IGetPluginMetaInfo
     }
 }

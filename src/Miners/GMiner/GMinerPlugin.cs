@@ -30,6 +30,15 @@ namespace GMinerPlugin
                     "https://github.com/develsoftware/GMinerRelease/releases/download/1.66/gminer_1_66_windows64.zip", // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "NVIDIA and AMD miner. Requires NVIDIA CUDA9+ capable drivers (384.0+).", // TODO blabla
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    // TODO NVIDIA
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CuckooCycle, AlgorithmType.BeamV2 } }
+                }
+            };
         }
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
