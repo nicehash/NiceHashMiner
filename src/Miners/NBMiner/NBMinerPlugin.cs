@@ -23,6 +23,8 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ current 25.2
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v25.2",
+                ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/NebuTech/NBMiner/releases/download/v25.2/NBMiner_25.2_Win.zip", // original
@@ -32,7 +34,7 @@ namespace NBMiner
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 4);
+        public override Version Version => new Version(3, 0);
         public override string Name => "NBMiner";
 
         public override string Author => "Dillon Newell";
@@ -105,9 +107,7 @@ namespace NBMiner
             return;
             if (_mappedIDs.Count == 0) return;
             // TODO will break
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json --no-watchdog");
             var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices.ToList());
 
@@ -121,9 +121,7 @@ namespace NBMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe", "OhGodAnETHlargementPill-r2.exe" });
         }
 
