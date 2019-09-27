@@ -1,9 +1,5 @@
 ﻿using NHM.Common.Enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NHM.DeviceDetection.CPU
 {
@@ -39,6 +35,19 @@ namespace NHM.DeviceDetection.CPU
                     break;
             }
             return false;
+        }
+
+        public static List<CpuExtensionType> SupportedExtensions()
+        {
+            var ret = new List<CpuExtensionType>();
+            foreach (var ext in _detectOrder)
+            {
+                if (HasExtensionSupport(ext))
+                {
+                    ret.Add(ext);
+                }
+            }
+            return ret;
         }
 
         /// <summary>
