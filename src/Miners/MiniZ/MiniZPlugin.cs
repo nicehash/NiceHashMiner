@@ -18,15 +18,15 @@ namespace MiniZ
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version current v1.5q2
+            // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.5q2",
+                BinVersion = "v1.5q6",
                 ExePath = new List<string> { "miniZ.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/miniZ.zip",
-                    "https://miniz.ch/?smd_process_download=1&download_id=2874", // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/miniZ_v1.5q6_cuda10_win-x64.zip",
+                    "https://miniz.ch/?smd_process_download=1&download_id=3083", // original
                 }
             };
         }
