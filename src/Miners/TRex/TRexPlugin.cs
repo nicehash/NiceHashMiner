@@ -17,14 +17,14 @@ namespace TRex
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
-            // https://github.com/trexminer/T-Rex/releases current 0.13.2
+            // https://github.com/trexminer/T-Rex/releases 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.13.2",
+                BinVersion = "0.14.4",
                 ExePath = new List<string> { "t-rex.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/trexminer/T-Rex/releases/download/0.13.2/t-rex-0.13.2-win-cuda10.0.zip", // original
+                    "https://github.com/trexminer/T-Rex/releases/download/0.14.4/t-rex-0.14.4-win-cuda10.0.zip", // original
                 }
             };
         }
@@ -58,6 +58,7 @@ namespace TRex
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
                 new Algorithm(PluginUUID, AlgorithmType.X16R),
                 new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.X16Rv2),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;

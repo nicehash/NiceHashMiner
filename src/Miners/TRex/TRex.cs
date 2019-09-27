@@ -10,7 +10,6 @@ using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
-using static NHM.Common.StratumServiceHelpers;
 
 
 namespace TRex
@@ -32,6 +31,7 @@ namespace TRex
             {
                 case AlgorithmType.Lyra2Z: return "lyra2z";
                 case AlgorithmType.X16R: return "x16r";
+                case AlgorithmType.X16Rv2: return "x16rv2";
                 case AlgorithmType.MTP: return "mtp";
                 default: return "";
             }
@@ -135,7 +135,7 @@ namespace TRex
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind-http 127.0.0.1:{_apiPort} --api-bind-telnet 0 --devices {_devices} {_extraLaunchParameters} --no-watchdog";
