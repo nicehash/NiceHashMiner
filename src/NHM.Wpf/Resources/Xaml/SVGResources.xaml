@@ -135,32 +135,6 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
-    <DrawingBrush x:Key="drawingBrush_ButtonLogin">
-        <DrawingBrush.Drawing>
-            <DrawingGroup x:Name="DrawingLayer">
-                <DrawingGroup.ClipGeometry>
-                    <RectangleGeometry Rect="0,0,182,64" />
-                </DrawingGroup.ClipGeometry>
-                <DrawingGroup Opacity="1" Transform="1,0,0,1,7,8">
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FF000000">
-                            <GeometryDrawing.Geometry>
-                                <PathGeometry FillRule="EvenOdd" Figures="M8.634,0L159.366,0A4,4,0,0,1,163.366,4L163.366,35.667A4,4,0,0,1,159.366,39.667L8.634,39.667A4,4,0,0,1,4.634,35.667L4.634,4A4,4,0,0,1,8.634,0z" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FFFBA342">
-                            <GeometryDrawing.Geometry>
-                                <PathGeometry FillRule="EvenOdd" Figures="M8.634,0L159.366,0A4,4,0,0,1,163.366,4L163.366,35.667A4,4,0,0,1,159.366,39.667L8.634,39.667A4,4,0,0,1,4.634,35.667L4.634,4A4,4,0,0,1,8.634,0z" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                </DrawingGroup>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-    
     <Style x:Key="CheckBoxStyle1" TargetType="{x:Type CheckBox}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
@@ -229,6 +203,63 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="LoginButtonStyle" TargetType="{x:Type Button}">
+        <!--<Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Name="border" BorderThickness="0" BorderBrush="Black" >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Opacity" Value="0.9" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>-->
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                    <GradientStop Color="#FFFBA342" Offset="0"/>
+                    <GradientStop Color="#FFFBC241" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background">
+            <Setter.Value>
+                <DrawingBrush>
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup x:Name="DrawingLayer">
+                            <DrawingGroup.ClipGeometry>
+                                <RectangleGeometry Rect="0,0,182,64" />
+                            </DrawingGroup.ClipGeometry>
+                            <DrawingGroup Opacity="1" Transform="1,0,0,1,7,8">
+                                <DrawingGroup Opacity="1">
+                                    <GeometryDrawing Brush="#FF000000">
+                                        <GeometryDrawing.Geometry>
+                                            <PathGeometry FillRule="EvenOdd" Figures="M8.634,0L159.366,0A4,4,0,0,1,163.366,4L163.366,35.667A4,4,0,0,1,159.366,39.667L8.634,39.667A4,4,0,0,1,4.634,35.667L4.634,4A4,4,0,0,1,8.634,0z" />
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+                                </DrawingGroup>
+                                <DrawingGroup Opacity="1">
+                                    <GeometryDrawing Brush="#FFFBA342">
+                                        <GeometryDrawing.Geometry>
+                                            <PathGeometry FillRule="EvenOdd" Figures="M8.634,0L159.366,0A4,4,0,0,1,163.366,4L163.366,35.667A4,4,0,0,1,159.366,39.667L8.634,39.667A4,4,0,0,1,4.634,35.667L4.634,4A4,4,0,0,1,8.634,0z" />
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+                                </DrawingGroup>
+                            </DrawingGroup>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="White" />
+        
     </Style>
     
 </ResourceDictionary>

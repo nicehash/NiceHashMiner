@@ -1,6 +1,8 @@
 ﻿using NHM.Wpf.Views.Common;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace NHM.Wpf.Views
@@ -28,6 +30,17 @@ namespace NHM.Wpf.Views
             var drawingBrushFromResources = this.FindResource("drawingBrush_circleNH") as DrawingBrush;
             drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
             this.Background = new SolidColorBrush(Color.FromRgb(255,255,255));
+        }
+
+        private void Register_OnClick(object sender, RoutedEventArgs e)
+        {
+            var hyperlink = (Hyperlink)sender;
+            Process.Start(hyperlink.NavigateUri.ToString());
+        }
+
+        private void ManuallyEnterBtc_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

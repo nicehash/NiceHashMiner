@@ -26,12 +26,12 @@
                 <DrawingBrush x:Name="drawingBrushNH" Drawing="{Binding Drawing, Source={StaticResource drawingBrush_circleNH}}"/>
             </Rectangle.Fill>
         </Rectangle>
-        <Button Height="40" Width="168" Margin="0,32,0,0" Content="LOGIN" Background="{StaticResource drawingBrush_ButtonLogin}" BorderBrush="{x:Null}" />
-        <TextBlock Height="21" Width="152" Margin="0,40,0,0" TextAlignment="Center">
-            <Hyperlink NavigateUri="RegisterBTC.xaml" Foreground="#cecdcd" TextDecorations="{x:Null}">Register a New Account</Hyperlink>
+        <Button Height="40" Width="168" Margin="0,32,0,0" Content="LOGIN" Style="{StaticResource LoginButtonStyle}" BorderBrush="{x:Null}"/>
+        <TextBlock Height="21" Width="152" Margin="0,40,0,0" TextAlignment="Center" FontSize="14">
+            <Hyperlink NavigateUri="https://www.nicehash.com/my/register" Foreground="#cecdcd" TextDecorations="{x:Null}" Click="Register_OnClick">Register a New Account</Hyperlink>
         </TextBlock>
-        <TextBlock Height="21" Width="170" Margin="0,16,0,0" TextAlignment="Center">
-            <Hyperlink NavigateUri="EnterBTC.xaml" Foreground="#fba342" TextDecorations="{x:Null}">Enter Bitcoin Address Manually</Hyperlink>
+        <TextBlock Height="21" Width="170" Margin="0,16,0,0" TextAlignment="Center" FontSize="14">
+            <Hyperlink Foreground="#fba342" TextDecorations="{x:Null}" Click="ManuallyEnterBtc_OnClick">Enter Bitcoin Address Manually</Hyperlink>
         </TextBlock>
         <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{DynamicResource CheckBoxStyle1}" Margin="0,0,10,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />
     </StackPanel>
