@@ -39,10 +39,18 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_CCMinerMTP_PLUGIN
                 new CCMinerMTPIntegratedPlugin(),
 #endif
+#if INTEGRATE_CCMinerTpruvot_PLUGIN
                 new CCMinerTpruvotIntegratedPlugin(),
+#endif
+#if INTEGRATE_SGminerAvemore_PLUGIN
                 new SGminerAvemoreIntegratedPlugin(),
+#endif
+#if INTEGRATE_SGminerGM_PLUGIN
                 new SGminerGMIntegratedPlugin(),
+#endif
+#if INTEGRATE_XmrStak_PLUGIN
                 new XmrStakIntegratedPlugin(),
+#endif
 #if INTEGRATE_CpuMinerOpt_PLUGIN
                 new CPUMinerOptIntegratedPlugin(),
 #endif
@@ -57,15 +65,24 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_GMiner_PLUGIN
                 new GMinerIntegratedPlugin(),
 #endif
+#if INTEGRATE_NBMiner_PLUGIN
                 new NBMinerIntegratedPlugin(),
+#endif
+#if INTEGRATE_Phoenix_PLUGIN
                 new PhoenixIntegratedPlugin(),
+#endif
+#if INTEGRATE_TeamRedMiner_PLUGIN
                 new TeamRedMinerIntegratedPlugin(),
+#endif
+#if INTEGRATE_TRex_PLUGIN
                 new TRexIntegratedPlugin(),
+#endif
 #if INTEGRATE_TTMiner_PLUGIN
                 new TTMinerIntegratedPlugin(),
 #endif
+#if INTEGRATE_ClaymoreDual_PLUGIN
                 new ClaymoreDual14IntegratedPlugin(),
-
+#endif
 #if INTEGRATE_NanoMiner_PLUGIN
                 new NanoMinerIntegratedPlugin(),
 #endif

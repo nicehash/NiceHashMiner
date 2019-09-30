@@ -34,33 +34,41 @@ namespace NHMCore.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_CCMinerTpruvot_PLUGIN
     class CCMinerTpruvotIntegratedPlugin : CCMinerTpruvot.CCMinerTpruvotPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "CCMinerTpruvot";
 
         public bool Is3rdParty => false;
     }
+#endif
 
+#if INTEGRATE_SGminerAvemore_PLUGIN
     class SGminerAvemoreIntegratedPlugin : SgminerAvemore.SgminerAvemorePlugin, IntegratedPlugin
     {
         public override string PluginUUID => "SGminerAvemore";
 
         public bool Is3rdParty => false;
     }
+#endif
 
+#if INTEGRATE_SGminerGM_PLUGIN
     class SGminerGMIntegratedPlugin : SgminerGM.SgminerGMPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "SGminerGM";
 
         public bool Is3rdParty => false;
     }
+#endif
 
+#if INTEGRATE_XmrStak_PLUGIN
     class XmrStakIntegratedPlugin : XmrStak.XmrStakPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "XmrStak";
 
         public bool Is3rdParty => false;
     }
+#endif
 
 #if INTEGRATE_CpuMinerOpt_PLUGIN
 
@@ -85,12 +93,14 @@ namespace NHMCore.Mining.Plugins
 
 #region Closed source / 3rd party
 
+#if INTEGRATE_ClaymoreDual_PLUGIN
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {
         public override string PluginUUID => "ClaymoreDual";
 
         public bool Is3rdParty => true;
     }
+#endif
 
 #if INTEGRATE_BMiner_PLUGIN
     class BMinerIntegratedPlugin : BMiner.BMinerPlugin, IntegratedPlugin
@@ -119,33 +129,41 @@ namespace NHMCore.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_TRex_PLUGIN
     class TRexIntegratedPlugin : TRex.TRexPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "TRex";
 
         public bool Is3rdParty => true;
     }
+#endif
 
+#if INTEGRATE_TeamRedMiner_PLUGIN
     class TeamRedMinerIntegratedPlugin : TeamRedMiner.TeamRedMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "TeamRedMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
+#if INTEGRATE_NBMiner_PLUGIN
     class NBMinerIntegratedPlugin : NBMiner.NBMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "NBMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
+#if INTEGRATE_Phoenix_PLUGIN
     class PhoenixIntegratedPlugin : Phoenix.PhoenixPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "Phoenix";
 
         public bool Is3rdParty => true;
     }
+#endif
 
 #if INTEGRATE_NanoMiner_PLUGIN
     class NanoMinerIntegratedPlugin : NanoMiner.NanoMinerPlugin, IntegratedPlugin
