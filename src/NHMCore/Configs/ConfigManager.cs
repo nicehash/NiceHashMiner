@@ -14,6 +14,8 @@ namespace NHMCore.Configs
     {
         private const string Tag = "ConfigManager";
 
+        public static bool IsVersionChanged { get; private set; } = false;
+
         public static GeneralConfig GeneralConfig { get; private set; } = new GeneralConfig();
         
         // extra composed settings
@@ -85,6 +87,7 @@ namespace NHMCore.Configs
             {
                 if (fromFile.ConfigFileVersion != null && asmVersion.CompareTo(fromFile.ConfigFileVersion) != 0)
                 {
+                    IsVersionChanged = true;
                     Logger.Info(Tag, "Config file differs from version of NiceHashMiner... Creating backup archive");
                     CreateBackupArchive(fromFile.ConfigFileVersion);
                     if (RestoreBackupArchive(asmVersion))//check if we have backup version

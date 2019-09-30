@@ -54,7 +54,9 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_EWBF_PLUGIN
                 new EWBFIntegratedPlugin(),
 #endif
+#if INTEGRATE_GMiner_PLUGIN
                 new GMinerIntegratedPlugin(),
+#endif
                 new NBMinerIntegratedPlugin(),
                 new PhoenixIntegratedPlugin(),
                 new TeamRedMinerIntegratedPlugin(),
@@ -146,6 +148,61 @@ namespace NHMCore.Mining.Plugins
                     .ThenBy(info => info.PluginName);
             }
         }
+
+#region Update miner plugin dlls
+        public static async Task CheckAndSwapInstalledExternalPlugins()
+        {
+            try
+            {
+                if (ConfigManager.IsVersionChanged)
+                {
+                    string minerPluginsPath = Paths.MinerPluginsPath();
+                    var zipPackages = Directory.GetFiles(Paths.RootPath("plugins_packages"), "*.zip", SearchOption.TopDirectoryOnly);
+                    var installedExternalPackages = Directory.GetDirectories(minerPluginsPath);
+                    foreach (var installedPath in installedExternalPackages)
+                    {
+                        try
+                        {
+                            var uuid = installedPath.Replace(minerPluginsPath, "").Trim('\\');
+                            if (!System.Guid.TryParse(uuid, out var _)) continue;
+                            var zipPackage = zipPackages.FirstOrDefault(package => package.Contains(uuid));
+                            if (zipPackage == null) continue;
+                            // uzip to temp dir
+                            var tmpPluginDir = installedPath + "_tmp";
+                            Directory.CreateDirectory(tmpPluginDir);
+                            await ArchiveHelpers.ExtractFileAsync(zipPackage, tmpPluginDir, null, CancellationToken.None);
+                            // now copy move over files 
+                            var tmpPackageFiles = Directory.GetFiles(tmpPluginDir, "*", SearchOption.AllDirectories);
+                            var installedPackagePaths = Directory.GetFiles(installedPath, "*", SearchOption.AllDirectories);
+                            foreach (var path in installedPackagePaths)
+                            {
+                                // skip if not file and skip all bins
+                                if (!File.Exists(path) || path.Contains("bins")) continue;
+                                var fileName = Path.GetFileName(path);
+                                var moveFile = tmpPackageFiles.FirstOrDefault(file => Path.GetFileName(file) == fileName);
+                                if (moveFile == null) continue;
+                                try
+                                {
+                                    File.Copy(moveFile, path, true);
+                                }
+                                catch
+                                {}
+                            }
+                            Directory.Delete(tmpPluginDir, true);
+                        }
+                        catch (Exception)
+                        {}
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+
+
+#endregion Update miner plugin dlls
 
         public static void LoadMinerPlugins()
         {

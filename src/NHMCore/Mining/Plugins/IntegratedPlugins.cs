@@ -156,12 +156,14 @@ namespace NHMCore.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_GMiner_PLUGIN
     class GMinerIntegratedPlugin : GMinerPlugin.GMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "GMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
 #if INTEGRATE_EWBF_PLUGIN
     class EWBFIntegratedPlugin : EWBF.EwbfPlugin, IntegratedPlugin

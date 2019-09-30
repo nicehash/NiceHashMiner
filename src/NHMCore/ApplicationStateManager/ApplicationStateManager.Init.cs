@@ -134,6 +134,9 @@ namespace NHMCore
                 ConfigManager.InitDeviceSettings();
                 #endregion Device Detection
 
+                // TODO ADD STEP AND MESSAGE
+                await MinerPluginsManager.CheckAndSwapInstalledExternalPlugins();
+
                 // STEP
                 // load plugins
                 loader.PrimaryProgress?.Report((Tr("Loading miner plugins..."), nextProgPerc()));
