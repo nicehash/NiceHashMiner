@@ -34,7 +34,7 @@ namespace ZEnemy
                 PluginDescription = "Zealot/Enemy (z-enemy) NVIDIA GPU miner.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.X16R } }
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.X16R, AlgorithmType.X16Rv2 } }
                 }
             };
         }
