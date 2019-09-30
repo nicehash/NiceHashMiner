@@ -35,7 +35,7 @@ namespace TTMiner
                 PluginDescription = "TT-Miner is mining software for NVIDIA devices.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.MTP } }
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3 } }
                 }
             };
         }

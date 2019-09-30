@@ -35,8 +35,8 @@ namespace GMinerPlugin
                 PluginDescription = "GMiner - High-performance miner for AMD/Nvidia GPUs.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.GrinCuckatoo31, AlgorithmType.CuckooCycle, AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 } },
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CuckooCycle, AlgorithmType.BeamV2 } }
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.GrinCuckatoo31, AlgorithmType.CuckooCycle, AlgorithmType.GrinCuckarood29, AlgorithmType.Beam, AlgorithmType.BeamV2 } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CuckooCycle, AlgorithmType.Beam, AlgorithmType.BeamV2 } }
                 }
             };
         }
@@ -116,6 +116,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
+                new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
@@ -127,6 +128,7 @@ namespace GMinerPlugin
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
+                new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);

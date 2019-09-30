@@ -32,7 +32,7 @@ namespace TeamRedMiner
                 PluginDescription = "Miner for AMD gpus.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CryptoNightR, AlgorithmType.Lyra2REv3, AlgorithmType.Lyra2Z, AlgorithmType.X16R, AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.MTP } }
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CryptoNightR, AlgorithmType.Lyra2REv3, AlgorithmType.Lyra2Z, AlgorithmType.X16R, AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.X16Rv2 } }
                 }
             };
         }

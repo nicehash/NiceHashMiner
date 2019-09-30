@@ -30,7 +30,7 @@ namespace CryptoDredge
                 PluginDescription = "Simple in use and highly optimized cryptocurrency mining software with stable power consumption.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.X16R, AlgorithmType.MTP } }
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.X16R } }
                 }
             };
         }

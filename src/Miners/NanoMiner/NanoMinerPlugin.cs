@@ -91,8 +91,6 @@ namespace NanoMiner
         {
             var algorithms = new List<Algorithm>
             {
-                //new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
-                //new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
             };

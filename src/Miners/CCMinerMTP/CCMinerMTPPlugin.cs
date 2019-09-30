@@ -32,7 +32,7 @@ namespace CCMinerMTP
                 PluginDescription = "Nvidia miner for MTP algorithm.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{AlgorithmType.MTP} }
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{} }
                 }
             };
         }
