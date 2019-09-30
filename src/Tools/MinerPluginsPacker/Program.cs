@@ -147,6 +147,7 @@ namespace MinerPluginsPacker
                 "abc3e2a0-7237-11e9-b20c-f9f12eb6d835", // TeamRedMinerPlugin
                 "d47d9b00-7237-11e9-b20c-f9f12eb6d835", // TRexPlugin
                 "3d4e56b0-7238-11e9-b20c-f9f12eb6d835", // XmrStakPlugin
+                "5532d300-7238-11e9-b20c-f9f12eb6d835", // ZEnemyPlugin
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
 
