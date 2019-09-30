@@ -44,7 +44,7 @@ namespace MiniZ
 
         public override string Name => "MiniZ";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 

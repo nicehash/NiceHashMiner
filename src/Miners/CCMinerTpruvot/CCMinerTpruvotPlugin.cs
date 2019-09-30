@@ -40,7 +40,7 @@ namespace CCMinerTpruvot
         public override Version Version => new Version(3, 0);
         public override string Name => "CCMinerTpruvot";
 
-        public override string Author => "stanko@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

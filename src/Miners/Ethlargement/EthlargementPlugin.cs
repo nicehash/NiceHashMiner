@@ -22,7 +22,7 @@ namespace Ethlargement
         public Version Version => new Version(1, 2);
         public string Name => "Ethlargement";
 
-        public string Author => "stanko@nicehash.com";
+        public string Author => "info@nicehash.com";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

@@ -47,7 +47,7 @@ namespace GMinerPlugin
 
         public override string Name => "GMinerCuda9.0+";
 
-        public override string Author => "stanko@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 

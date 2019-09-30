@@ -41,7 +41,7 @@ namespace XMRig
 
         public override string Name => "XMRig";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected override MinerBase CreateMinerBase()
         {

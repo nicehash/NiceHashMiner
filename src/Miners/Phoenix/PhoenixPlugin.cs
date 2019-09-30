@@ -47,7 +47,7 @@ namespace Phoenix
         public override Version Version => new Version(3, 0);
         public override string Name => "Phoenix";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 

@@ -47,7 +47,7 @@ namespace ClaymoreDual14
 
         public override string Name => "ClaymoreDual";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 

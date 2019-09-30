@@ -45,7 +45,7 @@ namespace NBMiner
         public override Version Version => new Version(3, 0);
         public override string Name => "NBMiner";
 
-        public override string Author => "Dillon Newell";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 

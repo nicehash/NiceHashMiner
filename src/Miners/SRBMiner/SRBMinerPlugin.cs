@@ -43,7 +43,7 @@ namespace SRBMiner
 
         public override string Name => "SRBMiner";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override string PluginUUID => "85f507c0-b2ba-11e9-8e4e-bb1e2c6e76b4";
 

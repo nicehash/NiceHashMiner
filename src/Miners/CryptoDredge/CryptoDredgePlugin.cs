@@ -38,7 +38,7 @@ namespace CryptoDredge
         public override Version Version => new Version(3, 0);
         public override string Name => "CryptoDredge";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override string PluginUUID => "d9c2e620-7236-11e9-b20c-f9f12eb6d835";
 

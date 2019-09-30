@@ -43,7 +43,7 @@ namespace ZEnemy
 
         public override string Name => "ZEnemy";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override string PluginUUID => "5532d300-7238-11e9-b20c-f9f12eb6d835";
 
