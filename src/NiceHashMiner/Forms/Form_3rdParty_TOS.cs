@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
-using NHM.Common.Enums;
+using NHMCore;
 using NHMCore.Configs;
 
 namespace NiceHashMiner.Forms
 {
     public partial class Form_3rdParty_TOS : Form
     {
+        public bool Accepted { get; private set; } = false;
         public Form_3rdParty_TOS()
         {
             InitializeComponent();
@@ -17,13 +18,14 @@ namespace NiceHashMiner.Forms
 
         private void Button_Agree_Click(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
+            ConfigManager.GeneralConfig.Use3rdPartyMinersTOS = ApplicationStateManager.CurrentTosVer;
+            Accepted = true;
             Close();
         }
 
         private void Button_Decline_Click(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
+            Accepted = false;
             Close();
         }
     }

@@ -2,8 +2,8 @@
 {
     public enum Use3rdPartyMiners
     {
-        NOT_SET = 0,
-        NO,
+        //NOT_SET = 0,
+        //NO,
         YES
     }
 }

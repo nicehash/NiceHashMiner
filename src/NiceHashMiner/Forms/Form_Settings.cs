@@ -78,11 +78,9 @@ namespace NiceHashMiner.Forms
             textBox_IFTTTKey.DataBindings.Add("Enabled", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
             textBox_IFTTTKey.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IFTTTKey), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            checkBox_RunEthlargement.DataBindings.Add("Checked", ThirdPartyMinerSettings.Instance, nameof(ThirdPartyMinerSettings.Instance.UseEthlargement), false, DataSourceUpdateMode.OnPropertyChanged);
-            checkBox_RunEthlargement.DataBindings.Add("Enabled", ThirdPartyMinerSettings.Instance, nameof(ThirdPartyMinerSettings.Instance.CanUseEthlargement), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_RunEthlargement.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseEthlargement), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_RunEthlargement.Enabled = true;
 
-
-            checkBox_Use3rdPartyMiners.CheckedChanged += CheckBox_Use3rdPartyMiners_CheckedChanged;
             //checkBox_RunEthlargement.CheckedChanged += CheckBox_RunEthlargement_CheckedChanged;
 
             // At the very end set to true
@@ -111,9 +109,6 @@ namespace NiceHashMiner.Forms
 
             SetToolTip(Tr("When checked, {0} will minimize to tray.", NHMProductInfo.Name),
                 checkBox_MinimizeToTray, pictureBox_MinimizeToTray);
-
-            SetToolTip(Tr("Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility."),
-                checkBox_Use3rdPartyMiners, pictureBox_Use3rdPartyMiners);
 
             SetToolTip(Tr("When unchecked {0} will allow only one instance running (it will close a new started instance if there is an opened instance running).", NHMProductInfo.Name),
                 checkBox_AllowMultipleInstances, pictureBox_AllowMultipleInstances);
@@ -274,8 +269,6 @@ namespace NiceHashMiner.Forms
         {
             // Checkboxes set checked value
             {
-                checkBox_Use3rdPartyMiners.Checked =
-                    ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
                 checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
             }
 
@@ -441,30 +434,6 @@ namespace NiceHashMiner.Forms
 
 #endregion Form Callbacks
 
-        private void CheckBox_Use3rdPartyMiners_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_isInitFinished) return;
-            if (checkBox_Use3rdPartyMiners.Checked)
-            {
-                // Show TOS
-                Form tos = new Form_3rdParty_TOS();
-                tos.ShowDialog(this);
-                checkBox_Use3rdPartyMiners.Checked =
-                    ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-            }
-            else
-            {
-                ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
-            }
-
-            // update logic
-            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-            checkBox_RunEthlargement.Enabled = Helpers.IsElevated && is3rdPartyEnabled;
-            // TODO_NiceHashMiner GUI coupling logic. Fix inside NHMCore
-            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
-            // re-init update plugins
-            MinerPluginsManager.InitIntegratedPlugins();
-        }
 
         //private void CheckBox_RunEthlargement_CheckedChanged(object sender, EventArgs e)
         //{

@@ -169,15 +169,8 @@ namespace NHMCore.Configs.Data
         public string IFTTTKey { get; set; } = "";
 
         // 3rd party miners
-        public Use3rdPartyMiners Use3rdPartyMiners
-        {
-            get => ThirdPartyMinerSettings.Instance.Use3rdPartyMiners;
-            set
-            {
-                ThirdPartyMinerSettings.Instance.Use3rdPartyMiners = value;
-                OnPropertyChanged();
-            }
-        }
+        public Use3rdPartyMiners Use3rdPartyMiners => Use3rdPartyMiners.YES;
+        public int Use3rdPartyMinersTOS = 0;
 
         // 
         public string hwid = "";
@@ -216,11 +209,7 @@ namespace NHMCore.Configs.Data
             set => FirewallRules.RunFirewallRulesOnStartup = value;
         }
 
-        public bool UseEthlargement
-        {
-            get => ThirdPartyMinerSettings.Instance.UseEthlargement;
-            set => ThirdPartyMinerSettings.Instance.UseEthlargement = value;
-        }
+        public bool UseEthlargement { get; set; } = false;
 
         public string RigGroup { get; set; } = "";
 
@@ -267,7 +256,6 @@ namespace NHMCore.Configs.Data
             MinimumProfit = 0;
             IdleWhenNoInternetAccess = true;
             IdleCheckType = IdleCheckType.SessionLock;
-            Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             AllowMultipleInstances = true;
             UseIFTTT = false;
             CoolDownCheckEnabled = true;

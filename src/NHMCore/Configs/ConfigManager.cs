@@ -185,7 +185,6 @@ namespace NHMCore.Configs
                 NVIDIAP0State = GeneralConfig.NVIDIAP0State,
                 LogToFile = GeneralConfig.LogToFile,
                 DisableWindowsErrorReporting = GeneralConfig.DisableWindowsErrorReporting,
-                Use3rdPartyMiners = GeneralConfig.Use3rdPartyMiners,
                 GUIWindowsAlwaysOnTop = GeneralConfig.GUIWindowsAlwaysOnTop,
                 DisableDeviceStatusMonitoring = GeneralConfig.DisableDeviceStatusMonitoring,
                 DisableDevicePowerModeSettings = GeneralConfig.DisableDevicePowerModeSettings,
@@ -203,7 +202,6 @@ namespace NHMCore.Configs
                    || GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
                    || GeneralConfig.LogToFile != _generalConfigBackup.LogToFile
                    || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
-                   || GeneralConfig.Use3rdPartyMiners != _generalConfigBackup.Use3rdPartyMiners
                    || GeneralConfig.GUIWindowsAlwaysOnTop != _generalConfigBackup.GUIWindowsAlwaysOnTop
                    || GeneralConfig.DisableDeviceStatusMonitoring != _generalConfigBackup.DisableDeviceStatusMonitoring
                    || GeneralConfig.DisableDevicePowerModeSettings != _generalConfigBackup.DisableDevicePowerModeSettings;
@@ -262,7 +260,6 @@ namespace NHMCore.Configs
             public bool NVIDIAP0State { get; set; }
             public bool LogToFile { get; set; }
             public bool DisableWindowsErrorReporting { get; set; }
-            public Use3rdPartyMiners Use3rdPartyMiners { get; set; }
             public bool GUIWindowsAlwaysOnTop { get; set; }
             public bool DisableDeviceStatusMonitoring { get; set; }
             public bool DisableDevicePowerModeSettings { get; set; }

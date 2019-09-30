@@ -123,7 +123,6 @@
     <Compile Include="Configs\IdleMiningSettings.cs" />
     <Compile Include="Configs\MiningProfitSettings.cs" />
     <Compile Include="Configs\RunAtStartup.cs" />
-    <Compile Include="Configs\ThirdPartyMinerSettings.cs" />
     <Compile Include="Configs\TranslationsSettings.cs" />
     <Compile Include="IFTTT.cs" />
     <Compile Include="Interfaces\DataVisualizer\IBalanceBTCDisplayer.cs" />
