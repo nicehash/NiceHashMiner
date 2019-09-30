@@ -49,7 +49,7 @@ namespace XmrStak
         public override Version Version => new Version(3, 0);
         public override string Name => "XmrStak";
 
-        public override string Author => "stanko@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected Dictionary<string, DeviceType> _registeredDeviceUUIDTypes = new Dictionary<string, DeviceType>();
         protected HashSet<AlgorithmType> _registeredAlgorithmTypes = new HashSet<AlgorithmType>();

@@ -44,7 +44,7 @@ namespace CpuMinerOpt
 
         public override string Name => "cpuminer-opt";
 
-        public override string Author => "stanko@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         private bool IsIntel { get; set; }
 

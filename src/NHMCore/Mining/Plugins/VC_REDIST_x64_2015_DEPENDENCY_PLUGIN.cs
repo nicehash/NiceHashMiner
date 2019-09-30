@@ -23,7 +23,7 @@ namespace NHMCore.Mining.Plugins
         public Version Version => new Version(1, 0);
         public string Name => "VC_REDIST_x64_2015_2019";
 
-        public string Author => "stanko@nicehash.com";
+        public string Author => "info@nicehash.com";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

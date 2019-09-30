@@ -44,7 +44,7 @@ namespace NanoMiner
 
         public override string Name => "NanoMiner";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 

@@ -43,7 +43,7 @@ namespace TeamRedMiner
 
         public override string Name => "TeamRedMiner";
 
-        public override string Author => "stanko@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override bool CanGroup(MiningPair a, MiningPair b)
         {

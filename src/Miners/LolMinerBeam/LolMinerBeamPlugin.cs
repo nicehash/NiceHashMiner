@@ -43,7 +43,7 @@ namespace LolMinerBeam
 
         public override string Name => "LolMinerBeam";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override string PluginUUID => "435f0820-7237-11e9-b20c-f9f12eb6d835";
 

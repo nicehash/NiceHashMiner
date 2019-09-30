@@ -42,7 +42,7 @@ namespace EWBF
 
         public override string Name => "Ewbf";
 
-        public override string Author => "stanko@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected override MinerBase CreateMinerBase()
         {

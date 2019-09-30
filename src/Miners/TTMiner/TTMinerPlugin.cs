@@ -44,7 +44,7 @@ namespace TTMiner
 
         public override Version Version => new Version(3, 0);
         public override string Name => "TTMiner";
-        public override string Author => "stanko@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
