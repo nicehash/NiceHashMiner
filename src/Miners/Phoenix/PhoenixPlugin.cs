@@ -33,7 +33,7 @@ namespace Phoenix
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "hoenixMiner is fast Ethash miner that supports both AMD and Nvidia cards(including in mixed mining rigs).",
+                PluginDescription = "Phoenix Miner is fast Ethash miner that supports both AMD and Nvidia cards(including in mixed mining rigs).",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
                     { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } },
@@ -42,7 +42,7 @@ namespace Phoenix
             };
         }
 
-        public override string PluginUUID => "ac9c763f-c901-41ef-9df1-c80099c9f942";
+        public override string PluginUUID => "f5d4a470-e360-11e9-a914-497feefbdfc8";
 
         public override Version Version => new Version(3, 0);
         public override string Name => "Phoenix";

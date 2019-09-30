@@ -20,14 +20,14 @@ namespace GMinerPlugin
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
-            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.66
+            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.66",
+                BinVersion = "1.67",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.66/gminer_1_66_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.67/gminer_1_67_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -174,20 +174,9 @@ namespace GMinerPlugin
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 8)
+                if (benchmarkedPluginVersion.Major < 3 && ids.FirstOrDefault() == AlgorithmType.GrinCuckarood29)
                 {
-                    // improved performance for ZHash for nvidia cards
-                    if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.GrinCuckarood29) return true;
-                }
-                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 7)
-                {
-                    // improved performance for ZHash for nvidia cards
-                    if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.ZHash) return true;
-                }
-                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 6)
-                {
-                    // improved performance for BEAM2 for nvidia cards
-                    if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.BeamV2) return true;
+                    return true;
                 }
                 return false;
             }

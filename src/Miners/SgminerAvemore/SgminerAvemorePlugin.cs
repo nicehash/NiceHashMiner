@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SgminerAvemore
 {
-    public abstract class SgminerAvemorePlugin : PluginBase
+    public class SgminerAvemorePlugin : PluginBase
     {
         public SgminerAvemorePlugin()
         {
@@ -37,7 +37,7 @@ namespace SgminerAvemore
             };
         }
 
-        //public override string PluginUUID => "MISSING";
+        public override string PluginUUID => "bc95fd70-e361-11e9-a914-497feefbdfc8";
 
         public override Version Version => new Version(3, 0);
         public override string Name => "SGminerAvemore";

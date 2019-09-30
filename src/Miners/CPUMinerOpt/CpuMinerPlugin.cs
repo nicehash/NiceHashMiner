@@ -71,9 +71,9 @@ namespace CpuMinerOpt
         IReadOnlyList<Algorithm> GetSupportedAlgorithms()
         {
             return new List<Algorithm>{
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
-                new Algorithm(PluginUUID, AlgorithmType.X16R),
+                new Algorithm(PluginUUID, AlgorithmType.Lyra2Z) { Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3) { Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.X16R) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.X16Rv2)
             };
         }

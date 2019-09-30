@@ -37,7 +37,7 @@ namespace SgminerGM
             };
         }
 
-        //public override string PluginUUID => "MISSING";
+        public override string PluginUUID => "d5f18960-e361-11e9-a914-497feefbdfc8";
 
         public override Version Version => new Version(3, 0);
         public override string Name => "SGminerGM";

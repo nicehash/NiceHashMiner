@@ -15,14 +15,14 @@ namespace XMRig
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/xmrig/xmrig current 3.1.3
+            // https://github.com/xmrig/xmrig
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "3.1.3-msvc-win64",
-                ExePath = new List<string> { "xmrig-3.1.3", "xmrig.exe" },
+                BinVersion = "v3.2.0",
+                ExePath = new List<string> { "xmrig-3.2.0", "xmrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/xmrig/xmrig/releases/download/v3.1.3/xmrig-3.1.3-msvc-win64.zip" // original
+                    "https://github.com/xmrig/xmrig/releases/download/v3.2.0/xmrig-3.2.0-msvc-win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo

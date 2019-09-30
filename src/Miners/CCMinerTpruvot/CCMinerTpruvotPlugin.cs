@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace CCMinerTpruvot
 {
-    public abstract class CCMinerTpruvotPlugin : PluginBase
+    public class CCMinerTpruvotPlugin : PluginBase
     {
         public CCMinerTpruvotPlugin()
         {
@@ -35,7 +35,7 @@ namespace CCMinerTpruvot
             };
         }
 
-        //public override string PluginUUID => "MISSING";
+        public override string PluginUUID => "2257f160-7236-11e9-b20c-f9f12eb6d835";
 
         public override Version Version => new Version(3, 0);
         public override string Name => "CCMinerTpruvot";
