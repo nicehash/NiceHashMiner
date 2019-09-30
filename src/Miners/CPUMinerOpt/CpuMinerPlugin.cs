@@ -22,7 +22,7 @@ namespace CpuMinerOpt
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "v3.9.8",
-                ExePath = new List<string> {}, // special case multiple executables
+                ExePath = new List<string> { "cpuminer-avx2.exe" }, // special case multiple executables
                 Urls = new List<string>
                 {
                     "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.9.8/cpuminer-opt-3.9.8-windows.zip", // original
@@ -40,7 +40,7 @@ namespace CpuMinerOpt
 
         public override string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "cpuminer-opt";
 
@@ -96,20 +96,17 @@ namespace CpuMinerOpt
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var binCwdBase = base.GetBinAndCwdPaths();
-            var pluginRootBins = binCwdBase.Item1;
-
-            var binPath = "";
+            var cwd = binCwdBase.Item2;
             if (IsIntel)
             {
-                binPath = Path.Combine(pluginRootBins, "cpuminer-avx2.exe");
+                var binPath = Path.Combine(cwd, "cpuminer-avx2.exe");
+                return Tuple.Create(binPath, cwd);
             }
             else
             {
-                binPath = Path.Combine(pluginRootBins, "cpuminer-zen.exe");
+                var binPath = Path.Combine(cwd, "cpuminer-zen.exe");
+                return Tuple.Create(binPath, cwd);
             }
-
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         private bool IsIntelCpu(IEnumerable<CPUDevice> cpus)
