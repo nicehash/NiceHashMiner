@@ -77,10 +77,11 @@ namespace MinerPluginsPacker
                 minerPackageURL = binsSource.GetMinerBinsUrlsForPlugin().FirstOrDefault();
             }
 
+            var binaryVersion = "N/A";
             // TODO binary version
             if (plugin is IGetMinerBinaryVersion binVersionGetter)
             {
-
+                binaryVersion = binVersionGetter.GetMinerBinaryVersion();
             }
             PluginMetaInfo pluginMetaInfo = null;
             if (plugin is IGetPluginMetaInfo pluginMetaInfoGetter)
@@ -99,7 +100,7 @@ namespace MinerPluginsPacker
                 MinerPackageURL = minerPackageURL,
                 SupportedDevicesAlgorithms = TransformToPluginPackageInfoSupportedDevicesAlgorithms(pluginMetaInfo.SupportedDevicesAlgorithms),
                 // TODO enhance this with the bins version
-                PluginDescription = pluginMetaInfo.PluginDescription
+                PluginDescription = $"Miner Binary Version '{binaryVersion}'\n\n. " + pluginMetaInfo.PluginDescription
             };
             PluginPackageInfos.Add(packageInfo);
         }

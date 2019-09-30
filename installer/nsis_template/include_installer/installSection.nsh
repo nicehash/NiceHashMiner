@@ -38,6 +38,7 @@ SetOutPath $INSTDIR
   File /oname=uninstallerIcon.ico "${UNINSTALLER_ICON}"
 !endif
 
+!insertmacro deleteUserData_KeepNonGeneralSettings
 !insertmacro installApplicationFiles
 !insertmacro registryAddInstallInfo
 !insertmacro addStartMenuLink $keepShortcuts
