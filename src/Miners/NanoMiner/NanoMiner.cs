@@ -31,10 +31,6 @@ namespace NanoMiner
         {
             switch (algorithmType)
             {
-                case AlgorithmType.DaggerHashimoto:
-                    return "Ethash";
-                case AlgorithmType.GrinCuckaroo29:
-                    return "Cuckaroo29";
                 case AlgorithmType.GrinCuckarood29:
                     return "Cuckarood29";
                 case AlgorithmType.CryptoNightR:

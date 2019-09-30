@@ -32,7 +32,7 @@ namespace TRex
                 PluginDescription = "T-Rex is a versatile cryptocurrency mining software for NVIDIA devices.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2Z, AlgorithmType.X16R, AlgorithmType.MTP, AlgorithmType.X16Rv2 } }
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2Z, AlgorithmType.X16R, AlgorithmType.X16Rv2 } }
                 }
             };
         }
