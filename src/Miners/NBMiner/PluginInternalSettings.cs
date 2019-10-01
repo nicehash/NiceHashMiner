@@ -18,6 +18,17 @@ namespace NBMiner
         {
             GeneralOptions = new List<MinerOption> { 
                 /// <summary>
+                /// Comma-separated list of intensities (1-100).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "nbminer_intensity",
+                    ShortName = "-i",
+                    LongName = "--intensity",
+                    Delimiter = ","
+                },
+                /// <summary>
                 /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 0.
                 /// </summary>
                 new MinerOption
@@ -83,29 +94,7 @@ namespace NBMiner
                     ID = "nbminer_fidelityTimeframe",
                     LongName = "--fidelity-timeframe",
                     DefaultValue = "24"
-                },
-                ///// <summary>
-                ///// Check validity of certificate when use SSL connection.
-                ///// </summary>
-                //new MinerOption
-                //{
-                //    Type = MinerOptionType.OptionIsParameter,
-                //    ID = "nbminer_strictSsl",
-                //    LongName = "--strict-ssl",
-                //},
-                /// <summary>
-                /// Comma-separated list of intensities (1 -100).
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "nbminer_Intensity",
-                    LongName = "--intensity",
-                    ShortName = "-i",
-                    DefaultValue = "-1",
-                    Delimiter = ","
                 }
-
             },
             TemperatureOptions = new List<MinerOption>
             {
