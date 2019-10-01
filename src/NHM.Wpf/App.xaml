@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:NHM.Wpf"
              Startup="App_OnStartup">
     <Application.Resources>
-        <FontFamily x:Key="UbuntuRegular">./Resources/Fonts/Ubuntu-R.ttf#Ubuntu-Regular</FontFamily>
+        <FontFamily x:Key="UbuntuFontFamily">pack://application:,,,/Resources/Fonts/#Ubuntu</FontFamily>
     </Application.Resources>
 </Application>

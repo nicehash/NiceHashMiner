@@ -22,8 +22,8 @@
         </Grid.RowDefinitions>
         <Separator Grid.Row="0" Margin="16,0,16,0" Background="#eeeeee"></Separator>
         <Grid Grid.Row="1" Height="Auto" >
-            <TextBlock Margin="24,0">TERMS OF SERVICE</TextBlock>
-            <RichTextBox  x:Name="EulaRtb" FontFamily="{StaticResource UbuntuRegular}" Margin="24,20,24,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" IsDocumentEnabled="True" BorderThickness="1" >
+            <TextBlock Margin="24,0" FontFamily="{StaticResource UbuntuFontFamily}" FontWeight="Bold">TERMS OF SERVICE</TextBlock>
+            <RichTextBox  x:Name="EulaRtb" Margin="24,20,24,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" IsDocumentEnabled="True" BorderThickness="1" >
                 <FlowDocument>
                     <Paragraph>
                         <Run Text="RichTextBox"/>
@@ -39,7 +39,7 @@
         </Grid>
 
         <DockPanel Grid.Row="2" Margin="24,24,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button DockPanel.Dock="Right" Width="168" Height="40" Click="AcceptButton_OnClick" Foreground="White" FontFamily="{StaticResource UbuntuRegular}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="I ACCEPT" >
+            <Button DockPanel.Dock="Right" Width="168" Height="40" Click="AcceptButton_OnClick" Foreground="White" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="I ACCEPT" >
                 <Button.Background>
                     <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
                         <GradientStop Color="#FFFBA342" Offset="0"/>
@@ -50,7 +50,7 @@
                     <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
                 </Button.BitmapEffect>
             </Button>
-            <Button DockPanel.Dock="Right" Width="168" Height="40" Click="CancelButton_OnClick" Foreground="Black" FontFamily="{StaticResource UbuntuRegular}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="CANCEL" Margin="16,0" Background="White">
+            <Button DockPanel.Dock="Right" Width="168" Height="40" Click="CancelButton_OnClick" Foreground="Black" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="CANCEL" Margin="16,0" Background="White">
                 <Button.BitmapEffect>
                     <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
                 </Button.BitmapEffect>
