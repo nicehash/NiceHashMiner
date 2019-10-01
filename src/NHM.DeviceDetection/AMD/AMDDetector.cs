@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace NHM.DeviceDetection.AMD
 {
+    using NHM.UUID;
     internal static class AMDDetector
     {
         private const string Tag = "AMDDetector";
