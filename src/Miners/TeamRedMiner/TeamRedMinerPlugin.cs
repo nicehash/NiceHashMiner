@@ -1,12 +1,12 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
+using System.Linq;
 
 namespace TeamRedMiner
 {

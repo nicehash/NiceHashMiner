@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NHM.Common.Device;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using NHM.Common.Device;
 
 namespace MinerPluginToolkitV1.ClaymoreCommon
 {

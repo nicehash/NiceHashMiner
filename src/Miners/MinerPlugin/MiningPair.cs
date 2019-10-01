@@ -1,5 +1,5 @@
-using NHM.Common.Device;
 using NHM.Common.Algorithm;
+using NHM.Common.Device;
 
 namespace MinerPlugin
 {

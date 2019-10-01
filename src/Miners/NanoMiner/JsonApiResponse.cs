@@ -1,9 +1,8 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
+using System.Linq;
 
 namespace NanoMiner
 {

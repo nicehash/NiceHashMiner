@@ -1,5 +1,5 @@
-﻿using NHM.Common.Enums;
-using MinerPluginToolkitV1.CCMinerCommon;
+﻿using MinerPluginToolkitV1.CCMinerCommon;
+using NHM.Common.Enums;
 
 namespace CCMinerMTP
 {

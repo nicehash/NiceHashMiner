@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using MinerPluginToolkitV1.Configs;
+﻿using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
+using System;
+using System.Collections.Generic;
 
 namespace TTMiner
 {

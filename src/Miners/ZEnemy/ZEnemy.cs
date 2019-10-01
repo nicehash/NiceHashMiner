@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MinerPlugin;
+﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.CCMinerCommon;
 using MinerPluginToolkitV1.Configs;
 using NHM.Common;
 using NHM.Common.Enums;
-using static NHM.Common.StratumServiceHelpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ZEnemy
 {
@@ -51,7 +50,7 @@ namespace ZEnemy
             // settup times
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 40, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo {algo} --url={urlWithPort} --user {MinerToolkit.DemoUserBTC} --devices {_devices} {_extraLaunchParameters}";
@@ -105,7 +104,7 @@ namespace ZEnemy
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
 
             var algo = AlgorithmName(_algorithmType);
 

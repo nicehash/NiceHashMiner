@@ -2,17 +2,16 @@
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Linq;
-using System.IO;
-using System.Collections.Generic;
-using XmrStak.Configs;
 using NHM.Common;
 using NHM.Common.Enums;
-using static NHM.Common.StratumServiceHelpers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using XmrStak.Configs;
 
 namespace XmrStak
 {
@@ -198,7 +197,7 @@ namespace XmrStak
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
 
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
             // this one here might block
@@ -268,7 +267,7 @@ namespace XmrStak
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binCwd = binPathBinCwdPair.Item2;
@@ -407,7 +406,7 @@ namespace XmrStak
             var configFlagAndFilesStr = string.Join(" ", configFlagAndFiles);
 
             // instant non blocking
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
+            var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
             var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(deviceTypes);
             var currency = AlgorithmName(_algorithmType);
             var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {currency} -i 0 --use-nicehash -p x -r x --benchmark 10 --benchwork 60 --benchwait 5 {disableDeviceTypes} {enableDeviceTypesStr} {configFlagAndFilesStr}";

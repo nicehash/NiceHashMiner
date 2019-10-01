@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MinerPlugin;
+using NHM.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using MinerPlugin;
-using NHM.Common;
 
 namespace MinerPluginToolkitV1.ExtraLaunchParameters
 {

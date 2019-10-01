@@ -1,6 +1,7 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Enums;
@@ -10,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MinerPluginToolkitV1.Configs;
 
 namespace ClaymoreDual14
 {

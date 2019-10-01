@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using NHM.Common;
+using System;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
-using NHM.Common;
 
 namespace MinerPluginToolkitV1
 {

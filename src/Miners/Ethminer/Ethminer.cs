@@ -1,15 +1,15 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ClaymoreCommon;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
+using NHM.Common;
+using NHM.Common.Enums;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-using NHM.Common.Enums;
-using NHM.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ethminer
 {

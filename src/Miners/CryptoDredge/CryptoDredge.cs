@@ -1,15 +1,14 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Globalization;
-using System.Linq;
-using System.Collections.Generic;
+using MinerPluginToolkitV1.Configs;
 using NHM.Common;
 using NHM.Common.Enums;
-using static NHM.Common.StratumServiceHelpers;
-using MinerPluginToolkitV1.Configs;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CryptoDredge
 {
@@ -204,7 +203,7 @@ namespace CryptoDredge
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo {algo} --url {url} --user {_username} -b 127.0.0.1:{_apiPort} --device {_devices} --no-watchdog {_extraLaunchParameters}";

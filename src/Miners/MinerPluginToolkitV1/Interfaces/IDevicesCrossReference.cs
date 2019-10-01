@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using NHM.Common.Device;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using NHM.Common.Device;
 
 namespace MinerPluginToolkitV1.Interfaces
 {

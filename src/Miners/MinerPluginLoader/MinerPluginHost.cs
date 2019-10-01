@@ -1,10 +1,10 @@
 ﻿using MinerPlugin;
+using NHM.Common;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using NHM.Common;
 
 namespace MinerPluginLoader
 {

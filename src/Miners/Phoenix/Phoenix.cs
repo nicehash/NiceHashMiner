@@ -1,8 +1,8 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;

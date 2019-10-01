@@ -1,6 +1,4 @@
-﻿using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
-using System;
+﻿using MinerPluginToolkitV1.ExtraLaunchParameters;
 using System.Collections.Generic;
 
 namespace XMRig

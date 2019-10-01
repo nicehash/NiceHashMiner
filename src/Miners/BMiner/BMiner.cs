@@ -1,17 +1,15 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
+using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Enums;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using static NHM.Common.StratumServiceHelpers;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Linq;
-using System.IO;
-using NHM.Common;
-using System.Collections.Generic;
-using MinerPluginToolkitV1.Configs;
 
 namespace BMiner
 {
@@ -93,7 +91,7 @@ namespace BMiner
             // settup times
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var split = urlWithPort.Split(':');
             var url = split[1].Substring(2, split[1].Length - 2);
             var port = split[2];
@@ -154,7 +152,7 @@ namespace BMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var split = urlWithPort.Split(':');
             var url = split[1].Substring(2, split[1].Length - 2);
             var port = split[2];

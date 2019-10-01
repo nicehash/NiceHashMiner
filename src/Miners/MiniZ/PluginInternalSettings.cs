@@ -1,10 +1,5 @@
-﻿using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
-using System;
+﻿using MinerPluginToolkitV1.ExtraLaunchParameters;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MiniZ
 {

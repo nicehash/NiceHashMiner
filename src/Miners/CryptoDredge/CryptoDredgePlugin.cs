@@ -6,7 +6,6 @@ using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static MinerPluginToolkitV1.Checkers;
 
 namespace CryptoDredge
 {
@@ -46,7 +45,7 @@ namespace CryptoDredge
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            var isDriverCompatible = Checkers.IsCudaCompatibleDriver(CudaVersion.CUDA_10_1_105, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            var isDriverCompatible = Checkers.IsCudaCompatibleDriver(Checkers.CudaVersion.CUDA_10_1_105, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             if (!isDriverCompatible) return supported;
 
             var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();

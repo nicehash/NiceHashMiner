@@ -1,7 +1,4 @@
 ﻿using NHM.Common.Enums;
-using NHM.Common.Device;
-using NHM.Common.Algorithm;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;

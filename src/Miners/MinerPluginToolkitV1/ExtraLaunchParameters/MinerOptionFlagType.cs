@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MinerPluginToolkitV1.ExtraLaunchParameters
+﻿namespace MinerPluginToolkitV1.ExtraLaunchParameters
 {
     /// <summary>
     /// Describes the flag option. The parser uses these enums to properly parse and merge miner options.

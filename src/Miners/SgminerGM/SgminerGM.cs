@@ -1,5 +1,5 @@
-﻿using NHM.Common.Enums;
-using MinerPluginToolkitV1.SgminerCommon;
+﻿using MinerPluginToolkitV1.SgminerCommon;
+using NHM.Common.Enums;
 
 namespace SgminerGM
 {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace TRex
 {
-        [Serializable]
+    [Serializable]
     internal class Gpu
     {
         public int device_id { get; set; }

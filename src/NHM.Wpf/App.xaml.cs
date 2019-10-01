@@ -1,8 +1,10 @@
 ﻿using log4net.Core;
 using NHM.Common;
+using NHM.Wpf.Views;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Stats;
+using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,8 +14,6 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using NHM.Wpf.Views;
-using NHMCore.Utils;
 
 namespace NHM.Wpf
 {

@@ -1,15 +1,15 @@
-﻿using System;
+﻿using MinerPlugin;
+using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.ClaymoreCommon;
+using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.Interfaces;
+using NHM.Common;
+using NHM.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
-using NHM.Common.Enums;
-using MinerPluginToolkitV1.ClaymoreCommon;
-using MinerPluginToolkitV1.Configs;
 
 namespace TTMiner
 {

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MinerPlugin;
+using MinerPluginToolkitV1.CCMinerCommon;
+using NHM.Common.Enums;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NHM.Common.Enums;
-using MinerPlugin;
-using MinerPluginToolkitV1.CCMinerCommon;
 
 namespace CCMinerTpruvot
 {
