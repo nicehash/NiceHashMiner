@@ -1,4 +1,3 @@
-using NHM.Extensions;
 using NHMCore.Mining;
 using NHMCore.Interfaces;
 using NHMCore.Mining.Plugins;
@@ -216,6 +215,17 @@ namespace NHMCore.Benchmarking
                     return algo.BenchmarkNeeded || algo.IsReBenchmark;
             }
             return true;
+        }
+
+        // from deleted NHM.Extensions
+        private static Queue<T> ToQueue<T>(this IEnumerable<T> source)
+        {
+            var queue = new Queue<T>();
+            foreach (var el in source)
+            {
+                queue.Enqueue(el);
+            }
+            return queue;
         }
 
         // network benchmark starts benchmarking on a device

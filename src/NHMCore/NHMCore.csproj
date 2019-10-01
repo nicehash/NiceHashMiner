@@ -406,10 +406,6 @@
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NHM.Extensions\NHM.Extensions.csproj">
-      <Project>{12564275-9741-4341-868d-8762448884d0}</Project>
-      <Name>NHM.Extensions</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
