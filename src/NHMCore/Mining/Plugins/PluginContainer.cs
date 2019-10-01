@@ -1,15 +1,15 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1.Interfaces;
-using NHMCore.Configs;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHMCore.Configs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace NHMCore.Mining.Plugins
 {

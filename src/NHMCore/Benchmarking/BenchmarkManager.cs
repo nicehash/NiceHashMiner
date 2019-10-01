@@ -1,11 +1,10 @@
-using NHMCore.Mining;
-using NHMCore.Interfaces;
-using NHMCore.Mining.Plugins;
 using NHM.Common.Enums;
+using NHMCore.Interfaces;
+using NHMCore.Mining;
+using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NHMCore.Stats;
 
 namespace NHMCore.Benchmarking
 {

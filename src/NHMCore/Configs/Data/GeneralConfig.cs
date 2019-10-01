@@ -1,12 +1,12 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.Mining;
+using NHMCore.Stats;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using NHMCore.Stats;
 
 namespace NHMCore.Configs.Data
 {

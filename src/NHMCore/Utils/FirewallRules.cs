@@ -1,11 +1,11 @@
-﻿using NHM.Common;
+﻿using MinerPluginToolkitV1.Configs;
+using NHM.Common;
+using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using MinerPluginToolkitV1.Configs;
-using NHMCore.Mining.Plugins;
 
 namespace NHMCore.Utils
 {

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using NHM.Common;
+using SharpCompress.Archives.SevenZip;
+using System;
 using System.IO;
 using System.IO.Compression;
-using SharpCompress.Archives.SevenZip;
-using NHM.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NHMCore.Utils
 {

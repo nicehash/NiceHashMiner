@@ -3,6 +3,8 @@
 // This is just a list of miners that are intergated in the nhm client
 namespace NHMCore.Mining.Plugins
 {
+
+    // TODO DELETE THIS INTERFACE
     public interface IntegratedPlugin : IMinerPlugin
     {
         bool Is3rdParty { get; }

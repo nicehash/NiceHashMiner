@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NHMCore.Mining;
+using System;
 using System.Timers;
-using NHMCore.Mining;
 
 namespace NHMCore.Benchmarking.BenchHelpers
 {

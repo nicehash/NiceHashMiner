@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NHM.Common;
+using NHMCore.Configs;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
-using NHMCore.Configs;
-using NHM.Common;
 
 namespace NHMCore.Stats
 {

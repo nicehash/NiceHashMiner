@@ -1,15 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using NHMCore.Mining;
-using System.Threading;
-using NHM.Common;
-using NHMCore.Configs;
-using NHMCore.Benchmarking.BenchHelpers;
-using NHMCore.Mining.Plugins;
+﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.Benchmarking.BenchHelpers;
+using NHMCore.Configs;
+using NHMCore.Mining;
+using NHMCore.Mining.Plugins;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NHMCore.Benchmarking
 {

@@ -1,20 +1,20 @@
-﻿using System;
+﻿using MinerPluginLoader;
+using MinerPluginToolkitV1;
+using Newtonsoft.Json;
+using NHM.Common;
+using NHM.Common.Enums;
+using NHM.MinersDownloader;
+using NHMCore.Configs;
+using NHMCore.Utils;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using MinerPluginLoader;
-using Newtonsoft.Json;
-using NHM.Common;
-using NHMCore.Configs;
-using NHM.Common.Enums;
-using NHM.MinersDownloader;
-using NHMCore.Utils;
-using System.Globalization;
-using System.Collections.Concurrent;
-using MinerPluginToolkitV1;
 
 namespace NHMCore.Mining.Plugins
 {

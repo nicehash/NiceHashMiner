@@ -1,18 +1,17 @@
+using NHM.Common.Enums;
+using NHM.UUID;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Stats;
 using NHMCore.Utils;
-using NHM.Common.Enums;
 using System;
 using System.Linq;
-using System.Windows.Forms;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NHMCore
 {
-    using NHM.UUID;
-    using System.Threading.Tasks;
-
     static partial class ApplicationStateManager
     {
         public static string RigID { get; } = UUID.GetDeviceB64UUID();

@@ -1,10 +1,8 @@
-// SHARED
-using NHMCore.Utils;
 using NHMCore.Stats;
+using NHMCore.Utils;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-
 using static NHMCore.Translations;
 
 namespace NHMCore

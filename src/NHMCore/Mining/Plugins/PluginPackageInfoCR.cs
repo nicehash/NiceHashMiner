@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MinerPluginToolkitV1;
+using System;
 using System.Collections.Generic;
-using MinerPluginToolkitV1;
 
 namespace NHMCore.Mining.Plugins
 {

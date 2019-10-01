@@ -1,12 +1,12 @@
 ﻿using Microsoft.Win32;
+using NHM.Common;
+using NHM.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Security.Principal;
-using NHM.Common.Enums;
 using System.Linq;
-using NHM.Common;
-using System.Collections.Generic;
+using System.Security.Principal;
 
 namespace NHMCore.Utils
 {

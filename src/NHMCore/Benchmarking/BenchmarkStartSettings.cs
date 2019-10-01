@@ -3,7 +3,6 @@
 namespace NHMCore.Benchmarking
 {
     // alias enum
-    using BenchmarkSelection = AlgorithmBenchmarkSettingsType;
     public class BenchmarkStartSettings
     {
         public bool StartMiningAfterBenchmark { get; set; } = false;

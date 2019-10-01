@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using MinerPlugin;
 using NHM.Common.Enums;
-using MinerPlugin;
+using System.Collections.Generic;
 
 namespace NHMCore.Mining.Grouping
 {

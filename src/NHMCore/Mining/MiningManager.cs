@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using MinerPlugin;
+using NHM.Common;
+using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Mining.Grouping;
 using NHMCore.Mining.Plugins;
 using NHMCore.Stats;
 using NHMCore.Switching;
-using NHM.Common;
-using NHM.Common.Enums;
-using MinerPlugin;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NHMCore.Mining
 {

@@ -1,6 +1,5 @@
 ﻿using MinerPluginToolkitV1.Configs;
 using NHM.Common;
-using NHM.Common.Enums;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using System;

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NHMCore.Mining;
+using System;
 using System.Collections.Generic;
-using NHMCore.Mining;
 
 namespace NHMCore.Stats.Models
 {

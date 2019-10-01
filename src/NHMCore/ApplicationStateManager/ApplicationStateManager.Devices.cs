@@ -1,5 +1,4 @@
 using NHMCore.Mining;
-using NHMCore.Stats;
 using System.Collections.Generic;
 using System.Linq;
 

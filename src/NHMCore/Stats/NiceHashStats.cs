@@ -1,22 +1,21 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Globalization;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using NHMCore.Configs;
-using NHMCore.Stats.Models;
 using NHM.Common.Enums;
-using WebSocketSharp;
-using NHMCore.Utils;
-using NHMCore.Mining;
-using NHMCore.Switching;
 using NHM.DeviceMonitoring.TDP;
-
+using NHMCore.Configs;
+using NHMCore.Mining;
+using NHMCore.Stats.Models;
+using NHMCore.Switching;
+using NHMCore.Utils;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using WebSocketSharp;
 // static imports
 using static NHMCore.Stats.StatusCodes;
-using System.Threading;
 
 namespace NHMCore.Stats
 {

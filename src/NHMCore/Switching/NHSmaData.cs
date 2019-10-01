@@ -1,12 +1,12 @@
-﻿using System;
+﻿using MinerPluginToolkitV1.Configs;
+using NHM.Common;
+using NHM.Common.Enums;
+using NHMCore.Configs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MinerPluginToolkitV1.Configs;
-using NHMCore.Configs;
-using NHM.Common;
-using NHM.Common.Enums;
 
 namespace NHMCore.Switching
 {

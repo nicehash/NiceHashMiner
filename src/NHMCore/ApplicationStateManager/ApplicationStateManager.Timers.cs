@@ -1,12 +1,11 @@
+using NHM.Common;
 using NHM.DeviceDetection;
 using NHMCore.Configs;
 using NHMCore.Mining;
-using NHM.Common;
+using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.Timers;
-using SystemTimer = System.Timers.Timer;
-using NHMCore.Utils;
 
 namespace NHMCore
 {
@@ -17,7 +16,7 @@ namespace NHMCore
             private readonly object _lock = new object();
             private readonly ElapsedEventHandler _elapsedEventHandler;
             private readonly double _interval;
-            private SystemTimer _timer;
+            private Timer _timer;
 
             internal AppTimer(ElapsedEventHandler elapsedEventHandler, double interval)
             {
@@ -42,7 +41,7 @@ namespace NHMCore
                 lock (_lock)
                 {
                     if (_timer != null) return;
-                    _timer = new SystemTimer();
+                    _timer = new Timer();
                     _timer.Elapsed += _elapsedEventHandler;
                     _timer.Interval = _interval;
                     _timer.Start();

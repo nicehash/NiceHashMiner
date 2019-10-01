@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using MinerPlugin;
+using NHM.Common.Enums;
+using NHMCore.Switching;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using MinerPlugin;
-using NHMCore.Switching;
-using NHM.Common.Enums;
 
 namespace NHMCore.Mining
 {

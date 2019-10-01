@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NHM.Common;
+using NHM.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHM.Common.Enums;
-using NHM.Common;
 
 namespace NHMCore.Mining.Grouping
 {

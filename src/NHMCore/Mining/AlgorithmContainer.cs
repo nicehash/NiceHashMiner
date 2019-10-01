@@ -1,15 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using NHM.Common;
-using NHMCore.Stats;
-using NHMCore.Switching;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Enums;
-using NHMCore.Configs;
-using NHMCore.Utils;
-using NHMCore.Mining.Plugins;
 using NHMCore.Benchmarking;
+using NHMCore.Configs;
+using NHMCore.Mining.Plugins;
+using NHMCore.Stats;
+using NHMCore.Switching;
+using NHMCore.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NHMCore.Mining
 {

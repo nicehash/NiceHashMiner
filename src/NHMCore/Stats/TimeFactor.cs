@@ -1,5 +1,5 @@
-﻿using System;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
+using System;
 
 namespace NHMCore.Stats
 {

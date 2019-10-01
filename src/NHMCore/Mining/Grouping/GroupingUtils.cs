@@ -1,7 +1,7 @@
-﻿using NHMCore.Mining.Plugins;
+﻿using MinerPlugin;
+using NHMCore.Mining.Plugins;
 using System.Collections.Generic;
 using System.Linq;
-using MinerPlugin;
 
 namespace NHMCore.Mining.Grouping
 {

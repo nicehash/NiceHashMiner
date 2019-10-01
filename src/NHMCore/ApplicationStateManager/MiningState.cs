@@ -1,7 +1,7 @@
-﻿using NHMCore.Configs;
+﻿using NHM.Common.Enums;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Utils;
-using NHM.Common.Enums;
 using System;
 using System.ComponentModel;
 using System.Linq;
