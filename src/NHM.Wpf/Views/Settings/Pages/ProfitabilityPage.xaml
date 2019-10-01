@@ -14,6 +14,7 @@
             <ComboBox ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding Config.TimeUnit}" />
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Minimum Profit ($/day):"
+                                    Enabled="{Binding MinProfitEnabled}"
                                     Description="If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount.">
             <TextBox Text="{Binding Config.MinimumProfit, StringFormat=F4}" />
         </controls:SettingsContainer>

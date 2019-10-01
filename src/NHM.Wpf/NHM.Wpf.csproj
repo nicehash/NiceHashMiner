@@ -94,6 +94,7 @@
     <Compile Include="ViewModels\Plugins\PluginEntryVM.cs" />
     <Compile Include="ViewModels\Plugins\PluginListVM.cs" />
     <Compile Include="ViewModels\Plugins\PluginVM.cs" />
+    <Compile Include="ViewModels\Settings\AdvancedDevicesVM.cs" />
     <Compile Include="ViewModels\Settings\AdvancedGeneralVM.cs" />
     <Compile Include="ViewModels\Settings\AdvancedMiningVM.cs" />
     <Compile Include="ViewModels\Settings\AdvancedSwitchingVM.cs" />
@@ -148,6 +149,9 @@
     </Compile>
     <Compile Include="Views\Settings\Pages\AdvancedMiningPage.xaml.cs">
       <DependentUpon>AdvancedMiningPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Pages\AdvancedDevicesPage.xaml.cs">
+      <DependentUpon>AdvancedDevicesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\Pages\AdvancedPage.xaml.cs">
       <DependentUpon>AdvancedPage.xaml</DependentUpon>
@@ -238,6 +242,10 @@
     <Page Include="Views\Settings\Pages\AdvancedMiningPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\Pages\AdvancedDevicesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Settings\Pages\AdvancedPage.xaml">
       <SubType>Designer</SubType>

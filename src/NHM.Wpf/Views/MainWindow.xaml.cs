@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using NHM.Common;
 using NHM.Wpf.ViewModels;
 using NHM.Wpf.Views.Common;
@@ -114,24 +115,43 @@ namespace NHM.Wpf.Views
 
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
+            // Disable managed controls
             WindowUtils.SetForceSoftwareRendering(this);
             IsEnabled = false;
+            // Get IntPtr handle for this Window
+            var handle = new WindowInteropHelper(this).Handle;
+            // Set native disabled state to disallow moving window
+            WindowUtils.TrySetNativeEnabled(false, handle);
+
             var startup = new StartupLoadingWindow
             {
-                Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner, CanClose = false
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                CanClose = false
             };
-            startup.Show();
 
-            await _vm.InitializeNhm(startup.StartupLoader);
+            try
+            {
+                startup.Show();
 
-            startup.CanClose = true;
+                await _vm.InitializeNhm(startup.StartupLoader);
+            }
+            finally
+            {
+                // Remove disabled native bit
+                // NOTE must happen before startup.Close() or else minimizing thing happens
+                WindowUtils.TrySetNativeEnabled(true, handle);
 
-            // If owner is still set to this when close is called, 
-            // it will minimize the main window for some reason
-            startup.Owner = null;
-            startup.Close();
+                startup.CanClose = true;
 
-            IsEnabled = true;
+                // If owner is still set to `this` when close is called, 
+                // it will minimize the main window for some reason
+                startup.Owner = null;
+                startup.Close();
+
+                // Re-enable managed controls
+                IsEnabled = true;
+            }
         }
 
         private async void StartButton_OnClick(object sender, RoutedEventArgs e)

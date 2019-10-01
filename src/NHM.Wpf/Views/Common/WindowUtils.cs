@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using NHM.Common;
 using System.Windows.Interop;
 using NHM.Wpf.ViewModels.Settings;
 using NHM.Wpf.Views.Settings.Controls;
@@ -11,6 +14,46 @@ namespace NHM.Wpf.Views.Common
 {
     public static class WindowUtils
     {
+        private const int GwlStyle = -16;
+        private const int WsDisabled = 0x08000000;
+
+        private const string UserDll = "user32.dll";
+
+        [DllImport(UserDll)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport(UserDll)]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        /// <summary>
+        /// Set the native disabled bit for the window.
+        /// </summary>
+        /// <param name="enabled">Whether bit set to enabled or disabled</param>
+        /// <param name="winHandle">Handle to window</param>
+        /// <returns>True iff successful</returns>
+        /// <remarks>
+        /// When the main window opens the loading init window, we want it to act like it does under ShowDialog().
+        /// However, we need to use Show() instead. ShowDialog() not only disables the window controls, but also
+        /// sets a native disabled bit in Windows that disallows the user to move the window.
+        /// This function sets that same bit.
+        /// </remarks>
+        public static bool TrySetNativeEnabled(bool enabled, IntPtr winHandle)
+        {
+            try
+            {
+                var current = GetWindowLong(winHandle, GwlStyle);
+                SetWindowLong(winHandle, GwlStyle, current & ~WsDisabled | (enabled ? 0 : WsDisabled));
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Warn("WindowUtils", $"Set native window disabled failed: {e.Message}");
+
+                return false;
+            }
+        }
+
         internal static bool ForceSoftwareRendering { get; set; } = true;
 
         internal static void SetForceSoftwareRendering(Window w)

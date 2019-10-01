@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
+using NHM.Common.Enums;
 using NHMCore.Mining.IdleChecking;
 
 namespace NHM.Wpf.ViewModels
@@ -45,6 +46,13 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
+        /// <summary>
+        /// Elements of <see cref="MiningDevs"/> that represent actual devices (i.e. not total rows) and
+        /// are in the mining state.
+        /// </summary>
+        private IEnumerable<MiningData> WorkingMiningDevs =>
+            MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining);
+
         public IReadOnlyList<string> ServiceLocations => StratumService.MiningLocationNames;
 
         public int ServiceLocationIndex
@@ -69,7 +77,26 @@ namespace NHM.Wpf.ViewModels
 
         #region Currency-related properties
 
-        private string PerTime => $"/{TimeFactor.UnitType}";
+        // TODO this section getting rather large, maybe good idea to break out into own class
+
+        private string _timeUnit = TimeFactor.UnitType.ToString();
+
+        private string TimeUnit
+        {
+            get => _timeUnit;
+            set
+            {
+                _timeUnit = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(PerTime));
+                OnPropertyChanged(nameof(CurrencyPerTime));
+                OnPropertyChanged(nameof(BtcPerTime));
+                OnPropertyChanged(nameof(MBtcPerTime));
+                OnPropertyChanged(nameof(ProfitPerTime));
+            }
+        }
+
+        private string PerTime => $"/{TimeUnit}";
 
         private string _currency = ExchangeRateApi.ActiveDisplayCurrency;
 
@@ -94,14 +121,57 @@ namespace NHM.Wpf.ViewModels
 
         public string MBtcPerTime => $"m{BtcPerTime}";
 
+        private string _scaledBtcPerTime;
+        public string ScaledBtcPerTime
+        {
+            get => _scaledBtcPerTime;
+            set
+            {
+                if (_scaledBtcPerTime == value) return;
+                _scaledBtcPerTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _scaledBtc = "BTC";
+        public string ScaledBtc
+        {
+            get => _scaledBtc;
+            set
+            {
+                if (_scaledBtc == value) return;
+                _scaledBtc = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
-        public double GlobalRate => MiningDevs?.Sum(d => d.Payrate) ?? 0;
+        public double GlobalRate
+        {
+            get
+            {
+                // sum is in mBTC already
+                var sum = WorkingMiningDevs?.Sum(d => d.Payrate) ?? 0;
+                var scale = 1000;
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && sum < 100)
+                {
+                    ScaledBtcPerTime = MBtcPerTime;
+                    scale = 1;
+                }
+                else
+                {
+                    ScaledBtcPerTime = BtcPerTime;
+                }
 
-        public double GlobalRateFiat => MiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
+                return sum / scale;
+            }
+        }
+
+        public double GlobalRateFiat => WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
 
         private double _btcBalance;
-        public double BtcBalance
+        private double BtcBalance
         {
             get => _btcBalance;
             set
@@ -109,6 +179,26 @@ namespace NHM.Wpf.ViewModels
                 _btcBalance = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(FiatBalance));
+                OnPropertyChanged(nameof(ScaledBtcBalance));
+            }
+        }
+
+        public double ScaledBtcBalance
+        {
+            get
+            {
+                var scale = 1;
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && _btcBalance < 0.1)
+                {
+                    scale = 1000;
+                    ScaledBtc = "mBTC";
+                }
+                else
+                {
+                    ScaledBtc = "BTC";
+                }
+
+                return _btcBalance * scale;
             }
         }
 
@@ -133,6 +223,8 @@ namespace NHM.Wpf.ViewModels
             };
 
             ApplicationStateManager.DisplayBTCBalance += UpdateBalance;
+
+            TimeFactor.OnUnitTypeChanged += (_, unit) => { TimeUnit = unit.ToString(); };
         }
 
         // TODO I don't like this way, a global refresh and notify would be better

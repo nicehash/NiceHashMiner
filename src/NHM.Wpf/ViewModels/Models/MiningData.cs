@@ -41,7 +41,7 @@ namespace NHM.Wpf.ViewModels.Models
 
         public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate) s);
 
-        public double Payrate => (Stats?.TotalPayingRate() ?? 0) * 1000;
+        public double Payrate => TimeFactor.ConvertFromDay((Stats?.TotalPayingRate() ?? 0) * 1000);
 
         public double FiatPayrate => ExchangeRateApi.ConvertFromBtc(Payrate / 1000);
 
@@ -52,7 +52,7 @@ namespace NHM.Wpf.ViewModels.Models
             get
             {
                 var cost = Stats?.PowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0;
-                return ExchangeRateApi.ConvertFromBtc(cost);
+                return TimeFactor.ConvertFromDay(ExchangeRateApi.ConvertFromBtc(cost));
             }
         }
 
@@ -61,7 +61,7 @@ namespace NHM.Wpf.ViewModels.Models
             get
             {
                 var cost = Stats?.TotalPayingRateDeductPowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0;
-                return ExchangeRateApi.ConvertFromBtc(cost);
+                return TimeFactor.ConvertFromDay(ExchangeRateApi.ConvertFromBtc(cost));
             }
         }
 

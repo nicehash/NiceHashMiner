@@ -18,7 +18,8 @@ namespace NHM.Wpf.ViewModels.Settings
                 "Advanced",
                 new AdvancedGeneralVM(settingsObj),
                 new AdvancedSwitchingVM(settingsObj),
-                new AdvancedMiningVM(settingsObj));
+                new AdvancedMiningVM(settingsObj),
+                new AdvancedDevicesVM(settingsObj));
         }
     }
 }
