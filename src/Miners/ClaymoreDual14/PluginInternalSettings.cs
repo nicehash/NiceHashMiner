@@ -139,6 +139,16 @@ namespace ClaymoreDual14
                     DefaultValue = "5"
                 },
                 /// <summary>
+                /// debug log and messages. "-dbg 0" - (default) create log file but don't show debug messages.
+                /// "-dbg 1" - create log file and show debug messages. "-dbg -1" - no log file and no debug messages.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_debug_log",
+                    ShortName = "-dbg",
+                },
+                /// <summary>
                 /// debug log file name. After restart, miner will append new log data to the same file. If you want to clear old log data, file name must contain "noappend" string.
                 /// If missed, default file name will be used. You can also use this option to specify folder for log files, use slash at the end to do it, for example, "-logfile logs\".
                 /// </summary>
@@ -160,26 +170,16 @@ namespace ClaymoreDual14
                     DefaultValue = "1000"
                 },
                 /// <summary>
-                /// use "-showdiff 1" to show difficulty for every ETH share and to display maximal found share difficulty when you press "s" key.
-                /// Default value is "0".
+                /// set "1" to cancel my developer fee at all. In this mode some optimizations are disabled so mining speed will be slower by about 3%. 
+	            /// By enabling this mode, I will lose 100% of my earnings, you will lose only about 2% of your earnings.
+                /// So you have a choice: "fastest miner" or "completely free miner but a bit slower".
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "claymoreDual_show_diff",
-                    ShortName = "-showdiff",
-                    DefaultValue = "0"
-                },
-                /// <summary>
-                /// displays statistics about GPU power consumption when you press "s" key.
-                /// Default value is "1" (show statistics about power consumption), use "-showpower 0" to hide it.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "claymoreDual_show_pow",
-                    ShortName = "-showpower",
-                    DefaultValue = "1"
+                    ID = "claymoreDual_noFee",
+                    ShortName = "-nofee",
+                    DefaultValue = "0",
                 },
                 /// <summary>
                 /// low intensity mode. Reduces mining intensity, useful if your cards are overheated. Note that mining speed is reduced too. 
@@ -205,19 +205,7 @@ namespace ClaymoreDual14
                     ShortName = "-lidag",
                     DefaultValue = "0",
                     Delimiter = ","
-                },
-                /// <summary>
-                /// set "1" to cancel my developer fee at all. In this mode some optimizations are disabled so mining speed will be slower by about 3%. 
-	            /// By enabling this mode, I will lose 100% of my earnings, you will lose only about 2% of your earnings.
-                /// So you have a choice: "fastest miner" or "completely free miner but a bit slower".
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "claymoreDual_noFee",
-                    ShortName = "-nofee",
-                    DefaultValue = "0",
-                },
+                },   
                 /// <summary>
                 /// enables Compute Mode and disables CrossFire for AMD cards. "-y 1" works as pressing "y" key when miner starts. This option works in Windows only.
                 /// </summary>
@@ -229,18 +217,38 @@ namespace ClaymoreDual14
                     DefaultValue = "1",
                 },
                 /// <summary>
-                /// enables additional boost for AMD Polaris cards and old AMD cards (Hawaii, Tonga, Tahiti, Pitcairn). This option is available for Windows only. It mproves hashrate up to 5% by applying some additional memory settings. 
-                /// To enable it, use "-rxboost 1", you can use your own straps or use "-strap" option, you will get boost anyway. If your card is unstable, you can specify custome boost value (2..100), for example, "-rxboost 5".
-                /// You can also specify values for every card, for example "-rxboost 1,0,10,30".
-                /// Default value is "0" which means no boost at all.
+                /// use "-showdiff 1" to show difficulty for every ETH share and to display maximal found share difficulty when you press "s" key.
+                /// Default value is "0".
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "claymoreDual_rxboost",
-                    ShortName = "-rxboost",
-                    DefaultValue = "0",
-                    Delimiter = ","
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_show_diff",
+                    ShortName = "-showdiff",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// displays statistics about GPU power consumption when you press "s" key.
+                /// Default value is "1" (show statistics about power consumption), use "-showpower 0" to hide it.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_show_pow",
+                    ShortName = "-showpower",
+                    DefaultValue = "1"
+                },
+                /// <summary>
+                /// installs or uninstalls the driver which is required to apply memory timings (straps), enables or disables Windows Test Mode and closes miner after it. This option is available for Windows only and requires admin rights to execute, 
+                /// also you need to disable "Secure Boot" in UEFI BIOS if you use it.
+                /// Use "-driver install" to install the driver and enable Windows Test Mode, "-driver uninstall" to uninstall the driver and disable Windows Test Mode. Since the driver is not signed, miner enables "Test mode" in Windows, you need to reboot to apply it.
+                /// This option is necessary only if you want to install or uninstall the driver separately, miner anyway will install the driver automatically if "-strap" option is used.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_driver",
+                    ShortName = "-driver"
                 },
                 /// <summary>
                 /// applies specified memory timings (strap). This option is available for Windows only and requires AMD blockchain drivers or drivers 18.x or newer (most tests were performed on 19.4.3) for AMD cards, any recent Nvidia drivers for Nvidia cards. 
@@ -283,16 +291,18 @@ namespace ClaymoreDual14
                     Delimiter = ","
                 },
                 /// <summary>
-                /// installs or uninstalls the driver which is required to apply memory timings (straps), enables or disables Windows Test Mode and closes miner after it. This option is available for Windows only and requires admin rights to execute, 
-                /// also you need to disable "Secure Boot" in UEFI BIOS if you use it.
-                /// Use "-driver install" to install the driver and enable Windows Test Mode, "-driver uninstall" to uninstall the driver and disable Windows Test Mode. Since the driver is not signed, miner enables "Test mode" in Windows, you need to reboot to apply it.
-                /// This option is necessary only if you want to install or uninstall the driver separately, miner anyway will install the driver automatically if "-strap" option is used.
+                /// enables additional boost for AMD Polaris cards and old AMD cards (Hawaii, Tonga, Tahiti, Pitcairn). This option is available for Windows only. It mproves hashrate up to 5% by applying some additional memory settings. 
+                /// To enable it, use "-rxboost 1", you can use your own straps or use "-strap" option, you will get boost anyway. If your card is unstable, you can specify custome boost value (2..100), for example, "-rxboost 5".
+                /// You can also specify values for every card, for example "-rxboost 1,0,10,30".
+                /// Default value is "0" which means no boost at all.
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "claymoreDual_driver",
-                    ShortName = "-driver"
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_rxboost",
+                    ShortName = "-rxboost",
+                    DefaultValue = "0",
+                    Delimiter = ","
                 }
             },
             TemperatureOptions = new List<MinerOption>
@@ -444,19 +454,6 @@ namespace ClaymoreDual14
                     Delimiter = ","
                 },
                 /// <summary>
-                /// set target GPU memory voltage, multiplied by 1000. For example, "-mvddc 1050" means 1.05V. 
-                /// You can also specify values for every card, for example "-mvddc 900,950,1000,970". 
-                /// Supports latest AMD 4xx cards only in Windows.	Note: for NVIDIA cards this option is not supported.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "claymoreDual_memory_voltage",
-                    ShortName = "-mvddc",
-                    DefaultValue = "0",
-                    Delimiter = ","
-                },
-                /// <summary>
                 /// set target GPU core voltage, multiplied by 1000. For example, "-cvddc 1050" means 1.05V. 
                 /// You can also specify values for every card, for example "-cvddc 900,950,1000,970". 
                 /// Supports latest AMD 4xx cards only in Windows.	Note: for NVIDIA cards this option is not supported.
@@ -468,7 +465,20 @@ namespace ClaymoreDual14
                     ShortName = "-cvddc",
                     DefaultValue = "0",
                     Delimiter = ","
-                }
+                },
+                /// <summary>
+                /// set target GPU memory voltage, multiplied by 1000. For example, "-mvddc 1050" means 1.05V. 
+                /// You can also specify values for every card, for example "-mvddc 900,950,1000,970". 
+                /// Supports latest AMD 4xx cards only in Windows.	Note: for NVIDIA cards this option is not supported.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_memory_voltage",
+                    ShortName = "-mvddc",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                }               
             }
         };
     }

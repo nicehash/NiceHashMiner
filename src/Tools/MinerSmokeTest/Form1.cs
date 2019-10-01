@@ -50,7 +50,6 @@ namespace MinerSmokeTest
 
         private async void FormShown(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
             try
             {
                 InitNhmlDevsPlugins();

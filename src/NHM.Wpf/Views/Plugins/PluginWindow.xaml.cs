@@ -17,6 +17,7 @@ namespace NHM.Wpf.Views.Plugins
             InitializeComponent();
 
             _vm = this.AssertViewModel<PluginVM>();
+            WindowUtils.InitWindow(this);
         }
 
         private void PluginEntry_OnDetailsClick(object sender, PluginEventArgs e)
@@ -27,6 +28,11 @@ namespace NHM.Wpf.Views.Plugins
         private void PluginDetail_OnBackClick(object sender, RoutedEventArgs e)
         {
             _vm.SetToList();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.SetForceSoftwareRendering(this);
         }
     }
 }

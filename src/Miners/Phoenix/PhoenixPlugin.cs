@@ -20,23 +20,34 @@ namespace Phoenix
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://bitcointalk.org/index.php?topic=2647654.0 current 4.5c
+            // https://bitcointalk.org/index.php?topic=2647654.0 current 4.6c
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "4.6c",
+                ExePath = new List<string> { "PhoenixMiner_4.6c_Windows", "PhoenixMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.11/PhoenixMiner_4.5c_Windows.zip",
-                    "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?zN9UxYZa" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12/PhoenixMiner_4.6c_Windows.7z",
+                    "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?2ZMgGaJS" // original
+                }
+            };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Phoenix Miner is fast Ethash miner that supports both AMD and Nvidia cards(including in mixed mining rigs).",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } }
                 }
             };
         }
 
-        public override string PluginUUID => "ac9c763f-c901-41ef-9df1-c80099c9f942";
+        public override string PluginUUID => "f5d4a470-e360-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(3, 0);
         public override string Name => "Phoenix";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
@@ -114,9 +125,7 @@ namespace Phoenix
             var containsAMD = devices.Any(dev => dev.DeviceType == DeviceType.AMD);
             var containsNVIDIA = devices.Any(dev => dev.DeviceType == DeviceType.NVIDIA);
 
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
 
             if (containsAMD)
             {
@@ -144,9 +153,7 @@ namespace Phoenix
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "PhoenixMiner.exe" });
         }
 

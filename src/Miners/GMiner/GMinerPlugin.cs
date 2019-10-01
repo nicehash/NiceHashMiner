@@ -1,3 +1,4 @@
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -5,10 +6,9 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NHM.Common;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.Interfaces;
 
 namespace GMinerPlugin
 {
@@ -20,23 +20,34 @@ namespace GMinerPlugin
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
-            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.62
+            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "1.67",
+                ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.62/gminer_1_62_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.67/gminer_1_67_windows64.zip", // original
+                }
+            };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "GMiner - High-performance miner for AMD/Nvidia GPUs.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.GrinCuckatoo31, AlgorithmType.CuckooCycle, AlgorithmType.GrinCuckarood29, AlgorithmType.Beam, AlgorithmType.BeamV2 } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CuckooCycle, AlgorithmType.Beam, AlgorithmType.BeamV2 } }
                 }
             };
         }
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 7);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "GMinerCuda9.0+";
 
-        public override string Author => "stanko@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
@@ -105,6 +116,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
+                new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
@@ -116,6 +128,7 @@ namespace GMinerPlugin
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
+                new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
@@ -140,10 +153,7 @@ namespace GMinerPlugin
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedDeviceIds.Count == 0) return;
-            // TODO will block
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices");
             var mappedDevs = DevicesListParser.ParseGMinerOutput(output, devices.ToList());
 
@@ -157,9 +167,7 @@ namespace GMinerPlugin
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe" });
         }
 
@@ -168,19 +176,9 @@ namespace GMinerPlugin
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 7)
+                if (benchmarkedPluginVersion.Major < 3 && ids.FirstOrDefault() == AlgorithmType.GrinCuckarood29)
                 {
-                    // improved performance for ZHash for nvidia cards
-                    if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.ZHash) return true;
-                }
-                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 6)
-                {
-                    // improved performance for BEAM2 for nvidia cards
-                    if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.BeamV2) return true;
-                }
-                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 3) {
-                    // improved performance for Equihash 144,5 and Equihash 192,7 on RTX cards
-                    if (device.Name.Contains("RTX") && ids.FirstOrDefault() == AlgorithmType.ZHash) return true;
+                    return true;
                 }
                 return false;
             }

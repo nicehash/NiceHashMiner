@@ -1,16 +1,13 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
+using NHM.Common;
 using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-using static NHM.Common.StratumServiceHelpers;
 using System.Collections.Generic;
 using System.Globalization;
-using NHM.Common;
-using System.IO;
 
 namespace CpuMinerOpt
 {
@@ -35,6 +32,8 @@ namespace CpuMinerOpt
                     return "lyra2rev3";
                 case AlgorithmType.X16R:
                     return "x16r";
+                case AlgorithmType.X16Rv2:
+                    return "x16rv2";
                 default:
                     return "";
             }
@@ -141,29 +140,6 @@ namespace CpuMinerOpt
             return await t;
         }
 
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
-            var binPath = "";
-            if (_miningPairs != null)
-            {
-#warning Implement in CPUDevice instruction set support checks. For now assume avx2
-                var intelCPU = _miningPairs.Where(pair => pair.Device.Name.ToLower().Contains("core") || pair.Device.Name.ToLower().Contains("intel"));
-                if (intelCPU.Count() > 0)
-                {
-                    binPath = Path.Combine(pluginRootBins, "cpuminer-avx2.exe");
-                }
-                else // it can only be AMD
-                {
-                    binPath = Path.Combine(pluginRootBins, "cpuminer-zen.exe");
-                }
-            }
-
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
-        }
-
         protected override string MiningCreateCommandLine()
         {
             return CreateCommandLine(_username);
@@ -174,7 +150,7 @@ namespace CpuMinerOpt
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo={algo} --url={url} --user={username} --api-bind={_apiPort} {_extraLaunchParameters}";

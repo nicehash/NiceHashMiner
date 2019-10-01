@@ -102,6 +102,29 @@ namespace WildRig
                     LongName = "--donate-level=",
                     DefaultValue = "2",
                 },
+            },
+            TemperatureOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// set temperature at which gpu will stop mining(default: 85)
+                /// </summary>
+                new MinerOption
+                {
+                    ID = "wildrig_tempLimit",
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    LongName = "--gpu-temp-limit=",
+                    DefaultValue = "85",
+                },
+                /// <summary>
+                /// set temperature at which gpu will resume mining(default: 60)
+                /// </summary>
+                new MinerOption
+                {
+                    ID = "wildrig_tempResume",
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    LongName = "--gpu-temp-resume=",
+                    DefaultValue = "60",
+                },
             }
         };
     }

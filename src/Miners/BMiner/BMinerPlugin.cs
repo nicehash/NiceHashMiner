@@ -21,20 +21,31 @@ namespace BMiner
             // https://www.bminer.me/releases/ current v 15.7.6
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "15.7.6",
+                ExePath = new List<string> { "bminer-lite-v15.7.6-f585663", "bminer.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12/bminer-lite-v15.7.6-f585663.zip",
                     "https://www.bminercontent.com/releases/bminer-lite-v15.7.6-f585663-amd64.zip" // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Bminer is a cryptocurrency miner that runs on modern AMD / NVIDIA GPUs.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.DaggerHashimoto, AlgorithmType.Beam, AlgorithmType.GrinCuckaroo29, AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29 } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.Beam } }
+                }
+            };
         }
 
         public override string PluginUUID => "e5fbd330-7235-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 3);
+        public override Version Version => new Version(3, 0);
         public override string Name => "BMiner";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -93,9 +104,7 @@ namespace BMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "bminer.exe" });
         }
 

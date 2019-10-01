@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MinerPluginToolkitV1;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -32,8 +33,22 @@ namespace NHMCore.Mining.Plugins
 
         public bool Supported => OnlineSupportedDeviceCount > 0;
 
-        // PluginPackageInfo region
-        public string PluginUUID
+        // for plugins that we provide we can know what versions are and are not supported
+        public bool CompatibleNHPluginVersion
+        {
+            get
+            {
+                var ver = OnlineInfo?.PluginVersion ?? null;
+                var isNHPlugin = "info@nicehash.com" == OnlineInfo?.PluginAuthor;
+                // current supported major versions start with 3, if not version 3 mark as incompatible
+                if (isNHPlugin && ver != null && ver.Major != 3) return false;
+                // here we assume it is compatible so allow install
+                return true;
+            }
+        }
+
+// PluginPackageInfo region
+public string PluginUUID
         {
             get
             {

@@ -21,18 +21,29 @@ namespace LolMinerBeam
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 current 0.8.8
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "0.8.8",
+                ExePath = new List<string> { "0.8.8", "lolMiner.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.8.8/lolMiner_v088_Win64.zip", // original source
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Miner for AMD and NVIDIA gpus.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 } }
+                }
+            };
         }
 
-        public override Version Version => new Version(2, 4);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "LolMinerBeam";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override string PluginUUID => "435f0820-7237-11e9-b20c-f9f12eb6d835";
 
@@ -113,9 +124,7 @@ namespace LolMinerBeam
         {
             if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--benchmark BEAM --longstats 60 --devices -1", new List<string> { "Start Benchmark..." });
             var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices.ToList());
 
@@ -129,9 +138,7 @@ namespace LolMinerBeam
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "lolMiner.exe" });
         }
 

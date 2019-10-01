@@ -57,7 +57,7 @@ namespace NHM.DeviceDetection.CPU
 
                 // plugin device
                 var bd = new BaseDevice(DeviceType.CPU, uuid, name, 0);
-                var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks);
+                var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks, CpuUtils.SupportedExtensions());
                 return cpu;
             });
         }

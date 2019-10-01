@@ -14,6 +14,7 @@ using NHM.MinersDownloader;
 using NHMCore.Utils;
 using System.Globalization;
 using System.Collections.Concurrent;
+using MinerPluginToolkitV1;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -27,19 +28,29 @@ namespace NHMCore.Mining.Plugins
             var integratedPlugins = new List<IntegratedPlugin>
             {
                 // testing 
-                #if INTEGRATE_BrokenMiner_PLUGIN
+#if INTEGRATE_BrokenMiner_PLUGIN
                 new BrokenPluginIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_ExamplePlugin_PLUGIN
+#endif
+#if INTEGRATE_ExamplePlugin_PLUGIN
                 new ExamplePluginIntegratedPlugin(),
-                #endif
+#endif
 
-                // open source
+// open source
+#if INTEGRATE_CCMinerMTP_PLUGIN
                 new CCMinerMTPIntegratedPlugin(),
+#endif
+#if INTEGRATE_CCMinerTpruvot_PLUGIN
                 new CCMinerTpruvotIntegratedPlugin(),
+#endif
+#if INTEGRATE_SGminerAvemore_PLUGIN
                 new SGminerAvemoreIntegratedPlugin(),
+#endif
+#if INTEGRATE_SGminerGM_PLUGIN
                 new SGminerGMIntegratedPlugin(),
+#endif
+#if INTEGRATE_XmrStak_PLUGIN
                 new XmrStakIntegratedPlugin(),
+#endif
 #if INTEGRATE_CpuMinerOpt_PLUGIN
                 new CPUMinerOptIntegratedPlugin(),
 #endif
@@ -51,16 +62,27 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_EWBF_PLUGIN
                 new EWBFIntegratedPlugin(),
 #endif
+#if INTEGRATE_GMiner_PLUGIN
                 new GMinerIntegratedPlugin(),
+#endif
+#if INTEGRATE_NBMiner_PLUGIN
                 new NBMinerIntegratedPlugin(),
+#endif
+#if INTEGRATE_Phoenix_PLUGIN
                 new PhoenixIntegratedPlugin(),
+#endif
+#if INTEGRATE_TeamRedMiner_PLUGIN
                 new TeamRedMinerIntegratedPlugin(),
+#endif
+#if INTEGRATE_TRex_PLUGIN
                 new TRexIntegratedPlugin(),
+#endif
 #if INTEGRATE_TTMiner_PLUGIN
                 new TTMinerIntegratedPlugin(),
 #endif
+#if INTEGRATE_ClaymoreDual_PLUGIN
                 new ClaymoreDual14IntegratedPlugin(),
-
+#endif
 #if INTEGRATE_NanoMiner_PLUGIN
                 new NanoMinerIntegratedPlugin(),
 #endif
@@ -93,7 +115,7 @@ namespace NHMCore.Mining.Plugins
                 EthlargementIntegratedPlugin.Instance,
 
                 // plugin dependencies
-                VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance
+                VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
             var filteredIntegratedPlugins = integratedPlugins.Where(p => SupportedPluginsFilter.IsSupported(p.PluginUUID)).ToList();
             foreach (var integratedPlugin in filteredIntegratedPlugins)
@@ -143,6 +165,61 @@ namespace NHMCore.Mining.Plugins
                     .ThenBy(info => info.PluginName);
             }
         }
+
+#region Update miner plugin dlls
+        public static async Task CheckAndSwapInstalledExternalPlugins()
+        {
+            try
+            {
+                if (ConfigManager.IsVersionChanged)
+                {
+                    string minerPluginsPath = Paths.MinerPluginsPath();
+                    var zipPackages = Directory.GetFiles(Paths.RootPath("plugins_packages"), "*.zip", SearchOption.TopDirectoryOnly);
+                    var installedExternalPackages = Directory.GetDirectories(minerPluginsPath);
+                    foreach (var installedPath in installedExternalPackages)
+                    {
+                        try
+                        {
+                            var uuid = installedPath.Replace(minerPluginsPath, "").Trim('\\');
+                            if (!System.Guid.TryParse(uuid, out var _)) continue;
+                            var zipPackage = zipPackages.FirstOrDefault(package => package.Contains(uuid));
+                            if (zipPackage == null) continue;
+                            // uzip to temp dir
+                            var tmpPluginDir = installedPath + "_tmp";
+                            Directory.CreateDirectory(tmpPluginDir);
+                            await ArchiveHelpers.ExtractFileAsync(zipPackage, tmpPluginDir, null, CancellationToken.None);
+                            // now copy move over files 
+                            var tmpPackageFiles = Directory.GetFiles(tmpPluginDir, "*", SearchOption.AllDirectories);
+                            var installedPackagePaths = Directory.GetFiles(installedPath, "*", SearchOption.AllDirectories);
+                            foreach (var path in installedPackagePaths)
+                            {
+                                // skip if not file and skip all bins
+                                if (!File.Exists(path) || path.Contains("bins")) continue;
+                                var fileName = Path.GetFileName(path);
+                                var moveFile = tmpPackageFiles.FirstOrDefault(file => Path.GetFileName(file) == fileName);
+                                if (moveFile == null) continue;
+                                try
+                                {
+                                    File.Copy(moveFile, path, true);
+                                }
+                                catch
+                                {}
+                            }
+                            Directory.Delete(tmpPluginDir, true);
+                        }
+                        catch (Exception)
+                        {}
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+
+
+#endregion Update miner plugin dlls
 
         public static void LoadMinerPlugins()
         {

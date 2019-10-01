@@ -254,6 +254,7 @@ namespace NHMCore.Mining
                 var setAlgo = AlgorithmSettings.FirstOrDefault(a => a.AlgorithmStringID == copyFromAlgo.AlgorithmStringID);
                 if (setAlgo != null)
                 {
+                    setAlgo.Enabled = copyFromAlgo.Enabled;
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
                     setAlgo.PowerUsage = copyFromAlgo.PowerUsage;

@@ -22,21 +22,32 @@ namespace ClaymoreDual14
             // https://bitcointalk.org/index.php?topic=1433925.0 current v15.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v15.0",
+                ExePath = new List<string> { "Claymore's Dual Ethereum AMD+NVIDIA GPU Miner v15.0", "EthDcrMiner64.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/Claymore.s.Dual.Ethereum.AMD+NVIDIA.GPU.Miner.v15.0.zip",
                     "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?64RGzCIb" // original
                 }
             };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "Miner for AMD and NVIDIA cards, supporting Dual mining.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto, AlgorithmType.Decred, AlgorithmType.Blake2s, AlgorithmType.Keccak } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto, AlgorithmType.Decred, AlgorithmType.Blake2s, AlgorithmType.Keccak } }
+                }
+            };
         }
 
-        public override string PluginUUID => "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76";
+        public override string PluginUUID => "70984aa0-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 1);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "ClaymoreDual";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
@@ -115,10 +126,9 @@ namespace ClaymoreDual14
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedIDs.Count == 0) return;
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var minerCwd = miner.GetBinAndCwdPaths().Item2;
+            var binAndCwdPaths = GetBinAndCwdPaths();
+            var minerBinPath = binAndCwdPaths.Item1;
+            var minerCwd = binAndCwdPaths.Item2;
             // no device list so 'start mining'
             var logFile = "noappend_cross_ref_devs.txt";
             var logFilePath = Path.Combine(minerCwd, logFile);
@@ -136,9 +146,7 @@ namespace ClaymoreDual14
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> {
                 "cudart64_80.dll",
                 "EthDcrMiner64.exe",

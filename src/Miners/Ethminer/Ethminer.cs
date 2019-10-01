@@ -1,17 +1,15 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using NHM.Common.Enums;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using static NHM.Common.StratumServiceHelpers;
-using System.Linq;
-using System.IO;
-using NHM.Common;
-using System.Collections.Generic;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ClaymoreCommon;
 using MinerPluginToolkitV1.Interfaces;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using NHM.Common.Enums;
+using NHM.Common;
 
 namespace Ethminer
 {
@@ -111,13 +109,6 @@ namespace Ethminer
             return await t;
         }
 
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins", "bin");
-            var binPath = Path.Combine(pluginRootBins, "ethminer.exe");
-            return Tuple.Create(binPath, pluginRootBins);
-        }
-
         protected override void Init()
         {
             var cudaDevs = _miningPairs.Where(mp => mp.Device.DeviceType == DeviceType.NVIDIA).Select(mp => mp.Device.ID);
@@ -143,7 +134,7 @@ namespace Ethminer
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
             var poolWithUsername = $"stratum2+tcp://{_username}@{urlWithPort}";
             // TODO add readonly API port
             var commandLine = $"--pool {poolWithUsername} --api-bind 127.0.0.1:{_apiPort} {_cudaDevices} {_openCLDevices} {_extraLaunchParameters}";

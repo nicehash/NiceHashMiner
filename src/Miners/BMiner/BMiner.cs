@@ -138,13 +138,6 @@ namespace BMiner
             return await t;
         }
 
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins", "bminer-lite-v15.7.6-f585663");
-            var binPath = Path.Combine(pluginRootBins, "bminer.exe");
-            return Tuple.Create(binPath, pluginRootBins);
-        }
-
         protected override void Init()
         {
             var deviceIDs = _miningPairs.Select(p =>

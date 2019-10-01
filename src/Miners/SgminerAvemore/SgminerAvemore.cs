@@ -1,14 +1,13 @@
-﻿using NHM.Common.Enums;
+﻿using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.SgminerCommon;
 using System;
 using System.Linq;
-using System.IO;
-using NHM.Common;
 using System.Threading.Tasks;
-using MinerPlugin;
 using System.Threading;
-using MinerPluginToolkitV1;
 using System.Collections.Generic;
+using NHM.Common;
+using NHM.Common.Enums;
 
 namespace SgminerAvemore
 {
@@ -84,17 +83,6 @@ namespace SgminerAvemore
             }
 
             return await base.StartBenchmark(stop, benchmarkType);
-        }
-
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            // avemore is differently packed
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "avermore-windows");
-            var binPath = Path.Combine(pluginRootBins, "sgminer.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
     }
 }

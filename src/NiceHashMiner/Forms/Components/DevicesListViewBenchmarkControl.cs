@@ -107,8 +107,6 @@ namespace NiceHashMiner.Forms.Components
                             if (sameDevTypes.Count > 0)
                             {
                                 var copyBenchItem = new ToolStripMenuItem();
-                                var copyTuningItem = new ToolStripMenuItem();
-                                //copyBenchItem.DropDownItems
                                 foreach (var cDev in sameDevTypes)
                                 {
                                     if (cDev.Enabled)
@@ -121,20 +119,10 @@ namespace NiceHashMiner.Forms.Components
                                         copyBenchDropDownItem.Click += ToolStripMenuItemCopySettings_Click;
                                         copyBenchDropDownItem.Tag = cDev.Uuid;
                                         copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
-                                        
-                                        var copyTuningDropDownItem = new ToolStripMenuItem {
-                                            Text = cDev.Name
-                                            //Checked = cDev.UUID == CDevice.TuningCopyUUID
-                                        };
-                                        copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;
-                                        copyTuningDropDownItem.Tag = cDev.Uuid;
-                                        copyTuningItem.DropDownItems.Add(copyTuningDropDownItem);
                                     }
                                 }
                                 copyBenchItem.Text = Translations.Tr("Copy Settings From (Benchmarks, algorithm parameters, ...)");
-                                copyTuningItem.Text = Translations.Tr("Copy tuning settings only");
                                 contextMenuStrip1.Items.Add(copyBenchItem);
-                                contextMenuStrip1.Items.Add(copyTuningItem);
                             }
                         }
                     }
@@ -143,9 +131,11 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private void ToolStripMenuItem_Click(object sender, bool justTuning) {
+        private void ToolStripMenuItemCopySettings_Click(object sender, EventArgs e) 
+        {
             if (sender is ToolStripMenuItem item && item.Tag is string uuid
-                && listViewDevices.FocusedItem.Tag is ComputeDevice CDevice) {
+                && listViewDevices.FocusedItem.Tag is ComputeDevice CDevice)
+            {
                 var copyBenchCDev = AvailableDevices.GetDeviceWithUuid(uuid);
 
                 var result = MessageBox.Show(
@@ -154,23 +144,13 @@ namespace NiceHashMiner.Forms.Components
                         copyBenchCDev.GetFullName(), CDevice.GetFullName()),
                     Translations.Tr("Confirm Settings Copy"),
                     MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes) 
+                if (result == DialogResult.Yes)
                 {
                     CDevice.BenchmarkCopyUuid = uuid;
                     CDevice.CopyBenchmarkSettingsFrom(copyBenchCDev);
                     _algorithmsListView?.RepaintStatus(CDevice.Enabled, CDevice.Uuid);
                 }
             }
-        }
-
-        private void ToolStripMenuItemCopySettings_Click(object sender, EventArgs e) 
-        {
-            ToolStripMenuItem_Click(sender, false);
-        }
-
-        private void ToolStripMenuItemCopyTuning_Click(object sender, EventArgs e) 
-        {
-            ToolStripMenuItem_Click(sender, true);
         }
     }
 }

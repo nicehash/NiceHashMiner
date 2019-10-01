@@ -10,7 +10,7 @@ namespace InstallerHelper
 {
     class Program
     {
-        static Tuple<string, string> GenerateVariableTemplate(string path)
+        static Tuple<string, string, string> GenerateVariableTemplate(string path)
         {
             var assembly = Assembly.LoadFrom(path);
             var assemblyData = assembly.CustomAttributes;
@@ -27,12 +27,17 @@ namespace InstallerHelper
             string TRADEMARK = "NICEHASH ®";
             
             string APP_ID = "com.nicehash.nhm";
+            #warning "APP_GUID #2 THE APP_GUID MUST BE EQUAL TO THE INSTALLER HELPER ONE. REFACTOR THIS PART"
             string APP_GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
 
-            if(BASE_NAME == "NiceHashMinerLegacy")
+            string BuildTag = "";
+            if(BASE_NAME.Contains("TESTNETDEV"))
             {
-                APP_ID = "com.nicehash.nhml";
-                APP_GUID = "6722ab0a-4f1d-4703-8169-dede20aad630";
+                BuildTag = "_TESTNETDEV";
+            }
+            else if(BASE_NAME.Contains("TESTNET"))
+            {
+                BuildTag = "_TESTNET";
             }
 
             string NSIS_GENERATED_FILE_TEMPLATE =
@@ -68,7 +73,7 @@ namespace InstallerHelper
             ";--------------------------------\n" +
             "!macroend\n";
 
-            return new Tuple<string, string>(NSIS_GENERATED_FILE_TEMPLATE, VERSION);
+            return Tuple.Create(NSIS_GENERATED_FILE_TEMPLATE, VERSION, BuildTag);
         }
 
         static void Main(string[] args)
@@ -91,9 +96,9 @@ namespace InstallerHelper
                     Directory.CreateDirectory(pluginPackagesFolder);
                 }
 
-                var (generatedTemplate, version) = GenerateVariableTemplate(args[0]);
+                var (generatedTemplate, version, BuildTag) = GenerateVariableTemplate(args[0]);
                 File.WriteAllText(Path.Combine(pluginPackagesFolder, "packageDefsGenerated.nsh"), generatedTemplate, new UTF8Encoding(true));
-                File.WriteAllText(Path.Combine(pluginPackagesFolder, "version.txt"), version);
+                File.WriteAllText(Path.Combine(pluginPackagesFolder, "version.txt"), version+BuildTag);
             }
         }
     }

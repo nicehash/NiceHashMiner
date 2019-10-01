@@ -86,6 +86,9 @@ namespace NHMCore.Benchmarking
             _statusCheckAlgos = new Dictionary<ComputeDevice, AlgorithmContainer>();
         }
 
+        public static bool DisableLastBenchmarkingFailed { get; set; } = false;
+
+
 #region Public get helpers
 
         public static IEnumerable<Tuple<ComputeDevice, AlgorithmContainer>> GetStatusCheckAlgos()

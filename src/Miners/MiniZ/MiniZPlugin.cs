@@ -1,41 +1,50 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MiniZ
 {
     public class MiniZPlugin : PluginBase, IDevicesCrossReference
     {
-        // TODO CROSS REFF ko developerji fixanjo svoj --cuda-info output
         public MiniZPlugin()
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version current v1.5q2
+            // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v1.5q6",
+                ExePath = new List<string> { "miniZ.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/miniZ.zip",
-                    "https://miniz.ch/?smd_process_download=1&download_id=2874", // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/miniZ_v1.5q6_cuda10_win-x64.zip",
+                    "https://miniz.ch/?smd_process_download=1&download_id=3083", // original
+                }
+            };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "miniZ is a fast and friendly Equihash miner.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.Beam, AlgorithmType.BeamV2 } }
                 }
             };
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(1,3);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "MiniZ";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
@@ -83,9 +92,7 @@ namespace MiniZ
         {
             if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-ci");
             var mappedDevs = DevicesListParser.ParseMiniZOutput(output, devices.ToList());
 
@@ -99,15 +106,25 @@ namespace MiniZ
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miniZ.exe" });
         }
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //no new version available
+            try
+            {
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major < 3 && ids.FirstOrDefault() == AlgorithmType.BeamV2)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             return false;
         }
     }

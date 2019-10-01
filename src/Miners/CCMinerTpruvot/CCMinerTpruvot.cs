@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using NHM.Common;
 using NHM.Common.Enums;
 using MinerPlugin;
 using MinerPluginToolkitV1.CCMinerCommon;
@@ -42,13 +40,6 @@ namespace CCMinerTpruvot
                 }
             }
             return ret;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins");
-            var binPath = Path.Combine(pluginRootBins, "ccminer-x64.exe");
-            return Tuple.Create(binPath, pluginRootBins);
         }
     }
 }

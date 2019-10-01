@@ -6,7 +6,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Net;
 using NHM.Common;
-using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
@@ -18,13 +17,21 @@ namespace NiceHashMiner
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
+#if TESTNET
+        private static readonly string BuildTag = "TESTNET";
+#elif TESTNETDEV
+        private static readonly string BuildTag = "TESTNETDEV";
+#else
+        private static readonly string BuildTag = "PRODUCTION";
+#endif
+
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    [STAThread]
         static void Main(string[] argv)
         {
-            NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS();
+            NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS(BuildTag);
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Application.ExecutablePath);
@@ -131,9 +138,13 @@ namespace NiceHashMiner
             if (!canRun) return;
 
             // 3rdparty miners TOS check if setting set
-            if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
+            if (ConfigManager.GeneralConfig.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
             {
-                Application.Run(new Form_3rdParty_TOS());
+                using (var secondTOS = new Form_3rdParty_TOS())
+                {
+                    Application.Run(secondTOS);
+                    if (!secondTOS.Accepted) return;
+                }
                 ConfigManager.GeneralConfigFileCommit();
             }
 

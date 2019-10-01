@@ -251,6 +251,8 @@ namespace NHMCore.Benchmarking
                 }
                 else
                 {
+                    // mark it as failed
+                    algo.LastBenchmarkingFailed = true;
                     // add new failed list
                     _benchmarkFailedAlgo.Add(algo.AlgorithmName);
                     algo.SetError(result.ErrorMessage);

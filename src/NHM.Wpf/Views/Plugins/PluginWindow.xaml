@@ -10,7 +10,7 @@
         Title="{Binding Title}" 
         Icon="../../Resources/logo.ico" 
         Height="450" Width="800"
-        MinHeight="250" MinWidth="350">
+        Loaded="Window_Loaded">
     <Window.DataContext>
         <plugins:PluginVM />
     </Window.DataContext>

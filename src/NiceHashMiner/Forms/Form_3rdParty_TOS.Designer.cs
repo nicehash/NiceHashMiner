@@ -55,7 +55,7 @@
             this.label_Tos.Location = new System.Drawing.Point(12, 9);
             this.label_Tos.MaximumSize = new System.Drawing.Size(350, 0);
             this.label_Tos.Name = "label_Tos";
-            this.label_Tos.Size = new System.Drawing.Size(350, 130);
+            this.label_Tos.Size = new System.Drawing.Size(349, 104);
             this.label_Tos.TabIndex = 2;
             this.label_Tos.Text = resources.GetString("label_Tos.Text");
             this.label_Tos.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

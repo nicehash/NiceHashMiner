@@ -41,7 +41,7 @@ namespace NHMCore.Utils
         public static bool IsNHMInstalled()
         {
             var isInstalled = false;
-            #warning if the app GUID changes so should this value
+            #warning "APP_GUID #1 THE APP_GUID MUST BE EQUAL TO THE INSTALLER HELPER ONE. REFACTOR THIS PART"
             if (Registry.CurrentUser.OpenSubKey(@"Software\8abad8e2-b957-48ed-92ba-4339c2a40e78", false) != null)
             {
                 isInstalled = true;

@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
-using MinerPluginToolkitV1.Configs;
 
 namespace NBMiner
 {
@@ -102,15 +101,6 @@ namespace NBMiner
             return await t;
         }
 
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "NBMiner_Win");
-            var binPath = Path.Combine(pluginRootBins, "nbminer.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
-        }
-
         protected override string MiningCreateCommandLine()
         {
             return CreateCommandLine(_username);
@@ -120,7 +110,7 @@ namespace NBMiner
         {
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} {_devices} -RUN {_extraLaunchParameters}";
+            return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} {_devices} --no-watchdog {_extraLaunchParameters}";
         }
         
         public override async Task<ApiData> GetMinerStatsDataAsync()

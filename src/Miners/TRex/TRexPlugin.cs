@@ -1,6 +1,5 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -18,23 +17,33 @@ namespace TRex
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
-            // https://github.com/trexminer/T-Rex/releases current 0.13.2
+            // https://github.com/trexminer/T-Rex/releases 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "0.14.4",
+                ExePath = new List<string> { "t-rex.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/trexminer/T-Rex/releases/download/0.13.2/t-rex-0.13.2-win-cuda10.0.zip", // original
+                    "https://github.com/trexminer/T-Rex/releases/download/0.14.4/t-rex-0.14.4-win-cuda10.0.zip", // original
+                }
+            };
+            PluginMetaInfo = new PluginMetaInfo
+            {
+                PluginDescription = "T-Rex is a versatile cryptocurrency mining software for NVIDIA devices.",
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
+                {
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2Z, AlgorithmType.X16R, AlgorithmType.X16Rv2 } }
                 }
             };
         }
 
         public override string PluginUUID => "d47d9b00-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 1);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "TRex";
 
-        public override string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "info@nicehash.com";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -57,6 +66,7 @@ namespace TRex
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
                 new Algorithm(PluginUUID, AlgorithmType.X16R),
                 new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.X16Rv2),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -69,9 +79,7 @@ namespace TRex
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "t-rex.exe" });
         }
 

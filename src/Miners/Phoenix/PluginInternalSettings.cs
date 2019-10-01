@@ -193,6 +193,18 @@ namespace Phoenix
                     DefaultValue = "0",
                 },
                 /// <summary>
+                /// Lower the GPU usage to n% of maximum (default: 100). If you already use -mi 0 (or other low value) use -li instead.
+                /// You may specify this option per-GPU.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "phoenix_gpow",
+                    ShortName = "-gpow",
+                    DefaultValue = "100",
+                    Delimiter = ","
+                },
+                /// <summary>
                 /// Use alternative way to initialize AMD cards to prevent startup crashes
                 /// </summary>
                 new MinerOption
@@ -246,18 +258,6 @@ namespace Phoenix
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "phoenix_logsmaxsize",
                     ShortName = "-logsmaxsize",
-                },
-                /// <summary>
-                /// Lower the GPU usage to n% of maximum (default: 100). If you already use -mi 0 (or other low value) use -li instead.
-                /// You may specify this option per-GPU.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "phoenix_gpow",
-                    ShortName = "-gpow",
-                    DefaultValue = "100",
-                    Delimiter = ","
                 },
                 /// <summary>
                 /// Another way to lower the GPU usage. Bigger n values mean less GPU utilization; the default is 0.
@@ -414,6 +414,24 @@ namespace Phoenix
                     Delimiter = ","
                 },
                 /// <summary>
+                /// Memory timing level (0 - VBIOS/default)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_mt",
+                    ShortName = "-mt"
+                },
+                /// <summary>
+                /// Do not reset memory timing level to 0 when closing
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_leavemt",
+                    ShortName = "-leavemt"
+                },
+                /// <summary>
                 /// Pause a GPU when temp is >= n deg C (0 for default; i.e. off)
                 /// You may specify this option per-GPU. Only AMD cards.
                 /// </summary>
@@ -436,7 +454,19 @@ namespace Phoenix
                     ShortName = "-tstart",
                     DefaultValue = "0",
                     Delimiter = ","
-                }
+                },
+                /// <summary>
+                /// <n> Level of hardware monitoring: 0 - temperature and fan speed only; 1 - temperature, fan speed, and power;
+                /// 2 - full (include core/memory clocks, voltages, P-states). The default is 1.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "phoenix_hstats",
+                    ShortName = "-hstats",
+                    DefaultValue = "2",
+                    Delimiter = ","
+                }                
             }
         };
 

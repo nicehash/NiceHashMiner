@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using NHM.Wpf.Properties;
+using NHM.Wpf.Views.Common;
 
 namespace NHM.Wpf.Views
 {
@@ -11,8 +12,6 @@ namespace NHM.Wpf.Views
     /// </summary>
     public partial class ChooseLanguageWindow : Window, INotifyPropertyChanged
     {
-        private bool _canClose = false;
-
         private int _selectedLangIndex = 0;
         public int SelectedLangIndex
         {
@@ -38,6 +37,7 @@ namespace NHM.Wpf.Views
         public ChooseLanguageWindow()
         {
             InitializeComponent();
+            WindowUtils.InitWindow(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -50,13 +50,17 @@ namespace NHM.Wpf.Views
 
         private void OkButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _canClose = true;
             Close();
         }
 
-        private void ChooseLanguageWindow_OnClosing(object sender, CancelEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!_canClose) e.Cancel = true;
+            WindowUtils.SetForceSoftwareRendering(this);
+        }
+
+        private void Window_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.Window_OnClosing(this);
         }
     }
 }

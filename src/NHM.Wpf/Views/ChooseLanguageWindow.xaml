@@ -5,15 +5,45 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Choose Language" 
-        Height="150" Width="400" WindowStyle="ToolWindow"
+        Height="217"
+        Width="600"
+        MinHeight="217"
+        MinWidth="400"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="NoResize"
         Icon="../Resources/logo.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Closing="ChooseLanguageWindow_OnClosing">
-    <Grid HorizontalAlignment="Center">
-        <StackPanel>
-            <TextBlock Margin="5">Choose a default language for NiceHash Miner:</TextBlock>
-            <ComboBox Margin="5" Width="200" ItemsSource="{Binding LangNames}" SelectedIndex="{Binding SelectedLangIndex}" />
-            <Button Margin="5" Width="80" Click="OkButton_OnClick">OK</Button>
-        </StackPanel>
+        Loaded="Window_Loaded"
+        Closing="Window_OnClosing">
+    <Grid Width="Auto" Height="Auto">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="88" />
+        </Grid.RowDefinitions>
+        <Separator Grid.Row="0" Margin="16,0,16,0" Background="#eeeeee"></Separator>
+        <TextBlock Grid.Row="1" Margin="24,24,0,8" FontFamily="{StaticResource UbuntuFontFamily}" Foreground="#959595" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal">Choose Language</TextBlock>
+        <ComboBox Grid.Row="2" Margin="24,0,24,0" Height="34" Padding="43,9,0,9" FontFamily="{StaticResource UbuntuFontFamily}" ItemsSource="{Binding LangNames}" SelectedIndex="{Binding SelectedLangIndex}" BorderBrush="White" Background="Yellow" FontSize="14">
+            <!--<ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Background" Value="Yellow"/>
+                    <Setter Property="BorderBrush" Value="Yellow"/>
+                </Style>
+            </ComboBox.ItemContainerStyle>-->
+        </ComboBox>
+        <DockPanel Grid.Row="3" Margin="0,0,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button Width="168" Height="40" Click="OkButton_OnClick" Foreground="White" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                        <GradientStop Color="#FFFBA342" Offset="0"/>
+                        <GradientStop Color="#FFFBC241" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+                <Button.BitmapEffect>
+                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                </Button.BitmapEffect> NEXT
+            </Button>
+        </DockPanel>
     </Grid>
 </Window>

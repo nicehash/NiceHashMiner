@@ -14,7 +14,7 @@ using NHM.Common.Enums;
 namespace MinerPluginToolkitV1
 {
     // TODO add documentation
-    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource
+    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo
     {
         protected abstract MinerBase CreateMinerBase();
 
@@ -43,6 +43,7 @@ namespace MinerPluginToolkitV1
         public virtual IMiner CreateMiner()
         {
             var miner = CreateMinerBase();
+            miner.BinAndCwdPathsGettter = this; // set the paths interface
             // set internal settings
             if (MinerOptionsPackage != null) miner.MinerOptionsPackage = MinerOptionsPackage;
             if (MinerSystemEnvironmentVariables != null) miner.MinerSystemEnvironmentVariables = MinerSystemEnvironmentVariables;
@@ -55,6 +56,8 @@ namespace MinerPluginToolkitV1
 
         public abstract Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
 
+
+        protected PluginMetaInfo PluginMetaInfo { get; set; } = null;
 
         #region IInitInternals
         public virtual void InitInternals()
@@ -117,5 +120,39 @@ namespace MinerPluginToolkitV1
             return MinersBinsUrlsSettings.Urls;
         }
         #endregion IMinerBinsSource
+
+        #region IBinAndCwdPathsGettter
+        public virtual Tuple<string, string> GetBinAndCwdPaths()
+        {
+            if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.ExePath == null || MinersBinsUrlsSettings.ExePath.Count == 0)
+            {
+                throw new Exception("Unable to return cwd and exe paths MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Path == null || MinersBinsUrlsSettings.Path.Count == 0");
+            }
+            var paths = new List<string>{ Paths.MinerPluginsPath(), PluginUUID, "bins" };
+            paths.AddRange(MinersBinsUrlsSettings.ExePath);
+            var binCwd = Path.Combine(paths.GetRange(0, paths.Count - 1).ToArray());
+            var binPath = Path.Combine(paths.ToArray());
+            return Tuple.Create(binPath, binCwd);
+        }
+        #endregion IBinAndCwdPathsGettter
+
+        #region IGetMinerBinaryVersion
+        public string GetMinerBinaryVersion()
+        {
+            if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.BinVersion == null)
+            {
+                // return this or throw???
+                return "N/A";
+            }
+            return MinersBinsUrlsSettings.BinVersion;
+        }
+        #endregion IGetMinerBinaryVersion
+
+        #region IGetPluginMetaInfo
+        public PluginMetaInfo GetPluginMetaInfo()
+        {
+            return PluginMetaInfo;
+        }
+        #endregion IGetPluginMetaInfo
     }
 }

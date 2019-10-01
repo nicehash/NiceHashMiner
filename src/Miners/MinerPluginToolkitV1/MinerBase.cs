@@ -143,9 +143,15 @@ namespace MinerPluginToolkitV1
             _password = password;
         }
 
+        // Parent plugin has this info
+        public IBinAndCwdPathsGettter BinAndCwdPathsGettter { get; set; } = null;
+        public Tuple<string, string> GetBinAndCwdPaths()
+        {
+            return BinAndCwdPathsGettter.GetBinAndCwdPaths();
+        }
+
         abstract public Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
-        abstract public Tuple<string, string> GetBinAndCwdPaths();
         abstract protected string MiningCreateCommandLine();
 
         protected virtual Dictionary<string, string> GetEnvironmentVariables()

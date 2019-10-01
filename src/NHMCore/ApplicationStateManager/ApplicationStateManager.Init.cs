@@ -134,6 +134,9 @@ namespace NHMCore
                 ConfigManager.InitDeviceSettings();
                 #endregion Device Detection
 
+                // TODO ADD STEP AND MESSAGE
+                await MinerPluginsManager.CheckAndSwapInstalledExternalPlugins();
+
                 // STEP
                 // load plugins
                 loader.PrimaryProgress?.Report((Tr("Loading miner plugins..."), nextProgPerc()));
@@ -211,7 +214,7 @@ namespace NHMCore
                 // STEP
                 // VC_REDIST check
                 loader.PrimaryProgress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
-                VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
+                VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
 
                 // STEP
                 if (FirewallRules.RunFirewallRulesOnStartup)

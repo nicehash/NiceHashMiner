@@ -5,10 +5,8 @@ using NHM.Common;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -113,15 +111,6 @@ namespace XMRig
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "xmrig-3.1.0");
-            var binPath = Path.Combine(pluginRootBins, "xmrig.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()

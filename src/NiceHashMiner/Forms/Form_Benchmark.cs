@@ -58,6 +58,8 @@ namespace NiceHashMiner.Forms
             BenchmarkManager.OnStepUp += StepUpBenchmarkStepProgress;
             BenchmarkManager.OnBenchmarkEnd += EndBenchmark;
 
+            BenchmarkManager.DisableLastBenchmarkingFailed = true;
+
             devicesListViewEnableControl1.Enabled = true;
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
 
@@ -142,22 +144,6 @@ namespace NiceHashMiner.Forms
         }
 
 #endregion
-
-        private void CopyBenchmarks()
-        {
-            Logger.Debug("CopyBenchmarks", "Checking for benchmarks to copy");
-            foreach (var cDev in AvailableDevices.Devices)
-                // check if copy
-                if (!cDev.Enabled && cDev.BenchmarkCopyUuid != null)
-                {
-                    var copyCdevSettings = AvailableDevices.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
-                    if (copyCdevSettings != null)
-                    {
-                        Logger.Info("CopyBenchmarks", $"Copy from {cDev.Uuid} to {cDev.BenchmarkCopyUuid}");
-                        cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
-                    }
-                }
-        }
 
         private void BenchmarkingTimer_Tick(object sender, EventArgs e)
         {
@@ -328,6 +314,7 @@ namespace NiceHashMiner.Forms
 
         private void FormBenchmark_New_FormClosing(object sender, FormClosingEventArgs e)
         {
+            BenchmarkManager.DisableLastBenchmarkingFailed = false;
             BenchmarkManager.OnAlgoStatusUpdate -= SetCurrentStatus;
             BenchmarkManager.OnStepUp -= StepUpBenchmarkStepProgress;
             BenchmarkManager.OnBenchmarkEnd -= EndBenchmark;

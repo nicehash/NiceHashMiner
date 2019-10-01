@@ -1,7 +1,6 @@
 ﻿using MinerPlugin;
 using NHM.Common;
 using NHM.Common.Enums;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,7 +11,6 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
     public abstract class ClaymoreBase : MinerBase
     {
-        public abstract override Tuple<string, string> GetBinAndCwdPaths();
         public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
 

@@ -19,11 +19,17 @@ namespace NHM.Wpf.Views
             InitializeComponent();
 
             StartupLoader = this.AssertViewModel<StartupLoadingVM>();
+            //WindowUtils.InitWindow(this);
         }
 
         private void StartupLoadingWindow_OnClosing(object sender, CancelEventArgs e)
         {
             if (!CanClose) e.Cancel = true;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.SetForceSoftwareRendering(this);
         }
     }
 }

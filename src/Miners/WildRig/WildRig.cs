@@ -5,7 +5,6 @@ using NHM.Common;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -162,15 +161,6 @@ namespace WildRig
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             return $"-a {AlgoName} -o {url} -u {username} --api-port={_apiPort} -d {_devices} --multiple-instance {_extraLaunchParameters}";
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
-            var binPath = Path.Combine(pluginRootBins, "wildrig.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
     }
 }

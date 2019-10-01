@@ -1,6 +1,5 @@
 ﻿using log4net.Core;
 using NHM.Common;
-using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Stats;
@@ -23,10 +22,18 @@ namespace NHM.Wpf
     /// </summary>
     public partial class App : Application
     {
+#if TESTNET
+        private static readonly string BuildTag = "TESTNET";
+#elif TESTNETDEV
+        private static readonly string BuildTag = "TESTNETDEV";
+#else
+        private static readonly string BuildTag = "PRODUCTION";
+#endif
         private const string Tag = "NICEHASH";
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
+            NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS(BuildTag);
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -92,19 +99,13 @@ namespace NHM.Wpf
             ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             Logger.Info(Tag, $"Starting up {ApplicationStateManager.Title}");
-
             if (ConfigManager.GeneralConfig.agreedWithTOS != ApplicationStateManager.CurrentTosVer)
             {
                 Logger.Info(Tag, $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}");
 
-                var eula = new EulaWindow
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen
-                };
-
+                var eula = new EulaWindow{};
                 var accepted = eula.ShowDialog();
-
-                if (accepted ?? false)
+                if (accepted.HasValue && eula.AcceptedTos)
                 {
                     ConfigManager.GeneralConfig.agreedWithTOS = ApplicationStateManager.CurrentTosVer;
                 }
@@ -112,7 +113,23 @@ namespace NHM.Wpf
                 {
                     Logger.Error(Tag, "TOS differs AFTER TOS confirmation window");
                     Shutdown();
+                    return;
                 }
+            }
+
+            // Check 3rd party miners TOS
+            if (ConfigManager.GeneralConfig.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
+            {
+                var thirdPty = new _3rdPartyTosWindow{};
+                thirdPty.ShowDialog();
+                if (!thirdPty.Accepted)
+                {
+                    Logger.Error(Tag, "3rd party TOS not accepted");
+                    Shutdown();
+                    return;
+                }
+                ConfigManager.GeneralConfig.Use3rdPartyMinersTOS = ApplicationStateManager.CurrentTosVer;
+                ConfigManager.GeneralConfigFileCommit();
             }
 
             // Chose lang
@@ -123,12 +140,10 @@ namespace NHM.Wpf
                 {
                     var lang = new ChooseLanguageWindow
                     {
-                        LangNames = Translations.GetAvailableLanguagesNames(),
-                        WindowStartupLocation = WindowStartupLocation.CenterScreen
+                        LangNames = Translations.GetAvailableLanguagesNames()
                     };
 
                     lang.ShowDialog();
-
                     langToSet = Translations.GetLanguageCodeFromIndex(lang.SelectedLangIndex);
                 }
 
@@ -142,30 +157,7 @@ namespace NHM.Wpf
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();
             if (!canRun) Shutdown();
 
-            // Check 3rd party miners
-            if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
-            {
-                var thirdPty = new _3rdPartyTosWindow
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen
-                };
-
-                var result = thirdPty.ShowDialog();
-
-                // Note result is a Nullable<bool>, hence the verbose if-else
-                if (result == true)
-                {
-                    ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
-                }
-                else if (result == false)
-                {
-                    ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
-                }
-
-                ConfigManager.GeneralConfigFileCommit();
-            }
-
-            var main = new MainWindow();
+            var main = new MainWindow() {};
             main.Show();
 
             // Set shutdown mode back to default

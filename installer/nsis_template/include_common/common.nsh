@@ -69,6 +69,7 @@ Name "${PRODUCT_NAME}"
   RMDir /R "$INSTDIR\OpenCL"
   RMDir /R "$INSTDIR\logs"
   RMDir /R "$INSTDIR\common"
+  RMDir /R "$INSTDIR\plugins_packages"
 
   DeleteRegKey HKCU "SOFTWARE\Nicehash"
 !macroend

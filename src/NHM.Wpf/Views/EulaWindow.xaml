@@ -3,28 +3,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
         Title="NiceHash Miner Terms Of Use" 
-        Height="450" Width="800" 
+        Height="475" Width="600" 
         Icon="../Resources/logo.ico" 
         Topmost="True"
-        Closing="EulaWindow_OnClosing">
-    <Grid>
+        MinWidth="440"
+        MinHeight="400"
+        Closing="EulaWindow_OnClosing"
+        Loaded="Window_Loaded">
+
+    <Grid Width="Auto" Height="Auto">
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="88" />
         </Grid.RowDefinitions>
+        <Separator Grid.Row="0" Margin="16,0,16,0" Background="#eeeeee"></Separator>
+        <Grid Grid.Row="1" Height="Auto" >
+            <TextBlock Margin="24,0" FontFamily="{StaticResource UbuntuFontFamily}" FontWeight="Bold">TERMS OF SERVICE</TextBlock>
+            <RichTextBox  x:Name="EulaRtb" Margin="24,20,24,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" IsDocumentEnabled="True" BorderThickness="1" >
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="RichTextBox"/>
+                    </Paragraph>
+                </FlowDocument>
+                <RichTextBox.Resources>
+                    <Style TargetType="Hyperlink">
+                        <Setter Property="Cursor" Value="Hand" />
+                        <EventSetter Event="MouseLeftButtonDown" Handler="Hyperlink_MouseLeftButtonDown" />
+                    </Style>
+                </RichTextBox.Resources>
+            </RichTextBox>
+        </Grid>
 
-        <!-- RichTextBox here is the WinForms control hosted. The WPF equivalent doesn't auto-detect URLs. -->
-        <WindowsFormsHost>
-            <forms:RichTextBox x:Name="EulaRtb" 
-                               DetectUrls="True" 
-                               ReadOnly="True" 
-                               HideSelection="True" 
-                               LinkClicked="EulaRtb_OnLinkClicked"/>
-        </WindowsFormsHost>
-
-        <Button Grid.Row="1" Height="30" Click="AcceptButton_OnClick">I accept the Terms of Use</Button>
+        <DockPanel Grid.Row="2" Margin="24,24,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Button DockPanel.Dock="Right" Width="168" Height="40" Click="AcceptButton_OnClick" Foreground="White" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="I ACCEPT" >
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                        <GradientStop Color="#FFFBA342" Offset="0"/>
+                        <GradientStop Color="#FFFBC241" Offset="1"/>
+                    </LinearGradientBrush>
+                </Button.Background>
+                <Button.BitmapEffect>
+                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                </Button.BitmapEffect>
+            </Button>
+            <Button DockPanel.Dock="Right" Width="168" Height="40" Click="CancelButton_OnClick" Foreground="Black" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="CANCEL" Margin="16,0" Background="White">
+                <Button.BitmapEffect>
+                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                </Button.BitmapEffect>
+            </Button>
+        </DockPanel>
     </Grid>
 </Window>

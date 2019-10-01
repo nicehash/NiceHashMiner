@@ -32,13 +32,8 @@ namespace NHM.Wpf.Views
 
             _vm = this.AssertViewModel<MainVM>();
 
-            Translations.LanguageChanged += TranslationsOnLanguageChanged;
-            TranslationsOnLanguageChanged(null, null);
-        }
-
-        private void TranslationsOnLanguageChanged(object sender, EventArgs e)
-        {
-            WindowUtils.Translate(this);
+            Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
+            WindowUtils.InitWindow(this);
         }
 
         private async void BenchButton_Click(object sender, RoutedEventArgs e)
@@ -121,6 +116,7 @@ namespace NHM.Wpf.Views
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             // Disable managed controls
+            WindowUtils.SetForceSoftwareRendering(this);
             IsEnabled = false;
             // Get IntPtr handle for this Window
             var handle = new WindowInteropHelper(this).Handle;
