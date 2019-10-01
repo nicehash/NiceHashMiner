@@ -20,9 +20,6 @@ namespace NHMCore.Mining.Plugins
 {
     public static class MinerPluginsManager
     {
-#warning "NO MORE ENABLE_EXTERNAL_PLUGINS. IntegratedPluginsOnly should be removed and deleted AND EXTERNAL PLUGINS SHOULD BE ALWAYS ENABLED"
-        public static bool IntegratedPluginsOnly => false;
-
         static MinerPluginsManager()
         {
             var integratedPlugins = new List<IntegratedPlugin>
@@ -225,7 +222,6 @@ namespace NHMCore.Mining.Plugins
         {
             // TODO only integrated
             InitIntegratedPlugins();
-            if (IntegratedPluginsOnly) return;
             var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath());
             foreach (var pluginUUID in loadedPlugins)
             {

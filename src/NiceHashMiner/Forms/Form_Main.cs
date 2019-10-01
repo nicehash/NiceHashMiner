@@ -51,14 +51,6 @@ namespace NiceHashMiner
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
             FormHelpers.SubscribeAllControls(this);
 
-            // Hide plugins button and resize
-            if (MinerPluginsManager.IntegratedPluginsOnly)
-            {
-                this.buttonHelp.Location = this.buttonPlugins.Location;
-                this.buttonPlugins.Enabled = false;
-                this.buttonPlugins.Visible = false;
-            }
-
             Width = ConfigManager.GeneralConfig.MainFormSize.X;
             Height = ConfigManager.GeneralConfig.MainFormSize.Y;
 
