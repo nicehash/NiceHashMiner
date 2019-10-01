@@ -32,11 +32,11 @@
             this.radioButton_SelectedUnbenchmarked = new System.Windows.Forms.RadioButton();
             this.radioButton_RE_SelectedUnbenchmarked = new System.Windows.Forms.RadioButton();
             this.checkBox_StartMiningAfterBenchmark = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewBenchmarkControl();
-            this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBoxBenchmarkProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -128,6 +128,17 @@
             this.checkBox_StartMiningAfterBenchmark.UseVisualStyleBackColor = true;
             this.checkBox_StartMiningAfterBenchmark.CheckedChanged += new System.EventHandler(this.CheckBox_StartMiningAfterBenchmark_CheckedChanged);
             // 
+            // algorithmSettingsControl1
+            // 
+            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmSettingsControl1.IsInBenchmark = false;
+            this.algorithmSettingsControl1.Location = new System.Drawing.Point(620, 133);
+            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 311);
+            this.algorithmSettingsControl1.TabIndex = 397;
+            // 
             // algorithmsListView1
             // 
             this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -166,16 +177,6 @@
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(600, 112);
             this.devicesListViewEnableControl1.TabIndex = 0;
-            // 
-            // algorithmSettingsControl1
-            // 
-            this.algorithmSettingsControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.algorithmSettingsControl1.Location = new System.Drawing.Point(620, 133);
-            this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 288);
-            this.algorithmSettingsControl1.TabIndex = 397;
             // 
             // Form_Benchmark
             // 
