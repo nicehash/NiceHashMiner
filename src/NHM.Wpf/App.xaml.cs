@@ -1,6 +1,5 @@
 ﻿using log4net.Core;
 using NHM.Common;
-using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Stats;

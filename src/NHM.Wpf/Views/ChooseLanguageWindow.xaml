@@ -23,8 +23,8 @@
             <RowDefinition Height="88" />
         </Grid.RowDefinitions>
         <Separator Grid.Row="0" Margin="16,0,16,0" Background="#eeeeee"></Separator>
-        <TextBlock Grid.Row="1" Margin="24,24,0,8" FontFamily="{StaticResource UbuntuRegular}" Foreground="#959595" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal">Choose Language</TextBlock>
-        <ComboBox Grid.Row="2" Margin="24,0,24,0" Height="34" Padding="43,9,0,9" FontFamily="{StaticResource UbuntuRegular}" ItemsSource="{Binding LangNames}" SelectedIndex="{Binding SelectedLangIndex}" BorderBrush="White" Background="Yellow" FontSize="14">
+        <TextBlock Grid.Row="1" Margin="24,24,0,8" FontFamily="{StaticResource UbuntuFontFamily}" Foreground="#959595" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal">Choose Language</TextBlock>
+        <ComboBox Grid.Row="2" Margin="24,0,24,0" Height="34" Padding="43,9,0,9" FontFamily="{StaticResource UbuntuFontFamily}" ItemsSource="{Binding LangNames}" SelectedIndex="{Binding SelectedLangIndex}" BorderBrush="White" Background="Yellow" FontSize="14">
             <!--<ComboBox.ItemContainerStyle>
                 <Style TargetType="ComboBoxItem">
                     <Setter Property="Background" Value="Yellow"/>
@@ -33,7 +33,7 @@
             </ComboBox.ItemContainerStyle>-->
         </ComboBox>
         <DockPanel Grid.Row="3" Margin="0,0,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button Width="168" Height="40" Click="OkButton_OnClick" Foreground="White" FontFamily="{StaticResource UbuntuRegular}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}">
+            <Button Width="168" Height="40" Click="OkButton_OnClick" Foreground="White" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
                         <GradientStop Color="#FFFBA342" Offset="0"/>

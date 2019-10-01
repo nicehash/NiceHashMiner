@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace NHM.Wpf.Views
 {
@@ -28,6 +29,8 @@ namespace NHM.Wpf.Views
                 EulaRtb.SelectAll();
                 EulaRtb.Selection.Load(stream, System.Windows.DataFormats.Rtf);
             }
+            EulaRtb.SelectAll();
+            EulaRtb.Selection.ApplyPropertyValue(FontFamilyProperty, FindResource("UbuntuFontFamily") as FontFamily);
             WindowUtils.InitWindow(this);
         }
 
