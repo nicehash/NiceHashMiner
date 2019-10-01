@@ -1,16 +1,16 @@
-﻿using System;
+﻿using CG.Web.MegaApiClient;
+using MyDownloader.Core;
+using MyDownloader.Core.Extensions;
+using MyDownloader.Core.UI;
+using MyDownloader.Extension.Protocols;
+using NHM.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using CG.Web.MegaApiClient;
-using MyDownloader.Core;
-using MyDownloader.Core.Extensions;
-using MyDownloader.Core.UI;
-using MyDownloader.Extension.Protocols;
-using NHM.Common;
 
 namespace NHM.MinersDownloader
 {
