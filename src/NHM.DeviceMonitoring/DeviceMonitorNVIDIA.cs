@@ -1,11 +1,10 @@
 ﻿using ManagedCuda.Nvml;
-using NHM.DeviceMonitoring.NVIDIA;
 using NHM.Common;
-using NHM.Common.Enums;
+using NHM.DeviceMonitoring.NVIDIA;
+using NHM.DeviceMonitoring.TDP;
 using NVIDIA.NVAPI;
 using System;
 using System.Linq;
-using NHM.DeviceMonitoring.TDP;
 
 namespace NHM.DeviceMonitoring
 {

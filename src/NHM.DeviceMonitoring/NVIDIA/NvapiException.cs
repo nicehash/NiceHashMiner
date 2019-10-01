@@ -1,5 +1,5 @@
-﻿using System;
-using NVIDIA.NVAPI;
+﻿using NVIDIA.NVAPI;
+using System;
 
 namespace NHM.DeviceMonitoring.NVIDIA
 {

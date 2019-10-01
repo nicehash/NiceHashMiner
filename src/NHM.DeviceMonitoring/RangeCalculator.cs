@@ -1,7 +1,4 @@
-﻿
-using System;
-
-namespace NHM.DeviceMonitoring
+﻿namespace NHM.DeviceMonitoring
 {
     internal class RangeCalculator
     {

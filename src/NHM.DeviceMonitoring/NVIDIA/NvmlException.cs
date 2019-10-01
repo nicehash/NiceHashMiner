@@ -1,5 +1,5 @@
-﻿using System;
-using ManagedCuda.Nvml;
+﻿using ManagedCuda.Nvml;
+using System;
 
 namespace NHM.DeviceMonitoring.NVIDIA
 {

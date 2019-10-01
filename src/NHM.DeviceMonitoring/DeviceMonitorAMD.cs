@@ -1,10 +1,8 @@
-﻿using NHM.DeviceMonitoring.AMD;
-using System;
-using ATI.ADL;
+﻿using ATI.ADL;
 using NHM.Common;
+using NHM.DeviceMonitoring.AMD;
 using NHM.DeviceMonitoring.TDP;
-using NHM.Common.Enums;
-using System.Runtime.InteropServices;
+using System;
 
 namespace NHM.DeviceMonitoring
 {

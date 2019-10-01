@@ -1,11 +1,11 @@
-﻿using NHM.DeviceMonitoring.AMD;
-using NHM.DeviceMonitoring.NVIDIA;
+﻿using NHM.Common;
 using NHM.Common.Device;
-using NHM.Common;
+using NHM.DeviceMonitoring.AMD;
+using NHM.DeviceMonitoring.NVIDIA;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
 
 namespace NHM.DeviceMonitoring
 {
