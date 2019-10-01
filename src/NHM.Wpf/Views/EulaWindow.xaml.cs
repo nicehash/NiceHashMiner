@@ -28,6 +28,7 @@ namespace NHM.Wpf.Views
                 EulaRtb.SelectAll();
                 EulaRtb.Selection.Load(stream, System.Windows.DataFormats.Rtf);
             }
+            WindowUtils.InitWindow(this);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -42,7 +43,7 @@ namespace NHM.Wpf.Views
 
         private void EulaWindow_OnClosing(object sender, CancelEventArgs e)
         {
-            DialogResult = false;
+            WindowUtils.Window_OnClosing(this);
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)

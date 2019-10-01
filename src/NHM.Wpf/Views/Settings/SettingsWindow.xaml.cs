@@ -25,7 +25,7 @@ namespace NHM.Wpf.Views.Settings
             _vm = this.AssertViewModel<SettingsVM>();
 
             Translations.LanguageChanged += Translations_LanguageChanged;
-            Translations_LanguageChanged(null, null);
+            WindowUtils.InitWindow(this);
         }
 
         private void Translations_LanguageChanged(object sender, EventArgs e)

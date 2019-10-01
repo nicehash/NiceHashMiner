@@ -8,20 +8,23 @@ namespace NHM.Wpf.Views
     /// </summary>
     public partial class _3rdPartyTosWindow : Window
     {
+        public bool Accepted { get; private set; } = false;
+
         public _3rdPartyTosWindow()
         {
             InitializeComponent();
 
-            WindowUtils.Translate(this);
+            WindowUtils.InitWindow(this);
         }
 
-        private void AgreeButton_OnClick(object sender, RoutedEventArgs e)
+        private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
+            Accepted = true;
             DialogResult = true;
             Close();
         }
 
-        private void RefuseButton_OnClick(object sender, RoutedEventArgs e)
+        private void CancelButton_OnClick(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
             Close();
@@ -30,6 +33,11 @@ namespace NHM.Wpf.Views
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             WindowUtils.SetForceSoftwareRendering(this);
+        }
+
+        private void EulaWindow_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.Window_OnClosing(this);
         }
     }
 }

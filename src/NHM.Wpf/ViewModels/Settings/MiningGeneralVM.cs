@@ -14,7 +14,8 @@ namespace NHM.Wpf.ViewModels.Settings
             get => Config.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             set
             {
-                Config.Use3rdPartyMiners = value ? Use3rdPartyMiners.YES : Use3rdPartyMiners.NO;
+                // TODO obsolete setting
+                //Config.Use3rdPartyMiners = value ? Use3rdPartyMiners.YES : Use3rdPartyMiners.NO;
             }
         }
 

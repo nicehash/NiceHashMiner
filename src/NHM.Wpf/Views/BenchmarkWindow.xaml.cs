@@ -26,7 +26,7 @@ namespace NHM.Wpf.Views
             _vm.Devices = devices;
             _vm.OnBenchEnd += OnBenchEnd;
 
-            WindowUtils.Translate(this);
+            WindowUtils.InitWindow(this);
         }
 
         private void OnBenchEnd(object sender, BenchEndEventArgs e)

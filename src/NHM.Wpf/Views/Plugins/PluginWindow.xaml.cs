@@ -17,6 +17,7 @@ namespace NHM.Wpf.Views.Plugins
             InitializeComponent();
 
             _vm = this.AssertViewModel<PluginVM>();
+            WindowUtils.InitWindow(this);
         }
 
         private void PluginEntry_OnDetailsClick(object sender, PluginEventArgs e)

@@ -13,7 +13,8 @@
         ResizeMode="NoResize"
         Icon="../Resources/logo.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Closing="Window_OnClosing">
     <Grid Width="Auto" Height="Auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="1" />

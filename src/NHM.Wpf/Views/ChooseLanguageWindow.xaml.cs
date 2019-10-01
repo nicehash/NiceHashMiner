@@ -37,6 +37,7 @@ namespace NHM.Wpf.Views
         public ChooseLanguageWindow()
         {
             InitializeComponent();
+            WindowUtils.InitWindow(this);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -55,6 +56,11 @@ namespace NHM.Wpf.Views
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             WindowUtils.SetForceSoftwareRendering(this);
+        }
+
+        private void Window_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            WindowUtils.Window_OnClosing(this);
         }
     }
 }

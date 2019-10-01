@@ -23,6 +23,29 @@ namespace NHM.Wpf.Views.Common
             }
         }
 
+        internal static double? Top = null;
+        internal static double? Left = null;
+
+        internal static void InitWindow(Window w)
+        {
+            if (Top.HasValue && Left.HasValue)
+            {
+                w.Top = Top.Value;
+                w.Left = Left.Value;
+            }
+            else
+            {
+                w.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            }
+            Translate(w);
+        }
+
+        internal static void Window_OnClosing(Window w)
+        {
+            Top = w.Top;
+            Left = w.Left;
+        }
+
         public static T AssertViewModel<T>(this FrameworkElement fe) where T : class, new()
         {
             if (!(fe.DataContext is T vm))

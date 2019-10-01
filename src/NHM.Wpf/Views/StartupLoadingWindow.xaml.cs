@@ -19,6 +19,7 @@ namespace NHM.Wpf.Views
             InitializeComponent();
 
             StartupLoader = this.AssertViewModel<StartupLoadingVM>();
+            //WindowUtils.InitWindow(this);
         }
 
         private void StartupLoadingWindow_OnClosing(object sender, CancelEventArgs e)
