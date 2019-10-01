@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using NHM.Common;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using NHM.Common;
 
 namespace NHM.DeviceDetection
 {

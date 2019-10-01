@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace NHM.DeviceDetection.CPU
+﻿namespace NHM.DeviceDetection.CPU
 {
     internal struct CpuInfo
     {

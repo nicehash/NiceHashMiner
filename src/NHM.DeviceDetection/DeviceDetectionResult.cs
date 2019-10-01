@@ -1,10 +1,7 @@
-﻿using NHM.DeviceDetection.WMI;
+﻿using NHM.Common.Device;
+using NHM.DeviceDetection.WMI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHM.Common.Device;
 
 namespace NHM.DeviceDetection
 {

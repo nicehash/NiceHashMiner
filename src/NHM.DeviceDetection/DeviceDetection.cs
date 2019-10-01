@@ -1,11 +1,11 @@
-﻿using System;
+﻿using NHM.Common;
+using NHM.Common.Device;
+using NHM.DeviceDetection.NVIDIA;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NHM.DeviceDetection.NVIDIA;
-using NHM.Common;
-using NHM.Common.Device;
 
 namespace NHM.DeviceDetection
 {

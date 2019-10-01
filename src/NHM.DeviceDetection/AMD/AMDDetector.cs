@@ -1,19 +1,16 @@
-﻿using System;
+﻿using NHM.Common;
+using NHM.Common.Device;
+using NHM.Common.Enums;
+using NHM.DeviceDetection.OpenCL;
+using NHM.DeviceDetection.OpenCL.Models;
+using NHM.DeviceDetection.WMI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using NHM.Common;
-using NHM.Common.Device;
 
 namespace NHM.DeviceDetection.AMD
 {
-    using NHM.DeviceDetection.OpenCL;
-    using NHM.DeviceDetection.OpenCL.Models;
-    using NHM.DeviceDetection.WMI;
-    using NHM.UUID;
-    using NHM.Common.Enums;
-
     internal static class AMDDetector
     {
         private const string Tag = "AMDDetector";

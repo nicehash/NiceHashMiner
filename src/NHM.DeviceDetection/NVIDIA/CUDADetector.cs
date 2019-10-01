@@ -1,11 +1,11 @@
-﻿using NHM.DeviceDetection.NVIDIA.Models;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
-using System.Threading.Tasks;
+using NHM.DeviceDetection.NVIDIA.Models;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NHM.DeviceDetection.NVIDIA
 {
