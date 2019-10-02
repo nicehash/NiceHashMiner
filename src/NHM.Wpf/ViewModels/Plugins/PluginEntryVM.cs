@@ -103,7 +103,7 @@ namespace NHM.Wpf.ViewModels.Plugins
 
             if (Plugin.Installed)
             {
-                MinerPluginsManager.Remove(Plugin.PluginUUID);
+                MinerPluginsManager.RemovePlugin(Plugin.PluginUUID);
             }
             else
             {

@@ -4,7 +4,6 @@ using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
-using NHMCore.Configs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -84,17 +83,6 @@ namespace NHMCore.Mining.Plugins
         }
         private IMinerPlugin _plugin = null;
 
-        public bool IsIntegrated => _plugin is IntegratedPlugin;
-
-        public bool Is3rdParty
-        {
-            get
-            {
-                if (_plugin is IntegratedPlugin integrated) return integrated.Is3rdParty;
-                return true;
-            }
-        }
-
         private string _logTag = null;
         private string LogTag
         {
@@ -128,11 +116,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                // global scope here
-                var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-                // check if enabled and 
-                var enabled = !Is3rdParty || Is3rdParty == is3rdPartyEnabled;
-                return enabled && IsCompatible && !IsBroken && IsInitialized;
+                return IsCompatible && !IsBroken && IsInitialized;
             }
         }
         public bool IsBroken { get; private set; } = false;

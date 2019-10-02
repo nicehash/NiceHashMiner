@@ -66,9 +66,7 @@ namespace NHMCore.Mining
             get
             {
                 if (PluginContainer == null) return "";
-                var isIntegrated = PluginContainer.IsIntegrated;
-                var minerName = PluginContainer.Name + (isIntegrated ? "" : "(PLUGIN)");
-                return minerName;
+                return PluginContainer.Name;
             }
         }
         /// <summary>

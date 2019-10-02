@@ -45,7 +45,7 @@ namespace MinerSmokeTest
         private static void InitNhmlDevsPlugins()
         {
             //await ComputeDeviceManager.QueryDevicesAsync(null, false);
-            MinerPluginsManager.LoadMinerPlugins();
+            MinerPluginsManager.LoadAndInitMinerPlugins();
         }
 
         private async void FormShown(object sender, EventArgs e)

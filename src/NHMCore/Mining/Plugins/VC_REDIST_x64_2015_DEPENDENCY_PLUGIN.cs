@@ -14,7 +14,7 @@ namespace NHMCore.Mining.Plugins
 {
     // ALL CAPS
     // This isn't really a plugin it just a hack to piggyback on the miner plugins downloader and file checker
-    class VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN : IMinerPlugin, IntegratedPlugin, IPluginDependency, IBinaryPackageMissingFilesChecker, IMinerBinsSource
+    class VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN : IMinerPlugin, IPluginDependency, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
         public static VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN Instance { get; } = new VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN();
         VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN() { }
@@ -32,8 +32,6 @@ namespace NHMCore.Mining.Plugins
         }
 
         public bool IsPluginDependency { get; } = true;
-
-        public bool Is3rdParty => false;
 
         #region IMinerPlugin stubs
         public IMiner CreateMiner()

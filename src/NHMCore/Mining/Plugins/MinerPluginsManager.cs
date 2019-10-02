@@ -1,8 +1,8 @@
-﻿using MinerPluginLoader;
+﻿using MinerPlugin;
+using MinerPluginLoader;
 using MinerPluginToolkitV1;
 using Newtonsoft.Json;
 using NHM.Common;
-using NHM.Common.Enums;
 using NHM.MinersDownloader;
 using NHMCore.Configs;
 using NHMCore.Utils;
@@ -20,93 +20,97 @@ namespace NHMCore.Mining.Plugins
 {
     public static class MinerPluginsManager
     {
+        private static readonly List<IMinerPlugin> _integratedPlugins;
         static MinerPluginsManager()
         {
-            var integratedPlugins = new List<IntegratedPlugin>
+            // This is just a list of miners that are intergated in the nhm client. usefull when debuging
+            _integratedPlugins = new List<IMinerPlugin>
             {
                 // testing 
 #if INTEGRATE_BrokenMiner_PLUGIN
-                new BrokenPluginIntegratedPlugin(),
+                new BrokenMiner.BrokenMinerPlugin(),
 #endif
 #if INTEGRATE_ExamplePlugin_PLUGIN
-                new ExamplePluginIntegratedPlugin(),
+                new Example.ExamplePlugin(),
 #endif
 
 // open source
-#if INTEGRATE_CCMinerMTP_PLUGIN
-                new CCMinerMTPIntegratedPlugin(),
-#endif
+//#if INTEGRATE_CCMinerMTP_PLUGIN
+//                new CCMinerMTP.CCMinerMTPPlugin(), // not compatible with new platform
+//#endif
 #if INTEGRATE_CCMinerTpruvot_PLUGIN
-                new CCMinerTpruvotIntegratedPlugin(),
+                new CCMinerTpruvot.CCMinerTpruvotPlugin(),
 #endif
 #if INTEGRATE_SGminerAvemore_PLUGIN
-                new SGminerAvemoreIntegratedPlugin(),
+                new SgminerAvemore.SgminerAvemorePlugin(),
 #endif
 #if INTEGRATE_SGminerGM_PLUGIN
-                new SGminerGMIntegratedPlugin(),
+                new SgminerGM.SgminerGMPlugin(),
 #endif
 #if INTEGRATE_XmrStak_PLUGIN
-                new XmrStakIntegratedPlugin(),
+                new XmrStak.XmrStakPlugin(),
 #endif
 #if INTEGRATE_CpuMinerOpt_PLUGIN
-                new CPUMinerOptIntegratedPlugin(),
+                new CpuMinerOpt.CPUMinerPlugin(),
 #endif
-#if INTEGRATE_Ethminer_PLUGIN
-                new EthminerIntegratedPlugin(),
-#endif
+//#if INTEGRATE_Ethminer_PLUGIN
+//                new Ethminer.EthminerPlugin(), // abstract UUID
+//#endif
 
 // 3rd party
 #if INTEGRATE_EWBF_PLUGIN
-                new EWBFIntegratedPlugin(),
+                new EWBF.EwbfPlugin(),
 #endif
 #if INTEGRATE_GMiner_PLUGIN
-                new GMinerIntegratedPlugin(),
+                new GMinerPlugin.GMinerPlugin(),
 #endif
 #if INTEGRATE_NBMiner_PLUGIN
-                new NBMinerIntegratedPlugin(),
+                new NBMiner.NBMinerPlugin(),
 #endif
 #if INTEGRATE_Phoenix_PLUGIN
-                new PhoenixIntegratedPlugin(),
+                new Phoenix.PhoenixPlugin(),
 #endif
 #if INTEGRATE_TeamRedMiner_PLUGIN
-                new TeamRedMinerIntegratedPlugin(),
+                new TeamRedMiner.TeamRedMinerPlugin(),
 #endif
 #if INTEGRATE_TRex_PLUGIN
-                new TRexIntegratedPlugin(),
+                new TRex.TRexPlugin(),
 #endif
 #if INTEGRATE_TTMiner_PLUGIN
-                new TTMinerIntegratedPlugin(),
+                new TTMiner.TTMinerPlugin(),
 #endif
 #if INTEGRATE_ClaymoreDual_PLUGIN
-                new ClaymoreDual14IntegratedPlugin(),
+                new ClaymoreDual14.ClaymoreDual14Plugin(),
 #endif
 #if INTEGRATE_NanoMiner_PLUGIN
-                new NanoMinerIntegratedPlugin(),
+                new NanoMiner.NanoMinerPlugin(),
 #endif
 #if INTEGRATE_WildRig_PLUGIN
-                new WildRigIntegratedPlugin(),
+                new WildRig.WildRigPlugin(),
 #endif
 #if INTEGRATE_CryptoDredge_PLUGIN
-                new CryptoDredgeIntegratedPlugin(),
+                new CryptoDredge.CryptoDredgePlugin(),
 #endif
 #if INTEGRATE_BMiner_PLUGIN
-                new BMinerIntegratedPlugin(),
+                new BMiner.BMinerPlugin(),
 #endif
 #if INTEGRATE_ZEnemy_PLUGIN
-                new ZEnemyIntegratedPlugin(),
+                new ZEnemy.ZEnemyPlugin(),
 #endif
 #if INTEGRATE_LolMinerBeam_PLUGIN
-                new LolMinerIntegratedPlugin(),
+                new LolMinerBeam.LolMinerBeamPlugin(),
 #endif
-#if INTEGRATE_SRBMiner_PLUGIN
-                new SRBMinerIntegratedPlugin(),
-#endif
+//#if INTEGRATE_SRBMiner_PLUGIN
+//                new SRBMiner.SRBMinerPlugin(),
+//#endif
 #if INTEGRATE_XMRig_PLUGIN
-                new XMRigIntegratedPlugin(),
+                new XMRig.XMRigPlugin(),
 #endif
 #if INTEGRATE_MiniZ_PLUGIN
-                new MiniZIntegratedPlugin(),
+                new MiniZ.MiniZPlugin(),
 #endif
+
+                // leave these 2 for now
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
@@ -114,48 +118,29 @@ namespace NHMCore.Mining.Plugins
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
-            var filteredIntegratedPlugins = integratedPlugins.Where(p => SupportedPluginsFilter.IsSupported(p.PluginUUID)).ToList();
+            var filteredIntegratedPlugins = _integratedPlugins.Where(p => SupportedPluginsFilter.IsSupported(p.PluginUUID)).ToList();
             foreach (var integratedPlugin in filteredIntegratedPlugins)
             {
                 PluginContainer.Create(integratedPlugin);
             }
         }
 
-        public static void InitIntegratedPlugins()
-        {
-            foreach (var plugin in PluginContainer.PluginContainers.Where(p => p.IsIntegrated))
-            {
-                if (!plugin.IsInitialized)
-                {
-                    plugin.InitPluginContainer();
-                }
-                if (plugin.Enabled)
-                {
-                    plugin.AddAlgorithmsToDevices();
-                }
-                else
-                {
-                    plugin.RemoveAlgorithmsFromDevices();
-                }
-            }
-
-            // global scope here
-            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
-            Logger.Info("MinerPluginsManager", "Finished initialization of miners.");
-        }
-
         // API data
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
-        public static Dictionary<string, PluginPackageInfoCR> Plugins { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
+        private static Dictionary<string, PluginPackageInfoCR> PluginsPackagesInfosCRs { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
 
-        //private static Dictionary<string, IMinerPlugin> MinerPlugins { get => MinerPluginHost.MinerPlugin; }
+        public static PluginPackageInfoCR GetPluginPackageInfoCR(string pluginUUID)
+        {
+            if (PluginsPackagesInfosCRs.ContainsKey(pluginUUID)) return PluginsPackagesInfosCRs[pluginUUID];
+            return null;
+        }
 
         public static IEnumerable<PluginPackageInfoCR> RankedPlugins
         {
             get
             {
-                return Plugins
+                return PluginsPackagesInfosCRs
+                    .Where(kvp => !_integratedPlugins.Any(p => p.PluginUUID == kvp.Value.PluginUUID))
                     .Select(kvp => kvp.Value)
                     .OrderByDescending(info => info.HasNewerVersion)
                     .ThenByDescending(info => info.OnlineSupportedDeviceCount)
@@ -199,18 +184,23 @@ namespace NHMCore.Mining.Plugins
                                 {
                                     File.Copy(moveFile, path, true);
                                 }
-                                catch
-                                {}
+                                catch (Exception e)
+                                {
+                                    Logger.Error("CheckAndSwapInstalledExternalPlugins", e.Message);
+                                }
                             }
                             Directory.Delete(tmpPluginDir, true);
                         }
-                        catch (Exception)
-                        {}
+                        catch (Exception e)
+                        {
+                            Logger.Error("CheckAndSwapInstalledExternalPlugins", e.Message);
+                        }
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Logger.Error("CheckAndSwapInstalledExternalPlugins", e.Message);
             }
         }
 
@@ -218,22 +208,26 @@ namespace NHMCore.Mining.Plugins
 
 #endregion Update miner plugin dlls
 
-        public static void LoadMinerPlugins()
+        public static void LoadAndInitMinerPlugins()
         {
-            // TODO only integrated
-            InitIntegratedPlugins();
+            // load dll's and create plugin containers
             var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath());
-            foreach (var pluginUUID in loadedPlugins)
+            foreach (var pluginUUID in loadedPlugins) PluginContainer.Create(MinerPluginHost.MinerPlugin[pluginUUID]);
+            // init all containers
+            foreach (var plugin in PluginContainer.PluginContainers)
             {
-                var externalPlugin = MinerPluginHost.MinerPlugin[pluginUUID];
-                var plugin = PluginContainer.Create(externalPlugin);
                 if (!plugin.IsInitialized)
                 {
                     plugin.InitPluginContainer();
                 }
+
                 if (plugin.Enabled)
                 {
                     plugin.AddAlgorithmsToDevices();
+                }
+                else if (!plugin.IsCompatible)
+                {
+                    RemovePlugin(plugin.PluginUUID, false);
                 }
                 else
                 {
@@ -242,6 +236,8 @@ namespace NHMCore.Mining.Plugins
             }
             // cross reference local and online list
             CrossReferenceInstalledWithOnline();
+            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated;
+            Logger.Info("MinerPluginsManager", "Finished initialization of miners.");
         }
 
         public static async Task DevicesCrossReferenceIDsWithMinerIndexes()
@@ -303,7 +299,6 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        // for now integrated only
         public static List<string> GetMissingMiners()
         {
             var checkPlugins = PluginContainer.PluginContainers
@@ -331,15 +326,7 @@ namespace NHMCore.Mining.Plugins
             return checkPlugins.Count() > 0;
         }
 
-        private static void RemovePluginAlgorithms(string pluginUUID)
-        {
-            foreach (var dev in AvailableDevices.Devices)
-            {
-                dev.RemovePluginAlgorithms(pluginUUID);
-            }
-        }
-
-        public static void Remove(string pluginUUID)
+        public static void RemovePlugin(string pluginUUID, bool crossReferenceInstalledWithOnline = true)
         {
             try
             {
@@ -350,16 +337,24 @@ namespace NHMCore.Mining.Plugins
                 {
                     PluginContainer.RemovePluginContainer(old);
                 }
-                RemovePluginAlgorithms(pluginUUID);
-
-                Plugins[pluginUUID].LocalInfo = null;
-                // TODO we might not have any online reference so remove it in this case
-                if (Plugins[pluginUUID].OnlineInfo == null)
+                // TODO this remove is probably redundant CHECK
+                foreach (var dev in AvailableDevices.Devices)
                 {
-                    Plugins.Remove(pluginUUID);
+                    dev.RemovePluginAlgorithms(pluginUUID);
                 }
 
-                CrossReferenceInstalledWithOnline();
+                // remove from cross ref dict
+                if (PluginsPackagesInfosCRs.ContainsKey(pluginUUID))
+                {
+                    PluginsPackagesInfosCRs[pluginUUID].LocalInfo = null;
+                    // TODO we might not have any online reference so remove it in this case
+                    if (PluginsPackagesInfosCRs[pluginUUID].OnlineInfo == null)
+                    {
+                        PluginsPackagesInfosCRs.Remove(pluginUUID);
+                    }
+                }
+
+                if (crossReferenceInstalledWithOnline) CrossReferenceInstalledWithOnline();
                 // TODO before deleting you will need to unload the dll
                 if (Directory.Exists(deletePath))
                 {
@@ -377,7 +372,7 @@ namespace NHMCore.Mining.Plugins
             // first go over the installed plugins
             // TODO rename installed to externalInstalledPlugin
             var checkPlugins = PluginContainer.PluginContainers
-                .Where(p => !p.IsIntegrated)
+                //.Where(p => !p.IsIntegrated)
                 //.Where(p => p.IsCompatible)
                 //.Where(p => p.Enabled)
                 .ToArray();
@@ -392,11 +387,11 @@ namespace NHMCore.Mining.Plugins
                     PluginVersion = installed.Version,
                     // other stuff is not inside the plugin
                 };
-                if (Plugins.ContainsKey(uuid) == false)
+                if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
                 {
-                    Plugins[uuid] = new PluginPackageInfoCR{};
+                    PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR{};
                 }
-                Plugins[uuid].LocalInfo = localPluginInfo;
+                PluginsPackagesInfosCRs[uuid].LocalInfo = localPluginInfo;
             }
 
             // get online list and check what we have and what is online
@@ -405,11 +400,11 @@ namespace NHMCore.Mining.Plugins
             foreach (var online in OnlinePlugins)
             {
                 var uuid = online.PluginUUID;
-                if (Plugins.ContainsKey(uuid) == false)
+                if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
                 {
-                    Plugins[uuid] = new PluginPackageInfoCR{};
+                    PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR{};
                 }
-                Plugins[uuid].OnlineInfo = online;
+                PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
                 if (online.SupportedDevicesAlgorithms != null)
                 {
                     var supportedDevices = online.SupportedDevicesAlgorithms
@@ -418,7 +413,7 @@ namespace NHMCore.Mining.Plugins
                     var devRank = AvailableDevices.Devices
                         .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
                         .Count();
-                    Plugins[uuid].OnlineSupportedDeviceCount = devRank;
+                    PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
                 }
                 
             }
@@ -560,7 +555,7 @@ namespace NHMCore.Mining.Plugins
             {
                 try
                 {
-                    var pluginPackageInfo = Plugins[pluginUUID];
+                    var pluginPackageInfo = PluginsPackagesInfosCRs[pluginUUID];
                     addSuccess = MinerPluginInstallTasks.TryAdd(pluginUUID, minerInstall);
                     progress?.Report(Tuple.Create(PluginInstallProgressState.Pending, 0));
                     minerInstall.AddProgress(progress);
