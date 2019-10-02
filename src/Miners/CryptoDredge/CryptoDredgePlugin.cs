@@ -14,27 +14,25 @@ namespace CryptoDredge
         public CryptoDredgePlugin()
         {
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/technobyl/CryptoDredge/releases | https://cryptodredge.org/ | https://bitcointalk.org/index.php?topic=4807821.0 current 0.21.0
+            // https://github.com/technobyl/CryptoDredge/releases | https://cryptodredge.org/ | https://bitcointalk.org/index.php?topic=4807821.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.21.0",
-                ExePath = new List<string> { "CryptoDredge_0.21.0", "CryptoDredge.exe" },
+                // TODO BinVersion github and bitcointalk missmatch
+                BinVersion = "0.22.0",
+                ExePath = new List<string> { "CryptoDredge_0.22.0", "CryptoDredge.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/technobyl/CryptoDredge/releases/download/v0.21.0/CryptoDredge_0.21.0_cuda_10.1_windows.zip", // original source
+                    "https://github.com/technobyl/CryptoDredge/releases/download/v0.22.0/CryptoDredge_0.22.0_cuda_10.1_windows.zip", // original source
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Simple in use and highly optimized cryptocurrency mining software with stable power consumption.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.X16R } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(3, 1);
         public override string Name => "CryptoDredge";
 
         public override string Author => "info@nicehash.com";
@@ -61,19 +59,14 @@ namespace CryptoDredge
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
-                new Algorithm(PluginUUID, AlgorithmType.X16R),
-                new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false }
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()
         {
-            return new CryptoDredge(PluginUUID);
+            return new CryptoDredge(PluginUUID, PluginSupportedAlgorithms.AlgorithmName, PluginSupportedAlgorithms.DevFee);
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
