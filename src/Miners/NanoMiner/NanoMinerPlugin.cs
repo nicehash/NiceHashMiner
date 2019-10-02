@@ -1,6 +1,7 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -17,30 +18,26 @@ namespace NanoMiner
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases current v1.5.3
+            // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.5.3",
-                ExePath = new List<string> { "nanominer-windows-1.5.3", "nanominer.exe" },
+                BinVersion = "v1.6.0",
+                ExePath = new List<string> { "nanominer-windows-1.6.0", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v1.5.3/nanominer-windows-1.5.3.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v1.6.0/nanominer-windows-1.6.0.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Nanominer is a versatile tool for mining cryptocurrencies which are based on Ethash, Ubqhash, Cuckaroo29, CryptoNight (v6, v7, v8, R, ReverseWaltz) and RandomHash (PascalCoin) algorithms.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.GrinCuckarood29, AlgorithmType.CryptoNightR } },
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.GrinCuckarood29, AlgorithmType.CryptoNightR } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(3, 1);
 
         public override string Name => "NanoMiner";
 
@@ -89,18 +86,14 @@ namespace NanoMiner
 
         List<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
-                new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID).ToList();
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()
         {
-            return new NanoMiner(PluginUUID, _mappedIDs);
+            return new NanoMiner(PluginUUID, _mappedIDs, PluginSupportedAlgorithms.AlgorithmName, PluginSupportedAlgorithms.DevFee);
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
@@ -127,7 +120,16 @@ namespace NanoMiner
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //no new version available
+            try
+            {
+                var algo = ids.FirstOrDefault();
+                if (benchmarkedPluginVersion.Major < 3 && algo == AlgorithmType.GrinCuckarood29) return true;
+                if (benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 1 && algo == AlgorithmType.GrinCuckarood29) return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("NanoMinerPlugin.ShouldReBenchmarkAlgorithmOnDevice", e.Message);
+            }
             return false;
         }
     }
