@@ -21,26 +21,23 @@ namespace CpuMinerOpt
             // https://bitcointalk.org/index.php?topic=1326803.0 | https://github.com/JayDDee/cpuminer-opt/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.9.8",
+                BinVersion = " v3.9.8.1",
                 ExePath = new List<string> { "cpuminer-avx2.exe" }, // special case multiple executables
                 Urls = new List<string>
                 {
-                    "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.9.8/cpuminer-opt-3.9.8-windows.zip", // original
+                    "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.9.8.1/cpuminer-opt-3.9.8.1-windows.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Miner for CPU devices.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.CPU, new List<AlgorithmType>{ AlgorithmType.Lyra2Z, AlgorithmType.Lyra2REv3, AlgorithmType.X16R, AlgorithmType.X16Rv2 } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(3, 1);
 
         public override string Name => "cpuminer-opt";
 
@@ -50,7 +47,7 @@ namespace CpuMinerOpt
 
         protected override MinerBase CreateMinerBase()
         {
-            return new CpuMiner(PluginUUID);
+            return new CpuMiner(PluginUUID, PluginSupportedAlgorithms.AlgorithmName);
         }
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
@@ -62,20 +59,10 @@ namespace CpuMinerOpt
 
             foreach (var cpu in cpus)
             {
-                supported.Add(cpu, GetSupportedAlgorithms());
+                supported.Add(cpu, PluginSupportedAlgorithms.GetSupportedAlgorithmsCPU(PluginUUID));
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms()
-        {
-            return new List<Algorithm>{
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2Z) { Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3) { Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.X16R) { Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.X16Rv2)
-            };
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

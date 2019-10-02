@@ -19,25 +19,12 @@ namespace CpuMinerOpt
         private int _apiPort;
         private double DevFee = 0d;
 
-        public CpuMiner(string uuid) : base(uuid)
-        {}
-
-        protected virtual string AlgorithmName(AlgorithmType algorithmType)
+        public CpuMiner(string uuid, Func<AlgorithmType, string> algorithmName) : base(uuid)
         {
-            switch (algorithmType)
-            {
-                case AlgorithmType.Lyra2Z:
-                    return "lyra2z";
-                case AlgorithmType.Lyra2REv3:
-                    return "lyra2rev3";
-                case AlgorithmType.X16R:
-                    return "x16r";
-                case AlgorithmType.X16Rv2:
-                    return "x16rv2";
-                default:
-                    return "";
-            }
+            _algorithmName = algorithmName;
         }
+
+        protected Func<AlgorithmType, string> _algorithmName;
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
@@ -84,7 +71,7 @@ namespace CpuMinerOpt
 
             var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var algo = AlgorithmName(_algorithmType);
+            var algo = _algorithmName(_algorithmType);
             var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
@@ -151,7 +138,7 @@ namespace CpuMinerOpt
             _apiPort = GetAvaliablePort();
             // instant non blocking
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var algo = AlgorithmName(_algorithmType);
+            var algo = _algorithmName(_algorithmType);
 
             var commandLine = $"--algo={algo} --url={url} --user={username} --api-bind={_apiPort} {_extraLaunchParameters}";
             return commandLine;
