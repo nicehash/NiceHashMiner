@@ -93,7 +93,7 @@ namespace NHM.Common.Enums
         GrinCuckatoo31 = 39,
         //[Obsolete("UNUSED Algorithm")]
         Lyra2REv3 = 40,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("NOT SUPPORTED. UNUSED Algorithm")]
         MTP = 41,
         //[Obsolete("UNUSED Algorithm")]
         CryptoNightR = 42,
