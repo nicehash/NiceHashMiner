@@ -33,11 +33,7 @@ namespace ClaymoreDual14
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Miner for AMD and NVIDIA cards, supporting Dual mining.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto, AlgorithmType.Decred, AlgorithmType.Blake2s, AlgorithmType.Keccak } },
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto, AlgorithmType.Decred, AlgorithmType.Blake2s, AlgorithmType.Keccak } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -100,16 +96,7 @@ namespace ClaymoreDual14
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
-            // duals disabled by default
-#pragma warning disable 0618
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred) {Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s) {Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak) {Enabled = false },
-#pragma warning restore 0618
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID).ToList();
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             if(gpu is AMDDevice amd && (amd.Codename.ToLower().Contains("gfx10") || amd.Name.ToLower().Contains("navi")))
             {
