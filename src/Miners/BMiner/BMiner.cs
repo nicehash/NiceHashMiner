@@ -19,31 +19,18 @@ namespace BMiner
         private int _apiPort;
         private readonly HttpClient _http = new HttpClient();
 
-        public BMiner(string uuid) : base(uuid)
-        { }
-
-        protected virtual string AlgorithmName(AlgorithmType algorithmType)
+        public BMiner(string uuid, Func<AlgorithmType, string> algorithmName, Func<AlgorithmType, double> devFee) : base(uuid)
         {
-            switch (algorithmType)
-            {
-                case AlgorithmType.DaggerHashimoto: return "ethstratum";
-                case AlgorithmType.ZHash: return "zhash";
-                case AlgorithmType.Beam: return "beam";
-                case AlgorithmType.GrinCuckaroo29: return "cuckaroo29";
-                case AlgorithmType.GrinCuckatoo31: return "cuckatoo31";
-                case AlgorithmType.GrinCuckarood29: return "cuckaroo29d";
-                default: return "";
-            }
+            _algorithmName = algorithmName;
+            _devFee = devFee;
         }
 
-        private double DevFee
-        {
-            get
-            {
-                if (AlgorithmType.DaggerHashimoto == _algorithmType) return 0.65;
-                return 2.0;
-            }
-        }
+        readonly Func<AlgorithmType, string> _algorithmName;
+        readonly Func<AlgorithmType, double> _devFee;
+
+        protected virtual string AlgorithmName(AlgorithmType algorithmType) => _algorithmName(algorithmType);
+
+        private double DevFee => _devFee(_algorithmType);
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
