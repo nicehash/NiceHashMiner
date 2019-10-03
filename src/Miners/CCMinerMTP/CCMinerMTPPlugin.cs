@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace CCMinerMTP
 {
+#warning "MTP only plugin. Do not instantiate this and do not publish this plugin"
     public abstract class CCMinerMTPPlugin : PluginBase
     {
         public CCMinerMTPPlugin()
@@ -30,10 +31,7 @@ namespace CCMinerMTP
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Nvidia miner for MTP algorithm.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{} }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -57,9 +55,7 @@ namespace CCMinerMTP
 
             foreach (var gpu in cudaGpus)
             {
-                var algorithms = new List<Algorithm> {
-                    new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false }
-                };
+                var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
                 var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
                 if (filteredAlgorithms.Count > 0) supported.Add(gpu, filteredAlgorithms);
             }

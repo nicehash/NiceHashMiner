@@ -8,14 +8,6 @@ namespace CCMinerMTP
         public CCMinerMTP(string uuid) : base(uuid)
         { }
 
-        protected override string AlgorithmName(AlgorithmType algorithmType)
-        {
-            switch (algorithmType)
-            {
-                case AlgorithmType.MTP: return "mtp";
-            }
-            // TODO throw exception
-            return "";
-        }
+        protected override string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
     }
 }
