@@ -28,10 +28,7 @@ namespace CCMinerTpruvot
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "NVIDIA miner for Lyra2REv3 and X16R.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2REv3, AlgorithmType.X16R } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -55,10 +52,7 @@ namespace CCMinerTpruvot
 
             foreach (var gpu in cudaGpus)
             {
-                var algorithms = new List<Algorithm> {
-                    new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
-                    new Algorithm(PluginUUID, AlgorithmType.X16R), // TODO check performance
-                };
+                var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
                 var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
                 if (filteredAlgorithms.Count > 0) supported.Add(gpu, filteredAlgorithms);
             }
