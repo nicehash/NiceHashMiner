@@ -30,10 +30,7 @@ namespace SgminerAvemore
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "This is a multi-threaded multi-pool GPU miner.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.X16R } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -53,12 +50,7 @@ namespace SgminerAvemore
 
             foreach (var gpu in amdGpus)
             {
-                var algorithms = new List<Algorithm> {
-                    new Algorithm(PluginUUID, AlgorithmType.X16R)
-                    {
-                        ExtraLaunchParameters = "-X 256"
-                    },
-                };
+                var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
                 var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
                 if (filteredAlgorithms.Count > 0) supported.Add(gpu, filteredAlgorithms);
             }

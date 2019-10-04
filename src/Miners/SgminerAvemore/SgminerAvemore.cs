@@ -16,20 +16,7 @@ namespace SgminerAvemore
         public SgminerAvemore(string uuid) : base(uuid)
         { }
 
-        protected override string AlgoName
-        {
-            get
-            {
-                switch (_algorithmType)
-                {
-                    // avemore
-                    case AlgorithmType.X16R:
-                        return "x16r";
-                    default:
-                        return "";
-                }
-            }
-        }
+        protected override string AlgoName => PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
 
         private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
