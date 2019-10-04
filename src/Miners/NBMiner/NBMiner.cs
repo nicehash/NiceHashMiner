@@ -20,38 +20,9 @@ namespace NBMiner
         private readonly HttpClient _http = new HttpClient();
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
-        private string AlgoName
-        {
-            get
-            {
-                switch (_algorithmType)
-                {
-                    case AlgorithmType.GrinCuckatoo31:
-                        return "cuckatoo";
-                    case AlgorithmType.CuckooCycle:
-                        return "cuckoo_ae";
-                    case AlgorithmType.GrinCuckarood29:
-                        return "cuckarood";
-                    default:
-                        return "";
-                }
-            }
-        }
-        private double DevFee
-        {
-            get
-            {
-                switch (_algorithmType)
-                {
-                    case AlgorithmType.GrinCuckatoo31:
-                    case AlgorithmType.CuckooCycle:
-                    case AlgorithmType.GrinCuckarood29:
-                        return 2.0;
-                    default:
-                        return 0;
-                }
-            }
-        }
+        private string AlgoName => PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
+
+        private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         public NBMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
