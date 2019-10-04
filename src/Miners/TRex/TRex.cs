@@ -25,25 +25,9 @@ namespace TRex
         public TRex(string uuid) : base(uuid)
         {}
 
-        protected virtual string AlgorithmName(AlgorithmType algorithmType)
-        {
-            switch (algorithmType)
-            {
-                case AlgorithmType.Lyra2Z: return "lyra2z";
-                case AlgorithmType.X16R: return "x16r";
-                case AlgorithmType.X16Rv2: return "x16rv2";
-                case AlgorithmType.MTP: return "mtp";
-                default: return "";
-            }
-        }
+        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
-        private double DevFee
-        {
-            get
-            {
-                return 1.0;
-            }
-        }
+        private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {

@@ -30,10 +30,7 @@ namespace TRex
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "T-Rex is a versatile cryptocurrency mining software for NVIDIA devices.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.Lyra2Z, AlgorithmType.X16R, AlgorithmType.X16Rv2 } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -61,13 +58,7 @@ namespace TRex
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
-                new Algorithm(PluginUUID, AlgorithmType.X16R),
-                new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.X16Rv2),
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
