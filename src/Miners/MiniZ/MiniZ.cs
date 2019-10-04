@@ -30,20 +30,7 @@ namespace MiniZ
         {
             _mappedDeviceIds = mappedDeviceIds;
         }
-        protected virtual string AlgorithmName(AlgorithmType algorithmType)
-        {
-            switch (algorithmType)
-            {
-                case AlgorithmType.ZHash:
-                    return "144,5";
-                case AlgorithmType.Beam:
-                    return "150,5";
-                case AlgorithmType.BeamV2:
-                    return "150,5,3";
-                default:
-                    return "";
-            }
-        }
+        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {

@@ -32,10 +32,7 @@ namespace MiniZ
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "miniZ is a fast and friendly Equihash miner.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash, AlgorithmType.Beam, AlgorithmType.BeamV2 } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
@@ -79,15 +76,11 @@ namespace MiniZ
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.ZHash),
-                new Algorithm(PluginUUID, AlgorithmType.Beam),
-                new Algorithm(PluginUUID, AlgorithmType.BeamV2)
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
+
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedDeviceIds.Count == 0) return;
