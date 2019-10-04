@@ -33,26 +33,7 @@ namespace GMinerPlugin
             _mappedDeviceIds = mappedDeviceIds;
         }
 
-        protected virtual string AlgorithmName(AlgorithmType algorithmType)
-        {
-            switch (algorithmType)
-            {
-                case AlgorithmType.ZHash:
-                    return "144_5";
-                case AlgorithmType.Beam:
-                    return "beamhashI";
-                case AlgorithmType.GrinCuckatoo31:
-                    return "grin31";
-                case AlgorithmType.CuckooCycle:
-                    return "cuckoo29";
-                case AlgorithmType.GrinCuckarood29:
-                    return "cuckarood29";
-                case AlgorithmType.BeamV2:
-                    return "beamhashII";
-                default:
-                    return "";
-            }
-        }
+        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
         private string CreateCommandLine(string username)
         {
