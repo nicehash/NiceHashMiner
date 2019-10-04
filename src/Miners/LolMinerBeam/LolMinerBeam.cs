@@ -30,16 +30,7 @@ namespace LolMinerBeam
             _mappedIDs = mappedIDs;
         }
 
-        protected virtual string AlgorithmName(AlgorithmType algorithmType)
-        {
-            switch (algorithmType)
-            {
-                case AlgorithmType.GrinCuckarood29: return "GRIN-AD29";
-                case AlgorithmType.GrinCuckatoo31: return "GRIN-AT31";
-                case AlgorithmType.BeamV2: return "BEAM-II";
-                default: return "";
-            }
-        }
+        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {

@@ -18,7 +18,7 @@ namespace LolMinerBeam
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 current 0.8.8
+            // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "0.8.8",
@@ -31,11 +31,7 @@ namespace LolMinerBeam
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Miner for AMD and NVIDIA gpus.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 } },
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.GrinCuckatoo31, AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -94,22 +90,12 @@ namespace LolMinerBeam
             List<Algorithm> algorithms;
             if (isAMD)
             {
-                algorithms = new List<Algorithm>
-                {
-                    new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
-                    new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
-                    new Algorithm(PluginUUID, AlgorithmType.BeamV2),
-                };
+                algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
             }
             else
             {
                 // NVIDIA OpenCL backend stability is questionable
-                algorithms = new List<Algorithm>
-                {
-                    new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31) { Enabled = false },
-                    new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29) { Enabled = false },
-                    new Algorithm(PluginUUID, AlgorithmType.BeamV2) { Enabled = false },
-                };
+                algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
             }
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
