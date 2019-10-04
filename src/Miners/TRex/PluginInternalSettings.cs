@@ -56,7 +56,8 @@ namespace TRex
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "trex_avgHashrate",
-                    ShortName = "--hashrate-avr",
+                    ShortName = "-N",
+                    LongName = "--hashrate-avr",
                     DefaultValue = "60"
                 },
                 /// <summary>
@@ -75,7 +76,7 @@ namespace TRex
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "trex_tempColor",
                     ShortName = "--temperature-color",
                     DefaultValue = "67,77"
@@ -97,7 +98,8 @@ namespace TRex
                 {
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "trex_quiet",
-                    ShortName = "--quiet"
+                    ShortName = "-q",
+                    LongName = "--quiet"
                 },
                 /// <summary>
                 /// Don't show date in console.
@@ -133,7 +135,8 @@ namespace TRex
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "trex_logPath",
-                    ShortName = "--log-path"
+                    ShortName = "-l",
+                    LongName = "--log-path"
                 },
             },
             TemperatureOptions = new List<MinerOption>
