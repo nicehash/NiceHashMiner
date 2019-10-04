@@ -34,11 +34,7 @@ namespace Phoenix
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Phoenix Miner is fast Ethash miner that supports both AMD and Nvidia cards(including in mixed mining rigs).",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } },
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -98,10 +94,7 @@ namespace Phoenix
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto) { Enabled = false },
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID);
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
