@@ -42,7 +42,7 @@ namespace NanoMiner
         {
             switch (algorithmType)
             {
-                case AlgorithmType.CryptoNightR: return 1.0;
+                case AlgorithmType.CryptoNightR: return 1.0; // dev fee migh be wrong
                 //case AlgorithmType.GrinCuckaroo29:
                 default: return 2.0;
             }
