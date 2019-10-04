@@ -30,10 +30,7 @@ namespace SgminerGM
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "This is a multi-threaded multi-pool GPU miner with ATI GPU monitoring.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -54,12 +51,7 @@ namespace SgminerGM
 
             foreach (var gpu in amdGpus)
             {
-                var algorithms = new List<Algorithm> {
-                    new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto)
-                    {
-                        ExtraLaunchParameters = " --remove-disabled --xintensity 512 -w 192 -g 1"
-                    },
-                };
+                var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
                 var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
                 if (filteredAlgorithms.Count > 0) supported.Add(gpu, filteredAlgorithms);
             }
