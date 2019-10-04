@@ -26,16 +26,7 @@ namespace EWBF
         public EwbfMiner(string uuid) : base(uuid)
         {}
 
-        private string AlgorithmName(AlgorithmType algorithmType)
-        {
-            switch (algorithmType)
-            {
-                case AlgorithmType.ZHash:
-                    return "144_5";
-                default:
-                    return "";
-            }
-        }
+        private string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
         private string CreateCommandLine(string username)
         {

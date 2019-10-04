@@ -15,7 +15,7 @@ namespace EWBF
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://bitcointalk.org/index.php?topic=4466962.0 current v0.6
+            // https://bitcointalk.org/index.php?topic=4466962.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "v0.6",
@@ -29,10 +29,7 @@ namespace EWBF
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "EWBF is Cuda Equihash Miner.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.ZHash } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -72,10 +69,7 @@ namespace EWBF
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.ZHash),
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
