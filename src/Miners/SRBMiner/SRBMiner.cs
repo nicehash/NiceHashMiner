@@ -26,19 +26,7 @@ namespace SRBMiner
             _mappedDeviceIds = mappedDeviceIds;
         }
 
-        private string AlgoName
-        {
-            get
-            {
-                switch (_algorithmType)
-                {
-                    case AlgorithmType.CryptoNightR:
-                        return "cryptonight_r";
-                    default:
-                        return "";
-                }
-            }
-        }
+        private string AlgoName => PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {

@@ -32,10 +32,7 @@ namespace SRBMiner
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "SRBMiner AMD GPU Miner is a Windows software made for mining cryptocurrencies based on Cryptonight algorithm.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.CryptoNightR } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -68,9 +65,7 @@ namespace SRBMiner
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
         {
-            var algorithms = new List<Algorithm> {
-                new Algorithm(PluginUUID, AlgorithmType.CryptoNightR)
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
 
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
