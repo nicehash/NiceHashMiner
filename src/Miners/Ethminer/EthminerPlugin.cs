@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace Ethminer
 {
+#warning "MARK abstract. This is due to API stats blocking so we don't want this instantiated"
     public abstract class EthminerPlugin : PluginBase
     {
         // mandatory constructor
@@ -16,7 +17,7 @@ namespace Ethminer
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/ethereum-mining/ethminer/releases current v 0.18.0 // new alpha check for stable update
+            // https://github.com/ethereum-mining/ethminer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "v0.18.0",
@@ -29,11 +30,7 @@ namespace Ethminer
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Ethminer is an Ethash GPU mining worker",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } },
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.DaggerHashimoto } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -79,10 +76,7 @@ namespace Ethminer
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID);
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
