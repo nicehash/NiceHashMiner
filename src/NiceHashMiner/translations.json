@@ -487,6 +487,9 @@
       "ru": "Бенчмарк всех выбранных алгоритмов",
       "zh_cn": "测试所有启用算法"
     },
+	"Benchmark result is null": {
+      "ru": "Результат бенчмарка равен нулю"
+    },
     "Benchmark Selected Unbenchmarked Algorithms": {
       "bg": "Тестване на избраните алгоритми, които не са измервани досега",
       "es": "Correr benchmark para los algoritmos seleccionados que no tengan un benchmark hecho",
@@ -2253,8 +2256,11 @@
       "ru": "Сперва выберите устройство",
       "zh_cn": "请先选择设备"
     },
+	"Selected Algorithm Settings:": {
+      "ru": "Настройки выбранного алгоритма:"
+    },
     "Selected Device Settings": {
-      "ru": "Выбранные настройки устройства"
+      "ru": "Настройки выбранного устройства"
     },
     "Selected Algorithm: {0}": {
       "bg": "Алгоритъм: {0}",
