@@ -86,7 +86,7 @@ namespace ClaymoreDual14
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionIsParameter,
+                    Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "claymoreDual_eth_stale",
                     ShortName = "-estale",
                     DefaultValue = "1"
@@ -369,20 +369,6 @@ namespace ClaymoreDual14
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "claymoreDual_temperature_start",
                     ShortName = "-tstart",
-                    DefaultValue = "0",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// set stop GPU temperature, miner will stop mining if GPU reaches specified temperature. For example, "-tstop 95" means 95C temperature. You can also specify values for every card, for example "-tstop 95,85,90".
-                /// This feature is disabled by default ("-tstop 0"). You also should specify non-zero value for "-tt" option to enable this option.
-                /// If it turned off wrong card, it will close miner in 30 seconds.
-                /// You can also specify negative value to close miner immediately instead of stopping GPU, for example, "-tstop -95" will close miner as soon as any GPU reach 95C temperature.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "claymoreDual_temperature_stop",
-                    ShortName = "-tstop",
                     DefaultValue = "0",
                     Delimiter = ","
                 },

@@ -94,7 +94,7 @@ namespace SRBMiner
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "srbminer_gpu_tweak_profile",
                     ShortName = "--cgputweakprofile",
                     Delimiter = ","
@@ -131,7 +131,7 @@ namespace SRBMiner
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithSingleParameter,
+                    Type = MinerOptionType.OptionIsParameter,
                     ID = "srbminer_no_cache",
                     ShortName = "--nocache",
                 },
@@ -143,6 +143,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "srbminer_precompile_blocks",
                     ShortName = "--precompileblocks",
+                    DefaultValue = "15"
                 },
                 /// <summary>
                 /// do some precalculations that *may* increase hashing speed a little bit on weak gpu's

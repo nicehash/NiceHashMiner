@@ -90,6 +90,7 @@ namespace XMRig
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "xmrig_config",
+                    ShortName = "-c",
                     LongName = "--config="
                 },
                 /// <summary>
