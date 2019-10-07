@@ -52,6 +52,17 @@ namespace TTMiner
                     DefaultValue = "-1",
                     Delimiter = ","
                 },
+                
+                /// <summary>
+                /// Reports the current hashrate every 90 seconds to the pool
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "ttminer_rate",
+                    ShortName = "-RH",
+                    LongName = "-rate"
+                },
                 /// <summary>
                 /// This option set the process priority for TT-Miner to a different level:
                 /// 1 low
@@ -67,15 +78,6 @@ namespace TTMiner
                     ID = "ttminer_processPriority",
                     ShortName = "-PP",
                     DefaultValue = "3"
-                },
-                /// <summary>
-                /// Reports the current hashrate every 90 seconds to the pool
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "ttminer_rate",
-                    ShortName = "-rate",
                 },
                 /// <summary>
                 /// Performance-Report GPU-name
