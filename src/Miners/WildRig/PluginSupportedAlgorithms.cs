@@ -13,7 +13,7 @@ namespace WildRig
             var nvidiaAlgos = new HashSet<AlgorithmType>(GetSupportedAlgorithmsNVIDIA("").SelectMany(a => a.IDs)).ToList();
             var ret = new Dictionary<DeviceType, List<AlgorithmType>>
             {
-                { DeviceType.NVIDIA, nvidiaAlgos },
+                { DeviceType.AMD, nvidiaAlgos },
             };
             return ret;
         }
