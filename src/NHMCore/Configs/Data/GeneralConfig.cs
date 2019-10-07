@@ -174,7 +174,6 @@ namespace NHMCore.Configs.Data
         public string IFTTTKey { get; set; } = "";
 
         // 3rd party miners
-        public Use3rdPartyMiners Use3rdPartyMiners => Use3rdPartyMiners.YES;
         public int Use3rdPartyMinersTOS = 0;
 
         // 

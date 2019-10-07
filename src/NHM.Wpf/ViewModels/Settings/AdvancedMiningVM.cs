@@ -1,12 +1,11 @@
-﻿using System.ComponentModel;
-using NHM.Common.Enums;
-using NHMCore.Configs.Data;
+﻿using NHMCore.Configs.Data;
+using System.ComponentModel;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
     public class AdvancedMiningVM : SettingsBaseVM
     {
-        public bool EthlargementAvailable => IsElevated && Config.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+        public bool EthlargementAvailable => IsElevated;
 
         public AdvancedMiningVM(GeneralConfig confObj)
             : base(confObj, "Mining")
@@ -16,8 +15,8 @@ namespace NHM.Wpf.ViewModels.Settings
         {
             base.Config_PropertyChanged(sender, e);
 
-            if (e.PropertyName == nameof(Config.Use3rdPartyMiners))
-                OnPropertyChanged(nameof(EthlargementAvailable));
+            //if (e.PropertyName == nameof(Config.Use3rdPartyMiners))
+            //    OnPropertyChanged(nameof(EthlargementAvailable));
         }
     }
 }
