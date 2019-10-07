@@ -32,10 +32,7 @@ namespace ZEnemy
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Zealot/Enemy (z-enemy) NVIDIA GPU miner.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.X16R, AlgorithmType.X16Rv2 } }
-                }
+                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -65,11 +62,7 @@ namespace ZEnemy
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.X16R),
-                new Algorithm(PluginUUID, AlgorithmType.X16Rv2)
-            };
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
