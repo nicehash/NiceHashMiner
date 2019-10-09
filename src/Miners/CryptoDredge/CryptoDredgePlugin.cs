@@ -32,7 +32,7 @@ namespace CryptoDredge
             };
         }
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(3, 2);
         public override string Name => "CryptoDredge";
 
         public override string Author => "info@nicehash.com";
@@ -60,6 +60,7 @@ namespace CryptoDredge
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
             var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }

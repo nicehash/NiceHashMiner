@@ -36,7 +36,7 @@ namespace TRex
 
         public override string PluginUUID => "d47d9b00-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(3, 1);
 
         public override string Name => "TRex";
 
@@ -59,6 +59,7 @@ namespace TRex
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
             var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }

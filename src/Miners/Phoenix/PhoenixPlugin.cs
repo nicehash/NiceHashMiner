@@ -40,7 +40,7 @@ namespace Phoenix
 
         public override string PluginUUID => "f5d4a470-e360-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(3, 1);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -95,6 +95,7 @@ namespace Phoenix
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
             var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID);
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }

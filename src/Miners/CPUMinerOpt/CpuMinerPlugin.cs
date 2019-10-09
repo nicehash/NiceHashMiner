@@ -37,7 +37,7 @@ namespace CpuMinerOpt
 
         public override string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(3, 2);
 
         public override string Name => "cpuminer-opt";
 
@@ -53,7 +53,7 @@ namespace CpuMinerOpt
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             // TODO set is intel/amd
-            var cpus = devices.Where(dev => dev is CPUDevice).Select(dev => (CPUDevice)dev);
+            var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
             IsIntel = IsIntelCpu(cpus);
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
