@@ -47,14 +47,10 @@ namespace NBMiner
         {
             switch (algorithmType)
             {
-                case AlgorithmType.GrinCuckatoo31:
-                    return "cuckatoo";
-                case AlgorithmType.CuckooCycle:
-                    return "cuckoo_ae";
-                case AlgorithmType.GrinCuckarood29:
-                    return "cuckarood";
-                default:
-                    return "";
+                case AlgorithmType.GrinCuckatoo31: return "cuckatoo";
+                case AlgorithmType.CuckooCycle: return "cuckoo_ae";
+                case AlgorithmType.GrinCuckarood29: return "cuckarood";
+                default: return "";
             }
         }
 
