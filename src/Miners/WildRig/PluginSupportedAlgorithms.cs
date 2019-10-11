@@ -37,7 +37,8 @@ namespace WildRig
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
-                new Algorithm(PluginUUID, AlgorithmType.X16R)
+                new Algorithm(PluginUUID, AlgorithmType.X16R),
+                new Algorithm(PluginUUID, AlgorithmType.X16Rv2)
             };
             return algorithms;
         }
@@ -46,12 +47,10 @@ namespace WildRig
         {
             switch (algorithmType)
             {
-                case AlgorithmType.Lyra2REv3:
-                    return "lyra2v3";
-                case AlgorithmType.X16R:
-                    return "x16r";
-                default:
-                    return "";
+                case AlgorithmType.Lyra2REv3: return "lyra2v3";
+                case AlgorithmType.X16R: return "x16r";
+                case AlgorithmType.X16Rv2: return "x16rv2";
+                default: return "";
             }
         }
 
