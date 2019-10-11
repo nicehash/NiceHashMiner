@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:NHM.Wpf"
              Startup="App_OnStartup">
     <Application.Resources>
-        <!--colors-->
+        <!--#region Colors-->
         <Color x:Key="NastyGreen">#68B641</Color>
         <Color x:Key="SuccessBgColor">#DBEED2</Color>
         <Color x:Key="RedDangerColor">#E92424</Color>
@@ -13,9 +13,9 @@
         <Color x:Key="TextColor">#3A3939</Color>
         <Color x:Key="Gray1Color">#959595</Color>
         <Color x:Key="Gray2Color">#CECDCD</Color>
-        
-        
-        <!--brushes-->
+        <!--#endregion Colors-->
+
+        <!--#region Brushes-->
         <SolidColorBrush x:Key="NastyGreenBrush" Color="{StaticResource NastyGreen}" />
         <SolidColorBrush x:Key="SuccessBgColorBrush" Color="{StaticResource SuccessBgColor}" />
         <SolidColorBrush x:Key="RedDangerColorBrush" Color="{StaticResource RedDangerColor}" />
@@ -24,9 +24,65 @@
         <SolidColorBrush x:Key="TextColorBrush" Color="{StaticResource TextColor}" />
         <SolidColorBrush x:Key="Gray1ColorBrush" Color="{StaticResource Gray1Color}" />
         <SolidColorBrush x:Key="Gray2ColorBrush" Color="{StaticResource Gray2Color}" />
+        <!--#endregion Brushes-->
 
-        <!--fonts-->
+        <!--#region Fonts-->
         <FontFamily x:Key="UbuntuFontFamily">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu</FontFamily>
         <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Free Solid</FontFamily>
+        <!--#endregion Fonts-->
+        
+        <!--#region base sytles-->
+        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlock">
+            <Setter Property= "FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "FontWeight" Value="Normal"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlockBold" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property= "FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlockMedium" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property= "FontWeight" Value="Medium"/>
+        </Style>
+
+        <!--#endregion base sytles-->
+        
+        <!--#region Dashboard styles -->
+        <!--devices circle count labels-->
+        <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeCountText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="40"/>
+            <Setter Property= "Foreground" Value="{StaticResource TextColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="10"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
+        </Style>
+        <!--stats-->
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatsTitleText" BasedOn="{StaticResource BaseUbuntuTextBlockMedium}">
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCValueText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="18"/>
+            <Setter Property= "Foreground" Value="{StaticResource TextColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "Foreground" Value="{StaticResource TextColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatsFiatEstimateText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
+        </Style>
+
+        <!--#endregion Dashboard styles -->
+        
+        
     </Application.Resources>
 </Application>

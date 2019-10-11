@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="NHM.Wpf.Views.Dashboard.Dashboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NHM.Wpf.Views.Dashboard"
+             xmlns:common="clr-namespace:NHM.Wpf.Views.Common"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="168" />
+            <RowDefinition Height="86" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="AliceBlue">
+            <TextBlock>Content</TextBlock>
+        </Grid>
+        <Grid Grid.Row="1" >
+            <!--shadow border-->
+            <Border BorderBrush="Transparent" BorderThickness="0" Background="White">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="1"/>
+                </Border.Effect>
+            </Border>
+
+            <!--content border-->
+            <Border Background="Transparent" BorderBrush="Transparent" BorderThickness="0" CornerRadius="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Border BorderThickness="2" BorderBrush="Black" CornerRadius="60" Margin="30">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource DevicesTypeCountText}">4</TextBlock>
+                                <TextBlock Style="{StaticResource DevicesTypeLabelText}">GPU’S</TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <GridSplitter Grid.Column="1" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
+                    <Grid Grid.Column="2">
+                        <Border BorderThickness="2" BorderBrush="Black" CornerRadius="60" Margin="30">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource DevicesTypeCountText}">1</TextBlock>
+                                <TextBlock Style="{StaticResource DevicesTypeLabelText}">CPU</TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <GridSplitter Grid.Column="3" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
+                    <StackPanel Grid.Column="4">
+                        <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">0.0191616</TextBlock>
+                            <TextBlock Style="{StaticResource StatsBTCLabelText}" Margin="4,14,0,0">BTC / 24h</TextBlock>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource StatsFiatEstimateText}" Margin="24,8,0,0">≈ $ 141,69</TextBlock>
+                    </StackPanel>
+                    <GridSplitter Grid.Column="5" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
+                    <StackPanel Grid.Column="6">
+                        <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">1.018</TextBlock>
+                            <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0">BTC</TextBlock>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0">≈ $ 7527,32</TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="2" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <common:MiningLocation Grid.Column="0"/>
+            <common:ViewStatsOnline Grid.Column="1" HorizontalAlignment="Right"/>
+        </Grid>
+    </Grid>
+</UserControl>
