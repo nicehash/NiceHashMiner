@@ -113,10 +113,34 @@
     <Compile Include="Views\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Benchmark\Benchmarks.xaml.cs">
+      <DependentUpon>Benchmarks.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Benchmark\Controls\ComputeDeviceElement.xaml.cs">
+      <DependentUpon>ComputeDeviceElement.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ChooseLanguageWindow.xaml.cs">
       <DependentUpon>ChooseLanguageWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\MiningLocation.xaml.cs">
+      <DependentUpon>MiningLocation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\ViewStatsOnline.xaml.cs">
+      <DependentUpon>ViewStatsOnline.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\WindowUtils.cs" />
+    <Compile Include="Views\Dashboard\Dashboard.xaml.cs">
+      <DependentUpon>Dashboard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Devices\ComputeDeviceItem.xaml.cs">
+      <DependentUpon>ComputeDeviceItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Devices\ComputeDeviceItemColumn.xaml.cs">
+      <DependentUpon>ComputeDeviceItemColumn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Devices\Devices.xaml.cs">
+      <DependentUpon>Devices.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EulaWindow.xaml.cs">
       <DependentUpon>EulaWindow.xaml</DependentUpon>
     </Compile>
@@ -125,6 +149,9 @@
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainWindowNew.xaml.cs">
+      <DependentUpon>MainWindowNew.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Plugins\Controls\InlineDataDisplay.xaml.cs">
       <DependentUpon>InlineDataDisplay.xaml</DependentUpon>
@@ -191,11 +218,43 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Benchmark\Benchmarks.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Benchmark\Controls\ComputeDeviceElement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ChooseLanguageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Common\MiningLocation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Common\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\ViewStatsOnline.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dashboard\Dashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Devices\ComputeDeviceItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Devices\ComputeDeviceItemColumn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Devices\Devices.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -210,6 +269,10 @@
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainWindowNew.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Plugins\Controls\InlineDataDisplay.xaml">
       <SubType>Designer</SubType>
@@ -301,7 +364,8 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="README.md" />
-    <Resource Include="Resources\Fonts\Ubuntu-R.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-R.ttf" />
+    <Resource Include="Resources\Fonts\FontAwesome\fa-solid-900.ttf" />
     <None Include="translations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -325,6 +389,5 @@
       <Name>NHMCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
