@@ -59,7 +59,19 @@
             </Grid>
         </Grid>
         <Grid Grid.Row="1">
-            <StackPanel>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" >
+                <TextBlock Text="Disable / Enable All" Style="{StaticResource BaseUbuntuTextBlockBold}" FontSize="14" Foreground="{StaticResource Gray2ColorBrush}"/>
+                <CheckBox Style="{StaticResource NHMSwitch}" Margin="24,0,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <local:ComputeDeviceItem></local:ComputeDeviceItem>
+                <local:ComputeDeviceItem></local:ComputeDeviceItem>
+                <local:ComputeDeviceItem></local:ComputeDeviceItem>
+                <local:ComputeDeviceItem></local:ComputeDeviceItem>
                 <local:ComputeDeviceItem></local:ComputeDeviceItem>
                 <local:ComputeDeviceItem></local:ComputeDeviceItem>
                 <local:ComputeDeviceItem></local:ComputeDeviceItem>

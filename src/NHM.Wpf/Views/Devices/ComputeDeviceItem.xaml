@@ -94,34 +94,37 @@
         <Border BorderThickness="1" Background="#ffffff" BorderBrush="#eeeeee" CornerRadius="4"/>
         <!--content-->
         <!--enabled/disabled-->
-        <CheckBox Margin="16,19,0,0" IsChecked="{ Binding Path=Enabled, Mode=TwoWay}"/>
+        
         <!--device name and mining algorithm-->
         
         <!--first one has flipped style-->
-        <StackPanel Margin="64,8,0,0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource StatusColumnValue}" Text="{ Binding Path=TitleText }"/>
-            <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,4,0,0">Equihash: 1740.77 Sol/s</TextBlock>
+        <StackPanel Margin="16,8,0,0" Orientation="Vertical">
+            <TextBlock Style="{StaticResource StatusColumnValue}" Text="{ Binding Path=TitleText }">Gygabyte GeForce GTX 1080</TextBlock>
+            <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,4,0,0">CryptoDredge / Equihash: 1740.77 Sol/s</TextBlock>
         </StackPanel>
-        <StackPanel Margin="251,8,0,0" Orientation="Vertical">
+        <StackPanel Margin="212,8,0,0" Orientation="Vertical">
             <TextBlock Style="{StaticResource StatusColumnTitle}">Status</TextBlock>
             <TextBlock Style="{StaticResource StatusColumnValue}" Foreground="{StaticResource NastyGreenBrush}" FontWeight="Bold" Margin="0,4,0,0">Mining</TextBlock>
         </StackPanel>
-        <StackPanel Margin="322,8,0,0" Orientation="Vertical">
+        <StackPanel Margin="287,8,0,0" Orientation="Vertical">
             <TextBlock Style="{StaticResource StatusColumnTitle}">Temp</TextBlock>
             <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">85ºC</TextBlock>
         </StackPanel>
-        <StackPanel Margin="381,8,0,0" Orientation="Vertical">
+        <StackPanel Margin="338,8,0,0" Orientation="Vertical">
             <TextBlock Style="{StaticResource StatusColumnTitle}">Load</TextBlock>
             <TextBlock Style="{StaticResource StatusColumnValue}" Foreground="#68b641" Margin="0,4,0,0">100%</TextBlock>
         </StackPanel>
-        <StackPanel Margin="444,8,0,0" Orientation="Vertical">
+        <StackPanel Margin="393,8,0,0" Orientation="Vertical">
             <TextBlock Style="{StaticResource StatusColumnTitle}">RPM</TextBlock>
             <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">2730</TextBlock>
         </StackPanel>
-        <StackPanel Margin="504,8,0,0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource StatusColumnTitle}">SPEEDS</TextBlock>
-            <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">38.071 MH/s</TextBlock>
+        <StackPanel Margin="445,8,0,0" Orientation="Vertical">
+            <TextBlock Style="{StaticResource StatusColumnTitle}">Profitability / 24h</TextBlock>
+            <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">0.001594 BTC</TextBlock>
         </StackPanel>
+
+        <CheckBox HorizontalAlignment="Right" Margin="0,0,97,0" Style="{StaticResource NHMSwitch}" IsChecked="{ Binding Path=Enabled, Mode=TwoWay }"/>
+
         <!--Play Button-->
         <Button IsEnabled="{ Binding Path=Enabled }" Margin="0,0,57.8,0" HorizontalAlignment="Right">
             <Button.Resources>

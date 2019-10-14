@@ -6,16 +6,17 @@
              xmlns:local="clr-namespace:NHM.Wpf.Views.Benchmark.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="32" d:DesignWidth="720">
-    <Grid Background="White">
-        <Border BorderBrush="Transparent" BorderThickness="0" Background="White">
+    <Grid Background="Transparent">
+        <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="1"/>
             </Border.Effect>
         </Border>
         <Border BorderBrush="Transparent" BorderThickness="0">
+
             <Grid>
-                <ToggleButton ></ToggleButton>
-                <!--<CheckBox />-->
+                <CheckBox Style="{StaticResource NHMSwitch}" Margin="16,0,0,0" />
+                <TextBlock Style="{StaticResource BaseUbuntuTextBlock}"  Text="Gygabyte GeForce GTX 1080" Margin="64,7,0,0"/>
             </Grid>
         </Border>
     </Grid>

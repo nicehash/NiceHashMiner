@@ -113,6 +113,9 @@
     <Compile Include="Views\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Benchmark\ActionButton.xaml.cs">
+      <DependentUpon>ActionButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Benchmark\Benchmarks.xaml.cs">
       <DependentUpon>Benchmarks.xaml</DependentUpon>
     </Compile>
@@ -215,6 +218,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BenchmarkWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Benchmark\ActionButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
