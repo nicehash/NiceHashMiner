@@ -23,23 +23,23 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.67",
+                BinVersion = "1.68",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.67/gminer_1_67_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.68/gminer_1_68_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "GMiner - High-performance miner for AMD/Nvidia GPUs.",
+                PluginDescription = "GMiner - High-performance miner for NVIDIA and AMD GPUs.",
                 SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(3, 2);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -160,12 +160,10 @@ namespace GMinerPlugin
         {
             try
             {
-                if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major < 3 && ids.FirstOrDefault() == AlgorithmType.GrinCuckarood29)
-                {
-                    return true;
-                }
-                return false;
+                var isReBenchVersion = benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 2;
+                var first = ids.FirstOrDefault();
+                var isBenchAlgo = first == AlgorithmType.GrinCuckarood29 || first == AlgorithmType.CuckooCycle;
+                return isReBenchVersion && isBenchAlgo;
             }
             catch (Exception e)
             {
