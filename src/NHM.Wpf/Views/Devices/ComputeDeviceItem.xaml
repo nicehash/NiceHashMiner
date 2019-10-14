@@ -34,6 +34,14 @@
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
 
             <Setter Property="Background" Value="#FFFFFF"/>
+
+
+            <Setter Property="BitmapEffect">
+                <Setter.Value>
+                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
+                </Setter.Value>
+            </Setter>
+
             <!--I don't understand this Template part-->
             <Setter Property="Template">
                 <Setter.Value>
@@ -50,14 +58,22 @@
                     <Setter Property="Background" Value="Aqua"/>
                 </Trigger>
             </Style.Triggers>
+
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Style>
+                <!--<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+                    <Setter Property="FontSize" Value="12" />
+                </Style>-->
+            </Style.Resources>
+
+
         </Style>
         
-        <Style TargetType="{x:Type Border}" x:Key="StartStopButtonBorder">
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-        </Style>
         <Style TargetType="{x:Type TextBlock}" x:Key="StartStopTextBlock">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
             <Setter Property="FontSize" Value="10" />
@@ -110,28 +126,20 @@
         <Button IsEnabled="{ Binding Path=Enabled }" Margin="0,0,57.8,0" HorizontalAlignment="Right">
             <Button.Resources>
                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
-                <Style TargetType="{x:Type Border}" BasedOn="{StaticResource StartStopButtonBorder}" />
                 <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
                     <Setter Property="Foreground" Value="{StaticResource NastyGreenBrush}" />
                 </Style>
             </Button.Resources>
-            <Button.BitmapEffect>
-                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
-            </Button.BitmapEffect>
             <TextBlock Text="&#xF04B;"/>
         </Button>
         <!--Stop Button-->
-        <Button IsEnabled="{ Binding Path=Enabled }" MaxHeight="24" MaxWidth="23.2" MinHeight="24" MinWidth="23.2" Margin="0,0,23.4,0" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+        <Button IsEnabled="{ Binding Path=Enabled }" Margin="0,0,23.4,0" HorizontalAlignment="Right">
             <Button.Resources>
                 <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
-                <Style TargetType="{x:Type Border}" BasedOn="{StaticResource StartStopButtonBorder}" />
                 <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
                     <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
                 </Style>
             </Button.Resources>
-            <Button.BitmapEffect>
-                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
-            </Button.BitmapEffect>
             <TextBlock Text="&#xF04D;"/>
         </Button>
     </Grid>

@@ -30,21 +30,11 @@
         </Grid>
 
         <DockPanel Grid.Row="2" Margin="24,24,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button DockPanel.Dock="Right" Width="168" Height="40" Click="AcceptButton_OnClick" Foreground="White" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="I ACCEPT" >
-                <Button.Background>
-                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                        <GradientStop Color="#FFFBA342" Offset="0"/>
-                        <GradientStop Color="#FFFBC241" Offset="1"/>
-                    </LinearGradientBrush>
-                </Button.Background>
-                <Button.BitmapEffect>
-                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
-                </Button.BitmapEffect>
+            <Button DockPanel.Dock="Right" Click="AcceptButton_OnClick" Style="{StaticResource OKButton}" >
+                <TextBlock Text="I ACCEPT"/>
             </Button>
-            <Button DockPanel.Dock="Right" Width="168" Height="40" Click="CancelButton_OnClick" Foreground="Black" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="CANCEL" Margin="16,0" Background="White">
-                <Button.BitmapEffect>
-                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
-                </Button.BitmapEffect>
+            <Button DockPanel.Dock="Right" Click="CancelButton_OnClick" Style="{StaticResource CancelButton}" Margin="16,0">
+                <TextBlock Text="CANCEL"/>
             </Button>
         </DockPanel>
     </Grid>
