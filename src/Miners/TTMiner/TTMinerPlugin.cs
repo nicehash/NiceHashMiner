@@ -19,15 +19,15 @@ namespace TTMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://bitcointalk.org/index.php?topic=5025783.0 current 3.0.5 // TODO update
+            // https://bitcointalk.org/index.php?topic=5025783.0 current 3.0.10 // TODO update
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "3.0.5",
+                BinVersion = "3.0.10",
                 ExePath = new List<string> { "TT-Miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/TT-Miner-3.0.5.zip",
-                    "https://tradeproject.de/download/Miner/TT-Miner-3.0.5.zip" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/TT-Miner-3.0.10.zip",
+                    "https://tradeproject.de/download/Miner/TT-Miner-3.0.10.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace TTMiner
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(3, 2);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 
