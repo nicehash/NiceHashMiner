@@ -21,7 +21,7 @@
         </Grid.RowDefinitions>
         <Separator Grid.Row="0" Margin="16,0,16,0" Background="#eeeeee"></Separator>
         <Grid Grid.Row="1" Height="Auto" >
-            <TextBlock Margin="24,0" FontFamily="{StaticResource UbuntuFontFamily}" FontWeight="Bold">TERMS OF SERVICE</TextBlock>
+            <TextBlock Margin="24,0,0,0" FontFamily="{StaticResource UbuntuFontFamily}" FontWeight="Bold">TERMS OF SERVICE</TextBlock>
             <RichTextBox  x:Name="EulaRtb" Margin="24,20,24,0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" IsDocumentEnabled="True" BorderThickness="1" >
                 <FlowDocument>
                     <Paragraph>

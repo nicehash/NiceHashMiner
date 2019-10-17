@@ -36,6 +36,24 @@
         <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Free Solid</FontFamily>
         <!--#endregion Fonts-->
 
+        <!--#region base sytles-->
+        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlock">
+            <Setter Property= "FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "FontWeight" Value="Normal"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlockBold" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property= "FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlockMedium" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property= "FontWeight" Value="Medium"/>
+        </Style>
+
+        <!--#endregion base sytles-->
+
         <!--#region common buttons-->
         <Style TargetType="{x:Type Button}" x:Key="NHMButton">
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -100,16 +118,83 @@
                 </Style>
             </Style.Resources>
         </Style>
+        
+        <!--Start Stop buttons-->
+        <Style TargetType="{x:Type Button}" x:Key="StartStopButton">
+            <Setter Property="MaxHeight" Value="24"/>
+            <Setter Property="MaxWidth" Value="23.2"/>
+            <Setter Property="MinHeight" Value="24"/>
+            <Setter Property="MinWidth" Value="23.2"/>
+
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+
+            <Setter Property="Background" Value="#FFFFFF"/>
 
 
-        <Style TargetType="CheckBox" x:Key="NHMSwitch">
+            <Setter Property="BitmapEffect">
+                <Setter.Value>
+                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
+                </Setter.Value>
+            </Setter>
+
+            <!--I don't understand this Template part-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
+                </Trigger>
+                
+            </Style.Triggers>
+
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Style>
+                
+            </Style.Resources>
+        </Style>
+        <!--#region start/stop button styles-->
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="StartStopTextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
+            <Style.Triggers>
+                <Trigger Property ="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"  Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style TargetType="{x:Type CheckBox}" x:Key="NHMSwitch">
             <Style.Resources>
                 <Color x:Key="DisabledBarColor">#cecdcd</Color>
                 <SolidColorBrush x:Key="DisabledBarColorBrush" Color="{StaticResource DisabledBarColor}"/>
             </Style.Resources>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="CheckBox">
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
                         <StackPanel Orientation="Horizontal">
                             <Grid >
                                 <Border x:Name="barInvisible" Width="32" Height="16" Background="Transparent" BorderBrush="Transparent"/>
@@ -189,24 +274,6 @@
         </Style>
 
         <!--#endregion common buttons-->
-        
-        <!--#region base sytles-->
-        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlock">
-            <Setter Property= "FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
-            <Setter Property= "FontStyle" Value="Normal"/>
-            <Setter Property= "FontStretch" Value="Normal"/>
-            <Setter Property= "FontWeight" Value="Normal"/>
-        </Style>
-
-        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlockBold" BasedOn="{StaticResource BaseUbuntuTextBlock}">
-            <Setter Property= "FontWeight" Value="Bold"/>
-        </Style>
-
-        <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlockMedium" BasedOn="{StaticResource BaseUbuntuTextBlock}">
-            <Setter Property= "FontWeight" Value="Medium"/>
-        </Style>
-
-        <!--#endregion base sytles-->
         
         <!--#region Dashboard styles -->
         <!--devices circle count labels-->

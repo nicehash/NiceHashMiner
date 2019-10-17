@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NHM.Wpf.Views.Benchmark.Controls
+namespace NHM.Wpf.Views.Benchmark
 {
     /// <summary>
-    /// Interaction logic for ComputeDeviceElement.xaml
+    /// Interaction logic for AlgorithmSettings.xaml
     /// </summary>
-    public partial class ComputeDeviceElement : UserControl
+    public partial class AlgorithmSettings : UserControl
     {
-        public ComputeDeviceElement()
+        public AlgorithmSettings()
         {
             InitializeComponent();
         }

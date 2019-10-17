@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace NHM.Wpf.Views.Benchmark
 {
     /// <summary>
-    /// Interaction logic for ActionButton.xaml
+    /// Interaction logic for ComputeDeviceElement.xaml
     /// </summary>
-    public partial class ActionButton : UserControl
+    public partial class ComputeDeviceElement : UserControl
     {
-        public ActionButton()
+        public ComputeDeviceElement()
         {
             InitializeComponent();
         }

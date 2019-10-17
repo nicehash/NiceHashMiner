@@ -157,8 +157,10 @@ namespace NHM.Wpf
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();
             if (!canRun) Shutdown();
 
-            var main = new MainWindow() {};
-            main.Show();
+            //var main = new MainWindow() {};
+            //main.Show();
+            var m2 = new MainWindowNew();
+            m2.Show();
 
             // Set shutdown mode back to default
             ShutdownMode = ShutdownMode.OnLastWindowClose;

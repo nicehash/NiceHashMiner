@@ -8,6 +8,7 @@ using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Stats;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace NHMCore.Mining
@@ -213,6 +214,16 @@ namespace NHMCore.Mining
             Index = index;
             NameCount = nameCount;
             Enabled = true;
+
+            ConfigManager.GeneralConfig.PropertyChanged += OnShowGPUPCIeBusIDs;
+        }
+
+        private void OnShowGPUPCIeBusIDs(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs))
+            {
+                OnPropertyChanged(nameof(FullName));
+            }
         }
 
         // combines long and short name

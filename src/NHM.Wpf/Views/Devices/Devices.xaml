@@ -13,6 +13,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="86" />
         </Grid.RowDefinitions>
+        <!--STATS-->
         <Grid Grid.Row="0" Margin="0,40,0,24">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -58,6 +59,7 @@
                 <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">Place for pushing user to the web</TextBlock>
             </Grid>
         </Grid>
+        <!--DEVICES-->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="24" />
@@ -65,20 +67,30 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" >
                 <TextBlock Text="Disable / Enable All" Style="{StaticResource BaseUbuntuTextBlockBold}" FontSize="14" Foreground="{StaticResource Gray2ColorBrush}"/>
-                <CheckBox Style="{StaticResource NHMSwitch}" Margin="24,0,0,0"/>
+                <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{Binding ShowPCI, Mode=TwoWay }" Margin="24,0,0,0"/>
             </StackPanel>
-            <StackPanel Grid.Row="1">
-                <local:ComputeDeviceItem></local:ComputeDeviceItem>
-                <local:ComputeDeviceItem></local:ComputeDeviceItem>
-                <local:ComputeDeviceItem></local:ComputeDeviceItem>
-                <local:ComputeDeviceItem></local:ComputeDeviceItem>
-                <local:ComputeDeviceItem></local:ComputeDeviceItem>
-                <local:ComputeDeviceItem></local:ComputeDeviceItem>
-                <local:ComputeDeviceItem></local:ComputeDeviceItem>
-                <local:ComputeDeviceItem></local:ComputeDeviceItem>
-            </StackPanel>
-            
+
+            <ListView Grid.Row="1" ItemsSource="{Binding Devices}" Width="Auto" Focusable="False" BorderThickness="0" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <local:ComputeDeviceItem DataContext="{Binding .}" Margin="0,8,0,0"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Focusable" Value="false"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{x:Null}" />
+                                <Setter Property="BorderBrush" Value="{x:Null}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
         </Grid>
+        <!--Footer-->
         <Grid Grid.Row="2" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -86,15 +98,27 @@
             </Grid.ColumnDefinitions>
             <common:MiningLocation Grid.Column="0"/>
             <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                <Button HorizontalAlignment="Right" MaxWidth="200">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                            <Setter Property="Foreground" Value="{StaticResource NastyGreenBrush}" />
+                        </Style>
+                    </Button.Resources>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontFamily="{StaticResource FontAwesome}" FontSize="10" Foreground="#68b641" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="17,1.5,0,0">&#xF04B;</TextBlock>
+                        <TextBlock Margin="17,1.5,0,0" Text="&#xF04B;"/>
                         <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="5.5,0,12.5,0">START ALL</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Margin="16,0,0,0" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                <Button Margin="16,0,0,0" MaxWidth="200" HorizontalAlignment="Right">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                            <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
+                        </Style>
+                    </Button.Resources>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontFamily="{StaticResource FontAwesome}" FontSize="10" Foreground="#e92424" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="17,1.5,0,0">&#xF04D;</TextBlock>
+                        <TextBlock Margin="17,1.5,0,0" Text="&#xF04D;" />
                         <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="5.5,0,12.5,0">STOP ALL</TextBlock>
                     </StackPanel>
                 </Button>

@@ -1,9 +1,10 @@
-﻿using System;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
+using NHM.Wpf.ViewModels.Models;
 using NHMCore;
 using NHMCore.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,7 +12,6 @@ using System.Linq;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
-using NHM.Wpf.ViewModels.Models;
 using MessageBox = System.Windows.MessageBox;
 
 namespace NHM.Wpf.ViewModels

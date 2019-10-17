@@ -2,7 +2,6 @@
 using NHM.Common.Enums;
 using NHMCore.Mining;
 using NHMCore.Stats;
-using NHMCore.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;

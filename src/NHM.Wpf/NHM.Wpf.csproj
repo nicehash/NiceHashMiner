@@ -70,6 +70,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\LoadValueToText.cs" />
+    <Compile Include="Converters\StatusColorConverter.cs" />
+    <Compile Include="Converters\TemperatureValueToText.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
@@ -113,13 +116,13 @@
     <Compile Include="Views\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Benchmark\ActionButton.xaml.cs">
-      <DependentUpon>ActionButton.xaml</DependentUpon>
+    <Compile Include="Views\Benchmark\AlgorithmSettings.xaml.cs">
+      <DependentUpon>AlgorithmSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Benchmark\Benchmarks.xaml.cs">
       <DependentUpon>Benchmarks.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Benchmark\Controls\ComputeDeviceElement.xaml.cs">
+    <Compile Include="Views\Benchmark\ComputeDeviceElement.xaml.cs">
       <DependentUpon>ComputeDeviceElement.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ChooseLanguageWindow.xaml.cs">
@@ -137,9 +140,6 @@
     </Compile>
     <Compile Include="Views\Devices\ComputeDeviceItem.xaml.cs">
       <DependentUpon>ComputeDeviceItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Devices\ComputeDeviceItemColumn.xaml.cs">
-      <DependentUpon>ComputeDeviceItemColumn.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Devices\Devices.xaml.cs">
       <DependentUpon>Devices.xaml</DependentUpon>
@@ -209,6 +209,9 @@
     <Compile Include="Views\StartupLoadingWindow.xaml.cs">
       <DependentUpon>StartupLoadingWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TemporaryStartupLoadingControl.xaml.cs">
+      <DependentUpon>TemporaryStartupLoadingControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="Resources\Xaml\SVGResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -221,7 +224,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Benchmark\ActionButton.xaml">
+    <Page Include="Views\Benchmark\AlgorithmSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -229,7 +232,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Benchmark\Controls\ComputeDeviceElement.xaml">
+    <Page Include="Views\Benchmark\ComputeDeviceElement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -254,10 +257,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Devices\ComputeDeviceItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Devices\ComputeDeviceItemColumn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -342,6 +341,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\StartupLoadingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TemporaryStartupLoadingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

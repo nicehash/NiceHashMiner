@@ -4,13 +4,20 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Devices"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels.Models"
+             xmlns:converters="clr-namespace:NHM.Wpf.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="53" Width="720"
+             d:DesignHeight="53"
+             d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=local:ComputeDeviceItem}">
+    <!--<UserControl.DataContext>
+        <viewModels:DeviceData />
+    </UserControl.DataContext>-->
     <UserControl.Resources>
         <Style TargetType="{x:Type StackPanel}">
             <Setter Property="Orientation" Value="Vertical" />
+            <Setter Property="Margin" Value="36,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
         </Style>
 
         <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
@@ -23,127 +30,84 @@
         </Style>
         
         
-        <!--#region start/stop button styles-->
-        <Style TargetType="{x:Type Button}" x:Key="StartStopButton">
-            <Setter Property="MaxHeight" Value="24"/>
-            <Setter Property="MaxWidth" Value="23.2"/>
-            <Setter Property="MinHeight" Value="24"/>
-            <Setter Property="MinWidth" Value="23.2"/>
-
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-
-            <Setter Property="Background" Value="#FFFFFF"/>
-
-
-            <Setter Property="BitmapEffect">
-                <Setter.Value>
-                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
-                </Setter.Value>
-            </Setter>
-
-            <!--I don't understand this Template part-->
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <!--change the aqua color-->
-                    <Setter Property="Background" Value="Aqua"/>
-                </Trigger>
-            </Style.Triggers>
-
-            <Style.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="4" />
-                    <Setter Property="BorderThickness" Value="0" />
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                </Style>
-                <!--<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                    <Setter Property="FontSize" Value="12" />
-                </Style>-->
-            </Style.Resources>
-
-
-        </Style>
         
-        <Style TargetType="{x:Type TextBlock}" x:Key="StartStopTextBlock">
-            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="FontStretch" Value="Normal" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
-            <Style.Triggers>
-                <Trigger Property ="IsEnabled" Value="False">
-                    <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}">
-                    </Setter>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
         <!--#endregion start/stop button styles-->
-        
+        <converters:TranslatingConverter x:Key="TrConv" />
+        <converters:StatusColorConverter x:Key="StatusConv" />
+        <converters:TemperatureValueToText x:Key="TempToText" />
+        <converters:LoadValueToText x:Key="LoadToText" />
     </UserControl.Resources>
-    <Grid MinHeight="53" MaxHeight="54" Background="Transparent">
+    <Grid MinHeight="53" MaxHeight="154" Width="Auto" Background="Transparent">
         <Border BorderThickness="1" Background="#ffffff" BorderBrush="#eeeeee" CornerRadius="4"/>
-        <!--content-->
-        <!--enabled/disabled-->
-        
-        <!--device name and mining algorithm-->
-        
-        <!--first one has flipped style-->
-        <StackPanel Margin="16,8,0,0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource StatusColumnValue}" Text="{ Binding Path=TitleText }">Gygabyte GeForce GTX 1080</TextBlock>
-            <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,4,0,0">CryptoDredge / Equihash: 1740.77 Sol/s</TextBlock>
-        </StackPanel>
-        <StackPanel Margin="212,8,0,0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource StatusColumnTitle}">Status</TextBlock>
-            <TextBlock Style="{StaticResource StatusColumnValue}" Foreground="{StaticResource NastyGreenBrush}" FontWeight="Bold" Margin="0,4,0,0">Mining</TextBlock>
-        </StackPanel>
-        <StackPanel Margin="287,8,0,0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource StatusColumnTitle}">Temp</TextBlock>
-            <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">85ºC</TextBlock>
-        </StackPanel>
-        <StackPanel Margin="338,8,0,0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource StatusColumnTitle}">Load</TextBlock>
-            <TextBlock Style="{StaticResource StatusColumnValue}" Foreground="#68b641" Margin="0,4,0,0">100%</TextBlock>
-        </StackPanel>
-        <StackPanel Margin="393,8,0,0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource StatusColumnTitle}">RPM</TextBlock>
-            <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">2730</TextBlock>
-        </StackPanel>
-        <StackPanel Margin="445,8,0,0" Orientation="Vertical">
-            <TextBlock Style="{StaticResource StatusColumnTitle}">Profitability / 24h</TextBlock>
-            <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">0.001594 BTC</TextBlock>
-        </StackPanel>
+        <Grid HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <CheckBox HorizontalAlignment="Right" Margin="0,0,97,0" Style="{StaticResource NHMSwitch}" IsChecked="{ Binding Path=Enabled, Mode=TwoWay }"/>
+            <!--first one has flipped style-->
+            <StackPanel Grid.Column="0" HorizontalAlignment="Left" Margin="16,8,0,0">
+                <TextBlock Style="{StaticResource StatusColumnValue}" Text="{ Binding Dev.FullName }" />
+                <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,4,0,0">CryptoDredge / Equihash: 1740.77 Sol/s</TextBlock>
+            </StackPanel>
 
-        <!--Play Button-->
-        <Button IsEnabled="{ Binding Path=Enabled }" Margin="0,0,57.8,0" HorizontalAlignment="Right">
-            <Button.Resources>
-                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
-                    <Setter Property="Foreground" Value="{StaticResource NastyGreenBrush}" />
-                </Style>
-            </Button.Resources>
-            <TextBlock Text="&#xF04B;"/>
-        </Button>
-        <!--Stop Button-->
-        <Button IsEnabled="{ Binding Path=Enabled }" Margin="0,0,23.4,0" HorizontalAlignment="Right">
-            <Button.Resources>
-                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
-                    <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
-                </Style>
-            </Button.Resources>
-            <TextBlock Text="&#xF04D;"/>
-        </Button>
+            <Grid Grid.Column="1" HorizontalAlignment="Left" Width="Auto">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                
+                <StackPanel Grid.Column="1">
+                    <TextBlock Style="{StaticResource StatusColumnTitle}">Status</TextBlock>
+                    <TextBlock Style="{StaticResource StatusColumnValue}" Foreground="{Binding Dev.State, Converter={StaticResource StatusConv}}" FontWeight="Bold" Margin="0,4,0,0" Text="{Binding Dev.State, Converter={StaticResource TrConv}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Style="{StaticResource StatusColumnTitle}">Temp</TextBlock>
+                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0" Text="{Binding Dev.Temp, Converter={StaticResource TempToText}}" />
+                </StackPanel>
+                <StackPanel Grid.Column="3">
+                    <TextBlock Style="{StaticResource StatusColumnTitle}">Load</TextBlock>
+                    <TextBlock Style="{StaticResource StatusColumnValue}" Foreground="#68b641" Margin="0,4,0,0" Text="{Binding Dev.Load, Converter={StaticResource LoadToText}}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="4">
+                    <TextBlock Style="{StaticResource StatusColumnTitle}">RPM</TextBlock>
+                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">2730</TextBlock>
+                </StackPanel>
+                <StackPanel Grid.Column="5">
+                    <TextBlock Style="{StaticResource StatusColumnTitle}">Profitability / 24h</TextBlock>
+                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">0.001594 BTC</TextBlock>
+                </StackPanel>
+            </Grid>
+            <StackPanel Grid.Column="2" Margin="16,0,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{ Binding Enabled, Mode=TwoWay }"/>
+
+                <!--Play Button-->
+                <Button IsEnabled="{ Binding CanStart, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,0,0" Command="{Binding StartStopCommand}">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                            <Setter Property="Foreground" Value="{StaticResource NastyGreenBrush}" />
+                        </Style>
+                    </Button.Resources>
+                    <TextBlock Text="&#xF04B;"/>
+                </Button>
+                <!--Stop Button-->
+                <Button IsEnabled="{ Binding CanStop, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,16,0" Command="{Binding StartStopCommand}">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                            <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
+                        </Style>
+                    </Button.Resources>
+                    <TextBlock Text="&#xF04D;"/>
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

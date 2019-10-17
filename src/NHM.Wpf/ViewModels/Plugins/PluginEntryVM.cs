@@ -1,10 +1,10 @@
 ﻿using NHM.Wpf.ViewModels.Models;
+using NHMCore;
 using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using NHMCore;
 using static NHMCore.Translations;
 
 namespace NHM.Wpf.ViewModels.Plugins

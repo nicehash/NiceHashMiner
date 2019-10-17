@@ -1,8 +1,10 @@
 ﻿using NHM.Common;
+using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Mining;
+using NHMCore.Mining.IdleChecking;
 using NHMCore.Stats;
 using NHMCore.Switching;
 using System.Collections.Generic;
@@ -12,8 +14,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
-using NHM.Common.Enums;
-using NHMCore.Mining.IdleChecking;
 
 namespace NHM.Wpf.ViewModels
 {
@@ -32,8 +32,13 @@ namespace NHM.Wpf.ViewModels
             {
                 _devices = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(DeviceGPUCount));
+                OnPropertyChanged(nameof(DeviceCPUCount));
             }
         }
+
+        public int DeviceGPUCount => _devices?.Where(d => d.Dev.DeviceType != DeviceType.CPU).Count() ?? 0;
+        public int DeviceCPUCount => _devices?.Where(d => d.Dev.DeviceType == DeviceType.CPU).Count() ?? 0;
 
         private ObservableCollection<IMiningData> _miningDevs;
         public ObservableCollection<IMiningData> MiningDevs
@@ -59,6 +64,12 @@ namespace NHM.Wpf.ViewModels
         {
             get => ConfigManager.GeneralConfig.ServiceLocation;
             set => ConfigManager.GeneralConfig.ServiceLocation = value;
+        }
+
+        public bool ShowPCI
+        {
+            get => ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs;
+            set => ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs = value;
         }
 
         public string BtcAddress
@@ -96,7 +107,7 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        private string PerTime => $"/{TimeUnit}";
+        private string PerTime => $" / {TimeUnit}";
 
         private string _currency = ExchangeRateApi.ActiveDisplayCurrency;
 
