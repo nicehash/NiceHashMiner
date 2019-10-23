@@ -4,13 +4,14 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using NHM.Wpf.Properties;
 using NHM.Wpf.Views.Common;
+using NHM.Wpf.Views.Common.NHBase;
 
 namespace NHM.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for ChooseLanguageWindow.xaml
     /// </summary>
-    public partial class ChooseLanguageWindow : Window, INotifyPropertyChanged
+    public partial class ChooseLanguageWindow : BaseDialogWindow, INotifyPropertyChanged
     {
         private int _selectedLangIndex = 0;
         public int SelectedLangIndex

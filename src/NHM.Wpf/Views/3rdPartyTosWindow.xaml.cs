@@ -1,12 +1,13 @@
 ﻿using System.Windows;
 using NHM.Wpf.Views.Common;
+using NHM.Wpf.Views.Common.NHBase;
 
 namespace NHM.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for _3rdPartyTosWindow.xaml
     /// </summary>
-    public partial class _3rdPartyTosWindow : Window
+    public partial class _3rdPartyTosWindow : BaseDialogWindow
     {
         public bool Accepted { get; private set; } = false;
 

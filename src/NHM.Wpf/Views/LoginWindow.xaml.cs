@@ -1,4 +1,5 @@
 ﻿using NHM.Wpf.Views.Common;
+using NHM.Wpf.Views.Common.NHBase;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
@@ -10,7 +11,7 @@ namespace NHM.Wpf.Views
     /// <summary>
     /// Interaction logic for LoginWindow.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class LoginWindow : BaseDialogWindow
     {
         public LoginWindow()
         {

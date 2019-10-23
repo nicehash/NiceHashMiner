@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NHM.Wpf.Views.Common"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="200">
-    <TextBlock Foreground="{StaticResource PrimaryColorBrush}" FontSize="14">
+    <TextBlock Foreground="{StaticResource PrimaryColorBrush}" FontSize="14" LineHeight="1.57">
         <TextBlock.Style>
             <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
                 <Style.Triggers>
@@ -14,7 +14,7 @@
                         <Setter Property="TextDecorations">
                             <Setter.Value>
                                 <TextDecorationCollection>
-                                    <TextDecoration Location="Underline">
+                                    <TextDecoration Location="Underline" PenOffset="4">
                                         <TextDecoration.Pen>
                                             <Pen Thickness="2" Brush="{StaticResource PrimaryColorBrush}"></Pen>
                                         </TextDecoration.Pen>

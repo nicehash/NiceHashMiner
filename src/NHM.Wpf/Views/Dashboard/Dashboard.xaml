@@ -11,20 +11,22 @@
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
-    <Grid Background="White">
+    <Grid Background="Transparent" Height="Auto" Width="Auto" Margin="40,0,40,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="168" />
+            <RowDefinition Height="128" />
             <RowDefinition Height="86" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="AliceBlue">
+        <Grid Grid.Row="0" Background="White">
+            <Button Background="{StaticResource StartButtonBrushLight}" BorderBrush="Transparent" Width="120" Height="120">
+            </Button>
             <TextBlock>Content</TextBlock>
         </Grid>
-        <Grid Grid.Row="1" >
+        <Grid Grid.Row="1">
             <!--shadow border-->
             <Border BorderBrush="Transparent" BorderThickness="0" Background="White">
                 <Border.Effect>
-                    <DropShadowEffect ShadowDepth="1"/>
+                    <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
                 </Border.Effect>
             </Border>
 
@@ -32,30 +34,28 @@
             <Border Background="Transparent" BorderBrush="Transparent" BorderThickness="0" CornerRadius="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="96" />
                         <ColumnDefinition Width="1" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="96" />
+                        <ColumnDefinition Width="1" />
+                        <ColumnDefinition Width="199" />
                         <ColumnDefinition Width="1" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="1" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <Border BorderThickness="2" BorderBrush="Black" CornerRadius="60" Margin="30">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
-                                <TextBlock Style="{StaticResource DevicesTypeLabelText}">GPU’S</TextBlock>
-                            </StackPanel>
-                        </Border>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
+                            <TextBlock Style="{StaticResource DevicesTypeLabelText}">GPU’S</TextBlock>
+                        </StackPanel>
                     </Grid>
                     <GridSplitter Grid.Column="1" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <Grid Grid.Column="2">
-                        <Border BorderThickness="2" BorderBrush="Black" CornerRadius="60" Margin="30">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceCPUCount}"/>
-                                <TextBlock Style="{StaticResource DevicesTypeLabelText}">CPU</TextBlock>
-                            </StackPanel>
-                        </Border>
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceCPUCount}"/>
+                            <TextBlock Style="{StaticResource DevicesTypeLabelText}">CPU</TextBlock>
+                        </StackPanel>
                     </Grid>
                     <GridSplitter Grid.Column="3" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <StackPanel Grid.Column="4">
@@ -75,6 +75,15 @@
                         </StackPanel>
                         <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0">≈ $ 7527,32</TextBlock>
                     </StackPanel>
+                    <GridSplitter Grid.Column="7" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
+                    <StackPanel Grid.Column="8">
+                        <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">1.018</TextBlock>
+                            <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0">BTC</TextBlock>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0">≈ $ 7527,32</TextBlock>
+                    </StackPanel>
                 </Grid>
             </Border>
         </Grid>
@@ -83,8 +92,14 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <common:MiningLocation Grid.Column="0"/>
-            <common:ViewStatsOnline Grid.Column="1" HorizontalAlignment="Right"/>
+            <common:MiningLocation
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                />
+            <common:ViewStatsOnline
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                />
         </Grid>
     </Grid>
 </UserControl>

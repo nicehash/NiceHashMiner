@@ -1,0 +1,194 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:fa="http://schemas.fontawesome.io/icons/"
+                    xmlns:local="clr-namespace:NHM.Wpf.Views.Common.NHBase">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../../../Resources/Xaml/NHMLogos.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="{x:Type Button}" x:Key="WindowButtonStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+        <Setter Property="FontSize" Value="13.333" />
+        <Setter Property="Foreground" Value="#CECDCD" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#FBA342" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="local:BaseDialogWindow" x:Key="BaseDialogWindowStyle">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="MinHeight" Value="320"/>
+        <Setter Property="MinWidth" Value="480"/>
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+        <Setter Property="Title" Value="{Binding Title}"/>
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome GlassFrameThickness="1" 
+                              ResizeBorderThickness="4"
+                              CaptionHeight="0"/>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:BaseDialogWindow}">
+
+                    <Grid Background="Transparent" x:Name="WindowRoot">
+                        <!--TODO drop shaddow-->
+                        <Border Background="White" CornerRadius="5" BorderThickness="1" BorderBrush="Black">
+                            <Border.BitmapEffect>
+                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
+                            </Border.BitmapEffect>
+                        </Border>
+                        <Grid x:Name="LayoutRoot"
+                              Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!--TitleBar-->
+                            <Grid x:Name="PART_HeaderBar">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!--<StackPanel HorizontalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="3" Width="Auto" Margin="24,8,0,0">
+                                    <Rectangle Width="24" Height="24" >
+                                        <Rectangle.Fill>
+                                            <DrawingBrush Drawing="{Binding Drawing, Source={StaticResource NHMLogoLightBrush}}"/>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <
+                                </StackPanel>-->
+
+                                
+
+                                <!--<TextBlock Text="{TemplateBinding Title}" 
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="3"
+                                           TextTrimming="CharacterEllipsis"
+                                           HorizontalAlignment="Stretch" 
+                                           FontSize="13"
+                                           TextAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Width="Auto"
+                                           Padding="200 0 200 0"
+                                           Foreground="Black"
+                                           Panel.ZIndex="0"
+                                           IsEnabled="{TemplateBinding IsActive}"/>-->
+                                <TextBlock Text="" 
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="3"
+                                           TextTrimming="CharacterEllipsis"
+                                           HorizontalAlignment="Stretch" 
+                                           FontSize="13"
+                                           TextAlignment="Left"
+                                           VerticalAlignment="Center"
+                                           Width="Auto"
+                                           Padding="24,0,0,0"
+                                           Foreground="Black"
+                                           Panel.ZIndex="0"
+                                           IsEnabled="{TemplateBinding IsActive}">
+                                    <Rectangle Width="24" Height="24">
+                                        <Rectangle.Fill>
+                                            <DrawingBrush Drawing="{Binding Drawing, Source={StaticResource NHMLogoLightBrush}}"/>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                    <TextBlock Margin="8,-8,0,0" 
+                                               FontFamily="{StaticResource UbuntuFontFamily}"
+                                               Foreground="{StaticResource TextColorBrush}"
+                                               FontSize="14"
+                                               LineHeight="1.57"
+                                               FontWeight="Normal"
+                                               FontStretch="Normal"
+                                               FontStyle="Normal"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center">NiceHash Miner</TextBlock>
+                                </TextBlock>
+                                <!--<Grid
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="3"
+                                           HorizontalAlignment="Stretch" 
+                                           VerticalAlignment="Center"                                    
+                                           Width="Auto"
+                                           Panel.ZIndex="0"
+                                           IsEnabled="{TemplateBinding IsActive}">
+                                    <Rectangle Width="24" Height="24" >
+                                        <Rectangle.Fill>
+                                            <DrawingBrush Drawing="{Binding Drawing, Source={StaticResource NHMLogoLightBrush}}"/>
+                                        </Rectangle.Fill>
+                                    </Rectangle>
+                                </Grid>-->
+
+                                <Grid x:Name="WindowControlsGrid"
+                                      Grid.Column="2"
+                                      Background="Transparent"
+                                      HorizontalAlignment="Right"
+                                      Margin="0,2.5,12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="28"/>
+                                        <ColumnDefinition Width="36"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    
+
+                                    <Button x:Name="MinimizeButton" Style="{StaticResource WindowButtonStyle}"
+                                            fa:Awesome.Content="WindowMinimize" 
+                                            TextElement.FontSize="13"
+                                            Grid.Column="0"/>
+
+                                    <Button x:Name="CloseButton" Style="{StaticResource WindowButtonStyle}"
+                                            fa:Awesome.Content="Times"
+                                            TextElement.FontSize="20"
+                                            Grid.Column="1">
+                                        <Button.Resources>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="Aqua" />
+                                            </Style>
+                                        </Button.Resources>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+
+                            <Grid x:Name="PART_MainContentGrid"
+                                  Grid.Row="1"
+                                  Panel.ZIndex="10">
+                                <ContentPresenter x:Name="PART_MainContentPresenter" Grid.Row="1"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

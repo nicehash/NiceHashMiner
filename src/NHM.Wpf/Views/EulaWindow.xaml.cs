@@ -1,4 +1,5 @@
 ﻿using NHM.Wpf.Views.Common;
+using NHM.Wpf.Views.Common.NHBase;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,7 +16,7 @@ namespace NHM.Wpf.Views
     /// <summary>
     /// Interaction logic for EulaWindow.xaml
     /// </summary>
-    public partial class EulaWindow : Window
+    public partial class EulaWindow : BaseDialogWindow
     {
         public bool AcceptedTos { get; set; } = false;
 

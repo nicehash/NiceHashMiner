@@ -91,8 +91,9 @@
         </Style>
     </Window.Resources>
     <Grid>
+        <!--Get rid of this crap-->
         <local:TemporaryStartupLoadingControl x:Name="LoadingBar" />
-        <TabControl x:Name="DashboardTabs" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="40,0,40,0">
+        <TabControl x:Name="DashboardTabs" Visibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="40,0,40,0">
             <TabItem Header="Dashboard">
                 <dashboard:Dashboard Background="White" Height="Auto" Width="Auto" DataContext="{Binding .}"/>
                 <!--<dashboard:Dashboard Background="White" Height="Auto" Width="Auto"/>-->

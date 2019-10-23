@@ -1,16 +1,19 @@
-﻿<Window x:Class="NHM.Wpf.Views.LoginWindow"
+﻿<nhb:BaseDialogWindow x:Class="NHM.Wpf.Views.LoginWindow"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:nhb="clr-namespace:NHM.Wpf.Views.Common.NHBase"
       xmlns:local="clr-namespace:NHM.Wpf.Views"
       mc:Ignorable="d" 
       Height="419" Width="600"
       Title="LoginWindow"
       Icon="../Resources/logo.ico" 
       Topmost="True"
-      Background="#FFFFFF"
-      ResizeMode="NoResize">
+      ResizeMode="NoResize"
+      WindowStyle="None"
+      AllowsTransparency="True"
+      Background="Transparent">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -38,4 +41,4 @@
         </TextBlock>
         <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{DynamicResource CheckBoxStyle1}" Margin="0,0,10,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />
     </StackPanel>
-</Window>
+</nhb:BaseDialogWindow>

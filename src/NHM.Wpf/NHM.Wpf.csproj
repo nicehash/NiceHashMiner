@@ -38,6 +38,9 @@
     <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
     </Reference>
@@ -113,6 +116,9 @@
     <Compile Include="Views\3rdPartyTosWindow.xaml.cs">
       <DependentUpon>3rdPartyTosWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BaseWindow.xaml.cs">
+      <DependentUpon>BaseWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
@@ -131,6 +137,11 @@
     <Compile Include="Views\Common\MiningLocation.xaml.cs">
       <DependentUpon>MiningLocation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\NHBase\BaseDialogWindow.cs" />
+    <Compile Include="Views\Common\NHBase\BaseDialogWindow.Sizing.cs" />
+    <Compile Include="Views\Common\NHBase\NHMMainWindow.cs" />
+    <Compile Include="Views\Common\NHBase\Utils\NativeUtils.cs" />
+    <Compile Include="Views\Common\NHBase\Utils\SystemHelper.cs" />
     <Compile Include="Views\Common\ViewStatsOnline.xaml.cs">
       <DependentUpon>ViewStatsOnline.xaml</DependentUpon>
     </Compile>
@@ -155,6 +166,9 @@
     </Compile>
     <Compile Include="Views\MainWindowNew.xaml.cs">
       <DependentUpon>MainWindowNew.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainWindowNew2.xaml.cs">
+      <DependentUpon>MainWindowNew2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Plugins\Controls\InlineDataDisplay.xaml.cs">
       <DependentUpon>InlineDataDisplay.xaml</DependentUpon>
@@ -212,11 +226,31 @@
     <Compile Include="Views\TemporaryStartupLoadingControl.xaml.cs">
       <DependentUpon>TemporaryStartupLoadingControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\Xaml\Buttons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\ColorsBrushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Fonts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\NHMLogos.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Xaml\SVGResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\3rdPartyTosWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BaseWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -241,6 +275,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Common\MiningLocation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\NHBase\NHBaseWindowStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\NHBase\NHMMainWindowStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -277,6 +319,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MainWindowNew.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindowNew2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -368,6 +414,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -376,6 +423,19 @@
     <None Include="README.md" />
     <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-R.ttf" />
     <Resource Include="Resources\Fonts\FontAwesome\fa-solid-900.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-B.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-BI.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-C.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-L.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-LI.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-M.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-MI.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-RI.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-Th.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-B.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-BI.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-R.ttf" />
+    <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-RI.ttf" />
     <None Include="translations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -399,5 +459,6 @@
       <Name>NHMCore</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
