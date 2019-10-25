@@ -2,6 +2,7 @@
 using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.Mining;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
@@ -22,8 +23,16 @@ namespace NHM.Wpf.ViewModels.Models
             {
                 ApplicationStateManager.SetDeviceEnabledState(this, (Dev.B64Uuid, value));
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanStart));
+                OnPropertyChanged(nameof(CanStop));
             }
         }
+
+        public List<string> AlgoNames { get; private set; }
+
+        // TODO Pending state and error states
+        public bool CanStart => Dev.Enabled && Dev.State == DeviceState.Stopped;
+        public bool CanStop => Dev.Enabled && (Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining);
 
         public string AlgoOptions
         {
@@ -57,6 +66,7 @@ namespace NHM.Wpf.ViewModels.Models
 
         public DeviceData(ComputeDevice dev)
         {
+            AlgoNames = dev.AlgorithmSettings.Select(a => a.AlgorithmName).ToList();
             Dev = dev;
 
             StartStopCommand = new BaseCommand(StartStopClick);
@@ -80,6 +90,8 @@ namespace NHM.Wpf.ViewModels.Models
             if (e.PropertyName == nameof(Dev.State))
             {
                 OnPropertyChanged(nameof(ButtonLabel));
+                OnPropertyChanged(nameof(CanStart));
+                OnPropertyChanged(nameof(CanStop));
             }
             else if (e.PropertyName == nameof(Dev.Enabled))
             {

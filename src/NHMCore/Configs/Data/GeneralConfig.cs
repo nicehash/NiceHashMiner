@@ -228,7 +228,16 @@ namespace NHMCore.Configs.Data
         public bool DisableDeviceStatusMonitoring { get; set; } = false;
         public bool DisableDevicePowerModeSettings { get; set; } = true;
 
-        public bool ShowGPUPCIeBusIDs { get; set; } = false;
+        private bool _showGPUPCIeBusIDs { get; set; } = false;
+        public bool ShowGPUPCIeBusIDs
+        {
+            get => _showGPUPCIeBusIDs;
+            set
+            {
+                _showGPUPCIeBusIDs = value;
+                OnPropertyChanged(nameof(ShowGPUPCIeBusIDs));
+            }
+        }
 
         // methods
         public void SetDefaults()

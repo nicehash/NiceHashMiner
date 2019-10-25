@@ -24,13 +24,18 @@
         <SolidColorBrush x:Key="TextColorBrush" Color="{StaticResource TextColor}" />
         <SolidColorBrush x:Key="Gray1ColorBrush" Color="{StaticResource Gray1Color}" />
         <SolidColorBrush x:Key="Gray2ColorBrush" Color="{StaticResource Gray2Color}" />
+
+        <LinearGradientBrush x:Key="OKButtonGradientBrush" EndPoint="1,0.5" StartPoint="0,0.5">
+            <GradientStop Color="#FFFBA342" Offset="0"/>
+            <GradientStop Color="#FFFBC241" Offset="1"/>
+        </LinearGradientBrush>
         <!--#endregion Brushes-->
 
         <!--#region Fonts-->
         <FontFamily x:Key="UbuntuFontFamily">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu</FontFamily>
         <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Free Solid</FontFamily>
         <!--#endregion Fonts-->
-        
+
         <!--#region base sytles-->
         <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlock">
             <Setter Property= "FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
@@ -48,6 +53,227 @@
         </Style>
 
         <!--#endregion base sytles-->
+
+        <!--#region common buttons-->
+        <Style TargetType="{x:Type Button}" x:Key="NHMButton">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="AliceBlue"/>
+            <Setter Property="Width" Value="168"/>
+            <Setter Property="Height" Value="40"/>
+
+            
+            <Setter Property="BitmapEffect" >
+                <Setter.Value>
+                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                </Setter.Value>
+            </Setter>
+            
+            <!--I don't understand this Template part-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!--change the aqua color-->
+                    <Setter Property="Background" Value="Aqua"/>
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Style>
+                <!--<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+                    <Setter Property="FontSize" Value="12" />
+                </Style>-->
+            </Style.Resources>
+        </Style>
+
+
+        <Style TargetType="{x:Type Button}" x:Key="OKButton" BasedOn="{StaticResource NHMButton}">
+            <Setter Property="Background" Value="{StaticResource OKButtonGradientBrush}"/>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="Foreground" Value="White" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style TargetType="{x:Type Button}" x:Key="CancelButton" BasedOn="{StaticResource NHMButton}">
+            <Setter Property="Background" Value="White"/>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        
+        <!--Start Stop buttons-->
+        <Style TargetType="{x:Type Button}" x:Key="StartStopButton">
+            <Setter Property="MaxHeight" Value="24"/>
+            <Setter Property="MaxWidth" Value="23.2"/>
+            <Setter Property="MinHeight" Value="24"/>
+            <Setter Property="MinWidth" Value="23.2"/>
+
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+
+            <Setter Property="Background" Value="#FFFFFF"/>
+
+
+            <Setter Property="BitmapEffect">
+                <Setter.Value>
+                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
+                </Setter.Value>
+            </Setter>
+
+            <!--I don't understand this Template part-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
+                </Trigger>
+                
+            </Style.Triggers>
+
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="4" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                </Style>
+                
+            </Style.Resources>
+        </Style>
+        <!--#region start/stop button styles-->
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="StartStopTextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
+            <Style.Triggers>
+                <Trigger Property ="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"  Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style TargetType="{x:Type CheckBox}" x:Key="NHMSwitch">
+            <Style.Resources>
+                <Color x:Key="DisabledBarColor">#cecdcd</Color>
+                <SolidColorBrush x:Key="DisabledBarColorBrush" Color="{StaticResource DisabledBarColor}"/>
+            </Style.Resources>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <StackPanel Orientation="Horizontal">
+                            <Grid >
+                                <Border x:Name="barInvisible" Width="32" Height="16" Background="Transparent" BorderBrush="Transparent"/>
+                                <Border x:Name="bar" Width="27.2" Height="11.2" Background="{StaticResource PrimaryColorBrush}" Opacity="0.5" CornerRadius="5" ></Border>
+                                <Border x:Name="button" Height="16" Width="16" CornerRadius="12.5" HorizontalAlignment="Left" Background="#FFFFFF" >
+                                    <Border.BitmapEffect>
+                                        <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                                    </Border.BitmapEffect>
+                                </Border>
+                            </Grid>
+                            <ContentPresenter x:Name="content" Content="{TemplateBinding Content}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Resources>
+                            <Storyboard x:Key="right">
+                                <ThicknessAnimation Storyboard.TargetProperty="Margin" Storyboard.TargetName="button" Duration="0:0:0.4" From="0,0,0,0" To="16,0,0,0" >
+                                    <ThicknessAnimation.EasingFunction>
+                                        <CircleEase EasingMode="EaseOut"/>
+                                    </ThicknessAnimation.EasingFunction>
+                                </ThicknessAnimation>
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                    Storyboard.TargetName="button"
+                                    Duration="0:0:0.4"
+                                    To="{StaticResource PrimaryColor}" />
+                                <DoubleAnimation 
+                                    Storyboard.TargetProperty="(Border.Opacity)"
+                                    Storyboard.TargetName="bar"
+                                    From="0.8" To="0.5" Duration="0:0:0.2" />
+                            </Storyboard>
+                            <Storyboard x:Key="left">
+                                <ThicknessAnimation Storyboard.TargetProperty="Margin" Storyboard.TargetName="button" Duration="0:0:0.4" From="16,0,0,0" To="0,0,0,0" >
+                                    <ThicknessAnimation.EasingFunction>
+                                        <CircleEase EasingMode="EaseOut"/>
+                                    </ThicknessAnimation.EasingFunction>
+                                </ThicknessAnimation>
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                    Storyboard.TargetName="button"
+                                    Duration="0:0:0.4"
+                                    To="White" />
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                    Storyboard.TargetName="bar"
+                                    Duration="0:0:0.4"
+                                    To="{StaticResource DisabledBarColor}" />
+                                <DoubleAnimation 
+                                    Storyboard.TargetProperty="(Border.Opacity)"
+                                    Storyboard.TargetName="bar"
+                                    From="0.5" To="0.8" Duration="0:0:0.2" />
+                            </Storyboard>
+                        </ControlTemplate.Resources>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="false">
+                                <Trigger.ExitActions>
+                                    <RemoveStoryboard BeginStoryboardName="leftt"></RemoveStoryboard>
+                                    <BeginStoryboard Storyboard="{StaticResource right}" x:Name="rightt" ></BeginStoryboard>
+                                </Trigger.ExitActions>
+                                <Setter TargetName="button" Property="Background" Value="White" />
+                                <Setter TargetName="button" Property="Margin" Value="0,0,16,0" />
+                                <Setter TargetName="bar" Property="Background" Value="#cecdcd" />
+                                <Setter TargetName="bar" Property="Opacity" Value="0.8" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Trigger.ExitActions>
+                                    <RemoveStoryboard BeginStoryboardName="rightt"></RemoveStoryboard>
+                                    <BeginStoryboard Storyboard="{StaticResource left}" x:Name="leftt" ></BeginStoryboard>
+                                </Trigger.ExitActions>
+                                <Setter TargetName="button" Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                                <Setter TargetName="button" Property="Margin" Value="16,0,0,0" />
+                                <Setter TargetName="bar" Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                                <Setter TargetName="bar" Property="Opacity" Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--#endregion common buttons-->
         
         <!--#region Dashboard styles -->
         <!--devices circle count labels-->

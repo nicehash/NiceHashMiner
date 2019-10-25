@@ -107,7 +107,7 @@
                       AutoGenerateColumns="False" 
                       CanUserResizeRows="False"
                       SelectionMode="Single"
-                      IsReadOnly="True">
+                      IsReadOnly="True" GridLinesVisibility="None">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="Enabled">
                         <DataGridTemplateColumn.CellTemplate>

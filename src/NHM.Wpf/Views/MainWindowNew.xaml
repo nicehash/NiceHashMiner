@@ -8,8 +8,15 @@
         xmlns:devices="clr-namespace:NHM.Wpf.Views.Devices"
         xmlns:common="clr-namespace:NHM.Wpf.Views.Common"
         xmlns:local="clr-namespace:NHM.Wpf.Views"
+        xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
+        
+        Loaded="MainWindow_OnLoaded"
+        
         mc:Ignorable="d"
         Title="MainWindowNew" Height="600" Width="800" MinWidth="800">
+    <Window.DataContext>
+        <viewModels:MainVM />
+    </Window.DataContext>
     <Window.Resources>
         <Style TargetType="{x:Type TabControl}">
             <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
@@ -28,12 +35,12 @@
                                      Margin="0,0,4,-1" 
                                      IsItemsHost="True"
                                      Background="White" />
-                                <Border 
+                            <Border 
                                      Grid.Row="1"
                                      BorderBrush="Transparent" 
                                      CornerRadius="0, 12, 12, 12" >
-                                    <ContentPresenter ContentSource="SelectedContent" />
-                                </Border>
+                                <ContentPresenter ContentSource="SelectedContent" />
+                            </Border>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -83,22 +90,25 @@
             </Setter>
         </Style>
     </Window.Resources>
-
-    <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="40,0,40,0">
-        <TabItem Header="Dashboard">
-            <dashboard:Dashboard Background="White" Height="Auto" Width="Auto"/>
-        </TabItem>
-        <TabItem Header="Devices">
-            <devices:Devices/>
-        </TabItem>
-        <TabItem Header="Benchmarks">
-            <benchmark:Benchmarks/>
-        </TabItem>
-        <TabItem Header="Settings">
-            <Grid Background="#FF000000"/>
-        </TabItem>
-        <TabItem Header="Help">
-            <Grid Background="#FF00F000"/>
-        </TabItem>
-    </TabControl>
+    <Grid>
+        <local:TemporaryStartupLoadingControl x:Name="LoadingBar" />
+        <TabControl x:Name="DashboardTabs" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="40,0,40,0">
+            <TabItem Header="Dashboard">
+                <dashboard:Dashboard Background="White" Height="Auto" Width="Auto" DataContext="{Binding .}"/>
+                <!--<dashboard:Dashboard Background="White" Height="Auto" Width="Auto"/>-->
+            </TabItem>
+            <TabItem Header="Devices">
+                <devices:Devices/>
+            </TabItem>
+            <TabItem Header="Benchmarks">
+                <benchmark:Benchmarks Background="Green" Height="Auto" Width="Auto" DataContext="{Binding .}"/>
+            </TabItem>
+            <TabItem Header="Settings">
+                <Grid Background="#FF000000"/>
+            </TabItem>
+            <TabItem Header="Help">
+                <Grid Background="#FF00F000"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </Window>

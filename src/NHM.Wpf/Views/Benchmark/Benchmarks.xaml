@@ -6,13 +6,27 @@
              xmlns:local="clr-namespace:NHM.Wpf.Views.Benchmark"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel Background="White" Height="Auto" Width="Auto">
-        <ToggleButton Height="50"></ToggleButton>
-        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="10" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">GPU’S</TextBlock>
-        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="10" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">GPU’S</TextBlock>
-        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="10" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">GPU’S</TextBlock>
-        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="10" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">GPU’S</TextBlock>
-        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="10" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">GPU’S</TextBlock>
-        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="10" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">GPU’S</TextBlock>
-    </StackPanel>
+    <Grid Background="Green" >
+        <!--WORKS-->
+        <ListView ItemsSource="{Binding Devices}" Width="Auto" Focusable="False" BorderThickness="0" HorizontalAlignment="Stretch">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:ComputeDeviceElement DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" Width="Auto"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Focusable" Value="false"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{x:Null}" />
+                            <Setter Property="BorderBrush" Value="{x:Null}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <!--<local:AlgorithmSettings Width="392"></local:AlgorithmSettings>-->
+    </Grid>
 </UserControl>

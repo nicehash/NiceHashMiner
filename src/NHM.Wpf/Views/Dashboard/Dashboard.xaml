@@ -5,8 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Dashboard"
              xmlns:common="clr-namespace:NHM.Wpf.Views.Common"
+             xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModels:MainVM />
+    </UserControl.DataContext>
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -39,7 +43,7 @@
                     <Grid Grid.Column="0">
                         <Border BorderThickness="2" BorderBrush="Black" CornerRadius="60" Margin="30">
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock Style="{StaticResource DevicesTypeCountText}">4</TextBlock>
+                                <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
                                 <TextBlock Style="{StaticResource DevicesTypeLabelText}">GPU’S</TextBlock>
                             </StackPanel>
                         </Border>
@@ -48,7 +52,7 @@
                     <Grid Grid.Column="2">
                         <Border BorderThickness="2" BorderBrush="Black" CornerRadius="60" Margin="30">
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock Style="{StaticResource DevicesTypeCountText}">1</TextBlock>
+                                <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceCPUCount}"/>
                                 <TextBlock Style="{StaticResource DevicesTypeLabelText}">CPU</TextBlock>
                             </StackPanel>
                         </Border>

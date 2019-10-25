@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHM.Wpf.ViewModels.Models;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,58 +26,16 @@ namespace NHM.Wpf.Views.Devices
         {
             InitializeComponent();
             DataContextChanged += ComputeDeviceItem_DataContextChanged;
-            DataContext = new ComputeDeviceItemData { };
             //DataContext = this;
         }
 
         private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (DataContext is ComputeDeviceItemData == false)
+            
+            if (DataContext is object == false)
             {
                 throw new Exception("ComputeDeviceItem DataContext must implement ComputeDeviceItemData");
             }
         }
-
-        //public interface IComputeDeviceItemData
-        //{
-        //    bool Enabled { get; set; }
-        //    bool Name { get; set; }
-        //}
-
-        public class ComputeDeviceItemData
-        {
-
-            public virtual bool Enabled { get; set; } = false;
-            //private bool _enabled = false;
-            //public virtual bool Enabled
-            //{
-            //    get => _enabled;
-            //    set
-            //    {
-            //        if (value == _enabled)
-            //        {
-            //            Debug.WriteLine("Same shit return");
-            //            return;
-            //        }
-            //        _enabled = value;
-            //        Debug.WriteLine($"Value changed to {_enabled}");
-            //    }
-            //}
-            public virtual string DeviceName { get; set; } = "Device name";
-        }
-
-        //public static readonly DependencyProperty TitleTextProperty =
-        //DependencyProperty.Register(
-        //    nameof(TitleText),
-        //    typeof(string),
-        //    typeof(ComputeDeviceItemColumn),
-        //    new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.AffectsRender));
-
-        //public string TitleText
-        //{
-        //    get { return (string)GetValue(TitleTextProperty); }
-        //    set { SetValue(TitleTextProperty, value); }
-        //}
-
     }
 }

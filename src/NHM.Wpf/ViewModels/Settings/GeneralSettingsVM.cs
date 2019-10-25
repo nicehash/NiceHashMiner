@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using NHMCore;
+﻿using NHMCore;
 using NHMCore.Configs.Data;
+using System.Collections.Generic;
 
 namespace NHM.Wpf.ViewModels.Settings
 {

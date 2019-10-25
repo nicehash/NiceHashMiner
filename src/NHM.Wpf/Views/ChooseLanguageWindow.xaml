@@ -33,16 +33,8 @@
             </ComboBox.ItemContainerStyle>-->
         </ComboBox>
         <DockPanel Grid.Row="3" Margin="0,0,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button Width="168" Height="40" Click="OkButton_OnClick" Foreground="White" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" FontWeight="Bold" FontStyle="Normal" FontStretch="Normal" BorderBrush="{x:Null}">
-                <Button.Background>
-                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
-                        <GradientStop Color="#FFFBA342" Offset="0"/>
-                        <GradientStop Color="#FFFBC241" Offset="1"/>
-                    </LinearGradientBrush>
-                </Button.Background>
-                <Button.BitmapEffect>
-                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
-                </Button.BitmapEffect> NEXT
+            <Button DockPanel.Dock="Right" Click="OkButton_OnClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsEnabled="{ Binding Path=Enabled }" Style="{StaticResource OKButton}">
+                <TextBlock Text="NEXT"/>
             </Button>
         </DockPanel>
     </Grid>

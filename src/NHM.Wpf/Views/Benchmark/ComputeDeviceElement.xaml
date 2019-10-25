@@ -1,0 +1,147 @@
+﻿<UserControl x:Class="NHM.Wpf.Views.Benchmark.ComputeDeviceElement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NHM.Wpf.Views.Benchmark"
+             xmlns:converters="clr-namespace:NHM.Wpf.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="332" d:DesignWidth="720">
+    <UserControl.Resources>
+        <converters:HashrateConverter x:Key="HashrateConv" />
+    </UserControl.Resources>
+    <Grid Background="Transparent" Width="Auto">
+        <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1"/>
+            </Border.Effect>
+        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" HorizontalAlignment="Left" Margin="16,11,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{StaticResource Gray1ColorBrush}" Text="GPU#1"/>
+                    <TextBlock Grid.Column="1" Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{StaticResource TextColorBrush}" Text="{Binding Dev.FullName}" Margin="8,0,0,0"/>
+                </Grid>
+
+                <Grid Grid.Column="1" HorizontalAlignment="Right" Margin="16,11,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{StaticResource TextColorBrush}" Text="14 / 15" />
+                    <TextBlock Grid.Column="1" Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{StaticResource TextColorBrush}" Text="14 / 15" Margin="8,0,0,0"/>
+                </Grid>
+
+                <Grid Grid.Column="2" HorizontalAlignment="Right" Margin="50,4,16,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" />
+                    <Button Grid.Column="1" IsEnabled="{ Binding CanStart, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,0,0">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                                <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+                            </Style>
+                        </Button.Resources>
+                        <!--<TextBlock Text="&#xF013;"/>-->
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="..." RenderTransformOrigin="0.5,0.5">
+                            <TextBlock.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="90"/>
+                                    <TranslateTransform X="3"/>
+                                </TransformGroup>
+                            </TextBlock.RenderTransform>
+                        </TextBlock>
+                    </Button>
+                </Grid>
+            </Grid>
+            <Expander Grid.Row="1" ExpandDirection="Left" HorizontalAlignment="Stretch">
+                <ListView ItemsSource="{Binding Dev.AlgorithmSettings }"
+                          Margin="30,0,0,0" 
+                          >
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridView.Columns>
+                                <GridViewColumn Header="ALGORITHM" DisplayMemberBinding="{Binding AlgorithmName}" />
+                                <GridViewColumn Header="NAME" DisplayMemberBinding="{Binding PluginName}" />
+                                <GridViewColumn Header="SPEEDS" DisplayMemberBinding="{Binding AnnotatedSpeeds, Converter={StaticResource HashrateConv}}" />
+                                <GridViewColumn Header="BTC / 24h" DisplayMemberBinding="{Binding CurPayingRateStr}" />
+                                <GridViewColumn Header="STATUS" />
+                                <GridViewColumn>
+                                    <GridViewColumn.Header>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock Text="SELECT / UNSELECT ALL"></TextBlock>
+                                            <CheckBox Style="{StaticResource NHMSwitch}" HorizontalContentAlignment="Left"  HorizontalAlignment="Left" IsChecked="{Binding Enabled, Mode=TwoWay}" />
+                                        </StackPanel>
+
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                <CheckBox Style="{StaticResource NHMSwitch}" HorizontalAlignment="Right" IsChecked="{Binding Enabled, Mode=TwoWay}" />
+                                                <Button IsEnabled="{ Binding Enabled, UpdateSourceTrigger=PropertyChanged }" >
+                                                    <Button.Resources>
+                                                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                                                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                                                            <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+                                                        </Style>
+                                                    </Button.Resources>
+                                                    <TextBlock Text="&#xF013;"/>
+                                                </Button>
+                                            </StackPanel>
+
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                            <GridView.ColumnHeaderContainerStyle>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Width" Value="Auto" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <!--<Setter Property="VerticalAlignment" Value="Stretch" />-->
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
+                                    <Setter Property="FontSize" Value="10" />
+                                    <!--<Setter Property="IsHitTestVisible" Value="False" />-->
+                                </Style>
+                            </GridView.ColumnHeaderContainerStyle>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="false"/>
+                            <Setter Property="Width" Value="Auto"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{x:Null}" />
+                                    <Setter Property="BorderBrush" Value="{x:Null}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Expander>
+        </Grid>
+    </Grid>
+</UserControl>
