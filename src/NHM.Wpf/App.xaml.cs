@@ -153,6 +153,9 @@ namespace NHM.Wpf
 
             Translations.SelectedLanguage = ConfigManager.GeneralConfig.Language;
 
+            var login = new LoginWindow { };
+            var nek = login.ShowDialog();
+
             // Check sys requirements
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();
             if (!canRun) Shutdown();
