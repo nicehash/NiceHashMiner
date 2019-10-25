@@ -2,12 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:NHM.Wpf.Resources.Xaml.Fonts">
 
-    <SolidColorBrush x:Key="FontsTypography.FontColor.Active" Color="#3a3939" />
-    <SolidColorBrush x:Key="FontsTypography.FontColor.Disabled" Color="#cecdcd" />
-    <SolidColorBrush x:Key="FontsTypography.FontColor.Secondary" Color="#959595" />
-    <SolidColorBrush x:Key="FontsTypography.FontColor.Link" Color="#fba342" />
-    <SolidColorBrush x:Key="FontsTypography.FontColor.White" Color="#ffffff" />
-
     <!-- HEADING 1 -->
     <Style x:Key="FontsTypography.Heading1" TargetType="Control">
         <Setter Property="FontWeight" Value="700" />
@@ -15,13 +9,13 @@
         <Setter Property="TextBlock.LineHeight" Value="25.2" />
     </Style>
     <Style x:Key="FontsTypography.Heading1/Active" BasedOn="{StaticResource FontsTypography.Heading1}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.Heading1/Disabled" BasedOn="{StaticResource FontsTypography.Heading1}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.Heading1/Secondary" BasedOn="{StaticResource FontsTypography.Heading1}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <!-- END OF HEADING 1 -->
 
@@ -32,13 +26,13 @@
         <Setter Property="TextBlock.LineHeight" Value="22.4" />
     </Style>
     <Style x:Key="FontsTypography.Heading2/Active" BasedOn="{StaticResource FontsTypography.Heading2}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.Heading2/Disabled" BasedOn="{StaticResource FontsTypography.Heading2}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.Heading2/Secondary" BasedOn="{StaticResource FontsTypography.Heading2}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <!-- END OF HEADING 2 -->
 
@@ -49,13 +43,13 @@
         <Setter Property="TextBlock.LineHeight" Value="25.2" />
     </Style>
     <Style x:Key="FontsTypography.Heading3/Active" BasedOn="{StaticResource FontsTypography.Heading3}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.Heading3/Disabled" BasedOn="{StaticResource FontsTypography.Heading3}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.Heading3/Secondary" BasedOn="{StaticResource FontsTypography.Heading3}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <!-- END OF HEADING 3 -->
 
@@ -66,13 +60,13 @@
         <Setter Property="TextBlock.LineHeight" Value="22.4" />
     </Style>
     <Style x:Key="FontsTypography.Heading4/Active" BasedOn="{StaticResource FontsTypography.Heading4}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.Heading4/Disabled" BasedOn="{StaticResource FontsTypography.Heading4}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.Heading4/Secondary" BasedOn="{StaticResource FontsTypography.Heading4}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <!-- END OF HEADING 4 -->
 
@@ -83,16 +77,16 @@
         <Setter Property="TextBlock.LineHeight" Value="18" />
     </Style>
     <Style x:Key="FontsTypography.SmallLight/Active" BasedOn="{StaticResource FontsTypography.SmallLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.SmallLight/Disabled" BasedOn="{StaticResource FontsTypography.SmallLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.SmallLight/Secondary" BasedOn="{StaticResource FontsTypography.SmallLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <Style x:Key="FontsTypography.SmallLight/Link" BasedOn="{StaticResource FontsTypography.SmallLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Link}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.MainColor}" />
     </Style>
     <!-- END OF SMALL LIGHT -->
 
@@ -103,13 +97,13 @@
         <Setter Property="TextBlock.LineHeight" Value="18" />
     </Style>
     <Style x:Key="FontsTypography.SmallRegular/Active" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.SmallRegular/Disabled" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.SmallRegular/Secondary" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <!-- END OF SMALL REGULAR -->
 
@@ -120,13 +114,13 @@
         <Setter Property="TextBlock.LineHeight" Value="18" />
     </Style>
     <Style x:Key="FontsTypography.SmallBold/Active" BasedOn="{StaticResource FontsTypography.SmallBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.SmallBold/Disabled" BasedOn="{StaticResource FontsTypography.SmallBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.SmallBold/Secondary" BasedOn="{StaticResource FontsTypography.SmallBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <!-- END OF SMALL BOLD -->
 
@@ -137,19 +131,19 @@
         <Setter Property="TextBlock.LineHeight" Value="21" />
     </Style>
     <Style x:Key="FontsTypography.NormalLight/Active" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.NormalLight/Disabled" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.NormalLight/Secondary" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <Style x:Key="FontsTypography.NormalLight/Link" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Link}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.MainColor}" />
     </Style>
     <Style x:Key="FontsTypography.NormalLight/White" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.White}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
     </Style>
     <!-- END OF NORMAL LIGHT -->
 
@@ -160,16 +154,16 @@
         <Setter Property="TextBlock.LineHeight" Value="21" />
     </Style>
     <Style x:Key="FontsTypography.NormalRegular/Active" BasedOn="{StaticResource FontsTypography.NormalRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.NormalRegular/Disabled" BasedOn="{StaticResource FontsTypography.NormalRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.NormalRegular/Secondary" BasedOn="{StaticResource FontsTypography.NormalRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <Style x:Key="FontsTypography.NormalRegular/Link" BasedOn="{StaticResource FontsTypography.NormalRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Link}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.MainColor}" />
     </Style>
     <!-- END OF NORMAL REGULAR -->
 
@@ -180,19 +174,19 @@
         <Setter Property="TextBlock.LineHeight" Value="21" />
     </Style>
     <Style x:Key="FontsTypography.NormalBold/Active" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.NormalBold/Disabled" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.NormalBold/Secondary" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <Style x:Key="FontsTypography.NormalBold/Link" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Link}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.MainColor}" />
     </Style>
     <Style x:Key="FontsTypography.NormalBold/White" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.White}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
     </Style>
     <!-- END OF NORMAL BOLD -->
 
@@ -203,13 +197,13 @@
         <Setter Property="TextBlock.LineHeight" Value="15" />
     </Style>
     <Style x:Key="FontsTypography.TinyRegular/Active" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.TinyRegular/Disabled" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.TinyRegular/Secondary" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <!-- END OF TINY REGULAR -->
 
@@ -220,13 +214,13 @@
         <Setter Property="TextBlock.LineHeight" Value="15" />
     </Style>
     <Style x:Key="FontsTypography.TinyBold/Active" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Active}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.TinyBold/Disabled" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Disabled}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
     </Style>
     <Style x:Key="FontsTypography.TinyBold/Secondary" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
-        <Setter Property="Foreground" Value="{StaticResource FontsTypography.FontColor.Secondary}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
     <!-- END OF TINY BOLD -->
 
