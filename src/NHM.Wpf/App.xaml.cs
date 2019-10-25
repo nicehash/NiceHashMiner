@@ -1,5 +1,10 @@
-﻿using log4net.Core;
+﻿//#define __DESIGN_DEVELOP
+
+using log4net.Core;
 using NHM.Common;
+#if __DESIGN_DEVELOP
+using NHM.Wpf._DESIGN_DEVELOP;
+#endif
 using NHM.Wpf.Views;
 using NHMCore;
 using NHMCore.Configs;
@@ -33,6 +38,12 @@ namespace NHM.Wpf
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
+#if __DESIGN_DEVELOP
+            var designWindow = new __DESIGN_DEVELOP();
+            designWindow.ShowDialog();
+            return;
+#endif
+
             NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS(BuildTag);
             // Set working directory to exe
             var pathSet = false;

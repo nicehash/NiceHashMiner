@@ -7,6 +7,8 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Xaml/Colors/Colors.xaml"/>
+                <ResourceDictionary Source="Resources/Xaml/Brushes.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/Buttons.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/Fonts.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/ColorsBrushes.xaml"/>
@@ -24,7 +26,7 @@
             <Style TargetType="views:_3rdPartyTosWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:MainWindowNew2" BasedOn="{StaticResource NHMMainWindowStyle}"/>
-            
+
             <!--#region base sytles-->
             <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlock">
                 <Setter Property= "FontFamily" Value="{StaticResource UbuntuFontFamily}"/>

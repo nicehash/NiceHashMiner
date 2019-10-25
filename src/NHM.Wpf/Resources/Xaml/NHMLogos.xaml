@@ -1,7 +1,15 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <DrawingBrush x:Key="NHMLogoLightBrush">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Icons/Icons.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+    
+    <DrawingBrush x:Key="NHMLogoLightBrush" Drawing="{StaticResource NHMLogoLight}" />
+
+
+    <!--<DrawingBrush x:Key="NHMLogoLightBrush" Drawing="{StaticResource NHMLogoLight}">
         <DrawingBrush.Drawing>
             <DrawingGroup>
                 <DrawingGroup x:Name="DrawingLayer">
@@ -59,6 +67,6 @@
                 </DrawingGroup>
             </DrawingGroup>
         </DrawingBrush.Drawing>
-    </DrawingBrush>
+    </DrawingBrush>-->
 
 </ResourceDictionary>

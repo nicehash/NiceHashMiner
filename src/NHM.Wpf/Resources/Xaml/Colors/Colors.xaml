@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NHM.Wpf.Resources.Xaml.Colors">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Dark.xaml"/>
+        <ResourceDictionary Source="Light.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
