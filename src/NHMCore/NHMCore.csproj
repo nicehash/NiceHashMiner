@@ -226,6 +226,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="README.md" />
     <None Include="Resources\Eula.rtf" />
     <None Include="translations.json" />
   </ItemGroup>

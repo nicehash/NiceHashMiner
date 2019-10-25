@@ -1,0 +1,27 @@
+﻿## Integrate plugins build tags
+  - INTEGRATE_BrokenMiner_PLUGIN // test plugin
+  - INTEGRATE_ExamplePlugin_PLUGIN // test plugin
+  - INTEGRATE_CCMinerMTP_PLUGIN  // no compatible algorithms
+  - INTEGRATE_CCMinerTpruvot_PLUGIN
+  - INTEGRATE_SGminerAvemore_PLUGIN
+  - INTEGRATE_SGminerGM_PLUGIN
+  - INTEGRATE_XmrStak_PLUGIN
+  - INTEGRATE_CpuMinerOpt_PLUGIN
+  - INTEGRATE_Ethminer_PLUGIN // broken miner API readings 
+  - INTEGRATE_ClaymoreDual_PLUGIN
+  - INTEGRATE_BMiner_PLUGIN
+  - INTEGRATE_WildRig_PLUGIN
+  - INTEGRATE_TTMiner_PLUGIN
+  - INTEGRATE_TRex_PLUGIN
+  - INTEGRATE_TeamRedMiner_PLUGIN
+  - INTEGRATE_NBMiner_PLUGIN
+  - INTEGRATE_Phoenix_PLUGIN
+  - INTEGRATE_NanoMiner_PLUGIN
+  - INTEGRATE_GMiner_PLUGIN
+  - INTEGRATE_EWBF_PLUGIN
+  - INTEGRATE_CryptoDredge_PLUGIN
+  - INTEGRATE_ZEnemy_PLUGIN
+  - INTEGRATE_LolMinerBeam_PLUGIN
+  - INTEGRATE_SRBMiner_PLUGIN // broken
+  - INTEGRATE_XMRig_PLUGIN
+  - INTEGRATE_MiniZ_PLUGIN
