@@ -7,6 +7,7 @@
         xmlns:benchmark="clr-namespace:NHM.Wpf.Views.Benchmark"
         xmlns:dashboard="clr-namespace:NHM.Wpf.Views.Dashboard"
         xmlns:devices="clr-namespace:NHM.Wpf.Views.Devices"
+        xmlns:pluginsNew="clr-namespace:NHM.Wpf.Views.PluginsNew"
         xmlns:local="clr-namespace:NHM.Wpf.Views"
         mc:Ignorable="d"
         Title="MainWindowNew2" Height="600" Width="800"
@@ -28,7 +29,7 @@
     </nhb:BaseDialogWindow.Resources>
     <Grid Background="Transparent" Opacity="1" >
         <!--Get rid of this crap-->
-        <local:TemporaryStartupLoadingControl x:Name="LoadingBar" Panel.ZIndex="1"/>
+        <local:TemporaryStartupLoadingControl x:Name="LoadingBar" Visibility="Collapsed" Panel.ZIndex="1"/>
 
         <!--Tab names mirror the NHM.Wpf.Views.Common.NHBase.ToggleButtonType enum names.-->
         <TabControl x:Name="MainTabs" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Panel.ZIndex="0">
@@ -42,9 +43,7 @@
                 <benchmark:Benchmarks DataContext="{Binding .}"/>
             </TabItem>
             <TabItem Header="Plugins" Name="PluginsButton">
-                <Grid Background="#FF0000" Opacity="0.5">
-                    <TextBlock Text="PLUGINS TODO" FontSize="50"/>
-                </Grid>
+                <pluginsNew:Plugins />
             </TabItem>
             <TabItem Header="LEFT_SETTINGS" Name="SettingsButton">
                 <Grid Background="#FF0000" Opacity="0.5">

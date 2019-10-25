@@ -19,5 +19,14 @@ namespace NHM.Wpf.ViewModels.Plugins
                 Plugins.Add(new PluginEntryVM(plugin));
             }
         }
+
+        public void RefreshPlugins()
+        {
+            Plugins.Clear();
+            foreach (var plugin in MinerPluginsManager.RankedPlugins)
+            {
+                Plugins.Add(new PluginEntryVM(plugin));
+            }
+        }
     }
 }

@@ -34,6 +34,8 @@ namespace NHM.Wpf.Views
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
 
             WindowUtils.InitWindow(this);
+
+            LoadingBar.Visibility = Visibility.Visible;
         }
 
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)

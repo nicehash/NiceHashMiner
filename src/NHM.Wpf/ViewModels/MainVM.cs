@@ -1,10 +1,12 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
+using NHM.Wpf.ViewModels.Plugins;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
+using NHMCore.Mining.Plugins;
 using NHMCore.Stats;
 using NHMCore.Switching;
 using System.Collections.Generic;
@@ -217,6 +219,19 @@ namespace NHM.Wpf.ViewModels
 
         #endregion
 
+        #region MinerPlugins
+        public ObservableCollection<PluginEntryVM> Plugins { get; } = new ObservableCollection<PluginEntryVM>();
+        public void RefreshPlugins()
+        {
+            foreach (var plugin in MinerPluginsManager.RankedPlugins)
+            {
+                var vm = Plugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
+                if (vm != null) continue;
+                Plugins.Add(new PluginEntryVM(plugin));
+            }
+        }
+        #endregion MinerPlugins
+
         public MainVM()
             : base(ApplicationStateManager.Title)
         {
@@ -261,6 +276,8 @@ namespace NHM.Wpf.ViewModels
             MiningStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
 
             IdleCheckManager.StartIdleCheck();
+
+            RefreshPlugins();
 
             _updateTimer.Start();
 

@@ -170,6 +170,19 @@
     <Compile Include="Views\MainWindowNew2.xaml.cs">
       <DependentUpon>MainWindowNew2.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PluginsNew\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
+    <Compile Include="Views\PluginsNew\PluginItem\Converters\PluginVersionConverter.cs" />
+    <Compile Include="Views\PluginsNew\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
+    <Compile Include="Views\PluginsNew\PluginItem\Converters\SupportedDevicesConverter.cs" />
+    <Compile Include="Views\PluginsNew\PluginItem\PluginIcon.xaml.cs">
+      <DependentUpon>PluginIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PluginsNew\PluginItem\PluginItem.xaml.cs">
+      <DependentUpon>PluginItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PluginsNew\Plugins.xaml.cs">
+      <DependentUpon>Plugins.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Plugins\Controls\InlineDataDisplay.xaml.cs">
       <DependentUpon>InlineDataDisplay.xaml</DependentUpon>
     </Compile>
@@ -326,6 +339,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\PluginsNew\PluginItem\PluginIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PluginsNew\PluginItem\PluginItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PluginsNew\Plugins.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Plugins\Controls\InlineDataDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -450,6 +475,10 @@
     <Resource Include="Resources\logo.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
+      <Project>{847398E0-2E35-4A85-8C70-0B40AA172ABA}</Project>
+      <Name>MinerPluginToolkitV1</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
@@ -459,6 +488,8 @@
       <Name>NHMCore</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\PluginsNew\Private\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

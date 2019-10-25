@@ -15,7 +15,7 @@
         Closing="EulaWindow_OnClosing"
         Loaded="Window_Loaded">
 
-    <Grid Width="Auto" Height="Auto" Background="White" Margin="0,1,0,0">
+    <Grid Width="Auto" Height="Auto" Background="Transparent" Margin="0,1,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="1" />
             <RowDefinition Height="*" />
