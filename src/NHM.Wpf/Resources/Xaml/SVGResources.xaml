@@ -8,51 +8,33 @@
                     <RectangleGeometry Rect="0,0,162,162" />
                 </DrawingGroup.ClipGeometry>
                 <DrawingGroup Opacity="1" Transform="1,0,0,1,1,1">
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing>
-                            <GeometryDrawing.Pen>
-                                <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                    <Pen.Brush>
-                                        <SolidColorBrush Color="#FFF5F5F5" Opacity="0.8" />
-                                    </Pen.Brush>
-                                </Pen>
-                            </GeometryDrawing.Pen>
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="46.623" RadiusY="46.623" Center="79.47,79.47" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                        <GeometryDrawing>
-                            <GeometryDrawing.Pen>
-                                <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                    <Pen.Brush>
-                                        <SolidColorBrush Color="#FFF5F5F5" Opacity="0.64" />
-                                    </Pen.Brush>
-                                </Pen>
-                            </GeometryDrawing.Pen>
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="65.695" RadiusY="65.695" Center="79.47,78.411" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                        <GeometryDrawing>
-                            <GeometryDrawing.Pen>
-                                <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                    <Pen.Brush>
-                                        <SolidColorBrush Color="#FFF5F5F5" Opacity="0.4" />
-                                    </Pen.Brush>
-                                </Pen>
-                            </GeometryDrawing.Pen>
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="80" RadiusY="80" Center="80,80" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
                     <GeometryDrawing>
                         <GeometryDrawing.Pen>
-                            <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                <Pen.Brush>
-                                    <SolidColorBrush Color="#FFF5F5F5" Opacity="0.8" />
-                                </Pen.Brush>
-                            </Pen>
+                            <Pen Brush="#FFF1F1F1" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                        </GeometryDrawing.Pen>
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="46.623" RadiusY="46.623" Center="79.47,79.47" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing>
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#FFF5F5F5" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                        </GeometryDrawing.Pen>
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="65.695" RadiusY="65.695" Center="79.47,78.411" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing>
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#FFF8F8F8" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                        </GeometryDrawing.Pen>
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="80" RadiusY="80" Center="80,80" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing>
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#FFEEEEEE" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
                         </GeometryDrawing.Pen>
                         <GeometryDrawing.Geometry>
                             <EllipseGeometry RadiusX="32" RadiusY="32" Center="80,80" />
@@ -81,53 +63,211 @@
                 <DrawingGroup.ClipGeometry>
                     <RectangleGeometry Rect="0,0,162,162" />
                 </DrawingGroup.ClipGeometry>
-                <DrawingGroup Opacity="1" Transform="1,0,0,1,1,1">
-                    <GeometryDrawing>
-                        <GeometryDrawing.Pen>
-                            <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                <Pen.Brush>
-                                    <SolidColorBrush Color="#FF959595" Opacity="0.3" />
-                                </Pen.Brush>
-                            </Pen>
-                        </GeometryDrawing.Pen>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1" Transform="1,0,0,1,1,1">
+                        <GeometryDrawing>
+                            <GeometryDrawing.Pen>
+                                <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
+                                    <Pen.Brush>
+                                        <SolidColorBrush Color="#FF959595" Opacity="0.3" />
+                                    </Pen.Brush>
+                                </Pen>
+                            </GeometryDrawing.Pen>
+                            <GeometryDrawing.Geometry>
+                                <EllipseGeometry RadiusX="46.623" RadiusY="46.623" Center="79.47,79.47" />
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                        <GeometryDrawing>
+                            <GeometryDrawing.Pen>
+                                <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
+                                    <Pen.Brush>
+                                        <SolidColorBrush Color="#FF959595" Opacity="0.2" />
+                                    </Pen.Brush>
+                                </Pen>
+                            </GeometryDrawing.Pen>
+                            <GeometryDrawing.Geometry>
+                                <EllipseGeometry RadiusX="65.695" RadiusY="65.695" Center="79.47,78.411" />
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                        <GeometryDrawing>
+                            <GeometryDrawing.Pen>
+                                <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
+                                    <Pen.Brush>
+                                        <SolidColorBrush Color="#FF959595" Opacity="0.1" />
+                                    </Pen.Brush>
+                                </Pen>
+                            </GeometryDrawing.Pen>
+                            <GeometryDrawing.Geometry>
+                                <EllipseGeometry RadiusX="80" RadiusY="80" Center="80,80" />
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                        <GeometryDrawing>
+                            <GeometryDrawing.Pen>
+                                <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
+                                    <Pen.Brush>
+                                        <SolidColorBrush Color="#FF959595" Opacity="0.4" />
+                                    </Pen.Brush>
+                                </Pen>
+                            </GeometryDrawing.Pen>
+                            <GeometryDrawing.Geometry>
+                                <EllipseGeometry RadiusX="32" RadiusY="32" Center="80,80" />
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                        <GeometryDrawing Brush="#FFF4BE49">
+                            <GeometryDrawing.Geometry>
+                                <PathGeometry FillRule="EvenOdd" Figures="M74.73,80.162L74.73,77.275 71.75,77.275C70.793,77.275 70.199,77.825 70.199,78.711 70.199,79.606 70.793,80.162 71.749,80.162L74.729,80.162z M71.901,75.328L74.73,75.328 74.73,72.64 71.9,72.64C70.924,72.64 70.364,73.13 70.364,73.984 70.364,74.838 70.924,75.328 71.9,75.328" />
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                        <DrawingGroup>
+                            <DrawingGroup.OpacityMask>
+                                <DrawingBrush ViewportUnits="Absolute" ViewboxUnits="Absolute" Viewport="60,60,40,40" Viewbox="60,60,40,40" Stretch="Uniform" TileMode="None">
+                                    <DrawingBrush.Drawing>
+                                        <DrawingGroup>
+                                            <DrawingGroup Opacity="1">
+                                                <GeometryDrawing Brush="#FFFFFFFF">
+                                                    <GeometryDrawing.Geometry>
+                                                        <PathGeometry FillRule="EvenOdd" Figures="M60,60L100,60 100,100 60,100z" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingGroup>
+                                        </DrawingGroup>
+                                    </DrawingBrush.Drawing>
+                                </DrawingBrush>
+                            </DrawingGroup.OpacityMask>
+                            <DrawingGroup>
+                                <DrawingGroup.OpacityMask>
+                                    <DrawingBrush ViewportUnits="Absolute" ViewboxUnits="Absolute" Viewport="60,60,40,40" Viewbox="60,60,40,40" Stretch="Uniform" TileMode="None">
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup Opacity="1">
+                                                    <GeometryDrawing Brush="#FFFFFFFF">
+                                                        <GeometryDrawing.Geometry>
+                                                            <PathGeometry FillRule="EvenOdd" Figures="M60,60L100,60 100,100 60,100z" />
+                                                        </GeometryDrawing.Geometry>
+                                                    </GeometryDrawing>
+                                                </DrawingGroup>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </DrawingGroup.OpacityMask>
+                                <GeometryDrawing Brush="#FFF4BE49">
+                                    <GeometryDrawing.Geometry>
+                                        <PathGeometry FillRule="EvenOdd" Figures="M89.034,82.066L89.034,83.149C89.034,83.567,88.692,83.908,88.274,83.908A0.762,0.762,0,0,1,87.514,83.148L87.514,82.108 86.32,82.108 86.32,83.148A0.76,0.76,0,0,1,85.561,83.908A0.761,0.761,0,0,1,84.802,83.148L84.802,82.108 84.074,82.108A0.899,0.899,0,0,1,83.182,81.203L83.182,71.6C83.182,71.1,83.582,70.694,84.074,70.694L84.802,70.694 84.802,69.837C84.802,69.419 85.143,69.077 85.562,69.077 85.979,69.077 86.32,69.419 86.32,69.837L86.32,70.694 87.515,70.694 87.515,69.837C87.515,69.419 87.857,69.077 88.275,69.077 88.692,69.077 89.035,69.419 89.035,69.837L89.035,70.762C90.685,71.046 91.714,72.222 91.714,73.922 91.714,75.004 91.165,75.812 90.525,76.242 91.381,76.756 91.88,77.679 91.88,78.788 91.88,80.625 90.805,81.834 89.034,82.066 M89.806,88.258C89.677,88.46 86.617,93.214 80,93.214 73.364,93.214 70.303,88.436 70.178,88.232A1.562,1.562,0,0,1,72.838,86.592C72.941,86.755 75.178,90.089 80,90.089 84.925,90.089 87.151,86.609 87.174,86.573A1.562,1.562,0,1,1,89.806,88.258 M68.115,78.788C68.115,77.678 68.614,76.756 69.47,76.241 68.83,75.813 68.281,75.004 68.281,73.923 68.281,72.223 69.31,71.046 70.961,70.762L70.961,69.837C70.961,69.419 71.303,69.077 71.721,69.077 72.138,69.077 72.4810000000001,69.419 72.4810000000001,69.837L72.4810000000001,70.694 73.674,70.694 73.674,69.837C73.674,69.419 74.016,69.077 74.4340000000001,69.077 74.8520000000001,69.077 75.1940000000001,69.419 75.1940000000001,69.837L75.1940000000001,70.694 75.9210000000001,70.694C76.4140000000001,70.694,76.8130000000001,71.1,76.8130000000001,71.6L76.8130000000001,81.203C76.8130000000001,81.703,76.4130000000001,82.109,75.9210000000001,82.109L75.1940000000001,82.109 75.1940000000001,83.149C75.1940000000001,83.567,74.8520000000001,83.908,74.4340000000001,83.908A0.761,0.761,0,0,1,73.674,83.148L73.674,82.108 72.48,82.108 72.48,83.148C72.48,83.567,72.138,83.908,71.72,83.908A0.761,0.761,0,0,1,70.96,83.148L70.96,82.066C69.19,81.834,68.115,80.625,68.115,78.788 M80,60C68.972,60 60,68.972 60,80 60,91.028 68.972,100 80,100 91.028,100 100,91.028 100,80 100,68.972 91.028,60 80,60" />
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingGroup>
+                        </DrawingGroup>
+                        <DrawingGroup>
+                            <DrawingGroup.OpacityMask>
+                                <DrawingBrush ViewportUnits="Absolute" ViewboxUnits="Absolute" Viewport="85.2649993896484,72.6399993896484,4.53199768066406,7.52200317382813" Viewbox="85.2649993896484,72.6399993896484,4.53199768066406,7.52200317382813" Stretch="Uniform" TileMode="None">
+                                    <DrawingBrush.Drawing>
+                                        <DrawingGroup>
+                                            <DrawingGroup Opacity="1">
+                                                <GeometryDrawing Brush="#FFFFFFFF">
+                                                    <GeometryDrawing.Geometry>
+                                                        <PathGeometry FillRule="EvenOdd" Figures="M60,60L100,60 100,100 60,100z" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingGroup>
+                                        </DrawingGroup>
+                                    </DrawingBrush.Drawing>
+                                </DrawingBrush>
+                            </DrawingGroup.OpacityMask>
+                            <DrawingGroup>
+                                <DrawingGroup.OpacityMask>
+                                    <DrawingBrush ViewportUnits="Absolute" ViewboxUnits="Absolute" Viewport="85.2649993896484,72.6399993896484,4.53199768066406,7.52200317382813" Viewbox="85.2649993896484,72.6399993896484,4.53199768066406,7.52200317382813" Stretch="Uniform" TileMode="None">
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup Opacity="1">
+                                                    <GeometryDrawing Brush="#FFFFFFFF">
+                                                        <GeometryDrawing.Geometry>
+                                                            <PathGeometry FillRule="EvenOdd" Figures="M60,60L100,60 100,100 60,100z" />
+                                                        </GeometryDrawing.Geometry>
+                                                    </GeometryDrawing>
+                                                </DrawingGroup>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </DrawingGroup.OpacityMask>
+                                <GeometryDrawing Brush="#FFF4BE49">
+                                    <GeometryDrawing.Geometry>
+                                        <PathGeometry FillRule="EvenOdd" Figures="M89.63,73.984C89.63,73.13,89.07,72.64,88.094,72.64L85.265,72.64 85.265,75.328 88.094,75.328C89.069,75.328,89.63,74.838,89.63,73.984 M88.245,77.274L85.265,77.274 85.265,80.162 88.245,80.162C89.202,80.162 89.797,79.606 89.797,78.711 89.797,77.825 89.202,77.274 88.245,77.274" />
+                                    </GeometryDrawing.Geometry>
+                                </GeometryDrawing>
+                            </DrawingGroup>
+                        </DrawingGroup>
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <DrawingBrush x:Key="sunButton">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+    <DrawingGroup.ClipGeometry>
+      <RectangleGeometry Rect="0,0,40,40" />
+    </DrawingGroup.ClipGeometry>
+    <DrawingGroup Opacity="1">
+      <DrawingGroup Opacity="1" Transform="-1,0,0,1,30,5">
+        <DrawingGroup Opacity="1">
+          <GeometryDrawing Brush="#FF000000">
+            <GeometryDrawing.Geometry>
+              <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+            </GeometryDrawing.Geometry>
+          </GeometryDrawing>
+        </DrawingGroup>
+        <DrawingGroup Opacity="1">
+          <GeometryDrawing Brush="#FFFBA342">
+            <GeometryDrawing.Geometry>
+              <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+            </GeometryDrawing.Geometry>
+          </GeometryDrawing>
+        </DrawingGroup>
+      </DrawingGroup>
+      <DrawingGroup Opacity="1">
+        <GeometryDrawing Brush="#FFFFFFFF">
+          <GeometryDrawing.Geometry>
+            <PathGeometry FillRule="Nonzero" Figures="M20,11.667A3.337,3.337,0,0,0,16.667,15A3.337,3.337,0,0,0,20,18.333A3.337,3.337,0,0,0,23.333,15A3.337,3.337,0,0,0,20,11.667z M20,17C18.897,17 18,16.103 18,15 18,13.897 18.897,13 20,13 21.103,13 22,13.897 22,15 22,16.103 21.103,17 20,17z M19.333,8.333L20.666,8.333 20.666,10.333 19.333,10.333z M24.243,9.814L25.186,10.757 23.771,12.172 22.828,11.229z M24.666,14.333L26.666,14.333 26.666,15.666 24.666,15.666z M24.243,20.186L22.828,18.771 23.77,17.828 25.185,19.243z M19.333,19.666L20.666,19.666 20.666,21.666 19.333,21.666z M15.758,20.186L14.815,19.243 16.23,17.829 17.172,18.771z M13.333,14.333L15.333,14.333 15.333,15.666 13.333,15.666z M15.758,9.815L17.172,11.229 16.229,12.172 14.815,10.757z" />
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+      </DrawingGroup>
+    </DrawingGroup>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <DrawingBrush x:Key="moonButton">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.ClipGeometry>
+                    <RectangleGeometry Rect="0,0,40,40" />
+                </DrawingGroup.ClipGeometry>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1" Transform="-1,0,0,1,30,5">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FF000000">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FF5856D6">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingGroup>
+                    <GeometryDrawing Brush="#FFFCFCFC">
                         <GeometryDrawing.Geometry>
-                            <EllipseGeometry RadiusX="46.623" RadiusY="46.623" Center="79.47,79.47" />
+                            <PathGeometry FillRule="Nonzero" Figures="M24.727,16.273L24,14.333 23.273,16.273 21.333,17 23.273,17.727 24,19.667 24.727,17.727 26.667,17z M24.121,11.121L22.667,11.667 24.121,12.212 24.667,13.667 25.212,12.212 26.667,11.667 25.212,11.121 24.667,9.667z" />
                         </GeometryDrawing.Geometry>
                     </GeometryDrawing>
-                    <GeometryDrawing>
-                        <GeometryDrawing.Pen>
-                            <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                <Pen.Brush>
-                                    <SolidColorBrush Color="#FF959595" Opacity="0.2" />
-                                </Pen.Brush>
-                            </Pen>
-                        </GeometryDrawing.Pen>
+                    <GeometryDrawing Brush="#FFFCFCFC">
                         <GeometryDrawing.Geometry>
-                            <EllipseGeometry RadiusX="65.695" RadiusY="65.695" Center="79.47,78.411" />
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                    <GeometryDrawing>
-                        <GeometryDrawing.Pen>
-                            <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                <Pen.Brush>
-                                    <SolidColorBrush Color="#FF959595" Opacity="0.1" />
-                                </Pen.Brush>
-                            </Pen>
-                        </GeometryDrawing.Pen>
-                        <GeometryDrawing.Geometry>
-                            <EllipseGeometry RadiusX="80" RadiusY="80" Center="80,80" />
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                    <GeometryDrawing>
-                        <GeometryDrawing.Pen>
-                            <Pen Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                <Pen.Brush>
-                                    <SolidColorBrush Color="#FF959595" Opacity="0.4" />
-                                </Pen.Brush>
-                            </Pen>
-                        </GeometryDrawing.Pen>
-                        <GeometryDrawing.Geometry>
-                            <EllipseGeometry RadiusX="32" RadiusY="32" Center="80,80" />
+                            <PathGeometry FillRule="Nonzero" Figures="M22.222,20.022A5.34,5.34,0,0,1,18.667,15A5.34,5.34,0,0,1,22.222,9.978A0.668,0.668,0,0,0,22.222,8.721A6.628,6.628,0,0,0,20,8.333A6.674,6.674,0,0,0,13.333,15A6.674,6.674,0,0,0,20,21.667C20.75,21.667,21.498,21.537,22.223,21.279A0.667,0.667,0,0,0,22.222,20.022z M20,20.333A5.34,5.34,0,0,1,14.667,15A5.34,5.34,0,0,1,20,9.667L20.01,9.667A6.675,6.675,0,0,0,17.332,15A6.674,6.674,0,0,0,20.008,20.333L20,20.333z" />
                         </GeometryDrawing.Geometry>
                     </GeometryDrawing>
                 </DrawingGroup>
@@ -135,69 +275,70 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
-    <Style x:Key="CheckBoxStyle1" TargetType="{x:Type CheckBox}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
-        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+    <Style TargetType="{x:Type CheckBox}" x:Key="NHMSwitch">
+        <Style.Resources>
+            <Color x:Key="DisabledBarColor">#cecdcd</Color>
+            <SolidColorBrush x:Key="DisabledBarColorBrush" Color="{StaticResource DisabledBarColor}"/>
+        </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
-                    <ControlTemplate.Resources>
-                        <Storyboard x:Key="OnChecking">
-                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="25"/>
-                            </DoubleAnimationUsingKeyFrames>
-                        </Storyboard>
-                        <Storyboard x:Key="OnUnchecking">
-                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
-                            </DoubleAnimationUsingKeyFrames>
-                            <ThicknessAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(FrameworkElement.Margin)">
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.3000000" Value="1,1,1,1"/>
-                            </ThicknessAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </ControlTemplate.Resources>
-
-                    <DockPanel x:Name="dockPanel">
-                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" ContentTemplate="{TemplateBinding ContentTemplate}" RecognizesAccessKey="True" VerticalAlignment="Center"/>
-                        <Grid Margin="5,5,0,5" Width="50" Background="#FFC0CCD9">
-                            <TextBlock Text="ON" TextWrapping="Wrap" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right" Margin="0,0,3,0"/>
-                            <TextBlock Text="OFF" TextWrapping="Wrap" HorizontalAlignment="Left" Margin="2,0,0,0" FontSize="12" FontWeight="Bold"/>
-                            <Border HorizontalAlignment="Left" x:Name="slider" Width="23" BorderThickness="1,1,1,1" CornerRadius="3,3,3,3" RenderTransformOrigin="0.5,0.5" Margin="1,1,1,1">
-                                <Border.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
-                                        <SkewTransform AngleX="0" AngleY="0"/>
-                                        <RotateTransform Angle="0"/>
-                                        <TranslateTransform X="0" Y="0"/>
-                                    </TransformGroup>
-                                </Border.RenderTransform>
-                                <Border.BorderBrush>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#FFFFFFFF" Offset="0"/>
-                                        <GradientStop Color="#FF4490FF" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.BorderBrush>
-                                <Border.Background>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#FF8AB4FF" Offset="1"/>
-                                        <GradientStop Color="#FFD1E2FF" Offset="0"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
+                    <StackPanel Orientation="Horizontal">
+                        <Grid>
+                            <Border x:Name="barInvisible" Width="32" Height="16" Background="Transparent" BorderBrush="Transparent"/>
+                            <Border x:Name="bar" Width="27.2" Height="11.2" Background="#fba342" Opacity="0.5" CornerRadius="5" ></Border>
+                            <Border x:Name="button" Height="17" Width="17" CornerRadius="12.5" HorizontalAlignment="Left" Background="{StaticResource sunButton}">
+                                <Border.BitmapEffect>
+                                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                                </Border.BitmapEffect>
                             </Border>
                         </Grid>
-                    </DockPanel>
-
+                        <ContentPresenter x:Name="content" Content="{TemplateBinding Content}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="right">
+                            <ThicknessAnimation Storyboard.TargetProperty="Margin" Storyboard.TargetName="button" Duration="0:0:0.4" From="0,0,0,0" To="16,0,0,0" >
+                                <ThicknessAnimation.EasingFunction>
+                                    <CircleEase EasingMode="EaseOut"/>
+                                </ThicknessAnimation.EasingFunction>
+                            </ThicknessAnimation>
+                            <DoubleAnimation 
+                                    Storyboard.TargetProperty="(Border.Opacity)"
+                                    Storyboard.TargetName="bar"
+                                    From="0.8" To="0.5" Duration="0:0:0.2" />
+                        </Storyboard>
+                        <Storyboard x:Key="left">
+                            <ThicknessAnimation Storyboard.TargetProperty="Margin" Storyboard.TargetName="button" Duration="0:0:0.4" From="16,0,0,0" To="0,0,0,0" >
+                                <ThicknessAnimation.EasingFunction>
+                                    <CircleEase EasingMode="EaseOut"/>
+                                </ThicknessAnimation.EasingFunction>
+                            </ThicknessAnimation>
+                            <DoubleAnimation 
+                                    Storyboard.TargetProperty="(Border.Opacity)"
+                                    Storyboard.TargetName="bar"
+                                    From="0.5" To="0.8" Duration="0:0:0.2" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="True">
+                        <Trigger Property="IsChecked" Value="false">
                             <Trigger.ExitActions>
-                                <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard" />
+                                <RemoveStoryboard BeginStoryboardName="leftt"></RemoveStoryboard>
+                                <BeginStoryboard Storyboard="{StaticResource right}" x:Name="rightt" ></BeginStoryboard>
                             </Trigger.ExitActions>
-                            <Trigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard"/>
-                            </Trigger.EnterActions>
+                            <Setter TargetName="button" Property="Background" Value="{StaticResource sunButton}" />
+                            <Setter TargetName="button" Property="Margin" Value="0,0,16,0" />
+                            <Setter TargetName="bar" Property="Background" Value="#fba342" />
+                            <Setter TargetName="bar" Property="Opacity" Value="0.8" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Trigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="rightt"></RemoveStoryboard>
+                                <BeginStoryboard Storyboard="{StaticResource left}" x:Name="leftt" ></BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter TargetName="button" Property="Background" Value="{StaticResource moonButton}" />
+                            <Setter TargetName="button" Property="Margin" Value="0,0,16,0" />
+                            <Setter TargetName="bar" Property="Background" Value="#5856d6" />
+                            <Setter TargetName="bar" Property="Opacity" Value="0.5" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -206,20 +347,6 @@
     </Style>
 
     <Style x:Key="LoginButtonStyle" TargetType="{x:Type Button}">
-        <!--<Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border Name="border" BorderThickness="0" BorderBrush="Black" >
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Opacity" Value="0.9" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>-->
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
