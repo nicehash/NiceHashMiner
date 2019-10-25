@@ -202,69 +202,143 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
-    <Style x:Key="CheckBoxStyle1" TargetType="{x:Type CheckBox}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
-        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+    <DrawingBrush x:Key="sunButton">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+    <DrawingGroup.ClipGeometry>
+      <RectangleGeometry Rect="0,0,40,40" />
+    </DrawingGroup.ClipGeometry>
+    <DrawingGroup Opacity="1">
+      <DrawingGroup Opacity="1" Transform="-1,0,0,1,30,5">
+        <DrawingGroup Opacity="1">
+          <GeometryDrawing Brush="#FF000000">
+            <GeometryDrawing.Geometry>
+              <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+            </GeometryDrawing.Geometry>
+          </GeometryDrawing>
+        </DrawingGroup>
+        <DrawingGroup Opacity="1">
+          <GeometryDrawing Brush="#FFFBA342">
+            <GeometryDrawing.Geometry>
+              <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+            </GeometryDrawing.Geometry>
+          </GeometryDrawing>
+        </DrawingGroup>
+      </DrawingGroup>
+      <DrawingGroup Opacity="1">
+        <GeometryDrawing Brush="#FFFFFFFF">
+          <GeometryDrawing.Geometry>
+            <PathGeometry FillRule="Nonzero" Figures="M20,11.667A3.337,3.337,0,0,0,16.667,15A3.337,3.337,0,0,0,20,18.333A3.337,3.337,0,0,0,23.333,15A3.337,3.337,0,0,0,20,11.667z M20,17C18.897,17 18,16.103 18,15 18,13.897 18.897,13 20,13 21.103,13 22,13.897 22,15 22,16.103 21.103,17 20,17z M19.333,8.333L20.666,8.333 20.666,10.333 19.333,10.333z M24.243,9.814L25.186,10.757 23.771,12.172 22.828,11.229z M24.666,14.333L26.666,14.333 26.666,15.666 24.666,15.666z M24.243,20.186L22.828,18.771 23.77,17.828 25.185,19.243z M19.333,19.666L20.666,19.666 20.666,21.666 19.333,21.666z M15.758,20.186L14.815,19.243 16.23,17.829 17.172,18.771z M13.333,14.333L15.333,14.333 15.333,15.666 13.333,15.666z M15.758,9.815L17.172,11.229 16.229,12.172 14.815,10.757z" />
+          </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+      </DrawingGroup>
+    </DrawingGroup>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <DrawingBrush x:Key="moonButton">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.ClipGeometry>
+                    <RectangleGeometry Rect="0,0,40,40" />
+                </DrawingGroup.ClipGeometry>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1" Transform="-1,0,0,1,30,5">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FF000000">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FF5856D6">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingGroup>
+                    <GeometryDrawing Brush="#FFFCFCFC">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Figures="M24.727,16.273L24,14.333 23.273,16.273 21.333,17 23.273,17.727 24,19.667 24.727,17.727 26.667,17z M24.121,11.121L22.667,11.667 24.121,12.212 24.667,13.667 25.212,12.212 26.667,11.667 25.212,11.121 24.667,9.667z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="#FFFCFCFC">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Figures="M22.222,20.022A5.34,5.34,0,0,1,18.667,15A5.34,5.34,0,0,1,22.222,9.978A0.668,0.668,0,0,0,22.222,8.721A6.628,6.628,0,0,0,20,8.333A6.674,6.674,0,0,0,13.333,15A6.674,6.674,0,0,0,20,21.667C20.75,21.667,21.498,21.537,22.223,21.279A0.667,0.667,0,0,0,22.222,20.022z M20,20.333A5.34,5.34,0,0,1,14.667,15A5.34,5.34,0,0,1,20,9.667L20.01,9.667A6.675,6.675,0,0,0,17.332,15A6.674,6.674,0,0,0,20.008,20.333L20,20.333z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+
+    <Style TargetType="{x:Type CheckBox}" x:Key="NHMSwitch">
+        <Style.Resources>
+            <Color x:Key="DisabledBarColor">#cecdcd</Color>
+            <SolidColorBrush x:Key="DisabledBarColorBrush" Color="{StaticResource DisabledBarColor}"/>
+        </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
-                    <ControlTemplate.Resources>
-                        <Storyboard x:Key="OnChecking">
-                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="25"/>
-                            </DoubleAnimationUsingKeyFrames>
-                        </Storyboard>
-                        <Storyboard x:Key="OnUnchecking">
-                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                                <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0"/>
-                            </DoubleAnimationUsingKeyFrames>
-                            <ThicknessAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="slider" Storyboard.TargetProperty="(FrameworkElement.Margin)">
-                                <SplineThicknessKeyFrame KeyTime="00:00:00.3000000" Value="1,1,1,1"/>
-                            </ThicknessAnimationUsingKeyFrames>
-                        </Storyboard>
-                    </ControlTemplate.Resources>
-
-                    <DockPanel x:Name="dockPanel">
-                        <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" ContentTemplate="{TemplateBinding ContentTemplate}" RecognizesAccessKey="True" VerticalAlignment="Center"/>
-                        <Grid Margin="5,5,0,5" Width="50" Background="#FFC0CCD9">
-                            <TextBlock Text="ON" TextWrapping="Wrap" FontWeight="Bold" FontSize="12" HorizontalAlignment="Right" Margin="0,0,3,0"/>
-                            <TextBlock Text="OFF" TextWrapping="Wrap" HorizontalAlignment="Left" Margin="2,0,0,0" FontSize="12" FontWeight="Bold"/>
-                            <Border HorizontalAlignment="Left" x:Name="slider" Width="23" BorderThickness="1,1,1,1" CornerRadius="3,3,3,3" RenderTransformOrigin="0.5,0.5" Margin="1,1,1,1">
-                                <Border.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform ScaleX="1" ScaleY="1"/>
-                                        <SkewTransform AngleX="0" AngleY="0"/>
-                                        <RotateTransform Angle="0"/>
-                                        <TranslateTransform X="0" Y="0"/>
-                                    </TransformGroup>
-                                </Border.RenderTransform>
-                                <Border.BorderBrush>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#FFFFFFFF" Offset="0"/>
-                                        <GradientStop Color="#FF4490FF" Offset="1"/>
-                                    </LinearGradientBrush>
-                                </Border.BorderBrush>
-                                <Border.Background>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#FF8AB4FF" Offset="1"/>
-                                        <GradientStop Color="#FFD1E2FF" Offset="0"/>
-                                    </LinearGradientBrush>
-                                </Border.Background>
+                    <StackPanel Orientation="Horizontal">
+                        <Grid>
+                            <Border x:Name="barInvisible" Width="32" Height="16" Background="Transparent" BorderBrush="Transparent"/>
+                            <Border x:Name="bar" Width="27.2" Height="11.2" Background="#fba342" Opacity="0.5" CornerRadius="5" ></Border>
+                            <Border x:Name="button" Height="17" Width="17" CornerRadius="12.5" HorizontalAlignment="Left" Background="{StaticResource sunButton}">
+                                <Border.BitmapEffect>
+                                    <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                                </Border.BitmapEffect>
                             </Border>
                         </Grid>
-                    </DockPanel>
-
+                        <ContentPresenter x:Name="content" Content="{TemplateBinding Content}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="right">
+                            <ThicknessAnimation Storyboard.TargetProperty="Margin" Storyboard.TargetName="button" Duration="0:0:0.4" From="0,0,0,0" To="16,0,0,0" >
+                                <ThicknessAnimation.EasingFunction>
+                                    <CircleEase EasingMode="EaseOut"/>
+                                </ThicknessAnimation.EasingFunction>
+                            </ThicknessAnimation>
+                            <DoubleAnimation 
+                                    Storyboard.TargetProperty="(Border.Opacity)"
+                                    Storyboard.TargetName="bar"
+                                    From="0.8" To="0.5" Duration="0:0:0.2" />
+                        </Storyboard>
+                        <Storyboard x:Key="left">
+                            <ThicknessAnimation Storyboard.TargetProperty="Margin" Storyboard.TargetName="button" Duration="0:0:0.4" From="16,0,0,0" To="0,0,0,0" >
+                                <ThicknessAnimation.EasingFunction>
+                                    <CircleEase EasingMode="EaseOut"/>
+                                </ThicknessAnimation.EasingFunction>
+                            </ThicknessAnimation>
+                            <DoubleAnimation 
+                                    Storyboard.TargetProperty="(Border.Opacity)"
+                                    Storyboard.TargetName="bar"
+                                    From="0.5" To="0.8" Duration="0:0:0.2" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="True">
+                        <Trigger Property="IsChecked" Value="false">
                             <Trigger.ExitActions>
-                                <BeginStoryboard Storyboard="{StaticResource OnUnchecking}" x:Name="OnUnchecking_BeginStoryboard" />
+                                <RemoveStoryboard BeginStoryboardName="leftt"></RemoveStoryboard>
+                                <BeginStoryboard Storyboard="{StaticResource right}" x:Name="rightt" ></BeginStoryboard>
                             </Trigger.ExitActions>
-                            <Trigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource OnChecking}" x:Name="OnChecking_BeginStoryboard"/>
-                            </Trigger.EnterActions>
+                            <Setter TargetName="button" Property="Background" Value="{StaticResource sunButton}" />
+                            <Setter TargetName="button" Property="Margin" Value="0,0,16,0" />
+                            <Setter TargetName="bar" Property="Background" Value="#fba342" />
+                            <Setter TargetName="bar" Property="Opacity" Value="0.8" />
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Trigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="rightt"></RemoveStoryboard>
+                                <BeginStoryboard Storyboard="{StaticResource left}" x:Name="leftt" ></BeginStoryboard>
+                            </Trigger.ExitActions>
+                            <Setter TargetName="button" Property="Background" Value="{StaticResource moonButton}" />
+                            <Setter TargetName="button" Property="Margin" Value="0,0,16,0" />
+                            <Setter TargetName="bar" Property="Background" Value="#5856d6" />
+                            <Setter TargetName="bar" Property="Opacity" Value="0.5" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -273,20 +347,6 @@
     </Style>
 
     <Style x:Key="LoginButtonStyle" TargetType="{x:Type Button}">
-        <!--<Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border Name="border" BorderThickness="0" BorderBrush="Black" >
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Opacity" Value="0.9" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>-->
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">

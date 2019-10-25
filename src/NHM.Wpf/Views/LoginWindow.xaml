@@ -33,6 +33,6 @@
         <TextBlock Height="21" Width="170" Margin="0,16,0,0" TextAlignment="Center" FontSize="14">
             <Hyperlink Foreground="#fba342" TextDecorations="{x:Null}" Click="ManuallyEnterBtc_OnClick">Enter Bitcoin Address Manually</Hyperlink>
         </TextBlock>
-        <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{DynamicResource CheckBoxStyle1}" Margin="0,0,10,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />
+        <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{DynamicResource NHMSwitch}" Margin="0,0,10,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />
     </StackPanel>
 </Window>
