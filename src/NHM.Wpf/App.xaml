@@ -13,6 +13,8 @@
                 <ResourceDictionary Source="Resources/Xaml/Fonts.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/ColorsBrushes.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/NHMLogos.xaml"/>
+                <ResourceDictionary Source="Resources/Xaml/Shadows.xaml"/>
+                <ResourceDictionary Source="Resources/Xaml/Fonts/Fonts.xaml"/>
                 <!--windows styles-->
                 <ResourceDictionary Source="Views/Common/NHBase/NHBaseWindowStyles.xaml"/>
                 <ResourceDictionary Source="Views/Common/NHBase/NHMMainWindowStyle.xaml"/>
