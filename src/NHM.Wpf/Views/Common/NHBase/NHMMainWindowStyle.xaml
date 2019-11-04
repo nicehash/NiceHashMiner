@@ -4,8 +4,6 @@
                     xmlns:local="clr-namespace:NHM.Wpf.Views.Common.NHBase">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../../../Resources/Xaml/NHMLogos.xaml" />
-        <!--<ResourceDictionary Source="../../../Resources/Xaml/Fonts.xaml" />
-        <ResourceDictionary Source="../../../Resources/Xaml/ColorsBrushes.xaml" />-->
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type Button}" x:Key="WindowButtonStyle">

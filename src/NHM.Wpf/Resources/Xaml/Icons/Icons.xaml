@@ -3,5 +3,11 @@
                     xmlns:local="clr-namespace:NHM.Wpf.Resources.Xaml.Icons">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="NHMLogoLight.xaml"/>
+        <ResourceDictionary Source="NHMLogoDark.xaml"/>
+        <ResourceDictionary Source="LoginCircleLogoLight.xaml"/>
+        <ResourceDictionary Source="LoginCircleLogoDark.xaml"/>
+        <ResourceDictionary Source="SunCircleLight.xaml"/>
+        <ResourceDictionary Source="MoonCircleDark.xaml"/>
+        <ResourceDictionary Source="MiningAxeIcon.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

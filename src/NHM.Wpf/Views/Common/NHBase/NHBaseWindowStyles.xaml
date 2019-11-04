@@ -80,31 +80,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-
-                                <!--<StackPanel HorizontalAlignment="Stretch" Grid.Column="0" Grid.ColumnSpan="3" Width="Auto" Margin="24,8,0,0">
-                                    <Rectangle Width="24" Height="24" >
-                                        <Rectangle.Fill>
-                                            <DrawingBrush Drawing="{Binding Drawing, Source={StaticResource NHMLogoLightBrush}}"/>
-                                        </Rectangle.Fill>
-                                    </Rectangle>
-                                    <
-                                </StackPanel>-->
-
                                 
-
-                                <!--<TextBlock Text="{TemplateBinding Title}" 
-                                           Grid.Column="0"
-                                           Grid.ColumnSpan="3"
-                                           TextTrimming="CharacterEllipsis"
-                                           HorizontalAlignment="Stretch" 
-                                           FontSize="13"
-                                           TextAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           Width="Auto"
-                                           Padding="200 0 200 0"
-                                           Foreground="Black"
-                                           Panel.ZIndex="0"
-                                           IsEnabled="{TemplateBinding IsActive}"/>-->
                                 <TextBlock Text="" 
                                            Grid.Column="0"
                                            Grid.ColumnSpan="3"
@@ -118,11 +94,7 @@
                                            Foreground="Black"
                                            Panel.ZIndex="0"
                                            IsEnabled="{TemplateBinding IsActive}">
-                                    <Rectangle Width="24" Height="24">
-                                        <Rectangle.Fill>
-                                            <DrawingBrush Drawing="{Binding Drawing, Source={StaticResource NHMLogoLightBrush}}"/>
-                                        </Rectangle.Fill>
-                                    </Rectangle>
+                                    <Grid x:Name="NHMIcon" Width="24" Height="24" Background="{StaticResource NHMLogoLightBrush}" />
                                     <TextBlock Margin="8,-8,0,0" 
                                                FontFamily="{StaticResource UbuntuFontFamily}"
                                                Foreground="{StaticResource TextColorBrush}"
@@ -134,20 +106,6 @@
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Center">NiceHash Miner</TextBlock>
                                 </TextBlock>
-                                <!--<Grid
-                                           Grid.Column="0"
-                                           Grid.ColumnSpan="3"
-                                           HorizontalAlignment="Stretch" 
-                                           VerticalAlignment="Center"                                    
-                                           Width="Auto"
-                                           Panel.ZIndex="0"
-                                           IsEnabled="{TemplateBinding IsActive}">
-                                    <Rectangle Width="24" Height="24" >
-                                        <Rectangle.Fill>
-                                            <DrawingBrush Drawing="{Binding Drawing, Source={StaticResource NHMLogoLightBrush}}"/>
-                                        </Rectangle.Fill>
-                                    </Rectangle>
-                                </Grid>-->
 
                                 <Grid x:Name="WindowControlsGrid"
                                       Grid.Column="2"

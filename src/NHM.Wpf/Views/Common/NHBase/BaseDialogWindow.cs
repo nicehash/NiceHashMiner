@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace NHM.Wpf.Views.Common.NHBase
 {
@@ -30,6 +31,19 @@ namespace NHM.Wpf.Views.Common.NHBase
         public double HeightBeforeMaximize { get; private set; }
         public double WidthBeforeMaximize { get; private set; }
         public WindowState PreviousState { get; private set; }
+
+        public Grid NHMIcon { get; private set; }
+
+        bool nextTheme = false;
+        public void SwitchTheme()
+        {
+            nextTheme = !nextTheme;
+            if (NHMIcon != null)
+            {
+                var b = nextTheme ? System.Windows.Application.Current.FindResource("NHMLogoDarkBrush") : System.Windows.Application.Current.FindResource("NHMLogoLightBrush"); ;
+                NHMIcon.Background = b as DrawingBrush;
+            }
+        }
 
         static BaseDialogWindow()
         {
@@ -65,6 +79,7 @@ namespace NHM.Wpf.Views.Common.NHBase
             this.RestoreButton = this.GetRequiredTemplateChild<System.Windows.Controls.Button>("RestoreButton");
             this.CloseButton = this.GetRequiredTemplateChild<System.Windows.Controls.Button>("CloseButton");
             this.HeaderBar = this.GetRequiredTemplateChild<Grid>("PART_HeaderBar");
+            NHMIcon = this.GetRequiredTemplateChild<Grid>("NHMIcon");
 
             if (this.LayoutRoot != null && this.WindowState == WindowState.Maximized)
             {
