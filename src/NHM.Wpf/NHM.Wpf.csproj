@@ -47,6 +47,7 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -242,6 +243,9 @@
     <Compile Include="_DESIGN_DEVELOP\Colors\Colors.xaml.cs">
       <DependentUpon>Colors.xaml</DependentUpon>
     </Compile>
+    <Compile Include="_DESIGN_DEVELOP\Components\Components.xaml.cs">
+      <DependentUpon>Components.xaml</DependentUpon>
+    </Compile>
     <Compile Include="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml.cs">
       <DependentUpon>__DESIGN_DEVELOP.xaml</DependentUpon>
     </Compile>
@@ -250,10 +254,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Buttons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\ColorsBrushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,7 +269,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\Xaml\Fonts.xaml">
+    <Page Include="Resources\Xaml\Controls\BigButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Controls\Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Controls\MenuDropdownButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Controls\StartStopButtonDark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Controls\StartStopButtonLight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -282,7 +298,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Fonts\Typography.xaml">
-          <SubType>Designer</SubType>
+      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Icons\Icons.xaml">
@@ -294,6 +310,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Icons\LoginCircleLogoLight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Icons\MiningAxeIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -486,6 +506,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="_DESIGN_DEVELOP\Colors\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="_DESIGN_DEVELOP\Components\Components.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

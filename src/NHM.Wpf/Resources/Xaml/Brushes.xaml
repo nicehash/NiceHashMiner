@@ -48,4 +48,33 @@
     <SolidColorBrush x:Key="Brushes.Dark.Grey.Grey3OutlineActive" Color="{ StaticResource Colors.Dark.Grey.Grey3OutlineActive }"/>
     <!--#endregion Dark Grey Brushes-->
 
+    <!--#region OLD DEPRECIATE-->
+    <!--#region Colors-->
+    <Color x:Key="NastyGreen">#68B641</Color>
+    <Color x:Key="SuccessBgColor">#DBEED2</Color>
+    <Color x:Key="RedDangerColor">#E92424</Color>
+    <Color x:Key="PrimaryColor">#FBA342</Color>
+    <Color x:Key="WarningColor">#FBC241</Color>
+    <Color x:Key="TextColor">#3A3939</Color>
+    <Color x:Key="Gray1Color">#959595</Color>
+    <Color x:Key="Gray2Color">#CECDCD</Color>
+    <!--#endregion Colors-->
+
+    <!--#region Brushes-->
+    <SolidColorBrush x:Key="NastyGreenBrush" Color="{StaticResource NastyGreen}" />
+    <SolidColorBrush x:Key="SuccessBgColorBrush" Color="{StaticResource SuccessBgColor}" />
+    <SolidColorBrush x:Key="RedDangerColorBrush" Color="{StaticResource RedDangerColor}" />
+    <SolidColorBrush x:Key="PrimaryColorBrush" Color="{StaticResource PrimaryColor}" />
+    <SolidColorBrush x:Key="WarningColorBrush" Color="{StaticResource WarningColor}" />
+    <SolidColorBrush x:Key="TextColorBrush" Color="{StaticResource TextColor}" />
+    <SolidColorBrush x:Key="Gray1ColorBrush" Color="{StaticResource Gray1Color}" />
+    <SolidColorBrush x:Key="Gray2ColorBrush" Color="{StaticResource Gray2Color}" />
+
+    <LinearGradientBrush x:Key="OKButtonGradientBrush" EndPoint="1,0.5" StartPoint="0,0.5">
+        <GradientStop Color="#FFFBA342" Offset="0"/>
+        <GradientStop Color="#FFFBC241" Offset="1"/>
+    </LinearGradientBrush>
+    <!--#endregion Brushes-->
+    <!--#endregion OLD DEPRECIATE-->
+
 </ResourceDictionary>

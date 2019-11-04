@@ -2,9 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:NHM.Wpf.Resources.Xaml.Fonts">
 
+    <!--#region Fonts-->
+    <FontFamily x:Key="UbuntuFontFamily">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu</FontFamily>
+    <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Free Solid</FontFamily>
+    <!--#endregion Fonts-->
+    
     <!-- HEADING 1 -->
-    <Style x:Key="FontsTypography.Heading1" TargetType="Control">
-        <Setter Property="FontWeight" Value="700" />
+    <Style x:Key="FontsTypography.Heading1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
+        <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="FontSize" Value="18" />
         <Setter Property="TextBlock.LineHeight" Value="25.2" />
     </Style>
