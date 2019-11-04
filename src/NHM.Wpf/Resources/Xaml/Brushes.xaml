@@ -10,6 +10,7 @@
         <GradientStop Color="{StaticResource Colors.Dark.Basic.MainColor}" Offset="0"/>
         <GradientStop Color="{StaticResource Colors.Dark.Basic.YellowColor}" Offset="1"/>
     </LinearGradientBrush>
+    <SolidColorBrush x:Key="Brushes.FontColor.White" Color="{StaticResource Colors.Dark.White}" />
 
     <!--#region Light Basic brushes-->
     <SolidColorBrush x:Key="Brushes.Light.Basic.MainColor" Color="{ StaticResource Colors.Light.Basic.MainColor }" />
