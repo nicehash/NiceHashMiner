@@ -12,6 +12,7 @@
         <localConv:SupportedDeviceAlgorithmsConverter x:Key="SupportedDevicesAlgorithmsConv" />
         <localConv:PluginVersionConverter x:Key="PluginVersionConverter" />
         <localConv:CompatibleVisibilityConverter x:Key="CompatibleVisibilityConverter" />
+        <localConv:PluginItemButtonStyleConverter x:Key="PluginItemButtonStyleConverter" />
 
         <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter Property="LineHeight" Value="1.5" />
@@ -144,7 +145,12 @@
                     <TextBlock x:Name="DetailsToggleButtonText" Text="Details"></TextBlock>
                 </ToggleButton>
 
-                <StackPanel Grid.Column="6"  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Plugin, Converter={StaticResource CompatibleVisibilityConverter}}">
+                <StackPanel Grid.Column="6"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding Plugin, Converter={StaticResource CompatibleVisibilityConverter}}">
+                    
                     <CheckBox Style="{StaticResource NHMSwitch}" Margin="0,0,16,0" />
                     <ToggleButton Style="{StaticResource MenuDropdownButton}" Margin="0,0,16,0" Click="Button_Click">
                         <ToggleButton.ContextMenu>
@@ -186,7 +192,10 @@
                             </ContextMenu>
                         </ToggleButton.ContextMenu>
                     </ToggleButton>
-                    <Button Style="{DynamicResource ButtonStyleWOW}" Width="105" Height="24" Margin="0,0,16,0" Content="INSTALL" />
+                    <Button Style="{Binding Plugin, Converter={StaticResource PluginItemButtonStyleConverter}}"
+                            Width="105" Height="24"
+                            Margin="0,0,16,0"
+                            Content="{Binding InstallString }" />
 
                 </StackPanel>
 

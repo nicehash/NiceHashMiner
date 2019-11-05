@@ -172,6 +172,7 @@
       <DependentUpon>MainWindowNew2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PluginsNew\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
+    <Compile Include="Views\PluginsNew\PluginItem\Converters\PluginItemButtonConverters.cs" />
     <Compile Include="Views\PluginsNew\PluginItem\Converters\PluginVersionConverter.cs" />
     <Compile Include="Views\PluginsNew\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
     <Compile Include="Views\PluginsNew\PluginItem\Converters\SupportedDevicesConverter.cs" />

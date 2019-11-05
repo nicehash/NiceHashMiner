@@ -18,9 +18,9 @@ namespace NHM.Wpf.ViewModels.Plugins
         {
             get
             {
-                if (Plugin.Installed) return Translations.Tr("Remove");
-                if (Load.IsInstalling) return Translations.Tr("Installing");
-                if (Plugin.Supported) return Translations.Tr("Install");
+                if (Plugin.Installed) return Translations.Tr("INSTALLED");
+                if (Load.IsInstalling) return Translations.Tr("INSTALLING");
+                if (Plugin.Supported) return Translations.Tr("INSTALL");
                 return Translations.Tr("Not Supported");
             }
         }

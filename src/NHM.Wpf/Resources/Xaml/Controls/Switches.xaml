@@ -65,26 +65,63 @@
                         </Storyboard>
                     </ControlTemplate.Resources>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsChecked" Value="false">
-                            <Trigger.ExitActions>
+                        <MultiTrigger>
+                            <MultiTrigger.ExitActions>
                                 <RemoveStoryboard BeginStoryboardName="leftt"></RemoveStoryboard>
                                 <BeginStoryboard Storyboard="{StaticResource right}" x:Name="rightt" ></BeginStoryboard>
-                            </Trigger.ExitActions>
-                            <Setter TargetName="button" Property="Background" Value="White" />
-                            <Setter TargetName="button" Property="Margin" Value="0,0,16,0" />
-                            <Setter TargetName="bar" Property="Background" Value="#cecdcd" />
-                            <Setter TargetName="bar" Property="Opacity" Value="0.8" />
-                        </Trigger>
-                        <Trigger Property="IsChecked" Value="true">
-                            <Trigger.ExitActions>
+                            </MultiTrigger.ExitActions>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="False"/>
+                                <Condition Property="IsEnabled" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="button" Property="Background" Value="White" />
+                                <Setter TargetName="button" Property="Margin" Value="0,0,16,0" />
+                                <Setter TargetName="bar" Property="Background" Value="{StaticResource Gray2ColorBrush}" />
+                                <Setter TargetName="bar" Property="Opacity" Value="0.8" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                        
+                        <MultiTrigger>
+                            <MultiTrigger.ExitActions>
                                 <RemoveStoryboard BeginStoryboardName="rightt"></RemoveStoryboard>
                                 <BeginStoryboard Storyboard="{StaticResource left}" x:Name="leftt" ></BeginStoryboard>
-                            </Trigger.ExitActions>
-                            <Setter TargetName="button" Property="Background" Value="{StaticResource PrimaryColorBrush}" />
-                            <Setter TargetName="button" Property="Margin" Value="16,0,0,0" />
-                            <Setter TargetName="bar" Property="Background" Value="{StaticResource PrimaryColorBrush}" />
-                            <Setter TargetName="bar" Property="Opacity" Value="0.5" />
-                        </Trigger>
+                            </MultiTrigger.ExitActions>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True"/>
+                                <Condition Property="IsEnabled" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="button" Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                                <Setter TargetName="button" Property="Margin" Value="16,0,0,0" />
+                                <Setter TargetName="bar" Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                                <Setter TargetName="bar" Property="Opacity" Value="0.5" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+
+                        <!--#region TODO Not working as desired-->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True"/>
+                                <Condition Property="IsEnabled" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="button" Property="Background" Value="{StaticResource Gray2ColorBrush}" />
+                                <Setter TargetName="bar" Property="Background" Value="#eeeeee" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                        
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="False"/>
+                                <Condition Property="IsEnabled" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="button" Property="Background" Value="{StaticResource Gray2ColorBrush}" />
+                                <Setter TargetName="bar" Property="Background" Value="#eeeeee" />
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                        <!--#endregion TODO Not working as desired-->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
