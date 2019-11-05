@@ -1,4 +1,5 @@
 ﻿using NHMCore;
+using NHMCore.Utils;
 
 namespace NiceHashMiner
 {
@@ -90,7 +91,7 @@ namespace NiceHashMiner
             // textBoxBTCAddress
             // 
             this.textBoxBTCAddress.Location = new System.Drawing.Point(113, 39);
-            this.textBoxBTCAddress.MaxLength = 34;
+            this.textBoxBTCAddress.MaxLength = CredentialValidators.MAX_BTC_LENGTH;
             this.textBoxBTCAddress.Name = "textBoxBTCAddress";
             this.textBoxBTCAddress.Size = new System.Drawing.Size(237, 20);
             this.textBoxBTCAddress.TabIndex = 1;

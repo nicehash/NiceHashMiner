@@ -6,6 +6,7 @@ namespace NHMCore.Utils
 {
     public static class CredentialValidators
     {
+        public const int MAX_BTC_LENGTH = 35;
         public static bool ValidateBitcoinAddress(string address)
         {
 #if TESTNET || TESTNETDEV
@@ -13,7 +14,7 @@ namespace NHMCore.Utils
 #else
             try
             {
-                if (address.Length < 26 || address.Length > 35) return false;
+                if (address.Length < 26 || address.Length > MAX_BTC_LENGTH) return false;
                 var decoded = DecodeBase58(address);
                 var d1 = Hash(SubArray(decoded, 0, 21));
                 var d2 = Hash(d1);
