@@ -12,9 +12,6 @@
     </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary x:Name="SVGResources" Source="../Resources/Xaml/SVGResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
         </ResourceDictionary>
     </UserControl.Resources>

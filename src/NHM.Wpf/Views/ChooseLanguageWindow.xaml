@@ -42,9 +42,7 @@
             </ComboBox.ItemContainerStyle>
         </ComboBox>
         <DockPanel Grid.Row="3" Margin="0,0,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button DockPanel.Dock="Right" Click="OkButton_OnClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsEnabled="{ Binding Path=Enabled }" Style="{StaticResource OKButton}">
-                <TextBlock Text="NEXT"/>
-            </Button>
+            <Button DockPanel.Dock="Right" Click="OkButton_OnClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsEnabled="{ Binding Path=Enabled }" Style="{StaticResource OKButton}" Content="NEXT" />
         </DockPanel>
     </Grid>
 </nhb:BaseDialogWindow>

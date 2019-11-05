@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -52,9 +53,23 @@ namespace NHM.Wpf.Views.PluginsNew.PluginItem
             }
         }
 
+        private readonly HashSet<ToggleButton> _toggleButtonsGuard = new HashSet<ToggleButton>();
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            PluginActionsButtonContext.IsOpen = true;
+            if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
+            {
+                _toggleButtonsGuard.Add(tButton);
+                PluginActionsButtonContext.IsOpen = true;
+                RoutedEventHandler closedHandler = null;
+                closedHandler += (s, e2) => {
+                    _toggleButtonsGuard.Remove(tButton);
+                    tButton.IsChecked = false;
+                    PluginActionsButtonContext.Closed -= closedHandler;
+                };
+                PluginActionsButtonContext.Closed += closedHandler;
+            }
+            
         }
     }
 }

@@ -4,8 +4,9 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="StartStopButtonLight.xaml"/>
         <ResourceDictionary Source="StartStopButtonDark.xaml"/>
-        <ResourceDictionary Source="BigButton.xaml"/>
+        <ResourceDictionary Source="Buttons.xaml"/>
         <ResourceDictionary Source="MenuDropdownButton.xaml"/>
+        <ResourceDictionary Source="Switches.xaml"/>
         <!--<ResourceDictionary Source="Next.xaml"/>-->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

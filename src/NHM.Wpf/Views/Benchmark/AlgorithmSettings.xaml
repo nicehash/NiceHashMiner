@@ -92,8 +92,6 @@
         </WrapPanel>
 
         <Separator Grid.Row="6"/>
-        <Button Grid.Row="7" Style="{StaticResource OKButton}" Width="326" Height="39.7" >
-            <TextBlock>SAVE</TextBlock>
-        </Button>
+        <Button Grid.Row="7" Style="{StaticResource OKButton}" Width="326" Height="39.7" Content="SAVE" />
     </Grid>
 </UserControl>

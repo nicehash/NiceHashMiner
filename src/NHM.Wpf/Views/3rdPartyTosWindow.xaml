@@ -40,12 +40,8 @@
         </Grid>
 
         <DockPanel Grid.Row="2" Margin="24,24,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button DockPanel.Dock="Right" Click="AcceptButton_OnClick" Style="{StaticResource OKButton}" >
-                <TextBlock Text="I ACCEPT"/>
-            </Button>
-            <Button DockPanel.Dock="Right" Click="CancelButton_OnClick" Style="{StaticResource CancelButton}" Margin="16,0">
-                <TextBlock Text="CANCEL"/>
-            </Button>
+            <Button DockPanel.Dock="Right" Click="AcceptButton_OnClick" Style="{StaticResource OKButton}" Content="I ACCEPT" />
+            <Button DockPanel.Dock="Right" Click="CancelButton_OnClick" Style="{StaticResource CancelButton}" Margin="16,0" Content="CANCEL" />
         </DockPanel>
     </Grid>
 </nhb:BaseDialogWindow>

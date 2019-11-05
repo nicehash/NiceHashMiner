@@ -76,19 +76,8 @@
                 </Style>
             </Style.Resources>
         </Style>
-        <Style x:Key="ButtonStyleWOW" TargetType="{x:Type Button}">
-            <Style.Resources>
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                    <Setter Property="FontSize" Value="12" />
-                    <Setter Property="Foreground" Value="White" />
-                    <Setter Property="LineHeight" Value="1.17" />
-                    <Setter Property="TextAlignment" Value="Center" />
-                </Style>
-            </Style.Resources>
-            <Setter Property="Background" Value="{StaticResource OKButtonGradientBrush}"/>
-            <Style.BasedOn>
-                <StaticResource ResourceKey="NHMButton"/>
-            </Style.BasedOn>
+        <Style x:Key="ButtonStyleWOW" BasedOn="{StaticResource BigButtonPrimary}" TargetType="{x:Type Button}">
+            <Setter Property="FontSize" Value="12"/>
         </Style>
     </UserControl.Resources>
     <Grid Background="Transparent" Width="Auto" Height="Auto" MaxWidth="720">
@@ -157,8 +146,8 @@
 
                 <StackPanel Grid.Column="6"  Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding Plugin, Converter={StaticResource CompatibleVisibilityConverter}}">
                     <CheckBox Style="{StaticResource NHMSwitch}" Margin="0,0,16,0" />
-                    <Button Style="{StaticResource StartStopButton}" Margin="0,0,16,0" Click="Button_Click">
-                        <Button.ContextMenu>
+                    <ToggleButton Style="{StaticResource MenuDropdownButton}" Margin="0,0,16,0" Click="Button_Click">
+                        <ToggleButton.ContextMenu>
                             <ContextMenu x:Name="PluginActionsButtonContext">
                                 <ContextMenu.Resources>
                                     <Style TargetType="{x:Type ContextMenu}">
@@ -195,12 +184,10 @@
                                 <Separator />
                                 <MenuItem Header="Menu item 3" />
                             </ContextMenu>
-                        </Button.ContextMenu>
-                        <TextBlock Text="..."></TextBlock>
-                    </Button>
-                    <Button Style="{DynamicResource ButtonStyleWOW}" Width="105" Height="24" Margin="0,0,16,0">
-                        <TextBlock FontSize="10" Text="INSTALL"></TextBlock>
-                    </Button>
+                        </ToggleButton.ContextMenu>
+                    </ToggleButton>
+                    <Button Style="{DynamicResource ButtonStyleWOW}" Width="105" Height="24" Margin="0,0,16,0" Content="INSTALL" />
+
                 </StackPanel>
 
             </Grid>

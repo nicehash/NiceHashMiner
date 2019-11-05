@@ -18,8 +18,8 @@
             <RowDefinition Height="86" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="White">
-            <Button Background="{StaticResource StartButtonBrushLight}" BorderBrush="Transparent" Width="120" Height="120">
-            </Button>
+            <!--Change the parent from grid to stackpanel and the button will work. Not entierly sure why it is not working-->
+            <ToggleButton Style="{StaticResource StartStopButtonDark}" />
             <TextBlock>Content</TextBlock>
         </Grid>
         <Grid Grid.Row="1">
