@@ -22,7 +22,7 @@ namespace NHMCore.Switching
         /// <summary>
         /// True iff there has been at least one SMA update
         /// </summary>
-#if FORCE_MINING
+#if FORCE_MINING || FORCE_PROFITABLE
         public static bool HasData { get => true; private set { } }
 #else
         public static bool HasData { get; private set; }
@@ -53,7 +53,7 @@ namespace NHMCore.Switching
                     if (cacheDict?.TryGetValue(algo, out paying) ?? false)
                         HasData = true;
 
-#if FORCE_MINING
+#if FORCE_MINING || FORCE_PROFITABLE
                     paying = 10000;
 #endif
 
@@ -86,7 +86,7 @@ namespace NHMCore.Switching
                     if (_currentPayingRates.ContainsKey(algo))
                     {
                         _currentPayingRates[algo] = newSma[algo];
-#if FILLSMA
+#if FORCE_PROFITABLE
                         var paying = 1;
                         _currentPayingRates[algo] = paying;
 #endif
@@ -117,7 +117,7 @@ namespace NHMCore.Switching
                 _currentPayingRates[algo] = paying;
             }
 
-#if FILLSMA
+#if FORCE_PROFITABLE
             paying = 1;
             _currentPayingRates[algo] = paying;
 #endif

@@ -3,6 +3,7 @@ using NHM.Common.Enums;
 using NHMCore.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining;
+using NHMCore.Stats;
 using NHMCore.Utils;
 using System;
 using System.Collections.Concurrent;
@@ -36,7 +37,8 @@ namespace NHMCore
                 startDevice.IsPendingChange = true;
                 UpdateDevicesToMineStates.Enqueue((startDevice, DeviceState.Mining));
             }
-            _UpdateDevicesToMineTaskDelayed.ExecuteDelayed(CancellationToken.None);
+            var t = _UpdateDevicesToMineTaskDelayed.ExecuteDelayedTask(CancellationToken.None);
+            NiceHashStats.SendMinerStatusTasks.Enqueue(t);
         }
 
         private static void StopMiningOnDevices(params ComputeDevice[] stopDevices)
@@ -48,7 +50,8 @@ namespace NHMCore
                 stopDevice.IsPendingChange = true;
                 UpdateDevicesToMineStates.Enqueue((stopDevice, DeviceState.Stopped));
             }
-            _UpdateDevicesToMineTaskDelayed.ExecuteDelayed(CancellationToken.None);
+            var t = _UpdateDevicesToMineTaskDelayed.ExecuteDelayedTask(CancellationToken.None);
+            NiceHashStats.SendMinerStatusTasks.Enqueue(t);
         }
 
         private static DelayedSingleExecActionTask _UpdateDevicesToMineTaskDelayed = new DelayedSingleExecActionTask
