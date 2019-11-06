@@ -8,6 +8,7 @@ using NHMCore.Stats.Models;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -653,30 +654,111 @@ namespace NHMCore.Stats
             // This function is run every minute and sends data every run which has two auxiliary effects
             // Keeps connection alive and attempts reconnection if internet was dropped
             _socket?.SendData(sendData);
+            LastSendMinerStatusTimestamp = DateTime.UtcNow;
         }
 
         private static void MinerStatus_Tick(object state)
         {
+            if (IsRPC) {
+                NHM.Common.Logger.Debug("SOCKET", "SendMinerStatus Tick 'miner.status' SKIPPING RPC in PROGRESS");
+                return;
+            }
+            var elapsedTime = DateTime.UtcNow - LastSendMinerStatusTimestamp;
+            var minElapsedTime_ms = DeviceUpdateInterval * 0.9;
+            if (elapsedTime.TotalMilliseconds < minElapsedTime_ms)
+            {
+                NHM.Common.Logger.Debug("SOCKET", $"SendMinerStatus Tick 'miner.status' SKIPPING elapsed time {elapsedTime.TotalMilliseconds} < {minElapsedTime_ms}");
+                return;
+            }
+
             NHM.Common.Logger.Info("SOCKET", "SendMinerStatus Tick 'miner.status'");
             SendMinerStatus(false);
         }
 
+        private static bool _isRPC = false;
+        private static object _lockRPC = new object();
+        private static bool IsRPC
+        {
+            get
+            {
+                lock (_lockRPC)
+                {
+                    return _isRPC;
+                }
+            }
+            set
+            {
+                lock (_lockRPC)
+                {
+                    _isRPC = value;
+                }
+            }
+        }
+
+        private static DateTime _lastSendMinerStatusTimestamp = DateTime.MinValue;
+        private static object _locklastSendMinerStatusTimestamp = new object();
+        private static DateTime LastSendMinerStatusTimestamp
+        {
+            get
+            {
+                lock (_locklastSendMinerStatusTimestamp)
+                {
+                    return _lastSendMinerStatusTimestamp;
+                }
+            }
+            set
+            {
+                lock (_locklastSendMinerStatusTimestamp)
+                {
+                    _lastSendMinerStatusTimestamp = value;
+                }
+            }
+        }
+
+
         private static void SendExecuted(ExecutedInfo info, int? id, int code = 0, string message = null)
         {
-            // First set status
-            NHM.Common.Logger.Debug("SOCKET", "SendExecuted-SendMinerStatus(false);");
-            SendMinerStatus(false);
-            // Then executed
-            var data = new ExecutedCall(id ?? -1, code, message).Serialize();
-            _socket?.SendData(data);
-            // Login if we have to
-            if (info?.LoginNeeded ?? false)
+            IsRPC = true;
+            try
             {
-                _socket?.StartConnection(info.NewBtc, info.NewWorker, info.NewRig);
+                // First set status
+                NHM.Common.Logger.Debug("SOCKET", "SendExecuted-SendMinerStatus(false);");
+                //SendMinerStatus(false); // THIS LINE HERE IS PROBLEMATIC BECAUSE IT DOESN'T WAIT FOR TASK COMPLETION
+                while (SendMinerStatusTasks.TryDequeue(out var t))
+                {
+                    CancelNotifyStateChangedTask();
+                    try
+                    {
+                        //NHM.Common.Logger.Info("DEBUGDELSOCKET", "SendExecuted-WAIT-START");
+                        t.Wait();
+                        //NHM.Common.Logger.Info("DEBUGDELSOCKET", "SendExecuted-WAIT-END");
+                    }
+                    catch
+                    {
+                        //NHM.Common.Logger.Info("DEBUGDELSOCKET", "SendExecuted-WAIT-EXCEPTION");
+                    }
+                }
+                SendMinerStatus(false);
+                // Then executed
+                var data = new ExecutedCall(id ?? -1, code, message).Serialize();
+                _socket?.SendData(data);
+                // Login if we have to
+                if (info?.LoginNeeded ?? false)
+                {
+                    _socket?.StartConnection(info.NewBtc, info.NewWorker, info.NewRig);
+                }
+            }
+            finally
+            {
+                IsRPC = false;
             }
         }
 
         #endregion
+
+        private static CancellationTokenSource _cancelStateChangeTask;
+
+        public static ConcurrentQueue<Task> SendMinerStatusTasks { get; private set; } = new ConcurrentQueue<Task>();
 
         // execute after 1seconds. Finish execution on last event after 1seconds
         private static DelayedSingleExecActionTask _minerStateChangeStatusSendDelay = new DelayedSingleExecActionTask
@@ -685,9 +767,30 @@ namespace NHMCore.Stats
             TimeSpan.FromSeconds(1)
             );
 
+        private static void CancelNotifyStateChangedTask()
+        {
+            if (_cancelStateChangeTask == null) return;
+            var release = _cancelStateChangeTask;
+            _cancelStateChangeTask = null;
+            try
+            {
+                release?.Cancel();
+            }
+            catch
+            {
+            }
+            finally
+            {
+                release?.Dispose();
+            }
+        }
+
         public static void NotifyStateChangedTask()
         {
-            _minerStateChangeStatusSendDelay.ExecuteDelayed(CancellationToken.None);
+            CancelNotifyStateChangedTask();
+            _cancelStateChangeTask = CancellationTokenSource.CreateLinkedTokenSource(ApplicationStateManager.ExitApplication.Token);
+            var t = _minerStateChangeStatusSendDelay.ExecuteDelayedTask(_cancelStateChangeTask.Token);
+            SendMinerStatusTasks.Enqueue(t);
         }
 
         public static void StateChangedExec()
