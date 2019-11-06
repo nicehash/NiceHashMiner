@@ -27,7 +27,7 @@ namespace Example
         /// <summary>
         /// With version we set the version of the plugin for further updating capabilities.
         /// </summary>
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
 
         /// <summary>
         /// CanGroup checks if miner can run multiple devices with same algorithm in one miner instance

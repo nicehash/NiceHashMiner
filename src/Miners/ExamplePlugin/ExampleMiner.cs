@@ -100,14 +100,15 @@ namespace Example
 
 
             // here we simulate benchmark work
-            await Task.Delay(15000);
-            double speed = 1000; // everything is same speed
+            await Task.Delay(15000, stop);
+            var success = !stop.IsCancellationRequested;
+            double speed = success ? 1000 : 0; // everything is same speed
 
             // and return our result
             return new BenchmarkResult
             {
                 AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, speed) },
-                Success = true,
+                Success = success,
                 ErrorMessage = ""
             };
         }
