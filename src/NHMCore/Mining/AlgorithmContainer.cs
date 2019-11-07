@@ -58,17 +58,7 @@ namespace NHMCore.Mining
         /// Friendly display name for this algorithm
         /// </summary>
         public string AlgorithmName => Algorithm?.AlgorithmName ?? "";
-        /// <summary>
-        /// Friendly name for miner type
-        /// </summary>
-        public string MinerBaseTypeName
-        {
-            get
-            {
-                if (PluginContainer == null) return "";
-                return PluginContainer.Name;
-            }
-        }
+
         /// <summary>
         /// Friendly name for this algorithm/miner combo
         /// </summary>

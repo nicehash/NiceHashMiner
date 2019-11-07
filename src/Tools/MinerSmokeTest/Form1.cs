@@ -38,7 +38,7 @@ namespace MinerSmokeTest
 
         public static object[] GetAlgorithmRowData(AlgorithmContainer a)
         {
-            object[] rowData = { a.Enabled, a.AlgorithmName, a.MinerBaseTypeName };
+            object[] rowData = { a.Enabled, a.AlgorithmName, a.PluginName };
             return rowData;
         }
 
@@ -185,7 +185,7 @@ namespace MinerSmokeTest
 
                         tbx_info.Text += $"TESTING: {Environment.NewLine}";
                         tbx_info.Text += $"Device: {device.GetFullName()} {Environment.NewLine}";
-                        tbx_info.Text += $"Miner base: {algorithm.MinerBaseTypeName}" + Environment.NewLine;
+                        tbx_info.Text += $"Miner base: {algorithm.PluginName}" + Environment.NewLine;
                         tbx_info.Text += $"Algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
 
                         label1.Text = $"{step} / {testSteps}";
@@ -251,7 +251,7 @@ namespace MinerSmokeTest
 
                         tbx_info.Text += $"TESTING: {Environment.NewLine}";
                         tbx_info.Text += $"Device: {device.GetFullName()} {Environment.NewLine}";
-                        tbx_info.Text += $"Miner base: {algorithm.MinerBaseTypeName}" + Environment.NewLine;
+                        tbx_info.Text += $"Miner base: {algorithm.PluginName}" + Environment.NewLine;
                         tbx_info.Text += $"Algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
 
                         label1.Text = $"{step} / {testSteps}";

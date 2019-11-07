@@ -82,7 +82,7 @@ namespace NiceHashMiner.Forms.Components
                 _currentlySelectedLvi = lvi;
                 Enabled = lvi.Checked && !IsInBenchmark;
 
-                var selectedAlgoName = $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})";
+                var selectedAlgoName = $"{algorithm.AlgorithmName} ({algorithm.PluginName})";
                 groupBoxSelectedAlgorithmSettings.Text = string.Format(
                     Translations.Tr("Selected Algorithm: {0}"), ""); // keep the translation
                 labelSelectedAlgorithm.Text = selectedAlgoName;

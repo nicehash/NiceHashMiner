@@ -101,7 +101,7 @@ namespace NiceHashMiner.Forms.Components
                 var lvi = new ListViewItem();
 
                 var name = alg.AlgorithmName;
-                var minerName = alg.MinerBaseTypeName;
+                var minerName = alg.PluginName;
                 var payingRatio = alg.CurPayingRatio;
 
                 lvi.SubItems.Add(name);
