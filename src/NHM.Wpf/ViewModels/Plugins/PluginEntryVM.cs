@@ -1,10 +1,12 @@
-﻿using NHM.Wpf.ViewModels.Models;
+﻿using NHM.Common;
+using NHM.Wpf.ViewModels.Models;
 using NHMCore;
 using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows;
 using static NHMCore.Translations;
 
 namespace NHM.Wpf.ViewModels.Plugins
@@ -18,14 +20,69 @@ namespace NHM.Wpf.ViewModels.Plugins
         {
             get
             {
+                // order really matters
+                if (Load.IsInstalling && Plugin.Supported)
+                {
+                    if (!Plugin.Installed) return Translations.Tr("INSTALLING");
+                    if (Plugin.HasNewerVersion) return Translations.Tr("UPDATING");
+                }
+
+                if (Plugin.HasNewerVersion) return Translations.Tr("UPDATE");
                 if (Plugin.Installed) return Translations.Tr("INSTALLED");
-                if (Load.IsInstalling) return Translations.Tr("INSTALLING");
                 if (Plugin.Supported) return Translations.Tr("INSTALL");
                 return Translations.Tr("Not Supported");
             }
         }
 
-        public bool InstallButtonEnabled => (Plugin.Installed || Plugin.Supported) && !Load.IsInstalling;
+        public string InstallVersionStatus
+        {
+            get
+            {
+                var localVer = Plugin?.LocalInfo?.PluginVersion ?? null;
+                var onlineVer = Plugin?.OnlineInfo?.PluginVersion ?? null;
+                if (!Plugin.Installed && onlineVer != null)
+                {
+                    return $"{onlineVer.Major}.{onlineVer.Minor} (Online)";
+                }
+                if (Plugin.Installed && Plugin.HasNewerVersion && localVer != null && onlineVer != null)
+                {
+                    return $"{localVer.Major}.{localVer.Minor} / {onlineVer.Major}.{onlineVer.Minor}";
+                }
+                if (Plugin.Installed && !Plugin.HasNewerVersion && localVer != null)
+                {
+                    // TODO translate
+                    return $"{localVer.Major}.{localVer.Minor} (Latest)";
+                }
+                if (localVer != null)
+                {
+                    // TODO Tranlsate
+                    return $"{localVer.Major}.{localVer.Minor} (Local)";
+                }
+                return Translations.Tr("N/A");
+            }
+        }
+
+        //public bool InstallButtonEnabled => (Plugin.Installed || Plugin.Supported) && !Load.IsInstalling;
+        public bool InstallButtonEnabled => Plugin.Supported && !Load.IsInstalling && (Plugin.HasNewerVersion || !Plugin.Installed);
+
+
+        public Visibility ActionsButtonVisibility
+        {
+            get
+            {
+                if (Load.IsInstalling) return Visibility.Collapsed;
+                if (Plugin.Installed) return Visibility.Visible;
+                return Visibility.Hidden;
+            }
+        }
+        public Visibility SpinningCircleVisibility
+        {
+            get
+            {
+                if (Load.IsInstalling) return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
 
         // Load is shared between the listing and detail page. This allows navigating to details and back
         // while maintaining the progress.
@@ -45,6 +102,7 @@ namespace NHM.Wpf.ViewModels.Plugins
         protected PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
         {
             Plugin = plugin;
+            Plugin.PropertyChanged += Plugin_PropertyChanged;
 
             // Filter the dict to remove empty entries
             FilteredSupportedAlgorithms = new Dictionary<string, List<string>>();
@@ -94,7 +152,23 @@ namespace NHM.Wpf.ViewModels.Plugins
         private void Install_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Load.IsInstalling))
-                OnPropertyChanged(nameof(InstallButtonEnabled));
+            {
+                CommonInstallOnPropertyChanged();
+            }
+                
+        }
+
+        private void Plugin_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Logger.Debug("PluginEntryVM", $"Plugin_PropertyChanged PropertyName: '{e.PropertyName}'");
+            if (e.PropertyName == nameof(PluginPackageInfoCR.OnlineInfo) || e.PropertyName == nameof(PluginPackageInfoCR.LocalInfo))
+            {
+                OnPropertyChanged(nameof(InstallVersionStatus));
+            }
+            if (e.PropertyName == nameof(PluginPackageInfoCR.HasNewerVersion))
+            {
+                OnPropertyChanged(nameof(InstallString));
+            }
         }
 
         public async Task InstallRemovePlugin()
@@ -112,5 +186,33 @@ namespace NHM.Wpf.ViewModels.Plugins
 
             OnPropertyChanged(nameof(InstallString));
         }
+
+        public async Task InstallOrUpdatePlugin()
+        {
+            if (Load.IsInstalling) return;
+            if (Plugin.Installed && !Plugin.HasNewerVersion) return;
+            //if (Plugin.HasNewerVersion) return;
+
+            await MinerPluginsManager.DownloadAndInstall(Plugin.PluginUUID, Progress);
+            CommonInstallOnPropertyChanged();
+        }
+
+        public void UninstallPlugin()
+        {
+            if (Load.IsInstalling) return;
+            if (!Plugin.Installed) return;
+            MinerPluginsManager.RemovePlugin(Plugin.PluginUUID);
+
+            CommonInstallOnPropertyChanged();
+        }
+
+        private void CommonInstallOnPropertyChanged()
+        {
+            OnPropertyChanged(nameof(InstallString));
+            OnPropertyChanged(nameof(InstallButtonEnabled));
+            OnPropertyChanged(nameof(ActionsButtonVisibility));
+            OnPropertyChanged(nameof(SpinningCircleVisibility));
+        }
+
     }
 }

@@ -2,9 +2,12 @@
 using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.Mining;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace NHM.Wpf.ViewModels.Models
@@ -14,7 +17,11 @@ namespace NHM.Wpf.ViewModels.Models
     /// </summary>
     public class DeviceData : NotifyChangedBase
     {
+        
+
         public ComputeDevice Dev { get; }
+
+        public ObservableCollection<AlgorithmContainer> AlgorithmSettingsCollection { get; private set; } = new ObservableCollection<AlgorithmContainer>();
 
         public bool Enabled
         {
@@ -77,6 +84,8 @@ namespace NHM.Wpf.ViewModels.Models
             {
                 algo.PropertyChanged += AlgoOnPropertyChanged;
             }
+
+            AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
         }
 
         private void AlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -87,6 +96,15 @@ namespace NHM.Wpf.ViewModels.Models
 
         private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            switch (e.PropertyName)
+            {
+                case nameof(ComputeDevice.AlgorithmSettings):
+                    AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
+                    OnPropertyChanged(nameof(AlgorithmSettingsCollection));
+                    return;
+                default:
+                    break;
+            }
             if (e.PropertyName == nameof(Dev.State))
             {
                 OnPropertyChanged(nameof(ButtonLabel));
@@ -119,6 +137,76 @@ namespace NHM.Wpf.ViewModels.Models
                     break;
             }
         }
+        #region AlgorithmSettingsCollection SORTING
+        private enum SortColumn
+        {
+            ALGORITHM = 0,
+            PLUGIN,
+            SPEEDS,
+            PAYING_RATE,
+            STATUS,
+            ENABLED
+        }
+
+        private SortColumn _sortColumn = SortColumn.PLUGIN;
+        private bool _sortDescending = false; 
+
+        public void OrderAlgorithmsByAlgorithm() => OrderAlgorithmsBy(SortColumn.ALGORITHM);
+        public void OrderAlgorithmsByPlugin() => OrderAlgorithmsBy(SortColumn.PLUGIN);
+        public void OrderAlgorithmsBySpeeds() => OrderAlgorithmsBy(SortColumn.SPEEDS);
+        public void OrderAlgorithmsByPaying() => OrderAlgorithmsBy(SortColumn.PAYING_RATE);
+        public void OrderAlgorithmsByStatus() => OrderAlgorithmsBy(SortColumn.STATUS);
+        public void OrderAlgorithmsByEnabled() => OrderAlgorithmsBy(SortColumn.ENABLED);
+
+        private void OrderAlgorithmsBy(SortColumn sortByColumn)
+        {
+            if (_sortColumn == sortByColumn)
+            {
+                _sortDescending = !_sortDescending;
+            }
+            else
+            {
+                _sortColumn = sortByColumn;
+                _sortDescending = false;
+            }
+            OrderAlgorithms();
+        }
+
+        private void OrderAlgorithms()
+        {
+            List<Func<AlgorithmContainer, object>> orderedSortingFunctions = new List<Func<AlgorithmContainer, object>>
+            {
+                algo => algo.AlgorithmName,
+                algo => algo.PluginName,
+                algo => algo.BenchmarkSpeed, // FIRST SPEED FIX only
+                algo => algo.CurrentProfit,
+                algo => algo.BenchmarkStatus, // TODO STATUS doesn't exist yet
+                algo => algo.Enabled,
+            };
+            // take the first one and order by that first then continue with the rest
+            var firstOrder = orderedSortingFunctions[(int)_sortColumn];
+            orderedSortingFunctions.RemoveAt((int)_sortColumn);
+            IOrderedEnumerable<AlgorithmContainer> ordered;
+            if (_sortDescending)
+            {
+                ordered = AlgorithmSettingsCollection.OrderByDescending(firstOrder);
+            }
+            else
+            {
+                ordered = AlgorithmSettingsCollection.OrderBy(firstOrder);
+            }
+
+            foreach (var nextOrderBy in orderedSortingFunctions)
+            {
+                ordered = ordered.ThenBy(nextOrderBy);
+            }
+
+            AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(ordered);
+            OnPropertyChanged(nameof(AlgorithmSettingsCollection));
+        }
+
+
+        #endregion AlgorithmSettingsCollection SORTING
 
         public static implicit operator DeviceData(ComputeDevice dev)
         {

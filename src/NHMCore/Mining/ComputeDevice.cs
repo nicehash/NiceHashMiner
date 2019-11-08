@@ -243,6 +243,7 @@ namespace NHMCore.Mining
             if (toRemove.Count() == 0) return;
             var newList = AlgorithmSettings.Where(algo => toRemove.Contains(algo) == false).ToList();
             AlgorithmSettings = newList;
+            OnPropertyChanged(nameof(AlgorithmSettings));
         }
 
         public void RemovePluginAlgorithms(IEnumerable<AlgorithmContainer> algos)
@@ -251,11 +252,13 @@ namespace NHMCore.Mining
             {
                 AlgorithmSettings.Remove(algo);
             }
+            OnPropertyChanged(nameof(AlgorithmSettings));
         }
 
         public void AddPluginAlgorithms(IEnumerable<AlgorithmContainer> algos)
         {
             AlgorithmSettings.AddRange(algos);
+            OnPropertyChanged(nameof(AlgorithmSettings));
         }
 
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)

@@ -16,7 +16,7 @@ namespace NHM.Wpf.Views.PluginsNew.PluginItem.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var style = Application.Current.FindResource("BigButtonPrimary");
-            if (value is PluginPackageInfoCR pluginCR && pluginCR.Installed)
+            if (value is bool installed && installed)
             {
                 return Application.Current.FindResource("BigButtonWhite");
             }
@@ -29,15 +29,15 @@ namespace NHM.Wpf.Views.PluginsNew.PluginItem.Converters
         }
     }
 
-    public class PluginItemButtonContentConverter : IValueConverter
+    public class PluginItemVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is PluginPackageInfoCR pluginCR && pluginCR.Installed)
+            if (value is bool installed && installed)
             {
-                return Translations.Tr("INSTALLED");
+                return Visibility.Visible;
             }
-            return Translations.Tr("INSTALL");
+            return Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -173,7 +173,6 @@
     </Compile>
     <Compile Include="Views\PluginsNew\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
     <Compile Include="Views\PluginsNew\PluginItem\Converters\PluginItemButtonConverters.cs" />
-    <Compile Include="Views\PluginsNew\PluginItem\Converters\PluginVersionConverter.cs" />
     <Compile Include="Views\PluginsNew\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
     <Compile Include="Views\PluginsNew\PluginItem\Converters\SupportedDevicesConverter.cs" />
     <Compile Include="Views\PluginsNew\PluginItem\PluginIcon.xaml.cs">
@@ -275,6 +274,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Controls\MenuDropdownButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Controls\SpinCirclePath.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,6 +7,7 @@
         <ResourceDictionary Source="Buttons.xaml"/>
         <ResourceDictionary Source="MenuDropdownButton.xaml"/>
         <ResourceDictionary Source="Switches.xaml"/>
+        <ResourceDictionary Source="SpinCirclePath.xaml"/>
         <!--<ResourceDictionary Source="Next.xaml"/>-->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

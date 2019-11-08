@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHM.Wpf.ViewModels.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,10 +22,18 @@ namespace NHM.Wpf.Views.PluginsNew.PluginItem
     /// </summary>
     public partial class PluginItem : UserControl
     {
+        private PluginEntryVM _vm;
         public PluginItem()
         {
             InitializeComponent();
             Collapse();
+
+            DataContextChanged += PluginEntry_DataContextChanged;
+        }
+
+        private void PluginEntry_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            _vm = e.NewValue as PluginEntryVM; // ?? throw new InvalidOperationException("DataContext must be of type `PluginEntryVM`");
         }
 
         private void Collapse()
@@ -70,6 +79,18 @@ namespace NHM.Wpf.Views.PluginsNew.PluginItem
                 PluginActionsButtonContext.Closed += closedHandler;
             }
             
+        }
+
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (_vm.Load.IsInstalling) return;
+
+            await _vm.InstallOrUpdatePlugin();
+        }
+
+        private void Button_Click_Uninstall(object sender, RoutedEventArgs e)
+        {
+            _vm.UninstallPlugin();
         }
     }
 }

@@ -74,19 +74,21 @@
                 </Grid>
             </Grid>
             <Expander Grid.Row="1" ExpandDirection="Left" HorizontalAlignment="Stretch">
-                <ListView ItemsSource="{Binding Dev.AlgorithmSettings }"
-                          Margin="30,0,0,0" 
+                <ListView ItemsSource="{Binding AlgorithmSettingsCollection }"
+                          Margin="30,0,0,0"
+                          GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler"
                           >
                     <ListView.View>
                         <GridView AllowsColumnReorder="False">
                             <GridView.Columns>
-                                <GridViewColumn Header="ALGORITHM" DisplayMemberBinding="{Binding AlgorithmName}" />
-                                <GridViewColumn Header="NAME" DisplayMemberBinding="{Binding PluginName}" />
-                                <GridViewColumn Header="SPEEDS" DisplayMemberBinding="{Binding AnnotatedSpeeds, Converter={StaticResource HashrateConv}}" />
-                                <GridViewColumn Header="BTC / 24h" DisplayMemberBinding="{Binding CurPayingRateStr}" />
-                                <GridViewColumn Header="STATUS" />
-                                <GridViewColumn>
+                                <GridViewColumn Header="ALGORITHM" DisplayMemberBinding="{Binding AlgorithmName}" x:Name="ALGORITHM_HEADER" />
+                                <GridViewColumn Header="NAME" DisplayMemberBinding="{Binding PluginName}" x:Name="PLUGIN_NAME_HEADER" />
+                                <GridViewColumn Header="SPEEDS" DisplayMemberBinding="{Binding AnnotatedSpeeds, Converter={StaticResource HashrateConv}}" x:Name="SPEEDS_HEADER" />
+                                <GridViewColumn Header="BTC / 24h" DisplayMemberBinding="{Binding CurPayingRateStr}" x:Name="PAYING_HEADER" />
+                                <GridViewColumn Header="STATUS" x:Name="STATUS_HEADER" />
+                                <GridViewColumn x:Name="ENABLED_HEADER">
                                     <GridViewColumn.Header>
+                                        <!--<GridViewColumnHeader  Click=""/>-->
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <TextBlock Text="SELECT / UNSELECT ALL"></TextBlock>
                                             <CheckBox Style="{StaticResource NHMSwitch}" HorizontalContentAlignment="Left"  HorizontalAlignment="Left" IsChecked="{Binding Enabled, Mode=TwoWay}" />

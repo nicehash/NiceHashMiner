@@ -1,14 +1,55 @@
 ﻿using MinerPluginToolkitV1;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace NHMCore.Mining.Plugins
 {
     // cross referenced local and online
-    public class PluginPackageInfoCR
+    public class PluginPackageInfoCR : NotifyChangedBase
     {
-        public PluginPackageInfo OnlineInfo { get; set; }
-        public PluginPackageInfo LocalInfo { get; set; }
+        private PluginPackageInfo _onlineInfo { get; set; }
+        public PluginPackageInfo OnlineInfo
+        {
+            get => _onlineInfo;
+            set
+            {
+                _onlineInfo = value;
+                OnPropertyChanged(nameof(OnlineInfo));
+                CommonOnPropertyChanged();
+            }
+        }
+
+        private PluginPackageInfo _localInfo;
+        public PluginPackageInfo LocalInfo
+        {
+            get => _localInfo;
+            set
+            {
+                _localInfo = value;
+                OnPropertyChanged(nameof(LocalInfo));
+                OnPropertyChanged(nameof(Installed));
+                CommonOnPropertyChanged();
+            }
+        }
+
+        private void CommonOnPropertyChanged()
+        {
+            OnPropertyChanged(nameof(HasNewerVersion));
+
+            OnPropertyChanged(nameof(PluginDescription));
+            OnPropertyChanged(nameof(PluginAuthor));
+            OnPropertyChanged(nameof(SupportedDevicesAlgorithms));
+
+            // online only but can be here
+            OnPropertyChanged(nameof(MinerPackageURL));
+            OnPropertyChanged(nameof(PluginPackageURL));
+
+            OnPropertyChanged(nameof(PluginVersion));
+            OnPropertyChanged(nameof(PluginName));
+            OnPropertyChanged(nameof(PluginUUID));
+        }
 
         public bool HasNewerVersion
         {
@@ -47,8 +88,8 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-// PluginPackageInfo region
-public string PluginUUID
+        // PluginPackageInfo region
+        public string PluginUUID
         {
             get
             {

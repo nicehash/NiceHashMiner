@@ -10,9 +10,9 @@
     <UserControl.Resources>
         <localConv:SupportedDevicesConverter x:Key="SupportedDevicesConv" />
         <localConv:SupportedDeviceAlgorithmsConverter x:Key="SupportedDevicesAlgorithmsConv" />
-        <localConv:PluginVersionConverter x:Key="PluginVersionConverter" />
         <localConv:CompatibleVisibilityConverter x:Key="CompatibleVisibilityConverter" />
         <localConv:PluginItemButtonStyleConverter x:Key="PluginItemButtonStyleConverter" />
+        <localConv:PluginItemVisibilityConverter x:Key="PluginItemVisibilityConverter" />
 
         <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter Property="LineHeight" Value="1.5" />
@@ -127,7 +127,7 @@
                            IsEnabled="{Binding Plugin.Supported}"
                            Style="{StaticResource TextBoxCol}"
                            Margin="32,0,0,0"
-                           Text="{Binding Plugin, Converter={StaticResource PluginVersionConverter}}"/>
+                           Text="{Binding InstallVersionStatus}"/>
 
                 <TextBlock Grid.Column="4"
                            IsEnabled="{Binding Plugin.Supported}"
@@ -150,52 +150,83 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Visibility="{Binding Plugin, Converter={StaticResource CompatibleVisibilityConverter}}">
-                    
-                    <CheckBox Style="{StaticResource NHMSwitch}" Margin="0,0,16,0" />
-                    <ToggleButton Style="{StaticResource MenuDropdownButton}" Margin="0,0,16,0" Click="Button_Click">
-                        <ToggleButton.ContextMenu>
-                            <ContextMenu x:Name="PluginActionsButtonContext">
-                                <ContextMenu.Resources>
-                                    <Style TargetType="{x:Type ContextMenu}">
-                                        <Setter Property="SnapsToDevicePixels" Value="True" />
-                                        <Setter Property="OverridesDefaultStyle" Value="True" />
-                                        <Setter Property="Grid.IsSharedSizeScope" Value="true" />
-                                        <Setter Property="HasDropShadow" Value="True" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type ContextMenu}">
-                                                    <Border x:Name="Border" Background="{StaticResource PrimaryColorBrush}" BorderThickness="0" CornerRadius="4">
-                                                        <Border.BorderBrush>
-                                                            <SolidColorBrush Color="Green" />
-                                                        </Border.BorderBrush>
-                                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="HasDropShadow" Value="true">
-                                                            <Setter TargetName="Border" Property="Padding" Value="0,3,0,3" />
-                                                            <Setter TargetName="Border" Property="CornerRadius" Value="4" />
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
 
-                                </ContextMenu.Resources>
-                                <Grid Background="Beige" >
-                                    <TextBlock>KAJ PA TOLE?</TextBlock>
-                                </Grid>
+                    <CheckBox Style="{StaticResource NHMSwitch}"
+                              Visibility="{Binding Plugin.Installed, Converter={StaticResource PluginItemVisibilityConverter}}"
+                              Margin="0,0,16,0" />
+                    <StackPanel x:Name="swapStackPanel" Margin="0,0,16,0">
+                        <Path Style="{StaticResource SpinCirclePath}"
+                              Visibility="{Binding SpinningCircleVisibility}"
+                              x:Name="spinCirclePath"
+                              Width="20"
+                              Height="20"
+                              Stretch="Fill"
+                              />
+                        <ToggleButton Style="{StaticResource MenuDropdownButton}"
+                                  Visibility="{Binding ActionsButtonVisibility}"
+                                  Click="Button_Click">
+                            <ToggleButton.ContextMenu>
+                                <ContextMenu x:Name="PluginActionsButtonContext">
+                                    <ContextMenu.Resources>
+                                        <Style TargetType="{x:Type ContextMenu}">
+                                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                                            <Setter Property="OverridesDefaultStyle" Value="True" />
+                                            <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+                                            <Setter Property="HasDropShadow" Value="True" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                                                        <Border x:Name="Border" Background="{StaticResource PrimaryColorBrush}" BorderThickness="0" CornerRadius="4">
+                                                            <Border.BorderBrush>
+                                                                <SolidColorBrush Color="Green" />
+                                                            </Border.BorderBrush>
+                                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="HasDropShadow" Value="true">
+                                                                <Setter TargetName="Border" Property="Padding" Value="0,3,0,3" />
+                                                                <Setter TargetName="Border" Property="CornerRadius" Value="4" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ContextMenu.Resources>
+                                    <MenuItem
+                                    Padding="16,7,16,7"
+                                    Header="Uninstall"
+                                    FontFamily="{StaticResource UbuntuFontFamily}"
+                                    FontSize="14"
+                                    Foreground="{StaticResource Brushes.FontColor.White}"
+                                    FontWeight="Normal"
+                                    FontStretch="Normal"
+                                    FontStyle="Normal"
+                                    Click="Button_Click_Uninstall" />
+                                </ContextMenu>
+                            </ToggleButton.ContextMenu>
+                        </ToggleButton>
+                    </StackPanel>
 
-                                <MenuItem Header="Menu item 2" />
-                                <Separator />
-                                <MenuItem Header="Menu item 3" />
-                            </ContextMenu>
-                        </ToggleButton.ContextMenu>
-                    </ToggleButton>
-                    <Button Style="{Binding Plugin, Converter={StaticResource PluginItemButtonStyleConverter}}"
+                    <Button Style="{Binding Plugin.Installed, Converter={StaticResource PluginItemButtonStyleConverter}}"
+                            IsEnabled="{Binding InstallButtonEnabled}"
                             Width="105" Height="24"
                             Margin="0,0,16,0"
-                            Content="{Binding InstallString }" />
+                            Content="{Binding InstallString }"
+                            Click="Button_Click_1"
+                            >
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
 
                 </StackPanel>
 

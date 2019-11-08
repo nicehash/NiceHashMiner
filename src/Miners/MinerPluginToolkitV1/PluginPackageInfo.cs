@@ -1,10 +1,11 @@
-﻿using System;
+﻿using NHM.Common;
+using System;
 using System.Collections.Generic;
 
 namespace MinerPluginToolkitV1
 {
     [Serializable]
-    public class PluginPackageInfo
+    public class PluginPackageInfo : NotifyChangedBase
     {
         /// <summary>
         /// UUID for the plugin. This identifies the plugin and is used to indicate if the plugin is installed.
