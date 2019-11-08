@@ -8,6 +8,7 @@
         xmlns:dashboard="clr-namespace:NHM.Wpf.Views.Dashboard"
         xmlns:devices="clr-namespace:NHM.Wpf.Views.Devices"
         xmlns:pluginsNew="clr-namespace:NHM.Wpf.Views.PluginsNew"
+        xmlns:settingsNew="clr-namespace:NHM.Wpf.Views.SettingsNew"
         xmlns:local="clr-namespace:NHM.Wpf.Views"
         mc:Ignorable="d"
         Title="MainWindowNew2" Height="600" Width="800"
@@ -46,9 +47,7 @@
                 <pluginsNew:Plugins />
             </TabItem>
             <TabItem Header="LEFT_SETTINGS" Name="SettingsButton">
-                <Grid Background="#FF0000" Opacity="0.5">
-                    <TextBlock Text="SETTINGS TODO" FontSize="50"/>
-                </Grid>
+                <settingsNew:Settings />
             </TabItem>
             <TabItem Header="LEFT_HELP" Name="HelpButton">
                 <Grid Background="#FF0000" Opacity="0.5">
