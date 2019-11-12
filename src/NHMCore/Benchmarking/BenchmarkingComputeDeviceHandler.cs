@@ -48,19 +48,27 @@ namespace NHMCore.Benchmarking
             await newBenchmarkHandler.BenchmarkTask;
         }
 
-        internal static void StopBenchmarkingDevice(ComputeDevice computeDevice)
+        internal static Task StopBenchmarkingDevice(ComputeDevice computeDevice)
         {
             if (BenchmarkingHandlers.TryGetValue(computeDevice, out var benchmarkHandler))
             {
-                NiceHashStats.SendMinerStatusTasks.Enqueue(benchmarkHandler.BenchmarkTask);
                 benchmarkHandler.StopBenchmark();
+                // return stopped task
+                return benchmarkHandler.BenchmarkTask;
             }
+            return null;
         }
 
-        internal static void StopBenchmarkingAllDevices()
+        internal static Task StopBenchmarkingAllDevices()
         {
             var removeAllKeys = BenchmarkingHandlers.Keys.ToArray();
-            foreach (var computeDevice in removeAllKeys) StopBenchmarkingDevice(computeDevice);
+            var stoppedTasks = new List<Task>();
+            foreach (var computeDevice in removeAllKeys)
+            {
+                var stoppedTask = StopBenchmarkingDevice(computeDevice);
+                if (stoppedTask != null) stoppedTasks.Add(stoppedTask);
+            }
+            return Task.WhenAll(stoppedTasks);
         }
 
         internal static bool IsBenchmarking => BenchmarkingHandlers.Count > 0;
