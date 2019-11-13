@@ -59,7 +59,7 @@ namespace NHMCore.Mining
                 _state = value;
                 MiningState.Instance.CalculateDevicesStateChange();
                 OnPropertyChanged();
-                NiceHashStats.NotifyStateChangedTask();
+                NHWebSocket.NotifyStateChanged();
             }
         }
 

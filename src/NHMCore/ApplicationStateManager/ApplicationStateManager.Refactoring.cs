@@ -1,11 +1,18 @@
 using NHMCore.Configs;
 using NHMCore.Interfaces;
 using NHMCore.Mining;
+using System;
 
 namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
+        public static event EventHandler OnExchangeUpdate;
+        public static void OnExchangeUpdated()
+        {
+            OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
+        }
+
         #region TODO temporary IRatesComunication / refactoring
         // TODO temporary
         public static IRatesComunication _ratesComunication = null; // for now should only have one of these

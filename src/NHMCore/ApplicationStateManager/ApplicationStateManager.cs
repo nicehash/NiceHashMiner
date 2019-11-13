@@ -144,7 +144,7 @@ namespace NHMCore
             {
                 // Reset credentials
                 var (btc, worker, group) = ConfigManager.GeneralConfig.GetCredentials();
-                NiceHashStats.SetCredentials(btc, worker, group);
+                NHWebSocket.ResetCredentials(btc, worker, group);
             }
             else
             {
@@ -162,7 +162,7 @@ namespace NHMCore
 #region BTC setter
 
         // make sure to pass in trimmedBtc
-        public static SetResult SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
+        public static async Task<SetResult> SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
         {
             if (btc == ConfigManager.GeneralConfig.BitcoinAddress && btc != "")
             {
@@ -173,7 +173,7 @@ namespace NHMCore
                 ConfigManager.GeneralConfig.BitcoinAddress = btc;
                 return SetResult.INVALID;
             }
-            SetBTC(btc);
+            await SetBTC(btc);
             if (!skipCredentialsSet)
             {
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
@@ -181,12 +181,12 @@ namespace NHMCore
             return SetResult.CHANGED;
         }
 
-        private static void SetBTC(string btc)
+        private static async Task SetBTC(string btc)
         {
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
-            RestartMinersIfMining();
+            await RestartMinersIfMining();
         }
 #endregion
 
@@ -194,7 +194,7 @@ namespace NHMCore
 
         // make sure to pass in trimmed workerName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
-        public static SetResult SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
+        public static async Task<SetResult> SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
         {
             if (workerName == ConfigManager.GeneralConfig.WorkerName)
             {
@@ -204,7 +204,7 @@ namespace NHMCore
             {
                 return SetResult.INVALID;
             }
-            SetWorker(workerName);
+            await SetWorker(workerName);
             if (!skipCredentialsSet)
             {
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
@@ -213,12 +213,12 @@ namespace NHMCore
             return SetResult.CHANGED;
         }
 
-        private static void SetWorker(string workerName)
+        private static async Task SetWorker(string workerName)
         {
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.WorkerName = workerName;
             ConfigManager.GeneralConfigFileCommit();
-            RestartMinersIfMining();
+            await RestartMinersIfMining();
         }
 #endregion
 
@@ -372,7 +372,7 @@ namespace NHMCore
             {
                 if (_currentForm == value) return;
                 _currentForm = value;
-                NiceHashStats.NotifyStateChangedTask();
+                NHWebSocket.NotifyStateChanged();
             }
         }
 
