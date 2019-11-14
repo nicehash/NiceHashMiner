@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.SettingsNew"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="1000" d:DesignWidth="800">
     <StackPanel>
             <!--WALLET-->
             <WrapPanel Margin="24,0,24,16" Orientation="Vertical">
@@ -14,7 +14,7 @@
                     <Label Content="Wallet Address" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-                <TextBox Style="{StaticResource inputBox}" Text="REMOVE TEXT - FOR TEST ONLY" />
+            <TextBox Style="{StaticResource inputBox}" Text="{Binding GeneralConfig.BitcoinAddress, Mode=TwoWay}" />
                 <Label Content="How to create a Wallet Address?" Style="{StaticResource FontsTypography.TinyRegular/Link}"/>
             </WrapPanel>
             <!--WORKER-->
@@ -24,28 +24,28 @@
                     <Label Content="Worker Name" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-                <TextBox Style="{StaticResource inputBox}" Text="REMOVE TEXT - FOR TEST ONLY" />
+            <TextBox Style="{StaticResource inputBox}" Text="{Binding GeneralConfig.WorkerName, Mode=TwoWay}" />
             </WrapPanel>
             <!--MAIN-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
                 <Label Content="Main" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                 <StackPanel Orientation="Horizontal">
-                    <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" />
+                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.MineRegardlessOfProfit, Mode=TwoWay}" />
                     <Label Content="Mine Regardless Of Profit" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
                     <StackPanel Orientation="Vertical">
                         <Label Content="Time Unit" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                        <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding TimeUnitType}" />
-                    </StackPanel>
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding GeneralConfig.TimeUnits}" />
+                </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                        <TextBox Style="{StaticResource smallInputBox}" Text="REMOVE TEXT" Margin="0,0,24,0"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding GeneralConfig.KwhPrice, Mode=TwoWay}" Margin="0,0,24,0"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <Label Content="Mininmum profit ($/day)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                        <TextBox Style="{StaticResource smallInputBox}" Text="REMOVE TEXT" Margin="0,0,24,0"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding GeneralConfig.MinimumProfit, Mode=TwoWay}" Margin="0,0,24,0"/>
                     </StackPanel>
                 </StackPanel>
             </WrapPanel>
@@ -56,7 +56,7 @@
                     <Label Content="Select Your Service Location" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-                <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding MiningLocationNames}" />
+            <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding ServiceLocations}" SelectedIndex="{Binding ServiceLocationIndex, Mode=TwoWay}" />
             </WrapPanel>
             <!--LOCALIZATION-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
@@ -67,8 +67,8 @@
                         <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding LangNames}"  SelectedIndex="{Binding SelectedLangIndex}" />
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
-                        <Label Content="Select Your Service Location" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                        <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding CurrencyOptions}" />
+                        <Label Content="Currency" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding CurrencyOptions}" />
                     </StackPanel>
                 </StackPanel>
             </WrapPanel>

@@ -47,7 +47,7 @@
                 <pluginsNew:Plugins />
             </TabItem>
             <TabItem Header="LEFT_SETTINGS" Name="SettingsButton">
-                <settingsNew:Settings />
+                <settingsNew:Settings DataContext="{Binding .}"/>
             </TabItem>
             <TabItem Header="LEFT_HELP" Name="HelpButton">
                 <Grid Background="#FF0000" Opacity="0.5">

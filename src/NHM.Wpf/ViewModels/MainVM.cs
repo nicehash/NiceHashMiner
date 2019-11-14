@@ -2,8 +2,10 @@
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
+using NHM.Wpf.ViewModels.Settings;
 using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.Plugins;
@@ -61,6 +63,8 @@ namespace NHM.Wpf.ViewModels
             MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining);
 
         public IReadOnlyList<string> ServiceLocations => StratumService.MiningLocationNames;
+
+        public static GeneralConfig GeneralConfig => ConfigManager.GeneralConfig;
 
         public int ServiceLocationIndex
         {

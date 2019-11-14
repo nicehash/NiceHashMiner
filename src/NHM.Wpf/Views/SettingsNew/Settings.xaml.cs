@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHM.Wpf.ViewModels.Settings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,20 @@ namespace NHM.Wpf.Views.SettingsNew
         public Settings()
         {
             InitializeComponent();
+            grid_SettingsGeneral.Visibility = Visibility.Visible;
+            grid_SettingsAdvanced.Visibility = Visibility.Hidden;
+        }
+
+        private void Btn_GeneralSettings_Click(object sender, RoutedEventArgs e)
+        {
+            grid_SettingsGeneral.Visibility = Visibility.Visible;
+            grid_SettingsAdvanced.Visibility = Visibility.Hidden;
+        }
+
+        private void Btn_AdvancedSettings_Click(object sender, RoutedEventArgs e)
+        {
+            grid_SettingsGeneral.Visibility = Visibility.Hidden;
+            grid_SettingsAdvanced.Visibility = Visibility.Visible;
         }
     }
 }
