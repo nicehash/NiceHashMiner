@@ -32,11 +32,6 @@
                 <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" />
-                <Label Content="Enable 3rd Party Miners" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
                 <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.AutoScaleBTCValues, Mode=TwoWay}" />
                 <Label Content="Autoscale BTC Values" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                 <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>

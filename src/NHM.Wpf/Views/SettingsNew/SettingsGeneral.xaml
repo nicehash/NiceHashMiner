@@ -14,8 +14,12 @@
                     <Label Content="Wallet Address" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-            <TextBox Style="{StaticResource inputBox}" Text="{Binding GeneralConfig.BitcoinAddress, Mode=TwoWay}" />
-                <Label Content="How to create a Wallet Address?" Style="{StaticResource FontsTypography.TinyRegular/Link}"/>
+                <TextBox Style="{StaticResource inputBox}" Text="{Binding GeneralConfig.BitcoinAddress, Mode=TwoWay}" />
+                <TextBlock Margin="0,8,0,0">
+                    <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                        How to create a Wallet Address?
+                    </Hyperlink>
+                </TextBlock>
             </WrapPanel>
             <!--WORKER-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
@@ -37,7 +41,7 @@
                 <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
                     <StackPanel Orientation="Vertical">
                         <Label Content="Time Unit" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding GeneralConfig.TimeUnits}" />
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GeneralConfig.TimeUnit, Mode=TwoWay}" />
                 </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
@@ -64,11 +68,11 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Orientation="Vertical">
                         <Label Content="Language" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                        <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding LangNames}"  SelectedIndex="{Binding SelectedLangIndex}" />
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding LanguageOptions}"  SelectedIndex="{Binding SelectedLangIndex, Mode=TwoWay}" />
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <Label Content="Currency" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding CurrencyOptions}" />
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding CurrencyOptions}" SelectedItem="{Binding Currency, Mode=TwoWay}" />
                     </StackPanel>
                 </StackPanel>
             </WrapPanel>
@@ -77,7 +81,7 @@
                 <Label Content="Apperance" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                 <StackPanel Orientation="Vertical">
                     <Label Content="Theme" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" Text="not implemented" />
+                <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding Theme, Mode=TwoWay}" />
                 </StackPanel>
             </WrapPanel>
             <!--NHM and PLUGINS UPDATE-->
