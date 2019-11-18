@@ -2,8 +2,10 @@
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
+using NHM.Wpf.ViewModels.Settings;
 using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.Plugins;
@@ -60,7 +62,66 @@ namespace NHM.Wpf.ViewModels
         private IEnumerable<MiningData> WorkingMiningDevs =>
             MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining);
 
+        #region settingsLists
+
         public IReadOnlyList<string> ServiceLocations => StratumService.MiningLocationNames;
+        public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
+        public IEnumerable<string> LanguageOptions => Translations.GetAvailableLanguagesNames();
+        public IReadOnlyList<string> CurrencyOptions => _currList;
+        public IReadOnlyList<string> ThemeOptions => _themeList;
+
+        private List<string> _currList = new List<string>
+            {
+                "AUD",
+                "BGN",
+                "BRL",
+                "CAD",
+                "CHF",
+                "CNY",
+                "CZK",
+                "DKK",
+                "EUR",
+                "GBP",
+                "HKD",
+                "HRK",
+                "HUF",
+                "IDR",
+                "ILS",
+                "INR",
+                "JPY",
+                "KRW",
+                "MXN",
+                "MYR",
+                "NOK",
+                "NZD",
+                "PHP",
+                "PLN",
+                "RON",
+                "RUB",
+                "SEK",
+                "SGD",
+                "THB",
+                "TRY",
+                "USD",
+                "ZAR"
+            };
+
+        public int SelectedLangIndex
+        {
+            get => Translations.GetCurrentIndex();
+            set
+            {
+                var code = Translations.GetLanguageCodeFromIndex(value);
+                Translations.SelectedLanguage = code;
+                GeneralConfig.Language = code;
+            }
+        }
+
+        private List<string> _themeList = new List<string>{ "Light", "Dark" };
+
+        #endregion settingsLists
+
+        public static GeneralConfig GeneralConfig => ConfigManager.GeneralConfig;
 
         public int ServiceLocationIndex
         {
@@ -87,6 +148,18 @@ namespace NHM.Wpf.ViewModels
         }
 
         public MiningState State => MiningState.Instance;
+
+        private string _theme = ConfigManager.GeneralConfig.DisplayTheme;
+        public string Theme
+        {
+            get => _theme;
+            set
+            {
+                _theme = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #region Currency-related properties
 

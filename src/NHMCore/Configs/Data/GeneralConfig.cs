@@ -27,8 +27,18 @@ namespace NHMCore.Configs.Data
 #endif
         }
 
-        private string _displayCurrency = "USD";
+        private string _displayTheme = "Light";
+        public string DisplayTheme
+        {
+            get => _displayTheme;
+            set
+            {
+                _displayTheme = value;
+                OnPropertyChanged();
+            }
+        }
 
+        private string _displayCurrency = "USD";
         public string DisplayCurrency
         {
             get => _displayCurrency;
@@ -53,8 +63,6 @@ namespace NHMCore.Configs.Data
             get => CredentialsSettings.Instance.WorkerName;
             set => CredentialsSettings.Instance.WorkerName = value;
         }
-
-
 
         public TimeUnitType TimeUnit
         {

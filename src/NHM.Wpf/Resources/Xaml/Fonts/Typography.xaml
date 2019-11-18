@@ -211,6 +211,9 @@
     <Style x:Key="FontsTypography.TinyRegular/Secondary" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
         <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
+    <Style x:Key="FontsTypography.TinyRegular/Link" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.NoticeColor}" />
+    </Style>
     <!-- END OF TINY REGULAR -->
 
     <!-- TINY BOLD -->
@@ -228,6 +231,9 @@
     <Style x:Key="FontsTypography.TinyBold/Secondary" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
         <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
     </Style>
+    <Style x:Key="FontsTypography.TinyBold/White" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+    </Style>
     <!-- END OF TINY BOLD -->
-
+    
 </ResourceDictionary>
