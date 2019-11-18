@@ -102,7 +102,7 @@ namespace NiceHashMiner.Forms.Components
 
                 var name = alg.AlgorithmName;
                 var minerName = alg.PluginName;
-                var payingRatio = alg.CurPayingRatio;
+                var payingRatio = alg.CurPayingRatioStr;
 
                 lvi.SubItems.Add(name);
 
@@ -110,7 +110,7 @@ namespace NiceHashMiner.Forms.Components
                 lvi.SubItems.Add(minerName);
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());
                 lvi.SubItems.Add(payingRatio);
-                lvi.SubItems.Add(alg.CurPayingRateStr);
+                lvi.SubItems.Add(alg.CurrentEstimatedProfitStr);
                 lvi.Tag = alg;
                 lvi.Checked = alg.Enabled;
                 listViewAlgorithms.Items.Add(lvi);
@@ -187,9 +187,9 @@ namespace NiceHashMiner.Forms.Components
                         {
                             // TODO handle numbers
                             lvi.SubItems[(int)Column.SPEEDS].Text = algorithm.BenchmarkSpeedString();
-                            lvi.SubItems[(int)Column.RATE].Text = algorithm.CurPayingRateStr;
+                            lvi.SubItems[(int)Column.RATE].Text = algorithm.CurrentEstimatedProfitStr;
                             // TODO handle DUAL first + second paying ratio X+Y
-                            lvi.SubItems[(int)Column.RATIO].Text = algorithm.CurPayingRatio;
+                            lvi.SubItems[(int)Column.RATIO].Text = algorithm.CurPayingRatioStr;
 
                             _listItemCheckColorSetter.LviSetColor(lvi);
                             break;

@@ -401,6 +401,11 @@ namespace NHMCore.Stats
                 }
 
                 NHSmaData.UpdateSmaPaying(payingDict);
+                // TODO new check crap 
+                foreach (var dev in AvailableDevices.Devices)
+                {
+                    dev.UpdateEstimatePaying(payingDict);
+                }
             }
             catch (Exception e)
             {

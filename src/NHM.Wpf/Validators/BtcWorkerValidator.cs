@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using NHMCore;
 
@@ -10,7 +11,7 @@ namespace NHM.Wpf.Validators
     {
         public override ValidationResult Validate(string value, CultureInfo cultureInfo)
         {
-            var result = ApplicationStateManager.SetBTCIfValidOrDifferent(value);
+            var result = Task.Run(async () => await ApplicationStateManager.SetBTCIfValidOrDifferent(value)).Result;
 
             if (result == ApplicationStateManager.SetResult.INVALID)
             {
@@ -25,7 +26,7 @@ namespace NHM.Wpf.Validators
     {
         public override ValidationResult Validate(string value, CultureInfo cultureInfo)
         {
-            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(value);
+            var result = Task.Run(async () => await ApplicationStateManager.SetWorkerIfValidOrDifferent(value)).Result;
 
             if (result == ApplicationStateManager.SetResult.INVALID)
             {

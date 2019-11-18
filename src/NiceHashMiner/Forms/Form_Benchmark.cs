@@ -42,7 +42,7 @@ namespace NiceHashMiner.Forms
             // clear prev pending statuses
             foreach (var dev in AvailableDevices.Devices)
             foreach (var algo in dev.AlgorithmSettings)
-                algo.ClearBenchmarkPendingFirst();
+                algo.ClearBenchmarkPending();
 
             benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
 

@@ -138,6 +138,7 @@
     <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
     <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
+    <Compile Include="Mining\AlgorithmStatus.cs" />
     <Compile Include="Mining\AvailableDevices.cs" />
     <Compile Include="Mining\ComputeDevice.cs" />
     <Compile Include="Mining\IdleChecking\IdleChangedEventArgs.cs" />

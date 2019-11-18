@@ -132,6 +132,13 @@
     <Compile Include="Views\Benchmark\ComputeDeviceElement.xaml.cs">
       <DependentUpon>ComputeDeviceElement.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItem.xaml.cs">
+      <DependentUpon>AlgorithmItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemStatusStyleConverter.cs" />
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItem.xaml.cs">
+      <DependentUpon>ComputeDeviceItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ChooseLanguageWindow.xaml.cs">
       <DependentUpon>ChooseLanguageWindow.xaml</DependentUpon>
     </Compile>
@@ -366,6 +373,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Benchmark\ComputeDeviceElement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

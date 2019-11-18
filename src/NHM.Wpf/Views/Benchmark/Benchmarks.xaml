@@ -4,14 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Benchmark"
+             xmlns:localComputeDeviceItem="clr-namespace:NHM.Wpf.Views.Benchmark.ComputeDeviceItem"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="Green" >
+    <Grid >
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Devices}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" Width="Auto"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
         <!--WORKS-->
-        <ListView ItemsSource="{Binding Devices}" Width="Auto" Focusable="False" BorderThickness="0" HorizontalAlignment="Stretch">
+        <!--<ListView ItemsSource="{Binding Devices}" Width="Auto" Focusable="False" BorderThickness="0" HorizontalAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <local:ComputeDeviceElement DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" Width="Auto"/>
+                    --><!--<local:ComputeDeviceElement DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" Width="Auto"/>--><!--
+                    <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" Width="Auto"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
             <ListView.ItemContainerStyle>
@@ -26,7 +38,7 @@
                     </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
-        </ListView>
+        </ListView>-->
         <!--<local:AlgorithmSettings Width="392"></local:AlgorithmSettings>-->
     </Grid>
 </UserControl>

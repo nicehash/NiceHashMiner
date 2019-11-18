@@ -218,6 +218,14 @@ namespace NHMCore.Mining
             ConfigManager.GeneralConfig.PropertyChanged += OnShowGPUPCIeBusIDs;
         }
 
+        public void UpdateEstimatePaying(Dictionary<AlgorithmType, double> paying)
+        {
+            foreach (var algo in AlgorithmSettings)
+            {
+                algo.UpdateEstimatedProfit(paying);
+            }
+        }
+
         private void OnShowGPUPCIeBusIDs(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs))
@@ -442,7 +450,7 @@ namespace NHMCore.Mining
 
         public bool AllEnabledAlgorithmsZeroPaying()
         {
-            var isAllZeroPayingState = AlgorithmSettings.Where(a => a.Enabled).Select(a => a.CurPayingRate == 0d);
+            var isAllZeroPayingState = AlgorithmSettings.Where(a => a.Enabled).Select(a => a.CurrentEstimatedProfit <= 0d);
             var ret = isAllZeroPayingState.All(t => t);
             return ret;
         }

@@ -51,6 +51,24 @@ namespace NHM.Wpf.ViewModels.Models
             }
         }
 
+        public string AlgosEnabled
+        {
+            get
+            {
+                var enabledAlgos = Dev.AlgorithmSettings.Count(a => a.Enabled);
+                return $"{Dev.AlgorithmSettings.Count} / {enabledAlgos}";
+            }
+        }
+
+        public string AlgosBenchmarked
+        {
+            get
+            {
+                var benchedAlgos = Dev.AlgorithmSettings.Count(a => !a.BenchmarkNeeded);
+                return $"{Dev.AlgorithmSettings.Count} / {benchedAlgos}";
+            }
+        }
+
         public string ButtonLabel
         {
             get
@@ -91,7 +109,11 @@ namespace NHM.Wpf.ViewModels.Models
         private void AlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(AlgorithmContainer.Enabled) || e.PropertyName == nameof(AlgorithmContainer.BenchmarkNeeded))
+            {
                 OnPropertyChanged(nameof(AlgoOptions));
+                OnPropertyChanged(nameof(AlgosEnabled));
+                OnPropertyChanged(nameof(AlgosBenchmarked));
+            }
         }
 
         private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -100,7 +122,10 @@ namespace NHM.Wpf.ViewModels.Models
             {
                 case nameof(ComputeDevice.AlgorithmSettings):
                     AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
-                    OnPropertyChanged(nameof(AlgorithmSettingsCollection));
+                    OrderAlgorithms();
+                    OnPropertyChanged(nameof(AlgoOptions));
+                    OnPropertyChanged(nameof(AlgosEnabled));
+                    OnPropertyChanged(nameof(AlgosBenchmarked));
                     return;
                 default:
                     break;
@@ -179,8 +204,8 @@ namespace NHM.Wpf.ViewModels.Models
                 algo => algo.AlgorithmName,
                 algo => algo.PluginName,
                 algo => algo.BenchmarkSpeed, // FIRST SPEED FIX only
-                algo => algo.CurrentProfit,
-                algo => algo.BenchmarkStatus, // TODO STATUS doesn't exist yet
+                algo => algo.CurrentEstimatedProfit,
+                algo => algo.Status, // TODO STATUS doesn't exist yet
                 algo => algo.Enabled,
             };
             // take the first one and order by that first then continue with the rest

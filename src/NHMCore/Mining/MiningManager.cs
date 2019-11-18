@@ -282,16 +282,16 @@ namespace NHMCore.Mining
                     foreach (var algo in device.Algorithms)
                     {
                         stringBuilderDevice.AppendLine(
-                            $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
-                            $"\t(SPEED = {algo.AvaragedSpeed:e5}" +
-                            $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
+                            $"\t\tPROFIT = {algo.CurrentNormalizedProfit.ToString(DoubleFormat)}" +
+                            $"\t(SPEED = {algo.AveragedSpeeds[0]:e5}" +
+                            $"\t\t| NHSMA = {algo.NormalizedSMAData[0]:e5})" +
                             $"\t[{algo.AlgorithmStringID}]"
                         );
                         if (algo.IsDual)
                         {
                             stringBuilderDevice.AppendLine(
-                                $"\t\t\t\t\t  Secondary:\t\t {algo.SecondaryAveragedSpeed:e5}" +
-                                $"\t\t\t\t  {algo.SecondaryCurNhmSmaDataVal:e5}"
+                                $"\t\t\t\t\t  Secondary:\t\t {algo.AveragedSpeeds[1]:e5}" +
+                                $"\t\t\t\t  {algo.NormalizedSMAData[1]:e5}"
                             );
                         }
                     }

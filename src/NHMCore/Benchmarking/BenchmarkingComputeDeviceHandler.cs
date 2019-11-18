@@ -99,8 +99,10 @@ namespace NHMCore.Benchmarking
             bool allAdded = true;
             foreach (var algo in algorithmContainers)
             {
+                var currentAdded = _benchmarkAlgorithms.TryAdd(algo.AlgorithmStringID, algo);
+                if (currentAdded) algo.SetBenchmarkPending();
                 // TODO make sure not to add the already same algorihtms, use UPDATE instead
-                allAdded &= _benchmarkAlgorithms.TryAdd(algo.AlgorithmStringID, algo);
+                allAdded &= currentAdded;
             }
             return allAdded;
         }
@@ -217,13 +219,13 @@ namespace NHMCore.Benchmarking
             try
             {
                 BenchmarkManager.AddToStatusCheck(nextAlgo.ComputeDevice, nextAlgo);
-                nextAlgo.InBenchmark = true;
+                nextAlgo.IsBenchmarking = true;
                 await BenchmarkAlgorithm(nextAlgo, stop);
             }
             finally
             {
                 nextAlgo.ClearBenchmarkPending();
-                nextAlgo.InBenchmark = false;
+                nextAlgo.IsBenchmarking = false;
             }
         }
 
