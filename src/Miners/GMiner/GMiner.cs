@@ -106,35 +106,50 @@ namespace GMinerPlugin
             var binCwd = binPathBinCwdPair.Item2;
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-
-            double benchHashesSum = 0;
-            double benchHashResult = 0;
-            int benchIters = 0;
-            int targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 30d));
-            // TODO implement fallback average, final benchmark 
-            bp.CheckData = (string data) => {
-                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total Speed:");
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
-                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
-
-                // sum and return
-                benchHashesSum += hashrate;
-                benchIters++;
-
-                benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee * 0.01);
-
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
-                    Success = benchIters >= targetBenchIters
-                };
-            };
+            // disable line readings and read speeds from API
+            bp.CheckData = null;
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
+
+            double benchHashesSum = 0;
+            int benchIters = 0;
+            var ticks = benchmarkTime / 10; // on each 10 seconds tick
+            var result = new BenchmarkResult();
+            for (var tick = 0; tick < ticks; tick++)
+            {
+                if (t.IsCompleted || t.IsCanceled) break;
+                
+                await Task.Delay(10 * 1000); // 10 seconds delay
+                var ad = await GetMinerStatsDataAsync();
+                if (ad.AlgorithmSpeedsPerDevice.Count == 1)
+                {
+                    // all single GPUs and single speeds
+                    try
+                    {
+                        var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                        benchHashesSum += gpuSpeed;
+                        benchIters++;
+                        double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
+                        // save each result step
+                        result = new BenchmarkResult
+                        {
+                            AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                            Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
+                        };
+                    }
+                    catch (Exception e)
+                    {
+                        if (t.IsCompleted || t.IsCanceled) break;
+                        Logger.Error(_logGroup, $"benchmarking error: {e.Message}");
+                    }
+                }
+            }
+            // await benchmark task
+            await t;
+            // return API result
+            return result;
         }
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
