@@ -112,10 +112,10 @@ namespace NiceHashMiner
             devicesMainBoard1.DataBindings.AddSafeBinding(nameof(devicesMainBoard1.SecondPanelVisible), MiningState.Instance, nameof(MiningState.Instance.AnyDeviceRunning), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
-        private void textBoxBTCAddress_Validate()
+        private async void textBoxBTCAddress_Validate()
         {
             var trimmedBtcText = textBoxBTCAddress.Text.Trim();
-            var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
+            var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
             if (ApplicationStateManager.SetResult.INVALID == result)
             {
                 errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
@@ -126,10 +126,10 @@ namespace NiceHashMiner
             }
         }
 
-        private void textBoxWorkerName_Validate()
+        private async void textBoxWorkerName_Validate()
         {
             var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
-            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
+            var result = await ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
             if (ApplicationStateManager.SetResult.INVALID == result)
             {
                 errorProvider1.SetError(textBoxWorkerName, Tr("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long)."));
@@ -229,7 +229,7 @@ namespace NiceHashMiner
         }
         
         // TODO this has nothing to do with Mian_Form
-        private void IdleCheck(object sender, IdleChangedEventArgs e)
+        private async void IdleCheck(object sender, IdleChangedEventArgs e)
         {
             if (!ConfigManager.GeneralConfig.StartMiningWhenIdle || _isManuallyStarted) return;
 
@@ -238,7 +238,7 @@ namespace NiceHashMiner
             {
                 if (!e.IsIdle)
                 {
-                    ApplicationStateManager.StopAllDevice();
+                    await ApplicationStateManager.StopAllDevice();
                     Logger.Info("NICEHASH", "Resumed from idling");
                 }
             }
@@ -247,7 +247,7 @@ namespace NiceHashMiner
                 Logger.Info("NICEHASH", "Entering idling state");
                 if (StartMining(false) != StartMiningReturnType.StartMining)
                 {
-                    ApplicationStateManager.StopAllDevice();
+                    await ApplicationStateManager.StopAllDevice();
                 }
             }
         }
@@ -263,8 +263,8 @@ namespace NiceHashMiner
             //// TODO temporary hooks
             ApplicationStateManager._ratesComunication = devicesListViewEnableControl1;
             // handle these callbacks differently
-            NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            NiceHashStats.OnExchangeUpdate += UpdateExchange;
+            //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
+            ApplicationStateManager.OnExchangeUpdate += UpdateExchange;
 
             foreach (Control c in Controls)
             {
@@ -439,23 +439,23 @@ namespace NiceHashMiner
             IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
         }
 
-        private void ButtonStartMining_Click(object sender, EventArgs e)
+        private async void ButtonStartMining_Click(object sender, EventArgs e)
         {
             _isManuallyStarted = true;
             if (StartMining(true) == StartMiningReturnType.ShowNoMining)
             {
                 _isManuallyStarted = false;
-                ApplicationStateManager.StopAllDevice();
+                await ApplicationStateManager.StopAllDevice();
                 MessageBox.Show(Tr("{0} cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.", NHMProductInfo.Name),
                     Tr("Warning!"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
-        private void ButtonStopMining_Click(object sender, EventArgs e)
+        private async void ButtonStopMining_Click(object sender, EventArgs e)
         {
             _isManuallyStarted = false;
-            ApplicationStateManager.StopAllDevice();
+            await ApplicationStateManager.StopAllDevice();
         }
 
         private void ButtonLogo_Click(object sender, EventArgs e)
@@ -676,7 +676,7 @@ namespace NiceHashMiner
             notifyIcon1.Visible = false;
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing && 
                 ConfigManager.GeneralConfig.MinimizeToTray && 
@@ -689,7 +689,7 @@ namespace NiceHashMiner
             }
 
             FormHelpers.UnsubscribeAllControls(this);
-            ApplicationStateManager.BeforeExit();
+            await ApplicationStateManager.BeforeExit();
             MessageBoxManager.Unregister();
         }
 

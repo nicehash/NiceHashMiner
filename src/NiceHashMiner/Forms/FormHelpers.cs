@@ -98,7 +98,7 @@ namespace NiceHashMiner.Forms
             // setters
             if (c is IEnabledDeviceStateSetter setter)
             {
-                setter.SetDeviceEnabledState += ApplicationStateManager.SetDeviceEnabledState;
+                setter.SetDeviceEnabledState += ApplicationStateManager.SetDeviceEnabledStateGUI;
             }
             // call on all controls
             foreach (Control childC in c.Controls)
@@ -116,7 +116,7 @@ namespace NiceHashMiner.Forms
             // setters
             if (c is IEnabledDeviceStateSetter setter)
             {
-                setter.SetDeviceEnabledState -= ApplicationStateManager.SetDeviceEnabledState;
+                setter.SetDeviceEnabledState -= ApplicationStateManager.SetDeviceEnabledStateGUI;
             }
             // call on all controls
             foreach (Control childC in c.Controls)
