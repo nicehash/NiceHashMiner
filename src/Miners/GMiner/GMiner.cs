@@ -119,9 +119,10 @@ namespace GMinerPlugin
             var result = new BenchmarkResult();
             for (var tick = 0; tick < ticks; tick++)
             {
-                if (t.IsCompleted || t.IsCanceled) break;
-                
-                await Task.Delay(10 * 1000); // 10 seconds delay
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+                await Task.Delay(10 * 1000, stop); // 10 seconds delay
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+
                 var ad = await GetMinerStatsDataAsync();
                 if (ad.AlgorithmSpeedsPerDevice.Count == 1)
                 {
@@ -141,13 +142,18 @@ namespace GMinerPlugin
                     }
                     catch (Exception e)
                     {
-                        if (t.IsCompleted || t.IsCanceled) break;
+                        if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
                         Logger.Error(_logGroup, $"benchmarking error: {e.Message}");
                     }
                 }
             }
             // await benchmark task
             await t;
+            if (stop.IsCancellationRequested)
+            {
+                return t.Result;
+            }
+            
             // return API result
             return result;
         }
