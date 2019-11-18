@@ -23,11 +23,11 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.68",
+                BinVersion = "1.75",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.68/gminer_1_68_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.75/gminer_1_75_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 2);
+        public override Version Version => new Version(3, 3);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -160,9 +160,9 @@ namespace GMinerPlugin
         {
             try
             {
-                var isReBenchVersion = benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 2;
+                var isReBenchVersion = benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 3;
                 var first = ids.FirstOrDefault();
-                var isBenchAlgo = first == AlgorithmType.GrinCuckarood29 || first == AlgorithmType.CuckooCycle;
+                var isBenchAlgo = first == AlgorithmType.GrinCuckatoo31;
                 return isReBenchVersion && isBenchAlgo;
             }
             catch (Exception e)

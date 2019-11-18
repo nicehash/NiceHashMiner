@@ -85,7 +85,7 @@ namespace NHM.Common.Enums
         SHA256AsicBoost = 35,
         //[Obsolete("UNUSED Algorithm")]
         ZHash = 36,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm. Replaced by BeamV2")]
         Beam = 37,
         //[Obsolete("UNUSED Algorithm")]
         GrinCuckaroo29 = 38,

@@ -43,11 +43,8 @@ namespace GMinerPlugin
             var algo = AlgorithmName(_algorithmType);
 
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-            var split = urlWithPort.Split(':');
-            var url = split[0];
-            var port = split[1];
 
-            var cmd = $"-a {algo} -s {url} -n {port} -u {username} -d {_devices} -w 0 --api {_apiPort} {_extraLaunchParameters}";
+            var cmd = $"-a {algo} --server {urlWithPort} -u {username} -d {_devices} -w 0 --api {_apiPort} {_extraLaunchParameters}";
 
             if (_algorithmType == AlgorithmType.ZHash)
             {
