@@ -37,7 +37,6 @@ namespace MiniZ
             var algorithms = new List<Algorithm>
                 {
                     new Algorithm(PluginUUID, AlgorithmType.ZHash),
-                    new Algorithm(PluginUUID, AlgorithmType.Beam),
                     new Algorithm(PluginUUID, AlgorithmType.BeamV2)
                 };
             return algorithms;
@@ -49,8 +48,8 @@ namespace MiniZ
             {
                 case AlgorithmType.ZHash:
                     return "144,5";
-                case AlgorithmType.Beam:
-                    return "150,5";
+                //case AlgorithmType.Beam:
+                //    return "150,5";
                 case AlgorithmType.BeamV2:
                     return "150,5,3";
                 default:

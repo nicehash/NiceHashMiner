@@ -40,7 +40,7 @@ namespace BMiner
             {
                 new Algorithm(PluginUUID, AlgorithmType.ZHash) {Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto) {Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.Beam) {Enabled = false },
+                //new Algorithm(PluginUUID, AlgorithmType.Beam) {Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
@@ -52,7 +52,7 @@ namespace BMiner
         {
             var algorithms = new List<Algorithm>
             {
-                new Algorithm(PluginUUID, AlgorithmType.Beam) {Enabled = false },
+                //new Algorithm(PluginUUID, AlgorithmType.Beam) {Enabled = false },
             };
             return algorithms;
         }
@@ -63,7 +63,7 @@ namespace BMiner
             {
                 case AlgorithmType.DaggerHashimoto: return "ethstratum";
                 case AlgorithmType.ZHash: return "zhash";
-                case AlgorithmType.Beam: return "beam";
+                //case AlgorithmType.Beam: return "beam";
                 case AlgorithmType.GrinCuckaroo29: return "cuckaroo29";
                 case AlgorithmType.GrinCuckatoo31: return "cuckatoo31";
                 case AlgorithmType.GrinCuckarood29: return "cuckaroo29d";
