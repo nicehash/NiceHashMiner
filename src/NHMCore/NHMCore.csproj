@@ -135,7 +135,6 @@
     <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
-    <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
     <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
     <Compile Include="Mining\AlgorithmStatus.cs" />

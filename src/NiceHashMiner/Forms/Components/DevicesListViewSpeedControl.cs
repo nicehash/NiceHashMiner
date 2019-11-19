@@ -15,7 +15,7 @@ namespace NiceHashMiner.Forms.Components
     /// <summary>
     /// Displays devices with hashrates/profits and optional power/diag columns. During mining groups devices by miner/algo combo.
     /// </summary>
-    public partial class DevicesListViewSpeedControl : DevicesListViewEnableControl, IRatesComunication
+    public partial class DevicesListViewSpeedControl : DevicesListViewEnableControl //, IRatesComunication
     {
         private enum Column : int
         {

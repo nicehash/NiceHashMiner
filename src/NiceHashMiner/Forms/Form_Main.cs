@@ -261,7 +261,7 @@ namespace NiceHashMiner
         private async void Form_Main_Shown(object sender, EventArgs e)
         {
             //// TODO temporary hooks
-            ApplicationStateManager._ratesComunication = devicesListViewEnableControl1;
+            //ApplicationStateManager._ratesComunication = devicesListViewEnableControl1; // BROKEN
             // handle these callbacks differently
             //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             ApplicationStateManager.OnExchangeUpdate += UpdateExchange;

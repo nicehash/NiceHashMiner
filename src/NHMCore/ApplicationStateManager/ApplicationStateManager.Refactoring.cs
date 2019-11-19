@@ -13,24 +13,6 @@ namespace NHMCore
             OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
         }
 
-        #region TODO temporary IRatesComunication / refactoring
-        // TODO temporary
-        public static IRatesComunication _ratesComunication = null; // for now should only have one of these
-
-        public static void ClearRatesAll()
-        {
-            // Quickfix
-            MiningStats.ClearApiDataGroups();
-
-            _ratesComunication?.ClearRatesAll();
-        }
-
-        public static void RefreshRates()
-        {
-            _ratesComunication?.RefreshRates();
-        }
-        #endregion
-
         #region Set Mining Profitable or NOT Profitable
         //// TODO we got a problem here with displaying and sending IFTTT stuff, since we can start/stop 
         //private static bool isProfitable = false;

@@ -77,7 +77,7 @@
                 </StackPanel>
                 <StackPanel Grid.Column="4">
                     <TextBlock Style="{StaticResource StatusColumnTitle}">RPM</TextBlock>
-                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">2730</TextBlock>
+                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0" Text="{Binding Dev.FanSpeed}" /> 
                 </StackPanel>
                 <StackPanel Grid.Column="5">
                     <TextBlock Style="{StaticResource StatusColumnTitle}">Profitability / 24h</TextBlock>
