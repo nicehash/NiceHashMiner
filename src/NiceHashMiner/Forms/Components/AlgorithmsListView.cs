@@ -108,7 +108,7 @@ namespace NiceHashMiner.Forms.Components
 
                 //sub.Tag = alg.Value;
                 lvi.SubItems.Add(minerName);
-                lvi.SubItems.Add(alg.BenchmarkSpeedString());
+                lvi.SubItems.Add("BROKEN alg.BenchmarkSpeedString()");
                 lvi.SubItems.Add(payingRatio);
                 lvi.SubItems.Add(alg.CurrentEstimatedProfitStr);
                 lvi.Tag = alg;
@@ -127,7 +127,7 @@ namespace NiceHashMiner.Forms.Components
                 foreach (ListViewItem lvi in listViewAlgorithms.Items)
                 {
                     var algo = lvi.Tag as AlgorithmContainer;
-                    lvi.SubItems[(int)Column.SPEEDS].Text = algo?.BenchmarkSpeedString();
+                    lvi.SubItems[(int)Column.SPEEDS].Text = "BROKEN algo?.BenchmarkSpeedString()";
                     _listItemCheckColorSetter.LviSetColor(lvi);
                 }
 
@@ -177,7 +177,7 @@ namespace NiceHashMiner.Forms.Components
         {
             if (algorithm != null)
             {
-                algorithm.BenchmarkStatus = Translations.Tr(status);
+                //algorithm.BenchmarkStatus = Translations.Tr(status); // BROKEN WPF
                 // gui update only if same as selected
                 if (_computeDevice != null && computeDevice.Uuid == _computeDevice.Uuid)
                 {
@@ -186,7 +186,7 @@ namespace NiceHashMiner.Forms.Components
                         if (lvi.Tag is AlgorithmContainer algo && algo.AlgorithmStringID == algorithm.AlgorithmStringID)
                         {
                             // TODO handle numbers
-                            lvi.SubItems[(int)Column.SPEEDS].Text = algorithm.BenchmarkSpeedString();
+                            lvi.SubItems[(int)Column.SPEEDS].Text = "BROKEN algorithm.BenchmarkSpeedString()";
                             lvi.SubItems[(int)Column.RATE].Text = algorithm.CurrentEstimatedProfitStr;
                             // TODO handle DUAL first + second paying ratio X+Y
                             lvi.SubItems[(int)Column.RATIO].Text = algorithm.CurPayingRatioStr;

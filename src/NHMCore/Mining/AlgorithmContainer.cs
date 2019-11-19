@@ -5,8 +5,6 @@ using NHMCore.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
 using NHMCore.Stats;
-using NHMCore.Switching;
-using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +30,10 @@ namespace NHMCore.Mining
             get
             {
                 // TODO errors
-
+                if (BenchmarkErrorMessage != null)
+                {
+                    return AlgorithmStatus.ErrorBenchmark;
+                }
                 // pending states
                 if (IsBenchmarking) return AlgorithmStatus.Benchmarking;
                 if (IsBenchmarkPending) return AlgorithmStatus.BenchmarkPending;
@@ -349,8 +350,6 @@ namespace NHMCore.Mining
 
         #region Benchmark info
 
-        public string BenchmarkStatus { get; set; } = "";
-
         private bool _benchmarkPending;
         public bool IsBenchmarkPending
         {
@@ -375,10 +374,10 @@ namespace NHMCore.Mining
             }
         }
 
-        public bool BenchmarkErred => ErrorMessage != null;
+        public bool BenchmarkErred => BenchmarkErrorMessage != null;
 
         private string _errorMessage;
-        public string ErrorMessage
+        public string BenchmarkErrorMessage
         {
             get => _errorMessage;
             set
@@ -386,6 +385,7 @@ namespace NHMCore.Mining
                 _errorMessage = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(BenchmarkErred));
+                OnPropertyChanged(nameof(Status));
             }
         }
 
@@ -401,51 +401,18 @@ namespace NHMCore.Mining
 
         public void SetBenchmarkPending()
         {
-            SetBenchmarkPendingNoMsg();
-            BenchmarkStatus = Translations.Tr("Waiting benchmark");
-        }
-
-        public void SetBenchmarkPendingNoMsg()
-        {
             IsBenchmarkPending = true;
-            ErrorMessage = null;
-        }
-
-        private bool IsPendingString()
-        {
-            return BenchmarkStatus == Translations.Tr("Waiting benchmark")
-                   || BenchmarkStatus == "."
-                   || BenchmarkStatus == ".."
-                   || BenchmarkStatus == "...";
+            BenchmarkErrorMessage = null;
         }
 
         public void ClearBenchmarkPending()
         {
             IsBenchmarkPending = false;
-            BenchmarkStatus = "";
         }
 
-        [Obsolete("TODO DELETE WinForms")]
-        public string BenchmarkSpeedString()
+        public void SetBenchmarkError(string message)
         {
-            if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus))
-            {
-                return BenchmarkStatus;
-            }
-            if (BenchmarkSpeed > 0)
-            {
-                return Helpers.FormatSpeedOutput(AnnotatedSpeeds);
-            }
-            if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
-            {
-                return BenchmarkStatus;
-            }
-            return Translations.Tr("none");
-        }
-
-        public void SetError(string message)
-        {
-            ErrorMessage = message;
+            BenchmarkErrorMessage = message;
         }
 
 #endregion

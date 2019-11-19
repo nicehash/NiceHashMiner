@@ -123,7 +123,7 @@ namespace NHMCore.Benchmarking
                         if (ShouldBenchmark(algo))
                         {
                             algorithmQueue.Enqueue(algo);
-                            algo.SetBenchmarkPendingNoMsg();
+                            algo.SetBenchmarkPending();
                         }
                         else
                         {

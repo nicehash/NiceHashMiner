@@ -4,6 +4,7 @@ using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHMCore.Switching;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -236,6 +237,7 @@ namespace NHMCore.Mining.Plugins
         private bool _initInternalsCalled = false;
         public void AddAlgorithmsToDevices()
         {
+            var payingRates = NHSmaData.CurrentPayingRatesSnapshot();
             CheckExec(nameof(AddAlgorithmsToDevices), () => {
                 if (!_initInternalsCalled && _plugin is IInitInternals impl)
                 {
@@ -246,17 +248,12 @@ namespace NHMCore.Mining.Plugins
                 var devices = _cachedNiceHashMinerAlgorithms.Keys.Select(uuid => AvailableDevices.GetDeviceWithUuid(uuid)).Where(d => d != null);
                 foreach (var dev in devices)
                 {
-                    var configs = dev.GetDeviceConfig();
                     var algos = _cachedNiceHashMinerAlgorithms[dev.Uuid];
                     foreach (var algo in algos)
                     {
+                        algo.UpdateEstimatedProfit(payingRates);
                         // try get data from configs
-                        var pluginConf = configs.PluginAlgorithmSettings.Where(c => c.GetAlgorithmStringID() == algo.AlgorithmStringID).FirstOrDefault();
-                        if (pluginConf == null)
-                        {
-                            // get cahced data
-                            pluginConf = dev.PluginAlgorithmSettings.Where(c => c.GetAlgorithmStringID() == algo.AlgorithmStringID).FirstOrDefault();
-                        }
+                        var pluginConf = dev.GetPluginAlgorithmConfig(algo.AlgorithmStringID);
                         if (pluginConf == null) continue;
                         // set plugin algo
                         algo.Speeds = pluginConf.Speeds;
@@ -283,25 +280,6 @@ namespace NHMCore.Mining.Plugins
         public void RemoveAlgorithmsFromDevices()
         {
             var devices = _cachedNiceHashMinerAlgorithms.Keys.Select(uuid => AvailableDevices.GetDeviceWithUuid(uuid)).Where(d => d != null);
-
-            // cahce current settings
-            foreach (var dev in devices)
-            {
-                // get all data from file configs 
-                var pluginConfs = dev.GetDeviceConfig().PluginAlgorithmSettings.Where(c => c.PluginUUID == PluginUUID);
-                foreach (var pluginConf in pluginConfs)
-                {
-                    // check and update from the chache
-                    var removeIndexAt = dev.PluginAlgorithmSettings.FindIndex(algo => algo.GetAlgorithmStringID() == pluginConf.GetAlgorithmStringID());
-                    // remove old if any
-                    if (removeIndexAt > -1)
-                    {
-                        dev.PluginAlgorithmSettings.RemoveAt(removeIndexAt);
-                    }
-                    // cahce pluginConf
-                    dev.PluginAlgorithmSettings.Add(pluginConf);
-                }
-            }
 
             // remove
             foreach (var dev in devices)

@@ -203,7 +203,7 @@ namespace NHMCore.Mining
                 // add / update data
                 _apiDataGroups[groupKey] = apiData;
 
-                var payingRates = NHSmaData.CurrentProfitsSnapshot();
+                var payingRates = NHSmaData.CurrentPayingRatesSnapshot();
                 // update stats
                 UpdateMinerMiningStats(apiData, minerUUID, minerName, groupKey, payingRates);
                 // update device stats

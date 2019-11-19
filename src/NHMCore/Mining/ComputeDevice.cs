@@ -111,7 +111,7 @@ namespace NHMCore.Mining
 
         public List<AlgorithmContainer> AlgorithmSettings { get; protected set; } = new List<AlgorithmContainer>();
 
-        public List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; protected set; } = new List<PluginAlgorithmConfig>();
+        private List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; set; } = new List<PluginAlgorithmConfig>();
 
         public double MinimumProfit { get; set; }
 
@@ -246,6 +246,21 @@ namespace NHMCore.Mining
 
         public void RemovePluginAlgorithms(string pluginUUID)
         {
+            // get all data from file configs 
+            var pluginConfs = GetDeviceConfig().PluginAlgorithmSettings.Where(c => c.PluginUUID == pluginUUID);
+            foreach (var pluginConf in pluginConfs)
+            {
+                // check and update from the chache
+                var removeIndexAt = PluginAlgorithmSettings.FindIndex(algo => algo.GetAlgorithmStringID() == pluginConf.GetAlgorithmStringID());
+                // remove old if any
+                if (removeIndexAt > -1)
+                {
+                    PluginAlgorithmSettings.RemoveAt(removeIndexAt);
+                }
+                // cahce pluginConf
+                PluginAlgorithmSettings.Add(pluginConf);
+            }
+
             // TODO save removed algorithm configs
             var toRemove = AlgorithmSettings.Where(algo => algo.Algorithm.MinerID == pluginUUID);
             if (toRemove.Count() == 0) return;
@@ -287,6 +302,19 @@ namespace NHMCore.Mining
         public AlgorithmContainer GetAlgorithm(string minerUUID, params AlgorithmType[] ids)
         {
             return AlgorithmSettings.FirstOrDefault(a => a.MinerUUID == minerUUID && !a.IDs.Except(ids).Any());
+        }
+
+        public PluginAlgorithmConfig GetPluginAlgorithmConfig(string algorithmStringID)
+        {
+            var configs = GetDeviceConfig();
+            // try get data from configs
+            var pluginConf = configs.PluginAlgorithmSettings.Where(c => c.GetAlgorithmStringID() == algorithmStringID).FirstOrDefault();
+            if (pluginConf == null)
+            {
+                // get cahced data
+                pluginConf = PluginAlgorithmSettings.Where(c => c.GetAlgorithmStringID() == algorithmStringID).FirstOrDefault();
+            }
+            return pluginConf;
         }
 
         #region Config Setters/Getters

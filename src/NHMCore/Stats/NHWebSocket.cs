@@ -106,7 +106,6 @@ namespace NHMCore.Stats
             var random = new Random();
             _address = address;
             NHLog.Info("NHWebSocket-WD", "Starting nhmws watchdog");
-            NHSmaData.InitializeIfNeeded();
             // TODO use this or just use the application exit source
             while (!token.IsCancellationRequested)
             {

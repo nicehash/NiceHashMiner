@@ -4,7 +4,6 @@ using NHMCore.Benchmarking.BenchHelpers;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
-using NHMCore.Stats;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -268,7 +267,7 @@ namespace NHMCore.Benchmarking
                     algo.LastBenchmarkingFailed = true;
                     // add new failed list
                     _benchmarkFailedAlgo.Add(algo.AlgorithmName);
-                    algo.SetError(result.ErrorMessage);
+                    algo.SetBenchmarkError(result.ErrorMessage);
                     BenchmarkManager.SetCurrentStatus(algo.ComputeDevice, algo, result.ErrorMessage);
                 }
             }

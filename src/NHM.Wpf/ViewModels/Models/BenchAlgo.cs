@@ -26,7 +26,7 @@ namespace NHM.Wpf.ViewModels.Models
                 if (Algo.IsBenchmarkPending)
                     return Translations.Tr("Waiting benchmark");
                 if (Algo.BenchmarkErred)
-                    return string.IsNullOrWhiteSpace(Algo.ErrorMessage) ? Translations.Tr("Error") : Algo.ErrorMessage;
+                    return string.IsNullOrWhiteSpace(Algo.BenchmarkErrorMessage) ? Translations.Tr("Error") : Algo.BenchmarkErrorMessage;
                 if (Algo.BenchmarkSpeed > 0)
                     return Helpers.FormatSpeedOutput(Algo.AnnotatedSpeeds);
 
