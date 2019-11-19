@@ -446,7 +446,6 @@ If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp120.dll" copy /Y "$(Sol
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp140.dll" "$(SolutionDir)$(Configuration)\common\msvcp140.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr110.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr110.dll" "$(SolutionDir)$(Configuration)\common\msvcr110.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\common\msvcr120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\OpenCL.dll" "$(SolutionDir)$(Configuration)\common\OpenCL.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\common\vcruntime140.dll"
 </PostBuildEvent>
   </PropertyGroup>
