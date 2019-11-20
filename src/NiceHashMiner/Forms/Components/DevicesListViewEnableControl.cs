@@ -94,19 +94,6 @@ namespace NiceHashMiner.Forms.Components
 
         protected virtual void SetLvi(ListViewItem lvi, int index)
         { }
-
-        public void ResetComputeDevices(List<ComputeDevice> computeDevices)
-        {
-            SetComputeDevices(computeDevices);
-        }
-
-        private void UpdateDevices(object sender, DeviceUpdateEventArgs e)
-        {
-            FormHelpers.SafeInvoke(this, () =>
-            {
-                SetComputeDevices(e.Devices);
-            });
-        }
         
         public virtual void InitLocale()
         {

@@ -4,6 +4,7 @@ using NHMCore.Interfaces;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using static NiceHashMiner.Forms.Components.AlgorithmsListView;
 
 namespace NiceHashMiner.Forms.Components
 {

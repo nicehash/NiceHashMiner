@@ -163,9 +163,7 @@
     <Compile Include="Stats\Models\ExchangeRateJson.cs" />
     <Compile Include="Stats\Models\MarketsMessage.cs" />
     <Compile Include="Stats\Models\MinerStatusMessage.cs" />
-    <Compile Include="Stats\Models\DeviceUpdateEventArgs.cs" />
     <Compile Include="Stats\Models\ExecutedCall.cs" />
-    <Compile Include="Stats\Models\ExecutedInfo.cs" />
     <Compile Include="Stats\Models\LoginMessage.cs" />
     <Compile Include="Stats\Models\RpcException.cs" />
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
@@ -189,7 +187,6 @@
     <Compile Include="Configs\Data\DeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
-    <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Mining\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Mining\Grouping\MiningDevice.cs" />

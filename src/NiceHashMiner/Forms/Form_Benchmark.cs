@@ -12,6 +12,7 @@ using NHM.Common.Enums;
 using Timer = System.Windows.Forms.Timer;
 
 using BenchmarkSelection = NHM.Common.Enums.AlgorithmBenchmarkSettingsType;
+using static NiceHashMiner.Forms.Components.AlgorithmsListView;
 
 namespace NiceHashMiner.Forms
 {

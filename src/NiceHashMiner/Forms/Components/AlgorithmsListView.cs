@@ -26,6 +26,11 @@ namespace NiceHashMiner.Forms.Components
             void ChangeSpeed(ListViewItem lvi);
         }
 
+        public interface IListItemCheckColorSetter
+        {
+            void LviSetColor(ListViewItem lvi);
+        }
+
         public IAlgorithmsListView ComunicationInterface { get; set; }
 
         public IBenchmarkCalculation BenchmarkCalculation { get; set; }
