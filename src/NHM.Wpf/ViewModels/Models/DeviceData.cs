@@ -2,12 +2,14 @@
 using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.Mining;
+using NHMCore.Mining.MiningStats;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace NHM.Wpf.ViewModels.Models
@@ -20,6 +22,10 @@ namespace NHM.Wpf.ViewModels.Models
         
 
         public ComputeDevice Dev { get; }
+
+        public DeviceMiningStats DeviceMiningStats { get; private set; } = null;
+        public string DeviceMiningStatsProfitability { get; private set; } = "---";
+        public string DeviceMiningStatsPluginAlgo { get; private set; } = "---";
 
         public ObservableCollection<AlgorithmContainer> AlgorithmSettingsCollection { get; private set; } = new ObservableCollection<AlgorithmContainer>();
 
@@ -104,6 +110,36 @@ namespace NHM.Wpf.ViewModels.Models
             }
 
             AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
+
+            MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
+        }
+
+        private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            //Logger.Info("DEBUG", $"DevicesMiningStatsOnCollectionChanged {e.Action.ToString()}");
+            if (e.NewItems == null)
+            {
+                DeviceMiningStats = null;
+                DeviceMiningStatsProfitability = "---";
+                DeviceMiningStatsPluginAlgo = "---";
+            }
+            else
+            {
+                var data = e.NewItems.OfType<DeviceMiningStats>().FirstOrDefault(d => d.DeviceUUID == Dev.Uuid);
+                if (data != null)
+                {
+                    DeviceMiningStats = data;
+                    // TODO this will not deduct power cost and no BTC scaling
+                    DeviceMiningStatsProfitability = data.TotalPayingRate().ToString("0.00000000") + " BTC";
+                    // CryptoDredge / Equihash: 1740.77 Sol/s
+                    var algoName = string.Join("+", data.Speeds.Select(s => s.type.ToString()));
+                    var speedStr = Helpers.FormatSpeedOutput(data.Speeds);
+                    DeviceMiningStatsPluginAlgo = $"{data.MinerName} / {algoName}: {speedStr}";
+                }
+            }
+            OnPropertyChanged(nameof(DeviceMiningStats));
+            OnPropertyChanged(nameof(DeviceMiningStatsProfitability));
+            OnPropertyChanged(nameof(DeviceMiningStatsPluginAlgo));
         }
 
         private void AlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)

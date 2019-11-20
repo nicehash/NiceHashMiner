@@ -377,8 +377,8 @@ namespace NiceHashMiner.Forms.Components
             }
 
             var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
-            var minersMiningStats = MiningStats.GetMinersMiningStats();
-            var devicesMiningStats = MiningStats.GetDevicesMiningStats();
+            var minersMiningStats = MiningDataStats.GetMinersMiningStats();
+            var devicesMiningStats = MiningDataStats.GetDevicesMiningStats();
             foreach(var minerStats in minersMiningStats)
             {
                 // get data

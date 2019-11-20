@@ -91,7 +91,7 @@ namespace NHMCore.Mining
             }
 
             _switchingManager?.Stop();
-            MiningStats.ClearApiDataGroups();
+            MiningDataStats.ClearApiDataGroups();
             //_internetCheckTimer?.Stop();
         }
 
@@ -111,7 +111,7 @@ namespace NHMCore.Mining
             {
                 _semaphore.Release();
             }
-            MiningStats.ClearApiDataGroups();
+            MiningDataStats.ClearApiDataGroups();
         }
 
         #endregion Start/Stop
@@ -391,7 +391,7 @@ namespace NHMCore.Mining
             // There is a change in groups, change GUI
             if (hasChanged)
             {
-                MiningStats.ClearApiDataGroups();
+                MiningDataStats.ClearApiDataGroups();
                 await MinerStatsCheck();
             }
         }
@@ -411,7 +411,7 @@ namespace NHMCore.Mining
                 //ApplicationStateManager.RefreshRates(); // just update the model
                 // now we shoud have new global/total rate display it
                 var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
-                var profitInBTC = MiningStats.GetProfit(kwhPriceInBtc);
+                var profitInBTC = MiningDataStats.GetProfit(kwhPriceInBtc);
                 ApplicationStateManager.DisplayTotalRate(profitInBTC);
             }
             catch (Exception e)

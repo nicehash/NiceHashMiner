@@ -49,7 +49,7 @@
             <!--first one has flipped style-->
             <StackPanel Grid.Column="0" HorizontalAlignment="Left" Margin="16,8,0,0">
                 <TextBlock Style="{StaticResource StatusColumnValue}" Text="{ Binding Dev.FullName }" />
-                <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,4,0,0">CryptoDredge / Equihash: 1740.77 Sol/s</TextBlock>
+                <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,4,0,0" Text="{Binding DeviceMiningStatsPluginAlgo}"/>
             </StackPanel>
 
             <Grid Grid.Column="1" HorizontalAlignment="Left" Width="Auto">
@@ -81,7 +81,7 @@
                 </StackPanel>
                 <StackPanel Grid.Column="5">
                     <TextBlock Style="{StaticResource StatusColumnTitle}">Profitability / 24h</TextBlock>
-                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0">0.001594 BTC</TextBlock>
+                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0" Text="{Binding DeviceMiningStatsProfitability}" />
                 </StackPanel>
             </Grid>
             <StackPanel Grid.Column="2" Margin="16,0,0,0" Orientation="Horizontal" HorizontalAlignment="Right">

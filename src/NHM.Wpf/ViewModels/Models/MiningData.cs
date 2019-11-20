@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.Mining;
+using NHMCore.Mining.MiningStats;
 using NHMCore.Stats;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,8 +18,8 @@ namespace NHM.Wpf.ViewModels.Models
 
         public string Name => Dev.FullName;
 
-        private MiningStats.DeviceMiningStats _stats;
-        public MiningStats.DeviceMiningStats Stats
+        private DeviceMiningStats _stats;
+        public DeviceMiningStats Stats
         {
             get => _stats;
             set

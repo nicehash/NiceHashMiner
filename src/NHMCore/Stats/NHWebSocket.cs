@@ -317,7 +317,7 @@ namespace NHMCore.Stats
                     array.Add((int)Math.Round(device.Load));
 
                     var speedsJson = new JArray();
-                    var speeds = MiningStats.GetSpeedForDevice(device.Uuid);
+                    var speeds = MiningDataStats.GetSpeedForDevice(device.Uuid);
                     if (speeds != null && device.State == DeviceState.Mining)
                     {
                         foreach (var kvp in speeds)

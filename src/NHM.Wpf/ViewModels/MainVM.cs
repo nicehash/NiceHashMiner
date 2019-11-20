@@ -8,6 +8,7 @@ using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
+using NHMCore.Mining.MiningStats;
 using NHMCore.Mining.Plugins;
 using NHMCore.Stats;
 using NHMCore.Switching;
@@ -345,8 +346,7 @@ namespace NHM.Wpf.ViewModels
 
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
-
-            MiningStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
+            MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
 
             IdleCheckManager.StartIdleCheck();
 
@@ -365,7 +365,7 @@ namespace NHM.Wpf.ViewModels
             {
                 case NotifyCollectionChangedAction.Add:
                 case NotifyCollectionChangedAction.Replace:
-                    foreach (var stat in e.NewItems.OfType<MiningStats.DeviceMiningStats>())
+                    foreach (var stat in e.NewItems.OfType<DeviceMiningStats>())
                     {
                         // Update this device row
                         var miningDev = MiningDevs.OfType<MiningData>().FirstOrDefault(d => d.Dev.Uuid == stat.DeviceUUID);
