@@ -289,13 +289,8 @@ namespace NHMCore.Mining
             get
             {
                 var currentEstimatedProfit = CurrentEstimatedProfit;
-                if (currentEstimatedProfit < 0)
-                {
-                    // WPF
-                    return "---";
-                    // WinForms
-                    return Translations.Tr("N/A");
-                }
+                // WPF or null
+                if (currentEstimatedProfit < 0) return "---";
                 // TODO BTC scaling
                 return currentEstimatedProfit.ToString("0.00000000");
             }
