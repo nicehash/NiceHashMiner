@@ -167,17 +167,17 @@
     <Compile Include="Views\MainWindowNew2.xaml.cs">
       <DependentUpon>MainWindowNew2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PluginsNew\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
-    <Compile Include="Views\PluginsNew\PluginItem\Converters\PluginItemButtonConverters.cs" />
-    <Compile Include="Views\PluginsNew\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
-    <Compile Include="Views\PluginsNew\PluginItem\Converters\SupportedDevicesConverter.cs" />
-    <Compile Include="Views\PluginsNew\PluginItem\PluginIcon.xaml.cs">
+    <Compile Include="Views\Plugins\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
+    <Compile Include="Views\Plugins\PluginItem\Converters\PluginItemButtonConverters.cs" />
+    <Compile Include="Views\Plugins\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
+    <Compile Include="Views\Plugins\PluginItem\Converters\SupportedDevicesConverter.cs" />
+    <Compile Include="Views\Plugins\PluginItem\PluginIcon.xaml.cs">
       <DependentUpon>PluginIcon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PluginsNew\PluginItem\PluginItem.xaml.cs">
+    <Compile Include="Views\Plugins\PluginItem\PluginItem.xaml.cs">
       <DependentUpon>PluginItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PluginsNew\Plugins.xaml.cs">
+    <Compile Include="Views\Plugins\Plugins.xaml.cs">
       <DependentUpon>Plugins.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsNew\Settings.xaml.cs">
@@ -417,15 +417,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PluginsNew\PluginItem\PluginIcon.xaml">
+    <Page Include="Views\Plugins\PluginItem\PluginIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PluginsNew\PluginItem\PluginItem.xaml">
+    <Page Include="Views\Plugins\PluginItem\PluginItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PluginsNew\Plugins.xaml">
+    <Page Include="Views\Plugins\Plugins.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

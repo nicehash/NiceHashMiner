@@ -5,7 +5,7 @@ using System.Windows.Data;
 using NHMCore;
 using NHMCore.Mining.Plugins;
 
-namespace NHM.Wpf.Views.PluginsNew.PluginItem.Converters
+namespace NHM.Wpf.Views.Plugins.PluginItem.Converters
 {
     //class PluginItemButtonConverters
     //{

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NHM.Wpf.Views.PluginsNew.PluginItem
+namespace NHM.Wpf.Views.Plugins
 {
     /// <summary>
-    /// Interaction logic for PluginIcon.xaml
+    /// Interaction logic for Plugins.xaml
     /// </summary>
-    public partial class PluginIcon : UserControl
+    public partial class Plugins : UserControl
     {
-        public PluginIcon()
+        public Plugins()
         {
             InitializeComponent();
         }

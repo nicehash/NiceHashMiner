@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NHM.Wpf.Views.PluginsNew.PluginItem
+namespace NHM.Wpf.Views.Plugins.PluginItem
 {
     /// <summary>
     /// Interaction logic for PluginItem.xaml

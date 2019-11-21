@@ -4,15 +4,22 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace NHM.Wpf.Views.PluginsNew.PluginItem.Converters
+namespace NHM.Wpf.Views.Plugins.PluginItem.Converters
 {
-    public class SupportedDevicesConverter : IValueConverter
+    public class SupportedDeviceAlgorithmsConverter : IValueConverter
     {
+        public class SupportedDeviceAlgorithm
+        {
+            public string DeviceType { get; set; }
+            public List<string> AlgorithmTypes { get; set; }
+        }
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is Dictionary<string, List<string>> supportedAlgos)
             {
-                return supportedAlgos.Keys.ToArray();
+                var ret = supportedAlgos.Select(kvp => new SupportedDeviceAlgorithm { DeviceType = kvp.Key, AlgorithmTypes = kvp.Value });
+                return ret.ToArray();
             }
             return null;
         }

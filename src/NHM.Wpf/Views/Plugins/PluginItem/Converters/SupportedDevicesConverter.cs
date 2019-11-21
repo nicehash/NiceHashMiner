@@ -1,20 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Windows;
+using System.Linq;
 using System.Windows.Data;
-using NHMCore.Mining.Plugins;
 
-namespace NHM.Wpf.Views.PluginsNew.PluginItem.Converters
+namespace NHM.Wpf.Views.Plugins.PluginItem.Converters
 {
-    public class CompatibleVisibilityConverter : IValueConverter
+    public class SupportedDevicesConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is PluginPackageInfoCR pluginCR)
+            if (value is Dictionary<string, List<string>> supportedAlgos)
             {
-                if (!pluginCR.CompatibleNHPluginVersion) return Visibility.Hidden;
-                if (!pluginCR.Supported) return Visibility.Hidden;
-                return Visibility.Visible;
+                return supportedAlgos.Keys.ToArray();
             }
             return null;
         }

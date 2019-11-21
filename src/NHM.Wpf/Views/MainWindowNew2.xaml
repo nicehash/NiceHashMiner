@@ -8,7 +8,7 @@
         xmlns:benchmark="clr-namespace:NHM.Wpf.Views.Benchmark"
         xmlns:dashboard="clr-namespace:NHM.Wpf.Views.Dashboard"
         xmlns:devices="clr-namespace:NHM.Wpf.Views.Devices"
-        xmlns:pluginsNew="clr-namespace:NHM.Wpf.Views.PluginsNew"
+        xmlns:pluginsNew="clr-namespace:NHM.Wpf.Views.Plugins"
         xmlns:settingsNew="clr-namespace:NHM.Wpf.Views.SettingsNew"
         xmlns:local="clr-namespace:NHM.Wpf.Views"
         xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"

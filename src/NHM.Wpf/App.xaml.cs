@@ -8,7 +8,6 @@ using NHM.Wpf._DESIGN_DEVELOP;
 using NHM.Wpf.Views;
 using NHMCore;
 using NHMCore.Configs;
-using NHMCore.Stats;
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
