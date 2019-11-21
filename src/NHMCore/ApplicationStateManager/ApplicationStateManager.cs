@@ -88,11 +88,11 @@ namespace NHMCore
             // assume it is valid
             var ret = CredentialsValidState.VALID;
 
-            if (!CredentialValidators.ValidateBitcoinAddress(ConfigManager.GeneralConfig.BitcoinAddress))
+            if (!CredentialValidators.ValidateBitcoinAddress(CredentialsSettings.Instance.BitcoinAddress))
             {
                 ret |= CredentialsValidState.INVALID_BTC;
             }
-            if (!CredentialValidators.ValidateWorkerName(ConfigManager.GeneralConfig.WorkerName))
+            if (!CredentialValidators.ValidateWorkerName(CredentialsSettings.Instance.WorkerName))
             {
                 ret |= CredentialsValidState.INVALID_WORKER;
             }
@@ -114,7 +114,7 @@ namespace NHMCore
             if (state == CredentialsValidState.VALID)
             {
                 // Reset credentials
-                var (btc, worker, group) = ConfigManager.GeneralConfig.GetCredentials();
+                var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
                 NHWebSocket.ResetCredentials(btc, worker, group);
             }
             else
@@ -135,13 +135,13 @@ namespace NHMCore
         // make sure to pass in trimmedBtc
         public static async Task<SetResult> SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
         {
-            if (btc == ConfigManager.GeneralConfig.BitcoinAddress && btc != "")
+            if (btc == CredentialsSettings.Instance.BitcoinAddress && btc != "")
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
             if (!CredentialValidators.ValidateBitcoinAddress(btc))
             {
-                ConfigManager.GeneralConfig.BitcoinAddress = btc;
+                CredentialsSettings.Instance.BitcoinAddress = btc;
                 return SetResult.INVALID;
             }
             await SetBTC(btc);
@@ -155,7 +155,7 @@ namespace NHMCore
         private static async Task SetBTC(string btc)
         {
             // change in memory and save changes to file
-            ConfigManager.GeneralConfig.BitcoinAddress = btc;
+            CredentialsSettings.Instance.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
             await RestartMinersIfMining();
         }
@@ -167,7 +167,7 @@ namespace NHMCore
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
         public static async Task<SetResult> SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
         {
-            if (workerName == ConfigManager.GeneralConfig.WorkerName)
+            if (workerName == CredentialsSettings.Instance.WorkerName)
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
@@ -187,7 +187,7 @@ namespace NHMCore
         private static async Task SetWorker(string workerName)
         {
             // change in memory and save changes to file
-            ConfigManager.GeneralConfig.WorkerName = workerName;
+            CredentialsSettings.Instance.WorkerName = workerName;
             ConfigManager.GeneralConfigFileCommit();
             await RestartMinersIfMining();
         }

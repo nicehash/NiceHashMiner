@@ -94,6 +94,8 @@ namespace NHM.Wpf.ViewModels
 
         public static MiningState MiningState => MiningState.Instance;
 
+        public static LoggingDebugConsoleSettings LoggingDebugConsoleSettings => LoggingDebugConsoleSettings.Instance;
+
         // TODO don't expose GeneralConfig, make it internal to NHMCore
         public static GeneralConfig GeneralConfig => ConfigManager.GeneralConfig;
 

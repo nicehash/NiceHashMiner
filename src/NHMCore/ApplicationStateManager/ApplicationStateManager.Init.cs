@@ -151,7 +151,7 @@ namespace NHMCore
                 // connect to nhmws
                 loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
                 // Init ws connection
-                var (btc, worker, group) = ConfigManager.GeneralConfig.GetCredentials();
+                var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
                 NHWebSocket.SetCredentials(btc, worker, group);
                 _ = Task.Run(() => NHWebSocket.Start(Nhmws.NhmSocketAddress, ExitApplication.Token));
                 

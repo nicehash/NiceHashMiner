@@ -102,7 +102,7 @@ namespace NHMCore.ApplicationState
             AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;
             IsCurrentlyMining = AnyDeviceRunning;
-            IsDemoMining = !ConfigManager.CredentialsSettings.IsCredentialsValid && IsCurrentlyMining;
+            IsDemoMining = !CredentialsSettings.Instance.IsCredentialsValid && IsCurrentlyMining;
             if (IsNotBenchmarkingOrMining) MiningManuallyStarted = false;
         }
     }

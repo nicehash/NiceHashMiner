@@ -63,12 +63,12 @@
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Logging" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
             <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.LogToFile, Mode=TwoWay}" />
+                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding LoggingDebugConsoleSettings.LogToFile, Mode=TwoWay}" />
                 <Label Content="Log To file" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                 <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.DebugConsole, Mode=TwoWay}" />
+                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding LoggingDebugConsoleSettings.DebugConsole, Mode=TwoWay}" />
                 <Label Content="Enable Debug Console" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                 <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
             </StackPanel>
@@ -77,7 +77,7 @@
                     <Label Content="Log Max File Size (bytes)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding GeneralConfig.LogMaxFileSize, Mode=TwoWay}" Margin="0,0,24,0"/>
+                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding LoggingDebugConsoleSettings.LogMaxFileSize, Mode=TwoWay}" Margin="0,0,24,0"/>
             </StackPanel>
         </WrapPanel>
     </StackPanel>

@@ -100,10 +100,10 @@ namespace NiceHashMiner
         private void InitDataBindings()
         {
             comboBoxLocation.DataBindings.Add("SelectedIndex", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ServiceLocation), false, DataSourceUpdateMode.OnPropertyChanged);
-            textBoxBTCAddress.DataBindings.AddSafeBinding("Text", ConfigManager.CredentialsSettings, nameof(ConfigManager.CredentialsSettings.BitcoinAddress), false, DataSourceUpdateMode.OnPropertyChanged);
-            textBoxWorkerName.DataBindings.AddSafeBinding("Text", ConfigManager.CredentialsSettings, nameof(ConfigManager.CredentialsSettings.WorkerName), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBoxBTCAddress.DataBindings.AddSafeBinding("Text", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.BitcoinAddress), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBoxWorkerName.DataBindings.AddSafeBinding("Text", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.WorkerName), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            linkLabelCheckStats.DataBindings.AddSafeBinding("Enabled", ConfigManager.CredentialsSettings, nameof(ConfigManager.CredentialsSettings.IsCredentialsValid), false, DataSourceUpdateMode.OnPropertyChanged);
+            linkLabelCheckStats.DataBindings.AddSafeBinding("Enabled", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.IsCredentialsValid), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // mining /benchmarking
             buttonPlugins.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
@@ -237,8 +237,8 @@ namespace NiceHashMiner
         // InitMainConfigGuiData gets called after settings are changed and whatnot but this is a crude and tightly coupled way of doing things
         private void InitMainConfigGuiData()
         {
-            textBoxBTCAddress.Text = ConfigManager.CredentialsSettings.BitcoinAddress;
-            textBoxWorkerName.Text = ConfigManager.CredentialsSettings.WorkerName;
+            textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
+            textBoxWorkerName.Text = CredentialsSettings.Instance.WorkerName;
             _showWarningNiceHashData = true;
 
             toolStripStatusLabelBalanceDollarValue.Text = "(" + BalanceAndExchangeRates.Instance.SelectedFiatCurrency + ")";
@@ -391,7 +391,7 @@ namespace NiceHashMiner
 
         private void LinkLabelCheckStats_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (ConfigManager.CredentialsSettings.IsCredentialsValid == false) return;
+            if (CredentialsSettings.Instance.IsCredentialsValid == false) return;
             ApplicationStateManager.VisitMiningStatsPage();
         }
 

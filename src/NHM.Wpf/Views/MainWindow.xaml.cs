@@ -109,7 +109,7 @@ namespace NHM.Wpf.Views
 
         private void StatsHyperlink_OnClick(object sender, RoutedEventArgs e)
         {
-            if (ConfigManager.CredentialsSettings.IsCredentialsValid == false) return;
+            if (CredentialsSettings.Instance.IsCredentialsValid == false) return;
             ApplicationStateManager.VisitMiningStatsPage();
         }
 

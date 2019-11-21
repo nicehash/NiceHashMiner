@@ -17,29 +17,6 @@ namespace NHMCore.Configs.Data
     {
         public Version ConfigFileVersion;
 
-        public string Language
-        {
-#if WPF
-            get;
-            set;
-#else
-            get => TranslationsSettings.Instance.Language;
-            set => TranslationsSettings.Instance.Language = value;
-#endif
-        }
-
-        private string _displayTheme = "Light";
-        public string DisplayTheme
-        {
-            get => _displayTheme;
-            set
-            {
-                _displayTheme = value;
-                OnPropertyChanged();
-            }
-        }
-
-
         public string DisplayCurrency
         {
             get => BalanceAndExchangeRates.Instance.SelectedFiatCurrency;
@@ -50,9 +27,7 @@ namespace NHMCore.Configs.Data
             }
         }
 
-        public bool DebugConsole { get; set; } = false;
-
-
+        #region CredentialsSettings
         public string BitcoinAddress
         {
             get => CredentialsSettings.Instance.BitcoinAddress;
@@ -64,6 +39,13 @@ namespace NHMCore.Configs.Data
             get => CredentialsSettings.Instance.WorkerName;
             set => CredentialsSettings.Instance.WorkerName = value;
         }
+
+        public string RigGroup
+        {
+            get => CredentialsSettings.Instance.RigGroup;
+            set => CredentialsSettings.Instance.RigGroup = value;
+        }
+        #endregion CredentialsSettings
 
         public TimeUnitType TimeUnit
         {
@@ -101,8 +83,6 @@ namespace NHMCore.Configs.Data
                 MinerPluginToolkitV1.MinerToolkit.MinimizeMiningWindows = value;
             }
         }
-
-        public bool MinimizeToTray { get; set; } = false;
 
         public double SwitchProfitabilityThreshold { get; set; } = 0.05; // percent
         public int MinerAPIQueryInterval { get; set; } = 5;
@@ -144,10 +124,27 @@ namespace NHMCore.Configs.Data
 
         public int MinIdleSeconds { get; set; } = 60;
 
-        public bool LogToFile { get; set; } = true;
+        #region LoggingDebugConsoleSettings
+
+        public bool DebugConsole
+        {
+            get => LoggingDebugConsoleSettings.Instance.DebugConsole;
+            set => LoggingDebugConsoleSettings.Instance.DebugConsole = value;
+        }
+
+        public bool LogToFile
+        {
+            get => LoggingDebugConsoleSettings.Instance.LogToFile;
+            set => LoggingDebugConsoleSettings.Instance.LogToFile = value;
+        }
 
         // in bytes
-        public long LogMaxFileSize { get; set; } = 1048576;
+        public long LogMaxFileSize
+        {
+            get => LoggingDebugConsoleSettings.Instance.LogMaxFileSize;
+            set => LoggingDebugConsoleSettings.Instance.LogMaxFileSize = value;
+        }
+        #endregion LoggingDebugConsoleSettings
 
         public bool ShowDriverVersionWarning { get; set; } = true;
         public bool DisableWindowsErrorReporting { get; set; } = true;
@@ -176,7 +173,7 @@ namespace NHMCore.Configs.Data
         }
 
         public bool IdleWhenNoInternetAccess { get; set; } = true;
-        public bool RunScriptOnCUDA_GPU_Lost { get; set; } = false;
+        
         private bool _allowMultipleInstances { get; set; } = true;
         public bool AllowMultipleInstances
         {
@@ -192,6 +189,8 @@ namespace NHMCore.Configs.Data
         public bool UseIFTTT { get; set; } = false;
         public string IFTTTKey { get; set; } = "";
 
+        #region ToS 'Settings'
+        
         // 3rd party miners
         public int Use3rdPartyMinersTOS = 0;
 
@@ -199,7 +198,7 @@ namespace NHMCore.Configs.Data
         public string hwid = "";
 
         public int agreedWithTOS = 0;
-
+        #endregion ToS 'Settings'
 
         public bool CoolDownCheckEnabled
         {
@@ -221,20 +220,42 @@ namespace NHMCore.Configs.Data
         /// </summary>
         public bool UseSmaCache { get; set; } = true;
 
+        #region GUI Settings
+
+        public string Language
+        {
+#if WPF
+            get;
+            set;
+#else
+            get => TranslationsSettings.Instance.Language;
+            set => TranslationsSettings.Instance.Language = value;
+#endif
+        }
+
+        public bool MinimizeToTray { get; set; } = false;
+
+        private string _displayTheme = "Light";
+        public string DisplayTheme
+        {
+            get => _displayTheme;
+            set
+            {
+                _displayTheme = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool ShowPowerColumns { get; set; } = false;
         public bool ShowDiagColumns { get; set; } = true;
 
         public Point MainFormSize = new Point(1000, 400);
 
-        public bool RunFirewallRulesOnStartup
-        {
-            get => FirewallRules.RunFirewallRulesOnStartup;
-            set => FirewallRules.RunFirewallRulesOnStartup = value;
-        }
+        public bool GUIWindowsAlwaysOnTop { get; set; } = false;
+        
+        #endregion GUI Settings
 
         public bool UseEthlargement { get; set; } = false;
-
-        public string RigGroup { get; set; } = "";
 
         public bool RunAtStartup
         {
@@ -242,7 +263,8 @@ namespace NHMCore.Configs.Data
             set => NHMCore.Configs.RunAtStartup.Instance.Enabled = value;
         }
 
-        public bool GUIWindowsAlwaysOnTop { get; set; } = false;
+        #region Global Device settings
+        public bool RunScriptOnCUDA_GPU_Lost { get; set; } = false;
 
         public bool DisableDeviceStatusMonitoring { get; set; } = false;
         public bool DisableDevicePowerModeSettings { get; set; } = true;
@@ -258,13 +280,16 @@ namespace NHMCore.Configs.Data
             }
         }
 
+        #endregion Global Device settings
+
         // methods
         public void SetDefaults()
         {
             ConfigFileVersion = new Version(Application.ProductVersion);
-            Language = "";
             BitcoinAddress = "";
             WorkerName = "worker1";
+            RigGroup = "";
+            Language = "";
             TimeUnit = TimeUnitType.Day;
             ServiceLocation = 0;
             AutoStartMining = false;
@@ -299,7 +324,7 @@ namespace NHMCore.Configs.Data
             ShowPowerColumns = false;
             ShowDiagColumns = true;
             UseEthlargement = false;
-            RigGroup = "";
+            
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;
             DisableDeviceStatusMonitoring = false;
@@ -373,12 +398,6 @@ namespace NHMCore.Configs.Data
             SwitchSmaTimeChangeSeconds.FixRange();
             SwitchSmaTicksStable.FixRange();
             SwitchSmaTicksUnstable.FixRange();
-        }
-
-        //C#7
-        public (string btc, string worker, string group) GetCredentials()
-        {
-            return (BitcoinAddress.Trim(), WorkerName.Trim(), RigGroup.Trim());
         }
     }
 }

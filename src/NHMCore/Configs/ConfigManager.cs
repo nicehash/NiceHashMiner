@@ -17,13 +17,13 @@ namespace NHMCore.Configs
 
         public static bool IsVersionChanged { get; private set; } = false;
 
+        // TODO set to internal and refactor external usage
         public static GeneralConfig GeneralConfig { get; private set; } = new GeneralConfig();
         
         // extra composed settings
         public static RunAtStartup RunAtStartup = RunAtStartup.Instance;
         public static IdleMiningSettings IdleMiningSettings = IdleMiningSettings.Instance;
         public static TranslationsSettings TranslationsSettings = TranslationsSettings.Instance;
-        public static CredentialsSettings CredentialsSettings = CredentialsSettings.Instance;
 
         private static string GeneralConfigPath => Paths.ConfigsPath("General.json");
 

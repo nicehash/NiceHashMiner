@@ -89,9 +89,9 @@ namespace NHM.Wpf
             }
             
             // Init logger
-            Logger.ConfigureWithFile(ConfigManager.GeneralConfig.LogToFile, Level.Info, ConfigManager.GeneralConfig.LogMaxFileSize);
+            Logger.ConfigureWithFile(LoggingDebugConsoleSettings.Instance.LogToFile, Level.Info, LoggingDebugConsoleSettings.Instance.LogMaxFileSize);
 
-            if (ConfigManager.GeneralConfig.DebugConsole)
+            if (LoggingDebugConsoleSettings.Instance.DebugConsole)
             {
                 PInvokeHelpers.AllocConsole();
                 Logger.ConfigureConsoleLogging(Level.Info);

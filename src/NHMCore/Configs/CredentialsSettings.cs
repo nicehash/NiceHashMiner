@@ -1,7 +1,5 @@
 ﻿using NHM.Common;
 using NHMCore.Utils;
-using System;
-using System.ComponentModel;
 
 namespace NHMCore.Configs
 {
@@ -14,6 +12,7 @@ namespace NHMCore.Configs
             _stringProps = new NotifyPropertyChangedHelper<string>(OnPropertyChanged);
             BitcoinAddress = "";
             WorkerName = "worker1";
+            RigGroup = "";
         }
         // TODO maybe this should be removed 
         private readonly NotifyPropertyChangedHelper<string> _stringProps;
@@ -21,7 +20,11 @@ namespace NHMCore.Configs
         public string BitcoinAddress
         {
             get => _stringProps.Get(nameof(BitcoinAddress));
-            internal set => _stringProps.Set(nameof(BitcoinAddress), value);
+            internal set
+            {
+                _stringProps.Set(nameof(BitcoinAddress), value);
+                OnPropertyChanged(nameof(IsCredentialsValid));
+            }
         }
         public string WorkerName
         {
@@ -38,6 +41,12 @@ namespace NHMCore.Configs
         public bool IsCredentialsValid
         {
             get => CredentialValidators.ValidateBitcoinAddress(BitcoinAddress);
+        }
+
+        //C#7
+        public (string btc, string worker, string group) GetCredentials()
+        {
+            return (BitcoinAddress.Trim(), WorkerName.Trim(), RigGroup.Trim());
         }
     }
 }

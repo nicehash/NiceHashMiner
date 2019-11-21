@@ -22,7 +22,7 @@ namespace NHMCore
             if (MiningState.Instance.IsDemoMining) {
                 return DemoUser.BTC;
             }
-            var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
+            var btc = CredentialsSettings.Instance.BitcoinAddress.Trim();
             return $"{btc}${RigID}";
         }
 

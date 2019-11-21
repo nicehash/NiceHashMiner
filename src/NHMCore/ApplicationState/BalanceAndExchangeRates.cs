@@ -153,7 +153,7 @@ namespace NHMCore.ApplicationState
 
         public double SelectedCurrBtcRate => ConvertToActiveCurrency(UsdBtcRate);
 
-        private bool ConverterActive => ConfigManager.GeneralConfig.DisplayCurrency != "USD";
+        private bool ConverterActive => SelectedFiatCurrency != "USD";
         // TODO change return to (double convertedAmount, bool ok)
         public double ConvertToActiveCurrency(double amount)
         {
