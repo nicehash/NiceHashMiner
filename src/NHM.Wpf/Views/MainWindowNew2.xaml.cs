@@ -51,22 +51,12 @@ namespace NHM.Wpf.Views
         private async Task MainWindow_OnLoadedTask()
         {
             WindowUtils.SetForceSoftwareRendering(this);
-
-            // Get IntPtr handle for this Window
-            var handle = new WindowInteropHelper(this).Handle;
-            // Set native disabled state to disallow moving window
-            WindowUtils.TrySetNativeEnabled(false, handle);
-
             try
             {
                 await _vm.InitializeNhm(LoadingBar.StartupLoader);
             }
             finally
             {
-                // Remove disabled native bit
-                // NOTE must happen before startup.Close() or else minimizing thing happens
-                WindowUtils.TrySetNativeEnabled(true, handle);
-
                 LoadingBar.Visibility = Visibility.Collapsed;
                 // Re-enable managed controls
                 IsEnabled = true;

@@ -232,16 +232,19 @@
                                     <ToggleButton x:Name="SettingsButton" Style="{StaticResource WindowTabButtonStyle2}"
                                             fa:Awesome.Content="Gear" 
                                             TextElement.FontSize="20"
-                                            Grid.Column="0"/>
+                                            Grid.Column="0"
+                                            Margin="0,0,20,0"/>
                                     <ToggleButton x:Name="HelpButton" Style="{StaticResource WindowTabButtonStyle2}"
                                             fa:Awesome.Content="QuestionCircle" 
                                             TextElement.FontSize="20"
-                                            Grid.Column="1"/>
+                                            Grid.Column="1"
+                                            Margin="0,0,20,0"/>
 
                                     <Button x:Name="MinimizeButton" Style="{StaticResource WindowButtonStyle}"
                                             fa:Awesome.Content="WindowMinimize" 
                                             TextElement.FontSize="13"
-                                            Grid.Column="2"/>
+                                            Grid.Column="2"
+                                            Margin="0,0,15,0"/>
 
                                     <Button x:Name="CloseButton" Style="{StaticResource WindowButtonStyle}"
                                             fa:Awesome.Content="Times"
