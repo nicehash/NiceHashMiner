@@ -247,9 +247,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\StartupLoadingWindow.xaml.cs">
-      <DependentUpon>StartupLoadingWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\TemporaryStartupLoadingControl.xaml.cs">
       <DependentUpon>TemporaryStartupLoadingControl.xaml</DependentUpon>
     </Compile>
@@ -531,10 +528,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Settings\SettingsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\StartupLoadingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

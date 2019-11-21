@@ -24,7 +24,9 @@
             </Grid.RowDefinitions>-->
             <!--Change the parent from grid to stackpanel and the button will work. Not entierly sure why it is not working-->
             <TextBlock >Content</TextBlock>
-            <ToggleButton Style="{StaticResource StartStopButtonLight}" />
+            <ToggleButton Style="{StaticResource StartStopButtonLight}"
+                          x:Name="StartStopToggleButton"
+                          Click="ToggleButtonStartStop_Click" />
             
         </Grid>
         <Grid Grid.Row="1">

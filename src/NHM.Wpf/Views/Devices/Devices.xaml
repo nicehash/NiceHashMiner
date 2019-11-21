@@ -8,6 +8,9 @@
              xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModels:MainVM />
+    </UserControl.DataContext>
     <UserControl.Resources>
         <Style TargetType="TextBlock" x:Key="InfoIcon">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>

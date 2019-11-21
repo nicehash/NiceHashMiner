@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:nhb="clr-namespace:NHM.Wpf.Views.Common.NHBase"
         xmlns:benchmark="clr-namespace:NHM.Wpf.Views.Benchmark"
         xmlns:dashboard="clr-namespace:NHM.Wpf.Views.Dashboard"
@@ -10,13 +11,19 @@
         xmlns:pluginsNew="clr-namespace:NHM.Wpf.Views.PluginsNew"
         xmlns:settingsNew="clr-namespace:NHM.Wpf.Views.SettingsNew"
         xmlns:local="clr-namespace:NHM.Wpf.Views"
+        xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
         mc:Ignorable="d"
         Title="MainWindowNew2" Height="600" Width="800"
         ResizeMode="NoResize"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        Loaded="MainWindow_OnLoaded" >
+        Loaded="MainWindow_OnLoaded"
+        Closing="MainWindow_OnClosing"
+        StateChanged="MainWindow_OnStateChanged">
+    <nhb:BaseDialogWindow.DataContext>
+        <viewModels:MainVM />
+    </nhb:BaseDialogWindow.DataContext>
     <nhb:BaseDialogWindow.Resources>
         <Style TargetType="{x:Type TabControl}">
             <Setter Property="Template">
@@ -38,13 +45,13 @@
                 <dashboard:Dashboard DataContext="{Binding .}"/>
             </TabItem>
             <TabItem Header="Devices" Name="DevicesButton">
-                <devices:Devices/>
+                <devices:Devices DataContext="{Binding .}"/>
             </TabItem>
             <TabItem Header="Benchmarks" Name="BenchmarkButton">
                 <benchmark:Benchmarks DataContext="{Binding .}"/>
             </TabItem>
             <TabItem Header="Plugins" Name="PluginsButton">
-                <pluginsNew:Plugins />
+                <pluginsNew:Plugins DataContext="{Binding .}" />
             </TabItem>
             <TabItem Header="LEFT_SETTINGS" Name="SettingsButton">
                 <settingsNew:Settings DataContext="{Binding .}"/>
@@ -55,5 +62,21 @@
                 </Grid>
             </TabItem>
         </TabControl>
+
+        <!-- Instantiation of taskbar icon for minimize to tray -->
+        <!-- Since this isn't visible setting the grid spot doesn't matter, but it stops XAML complaining -->
+        <tb:TaskbarIcon Grid.Row="0"
+                        Grid.Column="0"
+                        ToolTipText="NiceHash Miner" 
+                        TrayMouseDoubleClick="TaskbarIcon_OnTrayMouseDoubleClick"
+                        IconSource="../Resources/logo.ico">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Start (Placeholder)" />
+                    <Separator />
+                    <MenuItem Header="Close" Click="CloseMenuItem_OnClick" />
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
     </Grid>
 </nhb:NHMMainWindow>

@@ -1,4 +1,5 @@
-﻿using NHM.Common.Enums;
+﻿using NHM.Common;
+using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Utils;
@@ -8,13 +9,13 @@ using System.Linq;
 
 namespace NHMCore
 {
-    public class MiningState : INotifyPropertyChanged
+    public class MiningState : NotifyChangedBase
     {
         public static MiningState Instance { get; } = new MiningState();
 
         private MiningState()
         {
-            _boolProps = new NotifyPropertyChangedHelper<bool>(NotifyPropertyChanged);
+            _boolProps = new NotifyPropertyChangedHelper<bool>(OnPropertyChanged);
             IsDemoMining = false;
             IsCurrentlyMining = false;
         }
@@ -54,13 +55,6 @@ namespace NHMCore
         }
 
         public bool MiningManuallyStarted { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(String info)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-        }
 
         // poor mans way
         public void CalculateDevicesStateChange()

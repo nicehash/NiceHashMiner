@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.PluginsNew.PluginItem"
              xmlns:localConv="clr-namespace:NHM.Wpf.Views.PluginsNew.PluginItem.Converters"
+             xmlns:vmPlugins="clr-namespace:NHM.Wpf.ViewModels.Plugins"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vmPlugins:PluginEntryVM}">
     <UserControl.Resources>
         <localConv:SupportedDevicesConverter x:Key="SupportedDevicesConv" />
         <localConv:SupportedDeviceAlgorithmsConverter x:Key="SupportedDevicesAlgorithmsConv" />
@@ -129,7 +131,9 @@
                            Margin="32,0,0,0"
                            Text="{Binding InstallVersionStatus}"/>
 
+                <!--TODO THIS column seems to be removed-->
                 <TextBlock Grid.Column="4"
+                           Visibility="Collapsed"
                            IsEnabled="{Binding Plugin.Supported}"
                            Style="{StaticResource TextBoxCol}"
                            Margin="32,0,0,0"
@@ -151,9 +155,10 @@
                             VerticalAlignment="Center"
                             Visibility="{Binding Plugin, Converter={StaticResource CompatibleVisibilityConverter}}">
 
-                    <CheckBox Style="{StaticResource NHMSwitch}"
+                    <!--TODO this switch should be enablde when we enable plugin auto-updates-->
+                    <!--<CheckBox Style="{StaticResource NHMSwitch}"
                               Visibility="{Binding Plugin.Installed, Converter={StaticResource PluginItemVisibilityConverter}}"
-                              Margin="0,0,16,0" />
+                              Margin="0,0,16,0" />-->
                     <StackPanel x:Name="swapStackPanel" Margin="0,0,16,0">
                         <Path Style="{StaticResource SpinCirclePath}"
                               Visibility="{Binding SpinningCircleVisibility}"
