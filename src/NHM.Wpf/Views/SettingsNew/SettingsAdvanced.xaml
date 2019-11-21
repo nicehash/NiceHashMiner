@@ -14,31 +14,16 @@
         <!--Miscellaneous-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Miscellaneous" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.AutoStartMining}" />
-                <Label Content="Autostart Mining" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.AllowMultipleInstances, Mode=TwoWay}" />
-                <Label Content="Allow Multiple Instances" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.RunAtStartup, Mode=TwoWay}" />
-                <Label Content="Run On Startup" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.MinimizeToTray, Mode=TwoWay}"/>
-                <Label Content="Minimize To Tray" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.AutoScaleBTCValues, Mode=TwoWay}" />
-                <Label Content="Autoscale BTC Values" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
+            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.AutoStartMining}"
+                                        Label="Autostart Mining" />
+            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.AllowMultipleInstances}"
+                                        Label="Allow Multiple Instances" />
+            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.RunAtStartup}"
+                                        Label="Run On Startup" />
+            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.MinimizeToTray}"
+                                        Label="Minimize To Tray" />
+            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.AutoScaleBTCValues}"
+                                        Label="Autoscale BTC Values" />
             <StackPanel Orientation="Horizontal">
                 <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.ShowDriverVersionWarning, Mode=TwoWay}" />
                 <Label Content="Show Driver Version Warning" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
@@ -60,7 +45,7 @@
                 <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding ShowPCI, Mode=TwoWay}" />
+                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.ShowGPUPCIeBusIDs, Mode=TwoWay}" />
                 <Label Content="Show GPU PCIe Bus IDs" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                 <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
             </StackPanel>

@@ -177,7 +177,16 @@ namespace NHMCore.Configs.Data
 
         public bool IdleWhenNoInternetAccess { get; set; } = true;
         public bool RunScriptOnCUDA_GPU_Lost { get; set; } = false;
-        public bool AllowMultipleInstances { get; set; } = true;
+        private bool _allowMultipleInstances { get; set; } = true;
+        public bool AllowMultipleInstances
+        {
+            get => _allowMultipleInstances;
+            set
+            {
+                _allowMultipleInstances = value;
+                OnPropertyChanged(nameof(AllowMultipleInstances));
+            }
+        }
 
         // IFTTT
         public bool UseIFTTT { get; set; } = false;

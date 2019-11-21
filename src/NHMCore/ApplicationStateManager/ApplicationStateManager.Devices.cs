@@ -49,7 +49,7 @@ namespace NHMCore
             {
                 if (!enabled)
                 {
-                    // here we might want to await them all instead of each individually 
+                    // TODO here we might want to await them all instead of each individually 
                     await StopDevice(dev);
                 }
 
