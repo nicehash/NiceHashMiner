@@ -112,9 +112,6 @@
     <Compile Include="Views\3rdPartyTosWindow.xaml.cs">
       <DependentUpon>3rdPartyTosWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BaseWindow.xaml.cs">
-      <DependentUpon>BaseWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
@@ -341,10 +338,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\3rdPartyTosWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\BaseWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
