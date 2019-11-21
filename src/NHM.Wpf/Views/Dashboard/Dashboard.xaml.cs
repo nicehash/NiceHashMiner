@@ -1,5 +1,6 @@
 ﻿using NHM.Wpf.ViewModels;
 using NHMCore;
+using NHMCore.ApplicationState;
 using System;
 using System.Collections.Generic;
 using System.Linq;

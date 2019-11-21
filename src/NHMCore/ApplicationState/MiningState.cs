@@ -3,11 +3,9 @@ using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Utils;
-using System;
-using System.ComponentModel;
 using System.Linq;
 
-namespace NHMCore
+namespace NHMCore.ApplicationState
 {
     public class MiningState : NotifyChangedBase
     {
@@ -16,12 +14,14 @@ namespace NHMCore
         private MiningState()
         {
             _boolProps = new NotifyPropertyChangedHelper<bool>(OnPropertyChanged);
+            _intProps = new NotifyPropertyChangedHelper<int>(OnPropertyChanged);
             IsDemoMining = false;
             IsCurrentlyMining = false;
         }
 
         // auto properties don't trigger NotifyPropertyChanged so add this shitty boilerplate
         private readonly NotifyPropertyChangedHelper<bool> _boolProps;
+        private readonly NotifyPropertyChangedHelper<int> _intProps;
 
 
         public bool IsDemoMining
@@ -54,11 +54,50 @@ namespace NHMCore
             private set => _boolProps.Set(nameof(IsCurrentlyMining), value);
         }
 
+        public int StoppedDeviceStateCount
+        {
+            get => _intProps.Get(nameof(StoppedDeviceStateCount));
+            private set => _intProps.Set(nameof(StoppedDeviceStateCount), value);
+        }
+        public int MiningDeviceStateCount
+        {
+            get => _intProps.Get(nameof(MiningDeviceStateCount));
+            private set => _intProps.Set(nameof(MiningDeviceStateCount), value);
+        }
+        public int BenchmarkingDeviceStateCount
+        {
+            get => _intProps.Get(nameof(BenchmarkingDeviceStateCount));
+            private set => _intProps.Set(nameof(BenchmarkingDeviceStateCount), value);
+        }
+        public int ErrorDeviceStateCount
+        {
+            get => _intProps.Get(nameof(ErrorDeviceStateCount));
+            private set => _intProps.Set(nameof(ErrorDeviceStateCount), value);
+        }
+        public int PendingDeviceStateCount
+        {
+            get => _intProps.Get(nameof(PendingDeviceStateCount));
+            private set => _intProps.Set(nameof(PendingDeviceStateCount), value);
+        }
+        public int DisabledDeviceStateCount
+        {
+            get => _intProps.Get(nameof(DisabledDeviceStateCount));
+            private set => _intProps.Set(nameof(DisabledDeviceStateCount), value);
+        }
+
         public bool MiningManuallyStarted { get; set; }
 
         // poor mans way
         public void CalculateDevicesStateChange()
         {
+            // 
+            StoppedDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Stopped);
+            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining);
+            BenchmarkingDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Benchmarking);
+            ErrorDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Error);
+            PendingDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Pending);
+            DisabledDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Disabled);
+            // 
             AnyDeviceStopped = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Stopped && (dev.State != DeviceState.Disabled));
             AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;

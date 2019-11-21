@@ -1,5 +1,6 @@
 using NHM.Common.Enums;
 using NHM.UUID;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Stats;

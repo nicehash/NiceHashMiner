@@ -42,8 +42,8 @@
                 <TextBlock Style="{DynamicResource InfoIcon }" Foreground="#fba342" Margin="0,12,12,0" />
                 <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">DEVICES MINING</TextBlock>
                 <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">3</TextBlock>
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0">/ 4</TextBlock>
+                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding MiningState.MiningDeviceStateCount}" />
+                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding PerDeviceDisplayString}" />
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1" Margin="16,0,0,0">

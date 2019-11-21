@@ -40,6 +40,7 @@ namespace NHM.Wpf.ViewModels
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(DeviceGPUCount));
                 OnPropertyChanged(nameof(DeviceCPUCount));
+                OnPropertyChanged(nameof(PerDeviceDisplayString));
             }
         }
 
@@ -86,11 +87,15 @@ namespace NHM.Wpf.ViewModels
 
         #endregion settingsLists
 
+
+        public string PerDeviceDisplayString => $"/ {_devices?.Count() ?? 0}";
+        
         public static BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
 
-        public static GeneralConfig GeneralConfig => ConfigManager.GeneralConfig;
+        public static MiningState MiningState => MiningState.Instance;
 
-        public MiningState State => MiningState.Instance;
+        // TODO don't expose GeneralConfig, make it internal to NHMCore
+        public static GeneralConfig GeneralConfig => ConfigManager.GeneralConfig;
 
         private string _theme = ConfigManager.GeneralConfig.DisplayTheme;
         public string Theme
