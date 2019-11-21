@@ -186,6 +186,9 @@
     <Compile Include="Views\SettingsNew\SettingsAdvanced.xaml.cs">
       <DependentUpon>SettingsAdvanced.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingsNew\SettingsCheckBoxItem.xaml.cs">
+      <DependentUpon>SettingsCheckBoxItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsNew\SettingsGeneral.xaml.cs">
       <DependentUpon>SettingsGeneral.xaml</DependentUpon>
     </Compile>
@@ -434,6 +437,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsNew\SettingsAdvanced.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsNew\SettingsCheckBoxItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
