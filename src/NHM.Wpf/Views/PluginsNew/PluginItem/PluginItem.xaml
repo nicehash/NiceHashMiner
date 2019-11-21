@@ -94,6 +94,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition  Height="50"/>
                 <RowDefinition  Height="Auto"/>
+                <RowDefinition  Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" HorizontalAlignment="Stretch" Height="50">
                 <Grid.ColumnDefinitions>
@@ -236,9 +237,13 @@
                 </StackPanel>
 
             </Grid>
-
+            <!--TODO the progress here is can be collapsed-->
+            <Grid Grid.Row="1" Width="Auto" Visibility="{Binding Load.Visibility}" Margin="5">
+                <ProgressBar Width="Auto" Value="{Binding Load.Progress}" />
+                <TextBlock Width="Auto" HorizontalAlignment="Center" Text="{Binding Load.Status}" />
+            </Grid>
             <!--our 'expander'-->
-            <Grid Grid.Row="1" x:Name="DetailsGrid" Visibility="Visible" Margin="16,0,16,16">
+            <Grid Grid.Row="2" x:Name="DetailsGrid" Visibility="Visible" Margin="16,0,16,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="122" Width="Auto" />
                     <ColumnDefinition MinWidth="200" Width="Auto" />
