@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Mining;
 using NHMCore.Stats;
 using NHMCore.Switching;
@@ -38,13 +39,13 @@ namespace NHMCore.Configs.Data
             }
         }
 
-        private string _displayCurrency = "USD";
+
         public string DisplayCurrency
         {
-            get => _displayCurrency;
+            get => BalanceAndExchangeRates.Instance.SelectedFiatCurrency;
             set
             {
-                _displayCurrency = value;
+                BalanceAndExchangeRates.Instance.SelectedFiatCurrency = value;
                 OnPropertyChanged();
             }
         }
@@ -125,7 +126,7 @@ namespace NHMCore.Configs.Data
             set
             {
                 _autoScaleBTCValues = value;
-                ApplicationStateManager.OnAutoScaleBTCValuesChange();
+                OnPropertyChanged(nameof(AutoScaleBTCValues));
             }
         }
 
@@ -363,12 +364,6 @@ namespace NHMCore.Configs.Data
             SwitchSmaTimeChangeSeconds.FixRange();
             SwitchSmaTicksStable.FixRange();
             SwitchSmaTicksUnstable.FixRange();
-        }
-
-        public bool HasValidUserWorker()
-        {
-            return CredentialValidators.ValidateBitcoinAddress(BitcoinAddress) &&
-                   CredentialValidators.ValidateWorkerName(WorkerName);
         }
 
         //C#7

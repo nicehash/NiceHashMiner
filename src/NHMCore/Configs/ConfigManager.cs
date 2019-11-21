@@ -1,5 +1,6 @@
 ﻿using MinerPluginToolkitV1.Configs;
 using NHM.Common;
+using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using System;
@@ -101,6 +102,8 @@ namespace NHMCore.Configs
                     _isGeneralConfigFileInit = true;
                     GeneralConfig = fromFile;
                     GeneralConfig.FixSettingBounds();
+                    // TODO temp 
+                    GeneralConfig.PropertyChanged += BalanceAndExchangeRates.Instance.GeneralConfig_PropertyChanged; 
                 }
                 else
                 {

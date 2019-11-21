@@ -73,36 +73,6 @@ namespace NHMCore
         }
         #endregion
 
-        #region BtcBalance and fiat balance
-
-        public static double BtcBalance { get; private set; }
-
-        private static (double fiatBalance, string fiatSymbol) getFiatFromBtcBalance(double btcBalance)
-        {
-            var usdAmount = (BtcBalance * ExchangeRateApi.GetUsdExchangeRate());
-            var fiatBalance = ExchangeRateApi.ConvertToActiveCurrency(usdAmount);
-            var fiatSymbol = ExchangeRateApi.ActiveDisplayCurrency;
-            return (fiatBalance, fiatSymbol);
-        }
-
-        public static void OnAutoScaleBTCValuesChange()
-        {
-            // btc
-            DisplayBTCBalance?.Invoke(null, BtcBalance);
-            // fiat
-            DisplayFiatBalance?.Invoke(null, getFiatFromBtcBalance(BtcBalance));
-        }
-
-        public static void OnBalanceUpdate(double btcBalance)
-        {
-            BtcBalance = btcBalance;
-            // btc
-            DisplayBTCBalance?.Invoke(null, BtcBalance);
-            // fiat
-            DisplayFiatBalance?.Invoke(null, getFiatFromBtcBalance(BtcBalance));
-        }
-#endregion
-
         [Flags]
         public enum CredentialsValidState : uint
         {
@@ -252,8 +222,6 @@ namespace NHMCore
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.RigGroup = groupName;
             ConfigManager.GeneralConfigFileCommit();
-            // notify all components
-            DisplayGroup?.Invoke(null, groupName);
         }
 #endregion
 

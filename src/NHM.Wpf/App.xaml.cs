@@ -106,9 +106,6 @@ namespace NHM.Wpf
             // Set to explicit shutdown or else these intro windows will cause shutdown
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
-            // Init ExchangeRateApi
-            ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-
             Logger.Info(Tag, $"Starting up {ApplicationStateManager.Title}");
             if (ConfigManager.GeneralConfig.agreedWithTOS != ApplicationStateManager.CurrentTosVer)
             {

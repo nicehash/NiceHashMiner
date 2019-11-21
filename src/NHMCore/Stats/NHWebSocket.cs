@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
+using NHMCore.ApplicationState;
 using NHMCore.Mining;
 using NHMCore.Stats.Models;
 using NHMCore.Switching;
@@ -489,9 +490,9 @@ namespace NHMCore.Stats
             {
                 dynamic message = JsonConvert.DeserializeObject(data);
                 string balance = message.value.Value;
-                if (double.TryParse(balance, NumberStyles.Float, CultureInfo.InvariantCulture, out var bal))
+                if (double.TryParse(balance, NumberStyles.Float, CultureInfo.InvariantCulture, out var btcBalance))
                 {
-                    ApplicationStateManager.OnBalanceUpdate(bal);
+                    BalanceAndExchangeRates.Instance.BtcBalance = btcBalance;
                 }
             }
             catch (Exception e)
@@ -538,6 +539,7 @@ namespace NHMCore.Stats
                 string data = message.data.Value;
                 var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
                 if (exchange?.exchanges_fiat == null || exchange.exchanges == null) return completed;
+                double usdBtcRate = -1;
                 foreach (var exchangePair in exchange.exchanges)
                 {
                     if (!exchangePair.TryGetValue("coin", out var coin) || coin != "BTC" ||
@@ -545,14 +547,10 @@ namespace NHMCore.Stats
                         !double.TryParse(usd, NumberStyles.Float, CultureInfo.InvariantCulture, out var usdD))
                         continue;
 
-                    ExchangeRateApi.UsdBtcRate = usdD;
+                    usdBtcRate = usdD;
                     break;
                 }
-
-                ExchangeRateApi.UpdateExchangesFiat(exchange.exchanges_fiat);
-
-                // TODO check where and why we have this
-                ApplicationStateManager.OnExchangeUpdated();
+                BalanceAndExchangeRates.Instance.UpdateExchangesFiat(usdBtcRate, exchange.exchanges_fiat);
             }
             catch (Exception e)
             {

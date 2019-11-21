@@ -4,6 +4,7 @@ using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
 using NHM.Wpf.ViewModels.Settings;
 using NHMCore;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
@@ -68,44 +69,7 @@ namespace NHM.Wpf.ViewModels
         public IReadOnlyList<string> ServiceLocations => StratumService.MiningLocationNames;
         public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
         public IEnumerable<string> LanguageOptions => Translations.GetAvailableLanguagesNames();
-        public IReadOnlyList<string> CurrencyOptions => _currList;
         public IReadOnlyList<string> ThemeOptions => _themeList;
-
-        private List<string> _currList = new List<string>
-            {
-                "AUD",
-                "BGN",
-                "BRL",
-                "CAD",
-                "CHF",
-                "CNY",
-                "CZK",
-                "DKK",
-                "EUR",
-                "GBP",
-                "HKD",
-                "HRK",
-                "HUF",
-                "IDR",
-                "ILS",
-                "INR",
-                "JPY",
-                "KRW",
-                "MXN",
-                "MYR",
-                "NOK",
-                "NZD",
-                "PHP",
-                "PLN",
-                "RON",
-                "RUB",
-                "SEK",
-                "SGD",
-                "THB",
-                "TRY",
-                "USD",
-                "ZAR"
-            };
 
         public int SelectedLangIndex
         {
@@ -122,31 +86,9 @@ namespace NHM.Wpf.ViewModels
 
         #endregion settingsLists
 
+        public static BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
+
         public static GeneralConfig GeneralConfig => ConfigManager.GeneralConfig;
-
-        public int ServiceLocationIndex
-        {
-            get => ConfigManager.GeneralConfig.ServiceLocation;
-            set => ConfigManager.GeneralConfig.ServiceLocation = value;
-        }
-
-        public bool ShowPCI
-        {
-            get => ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs;
-            set => ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs = value;
-        }
-
-        public string BtcAddress
-        {
-            get => ConfigManager.GeneralConfig.BitcoinAddress;
-            set => ConfigManager.GeneralConfig.BitcoinAddress = value;
-        }
-
-        public string WorkerName
-        {
-            get => ConfigManager.GeneralConfig.WorkerName;
-            set => ConfigManager.GeneralConfig.WorkerName = value;
-        }
 
         public MiningState State => MiningState.Instance;
 
@@ -185,14 +127,12 @@ namespace NHM.Wpf.ViewModels
 
         private string PerTime => $" / {TimeUnit}";
 
-        private string _currency = ExchangeRateApi.ActiveDisplayCurrency;
-
+        // TODO get rif of duplicates
         public string Currency
         {
-            get => _currency;
+            get => BalanceAndExchangeRates.SelectedFiatCurrency;
             set
             {
-                _currency = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CurrencyPerTime));
                 OnPropertyChanged(nameof(ProfitPerTime));
@@ -200,9 +140,9 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        public string ExchangeTooltip => $"1 BTC = {ExchangeRateApi.SelectedCurrBtcRate:F2} {Currency}";
+        public string ExchangeTooltip => $"1 BTC = {BalanceAndExchangeRates.SelectedCurrBtcRate:F2} {Currency}";
 
-        public string CurrencyPerTime => $"{Currency}{PerTime}";
+        public string CurrencyPerTime => $"{BalanceAndExchangeRates.SelectedFiatCurrency}{PerTime}";
 
         public string BtcPerTime => $"BTC{PerTime}";
 
@@ -289,7 +229,7 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        public double FiatBalance => ExchangeRateApi.ConvertFromBtc(BtcBalance);
+        public double FiatBalance => BalanceAndExchangeRates.Instance.ConvertFromBtc(BtcBalance);
 
         #endregion
 
@@ -312,17 +252,22 @@ namespace NHM.Wpf.ViewModels
             _updateTimer = new Timer(1000);
             _updateTimer.Elapsed += UpdateTimerOnElapsed;
 
-            ExchangeRateApi.CurrencyChanged += (_, curr) =>
-            {
-                Currency = curr;
-                OnPropertyChanged(nameof(FiatBalance));
-            };
-            ExchangeRateApi.ExchangeChanged += (_, __) =>
+            BalanceAndExchangeRates.OnExchangeUpdate += (_, __) =>
             {
                 OnPropertyChanged(nameof(ExchangeTooltip));
             };
-
-            ApplicationStateManager.DisplayBTCBalance += UpdateBalance;
+            BalanceAndExchangeRates.Instance.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(BalanceAndExchangeRates.BtcBalance))
+                {
+                    BtcBalance = BalanceAndExchangeRates.Instance.BtcBalance ?? 0;
+                }
+                if (e.PropertyName == nameof(BalanceAndExchangeRates.SelectedFiatCurrency))
+                {
+                    Currency = BalanceAndExchangeRates.Instance.SelectedFiatCurrency;
+                    OnPropertyChanged(nameof(FiatBalance));
+                }
+            };
 
             TimeFactor.OnUnitTypeChanged += (_, unit) => { TimeUnit = unit.ToString(); };
         }
@@ -414,25 +359,22 @@ namespace NHM.Wpf.ViewModels
             OnPropertyChanged(nameof(GlobalRateFiat));
         }
 
-        private void UpdateBalance(object sender, double btcBalance)
-        {
-            BtcBalance = btcBalance;
-        }
-
         public async Task StartMining()
         {
             if (!await NHSmaData.WaitOnDataAsync(10)) return;
 
+            // this underlying comment shouldn't be true anymore 
             // TODO there is a mess of blocking and not-awaited async code down the line, 
             // Just wrapping with Task.Run here for now
 
-            await Task.Run(() => { ApplicationStateManager.StartAllAvailableDevices(); });
+            ApplicationStateManager.StartAllAvailableDevices();
+            await ApplicationStateManager.StartMiningTaskWait();
         }
 
         public async Task StopMining()
         {
             // TODO same as StartMining comment
-            await Task.Run(() => { ApplicationStateManager.StopAllDevice(); });
+            await ApplicationStateManager.StopAllDevice();
         }
     }
 }

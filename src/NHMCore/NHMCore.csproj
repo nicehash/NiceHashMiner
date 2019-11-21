@@ -109,7 +109,7 @@
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
     <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
     <Compile Include="ApplicationStateManager\MiningState.cs" />
-    <Compile Include="ApplicationStateManager\RatesAndStatsStates.cs" />
+    <Compile Include="ApplicationState\BalanceAndExchangeRates.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkingComputeDeviceHandler.cs" />
@@ -125,11 +125,8 @@
     <Compile Include="Configs\RunAtStartup.cs" />
     <Compile Include="Configs\TranslationsSettings.cs" />
     <Compile Include="IFTTT.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IBalanceBTCDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IBalanceFiatDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IDevicesStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGlobalMiningRateDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IGroupDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IMiningProfitabilityDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
@@ -167,7 +164,6 @@
     <Compile Include="Stats\Models\LoginMessage.cs" />
     <Compile Include="Stats\Models\RpcException.cs" />
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
-    <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Stats\NHWebSocket.cs" />
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />

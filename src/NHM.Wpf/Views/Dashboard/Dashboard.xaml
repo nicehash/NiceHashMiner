@@ -75,19 +75,19 @@
                     <StackPanel Grid.Column="6">
                         <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">1.018</TextBlock>
-                            <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0">BTC</TextBlock>
+                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
+                            <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
                         </StackPanel>
-                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0">≈ $ 7527,32</TextBlock>
+                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" />
                     </StackPanel>
                     <GridSplitter Grid.Column="7" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <StackPanel Grid.Column="8">
-                        <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
+                        <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">1.018</TextBlock>
-                            <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0">BTC</TextBlock>
+                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">N/A</TextBlock>
+                            <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0" Visibility="Collapsed">BTC</TextBlock>
                         </StackPanel>
-                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0">≈ $ 7527,32</TextBlock>
+                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0" Visibility="Collapsed" >≈ $ 7527,32</TextBlock>
                     </StackPanel>
                 </Grid>
             </Border>

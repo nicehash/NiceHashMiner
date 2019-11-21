@@ -9,6 +9,7 @@ using NHMCore.Interfaces;
 using NHMCore.Stats;
 using NHMCore.Utils;
 using NHMCore;
+using NHMCore.ApplicationState;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -376,7 +377,7 @@ namespace NiceHashMiner.Forms.Components
                 _ignoreChecks = false;
             }
 
-            var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
+            var kwhPriceInBtc = BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();
             var minersMiningStats = MiningDataStats.GetMinersMiningStats();
             var devicesMiningStats = MiningDataStats.GetDevicesMiningStats();
             foreach(var minerStats in minersMiningStats)
@@ -444,7 +445,7 @@ namespace NiceHashMiner.Forms.Components
 
         private static string CurrencyPerTimeUnit()
         {
-            return FormatPerTimeUnit(ExchangeRateApi.ActiveDisplayCurrency);
+            return FormatPerTimeUnit(BalanceAndExchangeRates.Instance.SelectedFiatCurrency);
         }
 
         private static string FormatPerTimeUnit(string unit)
@@ -461,14 +462,14 @@ namespace NiceHashMiner.Forms.Components
                 item.SubItems[(int)Column.Speeds].Text = Helpers.FormatSpeedOutput(speedPairs);
                 //item.SubItems[SecSpeed].Text = secSpeed > 0 ? Helpers.FormatSpeedOutput(secSpeed) : "";
 
-                var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);
+                var fiat = BalanceAndExchangeRates.Instance.ConvertFromBtc(profit * TimeFactor.TimeUnit);
                 if (ShowPowerCols)
                 {
                     // When showing power cols, the default "profit" header changes to revenue
                     // The power headers then explain cost of power and real profit after subtracting this
                     item.SubItems[(int)Column.Profit].Text = (revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                    item.SubItems[(int)Column.Fiat].Text = ExchangeRateApi.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
-                    var powerCost = ExchangeRateApi.ConvertFromBtc(power * TimeFactor.TimeUnit);
+                    item.SubItems[(int)Column.Fiat].Text = BalanceAndExchangeRates.Instance.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
+                    var powerCost = BalanceAndExchangeRates.Instance.ConvertFromBtc(power * TimeFactor.TimeUnit);
                     SetPowerText(item, powerUsage, powerCost, fiat);
                 }
                 else

@@ -91,9 +91,6 @@ namespace NiceHashMiner
                 Logger.ConfigureConsoleLogging(Level.Info);
             }
 
-            // init active display currency after config load
-            ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-
             Logger.Info("NICEHASH", $"Starting up {ApplicationStateManager.Title}");
 
             if (!pathSet)

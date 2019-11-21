@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
@@ -432,7 +433,7 @@ namespace NHMCore.Mining
             if (!ConfigManager.IsMiningRegardlesOfProfit)
             {
                 // This is power usage in BTC/hr
-                var power = PowerUsage / 1000 * ExchangeRateApi.GetKwhPriceInBtc();
+                var power = PowerUsage / 1000 * BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();
                 // Now it is power usage in BTC/day
                 power *= 24;
                 // Now we subtract from profit, which may make profit negative

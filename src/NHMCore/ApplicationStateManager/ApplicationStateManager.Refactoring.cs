@@ -7,12 +7,6 @@ namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
-        public static event EventHandler OnExchangeUpdate;
-        public static void OnExchangeUpdated()
-        {
-            OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
-        }
-
         #region Set Mining Profitable or NOT Profitable
         //// TODO we got a problem here with displaying and sending IFTTT stuff, since we can start/stop 
         //private static bool isProfitable = false;

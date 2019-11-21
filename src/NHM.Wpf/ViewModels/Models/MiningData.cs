@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
 using NHMCore.Stats;
@@ -43,7 +44,7 @@ namespace NHM.Wpf.ViewModels.Models
 
         public double Payrate => TimeFactor.ConvertFromDay((Stats?.TotalPayingRate() ?? 0) * 1000);
 
-        public double FiatPayrate => ExchangeRateApi.ConvertFromBtc(Payrate / 1000);
+        public double FiatPayrate => BalanceAndExchangeRates.Instance.ConvertFromBtc(Payrate / 1000);
 
         public double PowerUsage => Stats?.GetPowerUsage() ?? 0;
 
@@ -51,8 +52,8 @@ namespace NHM.Wpf.ViewModels.Models
         {
             get
             {
-                var cost = Stats?.PowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0;
-                return TimeFactor.ConvertFromDay(ExchangeRateApi.ConvertFromBtc(cost));
+                var cost = Stats?.PowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0;
+                return TimeFactor.ConvertFromDay(BalanceAndExchangeRates.Instance.ConvertFromBtc(cost));
             }
         }
 
@@ -60,8 +61,8 @@ namespace NHM.Wpf.ViewModels.Models
         {
             get
             {
-                var cost = Stats?.TotalPayingRateDeductPowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0;
-                return TimeFactor.ConvertFromDay(ExchangeRateApi.ConvertFromBtc(cost));
+                var cost = Stats?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0;
+                return TimeFactor.ConvertFromDay(BalanceAndExchangeRates.Instance.ConvertFromBtc(cost));
             }
         }
 

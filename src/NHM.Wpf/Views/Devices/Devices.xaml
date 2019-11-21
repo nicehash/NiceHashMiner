@@ -5,8 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:common="clr-namespace:NHM.Wpf.Views.Common"
              xmlns:local="clr-namespace:NHM.Wpf.Views.Devices"
+             xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#cecdcd"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
+    </UserControl.Resources>
     <Grid Background="White" Margin="40,0,40,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="182" />
@@ -23,7 +36,7 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Border  BorderThickness="1" Background="#fde3c6" BorderBrush="Transparent" CornerRadius="4"/>
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="14" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,12,12,0">&#xF05A;</TextBlock>
+                <TextBlock Style="{DynamicResource InfoIcon }" Foreground="#fba342" Margin="0,12,12,0" />
                 <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">DEVICES MINING</TextBlock>
                 <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
                     <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">3</TextBlock>
@@ -33,7 +46,7 @@
             <Grid Grid.Column="1" Margin="16,0,0,0">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
                 <!--content-->
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="14" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,12,12,0">&#xF05A;</TextBlock>
+                <TextBlock Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
                 <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">GLOBAL RATE</TextBlock>
                 <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
                     <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">0.0623858</TextBlock>
@@ -44,19 +57,23 @@
             <Grid Grid.Column="2" Margin="16,0,0,0">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
                 <!--content-->
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="14" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,12,12,0">&#xF05A;</TextBlock>
-                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">BALANCE</TextBlock>
+                <TextBlock Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
+                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0" Text="UNPAID BALANCE"/>
                 <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">0.0623858</TextBlock>
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0">BTC</TextBlock>
+                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
+                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
                 </StackPanel>
-                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,78,0,0">≈ $ 4.44</TextBlock>
+                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,78,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"/>
             </Grid>
             <Grid Grid.Column="3" Margin="16,0,0,0">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
                 <!--content-->
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="14" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,12,12,0">&#xF05A;</TextBlock>
-                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">Place for pushing user to the web</TextBlock>
+                <TextBlock Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
+                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0" Text="MY BTC WALLET" />
+                <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
+                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">N/A</TextBlock>
+                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Visibility="Collapsed">BTC</TextBlock>
+                </StackPanel>
             </Grid>
         </Grid>
         <!--DEVICES-->

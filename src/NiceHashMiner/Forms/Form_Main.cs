@@ -23,10 +23,11 @@ using static NHMCore.Translations;
 
 using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
+using NHMCore.ApplicationState;
 
 namespace NiceHashMiner
 {
-    public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
+    public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
     {
         private bool _showWarningNiceHashData;
         private bool _exitCalled = false;
@@ -37,6 +38,16 @@ namespace NiceHashMiner
         private DevicesListViewSpeedControl devicesListViewEnableControl1;
 
         private bool _isManuallyStarted = false;
+
+        private string LabelBalanceText
+        {
+            get
+            {
+                var timeUnit = ConfigManager.GeneralConfig.TimeUnit.ToString();
+                var currency = BalanceAndExchangeRates.Instance.SelectedFiatCurrency;
+                return (currency + "/") + Translations.Tr(timeUnit) + "     " + Translations.Tr("Balance") + ":";
+            }
+        }
 
         public Form_Main()
         {
@@ -110,6 +121,18 @@ namespace NiceHashMiner
             //labelDemoMode.DataBindings.Add("Visible", MiningState.Instance, nameof(MiningState.Instance.IsDemoMining), true, DataSourceUpdateMode.OnPropertyChanged);
             
             devicesMainBoard1.DataBindings.AddSafeBinding(nameof(devicesMainBoard1.SecondPanelVisible), MiningState.Instance, nameof(MiningState.Instance.AnyDeviceRunning), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            BalanceAndExchangeRates.Instance.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(BalanceAndExchangeRates.BtcBalance))
+                {
+                    SetDisplayBTCBalance(s, BalanceAndExchangeRates.Instance.BtcBalance ?? 0);
+                }
+                if (e.PropertyName == nameof(BalanceAndExchangeRates.FiatBalance))
+                {
+                    SetDisplayFiatBalance(s, (BalanceAndExchangeRates.Instance.FiatBalance ?? 0, BalanceAndExchangeRates.Instance.SelectedFiatCurrency));
+                }
+            };
         }
 
         private async void textBoxBTCAddress_Validate()
@@ -165,7 +188,7 @@ namespace NiceHashMiner
             toolStripStatusLabelGlobalRateText.Text = Tr("Global rate:");
             toolStripStatusLabelBTCDayText.Text =
                 "BTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            toolStripStatusLabelBalanceText.Text = RatesAndStatsStates.Instance.LabelBalanceText;
+            toolStripStatusLabelBalanceText.Text = LabelBalanceText;
 
             devicesListViewEnableControl1.InitLocale();
 
@@ -218,11 +241,8 @@ namespace NiceHashMiner
             textBoxWorkerName.Text = ConfigManager.CredentialsSettings.WorkerName;
             _showWarningNiceHashData = true;
 
-            // init active display currency after config load
-            ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-
-            toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateApi.ActiveDisplayCurrency + ")";
-            toolStripStatusLabelBalanceText.Text = RatesAndStatsStates.Instance.LabelBalanceText;
+            toolStripStatusLabelBalanceDollarValue.Text = "(" + BalanceAndExchangeRates.Instance.SelectedFiatCurrency + ")";
+            toolStripStatusLabelBalanceText.Text = LabelBalanceText;
 
 
             devicesListViewEnableControl1.SetPayingColumns();
@@ -264,7 +284,7 @@ namespace NiceHashMiner
             //ApplicationStateManager._ratesComunication = devicesListViewEnableControl1; // BROKEN
             // handle these callbacks differently
             //NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            ApplicationStateManager.OnExchangeUpdate += UpdateExchange;
+            BalanceAndExchangeRates.OnExchangeUpdate += UpdateExchange;
 
             foreach (Control c in Controls)
             {
@@ -329,24 +349,24 @@ namespace NiceHashMiner
             toolStripStatusLabelBTCDayText.Text = scaleBTC ? $"mBTC/{displayTimeUnit}" : $"BTC/{displayTimeUnit}";
             toolStripStatusLabelGlobalRateValue.Text = totalDisplayRate.ToString(scaleBTC ? "F5" : "F8", CultureInfo.InvariantCulture);
 
-            var timeFactorRate = ExchangeRateApi
-                .ConvertToActiveCurrency((totalRate * factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()));
+            var timeFactorRate = BalanceAndExchangeRates.Instance
+                .ConvertToActiveCurrency((totalRate * factorTimeUnit * BalanceAndExchangeRates.Instance.GetUsdExchangeRate()));
             toolStripStatusLabelBTCDayValue.Text = timeFactorRate.ToString("F2", CultureInfo.InvariantCulture);
-            toolStripStatusLabelBalanceText.Text = RatesAndStatsStates.Instance.LabelBalanceText;
+            toolStripStatusLabelBalanceText.Text = LabelBalanceText;
         }
 
         private void UpdateExchange(object sender, EventArgs e)
         {
             FormHelpers.SafeInvoke(this, () =>
             {
-                var br = ExchangeRateApi.GetUsdExchangeRate();
+                var br = BalanceAndExchangeRates.Instance.GetUsdExchangeRate();
                 var currencyRate = Tr("N/A");
                 if (br > 0)
                 {
-                    currencyRate = ExchangeRateApi.ConvertToActiveCurrency(br).ToString("F2");
+                    currencyRate = BalanceAndExchangeRates.Instance.ConvertToActiveCurrency(br).ToString("F2");
                 }
 
-                toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
+                toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}");
 
                 Logger.Info("NICEHASH", $"Current Bitcoin rate: {br.ToString("F2", CultureInfo.InvariantCulture)}");
             });
@@ -570,7 +590,7 @@ namespace NiceHashMiner
         }
 
         // TODO this might need some formatters?
-        void IBalanceBTCDisplayer.DisplayBTCBalance(object sender, double btcBalance)
+        void SetDisplayBTCBalance(object sender, double btcBalance)
         {
             FormHelpers.SafeInvoke(this, () =>
             {
@@ -588,7 +608,7 @@ namespace NiceHashMiner
             });
         }
 
-        void IBalanceFiatDisplayer.DisplayFiatBalance(object sender, (double fiatBalance, string fiatCurrencySymbol) args)
+        void SetDisplayFiatBalance(object sender, (double fiatBalance, string fiatCurrencySymbol) args)
         {
             FormHelpers.SafeInvoke(this, () =>
             {

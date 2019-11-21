@@ -1,6 +1,7 @@
 ﻿using MinerPlugin;
 using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Grouping;
 using NHMCore.Mining.Plugins;
@@ -189,7 +190,7 @@ namespace NHMCore.Mining
             }
 
             // TODO FOR NOW USD ONLY
-            var currentProfitUsd = (currentProfit * ExchangeRateApi.GetUsdExchangeRate());
+            var currentProfitUsd = (currentProfit * BalanceAndExchangeRates.Instance.GetUsdExchangeRate());
             var minProfit = ConfigManager.GeneralConfig.MinimumProfit;
             _isProfitable = currentProfitUsd >= minProfit;
             if (log)
@@ -410,7 +411,7 @@ namespace NHMCore.Mining
                 // Update GUI
                 //ApplicationStateManager.RefreshRates(); // just update the model
                 // now we shoud have new global/total rate display it
-                var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
+                var kwhPriceInBtc = BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();
                 var profitInBTC = MiningDataStats.GetProfit(kwhPriceInBtc);
                 ApplicationStateManager.DisplayTotalRate(profitInBTC);
             }
