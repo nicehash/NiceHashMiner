@@ -103,7 +103,7 @@ namespace NiceHashMiner
             textBoxBTCAddress.DataBindings.AddSafeBinding("Text", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.BitcoinAddress), false, DataSourceUpdateMode.OnPropertyChanged);
             textBoxWorkerName.DataBindings.AddSafeBinding("Text", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.WorkerName), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            linkLabelCheckStats.DataBindings.AddSafeBinding("Enabled", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.IsCredentialsValid), false, DataSourceUpdateMode.OnPropertyChanged);
+            linkLabelCheckStats.DataBindings.AddSafeBinding("Enabled", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.IsBitcoinAddressValid), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // mining /benchmarking
             buttonPlugins.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
@@ -391,7 +391,7 @@ namespace NiceHashMiner
 
         private void LinkLabelCheckStats_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (CredentialsSettings.Instance.IsCredentialsValid == false) return;
+            if (CredentialsSettings.Instance.IsBitcoinAddressValid == false) return;
             ApplicationStateManager.VisitMiningStatsPage();
         }
 

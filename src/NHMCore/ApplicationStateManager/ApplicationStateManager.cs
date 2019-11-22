@@ -74,31 +74,6 @@ namespace NHMCore
         }
         #endregion
 
-        [Flags]
-        public enum CredentialsValidState : uint
-        {
-            VALID,
-            INVALID_BTC,
-            INVALID_WORKER,
-            INVALID_BTC_AND_WORKER // composed state
-        }
-
-        public static CredentialsValidState GetCredentialsValidState()
-        {
-            // assume it is valid
-            var ret = CredentialsValidState.VALID;
-
-            if (!CredentialValidators.ValidateBitcoinAddress(CredentialsSettings.Instance.BitcoinAddress))
-            {
-                ret |= CredentialsValidState.INVALID_BTC;
-            }
-            if (!CredentialValidators.ValidateWorkerName(CredentialsSettings.Instance.WorkerName))
-            {
-                ret |= CredentialsValidState.INVALID_WORKER;
-            }
-
-            return ret;
-        }
 
         // execute after 5seconds. Finish execution on last event after 5seconds
         private static DelayedSingleExecActionTask _resetNiceHashStatsCredentialsDelayed = new DelayedSingleExecActionTask
@@ -109,9 +84,7 @@ namespace NHMCore
 
         static void ResetNiceHashStatsCredentials()
         {
-            // check if we have valid credentials
-            var state = GetCredentialsValidState();
-            if (state == CredentialsValidState.VALID)
+            if (CredentialsSettings.Instance.IsCredentialValid)
             {
                 // Reset credentials
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
@@ -120,6 +93,8 @@ namespace NHMCore
             else
             {
                 // TODO notify invalid credentials?? send state?
+                // login without user if credentials are invalid
+                NHWebSocket.ResetCredentials();
             }
         }
 
@@ -141,7 +116,8 @@ namespace NHMCore
             }
             if (!CredentialValidators.ValidateBitcoinAddress(btc))
             {
-                CredentialsSettings.Instance.BitcoinAddress = btc;
+                // TODO if RPC set only if valid if local then just set it
+                //CredentialsSettings.Instance.BitcoinAddress = btc;
                 return SetResult.INVALID;
             }
             await SetBTC(btc);
@@ -237,12 +213,6 @@ namespace NHMCore
             StartInternetCheckTimer();
             return true;
         }
-
-        //public static bool StartDemoMining()
-        //{
-        //    StopMinerStatsCheckTimer();
-        //    return false;
-        //}
 
         private static async Task<bool> StopMining()
         {

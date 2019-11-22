@@ -23,6 +23,7 @@ namespace NHMCore.Configs
             }
         }
 
+        // TODO move this to mining profitability settings
         private double _kwhPrice = 0;
         public double KwhPrice
         {
