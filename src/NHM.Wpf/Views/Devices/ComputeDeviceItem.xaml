@@ -88,7 +88,7 @@
                 <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{ Binding Enabled, Mode=TwoWay }"/>
 
                 <!--Play Button-->
-                <Button IsEnabled="{ Binding CanStart, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,0,0" Command="{Binding StartStopCommand}">
+                <Button IsEnabled="{ Binding CanStart, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,0,0" Click="StartStopButton">
                     <Button.Resources>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
@@ -98,7 +98,7 @@
                     <TextBlock Text="&#xF04B;"/>
                 </Button>
                 <!--Stop Button-->
-                <Button IsEnabled="{ Binding CanStop, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,16,0" Command="{Binding StartStopCommand}">
+                <Button IsEnabled="{ Binding CanStop, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,16,0" Click="StartStopButton">
                     <Button.Resources>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">

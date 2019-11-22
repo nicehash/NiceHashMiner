@@ -76,24 +76,25 @@ namespace NHM.Wpf.ViewModels
 
 
         public string PerDeviceDisplayString => $"/ {_devices?.Count() ?? 0}";
-        
-        public static BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
-        public static MiningState MiningState => MiningState.Instance;
-        public static StratumService StratumService => StratumService.Instance;
 
-        public static CredentialsSettings CredentialsSettings => CredentialsSettings.Instance;
-        public static GlobalDeviceSettings GlobalDeviceSettings => GlobalDeviceSettings.Instance;
-        public static GUISettings GUISettings => GUISettings.Instance;
-        public static IdleMiningSettings IdleMiningSettings => IdleMiningSettings.Instance;
-        public static IFTTTSettings IFTTTSettings => IFTTTSettings.Instance;
-        public static LoggingDebugConsoleSettings LoggingDebugConsoleSettings => LoggingDebugConsoleSettings.Instance;
-        public static MiningProfitSettings MiningProfitSettings => MiningProfitSettings.Instance;
-        public static MiningSettings MiningSettings => MiningSettings.Instance;
-        public static MiscSettings MiscSettings => MiscSettings.Instance;
-        public static SwitchSettings SwitchSettings => SwitchSettings.Instance;
-        public static ToSSetings ToSSetings => ToSSetings.Instance;
-        public static TranslationsSettings TranslationsSettings => TranslationsSettings.Instance;
-        public static WarningSettings WarningSettings => WarningSettings.Instance;
+        #region Exposed settings
+        public BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
+        public MiningState MiningState => MiningState.Instance;
+        public StratumService StratumService => StratumService.Instance;
+        public CredentialsSettings CredentialsSettings => CredentialsSettings.Instance;
+        public GlobalDeviceSettings GlobalDeviceSettings => GlobalDeviceSettings.Instance;
+        public GUISettings GUISettings => GUISettings.Instance;
+        public IdleMiningSettings IdleMiningSettings => IdleMiningSettings.Instance;
+        public IFTTTSettings IFTTTSettings => IFTTTSettings.Instance;
+        public LoggingDebugConsoleSettings LoggingDebugConsoleSettings => LoggingDebugConsoleSettings.Instance;
+        public MiningProfitSettings MiningProfitSettings => MiningProfitSettings.Instance;
+        public MiningSettings MiningSettings => MiningSettings.Instance;
+        public MiscSettings MiscSettings => MiscSettings.Instance;
+        public SwitchSettings SwitchSettings => SwitchSettings.Instance;
+        public ToSSetings ToSSetings => ToSSetings.Instance;
+        public TranslationsSettings TranslationsSettings => TranslationsSettings.Instance;
+        public WarningSettings WarningSettings => WarningSettings.Instance;
+        #endregion Exposed settings
 
         private string _theme = GUISettings.Instance.DisplayTheme;
         public string Theme
@@ -176,7 +177,7 @@ namespace NHM.Wpf.ViewModels
 
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
-        public double GlobalRate
+        public string GlobalRate
         {
             get
             {
@@ -192,12 +193,12 @@ namespace NHM.Wpf.ViewModels
                 {
                     ScaledBtcPerTime = BtcPerTime;
                 }
-
-                return sum / scale;
+                var ret = $"{(sum / scale):F8}";
+                return ret;
             }
         }
 
-        public double GlobalRateFiat => WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
+        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.SelectedFiatCurrency}";
 
         private double _btcBalance;
         private double BtcBalance

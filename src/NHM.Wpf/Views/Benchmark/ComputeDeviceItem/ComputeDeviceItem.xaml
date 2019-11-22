@@ -160,7 +160,7 @@
                         <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding AlgosBenchmarked}" Margin="0,0,54,0"/>
                         <CheckBox Style="{StaticResource NHMSwitch}"
                                   x:Name="EnableDisableCheckBox"
-                                  IsChecked="{Binding Dev.Enabled}"
+                                  IsChecked="{Binding Enabled}"
                                   Margin="0,0,16,0" />
                         <!--TODO add context menu and all that-->
                         <ToggleButton Style="{StaticResource MenuDropdownButton}"

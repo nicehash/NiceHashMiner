@@ -5,7 +5,6 @@ using NHMCore.ApplicationState;
 using NHMCore.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
-using NHMCore.Stats;
 using System;
 using System.Collections.Generic;
 using System.Linq;

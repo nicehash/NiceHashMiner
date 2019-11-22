@@ -30,6 +30,12 @@ namespace NHMCore.ApplicationState
             private set => _boolProps.Set(nameof(IsDemoMining), value);
         }
 
+        public bool AllDeviceEnabled
+        {
+            get => _boolProps.Get(nameof(AllDeviceEnabled));
+            private set => _boolProps.Set(nameof(AllDeviceEnabled), value);
+        }
+
         public bool AnyDeviceStopped
         {
             get => _boolProps.Get(nameof(AnyDeviceStopped));
@@ -54,6 +60,7 @@ namespace NHMCore.ApplicationState
             private set => _boolProps.Set(nameof(IsCurrentlyMining), value);
         }
 
+        #region DeviceState Counts
         public int StoppedDeviceStateCount
         {
             get => _intProps.Get(nameof(StoppedDeviceStateCount));
@@ -84,20 +91,22 @@ namespace NHMCore.ApplicationState
             get => _intProps.Get(nameof(DisabledDeviceStateCount));
             private set => _intProps.Set(nameof(DisabledDeviceStateCount), value);
         }
+        #endregion DeviceState Counts
 
         public bool MiningManuallyStarted { get; set; }
 
         // poor mans way
         public void CalculateDevicesStateChange()
         {
-            // 
+            // DeviceState Counts
             StoppedDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Stopped);
             MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining);
             BenchmarkingDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Benchmarking);
             ErrorDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Error);
             PendingDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Pending);
             DisabledDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Disabled);
-            // 
+            // Mining state
+            AllDeviceEnabled = AvailableDevices.Devices.All(dev => dev.Enabled);
             AnyDeviceStopped = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Stopped && (dev.State != DeviceState.Disabled));
             AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;

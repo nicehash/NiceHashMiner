@@ -92,7 +92,7 @@ namespace NiceHashMiner.Forms.Components
             cellItem.Value = value;
         }
 
-        private void DevicesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void DevicesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
             Console.WriteLine($"RowIndex {e.RowIndex} ColumnIndex {e.ColumnIndex}");
@@ -121,7 +121,7 @@ namespace NiceHashMiner.Forms.Components
                 case DataGridViewCheckBoxCell checkbox:
                     var deviceEnabled = checkbox.Value != null && (bool)checkbox.Value;
                     checkbox.Value = !deviceEnabled;
-                    ApplicationStateManager.SetDeviceEnabledStateGUI(this, (deviceUUID, !deviceEnabled));
+                    await ApplicationStateManager.SetDeviceEnabledState(this, (deviceUUID, !deviceEnabled));
                     break;
                 // TODO not working
                 //case DataGridViewComboBoxCell comboBox:

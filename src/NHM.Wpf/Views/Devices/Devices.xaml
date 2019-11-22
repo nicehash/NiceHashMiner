@@ -51,11 +51,12 @@
                 <!--content-->
                 <TextBlock Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
                 <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">GLOBAL RATE</TextBlock>
+                <!--TODO Bindings here are temp-->
                 <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">0.0623858</TextBlock>
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0">BTC  / 24h</TextBlock>
+                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding GlobalRate}"/>
+                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding ScaledBtcPerTime}"/>
                 </StackPanel>
-                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,78,0,0">≈ $ 4.44</TextBlock>
+                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,78,0,0" Text="{Binding GlobalRateFiat}"/>
             </Grid>
             <Grid Grid.Column="2" Margin="16,0,0,0">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
@@ -85,9 +86,12 @@
                 <RowDefinition Height="24" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" >
-                <TextBlock Text="Disable / Enable All" Style="{StaticResource BaseUbuntuTextBlockBold}" FontSize="14" Foreground="{StaticResource Gray2ColorBrush}"/>
-                <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{Binding ShowPCI, Mode=TwoWay }" Margin="24,0,0,0"/>
+            <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" >
+                <TextBlock Text="DISABLE / ENABLE ALL" Style="{StaticResource BaseUbuntuTextBlock}" FontWeight="Regular" FontSize="10" Foreground="{StaticResource TextColorBrush}"/>
+                <CheckBox Style="{StaticResource NHMSwitch}"
+                          IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }"
+                          Margin="24,0,0,0"
+                          Click="ToggleDisableEnableAllDevices"/>
             </StackPanel>
 
             <ListView Grid.Row="1" ItemsSource="{Binding Devices}" Width="Auto" Focusable="False" BorderThickness="0" >
@@ -118,7 +122,11 @@
             </Grid.ColumnDefinitions>
             <common:MiningLocation Grid.Column="0"/>
             <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button HorizontalAlignment="Right" MaxWidth="200">
+                <Button x:Name="startAllButton"
+                        HorizontalAlignment="Right"
+                        MaxWidth="200"
+                        IsEnabled="{Binding MiningState.AnyDeviceStopped}"
+                        Click="StartAllDevicesButtonClick">
                     <Button.Resources>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
@@ -130,7 +138,12 @@
                         <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="5.5,0,12.5,0">START ALL</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button Margin="16,0,0,0" MaxWidth="200" HorizontalAlignment="Right">
+                <Button x:Name="stopAllButton"
+                        Margin="16,0,0,0"
+                        MaxWidth="200"
+                        HorizontalAlignment="Right"
+                        IsEnabled="{Binding MiningState.AnyDeviceRunning}"
+                        Click="StopAllDevicesButtonClick">
                     <Button.Resources>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">

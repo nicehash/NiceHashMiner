@@ -7,8 +7,7 @@
              xmlns:localComputeDeviceItem="clr-namespace:NHM.Wpf.Views.Benchmark.ComputeDeviceItem"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid >
-
+    <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemTemplate>
@@ -18,27 +17,5 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <!--WORKS-->
-        <!--<ListView ItemsSource="{Binding Devices}" Width="Auto" Focusable="False" BorderThickness="0" HorizontalAlignment="Stretch">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    --><!--<local:ComputeDeviceElement DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" Width="Auto"/>--><!--
-                    <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" Width="Auto"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Focusable" Value="false"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{x:Null}" />
-                            <Setter Property="BorderBrush" Value="{x:Null}" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>-->
-        <!--<local:AlgorithmSettings Width="392"></local:AlgorithmSettings>-->
     </Grid>
 </UserControl>

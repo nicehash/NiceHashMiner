@@ -104,7 +104,9 @@ namespace NiceHashMiner.Forms.Components
         {
             if (e.Item.Tag is ComputeDevice cDevice)
             {
-                cDevice.Enabled = e.Item.Checked;
+                //cDevice.Enabled = e.Item.Checked; // will not work
+                var set = (cDevice.Uuid, e.Item.Checked);
+                ApplicationStateManager.SetDeviceEnabledState(this, set);
 
                 if (SaveToGeneralConfig)
                 {

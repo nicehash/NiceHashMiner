@@ -1,4 +1,3 @@
-using NHMCore.Stats;
 using NHMCore.Utils;
 using System.Diagnostics;
 using System.Threading;

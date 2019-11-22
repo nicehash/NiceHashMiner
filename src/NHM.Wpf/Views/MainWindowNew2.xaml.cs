@@ -3,6 +3,7 @@ using NHM.Wpf.Views.Common;
 using NHM.Wpf.Views.Common.NHBase;
 using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Configs.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,10 +42,19 @@ namespace NHM.Wpf.Views
             LoadingBar.Visibility = Visibility.Visible;
         }
 
+        private void GUISettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(GUISettings.GUIWindowsAlwaysOnTop))
+            {
+                this.Topmost = _vm.GUISettings.GUIWindowsAlwaysOnTop;
+            }
+        }
+
         #region Start-Loaded/Closing
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             await MainWindow_OnLoadedTask();
+            _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
         }
 
         // just in case we add more awaits this signature will await all of them
@@ -111,6 +121,7 @@ namespace NHM.Wpf.Views
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e)
         {
+            if (!_vm.GUISettings.MinimizeToTray) return;
             if (WindowState == WindowState.Minimized) // TODO && config min to tray
                 Hide();
         }
