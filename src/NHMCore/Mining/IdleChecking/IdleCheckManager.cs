@@ -42,7 +42,8 @@ namespace NHMCore.Mining.IdleChecking
             StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleTick);
         }
 
-        private static void IdleTick(object sender, IdleChangedEventArgs e)
+        // TODO create a private task and await that
+        private static async void IdleTick(object sender, IdleChangedEventArgs e)
         {
             if (MiningState.Instance.MiningManuallyStarted || !ConfigManager.GeneralConfig.StartMiningWhenIdle)
                 return;
@@ -57,7 +58,7 @@ namespace NHMCore.Mining.IdleChecking
             }
             else if (MiningState.Instance.IsCurrentlyMining)
             {
-                ApplicationStateManager.StopAllDevice();
+                await ApplicationStateManager.StopAllDevice();
                 Logger.Info("IDLECHECK", "Resumed from idling");
             }
         }
