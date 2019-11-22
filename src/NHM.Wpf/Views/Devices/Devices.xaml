@@ -86,8 +86,8 @@
                 <RowDefinition Height="24" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" >
-                <TextBlock Text="Disable / Enable All" Style="{StaticResource BaseUbuntuTextBlockBold}" FontSize="14" Foreground="{StaticResource Gray2ColorBrush}"/>
+            <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" >
+                <TextBlock Text="DISABLE / ENABLE ALL" Style="{StaticResource BaseUbuntuTextBlock}" FontWeight="Regular" FontSize="10" Foreground="{StaticResource TextColorBrush}"/>
                 <CheckBox Style="{StaticResource NHMSwitch}"
                           IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }"
                           Margin="24,0,0,0"
