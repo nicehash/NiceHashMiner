@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.SettingsNew"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="800">
+             d:DesignHeight="30" d:DesignWidth="400">
     <!--TODO style the description-->
     <!--TODO ToggleButton On UserControl -->
     <StackPanel Orientation="Horizontal"

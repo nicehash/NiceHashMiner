@@ -121,9 +121,6 @@
     <Compile Include="Views\Benchmark\Benchmarks.xaml.cs">
       <DependentUpon>Benchmarks.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Benchmark\ComputeDeviceElement.xaml.cs">
-      <DependentUpon>ComputeDeviceElement.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItem.xaml.cs">
       <DependentUpon>AlgorithmItem.xaml</DependentUpon>
     </Compile>
@@ -354,10 +351,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Benchmark\Benchmarks.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\ComputeDeviceElement.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
