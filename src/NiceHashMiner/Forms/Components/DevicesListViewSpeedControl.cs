@@ -53,14 +53,14 @@ namespace NiceHashMiner.Forms.Components
 
         private static bool ShowPowerCols
         {
-            get => ConfigManager.GeneralConfig.ShowPowerColumns;
-            set => ConfigManager.GeneralConfig.ShowPowerColumns = value;
+            get => GUISettings.Instance.ShowPowerColumns;
+            set => GUISettings.Instance.ShowPowerColumns = value;
         }
 
         private static bool ShowDiagCols
         {
-            get => ConfigManager.GeneralConfig.ShowDiagColumns;
-            set => ConfigManager.GeneralConfig.ShowDiagColumns = value;
+            get => GUISettings.Instance.ShowDiagColumns;
+            set => GUISettings.Instance.ShowDiagColumns = value;
         }
 
         public void SetIsMining(bool isMining)
@@ -450,7 +450,7 @@ namespace NiceHashMiner.Forms.Components
 
         private static string FormatPerTimeUnit(string unit)
         {
-            var timeUnit = Translations.Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+            var timeUnit = Translations.Tr(GUISettings.Instance.TimeUnit.ToString());
             return $"{unit}/{timeUnit}";
         }
         

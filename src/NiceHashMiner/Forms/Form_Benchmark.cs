@@ -38,7 +38,7 @@ namespace NiceHashMiner.Forms
             algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
 
             Icon = NHMCore.Properties.Resources.logo;
-            this.TopMost = NHMCore.Configs.ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
+            this.TopMost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
 
             // clear prev pending statuses
             foreach (var dev in AvailableDevices.Devices)

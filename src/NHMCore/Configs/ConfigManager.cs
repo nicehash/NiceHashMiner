@@ -265,5 +265,10 @@ namespace NHMCore.Configs
         {
             GeneralConfig.SetDefaults();
         }
+
+        public static void FixSettingBounds()
+        {
+            GeneralConfig.FixSettingBounds();
+        }
     }
 }

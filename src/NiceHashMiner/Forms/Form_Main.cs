@@ -43,7 +43,7 @@ namespace NiceHashMiner
         {
             get
             {
-                var timeUnit = ConfigManager.GeneralConfig.TimeUnit.ToString();
+                var timeUnit = GUISettings.Instance.TimeUnit.ToString();
                 var currency = BalanceAndExchangeRates.Instance.SelectedFiatCurrency;
                 return (currency + "/") + Translations.Tr(timeUnit) + "     " + Translations.Tr("Balance") + ":";
             }
@@ -57,13 +57,13 @@ namespace NiceHashMiner
             errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
             labelWarningNotProfitableOrNoIntenret.Visible = false;
             InitElevationWarning();
-            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
+            this.TopMost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
             FormHelpers.SubscribeAllControls(this);
 
-            Width = ConfigManager.GeneralConfig.MainFormSize.X;
-            Height = ConfigManager.GeneralConfig.MainFormSize.Y;
+            Width = GUISettings.Instance.MainFormSize.X;
+            Height = GUISettings.Instance.MainFormSize.Y;
 
             Text = ApplicationStateManager.Title;
 
@@ -99,7 +99,7 @@ namespace NiceHashMiner
 
         private void InitDataBindings()
         {
-            comboBoxLocation.DataBindings.Add("SelectedIndex", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ServiceLocation), false, DataSourceUpdateMode.OnPropertyChanged);
+            comboBoxLocation.DataBindings.Add("SelectedIndex", StratumService.Instance, nameof(StratumService.Instance.ServiceLocation), false, DataSourceUpdateMode.OnPropertyChanged);
             textBoxBTCAddress.DataBindings.AddSafeBinding("Text", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.BitcoinAddress), false, DataSourceUpdateMode.OnPropertyChanged);
             textBoxWorkerName.DataBindings.AddSafeBinding("Text", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.WorkerName), false, DataSourceUpdateMode.OnPropertyChanged);
 
@@ -187,7 +187,7 @@ namespace NiceHashMiner
             //??? doesn't get translated if we don't translate it directly????
             toolStripStatusLabelGlobalRateText.Text = Tr("Global rate:");
             toolStripStatusLabelBTCDayText.Text =
-                "BTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                "BTC/" + Tr(GUISettings.Instance.TimeUnit.ToString());
             toolStripStatusLabelBalanceText.Text = LabelBalanceText;
 
             devicesListViewEnableControl1.InitLocale();
@@ -216,7 +216,7 @@ namespace NiceHashMiner
 
         private void InitElevationWarning()
         {
-            if (!Helpers.IsElevated && !ConfigManager.GeneralConfig.DisableDevicePowerModeSettings)
+            if (!Helpers.IsElevated && !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
             {
                 errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
                 linkLabelAdminPrivs.Click += (s, e) =>
@@ -251,7 +251,7 @@ namespace NiceHashMiner
         // TODO this has nothing to do with Mian_Form
         private async void IdleCheck(object sender, IdleChangedEventArgs e)
         {
-            if (!ConfigManager.GeneralConfig.StartMiningWhenIdle || _isManuallyStarted) return;
+            if (!IdleMiningSettings.Instance.StartMiningWhenIdle || _isManuallyStarted) return;
 
             // TODO set is mining here
             if (MiningState.Instance.IsCurrentlyMining)
@@ -323,7 +323,7 @@ namespace NiceHashMiner
             textBoxBTCAddress_Validate();
             textBoxWorkerName_Validate();
 
-            if (ConfigManager.GeneralConfig.AutoStartMining)
+            if (MiningSettings.Instance.AutoStartMining)
             {
                 // well this is started manually as we want it to start at runtime
                 _isManuallyStarted = true;
@@ -342,9 +342,9 @@ namespace NiceHashMiner
         private void UpdateGlobalRate(double totalRate)
         {
             var factorTimeUnit = TimeFactor.TimeUnit;
-            var scaleBTC = ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1;
+            var scaleBTC = GUISettings.Instance.AutoScaleBTCValues && totalRate < 0.1;
             var totalDisplayRate = totalRate * factorTimeUnit * (scaleBTC ? 1000 : 1);
-            var displayTimeUnit = Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+            var displayTimeUnit = Tr(GUISettings.Instance.TimeUnit.ToString());
 
             toolStripStatusLabelBTCDayText.Text = scaleBTC ? $"mBTC/{displayTimeUnit}" : $"BTC/{displayTimeUnit}";
             toolStripStatusLabelGlobalRateValue.Text = totalDisplayRate.ToString(scaleBTC ? "F5" : "F8", CultureInfo.InvariantCulture);
@@ -374,7 +374,7 @@ namespace NiceHashMiner
 
         private void ConnectionLostCallback(object sender, EventArgs e)
         {
-            if (!NHSmaData.HasData && ConfigManager.GeneralConfig.ShowInternetConnectionWarning &&
+            if (!NHSmaData.HasData && WarningSettings.Instance.ShowInternetConnectionWarning &&
                 _showWarningNiceHashData)
             {
                 _showWarningNiceHashData = false;
@@ -456,7 +456,7 @@ namespace NiceHashMiner
             }
             InitMainConfigGuiData();
             // TODO check this later
-            IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
+            IdleCheckManager.StartIdleCheck(IdleMiningSettings.Instance.IdleCheckType, IdleCheck);
         }
 
         private async void ButtonStartMining_Click(object sender, EventArgs e)
@@ -574,8 +574,8 @@ namespace NiceHashMiner
 
         private void Form_Main_ResizeEnd(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.MainFormSize.X = Width;
-            ConfigManager.GeneralConfig.MainFormSize.Y = Height;
+            GUISettings.Instance.MainFormSize.X = Width;
+            GUISettings.Instance.MainFormSize.Y = Height;
         }
 
         // StateDisplay interfaces
@@ -594,7 +594,7 @@ namespace NiceHashMiner
         {
             FormHelpers.SafeInvoke(this, () =>
             {
-                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && btcBalance < 0.1)
+                if (GUISettings.Instance.AutoScaleBTCValues && btcBalance < 0.1)
                 {
                     toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
                     toolStripStatusLabelBalanceBTCValue.Text =
@@ -681,7 +681,7 @@ namespace NiceHashMiner
         // Minimize to system tray if MinimizeToTray is set to true
         private void Form1_Resize(object sender, EventArgs e)
         {
-            if (ConfigManager.GeneralConfig.MinimizeToTray && FormWindowState.Minimized == WindowState)
+            if (GUISettings.Instance.MinimizeToTray && FormWindowState.Minimized == WindowState)
             {
                 notifyIcon1.Visible = true;
                 Hide();
@@ -698,8 +698,8 @@ namespace NiceHashMiner
 
         private async void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing && 
-                ConfigManager.GeneralConfig.MinimizeToTray && 
+            if (e.CloseReason == CloseReason.UserClosing &&
+                GUISettings.Instance.MinimizeToTray && 
                 !_exitCalled)
             {
                 notifyIcon1.Visible = true;
@@ -718,7 +718,7 @@ namespace NiceHashMiner
 
         void IMiningProfitabilityDisplayer.DisplayMiningProfitable(object sender, bool isProfitable)
         {
-            if (ConfigManager.GeneralConfig.UseIFTTT)
+            if (IFTTTSettings.Instance.UseIFTTT)
             {
                 if (isProfitable)
                 {

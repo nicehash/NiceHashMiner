@@ -31,7 +31,7 @@ namespace NiceHashMiner.Forms
             ApplicationStateManager.SubscribeStateDisplayer(this);
 
             Icon = NHMCore.Properties.Resources.logo;
-            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
+            this.TopMost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
 
             // backup settings
             ConfigManager.CreateBackup();
@@ -39,46 +39,46 @@ namespace NiceHashMiner.Forms
             // Initialize tabs
             InitializeGeneralTab();
 
-            checkBox_DebugConsole.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DebugConsole));
-            checkBox_AutoStartMining.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AutoStartMining));
-            checkBox_HideMiningWindows.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.HideMiningWindows));
-            checkBox_MinimizeToTray.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.MinimizeToTray));
-            checkBox_AutoScaleBTCValues.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AutoScaleBTCValues), false, DataSourceUpdateMode.OnPropertyChanged);
-            checkBox_ShowDriverVersionWarning.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowDriverVersionWarning));
-            checkBox_DisableWindowsErrorReporting.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableWindowsErrorReporting));
-            checkBox_ShowInternetConnectionWarning.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowInternetConnectionWarning));
-            checkBox_NVIDIAP0State.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.NVIDIAP0State));
-            checkBox_LogToFile.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.LogToFile));
-            checkBox_AllowMultipleInstances.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AllowMultipleInstances));
-            checkBox_WindowAlwaysOnTop.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop));
-            checkBox_MinimizeMiningWindows.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.MinimizeMiningWindows));
-            checkBox_RunScriptOnCUDA_GPU_Lost.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost));
-            checkBox_RunAtStartup.DataBindings.Add("Checked", ConfigManager.RunAtStartup , nameof(ConfigManager.RunAtStartup.Enabled));
+            checkBox_DebugConsole.DataBindings.Add("Checked", LoggingDebugConsoleSettings.Instance, nameof(LoggingDebugConsoleSettings.Instance.DebugConsole));
+            checkBox_AutoStartMining.DataBindings.Add("Checked", MiningSettings.Instance, nameof(MiningSettings.Instance.AutoStartMining));
+            checkBox_HideMiningWindows.DataBindings.Add("Checked", MiningSettings.Instance, nameof(MiningSettings.Instance.HideMiningWindows));
+            checkBox_MinimizeToTray.DataBindings.Add("Checked", GUISettings.Instance, nameof(GUISettings.Instance.MinimizeToTray));
+            checkBox_AutoScaleBTCValues.DataBindings.Add("Checked", GUISettings.Instance, nameof(GUISettings.Instance.AutoScaleBTCValues), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_ShowDriverVersionWarning.DataBindings.Add("Checked", WarningSettings.Instance, nameof(WarningSettings.Instance.ShowDriverVersionWarning));
+            checkBox_DisableWindowsErrorReporting.DataBindings.Add("Checked", WarningSettings.Instance, nameof(WarningSettings.Instance.DisableWindowsErrorReporting));
+            checkBox_ShowInternetConnectionWarning.DataBindings.Add("Checked", WarningSettings.Instance, nameof(WarningSettings.Instance.ShowInternetConnectionWarning));
+            checkBox_NVIDIAP0State.DataBindings.Add("Checked", MiningSettings.Instance, nameof(MiningSettings.Instance.NVIDIAP0State));
+            checkBox_LogToFile.DataBindings.Add("Checked", LoggingDebugConsoleSettings.Instance, nameof(LoggingDebugConsoleSettings.Instance.LogToFile));
+            checkBox_AllowMultipleInstances.DataBindings.Add("Checked", MiscSettings.Instance, nameof(MiscSettings.Instance.AllowMultipleInstances));
+            checkBox_WindowAlwaysOnTop.DataBindings.Add("Checked", GUISettings.Instance, nameof(GUISettings.Instance.GUIWindowsAlwaysOnTop));
+            checkBox_MinimizeMiningWindows.DataBindings.Add("Checked", MiningSettings.Instance, nameof(MiningSettings.Instance.MinimizeMiningWindows));
+            checkBox_RunScriptOnCUDA_GPU_Lost.DataBindings.Add("Checked", GlobalDeviceSettings.Instance, nameof(GlobalDeviceSettings.Instance.RunScriptOnCUDA_GPU_Lost));
+            checkBox_RunAtStartup.DataBindings.Add("Checked", MiscSettings.Instance, nameof(MiscSettings.Instance.RunAtStartup));
 
-            checkBox_ShowGPUPCIeBusIDs.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs));
+            checkBox_ShowGPUPCIeBusIDs.DataBindings.Add("Checked", GlobalDeviceSettings.Instance, nameof(GlobalDeviceSettings.Instance.ShowGPUPCIeBusIDs));
 
             checkBox_MineRegardlessOfProfit.DataBindings.Add("Checked", MiningProfitSettings.Instance, nameof(MiningProfitSettings.MineRegardlessOfProfit), false, DataSourceUpdateMode.OnPropertyChanged);
             textBox_MinProfit.DataBindings.Add("Enabled", MiningProfitSettings.Instance, nameof(MiningProfitSettings.IsMinimumProfitProfitEnabled), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            checkBox_DisableDeviceStatusMonitoring.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring));
-            checkBox_DisableDevicePowerModeSettings.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDevicePowerModeSettings));
+            checkBox_DisableDeviceStatusMonitoring.DataBindings.Add("Checked", GlobalDeviceSettings.Instance, nameof(GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring));
+            checkBox_DisableDevicePowerModeSettings.DataBindings.Add("Checked", GlobalDeviceSettings.Instance, nameof(GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings));
 
             // idle mining
-            checkBox_IdleWhenNoInternetAccess.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IdleWhenNoInternetAccess));
-            checkBox_StartMiningWhenIdle.DataBindings.Add("Checked", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.StartMiningWhenIdle), false, DataSourceUpdateMode.OnPropertyChanged);
-            comboBox_IdleType.DataBindings.Add("Enabled", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.StartMiningWhenIdle), false, DataSourceUpdateMode.OnPropertyChanged);
-            comboBox_IdleType.DataBindings.Add("SelectedIndex", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.IdleCheckTypeIndex), false, DataSourceUpdateMode.OnPropertyChanged);
-            textBox_MinIdleSeconds.DataBindings.Add("Enabled", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.IsIdleCheckTypeInputTimeout), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_IdleWhenNoInternetAccess.DataBindings.Add("Checked", IdleMiningSettings.Instance, nameof(IdleMiningSettings.Instance.IdleWhenNoInternetAccess));
+            checkBox_StartMiningWhenIdle.DataBindings.Add("Checked", IdleMiningSettings.Instance, nameof(IdleMiningSettings.Instance.StartMiningWhenIdle), false, DataSourceUpdateMode.OnPropertyChanged);
+            comboBox_IdleType.DataBindings.Add("Enabled", IdleMiningSettings.Instance, nameof(IdleMiningSettings.Instance.StartMiningWhenIdle), false, DataSourceUpdateMode.OnPropertyChanged);
+            comboBox_IdleType.DataBindings.Add("SelectedIndex", IdleMiningSettings.Instance, nameof(IdleMiningSettings.Instance.IdleCheckTypeIndex), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_MinIdleSeconds.DataBindings.Add("Enabled", IdleMiningSettings.Instance, nameof(IdleMiningSettings.Instance.IsIdleCheckTypeInputTimeout), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // comboBox indexes
-            comboBox_Language.DataBindings.Add("SelectedIndex", ConfigManager.TranslationsSettings, nameof(ConfigManager.TranslationsSettings.LanguageIndex), false, DataSourceUpdateMode.OnPropertyChanged);
+            comboBox_Language.DataBindings.Add("SelectedIndex", TranslationsSettings.Instance, nameof(TranslationsSettings.Instance.LanguageIndex), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // IFTTT textbox
-            checkBox_UseIFTTT.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
-            textBox_IFTTTKey.DataBindings.Add("Enabled", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
-            textBox_IFTTTKey.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IFTTTKey), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_UseIFTTT.DataBindings.Add("Checked", IFTTTSettings.Instance, nameof(IFTTTSettings.Instance.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_IFTTTKey.DataBindings.Add("Enabled", IFTTTSettings.Instance, nameof(IFTTTSettings.Instance.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_IFTTTKey.DataBindings.Add("Text", IFTTTSettings.Instance, nameof(IFTTTSettings.Instance.IFTTTKey), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            checkBox_RunEthlargement.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseEthlargement), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_RunEthlargement.DataBindings.Add("Checked", MiscSettings.Instance, nameof(MiscSettings.Instance.UseEthlargement), false, DataSourceUpdateMode.OnPropertyChanged);
             checkBox_RunEthlargement.Enabled = true;
 
             //checkBox_RunEthlargement.CheckedChanged += CheckBox_RunEthlargement_CheckedChanged;
@@ -269,25 +269,25 @@ namespace NiceHashMiner.Forms
         {
             // Checkboxes set checked value
             {
-                checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
+                checkBox_RunEthlargement.Checked = MiscSettings.Instance.UseEthlargement;
             }
 
             // Textboxes
             {
-                textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
-                textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
-                textBox_MinerAPIQueryInterval.Text = ConfigManager.GeneralConfig.MinerAPIQueryInterval.ToString();
-                textBox_MinerRestartDelayMS.Text = ConfigManager.GeneralConfig.MinerRestartDelayMS.ToString();
-                textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
-                textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
+                textBox_SwitchMaxSeconds.Text = SwitchSettings.Instance.SwitchSmaTimeChangeSeconds.Upper.ToString();
+                textBox_SwitchMinSeconds.Text = SwitchSettings.Instance.SwitchSmaTimeChangeSeconds.Lower.ToString();
+                textBox_MinerAPIQueryInterval.Text = MiningSettings.Instance.MinerAPIQueryInterval.ToString();
+                textBox_MinerRestartDelayMS.Text = MiningSettings.Instance.MinerRestartDelayMS.ToString();
+                textBox_MinIdleSeconds.Text = IdleMiningSettings.Instance.MinIdleSeconds.ToString();
+                textBox_LogMaxFileSize.Text = LoggingDebugConsoleSettings.Instance.LogMaxFileSize.ToString();
                 //textBox_ethminerDefaultBlockHeight.Text =
                 //    ConfigManager.GeneralConfig.ethminerDefaultBlockHeight.ToString();
-                textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
+                textBox_APIBindPortStart.Text = MiningSettings.Instance.ApiBindPortPoolStart.ToString();
                 textBox_MinProfit.Text =
-                    ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
-                textBox_SwitchProfitabilityThreshold.Text = ConfigManager.GeneralConfig.SwitchProfitabilityThreshold
+                    MiningProfitSettings.Instance.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
+                textBox_SwitchProfitabilityThreshold.Text = SwitchSettings.Instance.SwitchProfitabilityThreshold
                     .ToString("F2").Replace(',', '.'); // force comma;
-                textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
+                textBox_ElectricityCost.Text = SwitchSettings.Instance.KwhPrice.ToString("0.0000");
             }
 
             // Add language selections list
@@ -314,11 +314,11 @@ namespace NiceHashMiner.Forms
 
             // ComboBox
             {
-                comboBox_Language.SelectedIndex = GetLanguageIndexFromCode(ConfigManager.GeneralConfig.Language);
+                comboBox_Language.SelectedIndex = GetLanguageIndexFromCode(GUISettings.Instance.Language);
 
 
-                comboBox_TimeUnit.SelectedItem = Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
+                comboBox_TimeUnit.SelectedItem = Tr(GUISettings.Instance.TimeUnit.ToString());
+                currencyConverterCombobox.SelectedItem = GUISettings.Instance.DisplayCurrency;
             }
         }
 
@@ -340,46 +340,46 @@ namespace NiceHashMiner.Forms
         private void GeneralTextBoxes_Leave(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            
-            ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper =
+
+            SwitchSettings.Instance.SwitchSmaTimeChangeSeconds.Upper =
                 Helpers.ParseInt(textBox_SwitchMaxSeconds.Text);
-            ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower = Helpers.ParseInt(textBox_SwitchMinSeconds.Text);
-            ConfigManager.GeneralConfig.MinerAPIQueryInterval = Helpers.ParseInt(textBox_MinerAPIQueryInterval.Text);
-            ConfigManager.GeneralConfig.MinerRestartDelayMS = Helpers.ParseInt(textBox_MinerRestartDelayMS.Text);
-            ConfigManager.GeneralConfig.MinIdleSeconds = Helpers.ParseInt(textBox_MinIdleSeconds.Text);
-            ConfigManager.GeneralConfig.LogMaxFileSize = Helpers.ParseLong(textBox_LogMaxFileSize.Text);
+            SwitchSettings.Instance.SwitchSmaTimeChangeSeconds.Lower = Helpers.ParseInt(textBox_SwitchMinSeconds.Text);
+            MiningSettings.Instance.MinerAPIQueryInterval = Helpers.ParseInt(textBox_MinerAPIQueryInterval.Text);
+            MiningSettings.Instance.MinerRestartDelayMS = Helpers.ParseInt(textBox_MinerRestartDelayMS.Text);
+            IdleMiningSettings.Instance.MinIdleSeconds = Helpers.ParseInt(textBox_MinIdleSeconds.Text);
+            LoggingDebugConsoleSettings.Instance.LogMaxFileSize = Helpers.ParseLong(textBox_LogMaxFileSize.Text);
             //ConfigManager.GeneralConfig.ethminerDefaultBlockHeight =
             //    Helpers.ParseInt(textBox_ethminerDefaultBlockHeight.Text);
-            ConfigManager.GeneralConfig.ApiBindPortPoolStart = Helpers.ParseInt(textBox_APIBindPortStart.Text);
+            MiningSettings.Instance.ApiBindPortPoolStart = Helpers.ParseInt(textBox_APIBindPortStart.Text);
             // min profit
-            ConfigManager.GeneralConfig.MinimumProfit = Helpers.ParseDouble(textBox_MinProfit.Text);
-            ConfigManager.GeneralConfig.SwitchProfitabilityThreshold =
+            MiningProfitSettings.Instance.MinimumProfit = Helpers.ParseDouble(textBox_MinProfit.Text);
+            SwitchSettings.Instance.SwitchProfitabilityThreshold =
                 Helpers.ParseDouble(textBox_SwitchProfitabilityThreshold.Text);
 
-            ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
+            SwitchSettings.Instance.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
 
             // Fix bounds
-            ConfigManager.GeneralConfig.FixSettingBounds();
+            ConfigManager.FixSettingBounds();
             // update strings
             textBox_MinProfit.Text =
-                ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma
-            textBox_SwitchProfitabilityThreshold.Text = ConfigManager.GeneralConfig.SwitchProfitabilityThreshold
+                MiningProfitSettings.Instance.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma
+            textBox_SwitchProfitabilityThreshold.Text = SwitchSettings.Instance.SwitchProfitabilityThreshold
                 .ToString("F2").Replace(',', '.'); // force comma
-            textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
-            textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
-            textBox_MinerAPIQueryInterval.Text = ConfigManager.GeneralConfig.MinerAPIQueryInterval.ToString();
-            textBox_MinerRestartDelayMS.Text = ConfigManager.GeneralConfig.MinerRestartDelayMS.ToString();
-            textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
-            textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
+            textBox_SwitchMaxSeconds.Text = SwitchSettings.Instance.SwitchSmaTimeChangeSeconds.Upper.ToString();
+            textBox_SwitchMinSeconds.Text = SwitchSettings.Instance.SwitchSmaTimeChangeSeconds.Lower.ToString();
+            textBox_MinerAPIQueryInterval.Text = MiningSettings.Instance.MinerAPIQueryInterval.ToString();
+            textBox_MinerRestartDelayMS.Text = MiningSettings.Instance.MinerRestartDelayMS.ToString();
+            textBox_MinIdleSeconds.Text = IdleMiningSettings.Instance.MinIdleSeconds.ToString();
+            textBox_LogMaxFileSize.Text = LoggingDebugConsoleSettings.Instance.LogMaxFileSize.ToString();
             //textBox_ethminerDefaultBlockHeight.Text = ConfigManager.GeneralConfig.ethminerDefaultBlockHeight.ToString();
-            textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
-            textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
+            textBox_APIBindPortStart.Text = MiningSettings.Instance.ApiBindPortPoolStart.ToString();
+            textBox_ElectricityCost.Text = SwitchSettings.Instance.KwhPrice.ToString("0.0000");
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
+            GUISettings.Instance.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
         }
 
 #endregion //Tab General
@@ -401,7 +401,7 @@ namespace NiceHashMiner.Forms
             {
                 SetDefaults = true;
                 Translations.SelectedLanguage = "en";
-                ConfigManager.GeneralConfig.SetDefaults();
+                ConfigManager.SetDefaults();
                 InitializeGeneralTabFieldValuesReferences();
                 InitializeGeneralTabTranslations();
                 Close();
@@ -429,7 +429,7 @@ namespace NiceHashMiner.Forms
         private void CurrencyConverterCombobox_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selected = currencyConverterCombobox.SelectedItem.ToString();
-            ConfigManager.GeneralConfig.DisplayCurrency = selected;
+            GUISettings.Instance.DisplayCurrency = selected;
         }
 
 #endregion Form Callbacks

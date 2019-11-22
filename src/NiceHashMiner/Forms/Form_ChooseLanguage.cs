@@ -26,7 +26,7 @@ namespace NiceHashMiner.Forms
 
         private void Button_OK_Click(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.Language = Translations.GetLanguageCodeFromIndex(comboBox_Languages.SelectedIndex);
+            GUISettings.Instance.Language = Translations.GetLanguageCodeFromIndex(comboBox_Languages.SelectedIndex);
             ConfigManager.GeneralConfigFileCommit();
             Close();
         }
