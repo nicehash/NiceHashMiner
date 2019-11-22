@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace NHM.Wpf.ViewModels.Models
@@ -93,14 +94,10 @@ namespace NHM.Wpf.ViewModels.Models
             }
         }
 
-        public ICommand StartStopCommand { get; }
-
         public DeviceData(ComputeDevice dev)
         {
             AlgoNames = dev.AlgorithmSettings.Select(a => a.AlgorithmName).ToList();
             Dev = dev;
-
-            StartStopCommand = new BaseCommand(StartStopClick);
 
             Dev.PropertyChanged += DevOnPropertyChanged;
 
@@ -185,16 +182,16 @@ namespace NHM.Wpf.ViewModels.Models
             Dev.OnPropertyChanged(nameof(Dev.FanSpeed));
         }
 
-        private void StartStopClick(object param)
+        public async Task StartStopClick()
         {
             switch (Dev.State)
             {
                 case DeviceState.Stopped:
-                    ApplicationStateManager.StartSingleDevicePublic(Dev);
+                    await ApplicationStateManager.StartSingleDevicePublic(Dev);
                     break;
                 case DeviceState.Mining:
                 case DeviceState.Benchmarking:
-                    ApplicationStateManager.StopSingleDevicePublic(Dev);
+                    await ApplicationStateManager.StopSingleDevicePublic(Dev);
                     break;
             }
         }

@@ -22,6 +22,7 @@ namespace NHM.Wpf.Views.Devices
     /// </summary>
     public partial class ComputeDeviceItem : UserControl
     {
+        private DeviceData _deviceData;
         public ComputeDeviceItem()
         {
             InitializeComponent();
@@ -32,10 +33,17 @@ namespace NHM.Wpf.Views.Devices
         private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             
-            if (DataContext is object == false)
+            if (DataContext is DeviceData dd)
             {
-                throw new Exception("ComputeDeviceItem DataContext must implement ComputeDeviceItemData");
+                _deviceData = dd;
+                return;
             }
+            throw new Exception("ComputeDeviceItem DataContext be of type DeviceData");
+        }
+
+        private async void StartStopButton(object sender, RoutedEventArgs e)
+        {
+            await _deviceData?.StartStopClick();
         }
     }
 }

@@ -182,10 +182,11 @@ namespace NHMCore
             return (started, failReason);
         }
 
-        public static bool StartSingleDevicePublic(ComputeDevice device)
+        public static async Task<bool> StartSingleDevicePublic(ComputeDevice device)
         {
             if (device.IsPendingChange) return false;
             StartDevice(device);
+            await StartMiningTaskWait();
             return true;
         }
 
@@ -280,10 +281,10 @@ namespace NHMCore
             return (stopped, failReason);
         }
 
-        public static bool StopSingleDevicePublic(ComputeDevice device)
+        public static async Task<bool> StopSingleDevicePublic(ComputeDevice device)
         {
             if (device.IsPendingChange) return false;
-            StopDevice(device);
+            await StopDevice(device);
             return true;
         }
 
