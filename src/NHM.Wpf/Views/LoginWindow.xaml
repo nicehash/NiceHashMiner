@@ -26,7 +26,7 @@
         <TextBlock Height="21" Width="152" Margin="0,40,0,0" TextAlignment="Center" FontSize="14">
             <Hyperlink NavigateUri="https://www.nicehash.com/my/register" Foreground="#cecdcd" TextDecorations="{x:Null}" Click="Register_OnClick">Register a New Account</Hyperlink>
         </TextBlock>
-        <TextBlock Height="21" Width="170" Margin="0,16,0,0" TextAlignment="Center" FontSize="14">
+        <TextBlock Height="21" Width="200" Margin="0,16,0,0" TextAlignment="Center" FontSize="14">
             <Hyperlink Foreground="#fba342" TextDecorations="{x:Null}" Click="ManuallyEnterBtc_OnClick">Enter Bitcoin Address Manually</Hyperlink>
         </TextBlock>
         <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{StaticResource NHMSwitchTheme}" Margin="0,0,10,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />

@@ -20,7 +20,7 @@ namespace NHM.Wpf.Views.PluginsNew.PluginItem
     /// <summary>
     /// Interaction logic for PluginItem.xaml
     /// </summary>
-    public partial class PluginItem : UserControl
+    public partial class PluginItem : UserControl, IThemeSetter
     {
         private PluginEntryVM _vm;
         public PluginItem()
@@ -91,6 +91,12 @@ namespace NHM.Wpf.Views.PluginsNew.PluginItem
         private void Button_Click_Uninstall(object sender, RoutedEventArgs e)
         {
             _vm.UninstallPlugin();
+        }
+
+        void IThemeSetter.SetTheme(string theme)
+        {
+            var windowBackground = theme != "Light" ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(1, 13, 21)) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
+            Background = windowBackground;
         }
     }
 }

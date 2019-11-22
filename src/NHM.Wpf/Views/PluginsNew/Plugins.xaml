@@ -7,7 +7,7 @@
              xmlns:localPluginItem="clr-namespace:NHM.Wpf.Views.PluginsNew.PluginItem"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid  Background="White" Width="Auto" Height="Auto">
+    <Grid Width="Auto" Height="Auto">
 
         <Grid Margin="40,10,40,40">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
