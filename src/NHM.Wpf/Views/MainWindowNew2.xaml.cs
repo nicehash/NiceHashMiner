@@ -42,11 +42,11 @@ namespace NHM.Wpf.Views
             LoadingBar.Visibility = Visibility.Visible;
         }
 
-        private void GeneralConfig_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void GUISettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(GeneralConfig.GUIWindowsAlwaysOnTop))
+            if (e.PropertyName == nameof(GUISettings.GUIWindowsAlwaysOnTop))
             {
-                this.Topmost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
+                this.Topmost = _vm.GUISettings.GUIWindowsAlwaysOnTop;
             }
         }
 
@@ -54,7 +54,7 @@ namespace NHM.Wpf.Views
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             await MainWindow_OnLoadedTask();
-            ConfigManager.GeneralConfig.PropertyChanged += GeneralConfig_PropertyChanged;
+            _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
         }
 
         // just in case we add more awaits this signature will await all of them
@@ -121,7 +121,7 @@ namespace NHM.Wpf.Views
 
         private void MainWindow_OnStateChanged(object sender, EventArgs e)
         {
-            if (!ConfigManager.GeneralConfig.MinimizeToTray) return;
+            if (!_vm.GUISettings.MinimizeToTray) return;
             if (WindowState == WindowState.Minimized) // TODO && config min to tray
                 Hide();
         }

@@ -31,13 +31,13 @@ namespace NHMCore.Benchmarking
         /// This is a minimum number of <see cref="MiningSpeed"/> elements, required for deviant checking
         /// Each element is generated every 5 seconds, therefore 36 is 3 minutes of data
         /// </summary>
-        private static int DeviantCap => (60 / Configs.ConfigManager.GeneralConfig.MinerAPIQueryInterval) * 3;
+        private static int DeviantCap => (60 / Configs.MiningSettings.Instance.MinerAPIQueryInterval) * 3;
 
         /// <summary>
         /// This is our max number of <see cref="MiningSpeed"/> elements that we use to analyze.
         /// Equals 10 min of speed data comming every 5 seconds.
         /// </summary>
-        private static int MaxHistory => (MaxHistoryTimeRangeInMinutes * 60) / Configs.ConfigManager.GeneralConfig.MinerAPIQueryInterval;
+        private static int MaxHistory => (MaxHistoryTimeRangeInMinutes * 60) / Configs.MiningSettings.Instance.MinerAPIQueryInterval;
 
         // SpeedID => {DeviceUUID}-{AlgorithmUUID}
 

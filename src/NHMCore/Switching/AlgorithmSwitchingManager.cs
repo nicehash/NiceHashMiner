@@ -29,9 +29,9 @@ namespace NHMCore.Switching
         private double _smaCheckTime = 1;
 
         // Simplify accessing config objects
-        public static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
-        public static Interval UnstableRange => ConfigManager.GeneralConfig.SwitchSmaTicksUnstable;
-        public static Interval SmaCheckRange => ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds;
+        public static Interval StableRange => SwitchSettings.Instance.SwitchSmaTicksStable;
+        public static Interval UnstableRange => SwitchSettings.Instance.SwitchSmaTicksUnstable;
+        public static Interval SmaCheckRange => SwitchSettings.Instance.SwitchSmaTimeChangeSeconds;
 
         public static int MaxHistory => Math.Max(StableRange.Upper, UnstableRange.Upper);
 

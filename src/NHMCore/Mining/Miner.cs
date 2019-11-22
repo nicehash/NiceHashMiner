@@ -208,7 +208,7 @@ namespace NHMCore.Mining
                 Logger.Debug(MinerTag(), "AFTER Stopping");
                 if (EndMiner.IsCancellationRequested) return;
                 // wait before going on // TODO state right here
-                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
+                await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, EndMiner.Token);
             }
             catch (Exception e)
             {
@@ -224,7 +224,7 @@ namespace NHMCore.Mining
                 if (IsRunning) return;
                 if (EndMiner.IsCancellationRequested) return;
                 // Wait before new start
-                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
+                await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, EndMiner.Token);
                 if (EndMiner.IsCancellationRequested) return;
                 Logger.Debug(MinerTag(), "BEFORE Starting");
                 Start(miningLocation, username);

@@ -15,9 +15,9 @@ namespace NHMCore
         {
             try
             {
-                var key = ConfigManager.GeneralConfig.IFTTTKey;
+                var key = IFTTTSettings.Instance.IFTTTKey;
                 var worker = CredentialsSettings.Instance.WorkerName;
-                var minProfit = ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.');
+                var minProfit = MiningProfitSettings.Instance.MinimumProfit.ToString("F2").Replace(',', '.');
 
                 using (var client = new WebClient())
                 {

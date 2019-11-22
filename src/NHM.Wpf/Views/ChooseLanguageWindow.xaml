@@ -33,7 +33,7 @@
                    LineHeight="1.33"
                    Text="Choose Language"
                    />
-        <ComboBox Grid.Row="2" Margin="24,0,24,0" Height="34" Padding="43,9,0,9" FontFamily="{StaticResource UbuntuFontFamily}" ItemsSource="{Binding LangNames}" SelectedIndex="{Binding SelectedLangIndex}" BorderBrush="White" Background="Yellow" FontSize="14">
+        <ComboBox Grid.Row="2" Margin="24,0,24,0" Height="34" Padding="43,9,0,9" FontFamily="{StaticResource UbuntuFontFamily}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}" SelectedIndex="{Binding TranslationsSettings.LanguageIndex}" BorderBrush="White" Background="Yellow" FontSize="14">
             <ComboBox.ItemContainerStyle>
                 <Style TargetType="ComboBoxItem">
                     <Setter Property="Background" Value="Yellow"/>

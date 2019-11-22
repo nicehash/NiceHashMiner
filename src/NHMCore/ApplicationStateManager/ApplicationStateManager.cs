@@ -199,7 +199,7 @@ namespace NHMCore
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
         public static SetResult SetGroupIfValidOrDifferent(string groupName, bool skipCredentialsSet = false)
         {
-            if (groupName == ConfigManager.GeneralConfig.RigGroup)
+            if (groupName == CredentialsSettings.Instance.RigGroup)
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
@@ -221,7 +221,7 @@ namespace NHMCore
         private static void SetGroup(string groupName)
         {
             // change in memory and save changes to file
-            ConfigManager.GeneralConfig.RigGroup = groupName;
+            CredentialsSettings.Instance.RigGroup = groupName;
             ConfigManager.GeneralConfigFileCommit();
         }
 #endregion

@@ -130,7 +130,7 @@ namespace NHMCore.ApplicationState
         // BTC Display balance stuff coresponds to the scaling
         private void SetBTCScaledProperties()
         {
-            if (ConfigManager.GeneralConfig.AutoScaleBTCValues && _btcBalance < 0.1)
+            if (GUISettings.Instance.AutoScaleBTCValues && _btcBalance < 0.1)
             {
                 var scaled = (_btcBalance ?? 0) * 1000;
                 DisplayBTCBalance = $"{scaled:F8}";
@@ -195,7 +195,7 @@ namespace NHMCore.ApplicationState
         /// </summary>
         public double GetKwhPriceInBtc()
         {
-            var price = ConfigManager.GeneralConfig.KwhPrice;
+            var price = SwitchSettings.Instance.KwhPrice;
             if (price <= 0) return 0;
             // Converting with 1/price will give us 1/usdPrice
             var invertedUsdRate = ConvertToActiveCurrency(1 / price);

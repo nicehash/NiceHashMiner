@@ -149,7 +149,7 @@ namespace NHMCore.Benchmarking
                             {
                                 // this will drain the container
                                 await BenchmarkNextAlgorithm(_stopCurrentAlgorithmBenchmark.Token);
-                                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, _stopCurrentAlgorithmBenchmark.Token);
+                                await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, _stopCurrentAlgorithmBenchmark.Token);
                                 BenchmarkManager.StepUpBenchmarkStepProgress();
                             }
                             catch (Exception e)
@@ -245,7 +245,7 @@ namespace NHMCore.Benchmarking
                 EthlargementIntegratedPlugin.Instance.Start(miningPairs);
                 miner.InitMiningPairs(miningPairs);
                 // fill service since the benchmark might be online. DemoUser.BTC must be used
-                miner.InitMiningLocationAndUsername(StratumService.SelectedServiceLocation, DemoUser.BTC);
+                miner.InitMiningLocationAndUsername(StratumService.Instance.SelectedServiceLocation, DemoUser.BTC);
                 powerHelper.Start();
                 algo.ComputeDevice.State = DeviceState.Benchmarking;
                 var result = await miner.StartBenchmark(stop, PerformanceType);

@@ -38,14 +38,14 @@ namespace NHMCore.Mining.IdleChecking
 
         public static void StartIdleCheck()
         {
-            if (!ConfigManager.GeneralConfig.StartMiningWhenIdle) return;
-            StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleTick);
+            if (!IdleMiningSettings.Instance.StartMiningWhenIdle) return;
+            StartIdleCheck(IdleMiningSettings.Instance.IdleCheckType, IdleTick);
         }
 
         // TODO create a private task and await that
         private static async void IdleTick(object sender, IdleChangedEventArgs e)
         {
-            if (MiningState.Instance.MiningManuallyStarted || !ConfigManager.GeneralConfig.StartMiningWhenIdle)
+            if (MiningState.Instance.MiningManuallyStarted || !IdleMiningSettings.Instance.StartMiningWhenIdle)
                 return;
 
             if (e.IsIdle)

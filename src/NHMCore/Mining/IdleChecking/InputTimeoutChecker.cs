@@ -19,7 +19,7 @@ namespace NHMCore.Mining.IdleChecking
         {
             var msIdle = Helpers.GetIdleTime();
 
-            if (msIdle < ConfigManager.GeneralConfig.MinIdleSeconds * 1000)
+            if (msIdle < IdleMiningSettings.Instance.MinIdleSeconds * 1000)
             {
                 if (_isIdling)
                 {

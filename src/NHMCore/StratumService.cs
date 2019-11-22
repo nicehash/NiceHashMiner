@@ -1,17 +1,22 @@
-﻿using NHMCore.Configs;
+﻿using NHM.Common;
+using NHMCore.Configs;
 using System.Collections.Generic;
 
 namespace NHMCore
 {
-    public static class StratumService
+    public class StratumService : NotifyChangedBase
     {
-        public static string SelectedServiceLocation => MiningLocations[_serviceLocation];
-        private static string _lastSelectedServiceLocation = "";
+        public static StratumService Instance { get; } = new StratumService();
 
-        private static bool _callResume = false;
+        private StratumService() { }
 
-        public static int _serviceLocation = 0;
-        public static int ServiceLocation
+        public string SelectedServiceLocation => MiningLocations[_serviceLocation];
+        private string _lastSelectedServiceLocation = "";
+
+        private bool _callResume = false;
+
+        public int _serviceLocation = 0;
+        public int ServiceLocation
         {
             get => _serviceLocation;
             set
@@ -24,6 +29,7 @@ namespace NHMCore
                     ConfigManager.GeneralConfigFileCommit();
                 }
                 _lastSelectedServiceLocation = SelectedServiceLocation;
+                OnPropertyChanged(nameof(ServiceLocation));
             }
         }
 
@@ -41,7 +47,7 @@ namespace NHMCore
             public bool Enabled { get; set; } = true;
         }
 
-        public static void SetEnabled(bool eu, bool usa)
+        public void SetEnabled(bool eu, bool usa)
         {
             var oldStates = new Dictionary<string, bool>();
             foreach (var kvp in _miningLocations)

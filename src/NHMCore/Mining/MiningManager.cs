@@ -167,7 +167,7 @@ namespace NHMCore.Mining
                     await _runningMiners[key].StopTask();
                 }
                 // START
-                var miningLocation = StratumService.SelectedServiceLocation;
+                var miningLocation = StratumService.Instance.SelectedServiceLocation;
                 foreach (var key in _runningMiners.Keys)
                 {
                     await _runningMiners[key].StartTask(miningLocation, _username);
@@ -184,14 +184,14 @@ namespace NHMCore.Mining
         // full of state
         private static bool CheckIfProfitable(double currentProfit, bool log = true)
         {
-            if (ConfigManager.IsMiningRegardlesOfProfit) {
+            if (MiningProfitSettings.Instance.MineRegardlessOfProfit) {
                 if (log) Logger.Info(Tag, $"Mine always regardless of profit");
                 return true;
             }
 
             // TODO FOR NOW USD ONLY
             var currentProfitUsd = (currentProfit * BalanceAndExchangeRates.Instance.GetUsdExchangeRate());
-            var minProfit = ConfigManager.GeneralConfig.MinimumProfit;
+            var minProfit = MiningProfitSettings.Instance.MinimumProfit;
             _isProfitable = currentProfitUsd >= minProfit;
             if (log)
             {
@@ -324,10 +324,10 @@ namespace NHMCore.Mining
                 var b = Math.Min(prevStateProfit, currentProfit);
                 //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
                 var percDiff = ((a - b)) / b;
-                if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+                if (percDiff < SwitchSettings.Instance.SwitchProfitabilityThreshold)
                 {
                     // don't switch
-                    Logger.Info(Tag, $"Will NOT switch profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
+                    Logger.Info(Tag, $"Will NOT switch profit diff is {percDiff}, current threshold {SwitchSettings.Instance.SwitchProfitabilityThreshold}");
                     // RESTORE OLD PROFITS STATE
                     foreach (var device in _miningDevices)
                     {
@@ -335,7 +335,7 @@ namespace NHMCore.Mining
                     }
                     return;
                 }
-                Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
+                Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {SwitchSettings.Instance.SwitchProfitabilityThreshold}");
             }
 
             await _semaphore.WaitAsync();
@@ -359,7 +359,7 @@ namespace NHMCore.Mining
                     stopGroup.End();
                 }
                 // start new
-                var miningLocation = StratumService.SelectedServiceLocation;
+                var miningLocation = StratumService.Instance.SelectedServiceLocation;
                 foreach (var startKey in toStartMinerGroupKeys)
                 {
                     var miningPairs = newGroupedMiningPairs[startKey];
@@ -434,7 +434,7 @@ namespace NHMCore.Mining
             await _semaphore.WaitAsync();
             try
             {
-                var miningLocation = StratumService.SelectedServiceLocation;
+                var miningLocation = StratumService.Instance.SelectedServiceLocation;
                 foreach (var groupKey in restartGroups)
                 {
                     if (_runningMiners.ContainsKey(groupKey) == false) continue;

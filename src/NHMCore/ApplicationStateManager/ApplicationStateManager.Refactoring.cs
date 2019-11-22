@@ -15,14 +15,14 @@ namespace NHMCore
         {
             if (isProfitable)
             {
-                if (ConfigManager.GeneralConfig.UseIFTTT)
+                if (IFTTTSettings.Instance.UseIFTTT)
                 {
                     Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
                 }
                 DisplayMiningProfitable(isProfitable);
             } else
             {
-                if (ConfigManager.GeneralConfig.UseIFTTT)
+                if (IFTTTSettings.Instance.UseIFTTT)
                 {
                     Ifttt.PostToIfttt("nicehash", "CURRENTLY MINING NOT PROFITABLE.");
                 }
