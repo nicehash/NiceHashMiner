@@ -6,26 +6,33 @@
              xmlns:local="clr-namespace:NHM.Wpf.Views.Common"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="200">
-    <TextBlock Foreground="{StaticResource PrimaryColorBrush}" FontSize="14" LineHeight="1.57">
-        <TextBlock.Style>
-            <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                <Style.Triggers>
-                    <Trigger Property ="IsMouseOver" Value="True">
-                        <Setter Property="TextDecorations">
-                            <Setter.Value>
-                                <TextDecorationCollection>
-                                    <TextDecoration Location="Underline" PenOffset="4">
-                                        <TextDecoration.Pen>
-                                            <Pen Thickness="2" Brush="{StaticResource PrimaryColorBrush}"></Pen>
-                                        </TextDecoration.Pen>
-                                    </TextDecoration>
-                                </TextDecorationCollection>
-                            </Setter.Value>
-                        </Setter>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </TextBlock.Style>
+    <Button Click="Click_VisitStatsOnline">
+        <Button.Template>
+            <ControlTemplate TargetType="{x:Type Button}">
+                <ContentPresenter />
+            </ControlTemplate>
+        </Button.Template>
+        <TextBlock Foreground="{StaticResource PrimaryColorBrush}" FontSize="14" LineHeight="1.57">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+                    <Style.Triggers>
+                        <Trigger Property ="IsMouseOver" Value="True">
+                            <Setter Property="TextDecorations">
+                                <Setter.Value>
+                                    <TextDecorationCollection>
+                                        <TextDecoration Location="Underline" PenOffset="4">
+                                            <TextDecoration.Pen>
+                                                <Pen Thickness="2" Brush="{StaticResource PrimaryColorBrush}"></Pen>
+                                            </TextDecoration.Pen>
+                                        </TextDecoration>
+                                    </TextDecorationCollection>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
                         View Stats Online
-    </TextBlock>
+        </TextBlock>
+    </Button>
 </UserControl>
