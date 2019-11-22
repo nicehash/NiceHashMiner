@@ -23,11 +23,13 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>-->
             <!--Change the parent from grid to stackpanel and the button will work. Not entierly sure why it is not working-->
-            <TextBlock >Content</TextBlock>
-            <ToggleButton Style="{StaticResource StartStopButtonLight}"
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ToggleButton Style="{StaticResource StartStopButtonLight}"
                           x:Name="StartStopToggleButton"
                           Click="ToggleButtonStartStop_Click" />
-            
+                <TextBlock >Content</TextBlock>
+            </StackPanel>
+
         </Grid>
         <Grid Grid.Row="1">
             <!--shadow border-->
@@ -67,11 +69,12 @@
                     <GridSplitter Grid.Column="3" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <StackPanel Grid.Column="4">
                         <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
+                        <!--TODO Bindings here are temp-->
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">0.0191616</TextBlock>
-                            <TextBlock Style="{StaticResource StatsBTCLabelText}" Margin="4,14,0,0">BTC / 24h</TextBlock>
+                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0" Text="{Binding GlobalRate}" />
+                            <TextBlock Style="{StaticResource StatsBTCLabelText}" Margin="4,14,0,0" Text="{Binding ScaledBtcPerTime}" />
                         </StackPanel>
-                        <TextBlock Style="{StaticResource StatsFiatEstimateText}" Margin="24,8,0,0">≈ $ 141,69</TextBlock>
+                        <TextBlock Style="{StaticResource StatsFiatEstimateText}" Margin="24,8,0,0" Text="{Binding GlobalRateFiat}" />
                     </StackPanel>
                     <GridSplitter Grid.Column="5" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <StackPanel Grid.Column="6">

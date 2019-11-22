@@ -127,6 +127,7 @@
     <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItem.xaml.cs">
       <DependentUpon>AlgorithmItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemSpeedsConverter.cs" />
     <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemStatusStyleConverter.cs" />
     <Compile Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItem.xaml.cs">
       <DependentUpon>ComputeDeviceItem.xaml</DependentUpon>

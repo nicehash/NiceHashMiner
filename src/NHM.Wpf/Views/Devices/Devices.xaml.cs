@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHM.Wpf.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,33 @@ namespace NHM.Wpf.Views.Devices
     /// </summary>
     public partial class Devices : UserControl
     {
+        private MainVM _vm;
+
         public Devices()
         {
             InitializeComponent();
+
+            DataContextChanged += Dashboard_DataContextChanged;
+        }
+
+        private void Dashboard_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is MainVM mainVM)
+            {
+                _vm = mainVM;
+                return;
+            }
+            throw new Exception("Dashboard_DataContextChanged e.NewValue must be of type MainVM");
+        }
+
+        private async void StopAllDevicesButtonClick(object sender, RoutedEventArgs e)
+        {
+            await _vm.StopMining();
+        }
+
+        private async void StartAllDevicesButtonClick(object sender, RoutedEventArgs e)
+        {
+            await _vm.StartMining();
         }
     }
 }

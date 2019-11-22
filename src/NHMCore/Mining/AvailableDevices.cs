@@ -62,11 +62,6 @@ namespace NHMCore.Mining
             _devices.Add(dev);
         }
 
-        internal static void AddDevices(IEnumerable<ComputeDevice> devs)
-        {
-            _devices.AddRange(devs);
-        }
-
         public static ComputeDevice GetDeviceWithUuid(string uuid)
         {
             return Devices.FirstOrDefault(dev => uuid == dev.Uuid);

@@ -181,7 +181,7 @@ namespace NHM.Wpf.ViewModels
 
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
-        public double GlobalRate
+        public string GlobalRate
         {
             get
             {
@@ -197,12 +197,12 @@ namespace NHM.Wpf.ViewModels
                 {
                     ScaledBtcPerTime = BtcPerTime;
                 }
-
-                return sum / scale;
+                var ret = $"{(sum / scale):F8}";
+                return ret;
             }
         }
 
-        public double GlobalRateFiat => WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
+        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.SelectedFiatCurrency}";
 
         private double _btcBalance;
         private double BtcBalance

@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Benchmark.ComputeDeviceItem"
+             xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore"
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="720">
+             d:DesignHeight="40" d:DesignWidth="720"
+             d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
     <UserControl.Resources>
         <local:AlgorithmItemStatusStyleConverter x:Key="AlgorithmItemStatusStyleConverter" />
+        <local:AlgorithmItemSpeedsConverter x:Key="AlgorithmItemSpeedsConverter" />
+        
         
         <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter Property="LineHeight" Value="1.5" />
@@ -156,7 +160,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Style="{DynamicResource TextBoxCol}" HorizontalAlignment="Left" Text="{Binding AlgorithmName}" Margin="16,0,0,0"/>
                 <TextBlock Grid.Column="1" Style="{DynamicResource TextBoxCol}" Text="{Binding PluginName}" Margin="0,0,0,0"/>
-                <TextBlock Grid.Column="2" Style="{DynamicResource TextBoxCol}" Text="Binding AnnotatedSpeeds" Margin="0,0,0,0"/>
+                <TextBlock Grid.Column="2" Style="{DynamicResource TextBoxCol}" Text="{Binding AnnotatedSpeeds, Converter={StaticResource AlgorithmItemSpeedsConverter}}" Margin="0,0,0,0"/>
                 <TextBlock Grid.Column="3" Style="{DynamicResource TextBoxCol}" Text="{Binding CurrentEstimatedProfitStr}" Margin="0,0,0,0"/>
                 <TextBlock Grid.Column="4" Style="{DynamicResource TextBoxCol}" Foreground="{Binding Status, Converter={StaticResource AlgorithmItemStatusStyleConverter}}" Text="{Binding Status}" Margin="0,0,0,0"/>
             </Grid>
