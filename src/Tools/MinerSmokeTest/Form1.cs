@@ -77,7 +77,7 @@ namespace MinerSmokeTest
         }
 
 
-        private void dgv_devices_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void dgv_devices_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             dgv_algo.Rows.Clear();
             if (!(e.RowIndex >= 0)) return;
@@ -99,7 +99,8 @@ namespace MinerSmokeTest
             {
                 var deviceEnabled = checkbox.Value != null && (bool)checkbox.Value;
                 checkbox.Value = !deviceEnabled;
-                device.Enabled = !deviceEnabled;
+                var set = (device.Uuid, !deviceEnabled);
+                await ApplicationStateManager.SetDeviceEnabledState(this, set);
             }
             var algorithms = device.AlgorithmSettings;
             foreach (var algo in algorithms)

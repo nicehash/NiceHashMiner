@@ -38,7 +38,7 @@ namespace NHMCore.Mining
         public bool Enabled
         {
             get => _enabled;
-            set
+            internal set
             {
                 if (value == _enabled) return;
                 _enabled = value;

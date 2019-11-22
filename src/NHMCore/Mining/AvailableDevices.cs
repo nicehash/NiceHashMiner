@@ -62,6 +62,17 @@ namespace NHMCore.Mining
             _devices.Add(dev);
         }
 
+        internal static bool IsEnableAllDevicesRedundantOperation()
+        {
+            var allEnabled = Devices.All(dev => !dev.IsDisabled);
+            return allEnabled;
+        }
+
+        internal static bool IsDisableAllDevicesRedundantOperation()
+        {
+            return !IsEnableAllDevicesRedundantOperation();
+        }
+
         public static ComputeDevice GetDeviceWithUuid(string uuid)
         {
             return Devices.FirstOrDefault(dev => uuid == dev.Uuid);

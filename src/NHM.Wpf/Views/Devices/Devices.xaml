@@ -88,7 +88,10 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" >
                 <TextBlock Text="Disable / Enable All" Style="{StaticResource BaseUbuntuTextBlockBold}" FontSize="14" Foreground="{StaticResource Gray2ColorBrush}"/>
-                <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }" Margin="24,0,0,0"/>
+                <CheckBox Style="{StaticResource NHMSwitch}"
+                          IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }"
+                          Margin="24,0,0,0"
+                          Click="ToggleDisableEnableAllDevices"/>
             </StackPanel>
 
             <ListView Grid.Row="1" ItemsSource="{Binding Devices}" Width="Auto" Focusable="False" BorderThickness="0" >

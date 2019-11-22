@@ -92,7 +92,7 @@ namespace NHM.Wpf.ViewModels
         
         public static BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
 
-        public static MiningState MiningState => MiningState.Instance;
+        public MiningState MiningState => MiningState.Instance;
 
         public static LoggingDebugConsoleSettings LoggingDebugConsoleSettings => LoggingDebugConsoleSettings.Instance;
 

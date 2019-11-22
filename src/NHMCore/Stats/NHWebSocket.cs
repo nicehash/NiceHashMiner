@@ -674,12 +674,12 @@ namespace NHMCore.Stats
 
             // Check if RPC should execute
             // check if redundant rpc
-            if (allDevices && enabled && ApplicationStateManager.IsEnableAllDevicesRedundantOperation())
+            if (allDevices && enabled && AvailableDevices.IsEnableAllDevicesRedundantOperation())
             {
                 throw new RpcException("All devices are already enabled.", ErrorCode.RedundantRpc);
             }
             // all disable
-            if (allDevices && !enabled && ApplicationStateManager.IsDisableAllDevicesRedundantOperation())
+            if (allDevices && !enabled && AvailableDevices.IsDisableAllDevicesRedundantOperation())
             {
                 throw new RpcException("All devices are already disabled.", ErrorCode.RedundantRpc);
             }

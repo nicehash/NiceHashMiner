@@ -28,8 +28,6 @@ namespace NHMCore.Configs
         private static string GeneralConfigPath => Paths.ConfigsPath("General.json");
 
         private static object _lock = new object();
-        // helper variables
-        private static bool _isGeneralConfigFileInit;
 
         public static bool IsMiningRegardlesOfProfit => GeneralConfig.MineRegardlessOfProfit;
 
@@ -98,8 +96,6 @@ namespace NHMCore.Configs
                 }
                 if (fromFile?.ConfigFileVersion != null)
                 {
-                    // set config loaded from file
-                    _isGeneralConfigFileInit = true;
                     GeneralConfig = fromFile;
                     GeneralConfig.FixSettingBounds();
                     // TODO temp 
@@ -173,11 +169,6 @@ namespace NHMCore.Configs
             catch
             {}
             #endregion MIGRATE plugin UUIDs
-        }
-
-        public static bool GeneralConfigIsFileExist()
-        {
-            return _isGeneralConfigFileInit;
         }
 
         public static void CreateBackup()

@@ -7,45 +7,27 @@ namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
-#region device state checkers
-        public static bool IsEnableAllDevicesRedundantOperation()
-        {
-            var allEnabled = AvailableDevices.Devices.All(dev => !dev.IsDisabled);
-            return allEnabled;
-        }
-
-        public static bool IsDisableAllDevicesRedundantOperation()
-        {
-            return !IsEnableAllDevicesRedundantOperation();
-        }
-
-        #endregion device state checkers
-
-        public static async void SetDeviceEnabledStateGUI(object sender, (string uuid, bool enabled) args)
-        {
-            await SetDeviceEnabledState(sender, args);
-        }
-
+        // TODO split into single and multiple devices
         public static async Task SetDeviceEnabledState(object sender, (string uuid, bool enabled) args)
         {
             var (uuid, enabled) = args;
             // TODO log sender
-            var devicesToDisable = new List<ComputeDevice>();
-            var isDisableAllDevices = "*" == uuid;
-            if (isDisableAllDevices)
+            var devicesToSet = new List<ComputeDevice>();
+            var isAllDevices = "*" == uuid;
+            if (isAllDevices)
             {
-                devicesToDisable.AddRange(AvailableDevices.Devices.Where(dev => !dev.IsDisabled));
+                devicesToSet.AddRange(AvailableDevices.Devices);
             }
             else
             {
                 var devWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
                 if (devWithUUID != null)
                 {
-                    devicesToDisable.Add(devWithUUID);
+                    devicesToSet.Add(devWithUUID);
                 }
             }
             // execute enabling/disabling
-            foreach (var dev in devicesToDisable)
+            foreach (var dev in devicesToSet)
             {
                 if (!enabled)
                 {

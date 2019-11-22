@@ -1,4 +1,6 @@
 ﻿using NHM.Wpf.ViewModels;
+using NHMCore;
+using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +50,12 @@ namespace NHM.Wpf.Views.Devices
         private async void StartAllDevicesButtonClick(object sender, RoutedEventArgs e)
         {
             await _vm.StartMining();
+        }
+
+        private async void ToggleDisableEnableAllDevices(object sender, RoutedEventArgs e)
+        {
+            var setEnabled = !_vm.MiningState.AllDeviceEnabled;
+            await ApplicationStateManager.SetDeviceEnabledState(this, ("*", setEnabled));
         }
     }
 }
