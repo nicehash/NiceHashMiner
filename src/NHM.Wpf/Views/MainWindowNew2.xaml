@@ -57,7 +57,7 @@
                 <settingsNew:Settings DataContext="{Binding .}"/>
             </TabItem>
             <TabItem Header="LEFT_HELP" Name="HelpButton">
-                <Grid Background="#FF0000" Opacity="0.5">
+                <Grid Background="White" Opacity="0.5">
                     <TextBlock Text="HELP TODO" FontSize="50"/>
                 </Grid>
             </TabItem>
