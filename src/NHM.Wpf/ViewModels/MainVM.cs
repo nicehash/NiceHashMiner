@@ -67,21 +67,8 @@ namespace NHM.Wpf.ViewModels
 
         #region settingsLists
 
-        public IReadOnlyList<string> ServiceLocations => StratumService.MiningLocationNames;
         public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
-        public IEnumerable<string> LanguageOptions => Translations.GetAvailableLanguagesNames();
         public IReadOnlyList<string> ThemeOptions => _themeList;
-
-        public int SelectedLangIndex
-        {
-            get => Translations.GetCurrentIndex();
-            set
-            {
-                var code = Translations.GetLanguageCodeFromIndex(value);
-                Translations.SelectedLanguage = code;
-                GeneralConfig.Language = code;
-            }
-        }
 
         private List<string> _themeList = new List<string>{ "Light", "Dark" };
 
@@ -91,15 +78,24 @@ namespace NHM.Wpf.ViewModels
         public string PerDeviceDisplayString => $"/ {_devices?.Count() ?? 0}";
         
         public static BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
-
         public static MiningState MiningState => MiningState.Instance;
+        public static StratumService StratumService => StratumService.Instance;
 
+        public static CredentialsSettings CredentialsSettings => CredentialsSettings.Instance;
+        public static GlobalDeviceSettings GlobalDeviceSettings => GlobalDeviceSettings.Instance;
+        public static GUISettings GUISettings => GUISettings.Instance;
+        public static IdleMiningSettings IdleMiningSettings => IdleMiningSettings.Instance;
+        public static IFTTTSettings IFTTTSettings => IFTTTSettings.Instance;
         public static LoggingDebugConsoleSettings LoggingDebugConsoleSettings => LoggingDebugConsoleSettings.Instance;
+        public static MiningProfitSettings MiningProfitSettings => MiningProfitSettings.Instance;
+        public static MiningSettings MiningSettings => MiningSettings.Instance;
+        public static MiscSettings MiscSettings => MiscSettings.Instance;
+        public static SwitchSettings SwitchSettings => SwitchSettings.Instance;
+        public static ToSSetings ToSSetings => ToSSetings.Instance;
+        public static TranslationsSettings TranslationsSettings => TranslationsSettings.Instance;
+        public static WarningSettings WarningSettings => WarningSettings.Instance;
 
-        // TODO don't expose GeneralConfig, make it internal to NHMCore
-        public static GeneralConfig GeneralConfig => ConfigManager.GeneralConfig;
-
-        private string _theme = ConfigManager.GeneralConfig.DisplayTheme;
+        private string _theme = GUISettings.Instance.DisplayTheme;
         public string Theme
         {
             get => _theme;
@@ -116,8 +112,7 @@ namespace NHM.Wpf.ViewModels
         // TODO this section getting rather large, maybe good idea to break out into own class
 
         private string _timeUnit = TimeFactor.UnitType.ToString();
-
-        private string TimeUnit
+        public string TimeUnit
         {
             get => _timeUnit;
             set
@@ -188,7 +183,7 @@ namespace NHM.Wpf.ViewModels
                 // sum is in mBTC already
                 var sum = WorkingMiningDevs?.Sum(d => d.Payrate) ?? 0;
                 var scale = 1000;
-                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && sum < 100)
+                if (GUISettings.Instance.AutoScaleBTCValues && sum < 100)
                 {
                     ScaledBtcPerTime = MBtcPerTime;
                     scale = 1;
@@ -222,7 +217,7 @@ namespace NHM.Wpf.ViewModels
             get
             {
                 var scale = 1;
-                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && _btcBalance < 0.1)
+                if (GUISettings.Instance.AutoScaleBTCValues && _btcBalance < 0.1)
                 {
                     scale = 1000;
                     ScaledBtc = "mBTC";
@@ -306,7 +301,7 @@ namespace NHM.Wpf.ViewModels
 
             _updateTimer.Start();
 
-            if (ConfigManager.GeneralConfig.AutoStartMining)
+            if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }
 

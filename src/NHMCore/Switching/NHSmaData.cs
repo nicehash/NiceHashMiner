@@ -83,7 +83,7 @@ namespace NHMCore.Switching
                     }
                 }
 
-                if (ConfigManager.GeneralConfig.UseSmaCache)
+                if (MiscSettings.Instance.UseSmaCache)
                 {
                     // Cache while in lock so file is not accessed on multiple threads
                     var isFileSaved = InternalConfigs.WriteFileSettings(CachedFile, newSma);

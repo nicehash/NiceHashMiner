@@ -14,64 +14,43 @@
         <!--Miscellaneous-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Miscellaneous" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.AutoStartMining}"
+            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.AutoStartMining}"
                                         Label="Autostart Mining" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.AllowMultipleInstances}"
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.AllowMultipleInstances}"
                                         Label="Allow Multiple Instances" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.RunAtStartup}"
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.RunAtStartup}"
                                         Label="Run On Startup" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.MinimizeToTray}"
+            <local:SettingsCheckBoxItem Enabled="{Binding GUISettings.MinimizeToTray}"
                                         Label="Minimize To Tray" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.AutoScaleBTCValues}"
+            <local:SettingsCheckBoxItem Enabled="{Binding GUISettings.AutoScaleBTCValues}"
                                         Label="Autoscale BTC Values" />
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.ShowDriverVersionWarning, Mode=TwoWay}" />
-                <Label Content="Show Driver Version Warning" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.DisableWindowsErrorReporting, Mode=TwoWay}" />
-                <Label Content="Disable Windows Error Reporting" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.ShowInternetConnectionWarning, Mode=TwoWay}" />
-                <Label Content="Show Internet Connection Warning" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.GUIWindowsAlwaysOnTop, Mode=TwoWay}" />
-                <Label Content="Form Windows Always on Top" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding GeneralConfig.ShowGPUPCIeBusIDs, Mode=TwoWay}" />
-                <Label Content="Show GPU PCIe Bus IDs" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
+            <local:SettingsCheckBoxItem Enabled="{Binding WarningSettings.ShowDriverVersionWarning}"
+                                        Label="Show Driver Version Warning" />
+            <local:SettingsCheckBoxItem Enabled="{Binding WarningSettings.DisableWindowsErrorReporting}"
+                                        Label="Disable Windows Error Reporting" />
+            <local:SettingsCheckBoxItem Enabled="{Binding WarningSettings.ShowInternetConnectionWarning}"
+                                        Label="Show Internet Connection Warning" />
+            <local:SettingsCheckBoxItem Enabled="{Binding GUISettings.GUIWindowsAlwaysOnTop}"
+                                        Label="Form Windows Always on Top" />
+            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.ShowGPUPCIeBusIDs}"
+                                        Label="Show GPU PCIe Bus IDs" />
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Device Monitoring" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.DisableDeviceStatusMonitoring}"
+            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.DisableDeviceStatusMonitoring}"
                                         Label="Disable Device Status Monitoring"
                                         Description="TODO more info" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GeneralConfig.DisableDevicePowerModeSettings, Mode=TwoWay}"
+            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.DisableDevicePowerModeSettings}"
                                         Label="Disable Device Power Mode Settings" />
         </WrapPanel>
         <!--Logging-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Logging" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding LoggingDebugConsoleSettings.LogToFile, Mode=TwoWay}" />
-                <Label Content="Log To file" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Grid.Column="0" Style="{StaticResource NHMSwitch}" IsChecked="{Binding LoggingDebugConsoleSettings.DebugConsole, Mode=TwoWay}" />
-                <Label Content="Enable Debug Console" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-            </StackPanel>
+            <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.LogToFile}"
+                                        Label="Log To file" />
+            <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.DebugConsole}"
+                                        Label="Enable Debug Console" />
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Log Max File Size (bytes)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />

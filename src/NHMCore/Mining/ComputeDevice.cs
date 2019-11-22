@@ -131,7 +131,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is IPowerTarget get) return get.PowerTarget;
+                if (!GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is IPowerTarget get) return get.PowerTarget;
                 //throw new NotSupportedException($"Device with {Uuid} doesn't support PowerTarget");
                 return 0;
             }
@@ -153,7 +153,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ILoad get) return get.Load;
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ILoad get) return get.Load;
                 return -1;
             }
         }
@@ -161,7 +161,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITemp get) return get.Temp;
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITemp get) return get.Temp;
                 return -1;
             }
         }
@@ -169,7 +169,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IFanSpeedRPM get) return get.FanSpeedRPM;
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IFanSpeedRPM get) return get.FanSpeedRPM;
                 return -1;
             }
         }
@@ -177,7 +177,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IPowerUsage get) return get.PowerUsage;
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IPowerUsage get) return get.PowerUsage;
                 return -1;
             }
         }
@@ -186,7 +186,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                var canSet = !ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP;
+                var canSet = !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP;
                 return canSet;
             }
         }
@@ -196,7 +196,7 @@ namespace NHMCore.Mining
 
         public bool SetPowerMode(TDPSimpleType level)
         {
-            if (!ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP set)
+            if (!GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP set)
             {
                 return set.SetTDPSimple(level);
             }
@@ -216,7 +216,7 @@ namespace NHMCore.Mining
             NameCount = nameCount;
             Enabled = true;
 
-            ConfigManager.GeneralConfig.PropertyChanged += OnShowGPUPCIeBusIDs;
+            GlobalDeviceSettings.Instance.PropertyChanged += OnShowGPUPCIeBusIDs;
         }
 
         public void UpdateEstimatePaying(Dictionary<AlgorithmType, double> paying)
@@ -229,7 +229,7 @@ namespace NHMCore.Mining
 
         private void OnShowGPUPCIeBusIDs(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs))
+            if (e.PropertyName == nameof(GlobalDeviceSettings.ShowGPUPCIeBusIDs))
             {
                 OnPropertyChanged(nameof(FullName));
             }
@@ -238,7 +238,7 @@ namespace NHMCore.Mining
         // combines long and short name
         public string GetFullName()
         {
-            if (ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs && BaseDevice is IGpuDevice gpu)
+            if (GlobalDeviceSettings.Instance.ShowGPUPCIeBusIDs && BaseDevice is IGpuDevice gpu)
             {
                 return $"{NameCount} {Name} (pcie {gpu.PCIeBusID})";
             }

@@ -121,7 +121,7 @@ namespace NHMCore
                 }
 
                 // STEP
-                DeviceMonitorManager.DisableDevicePowerModeSettings = ConfigManager.GeneralConfig.DisableDevicePowerModeSettings;
+                DeviceMonitorManager.DisableDevicePowerModeSettings = GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings;
                 loader.PrimaryProgress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
                 var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice), detectionResult.IsDCHDriver);
                 foreach (var monitor in monitors)
@@ -159,12 +159,12 @@ namespace NHMCore
                 // STEP
                 // disable windows error reporting
                 loader.PrimaryProgress?.Report((Tr("Setting Windows error reporting..."), nextProgPerc()));
-                Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
+                Helpers.DisableWindowsErrorReporting(WarningSettings.Instance.DisableWindowsErrorReporting);
 
                 // STEP
                 // Nvidia p0
                 loader.PrimaryProgress?.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
-                if (ConfigManager.GeneralConfig.NVIDIAP0State && AvailableDevices.HasNvidia)
+                if (MiningSettings.Instance.NVIDIAP0State && AvailableDevices.HasNvidia)
                 {
                     Helpers.SetNvidiaP0State();
                 }

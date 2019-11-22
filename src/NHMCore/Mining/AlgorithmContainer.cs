@@ -430,7 +430,7 @@ namespace NHMCore.Mining
             }
             CurrentNormalizedProfit = newProfit;
 
-            if (!ConfigManager.IsMiningRegardlesOfProfit)
+            if (!MiningProfitSettings.Instance.MineRegardlessOfProfit)
             {
                 // This is power usage in BTC/hr
                 var power = PowerUsage / 1000 * BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();

@@ -17,29 +17,17 @@ namespace NHMCore.Configs.Data
     {
         public Version ConfigFileVersion;
 
-        public string DisplayCurrency
-        {
-            get => BalanceAndExchangeRates.Instance.SelectedFiatCurrency;
-            set
-            {
-                BalanceAndExchangeRates.Instance.SelectedFiatCurrency = value;
-                OnPropertyChanged();
-            }
-        }
-
         #region CredentialsSettings
         public string BitcoinAddress
         {
             get => CredentialsSettings.Instance.BitcoinAddress;
             set => CredentialsSettings.Instance.BitcoinAddress = value;
         }
-
         public string WorkerName
         {
             get => CredentialsSettings.Instance.WorkerName;
             set => CredentialsSettings.Instance.WorkerName = value;
         }
-
         public string RigGroup
         {
             get => CredentialsSettings.Instance.RigGroup;
@@ -47,70 +35,53 @@ namespace NHMCore.Configs.Data
         }
         #endregion CredentialsSettings
 
-        public TimeUnitType TimeUnit
-        {
-            get => TimeFactor.UnitType;
-            set => TimeFactor.UnitType = value;
-        }
-
+        #region ServiceLocationSettings
         public int ServiceLocation
         {
-            get => StratumService.ServiceLocation;
-            set => StratumService.ServiceLocation = value;
+            get => StratumService.Instance.ServiceLocation;
+            set => StratumService.Instance.ServiceLocation = value;
         }
+        #endregion ServiceLocationSettings
 
-        public bool AutoStartMining { get; set; } = false;
-
-
-        private bool _hideMiningWindows = false;
+        #region MiningSettings
+        public bool AutoStartMining
+        {
+            get => MiningSettings.Instance.AutoStartMining;
+            set => MiningSettings.Instance.AutoStartMining = value;
+        }
         public bool HideMiningWindows
         {
-            get => _hideMiningWindows;
-            set
-            {
-                _hideMiningWindows = value;
-                MinerPluginToolkitV1.MinerToolkit.HideMiningWindows = value;
-            }
+            get => MiningSettings.Instance.HideMiningWindows;
+            set => MiningSettings.Instance.HideMiningWindows = value;
         }
-
-        private bool _minimizeMiningWindows = false;
         public bool MinimizeMiningWindows
         {
-            get => _minimizeMiningWindows;
-            set
-            {
-                _minimizeMiningWindows = value;
-                MinerPluginToolkitV1.MinerToolkit.MinimizeMiningWindows = value;
-            }
+            get => MiningSettings.Instance.MinimizeMiningWindows;
+            set => MiningSettings.Instance.MinimizeMiningWindows = value;
         }
-
-        public double SwitchProfitabilityThreshold { get; set; } = 0.05; // percent
-        public int MinerAPIQueryInterval { get; set; } = 5;
-
-
-        private int _minerRestartDelayMS = 1000;
+        public int MinerAPIQueryInterval
+        {
+            get => MiningSettings.Instance.MinerAPIQueryInterval;
+            set => MiningSettings.Instance.MinerAPIQueryInterval = value;
+        }
         public int MinerRestartDelayMS
         {
-            get => _minerRestartDelayMS;
-            set
-            {
-                _minerRestartDelayMS = value;
-                MinerPluginToolkitV1.MinerToolkit.MinerRestartDelayMS = value;
-            }
+            get => MiningSettings.Instance.MinerRestartDelayMS;
+            set => MiningSettings.Instance.MinerRestartDelayMS = value;
         }
-
-        private bool _autoScaleBTCValues = true;
-        public bool AutoScaleBTCValues
+        public int ApiBindPortPoolStart
         {
-            get => _autoScaleBTCValues;
-            set
-            {
-                _autoScaleBTCValues = value;
-                OnPropertyChanged(nameof(AutoScaleBTCValues));
-            }
+            get => MiningSettings.Instance.ApiBindPortPoolStart;
+            set => MiningSettings.Instance.ApiBindPortPoolStart = value;
         }
+        public bool NVIDIAP0State
+        {
+            get => MiningSettings.Instance.NVIDIAP0State;
+            set => MiningSettings.Instance.NVIDIAP0State = value;
+        }
+        #endregion MiningSettings
 
-
+        #region IdleMiningSettings
         public bool StartMiningWhenIdle
         {
             get => IdleMiningSettings.Instance.StartMiningWhenIdle;
@@ -121,23 +92,29 @@ namespace NHMCore.Configs.Data
             get => IdleMiningSettings.Instance.IdleCheckType;
             set => IdleMiningSettings.Instance.IdleCheckType = value;
         }
-
-        public int MinIdleSeconds { get; set; } = 60;
+        public int MinIdleSeconds
+        {
+            get => IdleMiningSettings.Instance.MinIdleSeconds;
+            set => IdleMiningSettings.Instance.MinIdleSeconds = value;
+        }
+        public bool IdleWhenNoInternetAccess
+        {
+            get => IdleMiningSettings.Instance.IdleWhenNoInternetAccess;
+            set => IdleMiningSettings.Instance.IdleWhenNoInternetAccess = value;
+        }
+        #endregion IdleMiningSettings
 
         #region LoggingDebugConsoleSettings
-
         public bool DebugConsole
         {
             get => LoggingDebugConsoleSettings.Instance.DebugConsole;
             set => LoggingDebugConsoleSettings.Instance.DebugConsole = value;
         }
-
         public bool LogToFile
         {
             get => LoggingDebugConsoleSettings.Instance.LogToFile;
             set => LoggingDebugConsoleSettings.Instance.LogToFile = value;
         }
-
         // in bytes
         public long LogMaxFileSize
         {
@@ -146,21 +123,25 @@ namespace NHMCore.Configs.Data
         }
         #endregion LoggingDebugConsoleSettings
 
-        public bool ShowDriverVersionWarning { get; set; } = true;
-        public bool DisableWindowsErrorReporting { get; set; } = true;
-        public bool ShowInternetConnectionWarning { get; set; } = true;
-        public bool NVIDIAP0State { get; set; } = false;
-
-        private int _apiBindPortPoolStart { get; set; } = 4000;
-        public int ApiBindPortPoolStart
+        #region WarningSettings
+        public bool ShowDriverVersionWarning
         {
-            get => _apiBindPortPoolStart;
-            set
-            {
-                _apiBindPortPoolStart = value;
-                MinerPluginToolkitV1.FreePortsCheckerManager.ApiBindPortPoolStart = value;
-            }
+            get => WarningSettings.Instance.ShowDriverVersionWarning;
+            set => WarningSettings.Instance.ShowDriverVersionWarning = value;
         }
+        public bool DisableWindowsErrorReporting
+        {
+            get => WarningSettings.Instance.DisableWindowsErrorReporting;
+            set => WarningSettings.Instance.DisableWindowsErrorReporting = value;
+        }
+        public bool ShowInternetConnectionWarning
+        {
+            get => WarningSettings.Instance.ShowInternetConnectionWarning;
+            set => WarningSettings.Instance.ShowInternetConnectionWarning = value;
+        }
+        #endregion WarningSettings
+
+        #region MiningProfitSettings
         public double MinimumProfit
         {
             get => MiningProfitSettings.Instance.MinimumProfit;
@@ -171,115 +152,168 @@ namespace NHMCore.Configs.Data
             get => MiningProfitSettings.Instance.MineRegardlessOfProfit;
             set => MiningProfitSettings.Instance.MineRegardlessOfProfit = value;
         }
+        #endregion MiningProfitSettings
 
-        public bool IdleWhenNoInternetAccess { get; set; } = true;
-        
-        private bool _allowMultipleInstances { get; set; } = true;
-        public bool AllowMultipleInstances
+        #region IFTTTSettings
+        public bool UseIFTTT
         {
-            get => _allowMultipleInstances;
-            set
-            {
-                _allowMultipleInstances = value;
-                OnPropertyChanged(nameof(AllowMultipleInstances));
-            }
+            get => IFTTTSettings.Instance.UseIFTTT;
+            set => IFTTTSettings.Instance.UseIFTTT = value;
         }
-
-        // IFTTT
-        public bool UseIFTTT { get; set; } = false;
-        public string IFTTTKey { get; set; } = "";
+        public string IFTTTKey
+        {
+            get => IFTTTSettings.Instance.IFTTTKey;
+            set => IFTTTSettings.Instance.IFTTTKey = value;
+        }
+        #endregion IFTTTSettings
 
         #region ToS 'Settings'
-        
-        // 3rd party miners
-        public int Use3rdPartyMinersTOS = 0;
-
-        // 
-        public string hwid = "";
-
-        public int agreedWithTOS = 0;
+        public int Use3rdPartyMinersTOS
+        {
+            get => ToSSetings.Instance.Use3rdPartyMinersTOS;
+            set => ToSSetings.Instance.Use3rdPartyMinersTOS = value;
+        }
+        public string Hwid
+        {
+            get => ToSSetings.Instance.Hwid;
+            set => ToSSetings.Instance.Hwid = value;
+        }
+        public int AgreedWithTOS
+        {
+            get => ToSSetings.Instance.AgreedWithTOS;
+            set => ToSSetings.Instance.AgreedWithTOS = value;
+        }
         #endregion ToS 'Settings'
 
-        public bool CoolDownCheckEnabled
+        #region SwitchSettings
+        public Interval SwitchSmaTimeChangeSeconds
         {
-            get => MinerApiWatchdog.Enabled;
-            set => MinerApiWatchdog.Enabled = value;
+            get => SwitchSettings.Instance.SwitchSmaTimeChangeSeconds;
+            set => SwitchSettings.Instance.SwitchSmaTimeChangeSeconds = value;
         }
-
-        public Interval SwitchSmaTimeChangeSeconds { get; set; } = new Interval(34, 55);
-        public Interval SwitchSmaTicksStable = new Interval(2, 3);
-        public Interval SwitchSmaTicksUnstable = new Interval(5, 13);
-
-        /// <summary>
-        /// Cost of electricity in kW-h
-        /// </summary>
-        public double KwhPrice { get; set; } = 0;
-
-        /// <summary>
-        /// True if NHML should try to cache SMA values for next launch
-        /// </summary>
-        public bool UseSmaCache { get; set; } = true;
+        public Interval SwitchSmaTicksStable
+        {
+            get => SwitchSettings.Instance.SwitchSmaTicksStable;
+            set => SwitchSettings.Instance.SwitchSmaTicksStable = value;
+        }
+        public Interval SwitchSmaTicksUnstable
+        {
+            get => SwitchSettings.Instance.SwitchSmaTicksUnstable;
+            set => SwitchSettings.Instance.SwitchSmaTicksUnstable = value;
+        }
+        public double KwhPrice
+        {
+            get => SwitchSettings.Instance.KwhPrice;
+            set => SwitchSettings.Instance.KwhPrice = value;
+        }
+        public double SwitchProfitabilityThreshold
+        {
+            get => SwitchSettings.Instance.SwitchProfitabilityThreshold;
+            set => SwitchSettings.Instance.SwitchProfitabilityThreshold = value;
+        }
+        #endregion SwitchSettings
 
         #region GUI Settings
-
+        public string DisplayCurrency
+        {
+            get => GUISettings.Instance.DisplayCurrency;
+            set => GUISettings.Instance.DisplayCurrency = value;
+        }
+        public TimeUnitType TimeUnit
+        {
+            get => GUISettings.Instance.TimeUnit;
+            set => GUISettings.Instance.TimeUnit = value;
+        }
+        public bool AutoScaleBTCValues
+        {
+            get => GUISettings.Instance.AutoScaleBTCValues;
+            set => GUISettings.Instance.AutoScaleBTCValues = value;
+        }
         public string Language
         {
-#if WPF
-            get;
-            set;
-#else
-            get => TranslationsSettings.Instance.Language;
-            set => TranslationsSettings.Instance.Language = value;
-#endif
+            get => GUISettings.Instance.Language;
+            set => GUISettings.Instance.Language = value;
         }
-
-        public bool MinimizeToTray { get; set; } = false;
-
-        private string _displayTheme = "Light";
+        public bool MinimizeToTray
+        {
+            get => GUISettings.Instance.MinimizeToTray;
+            set => GUISettings.Instance.MinimizeToTray = value;
+        }
         public string DisplayTheme
         {
-            get => _displayTheme;
-            set
-            {
-                _displayTheme = value;
-                OnPropertyChanged();
-            }
+            get => GUISettings.Instance.DisplayTheme;
+            set => GUISettings.Instance.DisplayTheme = value;
         }
-
-        public bool ShowPowerColumns { get; set; } = false;
-        public bool ShowDiagColumns { get; set; } = true;
-
-        public Point MainFormSize = new Point(1000, 400);
-
-        public bool GUIWindowsAlwaysOnTop { get; set; } = false;
-        
+        public bool ShowPowerColumns
+        {
+            get => GUISettings.Instance.ShowPowerColumns;
+            set => GUISettings.Instance.ShowPowerColumns = value;
+        }
+        public bool ShowDiagColumns
+        {
+            get => GUISettings.Instance.ShowDiagColumns;
+            set => GUISettings.Instance.ShowDiagColumns = value;
+        }
+        public bool GUIWindowsAlwaysOnTop
+        {
+            get => GUISettings.Instance.GUIWindowsAlwaysOnTop;
+            set => GUISettings.Instance.GUIWindowsAlwaysOnTop = value;
+        }
+        public Point MainFormSize
+        {
+            get => GUISettings.Instance.MainFormSize;
+        }
         #endregion GUI Settings
 
-        public bool UseEthlargement { get; set; } = false;
-
+        #region MiscSettings
+        public bool AllowMultipleInstances
+        {
+            get => MiscSettings.Instance.AllowMultipleInstances;
+            set => MiscSettings.Instance.AllowMultipleInstances = value;
+        }
+        public bool CoolDownCheckEnabled
+        {
+            get => MiscSettings.Instance.CoolDownCheckEnabled;
+            set => MiscSettings.Instance.CoolDownCheckEnabled = value;
+        }
+        public bool UseSmaCache
+        {
+            get => MiscSettings.Instance.UseSmaCache;
+            set => MiscSettings.Instance.UseSmaCache = value;
+        }
+        public bool UseEthlargement
+        {
+            get => MiscSettings.Instance.UseEthlargement;
+            set => MiscSettings.Instance.UseEthlargement = value;
+        }
         public bool RunAtStartup
         {
-            get => NHMCore.Configs.RunAtStartup.Instance.Enabled;
-            set => NHMCore.Configs.RunAtStartup.Instance.Enabled = value;
+            get => MiscSettings.Instance.RunAtStartup;
+            set => MiscSettings.Instance.RunAtStartup = value;
         }
+        #endregion MiscSettings
 
         #region Global Device settings
-        public bool RunScriptOnCUDA_GPU_Lost { get; set; } = false;
-
-        public bool DisableDeviceStatusMonitoring { get; set; } = false;
-        public bool DisableDevicePowerModeSettings { get; set; } = true;
-
-        private bool _showGPUPCIeBusIDs { get; set; } = false;
+        public bool RunScriptOnCUDA_GPU_Lost
+        {
+            get => GlobalDeviceSettings.Instance.RunScriptOnCUDA_GPU_Lost;
+            set => GlobalDeviceSettings.Instance.RunScriptOnCUDA_GPU_Lost = value;
+        }
+        public bool DisableDeviceStatusMonitoring
+        {
+            get => GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring;
+            set => GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring = value;
+        }
+        public bool DisableDevicePowerModeSettings
+        {
+            get => GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings;
+            set => GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings = value;
+        }
         public bool ShowGPUPCIeBusIDs
         {
-            get => _showGPUPCIeBusIDs;
-            set
-            {
-                _showGPUPCIeBusIDs = value;
-                OnPropertyChanged(nameof(ShowGPUPCIeBusIDs));
-            }
+            get => GlobalDeviceSettings.Instance.ShowGPUPCIeBusIDs;
+            set => GlobalDeviceSettings.Instance.ShowGPUPCIeBusIDs = value;
         }
-
         #endregion Global Device settings
 
         // methods
@@ -296,6 +330,7 @@ namespace NHMCore.Configs.Data
             //LessThreads = 0;
             DebugConsole = false;
             HideMiningWindows = false;
+            MinimizeMiningWindows = false;
             MinimizeToTray = false;
             AutoScaleBTCValues = true;
             StartMiningWhenIdle = false;
@@ -305,6 +340,7 @@ namespace NHMCore.Configs.Data
             DisableWindowsErrorReporting = true;
             ShowInternetConnectionWarning = true;
             NVIDIAP0State = false;
+            MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;
             SwitchProfitabilityThreshold = 0.05; // percent
             MinIdleSeconds = 60;
@@ -315,6 +351,7 @@ namespace NHMCore.Configs.Data
             IdleCheckType = IdleCheckType.SessionLock;
             AllowMultipleInstances = true;
             UseIFTTT = false;
+            IFTTTKey = "";
             CoolDownCheckEnabled = true;
             RunScriptOnCUDA_GPU_Lost = false;
             SwitchSmaTimeChangeSeconds = new Interval(34, 55);
@@ -324,7 +361,13 @@ namespace NHMCore.Configs.Data
             ShowPowerColumns = false;
             ShowDiagColumns = true;
             UseEthlargement = false;
-            
+            Use3rdPartyMinersTOS = 0;
+            Hwid = "";
+            AgreedWithTOS = 0;
+            KwhPrice = 0;
+            DisplayTheme = "Light";
+            ShowGPUPCIeBusIDs = false;
+
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;
             DisableDeviceStatusMonitoring = false;

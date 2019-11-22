@@ -469,10 +469,10 @@ namespace NHMCore.Stats
                 var hasEU = markets.data.Contains("EU");
                 var hasUSA = markets.data.Contains("USA");
 #if !DEBUG_MARKETS
-                StratumService.SetEnabled(hasEU, hasUSA);
+                StratumService.Instance.SetEnabled(hasEU, hasUSA);
 #else
                 changeDebugMarkets();
-                StratumService.SetEnabled(debugEU, debugUSA);
+                StratumService.Instance.SetEnabled(debugEU, debugUSA);
 #endif
             }
             catch (Exception e)

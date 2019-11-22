@@ -24,7 +24,7 @@
                         <Separator x:Name="spt_advanced" Background="{StaticResource Brushes.Dark.Basic.MainColor}" />
                     </StackPanel>
                 </StackPanel>
-                <Border BorderBrush="#eeeeee" BorderThickness="1" Height="450" Margin="0,10,0,0">
+                <Border BorderBrush="#eeeeee" BorderThickness="1" Height="435" Margin="0,10,0,0">
                     <Grid>
                         <Grid x:Name="grid_SettingsGeneral">
                             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">

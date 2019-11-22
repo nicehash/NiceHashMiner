@@ -10,6 +10,28 @@ namespace NHMCore.Configs
         private IdleMiningSettings()
         { }
 
+        private int _minIdleSeconds { get; set; } = 60;
+        public int MinIdleSeconds
+        {
+            get => _minIdleSeconds;
+            set
+            {
+                _minIdleSeconds = value;
+                OnPropertyChanged(nameof(MinIdleSeconds));
+            }
+        }
+
+        private bool _idleWhenNoInternetAccess = true;
+        public bool IdleWhenNoInternetAccess
+        {
+            get => _idleWhenNoInternetAccess;
+            set
+            {
+                _idleWhenNoInternetAccess = value;
+                OnPropertyChanged(nameof(IdleWhenNoInternetAccess));
+            }
+        }
+
         private bool _startMiningWhenIdle;
         public bool StartMiningWhenIdle
         {
@@ -17,7 +39,7 @@ namespace NHMCore.Configs
             set
             {
                 _startMiningWhenIdle = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(StartMiningWhenIdle));
             }
         }
 
@@ -28,13 +50,18 @@ namespace NHMCore.Configs
             set
             {
                 _idleCheckType = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(IdleCheckType));
             }
         }
+
         public int IdleCheckTypeIndex
         {
             get => (int)IdleCheckType;
-            set => IdleCheckType = (IdleCheckType)value;
+            set
+            {
+                IdleCheckType = (IdleCheckType)value;
+                OnPropertyChanged(nameof(IdleCheckTypeIndex));
+            }
         }
 
         public bool IsIdleCheckTypeInputTimeout

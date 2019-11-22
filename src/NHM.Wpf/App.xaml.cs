@@ -73,7 +73,7 @@ namespace NHM.Wpf
             ConfigManager.InitializeConfig();
 
             // Check multiple instances
-            if (!ConfigManager.GeneralConfig.AllowMultipleInstances)
+            if (!MiscSettings.Instance.AllowMultipleInstances)
             {
                 try
                 {
@@ -106,15 +106,15 @@ namespace NHM.Wpf
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             Logger.Info(Tag, $"Starting up {ApplicationStateManager.Title}");
-            if (ConfigManager.GeneralConfig.agreedWithTOS != ApplicationStateManager.CurrentTosVer)
+            if (ToSSetings.Instance.AgreedWithTOS != ApplicationStateManager.CurrentTosVer)
             {
-                Logger.Info(Tag, $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}");
+                Logger.Info(Tag, $"TOS differs! agreed: {ToSSetings.Instance.AgreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}");
 
                 var eula = new EulaWindow{};
                 var accepted = eula.ShowDialog();
                 if (accepted.HasValue && eula.AcceptedTos)
                 {
-                    ConfigManager.GeneralConfig.agreedWithTOS = ApplicationStateManager.CurrentTosVer;
+                    ToSSetings.Instance.AgreedWithTOS = ApplicationStateManager.CurrentTosVer;
                 }
                 else
                 {
@@ -125,7 +125,7 @@ namespace NHM.Wpf
             }
 
             // Check 3rd party miners TOS
-            if (ConfigManager.GeneralConfig.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
+            if (ToSSetings.Instance.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
             {
                 var thirdPty = new _3rdPartyTosWindow{};
                 thirdPty.ShowDialog();
@@ -135,12 +135,12 @@ namespace NHM.Wpf
                     Shutdown();
                     return;
                 }
-                ConfigManager.GeneralConfig.Use3rdPartyMinersTOS = ApplicationStateManager.CurrentTosVer;
+                ToSSetings.Instance.Use3rdPartyMinersTOS = ApplicationStateManager.CurrentTosVer;
                 ConfigManager.GeneralConfigFileCommit();
             }
 
             // Chose lang
-            if (string.IsNullOrEmpty(ConfigManager.GeneralConfig.Language))
+            if (string.IsNullOrEmpty(GUISettings.Instance.Language))
             {
                 var langToSet = "en";
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
@@ -154,11 +154,11 @@ namespace NHM.Wpf
                     langToSet = Translations.GetLanguageCodeFromIndex(lang.SelectedLangIndex);
                 }
 
-                ConfigManager.GeneralConfig.Language = langToSet;
+                GUISettings.Instance.Language = langToSet;
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            Translations.SelectedLanguage = ConfigManager.GeneralConfig.Language;
+            Translations.SelectedLanguage = GUISettings.Instance.Language;
 
             //var login = new LoginWindow { };
             //var nek = login.ShowDialog();
