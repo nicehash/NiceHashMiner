@@ -23,12 +23,12 @@ namespace Phoenix
             // https://bitcointalk.org/index.php?topic=2647654.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "4.7c",
-                ExePath = new List<string> { "PhoenixMiner_4.7c_Windows", "PhoenixMiner.exe" },
+                BinVersion = "4.8c",
+                ExePath = new List<string> { "PhoenixMiner_4.8c_Windows", "PhoenixMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/PhoenixMiner_4.7c_Windows.7z",
-                    "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?fcFnUIhD" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.2.16plus/PhoenixMiner_4.8c_Windows.zip",
+                    "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?yIM2WArR" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,7 +40,7 @@ namespace Phoenix
 
         public override string PluginUUID => "f5d4a470-e360-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(3, 3);
+        public override Version Version => new Version(3, 4);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
