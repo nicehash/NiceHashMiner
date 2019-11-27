@@ -147,8 +147,9 @@ namespace MinerPluginsPacker
                 "f5d4a470-e360-11e9-a914-497feefbdfc8", // PhoenixPlugin
                 "abc3e2a0-7237-11e9-b20c-f9f12eb6d835", // TeamRedMinerPlugin
                 "d47d9b00-7237-11e9-b20c-f9f12eb6d835", // TRexPlugin
-                "3d4e56b0-7238-11e9-b20c-f9f12eb6d835", // XmrStakPlugin
+                //"3d4e56b0-7238-11e9-b20c-f9f12eb6d835", // XmrStakPlugin
                 "5532d300-7238-11e9-b20c-f9f12eb6d835", // ZEnemyPlugin
+                "4aec5ec0-10f8-11ea-bad3-8dea21141bbb", // XmrStakRxPlugin
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
 
