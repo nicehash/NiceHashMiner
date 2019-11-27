@@ -23,11 +23,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v26.1",
+                BinVersion = "v26.2",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v26.1/NBMiner_26.1_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v26.2/NBMiner_26.2_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace NBMiner
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 3);
+        public override Version Version => new Version(3, 4);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
