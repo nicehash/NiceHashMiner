@@ -38,7 +38,7 @@ namespace NanoMiner
             return new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
-                new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
+                //new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
             };
         }
 
