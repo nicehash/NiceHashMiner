@@ -105,6 +105,8 @@ namespace NHM.Common.Enums
         BeamV2 = 45,
         //[Obsolete("UNUSED Algorithm")]
         X16Rv2 = 46,
+        //[Obsolete("UNUSED Algorithm")]
+        RandomX = 47,
         #endregion // NiceHashAPI
     }
 
