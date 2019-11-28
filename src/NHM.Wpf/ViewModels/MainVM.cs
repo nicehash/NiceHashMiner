@@ -102,14 +102,13 @@ namespace NHM.Wpf.ViewModels
             set
             {
                 _theme = value;
-                ConfigManager.GeneralConfig.DisplayTheme = _theme;
                 OnPropertyChanged();
             }
         }
 
         public void SetTheme(System.Windows.Window window)
         {
-            var theme = ConfigManager.GeneralConfig.DisplayTheme;
+            var theme = _theme;
             var windowBackground = theme != "Light" ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(1, 13, 21)) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
             window.Background = windowBackground;
         }

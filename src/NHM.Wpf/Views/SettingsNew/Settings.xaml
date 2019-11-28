@@ -45,7 +45,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Width="136" Height="24" HorizontalAlignment="Left" Grid.Column="0">
+            <Button Width="136" Height="24" HorizontalAlignment="Left" Grid.Column="0" x:Name="btn_default" Click="Btn_default_Click" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonWhite}" />
                 </Button.Resources>

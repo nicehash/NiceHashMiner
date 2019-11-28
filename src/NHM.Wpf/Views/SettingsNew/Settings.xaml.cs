@@ -1,4 +1,5 @@
 ﻿using NHM.Wpf.ViewModels;
+using NHMCore.Configs;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -56,6 +57,11 @@ namespace NHM.Wpf.Views.SettingsNew
         {
             _isGeneral = false;
             OnScreenChange();
+        }
+
+        private void Btn_default_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigManager.SetDefaults();
         }
     }
 }

@@ -43,7 +43,7 @@ namespace NHM.Wpf.Views.Common.NHBase
                 var windowBackground = isLight ? new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255)) : new SolidColorBrush(System.Windows.Media.Color.FromRgb(1, 13, 21));
                 NHMIcon.Background = icon as DrawingBrush;
                 this.Background = windowBackground;
-                ConfigManager.GeneralConfig.DisplayTheme = isLight ? "Light" : "Dark";
+                GUISettings.Instance.DisplayTheme = isLight ? "Light" : "Dark";
             }           
         }
 
