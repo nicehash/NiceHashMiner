@@ -95,20 +95,9 @@ namespace NHM.Wpf.ViewModels
         public WarningSettings WarningSettings => WarningSettings.Instance;
         #endregion Exposed settings
 
-        private string _theme = GUISettings.Instance.DisplayTheme;
-        public string Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                OnPropertyChanged();
-            }
-        }
-
         public void SetTheme(System.Windows.Window window)
         {
-            var theme = _theme;
+            var theme = GUISettings.Instance.DisplayTheme;
             var windowBackground = theme != "Light" ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(1, 13, 21)) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
             window.Background = windowBackground;
         }
