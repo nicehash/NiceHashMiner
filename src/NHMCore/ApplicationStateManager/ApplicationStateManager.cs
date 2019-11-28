@@ -1,5 +1,6 @@
 using NHM.Common.Enums;
 using NHM.UUID;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Stats;
@@ -73,36 +74,6 @@ namespace NHMCore
         }
         #endregion
 
-        #region BtcBalance and fiat balance
-
-        public static double BtcBalance { get; private set; }
-
-        private static (double fiatBalance, string fiatSymbol) getFiatFromBtcBalance(double btcBalance)
-        {
-            var usdAmount = (BtcBalance * ExchangeRateApi.GetUsdExchangeRate());
-            var fiatBalance = ExchangeRateApi.ConvertToActiveCurrency(usdAmount);
-            var fiatSymbol = ExchangeRateApi.ActiveDisplayCurrency;
-            return (fiatBalance, fiatSymbol);
-        }
-
-        public static void OnAutoScaleBTCValuesChange()
-        {
-            // btc
-            DisplayBTCBalance?.Invoke(null, BtcBalance);
-            // fiat
-            DisplayFiatBalance?.Invoke(null, getFiatFromBtcBalance(BtcBalance));
-        }
-
-        public static void OnBalanceUpdate(double btcBalance)
-        {
-            BtcBalance = btcBalance;
-            // btc
-            DisplayBTCBalance?.Invoke(null, BtcBalance);
-            // fiat
-            DisplayFiatBalance?.Invoke(null, getFiatFromBtcBalance(BtcBalance));
-        }
-#endregion
-
         [Flags]
         public enum CredentialsValidState : uint
         {
@@ -117,11 +88,11 @@ namespace NHMCore
             // assume it is valid
             var ret = CredentialsValidState.VALID;
 
-            if (!CredentialValidators.ValidateBitcoinAddress(ConfigManager.GeneralConfig.BitcoinAddress))
+            if (!CredentialValidators.ValidateBitcoinAddress(CredentialsSettings.Instance.BitcoinAddress))
             {
                 ret |= CredentialsValidState.INVALID_BTC;
             }
-            if (!CredentialValidators.ValidateWorkerName(ConfigManager.GeneralConfig.WorkerName))
+            if (!CredentialValidators.ValidateWorkerName(CredentialsSettings.Instance.WorkerName))
             {
                 ret |= CredentialsValidState.INVALID_WORKER;
             }
@@ -143,8 +114,8 @@ namespace NHMCore
             if (state == CredentialsValidState.VALID)
             {
                 // Reset credentials
-                var (btc, worker, group) = ConfigManager.GeneralConfig.GetCredentials();
-                NiceHashStats.SetCredentials(btc, worker, group);
+                var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
+                NHWebSocket.ResetCredentials(btc, worker, group);
             }
             else
             {
@@ -162,18 +133,18 @@ namespace NHMCore
 #region BTC setter
 
         // make sure to pass in trimmedBtc
-        public static SetResult SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
+        public static async Task<SetResult> SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
         {
-            if (btc == ConfigManager.GeneralConfig.BitcoinAddress && btc != "")
+            if (btc == CredentialsSettings.Instance.BitcoinAddress && btc != "")
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
             if (!CredentialValidators.ValidateBitcoinAddress(btc))
             {
-                ConfigManager.GeneralConfig.BitcoinAddress = btc;
+                CredentialsSettings.Instance.BitcoinAddress = btc;
                 return SetResult.INVALID;
             }
-            SetBTC(btc);
+            await SetBTC(btc);
             if (!skipCredentialsSet)
             {
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
@@ -181,12 +152,12 @@ namespace NHMCore
             return SetResult.CHANGED;
         }
 
-        private static void SetBTC(string btc)
+        private static async Task SetBTC(string btc)
         {
             // change in memory and save changes to file
-            ConfigManager.GeneralConfig.BitcoinAddress = btc;
+            CredentialsSettings.Instance.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
-            RestartMinersIfMining();
+            await RestartMinersIfMining();
         }
 #endregion
 
@@ -194,9 +165,9 @@ namespace NHMCore
 
         // make sure to pass in trimmed workerName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
-        public static SetResult SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
+        public static async Task<SetResult> SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
         {
-            if (workerName == ConfigManager.GeneralConfig.WorkerName)
+            if (workerName == CredentialsSettings.Instance.WorkerName)
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
@@ -204,7 +175,7 @@ namespace NHMCore
             {
                 return SetResult.INVALID;
             }
-            SetWorker(workerName);
+            await SetWorker(workerName);
             if (!skipCredentialsSet)
             {
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
@@ -213,12 +184,12 @@ namespace NHMCore
             return SetResult.CHANGED;
         }
 
-        private static void SetWorker(string workerName)
+        private static async Task SetWorker(string workerName)
         {
             // change in memory and save changes to file
-            ConfigManager.GeneralConfig.WorkerName = workerName;
+            CredentialsSettings.Instance.WorkerName = workerName;
             ConfigManager.GeneralConfigFileCommit();
-            RestartMinersIfMining();
+            await RestartMinersIfMining();
         }
 #endregion
 
@@ -228,7 +199,7 @@ namespace NHMCore
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
         public static SetResult SetGroupIfValidOrDifferent(string groupName, bool skipCredentialsSet = false)
         {
-            if (groupName == ConfigManager.GeneralConfig.RigGroup)
+            if (groupName == CredentialsSettings.Instance.RigGroup)
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
@@ -250,10 +221,8 @@ namespace NHMCore
         private static void SetGroup(string groupName)
         {
             // change in memory and save changes to file
-            ConfigManager.GeneralConfig.RigGroup = groupName;
+            CredentialsSettings.Instance.RigGroup = groupName;
             ConfigManager.GeneralConfigFileCommit();
-            // notify all components
-            DisplayGroup?.Invoke(null, groupName);
         }
 #endregion
 
@@ -372,7 +341,7 @@ namespace NHMCore
             {
                 if (_currentForm == value) return;
                 _currentForm = value;
-                NiceHashStats.NotifyStateChangedTask();
+                NHWebSocket.NotifyStateChanged();
             }
         }
 

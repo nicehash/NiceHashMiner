@@ -9,40 +9,6 @@ namespace NHMCore
         // lock for adding and removing IDataVisualizers
         static object objectLock = new object();
 
-#region IBalanceBTCDisplayer DisplayBTCBalance double
-        public static event EventHandler<double> DisplayBTCBalance;
-        private static void subscribeIBalanceBTCDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IBalanceBTCDisplayer sIBalanceBTCDisplayer)) return;
-            DisplayBTCBalance += sIBalanceBTCDisplayer.DisplayBTCBalance;
-            // emit on single shot
-            EventHandler<double> singleShotEvent = sIBalanceBTCDisplayer.DisplayBTCBalance;
-            singleShotEvent.Invoke(null, BtcBalance);
-        }
-
-        private static void unsubscribeIBalanceBTCDisplayer(IDataVisualizer s)
-        {
-            if (s is IBalanceBTCDisplayer sIBalanceBTCDisplayer) DisplayBTCBalance -= sIBalanceBTCDisplayer.DisplayBTCBalance;
-        }
-#endregion IBalanceBTCDisplayer DisplayBTCBalance double
-
-#region IBalanceFiatDisplayer DisplayFiatBalance (double fiatBalance, string fiatCurrencySymbol)
-        static event EventHandler<(double fiatBalance, string fiatCurrencySymbol)> DisplayFiatBalance;
-        private static void subscribeIBalanceFiatDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IBalanceFiatDisplayer sIBalanceFiatDisplayer)) return;
-            DisplayFiatBalance += sIBalanceFiatDisplayer.DisplayFiatBalance;
-            // emit on single shot
-            EventHandler<(double fiatBalance, string fiatCurrencySymbol)> singleShotEvent = sIBalanceFiatDisplayer.DisplayFiatBalance;
-            singleShotEvent.Invoke(null, getFiatFromBtcBalance(BtcBalance));
-        }
-
-        private static void unsubscribeIBalanceFiatDisplayer(IDataVisualizer s)
-        {
-            if (s is IBalanceFiatDisplayer sIBalanceFiatDisplayer) DisplayFiatBalance -= sIBalanceFiatDisplayer.DisplayFiatBalance;
-        }
-#endregion IBalanceFiatDisplayer DisplayFiatBalance (double fiatBalance, string fiatCurrencySymbol)
-
 #region IGlobalMiningRateDisplayer DisplayGlobalMiningRate double
         static event EventHandler<double> DisplayGlobalMiningRate;
         private static void subscribeIGlobalMiningRateDisplayer(IDataVisualizer s)
@@ -56,20 +22,6 @@ namespace NHMCore
             if (s is IGlobalMiningRateDisplayer sIGlobalMiningRateDisplayer) DisplayGlobalMiningRate -= sIGlobalMiningRateDisplayer.DisplayGlobalMiningRate;
         }
 #endregion IGlobalMiningRateDisplayer DisplayGlobalMiningRate double
-
-#region IGroupDisplayer DisplayGroup string
-        static event EventHandler<string> DisplayGroup;
-        private static void subscribeIGroupDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IGroupDisplayer sIGroupDisplayer)) return;
-            DisplayGroup += sIGroupDisplayer.DisplayGroup;
-        }
-
-        private static void unsubscribeIGroupDisplayer(IDataVisualizer s)
-        {
-            if (s is IGroupDisplayer sIGroupDisplayer) DisplayGroup -= sIGroupDisplayer.DisplayGroup;
-        }
-#endregion IGroupDisplayer DisplayGroup string
 
 #region IMiningProfitableDisplayer DisplayMiningProfitable EventArgs
         static event EventHandler<bool> _DisplayMiningProfitability;
@@ -132,14 +84,7 @@ namespace NHMCore
         {
             lock (objectLock)
             {
-
-                subscribeIBalanceBTCDisplayer(s);
-
-                subscribeIBalanceFiatDisplayer(s);
-
                 subscribeIGlobalMiningRateDisplayer(s);
-
-                subscribeIGroupDisplayer(s);
 
                 subscribeIMiningProfitableDisplayer(s);
 
@@ -156,14 +101,7 @@ namespace NHMCore
         {
             lock (objectLock)
             {
-
-                unsubscribeIBalanceBTCDisplayer(s);
-
-                unsubscribeIBalanceFiatDisplayer(s);
-
                 unsubscribeIGlobalMiningRateDisplayer(s);
-
-                unsubscribeIGroupDisplayer(s);
 
                 unsubscribeIMiningProfitableDisplayer(s);
 

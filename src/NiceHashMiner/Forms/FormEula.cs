@@ -30,7 +30,7 @@ namespace NiceHashMiner.Forms
         private void buttonAcceptToS_Click(object sender, EventArgs e)
         {
             AcceptedToS = true;
-            ConfigManager.GeneralConfig.agreedWithTOS = ApplicationStateManager.CurrentTosVer;
+            ToSSetings.Instance.AgreedWithTOS = ApplicationStateManager.CurrentTosVer;
             ConfigManager.GeneralConfigFileCommit();
             Close();
         }

@@ -9,13 +9,14 @@ using NHMCore.Interfaces;
 using NHMCore.Stats;
 using NHMCore.Utils;
 using NHMCore;
+using NHMCore.ApplicationState;
 
 namespace NiceHashMiner.Forms.Components
 {
     /// <summary>
     /// Displays devices with hashrates/profits and optional power/diag columns. During mining groups devices by miner/algo combo.
     /// </summary>
-    public partial class DevicesListViewSpeedControl : DevicesListViewEnableControl, IRatesComunication
+    public partial class DevicesListViewSpeedControl : DevicesListViewEnableControl //, IRatesComunication
     {
         private enum Column : int
         {
@@ -52,14 +53,14 @@ namespace NiceHashMiner.Forms.Components
 
         private static bool ShowPowerCols
         {
-            get => ConfigManager.GeneralConfig.ShowPowerColumns;
-            set => ConfigManager.GeneralConfig.ShowPowerColumns = value;
+            get => GUISettings.Instance.ShowPowerColumns;
+            set => GUISettings.Instance.ShowPowerColumns = value;
         }
 
         private static bool ShowDiagCols
         {
-            get => ConfigManager.GeneralConfig.ShowDiagColumns;
-            set => ConfigManager.GeneralConfig.ShowDiagColumns = value;
+            get => GUISettings.Instance.ShowDiagColumns;
+            set => GUISettings.Instance.ShowDiagColumns = value;
         }
 
         public void SetIsMining(bool isMining)
@@ -376,9 +377,9 @@ namespace NiceHashMiner.Forms.Components
                 _ignoreChecks = false;
             }
 
-            var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
-            var minersMiningStats = MiningStats.GetMinersMiningStats();
-            var devicesMiningStats = MiningStats.GetDevicesMiningStats();
+            var kwhPriceInBtc = BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();
+            var minersMiningStats = MiningDataStats.GetMinersMiningStats();
+            var devicesMiningStats = MiningDataStats.GetDevicesMiningStats();
             foreach(var minerStats in minersMiningStats)
             {
                 // get data
@@ -444,12 +445,12 @@ namespace NiceHashMiner.Forms.Components
 
         private static string CurrencyPerTimeUnit()
         {
-            return FormatPerTimeUnit(ExchangeRateApi.ActiveDisplayCurrency);
+            return FormatPerTimeUnit(BalanceAndExchangeRates.Instance.SelectedFiatCurrency);
         }
 
         private static string FormatPerTimeUnit(string unit)
         {
-            var timeUnit = Translations.Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+            var timeUnit = Translations.Tr(GUISettings.Instance.TimeUnit.ToString());
             return $"{unit}/{timeUnit}";
         }
         
@@ -461,14 +462,14 @@ namespace NiceHashMiner.Forms.Components
                 item.SubItems[(int)Column.Speeds].Text = Helpers.FormatSpeedOutput(speedPairs);
                 //item.SubItems[SecSpeed].Text = secSpeed > 0 ? Helpers.FormatSpeedOutput(secSpeed) : "";
 
-                var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);
+                var fiat = BalanceAndExchangeRates.Instance.ConvertFromBtc(profit * TimeFactor.TimeUnit);
                 if (ShowPowerCols)
                 {
                     // When showing power cols, the default "profit" header changes to revenue
                     // The power headers then explain cost of power and real profit after subtracting this
                     item.SubItems[(int)Column.Profit].Text = (revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                    item.SubItems[(int)Column.Fiat].Text = ExchangeRateApi.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
-                    var powerCost = ExchangeRateApi.ConvertFromBtc(power * TimeFactor.TimeUnit);
+                    item.SubItems[(int)Column.Fiat].Text = BalanceAndExchangeRates.Instance.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
+                    var powerCost = BalanceAndExchangeRates.Instance.ConvertFromBtc(power * TimeFactor.TimeUnit);
                     SetPowerText(item, powerUsage, powerCost, fiat);
                 }
                 else

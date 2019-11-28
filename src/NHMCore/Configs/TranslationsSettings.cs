@@ -1,11 +1,30 @@
-﻿
+﻿using NHM.Common;
+using System.Collections.Generic;
+
 namespace NHMCore.Configs
 {
-    public class TranslationsSettings
+    public class TranslationsSettings : NotifyChangedBase
     {
         public static TranslationsSettings Instance { get; } = new TranslationsSettings();
 
-        public string Language { get; set; } = ""; // no language by default
+        private TranslationsSettings()
+        {
+
+        }
+
+        public IEnumerable<string> LanguageOptions => Translations.GetAvailableLanguagesNames();
+
+        private string _language = ""; // no language by default
+        public string Language
+        {
+            get => _language;
+            set
+            {
+                _language = value;
+                OnPropertyChanged(nameof(Language));
+            }
+        }
+
         public int LanguageIndex
         {
             get => Translations.GetLanguageIndexFromCode(Language);
@@ -18,9 +37,8 @@ namespace NHMCore.Configs
 
                     Translations.SelectedLanguage = Language;
                 }
+                OnPropertyChanged(nameof(LanguageIndex));
             }
         }
-
-
     }
 }

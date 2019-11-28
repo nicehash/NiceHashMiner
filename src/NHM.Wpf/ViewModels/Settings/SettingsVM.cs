@@ -1,5 +1,6 @@
 ﻿using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Configs.Data;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,7 +29,8 @@ namespace NHM.Wpf.ViewModels.Settings
         {
             ConfigManager.CreateBackup();
 
-            var settingsObj = ConfigManager.GeneralConfig;
+            // TODO this is stub, we will delete SettingsVM
+            GeneralConfig settingsObj = null;
 
             PageVMs = new List<SettingsBaseVM>
             {
@@ -57,7 +59,7 @@ namespace NHM.Wpf.ViewModels.Settings
 
         public void SetDefaults()
         {
-            ConfigManager.GeneralConfig.SetDefaults();
+            ConfigManager.SetDefaults();
             DefaultsSet = true;
         }
 

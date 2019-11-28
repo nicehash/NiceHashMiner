@@ -121,7 +121,7 @@ namespace NHMCore
                 }
 
                 // STEP
-                DeviceMonitorManager.DisableDevicePowerModeSettings = ConfigManager.GeneralConfig.DisableDevicePowerModeSettings;
+                DeviceMonitorManager.DisableDevicePowerModeSettings = GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings;
                 loader.PrimaryProgress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
                 var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice), detectionResult.IsDCHDriver);
                 foreach (var monitor in monitors)
@@ -151,17 +151,20 @@ namespace NHMCore
                 // connect to nhmws
                 loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
                 // Init ws connection
-                NiceHashStats.StartConnection(Nhmws.NhmSocketAddress);
+                var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
+                NHWebSocket.SetCredentials(btc, worker, group);
+                _ = Task.Run(() => NHWebSocket.Start(Nhmws.NhmSocketAddress, ExitApplication.Token));
+                
 
                 // STEP
                 // disable windows error reporting
                 loader.PrimaryProgress?.Report((Tr("Setting Windows error reporting..."), nextProgPerc()));
-                Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
+                Helpers.DisableWindowsErrorReporting(WarningSettings.Instance.DisableWindowsErrorReporting);
 
                 // STEP
                 // Nvidia p0
                 loader.PrimaryProgress?.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
-                if (ConfigManager.GeneralConfig.NVIDIAP0State && AvailableDevices.HasNvidia)
+                if (MiningSettings.Instance.NVIDIAP0State && AvailableDevices.HasNvidia)
                 {
                     Helpers.SetNvidiaP0State();
                 }
@@ -244,7 +247,7 @@ namespace NHMCore
             finally
             {
                 isInitFinished = true;
-                NiceHashStats.NotifyStateChangedTask();
+                NHWebSocket.NotifyStateChanged();
             }
         }
 

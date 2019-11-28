@@ -81,57 +81,39 @@
                 <DrawingGroup.ClipGeometry>
                     <RectangleGeometry Rect="0,0,212,214" />
                 </DrawingGroup.ClipGeometry>
-                <DrawingGroup Opacity="1" Transform="1,0,0,1,46,26">
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FF000000">
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1" Transform="1,0,0,1,46,26">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FF000000">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing>
+                                <GeometryDrawing.Pen>
+                                    <Pen Brush="#FFDBEED2" Thickness="10" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                                </GeometryDrawing.Pen>
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
                     </DrawingGroup>
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FF000000">
-                            <GeometryDrawing.Pen>
-                                <Pen Brush="#FFDBEED2" Thickness="10" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
-                            </GeometryDrawing.Pen>
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
+                    <GeometryDrawing Brush="#FF68B641">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Figures="M94.333,73.949L94.333,98.06A1.667,1.667,0,0,0,96.857,99.49L116.951,87.433A1.667,1.667,0,0,0,116.951,84.575L96.857,72.519A1.667,1.667,0,0,0,94.333,73.949z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
                 </DrawingGroup>
             </DrawingGroup>
 
             <DrawingGroup x:Key="StartHover">
                 <DrawingGroup.ClipGeometry>
-                    <RectangleGeometry Rect="0,0,238,247" />
+                    <RectangleGeometry Rect="0,0,234,245" />
                 </DrawingGroup.ClipGeometry>
-                <DrawingGroup Opacity="1" Transform="1,0,0,1,59,26">
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FF000000">
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FF000000">
-                            <GeometryDrawing.Pen>
-                                <Pen Brush="#FF68B641" Thickness="10" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
-                            </GeometryDrawing.Pen>
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
-                    </DrawingGroup>
-                </DrawingGroup>
-            </DrawingGroup>
-
-            <DrawingGroup x:Key="Stop">
-                <DrawingGroup.ClipGeometry>
-                    <RectangleGeometry Rect="0,0,213,214" />
-                </DrawingGroup.ClipGeometry>
-                <DrawingGroup Opacity="1" Transform="1,0,0,1,46,26">
+                <DrawingGroup Opacity="1" Transform="1,0,0,1,57,26">
                     <DrawingGroup Opacity="1">
                         <GeometryDrawing Brush="#FF000000">
                             <GeometryDrawing.Geometry>
@@ -142,50 +124,101 @@
                     <DrawingGroup Opacity="1">
                         <GeometryDrawing>
                             <GeometryDrawing.Pen>
-                                <Pen Thickness="10.714" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                    <Pen.Brush>
-                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="0.97154,0.5" MappingMode="RelativeToBoundingBox" SpreadMethod="Pad" Opacity="1">
-                                            <GradientStop Color="#FFFBA342" Offset="0" />
-                                            <GradientStop Color="#FFFBC241" Offset="1" />
-                                        </LinearGradientBrush>
-                                    </Pen.Brush>
-                                </Pen>
+                                <Pen Brush="#FF68B641" Thickness="10" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
                             </GeometryDrawing.Pen>
                             <GeometryDrawing.Geometry>
                                 <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+                    </DrawingGroup>
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="#FF68B641">
+                            <GeometryDrawing.Geometry>
+                                <PathGeometry FillRule="Nonzero" Figures="M48.333,47.949L48.333,72.06A1.667,1.667,0,0,0,50.857,73.49L70.951,61.433A1.667,1.667,0,0,0,70.951,58.575L50.857,46.519A1.667,1.667,0,0,0,48.333,47.949z" />
                             </GeometryDrawing.Geometry>
                         </GeometryDrawing>
                     </DrawingGroup>
                 </DrawingGroup>
             </DrawingGroup>
 
-            <!--TODO THIS IS ONLY TO SEE THE TRIGGER WORKING REPLACE IT-->
+            <DrawingGroup x:Key="Stop">
+                <DrawingGroup.ClipGeometry>
+                    <RectangleGeometry Rect="0,0,213,214" />
+                </DrawingGroup.ClipGeometry>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1" Transform="1,0,0,1,46,26">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FF000000">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing>
+                                <GeometryDrawing.Pen>
+                                    <Pen Thickness="10.714" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
+                                        <Pen.Brush>
+                                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="0.97154,0.5" MappingMode="RelativeToBoundingBox" SpreadMethod="Pad" Opacity="1">
+                                                <GradientStop Color="#FFFBA342" Offset="0" />
+                                                <GradientStop Color="#FFFBC241" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Pen.Brush>
+                                    </Pen>
+                                </GeometryDrawing.Pen>
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingGroup>
+                    <DrawingGroup Opacity="0.5">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FFFBA342">
+                                <GeometryDrawing.Geometry>
+                                    <PathGeometry FillRule="Nonzero" Figures="M101,71.005L96,71.005C95.083,71.005,94.333,71.755,94.333,72.672L94.333,99.338C94.333,100.255,95.083,101.005,96,101.005L101,101.005C101.917,101.005,102.667,100.255,102.667,99.338L102.667,72.672C102.667,71.755,101.917,71.005,101,71.005z M114.333,71.005L109.333,71.005C108.417,71.005,107.667,71.755,107.667,72.672L107.667,99.338C107.667,100.255,108.417,101.005,109.333,101.005L114.333,101.005C115.25,101.005,116,100.255,116,99.338L116,72.672C116,71.755,115.25,71.005,114.333,71.005z" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+
             <DrawingGroup x:Key="StopHover">
                 <DrawingGroup.ClipGeometry>
-                    <RectangleGeometry Rect="0,0,244,246" />
+                    <RectangleGeometry Rect="0,0,213,214" />
                 </DrawingGroup.ClipGeometry>
-                <DrawingGroup Opacity="1" Transform="1,0,0,1,62,43">
-                    <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FF000000">
-                            <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
-                            </GeometryDrawing.Geometry>
-                        </GeometryDrawing>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1" Transform="1,0,0,1,46,26">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FF000000">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing>
+                                <GeometryDrawing.Pen>
+                                    <Pen Thickness="10.714" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
+                                        <Pen.Brush>
+                                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="0.97154,0.5" MappingMode="RelativeToBoundingBox" SpreadMethod="Pad" Opacity="1">
+                                                <GradientStop Color="#FFFBA342" Offset="0" />
+                                                <GradientStop Color="#FFFBC241" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Pen.Brush>
+                                    </Pen>
+                                </GeometryDrawing.Pen>
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
                     </DrawingGroup>
                     <DrawingGroup Opacity="1">
-                        <GeometryDrawing Brush="#FFFFFFFF">
-                            <GeometryDrawing.Pen>
-                                <Pen Thickness="10" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter">
-                                    <Pen.Brush>
-                                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="0.97154,0.5" MappingMode="RelativeToBoundingBox" SpreadMethod="Pad" Opacity="1">
-                                            <GradientStop Color="#FFFBA342" Offset="0" />
-                                            <GradientStop Color="#FFFBC241" Offset="1" />
-                                        </LinearGradientBrush>
-                                    </Pen.Brush>
-                                </Pen>
-                            </GeometryDrawing.Pen>
+                        <GeometryDrawing Brush="#FFFBA342">
                             <GeometryDrawing.Geometry>
-                                <EllipseGeometry RadiusX="60" RadiusY="60" Center="60,60" />
+                                <PathGeometry FillRule="Nonzero" Figures="M101,71.005L96,71.005C95.083,71.005,94.333,71.755,94.333,72.672L94.333,99.338C94.333,100.255,95.083,101.005,96,101.005L101,101.005C101.917,101.005,102.667,100.255,102.667,99.338L102.667,72.672C102.667,71.755,101.917,71.005,101,71.005z M114.333,71.005L109.333,71.005C108.417,71.005,107.667,71.755,107.667,72.672L107.667,99.338C107.667,100.255,108.417,101.005,109.333,101.005L114.333,101.005C115.25,101.005,116,100.255,116,99.338L116,72.672C116,71.755,115.25,71.005,114.333,71.005z" />
                             </GeometryDrawing.Geometry>
                         </GeometryDrawing>
                     </DrawingGroup>

@@ -12,6 +12,7 @@ using NHM.Common.Enums;
 using Timer = System.Windows.Forms.Timer;
 
 using BenchmarkSelection = NHM.Common.Enums.AlgorithmBenchmarkSettingsType;
+using static NiceHashMiner.Forms.Components.AlgorithmsListView;
 
 namespace NiceHashMiner.Forms
 {
@@ -37,12 +38,12 @@ namespace NiceHashMiner.Forms
             algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
 
             Icon = NHMCore.Properties.Resources.logo;
-            this.TopMost = NHMCore.Configs.ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
+            this.TopMost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
 
             // clear prev pending statuses
             foreach (var dev in AvailableDevices.Devices)
             foreach (var algo in dev.AlgorithmSettings)
-                algo.ClearBenchmarkPendingFirst();
+                algo.ClearBenchmarkPending();
 
             benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
 

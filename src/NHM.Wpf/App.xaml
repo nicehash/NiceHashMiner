@@ -18,7 +18,6 @@
                 <ResourceDictionary Source="Views/Common/NHBase/NHMMainWindowStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="views:BaseWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:EulaWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:ChooseLanguageWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:_3rdPartyTosWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>

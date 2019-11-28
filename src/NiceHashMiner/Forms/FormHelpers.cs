@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using NHMCore;
 using NHMCore.Interfaces.DataVisualizer;
-using NHMCore.Interfaces.StateSetters;
 
 namespace NiceHashMiner.Forms
 {
@@ -95,11 +94,6 @@ namespace NiceHashMiner.Forms
             {
                 ApplicationStateManager.SubscribeStateDisplayer(dv);
             }
-            // setters
-            if (c is IEnabledDeviceStateSetter setter)
-            {
-                setter.SetDeviceEnabledState += ApplicationStateManager.SetDeviceEnabledState;
-            }
             // call on all controls
             foreach (Control childC in c.Controls)
             {
@@ -112,11 +106,6 @@ namespace NiceHashMiner.Forms
             if (c is IDataVisualizer dv)
             {
                 ApplicationStateManager.UnsubscribeStateDisplayer(dv);
-            }
-            // setters
-            if (c is IEnabledDeviceStateSetter setter)
-            {
-                setter.SetDeviceEnabledState -= ApplicationStateManager.SetDeviceEnabledState;
             }
             // call on all controls
             foreach (Control childC in c.Controls)

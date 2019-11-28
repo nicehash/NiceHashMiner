@@ -5,6 +5,7 @@ using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NHMCore.Benchmarking
 {
@@ -122,7 +123,7 @@ namespace NHMCore.Benchmarking
                         if (ShouldBenchmark(algo))
                         {
                             algorithmQueue.Enqueue(algo);
-                            algo.SetBenchmarkPendingNoMsg();
+                            algo.SetBenchmarkPending();
                         }
                         else
                         {
@@ -239,23 +240,23 @@ namespace NHMCore.Benchmarking
             InBenchmark = true;
         }
 
-        public static void StopBenchmarForDevice(ComputeDevice device)
+        public static Task StopBenchmarForDevice(ComputeDevice device)
         {
-            BenchmarkingComputeDeviceHandler.StopBenchmarkingDevice(device);
+            return BenchmarkingComputeDeviceHandler.StopBenchmarkingDevice(device);
         }
 
-        public static void StopBenchmarForDevices(IEnumerable<ComputeDevice> devices)
-        {
-            foreach (var device in devices)
-            {
-                BenchmarkingComputeDeviceHandler.StopBenchmarkingDevice(device);
-            }
-        }
+        //public static void StopBenchmarForDevices(IEnumerable<ComputeDevice> devices)
+        //{
+        //    foreach (var device in devices)
+        //    {
+        //        BenchmarkingComputeDeviceHandler.StopBenchmarkingDevice(device);
+        //    }
+        //}
 
-        public static void Stop()
+        public static Task Stop()
         {
             InBenchmark = false;
-            BenchmarkingComputeDeviceHandler.StopBenchmarkingAllDevices();
+            return BenchmarkingComputeDeviceHandler.StopBenchmarkingAllDevices();
         }
 
         private static void End()

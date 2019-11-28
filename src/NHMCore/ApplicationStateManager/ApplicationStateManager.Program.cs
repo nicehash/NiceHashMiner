@@ -1,7 +1,7 @@
-using NHMCore.Stats;
 using NHMCore.Utils;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static NHMCore.Translations;
 
@@ -35,7 +35,7 @@ namespace NHMCore
 
         public static CancellationTokenSource ExitApplication { get; } = new CancellationTokenSource();
 
-        public static void BeforeExit()
+        public static async Task BeforeExit()
         {
             try
             {
@@ -44,9 +44,9 @@ namespace NHMCore
             catch { }
             StopRefreshDeviceListViewTimer();
             // close websocket
-            NiceHashStats.EndConnection();
+            //NiceHashStats.EndConnection();
             // stop all mining and benchmarking devices
-            StopAllDevice();
+            await StopAllDevice();
             MessageBoxManager.Unregister();
         }
 
@@ -68,7 +68,7 @@ namespace NHMCore
         {
             if (BurnCalled) return;
             BurnCalled = true;
-            BeforeExit();
+            _ = BeforeExit();
             MessageBox.Show(message, Tr("Error!"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             Application.Exit();
         }

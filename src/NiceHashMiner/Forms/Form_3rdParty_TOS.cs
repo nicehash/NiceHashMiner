@@ -18,7 +18,7 @@ namespace NiceHashMiner.Forms
 
         private void Button_Agree_Click(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.Use3rdPartyMinersTOS = ApplicationStateManager.CurrentTosVer;
+            ToSSetings.Instance.Use3rdPartyMinersTOS = ApplicationStateManager.CurrentTosVer;
             Accepted = true;
             Close();
         }

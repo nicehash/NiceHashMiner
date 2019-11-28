@@ -1,11 +1,13 @@
 ﻿using MinerPluginToolkitV1.Configs;
 using NHM.Common;
+using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Windows.Forms;
 
 namespace NHMCore.Configs
 {
@@ -15,21 +17,12 @@ namespace NHMCore.Configs
 
         public static bool IsVersionChanged { get; private set; } = false;
 
-        public static GeneralConfig GeneralConfig { get; private set; } = new GeneralConfig();
-        
-        // extra composed settings
-        public static RunAtStartup RunAtStartup = RunAtStartup.Instance;
-        public static IdleMiningSettings IdleMiningSettings = IdleMiningSettings.Instance;
-        public static TranslationsSettings TranslationsSettings = TranslationsSettings.Instance;
-        public static CredentialsSettings CredentialsSettings = CredentialsSettings.Instance;
+        // TODO set to internal and refactor external usage
+        private static GeneralConfig GeneralConfig { get; set; } = new GeneralConfig();
 
         private static string GeneralConfigPath => Paths.ConfigsPath("General.json");
 
         private static object _lock = new object();
-        // helper variables
-        private static bool _isGeneralConfigFileInit;
-
-        public static bool IsMiningRegardlesOfProfit => GeneralConfig.MineRegardlessOfProfit;
 
         // backups
         private static GeneralConfigBackup _generalConfigBackup = new GeneralConfigBackup();
@@ -76,9 +69,9 @@ namespace NHMCore.Configs
         {
             // init defaults
             GeneralConfig.SetDefaults();
-            GeneralConfig.hwid = ApplicationStateManager.RigID;
+            ToSSetings.Instance.Hwid = ApplicationStateManager.RigID;
 
-            var asmVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            var asmVersion = new Version(Application.ProductVersion);
 
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
@@ -96,10 +89,10 @@ namespace NHMCore.Configs
                 }
                 if (fromFile?.ConfigFileVersion != null)
                 {
-                    // set config loaded from file
-                    _isGeneralConfigFileInit = true;
                     GeneralConfig = fromFile;
                     GeneralConfig.FixSettingBounds();
+                    // TODO temp 
+                    GeneralConfig.PropertyChanged += BalanceAndExchangeRates.Instance.GeneralConfig_PropertyChanged; 
                 }
                 else
                 {
@@ -171,22 +164,17 @@ namespace NHMCore.Configs
             #endregion MIGRATE plugin UUIDs
         }
 
-        public static bool GeneralConfigIsFileExist()
-        {
-            return _isGeneralConfigFileInit;
-        }
-
         public static void CreateBackup()
         {
             _generalConfigBackup = new GeneralConfigBackup
             {
-                DebugConsole = GeneralConfig.DebugConsole,
-                NVIDIAP0State = GeneralConfig.NVIDIAP0State,
-                LogToFile = GeneralConfig.LogToFile,
-                DisableWindowsErrorReporting = GeneralConfig.DisableWindowsErrorReporting,
-                GUIWindowsAlwaysOnTop = GeneralConfig.GUIWindowsAlwaysOnTop,
-                DisableDeviceStatusMonitoring = GeneralConfig.DisableDeviceStatusMonitoring,
-                DisableDevicePowerModeSettings = GeneralConfig.DisableDevicePowerModeSettings,
+                DebugConsole = LoggingDebugConsoleSettings.Instance.DebugConsole,
+                NVIDIAP0State = MiningSettings.Instance.NVIDIAP0State,
+                LogToFile = LoggingDebugConsoleSettings.Instance.LogToFile,
+                DisableWindowsErrorReporting = WarningSettings.Instance.DisableWindowsErrorReporting,
+                GUIWindowsAlwaysOnTop = GUISettings.Instance.GUIWindowsAlwaysOnTop,
+                DisableDeviceStatusMonitoring = GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring,
+                DisableDevicePowerModeSettings = GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings,
             };
             _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
             foreach (var cDev in AvailableDevices.Devices)
@@ -197,13 +185,13 @@ namespace NHMCore.Configs
 
         public static bool IsRestartNeeded()
         {
-            return GeneralConfig.DebugConsole != _generalConfigBackup.DebugConsole
-                   || GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
-                   || GeneralConfig.LogToFile != _generalConfigBackup.LogToFile
-                   || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
-                   || GeneralConfig.GUIWindowsAlwaysOnTop != _generalConfigBackup.GUIWindowsAlwaysOnTop
-                   || GeneralConfig.DisableDeviceStatusMonitoring != _generalConfigBackup.DisableDeviceStatusMonitoring
-                   || GeneralConfig.DisableDevicePowerModeSettings != _generalConfigBackup.DisableDevicePowerModeSettings;
+            return LoggingDebugConsoleSettings.Instance.DebugConsole != _generalConfigBackup.DebugConsole
+                   || MiningSettings.Instance.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
+                   || LoggingDebugConsoleSettings.Instance.LogToFile != _generalConfigBackup.LogToFile
+                   || WarningSettings.Instance.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
+                   || GUISettings.Instance.GUIWindowsAlwaysOnTop != _generalConfigBackup.GUIWindowsAlwaysOnTop
+                   || GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring != _generalConfigBackup.DisableDeviceStatusMonitoring
+                   || GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings != _generalConfigBackup.DisableDevicePowerModeSettings;
         }
 
         public static void GeneralConfigFileCommit()
@@ -262,6 +250,16 @@ namespace NHMCore.Configs
             public bool GUIWindowsAlwaysOnTop { get; set; }
             public bool DisableDeviceStatusMonitoring { get; set; }
             public bool DisableDevicePowerModeSettings { get; set; }
+        }
+
+        public static void SetDefaults()
+        {
+            GeneralConfig.SetDefaults();
+        }
+
+        public static void FixSettingBounds()
+        {
+            GeneralConfig.FixSettingBounds();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace NiceHashMiner.Forms
             flowLayoutPanelPluginsLV.Controls.Clear();
             CenterToScreen();
             Icon = NHMCore.Properties.Resources.logo;
-            TopMost = NHMCore.Configs.ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
+            TopMost = NHMCore.Configs.GUISettings.Instance.GUIWindowsAlwaysOnTop;
             FormHelpers.TranslateFormControls(this);
 
             Shown += new EventHandler(FormShown);

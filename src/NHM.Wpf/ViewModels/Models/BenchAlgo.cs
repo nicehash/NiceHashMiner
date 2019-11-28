@@ -21,12 +21,12 @@ namespace NHM.Wpf.ViewModels.Models
         {
             get
             {
-                if (Algo.InBenchmark)
+                if (Algo.IsBenchmarking)
                     return new string('.', _dotCount);
                 if (Algo.IsBenchmarkPending)
                     return Translations.Tr("Waiting benchmark");
                 if (Algo.BenchmarkErred)
-                    return string.IsNullOrWhiteSpace(Algo.ErrorMessage) ? Translations.Tr("Error") : Algo.ErrorMessage;
+                    return string.IsNullOrWhiteSpace(Algo.BenchmarkErrorMessage) ? Translations.Tr("Error") : Algo.BenchmarkErrorMessage;
                 if (Algo.BenchmarkSpeed > 0)
                     return Helpers.FormatSpeedOutput(Algo.AnnotatedSpeeds);
 
@@ -44,7 +44,7 @@ namespace NHM.Wpf.ViewModels.Models
 
         private void AlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Algo.InBenchmark) || e.PropertyName == nameof(Algo.IsBenchmarkPending) ||
+            if (e.PropertyName == nameof(Algo.IsBenchmarking) || e.PropertyName == nameof(Algo.IsBenchmarkPending) ||
                 e.PropertyName == nameof(Algo.BenchmarkErred) || e.PropertyName == nameof(Algo.Speeds))
                 OnPropertyChanged(nameof(StatusString));
         }

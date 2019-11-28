@@ -1,6 +1,7 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Device;
@@ -17,12 +18,12 @@ using System.Threading.Tasks;
 
 namespace MiniZ
 {
-    public class MiniZ : MinerBase
+    public class MiniZ : MinerBase, IAfterStartMining
     {
         private const double DevFee = 2.0;
         private int _apiPort;
         private string _devices;
-        private bool firstStart = true;
+        private DateTime _started;
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
@@ -32,14 +33,17 @@ namespace MiniZ
         }
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
+        public void AfterStartMining()
+        {
+            _started = DateTime.UtcNow;
+        }
+
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var api = new ApiData();
-
-            if (firstStart)
+            var elapsedSeconds = DateTime.UtcNow.Subtract(_started).Seconds;
+            if (elapsedSeconds < 10)
             {
-                Thread.Sleep(3000);
-                firstStart = false;
                 return api;
             }
 

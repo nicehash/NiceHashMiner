@@ -145,7 +145,7 @@ namespace NHMCore.Mining
             }
 
             // TODO temporary here move it outside later
-            MiningStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
+            MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
 
             return apiData;
         }
@@ -169,7 +169,7 @@ namespace NHMCore.Mining
             // TODO thing about this case, closing opening on switching
             // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
             MinerApiWatchdog.RemoveGroup(GroupKey);
-            MiningStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
+            MiningDataStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             IsRunning = false;
             _miner.StopMining();
             //if (_miner is IDisposable disposableMiner)
@@ -208,7 +208,7 @@ namespace NHMCore.Mining
                 Logger.Debug(MinerTag(), "AFTER Stopping");
                 if (EndMiner.IsCancellationRequested) return;
                 // wait before going on // TODO state right here
-                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
+                await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, EndMiner.Token);
             }
             catch (Exception e)
             {
@@ -224,7 +224,7 @@ namespace NHMCore.Mining
                 if (IsRunning) return;
                 if (EndMiner.IsCancellationRequested) return;
                 // Wait before new start
-                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
+                await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, EndMiner.Token);
                 if (EndMiner.IsCancellationRequested) return;
                 Logger.Debug(MinerTag(), "BEFORE Starting");
                 Start(miningLocation, username);

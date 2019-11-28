@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHMCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace NHM.Wpf.Views.Common
         public ViewStatsOnline()
         {
             InitializeComponent();
+        }
+
+        private void Click_VisitStatsOnline(object sender, RoutedEventArgs e)
+        {
+            ApplicationStateManager.VisitMiningStatsPage();
         }
     }
 }

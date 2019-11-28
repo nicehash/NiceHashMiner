@@ -178,10 +178,10 @@ namespace NHMCore.Mining.Grouping
                                 .FindIndex((a) => a.AlgorithmStringID == algoID);
                             if (index > -1)
                             {
-                                miningDevs[minerDevIndex].Algorithms[index].AvaragedSpeed = avaragedSpeed;
+                                miningDevs[minerDevIndex].Algorithms[index].AveragedSpeeds[0] = avaragedSpeed;
                                 if (miningDevs[minerDevIndex].Algorithms[index].IsDual)
                                 {
-                                    miningDevs[minerDevIndex].Algorithms[index].SecondaryAveragedSpeed = secondaryAveragedSpeed;
+                                    miningDevs[minerDevIndex].Algorithms[index].AveragedSpeeds[1] = secondaryAveragedSpeed;
                                 }
                             }
                         }

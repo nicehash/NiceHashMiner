@@ -1,30 +1,41 @@
-﻿using NHMCore.Utils;
-using System;
-using System.ComponentModel;
+﻿using NHM.Common;
+using NHMCore.Utils;
 
 namespace NHMCore.Configs
 {
-    public class CredentialsSettings : INotifyPropertyChanged
+    public class CredentialsSettings : NotifyChangedBase
     {
         public static CredentialsSettings Instance { get; } = new CredentialsSettings();
 
         private CredentialsSettings()
         {
-            _stringProps = new NotifyPropertyChangedHelper<string>(NotifyPropertyChanged);
+            _stringProps = new NotifyPropertyChangedHelper<string>(OnPropertyChanged);
             BitcoinAddress = "";
             WorkerName = "worker1";
+            RigGroup = "";
         }
+        // TODO maybe this should be removed 
         private readonly NotifyPropertyChangedHelper<string> _stringProps;
 
         public string BitcoinAddress
         {
             get => _stringProps.Get(nameof(BitcoinAddress));
-            set => _stringProps.Set(nameof(BitcoinAddress), value);
+            internal set
+            {
+                _stringProps.Set(nameof(BitcoinAddress), value);
+                OnPropertyChanged(nameof(IsCredentialsValid));
+            }
         }
         public string WorkerName
         {
             get => _stringProps.Get(nameof(WorkerName));
-            set => _stringProps.Set(nameof(WorkerName), value);
+            internal set => _stringProps.Set(nameof(WorkerName), value);
+        }
+
+        public string RigGroup
+        {
+            get => _stringProps.Get(nameof(RigGroup));
+            internal set => _stringProps.Set(nameof(RigGroup), value);
         }
 
         public bool IsCredentialsValid
@@ -32,11 +43,10 @@ namespace NHMCore.Configs
             get => CredentialValidators.ValidateBitcoinAddress(BitcoinAddress);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(String info)
+        //C#7
+        public (string btc, string worker, string group) GetCredentials()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+            return (BitcoinAddress.Trim(), WorkerName.Trim(), RigGroup.Trim());
         }
     }
 }

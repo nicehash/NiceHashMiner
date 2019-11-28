@@ -293,7 +293,7 @@
                 <Separator />
                 <!--<Button Style="{StaticResource BigButtonPrimary}" Content="BIG" />
                 --><!--<Button Style="{StaticResource BigButton}" Content="BIG" Width="500" Height="50" IsEnabled="False" />-->
-                <!--<ToggleButton Style="{StaticResource StartStopButtonDark}" />-->
+                <ToggleButton Style="{StaticResource StartStopButtonLight}" />
 
                 <Path x:Name="paththing" Width="24" Height="24" Stretch="Fill" Style="{StaticResource SpinCirclePath}" />
                 <Button Grid.Row="1" x:Name="button" Content="Go" VerticalAlignment="Bottom">

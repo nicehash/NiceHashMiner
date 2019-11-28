@@ -64,7 +64,7 @@ namespace NiceHashMiner
 
 #warning "TODO Ensure that there is only a single instance running at time. Currenly the restart is broken if we close on multiple instances"
             // #2 check if multiple instances are allowed
-            if (ConfigManager.GeneralConfig.AllowMultipleInstances == false)
+            if (MiscSettings.Instance.AllowMultipleInstances == false)
             {
                 try
                 {
@@ -83,16 +83,13 @@ namespace NiceHashMiner
 
 
             // TODO set logging level
-            Logger.ConfigureWithFile(ConfigManager.GeneralConfig.LogToFile, Level.Info, ConfigManager.GeneralConfig.LogMaxFileSize);
+            Logger.ConfigureWithFile(LoggingDebugConsoleSettings.Instance.LogToFile, Level.Info, LoggingDebugConsoleSettings.Instance.LogMaxFileSize);
 
-            if (ConfigManager.GeneralConfig.DebugConsole)
+            if (LoggingDebugConsoleSettings.Instance.DebugConsole)
             {
                 PInvokeHelpers.AllocConsole();
                 Logger.ConfigureConsoleLogging(Level.Info);
             }
-
-            // init active display currency after config load
-            ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             Logger.Info("NICEHASH", $"Starting up {ApplicationStateManager.Title}");
 
@@ -102,13 +99,13 @@ namespace NiceHashMiner
             }
 
             // check TOS
-            if (ConfigManager.GeneralConfig.agreedWithTOS != ApplicationStateManager.CurrentTosVer)
+            if (ToSSetings.Instance.AgreedWithTOS != ApplicationStateManager.CurrentTosVer)
             {
-                Logger.Info("NICEHASH", $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}. Showing TOS Form.");
+                Logger.Info("NICEHASH", $"TOS differs! agreed: {ToSSetings.Instance.AgreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}. Showing TOS Form.");
 
                 Application.Run(new FormEula());
                 // check TOS after 
-                if (ConfigManager.GeneralConfig.agreedWithTOS != ApplicationStateManager.CurrentTosVer)
+                if (ToSSetings.Instance.AgreedWithTOS != ApplicationStateManager.CurrentTosVer)
                 {
                     Logger.Info("NICEHASH", "TOS differs AFTER TOS confirmation FORM");
                     // TOS not confirmed return from Main
@@ -117,7 +114,7 @@ namespace NiceHashMiner
             }
 
             // if config created show language select
-            if (string.IsNullOrEmpty(ConfigManager.GeneralConfig.Language))
+            if (string.IsNullOrEmpty(GUISettings.Instance.Language))
             {
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
                 {
@@ -125,20 +122,20 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    ConfigManager.GeneralConfig.Language = "en";
+                    GUISettings.Instance.Language = "en";
                     ConfigManager.GeneralConfigFileCommit();
                 }
 
             }
             Translations.LanguageChanged += (s, e) => FormHelpers.TranslateAllOpenForms();
-            Translations.SelectedLanguage = ConfigManager.GeneralConfig.Language;
+            Translations.SelectedLanguage = GUISettings.Instance.Language;
 
             // if system requirements are not ensured it will fail the program
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();
             if (!canRun) return;
 
             // 3rdparty miners TOS check if setting set
-            if (ConfigManager.GeneralConfig.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
+            if (ToSSetings.Instance.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
             {
                 using (var secondTOS = new Form_3rdParty_TOS())
                 {

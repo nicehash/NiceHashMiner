@@ -170,7 +170,7 @@ namespace NiceHashMiner.Forms.Components
 
         private void UpdateSpeedText()
         {
-            var speedString = _currentlySelectedAlgorithm.BenchmarkSpeedString();
+            var speedString = "BROKEN _currentlySelectedAlgorithm.BenchmarkSpeedString()";
             // update lvi speed
             if (_currentlySelectedLvi != null)
             {

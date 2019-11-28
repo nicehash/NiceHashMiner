@@ -58,7 +58,7 @@ namespace NiceHashMiner.Forms.Components
             // intialize ListView callbacks
             listViewDevices.ItemChecked += ListViewDevicesItemChecked;
             //listViewDevices.CheckBoxes = false;
-            NiceHashStats.OnDeviceUpdate += UpdateDevices;
+            //NiceHashStats.OnDeviceUpdate += UpdateDevices;
             FormHelpers.TranslateFormControls(this);
         }
 
@@ -94,19 +94,6 @@ namespace NiceHashMiner.Forms.Components
 
         protected virtual void SetLvi(ListViewItem lvi, int index)
         { }
-
-        public void ResetComputeDevices(List<ComputeDevice> computeDevices)
-        {
-            SetComputeDevices(computeDevices);
-        }
-
-        private void UpdateDevices(object sender, DeviceUpdateEventArgs e)
-        {
-            FormHelpers.SafeInvoke(this, () =>
-            {
-                SetComputeDevices(e.Devices);
-            });
-        }
         
         public virtual void InitLocale()
         {
@@ -117,7 +104,9 @@ namespace NiceHashMiner.Forms.Components
         {
             if (e.Item.Tag is ComputeDevice cDevice)
             {
-                cDevice.Enabled = e.Item.Checked;
+                //cDevice.Enabled = e.Item.Checked; // will not work
+                var set = (cDevice.Uuid, e.Item.Checked);
+                ApplicationStateManager.SetDeviceEnabledState(this, set);
 
                 if (SaveToGeneralConfig)
                 {

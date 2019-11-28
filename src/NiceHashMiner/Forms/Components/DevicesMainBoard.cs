@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using NHMCore.Interfaces.DataVisualizer;
-using NHMCore.Interfaces.StateSetters;
 using NHMCore.Mining;
 using NHMCore;
 using NHM.Common.Enums;
@@ -12,7 +11,7 @@ using static NHMCore.Translations;
 
 namespace NiceHashMiner.Forms.Components
 {
-    public partial class DevicesMainBoard : UserControl, IEnabledDeviceStateSetter, IDevicesStateDisplayer
+    public partial class DevicesMainBoard : UserControl, IDevicesStateDisplayer
     {
         private enum Column : int
         {
@@ -26,8 +25,6 @@ namespace NiceHashMiner.Forms.Components
             AlgorithmsOptions,
             //PowerModeDropdown // disable for now
         }
-
-        public event EventHandler<(string uuid, bool enabled)> SetDeviceEnabledState;
 
         //public static object[] GetRowData()
         //{
@@ -95,7 +92,7 @@ namespace NiceHashMiner.Forms.Components
             cellItem.Value = value;
         }
 
-        private void DevicesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void DevicesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
             Console.WriteLine($"RowIndex {e.RowIndex} ColumnIndex {e.ColumnIndex}");
@@ -124,7 +121,7 @@ namespace NiceHashMiner.Forms.Components
                 case DataGridViewCheckBoxCell checkbox:
                     var deviceEnabled = checkbox.Value != null && (bool)checkbox.Value;
                     checkbox.Value = !deviceEnabled;
-                    SetDeviceEnabledState?.Invoke(null, (deviceUUID, !deviceEnabled));
+                    await ApplicationStateManager.SetDeviceEnabledState(this, (deviceUUID, !deviceEnabled));
                     break;
                 // TODO not working
                 //case DataGridViewComboBoxCell comboBox:

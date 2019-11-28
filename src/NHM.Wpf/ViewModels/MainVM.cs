@@ -3,10 +3,12 @@ using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
 using NHMCore;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
+using NHMCore.Mining.MiningStats;
 using NHMCore.Mining.Plugins;
 using NHMCore.Stats;
 using NHMCore.Switching;
@@ -37,6 +39,7 @@ namespace NHM.Wpf.ViewModels
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(DeviceGPUCount));
                 OnPropertyChanged(nameof(DeviceCPUCount));
+                OnPropertyChanged(nameof(PerDeviceDisplayString));
             }
         }
 
@@ -63,92 +66,36 @@ namespace NHM.Wpf.ViewModels
 
         #region settingsLists
 
-        public IReadOnlyList<string> ServiceLocations => StratumService.MiningLocationNames;
         public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
-        public IEnumerable<string> LanguageOptions => Translations.GetAvailableLanguagesNames();
-        public IReadOnlyList<string> CurrencyOptions => _currList;
         public IReadOnlyList<string> ThemeOptions => _themeList;
-
-        private List<string> _currList = new List<string>
-            {
-                "AUD",
-                "BGN",
-                "BRL",
-                "CAD",
-                "CHF",
-                "CNY",
-                "CZK",
-                "DKK",
-                "EUR",
-                "GBP",
-                "HKD",
-                "HRK",
-                "HUF",
-                "IDR",
-                "ILS",
-                "INR",
-                "JPY",
-                "KRW",
-                "MXN",
-                "MYR",
-                "NOK",
-                "NZD",
-                "PHP",
-                "PLN",
-                "RON",
-                "RUB",
-                "SEK",
-                "SGD",
-                "THB",
-                "TRY",
-                "USD",
-                "ZAR"
-            };
-
-        public int SelectedLangIndex
-        {
-            get => Translations.GetCurrentIndex();
-            set
-            {
-                var code = Translations.GetLanguageCodeFromIndex(value);
-                Translations.SelectedLanguage = code;
-                GeneralConfig.Language = code;
-            }
-        }
 
         private List<string> _themeList = new List<string>{ "Light", "Dark" };
 
         #endregion settingsLists
 
-        public static GeneralConfig GeneralConfig => ConfigManager.GeneralConfig;
 
-        public int ServiceLocationIndex
-        {
-            get => ConfigManager.GeneralConfig.ServiceLocation;
-            set => ConfigManager.GeneralConfig.ServiceLocation = value;
-        }
+        public string PerDeviceDisplayString => $"/ {_devices?.Count() ?? 0}";
 
-        public bool ShowPCI
-        {
-            get => ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs;
-            set => ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs = value;
-        }
+        #region Exposed settings
+        public BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
+        public MiningState MiningState => MiningState.Instance;
+        public StratumService StratumService => StratumService.Instance;
+        public CredentialsSettings CredentialsSettings => CredentialsSettings.Instance;
+        public GlobalDeviceSettings GlobalDeviceSettings => GlobalDeviceSettings.Instance;
+        public GUISettings GUISettings => GUISettings.Instance;
+        public IdleMiningSettings IdleMiningSettings => IdleMiningSettings.Instance;
+        public IFTTTSettings IFTTTSettings => IFTTTSettings.Instance;
+        public LoggingDebugConsoleSettings LoggingDebugConsoleSettings => LoggingDebugConsoleSettings.Instance;
+        public MiningProfitSettings MiningProfitSettings => MiningProfitSettings.Instance;
+        public MiningSettings MiningSettings => MiningSettings.Instance;
+        public MiscSettings MiscSettings => MiscSettings.Instance;
+        public SwitchSettings SwitchSettings => SwitchSettings.Instance;
+        public ToSSetings ToSSetings => ToSSetings.Instance;
+        public TranslationsSettings TranslationsSettings => TranslationsSettings.Instance;
+        public WarningSettings WarningSettings => WarningSettings.Instance;
+        #endregion Exposed settings
 
-        public string BtcAddress
-        {
-            get => ConfigManager.GeneralConfig.BitcoinAddress;
-            set => ConfigManager.GeneralConfig.BitcoinAddress = value;
-        }
-
-        public string WorkerName
-        {
-            get => ConfigManager.GeneralConfig.WorkerName;
-            set => ConfigManager.GeneralConfig.WorkerName = value;
-        }
-
-        public MiningState State => MiningState.Instance;
-
-        private string _theme = ConfigManager.GeneralConfig.DisplayTheme;
+        private string _theme = GUISettings.Instance.DisplayTheme;
         public string Theme
         {
             get => _theme;
@@ -172,8 +119,7 @@ namespace NHM.Wpf.ViewModels
         // TODO this section getting rather large, maybe good idea to break out into own class
 
         private string _timeUnit = TimeFactor.UnitType.ToString();
-
-        private string TimeUnit
+        public string TimeUnit
         {
             get => _timeUnit;
             set
@@ -190,14 +136,12 @@ namespace NHM.Wpf.ViewModels
 
         private string PerTime => $" / {TimeUnit}";
 
-        private string _currency = ExchangeRateApi.ActiveDisplayCurrency;
-
+        // TODO get rif of duplicates
         public string Currency
         {
-            get => _currency;
+            get => BalanceAndExchangeRates.SelectedFiatCurrency;
             set
             {
-                _currency = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CurrencyPerTime));
                 OnPropertyChanged(nameof(ProfitPerTime));
@@ -205,9 +149,9 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        public string ExchangeTooltip => $"1 BTC = {ExchangeRateApi.SelectedCurrBtcRate:F2} {Currency}";
+        public string ExchangeTooltip => $"1 BTC = {BalanceAndExchangeRates.SelectedCurrBtcRate:F2} {Currency}";
 
-        public string CurrencyPerTime => $"{Currency}{PerTime}";
+        public string CurrencyPerTime => $"{BalanceAndExchangeRates.SelectedFiatCurrency}{PerTime}";
 
         public string BtcPerTime => $"BTC{PerTime}";
 
@@ -239,14 +183,14 @@ namespace NHM.Wpf.ViewModels
 
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
-        public double GlobalRate
+        public string GlobalRate
         {
             get
             {
                 // sum is in mBTC already
                 var sum = WorkingMiningDevs?.Sum(d => d.Payrate) ?? 0;
                 var scale = 1000;
-                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && sum < 100)
+                if (GUISettings.Instance.AutoScaleBTCValues && sum < 100)
                 {
                     ScaledBtcPerTime = MBtcPerTime;
                     scale = 1;
@@ -255,12 +199,12 @@ namespace NHM.Wpf.ViewModels
                 {
                     ScaledBtcPerTime = BtcPerTime;
                 }
-
-                return sum / scale;
+                var ret = $"{(sum / scale):F8}";
+                return ret;
             }
         }
 
-        public double GlobalRateFiat => WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
+        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.SelectedFiatCurrency}";
 
         private double _btcBalance;
         private double BtcBalance
@@ -280,7 +224,7 @@ namespace NHM.Wpf.ViewModels
             get
             {
                 var scale = 1;
-                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && _btcBalance < 0.1)
+                if (GUISettings.Instance.AutoScaleBTCValues && _btcBalance < 0.1)
                 {
                     scale = 1000;
                     ScaledBtc = "mBTC";
@@ -294,7 +238,7 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        public double FiatBalance => ExchangeRateApi.ConvertFromBtc(BtcBalance);
+        public double FiatBalance => BalanceAndExchangeRates.Instance.ConvertFromBtc(BtcBalance);
 
         #endregion
 
@@ -317,17 +261,22 @@ namespace NHM.Wpf.ViewModels
             _updateTimer = new Timer(1000);
             _updateTimer.Elapsed += UpdateTimerOnElapsed;
 
-            ExchangeRateApi.CurrencyChanged += (_, curr) =>
-            {
-                Currency = curr;
-                OnPropertyChanged(nameof(FiatBalance));
-            };
-            ExchangeRateApi.ExchangeChanged += (_, __) =>
+            BalanceAndExchangeRates.OnExchangeUpdate += (_, __) =>
             {
                 OnPropertyChanged(nameof(ExchangeTooltip));
             };
-
-            ApplicationStateManager.DisplayBTCBalance += UpdateBalance;
+            BalanceAndExchangeRates.Instance.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(BalanceAndExchangeRates.BtcBalance))
+                {
+                    BtcBalance = BalanceAndExchangeRates.Instance.BtcBalance ?? 0;
+                }
+                if (e.PropertyName == nameof(BalanceAndExchangeRates.SelectedFiatCurrency))
+                {
+                    Currency = BalanceAndExchangeRates.Instance.SelectedFiatCurrency;
+                    OnPropertyChanged(nameof(FiatBalance));
+                }
+            };
 
             TimeFactor.OnUnitTypeChanged += (_, unit) => { TimeUnit = unit.ToString(); };
         }
@@ -351,8 +300,7 @@ namespace NHM.Wpf.ViewModels
 
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
-
-            MiningStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
+            MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
 
             IdleCheckManager.StartIdleCheck();
 
@@ -360,7 +308,7 @@ namespace NHM.Wpf.ViewModels
 
             _updateTimer.Start();
 
-            if (ConfigManager.GeneralConfig.AutoStartMining)
+            if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }
 
@@ -371,7 +319,7 @@ namespace NHM.Wpf.ViewModels
             {
                 case NotifyCollectionChangedAction.Add:
                 case NotifyCollectionChangedAction.Replace:
-                    foreach (var stat in e.NewItems.OfType<MiningStats.DeviceMiningStats>())
+                    foreach (var stat in e.NewItems.OfType<DeviceMiningStats>())
                     {
                         // Update this device row
                         var miningDev = MiningDevs.OfType<MiningData>().FirstOrDefault(d => d.Dev.Uuid == stat.DeviceUUID);
@@ -420,25 +368,22 @@ namespace NHM.Wpf.ViewModels
             OnPropertyChanged(nameof(GlobalRateFiat));
         }
 
-        private void UpdateBalance(object sender, double btcBalance)
-        {
-            BtcBalance = btcBalance;
-        }
-
         public async Task StartMining()
         {
             if (!await NHSmaData.WaitOnDataAsync(10)) return;
 
+            // this underlying comment shouldn't be true anymore 
             // TODO there is a mess of blocking and not-awaited async code down the line, 
             // Just wrapping with Task.Run here for now
 
-            await Task.Run(() => { ApplicationStateManager.StartAllAvailableDevices(); });
+            ApplicationStateManager.StartAllAvailableDevices();
+            await ApplicationStateManager.StartMiningTaskWait();
         }
 
         public async Task StopMining()
         {
             // TODO same as StartMining comment
-            await Task.Run(() => { ApplicationStateManager.StopAllDevice(); });
+            await ApplicationStateManager.StopAllDevice();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using System;
 using System.ComponentModel;
@@ -37,13 +38,14 @@ namespace NHMCore.Mining.IdleChecking
 
         public static void StartIdleCheck()
         {
-            if (!ConfigManager.GeneralConfig.StartMiningWhenIdle) return;
-            StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleTick);
+            if (!IdleMiningSettings.Instance.StartMiningWhenIdle) return;
+            StartIdleCheck(IdleMiningSettings.Instance.IdleCheckType, IdleTick);
         }
 
-        private static void IdleTick(object sender, IdleChangedEventArgs e)
+        // TODO create a private task and await that
+        private static async void IdleTick(object sender, IdleChangedEventArgs e)
         {
-            if (MiningState.Instance.MiningManuallyStarted || !ConfigManager.GeneralConfig.StartMiningWhenIdle)
+            if (MiningState.Instance.MiningManuallyStarted || !IdleMiningSettings.Instance.StartMiningWhenIdle)
                 return;
 
             if (e.IsIdle)
@@ -56,7 +58,7 @@ namespace NHMCore.Mining.IdleChecking
             }
             else if (MiningState.Instance.IsCurrentlyMining)
             {
-                ApplicationStateManager.StopAllDevice();
+                await ApplicationStateManager.StopAllDevice();
                 Logger.Info("IDLECHECK", "Resumed from idling");
             }
         }

@@ -69,7 +69,7 @@ namespace NHMCore
             {
                 await MiningManager.MinerStatsCheck();
             },
-            ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000);
+            MiningSettings.Instance.MinerAPIQueryInterval * 1000);
             _minerStatsCheck.Start();
         }
 
@@ -87,7 +87,7 @@ namespace NHMCore
         {
             if (_cudaDeviceCheckerTimer?.IsActive ?? false) return;
             _cudaDeviceCheckerTimer = new AppTimer(async (object sender, ElapsedEventArgs e) => {
-                if (!ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
+                if (!GlobalDeviceSettings.Instance.RunScriptOnCUDA_GPU_Lost)
                     return;
                 // this function checks if count of CUDA devices is same as it was on application start, reason for that is
                 // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
@@ -171,7 +171,7 @@ namespace NHMCore
 
         public static void StartInternetCheckTimer()
         {
-            if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
+            if (IdleMiningSettings.Instance.IdleWhenNoInternetAccess)
             {
                 OnInternetCheck?.Invoke(null, Helpers.IsConnectedToInternet());
             }
@@ -179,7 +179,7 @@ namespace NHMCore
             if (_internetCheckTimer?.IsActive ?? false) return;
             _internetCheckTimer = new AppTimer((object sender, ElapsedEventArgs e) =>
             {
-                if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
+                if (IdleMiningSettings.Instance.IdleWhenNoInternetAccess)
                 {
                     OnInternetCheck?.Invoke(null, Helpers.IsConnectedToInternet());
                 }

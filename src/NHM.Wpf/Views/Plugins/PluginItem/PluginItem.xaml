@@ -1,0 +1,325 @@
+﻿<UserControl x:Class="NHM.Wpf.Views.Plugins.PluginItem.PluginItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NHM.Wpf.Views.Plugins.PluginItem"
+             xmlns:localConv="clr-namespace:NHM.Wpf.Views.Plugins.PluginItem.Converters"
+             xmlns:vmPlugins="clr-namespace:NHM.Wpf.ViewModels.Plugins"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vmPlugins:PluginEntryVM}">
+    <UserControl.Resources>
+        <localConv:SupportedDevicesConverter x:Key="SupportedDevicesConv" />
+        <localConv:SupportedDeviceAlgorithmsConverter x:Key="SupportedDevicesAlgorithmsConv" />
+        <localConv:CompatibleVisibilityConverter x:Key="CompatibleVisibilityConverter" />
+        <localConv:PluginItemButtonStyleConverter x:Key="PluginItemButtonStyleConverter" />
+        <localConv:PluginItemVisibilityConverter x:Key="PluginItemVisibilityConverter" />
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="local:PluginIcon" x:Key="PluginIconStyle">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                    <Setter Property="LineHeight" Value="1.57" />
+                    <Setter Property="TextAlignment" Value="Right" />
+                </Style>
+            </Style.Resources>
+        </Style>
+        <Style x:Key="ButtonStyleWOW" BasedOn="{StaticResource BigButtonPrimary}" TargetType="{x:Type Button}">
+            <Setter Property="FontSize" Value="12"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="Transparent" Width="Auto" Height="Auto" MaxWidth="720">
+
+        <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
+            </Border.Effect>
+        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="50"/>
+                <RowDefinition  Height="Auto"/>
+                <RowDefinition  Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" HorizontalAlignment="Stretch" Height="50">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <local:PluginIcon Grid.Column="0"
+                                  IsEnabled="{Binding Plugin.Supported}"
+                                  Style="{StaticResource PluginIconStyle}"
+                                  Margin="16,9" />
+
+                <TextBlock Grid.Column="1"
+                           IsEnabled="{Binding Plugin.Supported}"
+                           Style="{StaticResource TextBoxCol}"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource TextColorBrush}"
+                           Margin="0,16,0,16"
+                           Text="{ Binding Plugin.PluginName }"/>
+
+                <TextBlock Grid.Column="2"
+                           IsEnabled="{Binding Plugin.Supported}"
+                           Style="{StaticResource TextBoxCol}"
+                           Margin="32,0,0,0"
+                           Text="{ Binding Plugin.PluginAuthor }"/>
+
+                <TextBlock Grid.Column="3"
+                           IsEnabled="{Binding Plugin.Supported}"
+                           Style="{StaticResource TextBoxCol}"
+                           Margin="32,0,0,0"
+                           Text="{Binding InstallVersionStatus}"/>
+
+                <!--TODO THIS column seems to be removed-->
+                <TextBlock Grid.Column="4"
+                           Visibility="Collapsed"
+                           IsEnabled="{Binding Plugin.Supported}"
+                           Style="{StaticResource TextBoxCol}"
+                           Margin="32,0,0,0"
+                           Text="---"/>
+
+                <ToggleButton Grid.Column="5"
+                              x:Name="DetailsToggleButton"
+                              Style="{StaticResource TextBoxToggleButton}"
+                              Margin="32,0,0,0"
+                              Click="ToggleDetailsButton_Click"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center" >
+                    <TextBlock x:Name="DetailsToggleButtonText" Text="Details"></TextBlock>
+                </ToggleButton>
+
+                <StackPanel Grid.Column="6"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding Plugin, Converter={StaticResource CompatibleVisibilityConverter}}">
+
+                    <!--TODO this switch should be enablde when we enable plugin auto-updates-->
+                    <!--<CheckBox Style="{StaticResource NHMSwitch}"
+                              Visibility="{Binding Plugin.Installed, Converter={StaticResource PluginItemVisibilityConverter}}"
+                              Margin="0,0,16,0" />-->
+                    <StackPanel x:Name="swapStackPanel" Margin="0,0,16,0">
+                        <Path Style="{StaticResource SpinCirclePath}"
+                              Visibility="{Binding SpinningCircleVisibility}"
+                              x:Name="spinCirclePath"
+                              Width="20"
+                              Height="20"
+                              Stretch="Fill"
+                              />
+                        <ToggleButton Style="{StaticResource MenuDropdownButton}"
+                                  Visibility="{Binding ActionsButtonVisibility}"
+                                  Click="Button_Click">
+                            <ToggleButton.ContextMenu>
+                                <ContextMenu x:Name="PluginActionsButtonContext">
+                                    <ContextMenu.Resources>
+                                        <Style TargetType="{x:Type ContextMenu}">
+                                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                                            <Setter Property="OverridesDefaultStyle" Value="True" />
+                                            <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+                                            <Setter Property="HasDropShadow" Value="True" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                                                        <Border x:Name="Border" Background="{StaticResource PrimaryColorBrush}" BorderThickness="0" CornerRadius="4">
+                                                            <Border.BorderBrush>
+                                                                <SolidColorBrush Color="Green" />
+                                                            </Border.BorderBrush>
+                                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="HasDropShadow" Value="true">
+                                                                <Setter TargetName="Border" Property="Padding" Value="0,3,0,3" />
+                                                                <Setter TargetName="Border" Property="CornerRadius" Value="4" />
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ContextMenu.Resources>
+                                    <MenuItem
+                                    Padding="16,7,16,7"
+                                    Header="Uninstall"
+                                    FontFamily="{StaticResource UbuntuFontFamily}"
+                                    FontSize="14"
+                                    Foreground="{StaticResource Brushes.FontColor.White}"
+                                    FontWeight="Normal"
+                                    FontStretch="Normal"
+                                    FontStyle="Normal"
+                                    Click="Button_Click_Uninstall" />
+                                </ContextMenu>
+                            </ToggleButton.ContextMenu>
+                        </ToggleButton>
+                    </StackPanel>
+
+                    <Button Style="{Binding Plugin.Installed, Converter={StaticResource PluginItemButtonStyleConverter}}"
+                            IsEnabled="{Binding InstallButtonEnabled}"
+                            Width="105" Height="24"
+                            Margin="0,0,16,0"
+                            Content="{Binding InstallString }"
+                            Click="Button_Click_1"
+                            >
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                </StackPanel>
+
+            </Grid>
+            <!--TODO the progress here is can be collapsed-->
+            <Grid Grid.Row="1" Width="Auto" Visibility="{Binding Load.Visibility}" Margin="5">
+                <ProgressBar Width="Auto" Value="{Binding Load.Progress}" />
+                <TextBlock Width="Auto" HorizontalAlignment="Center" Text="{Binding Load.Status}" />
+            </Grid>
+            <!--our 'expander'-->
+            <Grid Grid.Row="2" x:Name="DetailsGrid" Visibility="Visible" Margin="16,0,16,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="122" Width="Auto" />
+                    <ColumnDefinition MinWidth="200" Width="Auto" />
+                    <ColumnDefinition MinWidth="250" Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                               Foreground="{StaticResource TextColorBrush}"
+                               FontSize="12"
+                               LineHeight="1.5"
+                               Text="Supported Devices"
+                               />
+                    <ItemsControl x:Name="supportedDevices" ItemsSource="{Binding Plugin.SupportedDevicesAlgorithms, Converter={StaticResource SupportedDevicesConv}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{StaticResource BaseUbuntuTextBlock}"
+                               Foreground="{StaticResource Gray1ColorBrush}"
+                               FontSize="12"
+                               LineHeight="1.5"
+                               Text="{Binding .}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                               Foreground="{StaticResource TextColorBrush}"
+                               FontSize="12"
+                               LineHeight="1.5"
+                               Text="Supported Devices Algorithms"
+                               />
+
+                    <ItemsControl x:Name="deviceAlgorithms" Margin="0,4,0,0" ItemsSource="{Binding Plugin.SupportedDevicesAlgorithms, Converter={StaticResource SupportedDevicesAlgorithmsConv}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,0,0,8">
+                                    <TextBlock Style="{StaticResource BaseUbuntuTextBlock}"
+                                               Foreground="{StaticResource TextColorBrush}"
+                                               FontWeight="Regular"
+                                               FontSize="12"
+                                               LineHeight="1.5"
+                                               Text="{Binding DeviceType}" />
+                                    <ItemsControl Margin="0,2,0,0" ItemsSource="{Binding AlgorithmTypes}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource BaseUbuntuTextBlock}"
+                                                           Foreground="{StaticResource Gray1ColorBrush}"
+                                                           Margin="0,0,0,1.5"
+                                                           FontSize="12"
+                                                           Text="{Binding .}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                               Foreground="{StaticResource TextColorBrush}"
+                               FontSize="12"
+                               LineHeight="1.5"
+                               Text="Description"
+                               />
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlock}"
+                               Foreground="{StaticResource Gray1ColorBrush}"
+                               FontSize="12"
+                               LineHeight="1.5"
+                               HorizontalAlignment="Left"
+                               MaxWidth="300"
+                               Text="{Binding Plugin.PluginDescription}"/>
+                </StackPanel>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

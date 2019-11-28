@@ -1,9 +1,9 @@
 using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining;
-using NHMCore.Stats;
 using NHMCore.Utils;
 using System;
 using System.Collections.Concurrent;
@@ -22,11 +22,29 @@ namespace NHMCore
             if (MiningState.Instance.IsDemoMining) {
                 return DemoUser.BTC;
             }
-            var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
+            var btc = CredentialsSettings.Instance.BitcoinAddress.Trim();
             return $"{btc}${RigID}";
         }
 
         private static ConcurrentQueue<(ComputeDevice, DeviceState)> UpdateDevicesToMineStates { get; set; } = new ConcurrentQueue<(ComputeDevice, DeviceState)>();
+        private static ConcurrentQueue<Task> _updateDevicesToMineTasks { get; set; } = new ConcurrentQueue<Task>();
+
+        // this is a compromise for Start "Task"
+        public static Task StartMiningTaskWait()
+        {
+            var waitTasks = new List<Task>();
+            foreach (var t in _updateDevicesToMineTasks)
+            {
+                waitTasks.Add(t);
+            }
+            // this inditaces we started benchmarking
+            if (waitTasks.Count == 0)
+            {
+                // delay for 1second
+                waitTasks.Add(Task.Delay(1000));
+            }
+            return Task.WhenAll(waitTasks);
+        }
 
         private static void StartMiningOnDevices(params ComputeDevice[] startDevices)
         {
@@ -37,8 +55,7 @@ namespace NHMCore
                 startDevice.IsPendingChange = true;
                 UpdateDevicesToMineStates.Enqueue((startDevice, DeviceState.Mining));
             }
-            var t = _UpdateDevicesToMineTaskDelayed.ExecuteDelayedTask(CancellationToken.None);
-            NiceHashStats.SendMinerStatusTasks.Enqueue(t);
+            _updateDevicesToMineTasks.Enqueue(_UpdateDevicesToMineTaskDelayed.ExecuteDelayedTask(CancellationToken.None));
         }
 
         private static void StopMiningOnDevices(params ComputeDevice[] stopDevices)
@@ -50,8 +67,7 @@ namespace NHMCore
                 stopDevice.IsPendingChange = true;
                 UpdateDevicesToMineStates.Enqueue((stopDevice, DeviceState.Stopped));
             }
-            var t = _UpdateDevicesToMineTaskDelayed.ExecuteDelayedTask(CancellationToken.None);
-            NiceHashStats.SendMinerStatusTasks.Enqueue(t);
+            //var t = _UpdateDevicesToMineTaskDelayed.ExecuteDelayedTask(CancellationToken.None);
         }
 
         private static DelayedSingleExecActionTask _UpdateDevicesToMineTaskDelayed = new DelayedSingleExecActionTask
@@ -63,21 +79,21 @@ namespace NHMCore
         private static async Task UpdateDevicesToMineTask()
         {
             // drain queue 
-            var _updateDeviceStates = new Dictionary<ComputeDevice, DeviceState>();
+            var updateDeviceStates = new Dictionary<ComputeDevice, DeviceState>();
             while (UpdateDevicesToMineStates.TryDequeue(out var pair))
             {
                 var (device, state) = pair;
-                _updateDeviceStates[device] = state;
+                updateDeviceStates[device] = state;
             }
             // and update states
-            foreach (var newState in _updateDeviceStates)
+            foreach (var newState in updateDeviceStates)
             {
                 var device = newState.Key;
                 var setState = newState.Value;
                 device.State = setState; // THIS TRIGERS STATE CHANGE
             }
             var devicesToMine = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining).ToList();
-            foreach (var newState in _updateDeviceStates)
+            foreach (var newState in updateDeviceStates)
             {
                 var device = newState.Key;
                 var setState = newState.Value;
@@ -90,20 +106,20 @@ namespace NHMCore
             } else {
                 await StopMining();
             }
-            // TODO implement and cleat devicePending state changed
-            foreach (var newState in _updateDeviceStates)
+            // TODO implement and clear devicePending state changed
+            foreach (var newState in updateDeviceStates)
             {
                 var device = newState.Key;
                 device.IsPendingChange = false;
             }
         }
 
-        private static void RestartMinersIfMining()
+        private static async Task RestartMinersIfMining()
         {
             // if mining update the mining manager
             if (MiningState.Instance.IsCurrentlyMining)
             {
-                MiningManager.RestartMiners(GetUsername());
+                await MiningManager.RestartMiners(GetUsername());
             }
         }
 
@@ -120,7 +136,8 @@ namespace NHMCore
             }
             else
             {
-                RestartMinersIfMining();
+                // TODO here we probably don't care to wait the Task to complete
+                _ = RestartMinersIfMining();
             }
         }
 
@@ -165,10 +182,11 @@ namespace NHMCore
             return (started, failReason);
         }
 
-        public static bool StartSingleDevicePublic(ComputeDevice device)
+        public static async Task<bool> StartSingleDevicePublic(ComputeDevice device)
         {
             if (device.IsPendingChange) return false;
             StartDevice(device);
+            await StartMiningTaskWait();
             return true;
         }
 
@@ -222,7 +240,7 @@ namespace NHMCore
             return (started, failReason);
         }
 
-        public static (bool stopped, string failReason) StopAllDevice() {
+        public static async Task<(bool stopped, string failReason)> StopAllDevice() {
             // TODO when starting and stopping we are not taking Pending and Error states into account
             var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
             if (devicesToStop.Count() == 0)
@@ -230,28 +248,47 @@ namespace NHMCore
                 return (false, "No new devices to stop");
             }
 
+            var anyMining = devicesToStop.Any(dev => dev.State == DeviceState.Mining);
             var stopped = true;
             var failReason = "";
+            var stopTasks = new List<Task<(bool stopped, string failReason)>>();
             foreach (var stopDevice in devicesToStop)
             {
-                var (deviceStopped, deviceFailReason) = StopDevice(stopDevice);
+                stopTasks.Add(StopDevice(stopDevice, false));
+            }
+            if (anyMining)
+            {
+                var stopTasksAndMining = new List<Task>();
+                stopTasksAndMining.Add(UpdateDevicesToMineTask());
+                foreach (var t in stopTasks) stopTasksAndMining.Add(t);
+                await Task.WhenAll(stopTasksAndMining);
+            }
+            else
+            {
+                await Task.WhenAll(stopTasks);
+            }
+            
+            var stopedDeviceTasks = devicesToStop.Zip(stopTasks, (dev, task) => new { Device = dev, Task = task });
+            foreach (var pair in stopedDeviceTasks)
+            {
+                var (deviceStopped, deviceFailReason) = pair.Task.Result;
                 stopped &= deviceStopped;
                 if (!deviceStopped)
                 {
-                    failReason += $"{stopDevice.Name} {deviceFailReason};";
+                    failReason += $"{pair.Device.Name} {deviceFailReason};";
                 }
             }
             return (stopped, failReason);
         }
 
-        public static bool StopSingleDevicePublic(ComputeDevice device)
+        public static async Task<bool> StopSingleDevicePublic(ComputeDevice device)
         {
             if (device.IsPendingChange) return false;
-            StopDevice(device);
+            await StopDevice(device);
             return true;
         }
 
-        internal static (bool stopped, string failReason) StopDevice(ComputeDevice device)
+        internal static async Task<(bool stopped, string failReason)> StopDevice(ComputeDevice device, bool executeStop = true)
         {
             // we can only stop a device it is mining or benchmarking
             switch (device.State)
@@ -259,10 +296,14 @@ namespace NHMCore
                 case DeviceState.Stopped:
                     return (false, $"Device {device.Uuid} already stopped");
                 case DeviceState.Benchmarking:
-                    BenchmarkManager.StopBenchmarForDevice(device); // TODO benchmarking is in a Task
+                    await BenchmarkManager.StopBenchmarForDevice(device); // TODO benchmarking is in a Task
                     return (true, "");
                 case DeviceState.Mining:
                     StopMiningOnDevices(device);
+                    if (executeStop)
+                    {
+                        await UpdateDevicesToMineTask();
+                    }
                     return (true, "");
                 default:
                     return (false, $"Cannot handle state {device.State.ToString()} for device {device.Uuid}");

@@ -108,8 +108,8 @@
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Refactoring.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
     <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
-    <Compile Include="ApplicationStateManager\MiningState.cs" />
-    <Compile Include="ApplicationStateManager\RatesAndStatsStates.cs" />
+    <Compile Include="ApplicationState\BalanceAndExchangeRates.cs" />
+    <Compile Include="ApplicationState\MiningState.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkingComputeDeviceHandler.cs" />
@@ -120,24 +120,28 @@
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\DeviceTDPSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
+    <Compile Include="Configs\GlobalDeviceSettings.cs" />
+    <Compile Include="Configs\GUISettings.cs" />
     <Compile Include="Configs\IdleMiningSettings.cs" />
+    <Compile Include="Configs\IFTTTSettings.cs" />
+    <Compile Include="Configs\LoggingDebugConsoleSettings.cs" />
     <Compile Include="Configs\MiningProfitSettings.cs" />
+    <Compile Include="Configs\MiningSettings.cs" />
+    <Compile Include="Configs\MiscSettings.cs" />
     <Compile Include="Configs\RunAtStartup.cs" />
+    <Compile Include="Configs\SwitchSettings.cs" />
+    <Compile Include="Configs\ToSSetings.cs" />
     <Compile Include="Configs\TranslationsSettings.cs" />
+    <Compile Include="Configs\WarningSettings.cs" />
     <Compile Include="IFTTT.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IBalanceBTCDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IBalanceFiatDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IDevicesStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGlobalMiningRateDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IGroupDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IMiningProfitabilityDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
-    <Compile Include="Interfaces\IRatesComunication.cs" />
-    <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
-    <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
+    <Compile Include="Mining\AlgorithmStatus.cs" />
     <Compile Include="Mining\AvailableDevices.cs" />
     <Compile Include="Mining\ComputeDevice.cs" />
     <Compile Include="Mining\IdleChecking\IdleChangedEventArgs.cs" />
@@ -146,13 +150,16 @@
     <Compile Include="Mining\IdleChecking\InputTimeoutChecker.cs" />
     <Compile Include="Mining\IdleChecking\SessionLockChecker.cs" />
     <Compile Include="Mining\AlgorithmContainer.cs" />
+    <Compile Include="Mining\MiningStats\BaseStats.cs" />
+    <Compile Include="Mining\MiningStats\DeviceMiningStats.cs" />
+    <Compile Include="Mining\MiningStats\MinerMiningStats.cs" />
     <Compile Include="Mining\Plugins\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Mining\Plugins\MinerPluginInstallTask.cs" />
     <Compile Include="Mining\Plugins\PluginInstallProgressState.cs" />
     <Compile Include="Mining\Plugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
     <Compile Include="Mining\MinerApiWatchdog.cs" />
     <Compile Include="Mining\MiningManager.cs" />
-    <Compile Include="Mining\MiningStats.cs" />
+    <Compile Include="Mining\MiningDataStats.cs" />
     <Compile Include="NHMProductInfo.cs" />
     <Compile Include="Mining\Plugins\PluginContainer.cs" />
     <Compile Include="Mining\Plugins\SupportedAlgorithmsFilter.cs" />
@@ -162,18 +169,11 @@
     <Compile Include="Stats\Models\ExchangeRateJson.cs" />
     <Compile Include="Stats\Models\MarketsMessage.cs" />
     <Compile Include="Stats\Models\MinerStatusMessage.cs" />
-    <Compile Include="Stats\Models\NicehashCredentials.cs" />
-    <Compile Include="Stats\Models\DeviceUpdateEventArgs.cs" />
-    <Compile Include="Stats\Models\EssentialsCall.cs" />
     <Compile Include="Stats\Models\ExecutedCall.cs" />
-    <Compile Include="Stats\Models\ExecutedInfo.cs" />
     <Compile Include="Stats\Models\LoginMessage.cs" />
-    <Compile Include="Stats\Models\DeviceStatusMessage.cs" />
     <Compile Include="Stats\Models\RpcException.cs" />
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
-    <Compile Include="Stats\ExchangeRateAPI.cs" />
-    <Compile Include="Stats\NiceHashSocket.cs" />
-    <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Stats\NHWebSocket.cs" />
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="StratumService.cs" />
@@ -192,7 +192,6 @@
     <Compile Include="Configs\Data\DeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
-    <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Mining\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Mining\Grouping\MiningDevice.cs" />
@@ -450,7 +449,6 @@ If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp120.dll" copy /Y "$(Sol
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp140.dll" "$(SolutionDir)$(Configuration)\common\msvcp140.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr110.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr110.dll" "$(SolutionDir)$(Configuration)\common\msvcr110.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\common\msvcr120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\OpenCL.dll" "$(SolutionDir)$(Configuration)\common\OpenCL.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\common\vcruntime140.dll"
 </PostBuildEvent>
   </PropertyGroup>

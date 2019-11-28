@@ -4,7 +4,6 @@ using NHMCore.Benchmarking.BenchHelpers;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
-using NHMCore.Stats;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -48,19 +47,27 @@ namespace NHMCore.Benchmarking
             await newBenchmarkHandler.BenchmarkTask;
         }
 
-        internal static void StopBenchmarkingDevice(ComputeDevice computeDevice)
+        internal static Task StopBenchmarkingDevice(ComputeDevice computeDevice)
         {
             if (BenchmarkingHandlers.TryGetValue(computeDevice, out var benchmarkHandler))
             {
-                NiceHashStats.SendMinerStatusTasks.Enqueue(benchmarkHandler.BenchmarkTask);
                 benchmarkHandler.StopBenchmark();
+                // return stopped task
+                return benchmarkHandler.BenchmarkTask;
             }
+            return null;
         }
 
-        internal static void StopBenchmarkingAllDevices()
+        internal static Task StopBenchmarkingAllDevices()
         {
             var removeAllKeys = BenchmarkingHandlers.Keys.ToArray();
-            foreach (var computeDevice in removeAllKeys) StopBenchmarkingDevice(computeDevice);
+            var stoppedTasks = new List<Task>();
+            foreach (var computeDevice in removeAllKeys)
+            {
+                var stoppedTask = StopBenchmarkingDevice(computeDevice);
+                if (stoppedTask != null) stoppedTasks.Add(stoppedTask);
+            }
+            return Task.WhenAll(stoppedTasks);
         }
 
         internal static bool IsBenchmarking => BenchmarkingHandlers.Count > 0;
@@ -91,8 +98,10 @@ namespace NHMCore.Benchmarking
             bool allAdded = true;
             foreach (var algo in algorithmContainers)
             {
+                var currentAdded = _benchmarkAlgorithms.TryAdd(algo.AlgorithmStringID, algo);
+                if (currentAdded) algo.SetBenchmarkPending();
                 // TODO make sure not to add the already same algorihtms, use UPDATE instead
-                allAdded &= _benchmarkAlgorithms.TryAdd(algo.AlgorithmStringID, algo);
+                allAdded &= currentAdded;
             }
             return allAdded;
         }
@@ -140,7 +149,7 @@ namespace NHMCore.Benchmarking
                             {
                                 // this will drain the container
                                 await BenchmarkNextAlgorithm(_stopCurrentAlgorithmBenchmark.Token);
-                                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, _stopCurrentAlgorithmBenchmark.Token);
+                                await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, _stopCurrentAlgorithmBenchmark.Token);
                                 BenchmarkManager.StepUpBenchmarkStepProgress();
                             }
                             catch (Exception e)
@@ -209,13 +218,13 @@ namespace NHMCore.Benchmarking
             try
             {
                 BenchmarkManager.AddToStatusCheck(nextAlgo.ComputeDevice, nextAlgo);
-                nextAlgo.InBenchmark = true;
+                nextAlgo.IsBenchmarking = true;
                 await BenchmarkAlgorithm(nextAlgo, stop);
             }
             finally
             {
                 nextAlgo.ClearBenchmarkPending();
-                nextAlgo.InBenchmark = false;
+                nextAlgo.IsBenchmarking = false;
             }
         }
 
@@ -236,7 +245,7 @@ namespace NHMCore.Benchmarking
                 EthlargementIntegratedPlugin.Instance.Start(miningPairs);
                 miner.InitMiningPairs(miningPairs);
                 // fill service since the benchmark might be online. DemoUser.BTC must be used
-                miner.InitMiningLocationAndUsername(StratumService.SelectedServiceLocation, DemoUser.BTC);
+                miner.InitMiningLocationAndUsername(StratumService.Instance.SelectedServiceLocation, DemoUser.BTC);
                 powerHelper.Start();
                 algo.ComputeDevice.State = DeviceState.Benchmarking;
                 var result = await miner.StartBenchmark(stop, PerformanceType);
@@ -258,7 +267,7 @@ namespace NHMCore.Benchmarking
                     algo.LastBenchmarkingFailed = true;
                     // add new failed list
                     _benchmarkFailedAlgo.Add(algo.AlgorithmName);
-                    algo.SetError(result.ErrorMessage);
+                    algo.SetBenchmarkError(result.ErrorMessage);
                     BenchmarkManager.SetCurrentStatus(algo.ComputeDevice, algo, result.ErrorMessage);
                 }
             }

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
 
@@ -24,15 +25,15 @@ namespace NiceHashMiner.Forms
             form.Location = new Point(Location.X + (Width - form.Width) / 2, Location.Y + (Height - form.Height) / 2);
         }
 
-        private void ButtonOK_Click(object sender, EventArgs e)
+        private async void ButtonOK_Click(object sender, EventArgs e)
         {
             var loginForm = new LoginForm();
             SetChildFormCenter(loginForm);
             loginForm.ShowDialog();
-            if (CredentialValidators.ValidateBitcoinAddress(loginForm.Btc))
+            // SOON TO BE OBSOLETE
+            var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(loginForm.Btc, true);
+            if (result == ApplicationStateManager.SetResult.CHANGED)
             {
-                ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
-                ConfigManager.GeneralConfigFileCommit();
                 Close();
             }
         }

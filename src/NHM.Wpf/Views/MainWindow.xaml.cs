@@ -8,7 +8,7 @@ using System.Windows.Interop;
 using NHM.Common;
 using NHM.Wpf.ViewModels;
 using NHM.Wpf.Views.Common;
-using NHM.Wpf.Views.Plugins;
+//using NHM.Wpf.Views.Plugins;
 using NHM.Wpf.Views.Settings;
 using NHMCore;
 using NHMCore.Configs;
@@ -79,10 +79,10 @@ namespace NHM.Wpf.Views
 
         private void PluginButton_Click(object sender, RoutedEventArgs e)
         {
-            ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Plugins;
-            var plugin = new PluginWindow();
-            ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
-            plugin.ShowDialog();
+            //ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Plugins;
+            //var plugin = new PluginWindow();
+            //ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
+            //plugin.ShowDialog();
         }
 
         #region Minimize to tray stuff
@@ -109,7 +109,7 @@ namespace NHM.Wpf.Views
 
         private void StatsHyperlink_OnClick(object sender, RoutedEventArgs e)
         {
-            if (ConfigManager.CredentialsSettings.IsCredentialsValid == false) return;
+            if (CredentialsSettings.Instance.IsCredentialsValid == false) return;
             ApplicationStateManager.VisitMiningStatsPage();
         }
 
@@ -123,35 +123,35 @@ namespace NHM.Wpf.Views
             // Set native disabled state to disallow moving window
             WindowUtils.TrySetNativeEnabled(false, handle);
 
-            var startup = new StartupLoadingWindow
-            {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                CanClose = false
-            };
+            //var startup = new StartupLoadingWindow
+            //{
+            //    Owner = this,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    CanClose = false
+            //};
 
-            try
-            {
-                startup.Show();
+            //try
+            //{
+            //    startup.Show();
 
-                await _vm.InitializeNhm(startup.StartupLoader);
-            }
-            finally
-            {
-                // Remove disabled native bit
-                // NOTE must happen before startup.Close() or else minimizing thing happens
-                WindowUtils.TrySetNativeEnabled(true, handle);
+            //    await _vm.InitializeNhm(startup.StartupLoader);
+            //}
+            //finally
+            //{
+            //    // Remove disabled native bit
+            //    // NOTE must happen before startup.Close() or else minimizing thing happens
+            //    WindowUtils.TrySetNativeEnabled(true, handle);
 
-                startup.CanClose = true;
+            //    startup.CanClose = true;
 
-                // If owner is still set to `this` when close is called, 
-                // it will minimize the main window for some reason
-                startup.Owner = null;
-                startup.Close();
+            //    // If owner is still set to `this` when close is called, 
+            //    // it will minimize the main window for some reason
+            //    startup.Owner = null;
+            //    startup.Close();
 
-                // Re-enable managed controls
-                IsEnabled = true;
-            }
+            //    // Re-enable managed controls
+            //    IsEnabled = true;
+            //}
         }
 
         private async void StartButton_OnClick(object sender, RoutedEventArgs e)

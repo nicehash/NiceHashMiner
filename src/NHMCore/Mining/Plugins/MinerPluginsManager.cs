@@ -236,7 +236,7 @@ namespace NHMCore.Mining.Plugins
             }
             // cross reference local and online list
             CrossReferenceInstalledWithOnline();
-            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated;
+            EthlargementIntegratedPlugin.Instance.ServiceEnabled = MiscSettings.Instance.UseEthlargement && Helpers.IsElevated;
             Logger.Info("MinerPluginsManager", "Finished initialization of miners.");
         }
 

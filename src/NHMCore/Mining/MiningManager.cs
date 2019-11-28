@@ -1,6 +1,7 @@
 ﻿using MinerPlugin;
 using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Grouping;
 using NHMCore.Mining.Plugins;
@@ -91,7 +92,7 @@ namespace NHMCore.Mining
             }
 
             _switchingManager?.Stop();
-            ApplicationStateManager.ClearRatesAll();
+            MiningDataStats.ClearApiDataGroups();
             //_internetCheckTimer?.Stop();
         }
 
@@ -111,7 +112,7 @@ namespace NHMCore.Mining
             {
                 _semaphore.Release();
             }
-            ApplicationStateManager.ClearRatesAll();
+            MiningDataStats.ClearApiDataGroups();
         }
 
         #endregion Start/Stop
@@ -166,7 +167,7 @@ namespace NHMCore.Mining
                     await _runningMiners[key].StopTask();
                 }
                 // START
-                var miningLocation = StratumService.SelectedServiceLocation;
+                var miningLocation = StratumService.Instance.SelectedServiceLocation;
                 foreach (var key in _runningMiners.Keys)
                 {
                     await _runningMiners[key].StartTask(miningLocation, _username);
@@ -183,14 +184,14 @@ namespace NHMCore.Mining
         // full of state
         private static bool CheckIfProfitable(double currentProfit, bool log = true)
         {
-            if (ConfigManager.IsMiningRegardlesOfProfit) {
+            if (MiningProfitSettings.Instance.MineRegardlessOfProfit) {
                 if (log) Logger.Info(Tag, $"Mine always regardless of profit");
                 return true;
             }
 
             // TODO FOR NOW USD ONLY
-            var currentProfitUsd = (currentProfit * ExchangeRateApi.GetUsdExchangeRate());
-            var minProfit = ConfigManager.GeneralConfig.MinimumProfit;
+            var currentProfitUsd = (currentProfit * BalanceAndExchangeRates.Instance.GetUsdExchangeRate());
+            var minProfit = MiningProfitSettings.Instance.MinimumProfit;
             _isProfitable = currentProfitUsd >= minProfit;
             if (log)
             {
@@ -282,16 +283,16 @@ namespace NHMCore.Mining
                     foreach (var algo in device.Algorithms)
                     {
                         stringBuilderDevice.AppendLine(
-                            $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
-                            $"\t(SPEED = {algo.AvaragedSpeed:e5}" +
-                            $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
+                            $"\t\tPROFIT = {algo.CurrentNormalizedProfit.ToString(DoubleFormat)}" +
+                            $"\t(SPEED = {algo.AveragedSpeeds[0]:e5}" +
+                            $"\t\t| NHSMA = {algo.NormalizedSMAData[0]:e5})" +
                             $"\t[{algo.AlgorithmStringID}]"
                         );
                         if (algo.IsDual)
                         {
                             stringBuilderDevice.AppendLine(
-                                $"\t\t\t\t\t  Secondary:\t\t {algo.SecondaryAveragedSpeed:e5}" +
-                                $"\t\t\t\t  {algo.SecondaryCurNhmSmaDataVal:e5}"
+                                $"\t\t\t\t\t  Secondary:\t\t {algo.AveragedSpeeds[1]:e5}" +
+                                $"\t\t\t\t  {algo.NormalizedSMAData[1]:e5}"
                             );
                         }
                     }
@@ -323,10 +324,10 @@ namespace NHMCore.Mining
                 var b = Math.Min(prevStateProfit, currentProfit);
                 //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
                 var percDiff = ((a - b)) / b;
-                if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+                if (percDiff < SwitchSettings.Instance.SwitchProfitabilityThreshold)
                 {
                     // don't switch
-                    Logger.Info(Tag, $"Will NOT switch profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
+                    Logger.Info(Tag, $"Will NOT switch profit diff is {percDiff}, current threshold {SwitchSettings.Instance.SwitchProfitabilityThreshold}");
                     // RESTORE OLD PROFITS STATE
                     foreach (var device in _miningDevices)
                     {
@@ -334,7 +335,7 @@ namespace NHMCore.Mining
                     }
                     return;
                 }
-                Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
+                Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {SwitchSettings.Instance.SwitchProfitabilityThreshold}");
             }
 
             await _semaphore.WaitAsync();
@@ -358,7 +359,7 @@ namespace NHMCore.Mining
                     stopGroup.End();
                 }
                 // start new
-                var miningLocation = StratumService.SelectedServiceLocation;
+                var miningLocation = StratumService.Instance.SelectedServiceLocation;
                 foreach (var startKey in toStartMinerGroupKeys)
                 {
                     var miningPairs = newGroupedMiningPairs[startKey];
@@ -391,7 +392,7 @@ namespace NHMCore.Mining
             // There is a change in groups, change GUI
             if (hasChanged)
             {
-                ApplicationStateManager.ClearRatesAll();
+                MiningDataStats.ClearApiDataGroups();
                 await MinerStatsCheck();
             }
         }
@@ -408,10 +409,10 @@ namespace NHMCore.Mining
                     var ad = m.GetSummaryAsync();
                 }
                 // Update GUI
-                ApplicationStateManager.RefreshRates();
+                //ApplicationStateManager.RefreshRates(); // just update the model
                 // now we shoud have new global/total rate display it
-                var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
-                var profitInBTC = MiningStats.GetProfit(kwhPriceInBtc);
+                var kwhPriceInBtc = BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();
+                var profitInBTC = MiningDataStats.GetProfit(kwhPriceInBtc);
                 ApplicationStateManager.DisplayTotalRate(profitInBTC);
             }
             catch (Exception e)
@@ -433,7 +434,7 @@ namespace NHMCore.Mining
             await _semaphore.WaitAsync();
             try
             {
-                var miningLocation = StratumService.SelectedServiceLocation;
+                var miningLocation = StratumService.Instance.SelectedServiceLocation;
                 foreach (var groupKey in restartGroups)
                 {
                     if (_runningMiners.ContainsKey(groupKey) == false) continue;

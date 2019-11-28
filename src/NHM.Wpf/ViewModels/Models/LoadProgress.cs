@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using NHM.Common;
 
 namespace NHM.Wpf.ViewModels.Models
@@ -10,6 +11,15 @@ namespace NHM.Wpf.ViewModels.Models
     {
         private bool _isInstalling;
 
+        public Visibility Visibility
+        {
+            get
+            {
+                if (_isInstalling) return Visibility.Visible;
+                return Visibility.Collapsed;
+            }
+        }
+
         public bool IsInstalling
         {
             get => _isInstalling;
@@ -17,6 +27,7 @@ namespace NHM.Wpf.ViewModels.Models
             {
                 _isInstalling = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Visibility));
             }
         }
 
