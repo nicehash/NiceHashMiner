@@ -100,7 +100,7 @@ namespace MinerPluginsPacker
                 MinerPackageURL = minerPackageURL,
                 SupportedDevicesAlgorithms = TransformToPluginPackageInfoSupportedDevicesAlgorithms(pluginMetaInfo.SupportedDevicesAlgorithms),
                 // TODO enhance this with the bins version
-                PluginDescription = $"Miner Binary Version '{binaryVersion}'\n\n. " + pluginMetaInfo.PluginDescription
+                PluginDescription = $"Miner Binary Version '{binaryVersion}'.\n\n" + pluginMetaInfo.PluginDescription
             };
             PluginPackageInfos.Add(packageInfo);
         }
