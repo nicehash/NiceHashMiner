@@ -106,7 +106,7 @@ namespace NHM.Common.Enums
         //[Obsolete("UNUSED Algorithm")]
         X16Rv2 = 46,
         //[Obsolete("UNUSED Algorithm")]
-        RandomX = 47,
+        RandomXmonero = 47,
         #endregion // NiceHashAPI
     }
 

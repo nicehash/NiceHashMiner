@@ -25,11 +25,11 @@ namespace XmrStakRx
             // https://github.com/nicehash/xmr-stak/releases (fork of https://github.com/fireice-uk/xmr-stak/releases) current nhm-2.10.7
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.0.0-rx",
-                ExePath = new List<string> { "xmr-stak-rx-win64-1.0.0", "xmr-stak-rx.exe" },
+                BinVersion = "1.0.1-rx",
+                ExePath = new List<string> { "xmr-stak-rx-win64-1.0.1", "xmr-stak-rx.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/fireice-uk/xmr-stak/releases/download/1.0.0-rx/xmr-stak-rx-win64-1.0.0.zip", // original
+                    "https://github.com/fireice-uk/xmr-stak/releases/download/1.0.1-rx/xmr-stak-rx-win64-1.0.1.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,9 +37,9 @@ namespace XmrStakRx
                 PluginDescription = "XMR-Stak is a universal open source stratum pool miner. This miner supports x86-64 CPUs, AMD and NVIDIA GPUs.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
                 {
-                    { DeviceType.CPU, new List<AlgorithmType>{ AlgorithmType.RandomX } },
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.RandomX } },
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.RandomX } }
+                    { DeviceType.CPU, new List<AlgorithmType>{ AlgorithmType.RandomXmonero } },
+                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.RandomXmonero } },
+                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.RandomXmonero } }
                 }
             };
         }
@@ -98,7 +98,7 @@ namespace XmrStakRx
             var AMD_DisabledByDefault = dev.DeviceType != DeviceType.AMD;
             var algos = new List<Algorithm>
             {
-                new Algorithm(PluginUUID, AlgorithmType.RandomX) { Enabled = AMD_DisabledByDefault },
+                new Algorithm(PluginUUID, AlgorithmType.RandomXmonero) { Enabled = AMD_DisabledByDefault },
             };
             return algos;
         }
