@@ -29,6 +29,7 @@ namespace XmrStakRx
                 ExePath = new List<string> { "xmr-stak-rx-win64-1.0.1", "xmr-stak-rx.exe" },
                 Urls = new List<string>
                 {
+                    "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.7/xmr-stak-rx-win64-1.0.1_NH_MODDED.7z", // modded
                     "https://github.com/fireice-uk/xmr-stak/releases/download/1.0.1-rx/xmr-stak-rx-win64-1.0.1.zip", // original
                 }
             };
