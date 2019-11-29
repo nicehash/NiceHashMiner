@@ -37,7 +37,7 @@ namespace XMRig
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(4, 0);
 
         public override string Name => "XMRig";
 
