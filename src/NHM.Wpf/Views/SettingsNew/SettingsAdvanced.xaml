@@ -17,7 +17,8 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.AutoStartMining}"
                                         Label="Autostart Mining" />
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.AllowMultipleInstances}"
-                                        Label="Allow Multiple Instances" />
+                                        Label="Allow Multiple Instances" 
+                                        Description="{StaticResource messageTest}" />
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.RunAtStartup}"
                                         Label="Run On Startup" />
             <local:SettingsCheckBoxItem Enabled="{Binding GUISettings.MinimizeToTray}"

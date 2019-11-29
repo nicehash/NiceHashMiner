@@ -67,9 +67,15 @@ namespace NHM.Wpf.ViewModels
         #region settingsLists
 
         public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
-        public IReadOnlyList<string> ThemeOptions => _themeList;
 
-        private List<string> _themeList = new List<string>{ "Light", "Dark" };
+
+
+        public IReadOnlyList<ThemeOption> ThemeOptions => _themeList;
+
+        private List<ThemeOption> _themeList = new List<ThemeOption> {
+            new ThemeOption(){ThemeName = "Light", ThemeLogo = new System.Windows.Media.DrawingBrush() },
+            new ThemeOption(){ThemeName = "Dark", ThemeLogo = new System.Windows.Media.DrawingBrush()}
+        };
 
         #endregion settingsLists
 
@@ -94,13 +100,6 @@ namespace NHM.Wpf.ViewModels
         public TranslationsSettings TranslationsSettings => TranslationsSettings.Instance;
         public WarningSettings WarningSettings => WarningSettings.Instance;
         #endregion Exposed settings
-
-        public void SetTheme(System.Windows.Window window)
-        {
-            var theme = GUISettings.Instance.DisplayTheme;
-            var windowBackground = theme != "Light" ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(1, 13, 21)) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
-            window.Background = windowBackground;
-        }
 
         #region Currency-related properties
 
@@ -373,5 +372,11 @@ namespace NHM.Wpf.ViewModels
             // TODO same as StartMining comment
             await ApplicationStateManager.StopAllDevice();
         }
+    }
+
+    public class ThemeOption
+    {
+        public string ThemeName;
+        public System.Windows.Media.DrawingBrush ThemeLogo;
     }
 }
