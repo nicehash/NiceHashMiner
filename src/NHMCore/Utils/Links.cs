@@ -7,23 +7,24 @@
         public const string CheckStats = "https://test.nicehash.com/mining/stats";
         public const string Register = "NO_URL";
         //public const string Login = "NO_URL";
-        public const string PluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
+        //public const string PluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
         public const string NhmPayingFaq = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid"; // ADD TESTNET
 #elif TESTNETDEV
         public const string VisitUrl = "https://test-dev.nicehash.com";
         public const string CheckStats = "https://test-dev.nicehash.com/mining/stats";
         public const string Register = "NO_URL";
         //public const string Login = "NO_URL";
-        public const string PluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
+        //public const string PluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
         public const string NhmPayingFaq = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";  // ADD TESTNETDEV
 #else
         public const string VisitUrl = "https://nicehash.com";
         public const string CheckStats = "https://nicehash.com/my/mining/stats";
         public const string Register = "https://nicehash.com/my/register";
         //public const string Login = "NO_URL";
-        public const string PluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
+        //public const string PluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
         public const string NhmPayingFaq = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
 #endif
+        public const string PluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
         // add version
         public const string VisitReleasesUrl = "https://github.com/NiceHash/NiceHashMiner/releases/";
         public const string VisitNewVersionReleaseUrl = "https://github.com/NiceHash/NiceHashMiner/releases/tag/";
