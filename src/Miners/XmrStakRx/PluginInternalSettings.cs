@@ -33,6 +33,12 @@ namespace XmrStakRx
                     ID = "xmrstak_amdCacheDir",
                     ShortName = "--amdCacheDir",
                 },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrstak_noTest",
+                    ShortName = "--noTest",
+                },
             }
         };
     }
