@@ -38,7 +38,7 @@ namespace NanoMiner
             return new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
-                //new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
+                new Algorithm(PluginUUID, AlgorithmType.RandomXmonero) { Enabled = false},
             };
         }
 
@@ -47,7 +47,7 @@ namespace NanoMiner
             switch (algorithmType)
             {
                 case AlgorithmType.GrinCuckarood29: return "Cuckarood29";
-                case AlgorithmType.CryptoNightR: return "CryptoNightR";
+                case AlgorithmType.RandomXmonero: return "RandomX";
                 default: return "";
             }
         }

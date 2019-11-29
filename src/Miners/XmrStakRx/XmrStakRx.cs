@@ -55,7 +55,7 @@ namespace XmrStakRx
         {
             switch (algorithmType)
             {
-                case AlgorithmType.RandomX: return "randomx";
+                case AlgorithmType.RandomXmonero: return "randomx";
                 default: return "";
             }
         }

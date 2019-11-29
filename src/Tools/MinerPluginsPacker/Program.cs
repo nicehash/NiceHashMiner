@@ -67,6 +67,10 @@ namespace MinerPluginsPacker
             {
                 pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v3.x/" + GetPluginPackageName(plugin);
             }
+            else if(version.major == 4)
+            {
+                pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v4.x/" + GetPluginPackageName(plugin);
+            }
             else
             {
                 //throw new Exception("Plugin version not supported");
@@ -100,7 +104,7 @@ namespace MinerPluginsPacker
                 MinerPackageURL = minerPackageURL,
                 SupportedDevicesAlgorithms = TransformToPluginPackageInfoSupportedDevicesAlgorithms(pluginMetaInfo.SupportedDevicesAlgorithms),
                 // TODO enhance this with the bins version
-                PluginDescription = $"Miner Binary Version '{binaryVersion}'\n\n. " + pluginMetaInfo.PluginDescription
+                PluginDescription = $"Miner Binary Version '{binaryVersion}'.\n\n" + pluginMetaInfo.PluginDescription
             };
             PluginPackageInfos.Add(packageInfo);
         }
