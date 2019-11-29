@@ -35,7 +35,7 @@ namespace EWBF
 
         public override string PluginUUID => "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(4, 0);
 
         public override string Name => "Ewbf";
 

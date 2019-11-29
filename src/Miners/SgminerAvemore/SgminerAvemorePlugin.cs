@@ -36,7 +36,7 @@ namespace SgminerAvemore
 
         public override string PluginUUID => "bc95fd70-e361-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(4, 0);
         public override string Name => "SGminerAvemore";
 
         public override string Author => "info@nicehash.com";

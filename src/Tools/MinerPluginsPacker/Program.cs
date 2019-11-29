@@ -63,7 +63,7 @@ namespace MinerPluginsPacker
             var version = new MajorMinorVersion(plugin.Version.Major, plugin.Version.Minor);
 
             string pluginPackageURL = null;
-            if (version.major == 3)
+            if (version.major == 3 || version.major == 4)
             {
                 pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v3.x/" + GetPluginPackageName(plugin);
             }
