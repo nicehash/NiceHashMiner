@@ -17,14 +17,14 @@ namespace WildRig
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://bitcointalk.org/index.php?topic=5023676 | https://github.com/andru-kun/wildrig-multi/releases current 0.18 // TODO pre-release is out added RX 5700
+            // https://bitcointalk.org/index.php?topic=5023676 | https://github.com/andru-kun/wildrig-multi/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.18",
+                BinVersion = " 0.20.1",
                 ExePath = new List<string> { "wildrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.18.0/wildrig-multi-windows-0.18.0-beta.7z", // original
+                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.20.1/wildrig-multi-windows-0.20.1.7z", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -36,7 +36,7 @@ namespace WildRig
 
         public override string PluginUUID => "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(4, 0);
 
         public override string Name => "WildRig";
 
@@ -72,7 +72,8 @@ namespace WildRig
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
         {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }

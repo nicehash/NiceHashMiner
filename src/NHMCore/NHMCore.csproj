@@ -162,18 +162,14 @@
     <Compile Include="Stats\Models\ExchangeRateJson.cs" />
     <Compile Include="Stats\Models\MarketsMessage.cs" />
     <Compile Include="Stats\Models\MinerStatusMessage.cs" />
-    <Compile Include="Stats\Models\NicehashCredentials.cs" />
     <Compile Include="Stats\Models\DeviceUpdateEventArgs.cs" />
-    <Compile Include="Stats\Models\EssentialsCall.cs" />
     <Compile Include="Stats\Models\ExecutedCall.cs" />
     <Compile Include="Stats\Models\ExecutedInfo.cs" />
     <Compile Include="Stats\Models\LoginMessage.cs" />
-    <Compile Include="Stats\Models\DeviceStatusMessage.cs" />
     <Compile Include="Stats\Models\RpcException.cs" />
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
-    <Compile Include="Stats\NiceHashSocket.cs" />
-    <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Stats\NHWebSocket.cs" />
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="StratumService.cs" />
@@ -226,6 +222,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="README.md" />
     <None Include="Resources\Eula.rtf" />
     <None Include="translations.json" />
   </ItemGroup>
@@ -382,6 +379,10 @@
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
       <Name>XmrStak</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\XmrStakRx\XmrStakRx.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStakRx_PLUGIN'))">
+      <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
+      <Name>XmrStakRx</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\ZEnemy\ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
       <Project>{059e2ca2-85c5-453e-a48c-ada45a3c5879}</Project>
       <Name>ZEnemy</Name>
@@ -449,7 +450,6 @@ If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp120.dll" copy /Y "$(Sol
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp140.dll" "$(SolutionDir)$(Configuration)\common\msvcp140.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr110.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr110.dll" "$(SolutionDir)$(Configuration)\common\msvcr110.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\common\msvcr120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\OpenCL.dll" "$(SolutionDir)$(Configuration)\common\OpenCL.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\common\vcruntime140.dll"
 </PostBuildEvent>
   </PropertyGroup>

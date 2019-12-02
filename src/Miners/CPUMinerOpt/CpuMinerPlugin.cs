@@ -21,11 +21,11 @@ namespace CpuMinerOpt
             // https://bitcointalk.org/index.php?topic=1326803.0 | https://github.com/JayDDee/cpuminer-opt/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = " v3.9.8.1",
+                BinVersion = "v3.9.9.1",
                 ExePath = new List<string> { "cpuminer-avx2.exe" }, // special case multiple executables
                 Urls = new List<string>
                 {
-                    "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.9.8.1/cpuminer-opt-3.9.8.1-windows.zip", // original
+                    "https://github.com/JayDDee/cpuminer-opt/releases/download/v3.9.9.1/cpuminer-opt-3.9.9.1-windows.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,7 +37,7 @@ namespace CpuMinerOpt
 
         public override string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(4, 0);
 
         public override string Name => "cpuminer-opt";
 
@@ -53,7 +53,7 @@ namespace CpuMinerOpt
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             // TODO set is intel/amd
-            var cpus = devices.Where(dev => dev is CPUDevice).Select(dev => (CPUDevice)dev);
+            var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
             IsIntel = IsIntelCpu(cpus);
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 

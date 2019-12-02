@@ -36,7 +36,7 @@ namespace SgminerGM
 
         public override string PluginUUID => "d5f18960-e361-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(4, 0);
         public override string Name => "SGminerGM";
 
         public override string Author => "info@nicehash.com";
@@ -51,12 +51,19 @@ namespace SgminerGM
 
             foreach (var gpu in amdGpus)
             {
-                var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
-                var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-                if (filteredAlgorithms.Count > 0) supported.Add(gpu, filteredAlgorithms);
+                var algorithms = GetSupportedAlgorithms(gpu);
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
+        }
+
+        private List<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
+        {
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

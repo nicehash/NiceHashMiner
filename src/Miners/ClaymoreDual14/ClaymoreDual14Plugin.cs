@@ -39,7 +39,7 @@ namespace ClaymoreDual14
 
         public override string PluginUUID => "70984aa0-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(4, 0);
 
         public override string Name => "ClaymoreDual";
 
@@ -97,6 +97,7 @@ namespace ClaymoreDual14
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
             var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID).ToList();
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             if(gpu is AMDDevice amd && (amd.Codename.ToLower().Contains("gfx10") || amd.Name.ToLower().Contains("navi")))
             {

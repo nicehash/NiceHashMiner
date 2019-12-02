@@ -1,6 +1,7 @@
 using NHMCore.Mining;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NHMCore
 {
@@ -18,9 +19,14 @@ namespace NHMCore
             return !IsEnableAllDevicesRedundantOperation();
         }
 
-#endregion device state checkers
+        #endregion device state checkers
 
-        public static void SetDeviceEnabledState(object sender, (string uuid, bool enabled) args)
+        public static async void SetDeviceEnabledStateGUI(object sender, (string uuid, bool enabled) args)
+        {
+            await SetDeviceEnabledState(sender, args);
+        }
+
+        public static async Task SetDeviceEnabledState(object sender, (string uuid, bool enabled) args)
         {
             var (uuid, enabled) = args;
             // TODO log sender
@@ -43,7 +49,8 @@ namespace NHMCore
             {
                 if (!enabled)
                 {
-                    StopDevice(dev);
+                    // here we might want to await them all instead of each individually 
+                    await StopDevice(dev);
                 }
 
                 dev.Enabled = enabled;

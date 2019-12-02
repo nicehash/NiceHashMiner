@@ -151,7 +151,10 @@ namespace NHMCore
                 // connect to nhmws
                 loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
                 // Init ws connection
-                NiceHashStats.StartConnection(Nhmws.NhmSocketAddress);
+                var (btc, worker, group) = ConfigManager.GeneralConfig.GetCredentials();
+                NHWebSocket.SetCredentials(btc, worker, group);
+                _ = Task.Run(() => NHWebSocket.Start(Nhmws.NhmSocketAddress, ExitApplication.Token));
+                
 
                 // STEP
                 // disable windows error reporting
@@ -244,7 +247,7 @@ namespace NHMCore
             finally
             {
                 isInitFinished = true;
-                NiceHashStats.NotifyStateChangedTask();
+                NHWebSocket.NotifyStateChanged();
             }
         }
 

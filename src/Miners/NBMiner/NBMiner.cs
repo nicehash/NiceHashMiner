@@ -81,7 +81,8 @@ namespace NBMiner
         {
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} {_devices} --no-watchdog {_extraLaunchParameters}";
+            // NVIDIA only platform
+            return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} {_devices} --no-watchdog --platform 1 {_extraLaunchParameters}";
         }
         
         public override async Task<ApiData> GetMinerStatsDataAsync()

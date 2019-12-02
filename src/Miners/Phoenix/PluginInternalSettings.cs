@@ -81,7 +81,6 @@ namespace Phoenix
                 /// <summary>
                 /// Use new AMD kernels if supported (0: no, 1: yes; default: 1). You may specify this option per-GPU.
                 /// </summary>
-
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
@@ -461,12 +460,19 @@ namespace Phoenix
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "phoenix_hstats",
-                    ShortName = "-hstats",
-                    DefaultValue = "2",
-                    Delimiter = ","
-                }                
+                    ShortName = "-hstats"
+                },
+                /// <summary>
+                /// -rvram <n> Minimum free VRAM in MB (-1: don't check; default: 384 for Windows, and 128 for Linux)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_rvram",
+                    ShortName = "-rvram"
+                },
             }
         };
 

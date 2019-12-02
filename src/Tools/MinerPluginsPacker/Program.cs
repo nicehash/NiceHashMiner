@@ -67,6 +67,10 @@ namespace MinerPluginsPacker
             {
                 pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v3.x/" + GetPluginPackageName(plugin);
             }
+            else if(version.major == 4)
+            {
+                pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v4.x/" + GetPluginPackageName(plugin);
+            }
             else
             {
                 //throw new Exception("Plugin version not supported");
@@ -100,7 +104,7 @@ namespace MinerPluginsPacker
                 MinerPackageURL = minerPackageURL,
                 SupportedDevicesAlgorithms = TransformToPluginPackageInfoSupportedDevicesAlgorithms(pluginMetaInfo.SupportedDevicesAlgorithms),
                 // TODO enhance this with the bins version
-                PluginDescription = $"Miner Binary Version '{binaryVersion}'\n\n. " + pluginMetaInfo.PluginDescription
+                PluginDescription = $"Miner Binary Version '{binaryVersion}'.\n\n" + pluginMetaInfo.PluginDescription
             };
             PluginPackageInfos.Add(packageInfo);
         }
@@ -139,7 +143,7 @@ namespace MinerPluginsPacker
             {
                 "2257f160-7236-11e9-b20c-f9f12eb6d835", // CCMinerTpruvotPlugin
                 "70984aa0-7236-11e9-b20c-f9f12eb6d835", // ClaymoreDual14Plugin
-                "92fceb00-7236-11e9-b20c-f9f12eb6d835", // CPUMinerPlugin
+                //"92fceb00-7236-11e9-b20c-f9f12eb6d835", // CPUMinerPlugin
                 "1b7019d0-7237-11e9-b20c-f9f12eb6d835", // GMinerPlugin
                 "435f0820-7237-11e9-b20c-f9f12eb6d835", // LolMinerBeamPlugin
                 "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4", // MiniZPlugin
@@ -147,8 +151,10 @@ namespace MinerPluginsPacker
                 "f5d4a470-e360-11e9-a914-497feefbdfc8", // PhoenixPlugin
                 "abc3e2a0-7237-11e9-b20c-f9f12eb6d835", // TeamRedMinerPlugin
                 "d47d9b00-7237-11e9-b20c-f9f12eb6d835", // TRexPlugin
-                "3d4e56b0-7238-11e9-b20c-f9f12eb6d835", // XmrStakPlugin
+                //"3d4e56b0-7238-11e9-b20c-f9f12eb6d835", // XmrStakPlugin
                 "5532d300-7238-11e9-b20c-f9f12eb6d835", // ZEnemyPlugin
+                //"4aec5ec0-10f8-11ea-bad3-8dea21141bbb", // XmrStakRxPlugin
+                "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4", // XMRig
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
 

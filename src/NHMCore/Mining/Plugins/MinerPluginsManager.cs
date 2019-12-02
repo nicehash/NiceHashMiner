@@ -50,6 +50,9 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_XmrStak_PLUGIN
                 new XmrStak.XmrStakPlugin(),
 #endif
+#if INTEGRATE_XmrStakRx_PLUGIN
+                new XmrStakRx.XmrStakRxPlugin(),
+#endif
 #if INTEGRATE_CpuMinerOpt_PLUGIN
                 new CpuMinerOpt.CPUMinerPlugin(),
 #endif

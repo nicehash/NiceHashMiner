@@ -1,6 +1,8 @@
-﻿using NHM.Common.Algorithm;
+﻿using NHM.Common;
+using NHM.Common.Algorithm;
 using NHM.Common.Enums;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ZEnemy
@@ -8,6 +10,18 @@ namespace ZEnemy
     // TODO move this into PluginBase when we break 3.x plugins with monero fork
     internal static class PluginSupportedAlgorithms
     {
+        internal static bool UnsafeLimits(string PluginUUID)
+        {
+            try
+            {
+                var unsafeLimits = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "unsafe_limits");
+                return File.Exists(unsafeLimits);
+            }
+            catch
+            { }
+            return false;
+        }
+
         internal static Dictionary<DeviceType, List<AlgorithmType>> SupportedDevicesAlgorithmsDict()
         {
             var nvidiaAlgos = new HashSet<AlgorithmType>(GetSupportedAlgorithmsNVIDIA("").SelectMany(a => a.IDs)).ToList();

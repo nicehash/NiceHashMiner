@@ -34,7 +34,7 @@ namespace CCMinerTpruvot
 
         public override string PluginUUID => "2257f160-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(4, 0);
         public override string Name => "CCMinerTpruvot";
 
         public override string Author => "info@nicehash.com";
@@ -52,12 +52,19 @@ namespace CCMinerTpruvot
 
             foreach (var gpu in cudaGpus)
             {
-                var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
-                var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-                if (filteredAlgorithms.Count > 0) supported.Add(gpu, filteredAlgorithms);
+                var algorithms = GetSupportedAlgorithms(gpu);
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
+        }
+
+        private List<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
+        {
+            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

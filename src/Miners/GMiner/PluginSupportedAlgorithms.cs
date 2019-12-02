@@ -1,6 +1,8 @@
-﻿using NHM.Common.Algorithm;
+﻿using NHM.Common;
+using NHM.Common.Algorithm;
 using NHM.Common.Enums;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace GMinerPlugin
@@ -8,6 +10,18 @@ namespace GMinerPlugin
     // TODO move this into PluginBase when we break 3.x plugins with monero fork
     internal static class PluginSupportedAlgorithms
     {
+        internal static bool UnsafeLimits(string PluginUUID)
+        {
+            try
+            {
+                var unsafeLimits = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "unsafe_limits");
+                return File.Exists(unsafeLimits);
+            }
+            catch
+            { }
+            return false;
+        }
+
         internal static Dictionary<DeviceType, List<AlgorithmType>> SupportedDevicesAlgorithmsDict()
         {
             var nvidiaAlgos = new HashSet<AlgorithmType>(GetSupportedAlgorithmsNVIDIA("").SelectMany(a => a.IDs)).ToList();
@@ -28,7 +42,6 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
-                new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
             return algorithms;
@@ -39,7 +52,6 @@ namespace GMinerPlugin
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
-                new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
             return algorithms;
@@ -51,8 +63,8 @@ namespace GMinerPlugin
             {
                 case AlgorithmType.ZHash:
                     return "144_5";
-                case AlgorithmType.Beam:
-                    return "beamhashI";
+                //case AlgorithmType.Beam:
+                //    return "beamhashI";
                 case AlgorithmType.GrinCuckatoo31:
                     return "grin31";
                 case AlgorithmType.CuckooCycle:

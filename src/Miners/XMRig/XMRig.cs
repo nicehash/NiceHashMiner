@@ -26,6 +26,8 @@ namespace XMRig
                 {
                     case AlgorithmType.CryptoNightR:
                         return "cn/r";
+                    case AlgorithmType.RandomXmonero:
+                        return "rx/0";
                     default:
                         return "";
                 }

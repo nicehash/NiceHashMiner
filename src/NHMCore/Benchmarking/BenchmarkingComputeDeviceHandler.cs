@@ -4,6 +4,7 @@ using NHMCore.Benchmarking.BenchHelpers;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
+using NHMCore.Stats;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -43,21 +44,31 @@ namespace NHMCore.Benchmarking
                 StartMiningAfterBenchmark = startMiningAfterBenchmark
             };
             newBenchmarkHandler.AppendForBenchmarking(algorithmContainers);
-            await newBenchmarkHandler.Benchmark();
+            newBenchmarkHandler.BenchmarkTask = newBenchmarkHandler.Benchmark();
+            await newBenchmarkHandler.BenchmarkTask;
         }
 
-        internal static void StopBenchmarkingDevice(ComputeDevice computeDevice)
+        internal static Task StopBenchmarkingDevice(ComputeDevice computeDevice)
         {
             if (BenchmarkingHandlers.TryGetValue(computeDevice, out var benchmarkHandler))
             {
                 benchmarkHandler.StopBenchmark();
+                // return stopped task
+                return benchmarkHandler.BenchmarkTask;
             }
+            return null;
         }
 
-        internal static void StopBenchmarkingAllDevices()
+        internal static Task StopBenchmarkingAllDevices()
         {
             var removeAllKeys = BenchmarkingHandlers.Keys.ToArray();
-            foreach (var computeDevice in removeAllKeys) StopBenchmarkingDevice(computeDevice);
+            var stoppedTasks = new List<Task>();
+            foreach (var computeDevice in removeAllKeys)
+            {
+                var stoppedTask = StopBenchmarkingDevice(computeDevice);
+                if (stoppedTask != null) stoppedTasks.Add(stoppedTask);
+            }
+            return Task.WhenAll(stoppedTasks);
         }
 
         internal static bool IsBenchmarking => BenchmarkingHandlers.Count > 0;
@@ -65,7 +76,7 @@ namespace NHMCore.Benchmarking
         #endregion STATIC
 
         //private object _lock = new object();
-
+        public Task BenchmarkTask { get; private set; }
         public ComputeDevice Device { get; }
         private readonly ConcurrentDictionary<string, AlgorithmContainer> _benchmarkAlgorithms = new ConcurrentDictionary<string, AlgorithmContainer>();
 
@@ -106,12 +117,12 @@ namespace NHMCore.Benchmarking
         //    return allRemoved;
         //}
 
-        // TODO on plugin updates update algorithms and stop benchmarking if the current active algorithm is in the update array
-        public bool UpdateForBenchmarking(params AlgorithmContainer[] algorithmContainers)
-        {
-            throw new NotImplementedException();
-            StopCurrentAlgorithmBenchmark();
-        }
+        //// TODO on plugin updates update algorithms and stop benchmarking if the current active algorithm is in the update array
+        //public bool UpdateForBenchmarking(params AlgorithmContainer[] algorithmContainers)
+        //{
+        //    throw new NotImplementedException();
+        //    StopCurrentAlgorithmBenchmark();
+        //}
 
         public async Task Benchmark()
         {

@@ -1,10 +1,10 @@
 ﻿using NHM.Common.Enums;
 #if CUSTOM_ENDPOINTS
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
 #endif
 
 namespace NHM.Common
@@ -53,7 +53,7 @@ namespace NHM.Common
                 {
                     if (algorithmType < 0) continue;
                     var nPort = 3333 + algorithmType;
-                    var name = GetAlgorithmUrlName(algorithmType);
+                    var name = GetAlgorithmUrlName(algorithmType).name;
                     var endpointTemplate = $"{PREFIX_TEMPLATE}{name}.{LOCATION_TEMPLATE}.nicehash.com{PORT_TEMPLATE}";
                     _stratumEndpointTemplatesByAlgorithmType[algorithmType] = new StratumTemplateEntry
                     {
@@ -65,7 +65,7 @@ namespace NHM.Common
                 // create defaults
                 var defaultCustomSettings = new ServiceCustomSettings
                 {
-                    NhmSocketAddress = "https://nhmws.nicehash.com/v2/nhm",
+                    NhmSocketAddress = "https://nhmws.nicehash.com/v3/nhml",
                     StratumEndpointTemplatesByAlgorithmType = _stratumEndpointTemplatesByAlgorithmType,
                 };
                 File.WriteAllText(customSettingsFile, JsonConvert.SerializeObject(defaultCustomSettings, Formatting.Indented));

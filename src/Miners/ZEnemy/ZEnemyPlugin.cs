@@ -21,12 +21,12 @@ namespace ZEnemy
             // https://bitcointalk.org/index.php?topic=3378390.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "2-2-cuda10.1", // fix version if wrong
+                // github tag ver-2.3
+                BinVersion = "2.3-win-cuda10.1", // fix version if wrong
                 ExePath = new List<string> { "z-enemy.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/z-enemy-2.2-cuda10.1.zip",
-                    "https://mega.nz/#!EPJHRY4D!WyCjfcOZnDof8FuclXoEYB1BXsjX8DbvTWrCNbpzECM" // original source
+                    "https://github.com/z-enemy/z-enemy/releases/download/ver-2.3/z-enemy-2.3-win-cuda10.1.zip" // original source
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -36,7 +36,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(4, 0);
 
         public override string Name => "ZEnemy";
 
@@ -63,6 +63,7 @@ namespace ZEnemy
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
             var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
@@ -83,10 +84,10 @@ namespace ZEnemy
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 2)
+                if (benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 1)
                 {
-                    // v2.1 https://bitcointalk.org/index.php?topic=3378390.0
-                    if (ids.FirstOrDefault() == AlgorithmType.X16R) return true;
+                    // v2.3 Performance improvement: +2-3% x16rv2 algo https://github.com/z-enemy/z-enemy/releases/tag/ver-2.3
+                    if (ids.FirstOrDefault() == AlgorithmType.X16Rv2) return true;
                 }
             }
             catch (Exception e)

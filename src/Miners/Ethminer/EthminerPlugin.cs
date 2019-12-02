@@ -36,7 +36,7 @@ namespace Ethminer
 
         //public override string PluginUUID => "TODO";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(4, 0);
         public override string Name => "Ethminer";
 
         public override string Author => "info@nicehash.com";
@@ -77,6 +77,7 @@ namespace Ethminer
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
             var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID);
+            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }

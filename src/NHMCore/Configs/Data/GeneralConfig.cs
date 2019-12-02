@@ -7,6 +7,7 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace NHMCore.Configs.Data
 {
@@ -233,7 +234,7 @@ namespace NHMCore.Configs.Data
         // methods
         public void SetDefaults()
         {
-            ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            ConfigFileVersion = new Version(Application.ProductVersion);
             Language = "";
             BitcoinAddress = "";
             WorkerName = "worker1";
@@ -281,7 +282,7 @@ namespace NHMCore.Configs.Data
 
         public void FixSettingBounds()
         {
-            ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            ConfigFileVersion = new Version(Application.ProductVersion);
             if (string.IsNullOrEmpty(DisplayCurrency)
                 || string.IsNullOrWhiteSpace(DisplayCurrency))
             {

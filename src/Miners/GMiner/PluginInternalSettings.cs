@@ -54,7 +54,7 @@ namespace GMinerPlugin
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "gminer_electricity",
-                    LongName = "--electricity_cost"
+                    LongName = "--electricity_cost="
                 },
                 /// <summary>
                 /// option to control GPU intensity (--intensity, 1-100)
