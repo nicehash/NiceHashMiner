@@ -153,7 +153,8 @@ namespace MinerPluginsPacker
                 "d47d9b00-7237-11e9-b20c-f9f12eb6d835", // TRexPlugin
                 //"3d4e56b0-7238-11e9-b20c-f9f12eb6d835", // XmrStakPlugin
                 "5532d300-7238-11e9-b20c-f9f12eb6d835", // ZEnemyPlugin
-                "4aec5ec0-10f8-11ea-bad3-8dea21141bbb", // XmrStakRxPlugin
+                //"4aec5ec0-10f8-11ea-bad3-8dea21141bbb", // XmrStakRxPlugin
+                "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4", // XMRig
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
 
