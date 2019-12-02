@@ -24,7 +24,7 @@ namespace TeamRedMiner
                 ExePath = new List<string> { "teamredminer-v0.6.1-win", "teamredminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/todxx/teamredminer/releases/download/0.6.0/teamredminer-v0.6.0-win.zip", // original
+                    "https://github.com/todxx/teamredminer/releases/download/0.6.1/teamredminer-v0.6.1-win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
