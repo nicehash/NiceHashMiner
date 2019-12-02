@@ -1,5 +1,6 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -69,6 +70,18 @@ namespace XMRig
         }
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            try
+            {
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 1)
+                {
+                    if (ids.FirstOrDefault() == AlgorithmType.RandomXmonero) return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             return false;
         }
     }
