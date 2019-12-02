@@ -143,7 +143,7 @@ namespace MinerPluginsPacker
             {
                 "2257f160-7236-11e9-b20c-f9f12eb6d835", // CCMinerTpruvotPlugin
                 "70984aa0-7236-11e9-b20c-f9f12eb6d835", // ClaymoreDual14Plugin
-                "92fceb00-7236-11e9-b20c-f9f12eb6d835", // CPUMinerPlugin
+                //"92fceb00-7236-11e9-b20c-f9f12eb6d835", // CPUMinerPlugin
                 "1b7019d0-7237-11e9-b20c-f9f12eb6d835", // GMinerPlugin
                 "435f0820-7237-11e9-b20c-f9f12eb6d835", // LolMinerBeamPlugin
                 "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4", // MiniZPlugin
