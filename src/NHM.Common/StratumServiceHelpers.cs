@@ -1,24 +1,21 @@
 ﻿using NHM.Common.Enums;
-#if CUSTOM_ENDPOINTS
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-#endif
 
 namespace NHM.Common
 {
     public static class StratumServiceHelpers
     {
         #region CUSTOM_ENDPOINTS
-#if CUSTOM_ENDPOINTS
-        class StratumTemplateEntry
+        internal class StratumTemplateEntry
         {
             public string Template { get; set; } = "";
             public int Port { get; set; } = -1;
         }
-        class ServiceCustomSettings
+        internal class ServiceCustomSettings
         {
             public string NhmSocketAddress { get; set; } = "";
             public Dictionary<AlgorithmType, StratumTemplateEntry> StratumEndpointTemplatesByAlgorithmType { get; set; } = new Dictionary<AlgorithmType, StratumTemplateEntry>();
@@ -27,10 +24,11 @@ namespace NHM.Common
         const string PREFIX_TEMPLATE = "{PREFIX://}";
         const string PORT_TEMPLATE = "{:PORT}";
         //const string NAME_TEMPLATE = "NAME";
-        public static string NhmSocketAddress { get; private set; }
+        internal static string NhmSocketAddress { get; private set; }
         private static Dictionary<AlgorithmType, StratumTemplateEntry> _stratumEndpointTemplatesByAlgorithmType { get; set; } = new Dictionary<AlgorithmType, StratumTemplateEntry>();
         static StratumServiceHelpers()
         {
+            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED == false) return;
             var jsonSettings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
@@ -65,13 +63,12 @@ namespace NHM.Common
                 // create defaults
                 var defaultCustomSettings = new ServiceCustomSettings
                 {
-                    NhmSocketAddress = "https://nhmws.nicehash.com/v3/nhml",
+                    NhmSocketAddress = Nhmws.BuildTagNhmSocketAddress(),
                     StratumEndpointTemplatesByAlgorithmType = _stratumEndpointTemplatesByAlgorithmType,
                 };
                 File.WriteAllText(customSettingsFile, JsonConvert.SerializeObject(defaultCustomSettings, Formatting.Indented));
             }
         }
-#endif
         #endregion CUSTOM_ENDPOINTS
 
         private static (string name, bool ok) GetAlgorithmUrlName(AlgorithmType algorithmType)
@@ -106,37 +103,41 @@ namespace NHM.Common
                     port = sslPort;
                     break;
             }
-
-#if CUSTOM_ENDPOINTS
-            var customEndpointTemplateEntry = _stratumEndpointTemplatesByAlgorithmType[algorithmType];
-            var customPort = customEndpointTemplateEntry.Port;
-            if (conectionType == NhmConectionType.STRATUM_SSL)
+            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED)
             {
-                customPort = customPort + 30000;
+                var customEndpointTemplateEntry = _stratumEndpointTemplatesByAlgorithmType[algorithmType];
+                var customPort = customEndpointTemplateEntry.Port;
+                if (conectionType == NhmConectionType.STRATUM_SSL)
+                {
+                    customPort = customPort + 30000;
+                }
+                var customEndpointTemplate = customEndpointTemplateEntry.Template;
+                customEndpointTemplate = customEndpointTemplate.Replace(PREFIX_TEMPLATE, prefix);
+                customEndpointTemplate = customEndpointTemplate.Replace(LOCATION_TEMPLATE, miningLocation);
+                customEndpointTemplate = customEndpointTemplate.Replace(PORT_TEMPLATE, $":{customPort}");
+                return customEndpointTemplate;
             }
-            var customEndpointTemplate = customEndpointTemplateEntry.Template;
-            customEndpointTemplate = customEndpointTemplate.Replace(PREFIX_TEMPLATE, prefix);
-            customEndpointTemplate = customEndpointTemplate.Replace(LOCATION_TEMPLATE, miningLocation);
-            customEndpointTemplate = customEndpointTemplate.Replace(PORT_TEMPLATE, $":{customPort}");
-            return customEndpointTemplate;
-#elif TESTNET
-            return prefix
+            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
+            {
+                return prefix
                    + name
                    + "-test." + miningLocation
                    + ".nicehash.com:"
                    + port;
-#elif TESTNETDEV
-            return prefix
+            }
+            if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
+            {
+                return prefix
                    + "stratum-test." + miningLocation
                    + ".nicehash.com:"
                    + port;
-#else 
+            }
+            //BuildTag.PRODUCTION
             return prefix
                    + name
                    + "." + miningLocation
                    + ".nicehash.com:"
                    + port;
-#endif
         }
     }
 }

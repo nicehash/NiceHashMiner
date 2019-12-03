@@ -17,21 +17,12 @@ namespace NiceHashMiner
 {
     static class Program
     {
-#if TESTNET
-        private static readonly string BuildTag = "TESTNET";
-#elif TESTNETDEV
-        private static readonly string BuildTag = "TESTNETDEV";
-#else
-        private static readonly string BuildTag = "PRODUCTION";
-#endif
-
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
     [STAThread]
         static void Main(string[] argv)
         {
-            NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS(BuildTag);
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Application.ExecutablePath);

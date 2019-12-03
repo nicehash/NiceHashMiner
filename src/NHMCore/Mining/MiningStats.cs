@@ -26,13 +26,13 @@ namespace NHMCore.Mining
             public double PowerUsageDeviceReading { get; set; } = 0d;
             public double PowerUsageAlgorithmSetting { get; set; } = 0d;
 
-            // add methods or Revenue in ApiData TESTNET
+            // add methods or Revenue in ApiData
             public double TotalPayingRate()
             {
                 return Rates.Select(rateInfo => rateInfo.rate).Sum();
             }
 
-            // or Profit in ApiData TESTNET
+            // or Profit in ApiData
             public double TotalPayingRateDeductPowerCost(double kwhPriceInBtc)
             {
                 var totalRate = TotalPayingRate();
@@ -385,7 +385,6 @@ namespace NHMCore.Mining
             return ret;
         }
 
-        // For TESTNET
         public static List<DeviceMiningStats> GetDevicesMiningStats()
         {
             var ret = new List<DeviceMiningStats>();
