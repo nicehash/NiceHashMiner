@@ -1,13 +1,11 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace TeamRedMiner
@@ -22,11 +20,11 @@ namespace TeamRedMiner
             // https://github.com/todxx/teamredminer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.5.9",
-                ExePath = new List<string> { "teamredminer-v0.5.9-win", "teamredminer.exe" },
+                BinVersion = "0.6.1",
+                ExePath = new List<string> { "teamredminer-v0.6.1-win", "teamredminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/todxx/teamredminer/releases/download/0.5.9/teamredminer-v0.5.9-win.zip", // original
+                    "https://github.com/todxx/teamredminer/releases/download/0.6.1/teamredminer-v0.6.1-win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -38,7 +36,7 @@ namespace TeamRedMiner
 
         public override string PluginUUID => "abc3e2a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(4, 1);
 
         public override string Name => "TeamRedMiner";
 

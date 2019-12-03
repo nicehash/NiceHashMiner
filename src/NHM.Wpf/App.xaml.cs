@@ -26,13 +26,6 @@ namespace NHM.Wpf
     /// </summary>
     public partial class App : Application
     {
-#if TESTNET
-        private static readonly string BuildTag = "TESTNET";
-#elif TESTNETDEV
-        private static readonly string BuildTag = "TESTNETDEV";
-#else
-        private static readonly string BuildTag = "PRODUCTION";
-#endif
         private const string Tag = "NICEHASH";
 
         private void App_OnStartup(object sender, StartupEventArgs e)
@@ -43,7 +36,6 @@ namespace NHM.Wpf
             return;
 #endif
 
-            NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS(BuildTag);
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

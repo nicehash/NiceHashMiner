@@ -1,4 +1,3 @@
-//#define SHOW_TDP_SETTINGS
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -24,6 +23,7 @@ using static NHMCore.Translations;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NHMCore.ApplicationState;
+using NHM.Common;
 
 namespace NiceHashMiner
 {
@@ -333,10 +333,12 @@ namespace NiceHashMiner
                     ApplicationStateManager.StopAllDevice();
                 }
             }
-#if SHOW_TDP_SETTINGS
-            var form_TDP = new Form_TDPSettings();
-            form_TDP.Show();
-#endif
+
+            if (BuildOptions.SHOW_TDP_SETTINGS)
+            {
+                var form_TDP = new Form_TDPSettings();
+                form_TDP.Show();
+            }
         }
 
         private void UpdateGlobalRate(double totalRate)

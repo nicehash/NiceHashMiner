@@ -37,7 +37,7 @@ namespace CCMinerMTP
 
         //public override string PluginUUID => "MISSING";
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(4, 0);
         public override string Name => "CCMinerMTP";
 
         public override string Author => "info@nicehash.com";

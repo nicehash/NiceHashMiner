@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NHM.Common;
+using NHM.Common.Enums;
+using System;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
@@ -9,9 +11,8 @@ namespace NHMCore.Utils
         public const int MAX_BTC_LENGTH = 35;
         public static bool ValidateBitcoinAddress(string address)
         {
-#if TESTNET || TESTNETDEV
-            return true;
-#else
+            if (BuildOptions.BUILD_TAG != BuildTag.PRODUCTION) return true;
+            // production
             try
             {
                 if (address.Length < 26 || address.Length > MAX_BTC_LENGTH) return false;
@@ -24,7 +25,6 @@ namespace NHMCore.Utils
             {
                 return false;
             }
-#endif
         }
 
         public static bool ValidateWorkerName(string workername)

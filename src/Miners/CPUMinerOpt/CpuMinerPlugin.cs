@@ -37,7 +37,7 @@ namespace CpuMinerOpt
 
         public override string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 4);
+        public override Version Version => new Version(4, 0);
 
         public override string Name => "cpuminer-opt";
 

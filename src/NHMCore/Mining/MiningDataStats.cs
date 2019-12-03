@@ -264,7 +264,6 @@ namespace NHMCore.Mining
             return ret;
         }
 
-        // For TESTNET
         public static List<DeviceMiningStats> GetDevicesMiningStats()
         {
             var ret = new List<DeviceMiningStats>();

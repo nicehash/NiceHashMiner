@@ -116,7 +116,6 @@
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Benchmarking\BenchmarkOption.cs" />
     <Compile Include="Benchmarking\BenchmarkStartSettings.cs" />
-    <Compile Include="BUILD_TAG.cs" />
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\DeviceTDPSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
@@ -381,6 +380,10 @@
     <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStak_PLUGIN'))">
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
       <Name>XmrStak</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\XmrStakRx\XmrStakRx.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStakRx_PLUGIN'))">
+      <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
+      <Name>XmrStakRx</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\ZEnemy\ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
       <Project>{059e2ca2-85c5-453e-a48c-ada45a3c5879}</Project>
