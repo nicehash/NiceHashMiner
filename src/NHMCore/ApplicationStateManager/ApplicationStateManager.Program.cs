@@ -1,3 +1,5 @@
+using NHM.Common;
+using NHM.Common.Enums;
 using NHMCore.Stats;
 using NHMCore.Utils;
 using System.Diagnostics;
@@ -12,18 +14,23 @@ namespace NHMCore
     {
         #region BuildTag
         private const string BetaAlphaPostfixString = "";
-#if TESTNET
-        private static readonly string BuildTag = " (TESTNET)";
-#elif TESTNETDEV
-        private static readonly string BuildTag = " (TESTNETDEV)";
-#else
-        private static readonly string BuildTag = "";
-#endif
+
+        private static string BuildTagStr
+        {
+            get
+            {
+                if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return " (TESTNET)";
+                if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return " (TESTNETDEV)";
+                //BuildTag.PRODUCTION
+                return "";
+            }
+        }
+
         public static string Title
         {
             get
             {
-                return  $"{NHMProductInfo.Name} v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
+                return  $"{NHMProductInfo.Name} v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTagStr;
             }
         }
         #endregion BuildTag
