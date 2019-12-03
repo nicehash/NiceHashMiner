@@ -327,7 +327,7 @@ namespace XmrStakRx
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 1)
+            if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 2)
             {
                 return true;
             }
