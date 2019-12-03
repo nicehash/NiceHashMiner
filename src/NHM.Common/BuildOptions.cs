@@ -56,8 +56,8 @@ namespace NHM.Common
 
         public static bool CUSTOM_ENDPOINTS_ENABLED { get; private set; } = false;
         // core settings
-        public static bool FORCE_MINING { get; set; } = false;
-        public static bool FORCE_PROFITABLE { get; set; } = false;
-        public static bool SHOW_TDP_SETTINGS { get; set; } = false;
+        public static bool FORCE_MINING { get; private set; } = false;
+        public static bool FORCE_PROFITABLE { get; private set; } = false;
+        public static bool SHOW_TDP_SETTINGS { get; private set; } = false;
     }
 }
