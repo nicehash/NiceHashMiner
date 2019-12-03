@@ -12,6 +12,10 @@ namespace NHM.Common
             public BuildTag BUILD_TAG { get; set; } = BuildTag.PRODUCTION;
             public bool IS_PLUGINS_TEST_SOURCE { get; set; } = false;
             public bool CUSTOM_ENDPOINTS_ENABLED { get; set; } = false;
+            // core settings
+            public bool FORCE_MINING { get; set; } = false;
+            public bool FORCE_PROFITABLE { get; set; } = false;
+            public bool SHOW_TDP_SETTINGS { get; set; } = false;
         }
 
         static BuildOptions()
@@ -33,6 +37,9 @@ namespace NHM.Common
                     BUILD_TAG = customSettings.BUILD_TAG;
                     IS_PLUGINS_TEST_SOURCE = customSettings.IS_PLUGINS_TEST_SOURCE;
                     CUSTOM_ENDPOINTS_ENABLED = customSettings.CUSTOM_ENDPOINTS_ENABLED;
+                    FORCE_MINING = customSettings.FORCE_MINING;
+                    FORCE_PROFITABLE = customSettings.FORCE_PROFITABLE;
+                    SHOW_TDP_SETTINGS = customSettings.SHOW_TDP_SETTINGS;
                 }
             }
             if (!isSettingsLoaded)
@@ -48,8 +55,9 @@ namespace NHM.Common
         public static bool IS_PLUGINS_TEST_SOURCE { get; private set; } = false;
 
         public static bool CUSTOM_ENDPOINTS_ENABLED { get; private set; } = false;
-
-        // TODO add FORCE_MINING
-        // TODO add SMA_PROFITABLE
+        // core settings
+        public static bool FORCE_MINING { get; set; } = false;
+        public static bool FORCE_PROFITABLE { get; set; } = false;
+        public static bool SHOW_TDP_SETTINGS { get; set; } = false;
     }
 }
