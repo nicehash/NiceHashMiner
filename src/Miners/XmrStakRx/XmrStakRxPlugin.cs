@@ -25,12 +25,12 @@ namespace XmrStakRx
             // https://github.com/nicehash/xmr-stak/releases (fork of https://github.com/fireice-uk/xmr-stak/releases) current nhm-2.10.7
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.0.1-rx",
+                BinVersion = "1.0.2-rx",
                 ExePath = new List<string> { "xmr-stak-rx.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.7/xmr-stak-rx-win64-1.0.1_NH_MODDED.7z", // modded
-                    //"https://github.com/fireice-uk/xmr-stak/releases/download/1.0.1-rx/xmr-stak-rx-win64-1.0.1.zip", // original
+                    "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.7/nhm-xmr-stak-rx-win64-1.0.2.7z", // modded
+                    //"https://github.com/fireice-uk/xmr-stak/releases/download/1.0.2-rx/xmr-stak-rx-win64-1.0.2.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -47,7 +47,7 @@ namespace XmrStakRx
 
         public override string PluginUUID => "4aec5ec0-10f8-11ea-bad3-8dea21141bbb";
 
-        public override Version Version => new Version(4, 1);
+        public override Version Version => new Version(4, 2);
         public override string Name => "XmrStakRx";
 
         public override string Author => "info@nicehash.com";
@@ -319,7 +319,7 @@ namespace XmrStakRx
         {
             var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> {
-                "libcrypto-1_1-x64.dll", "libssl-1_1-x64.dll", "rx-switcher.exe",
+                "libcrypto-1_1-x64.dll", "libssl-1_1-x64.dll",
                 "xmrstak_cuda_backend.dll", "xmrstak_cuda_backend_cuda10_0.dll",
                 "xmrstak_opencl_backend.dll", "xmr-stak-rx.exe"
             });
@@ -327,7 +327,7 @@ namespace XmrStakRx
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            if (benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor == 1)
+            if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 2)
             {
                 return true;
             }
