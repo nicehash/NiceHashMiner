@@ -40,7 +40,7 @@ namespace Phoenix
 
         public override string PluginUUID => "f5d4a470-e360-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(4, 1);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -123,11 +123,11 @@ namespace Phoenix
 
             if (containsAMD)
             {
-                await MapDeviceCrossRefference(devices, minerBinPath, "-list -amd");
+                await MapDeviceCrossRefference(devices, minerBinPath, "-list -amd -gbase 0");
             }
             if (containsNVIDIA)
             {
-                await MapDeviceCrossRefference(devices, minerBinPath, "-list -nvidia");
+                await MapDeviceCrossRefference(devices, minerBinPath, "-list -nvidia -gbase 0");
             }
 
         }

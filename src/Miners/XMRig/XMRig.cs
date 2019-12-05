@@ -137,6 +137,10 @@ namespace XMRig
                     Logger.Error(_logGroup, $"Init failed: {e.Message}");
                 }
             }
+            else
+            {
+                _extraLaunchParameters += " --donate-level=1";
+            }
         }
 
         private string CreateCommandLine(string username)
