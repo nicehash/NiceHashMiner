@@ -15,6 +15,7 @@ namespace NHMCore
                 await StopDevice(dev, false);
             }
             dev.Enabled = enabled;
+            Configs.ConfigManager.CommitBenchmarksForDevice(dev);
         }
 
         public static async Task SetDeviceEnabledState(object sender, (string uuid, bool enabled) args)
@@ -39,8 +40,6 @@ namespace NHMCore
             // await tasks
             await Task.WhenAll(tasks);
             await UpdateDevicesToMineTask();
-
-            Configs.ConfigManager.GeneralConfigFileCommit();
 
             // finally refresh state
             RefreshDeviceListView?.Invoke(null, null);
