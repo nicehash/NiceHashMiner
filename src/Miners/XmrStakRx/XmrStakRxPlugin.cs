@@ -47,7 +47,7 @@ namespace XmrStakRx
 
         public override string PluginUUID => "4aec5ec0-10f8-11ea-bad3-8dea21141bbb";
 
-        public override Version Version => new Version(4, 2);
+        public override Version Version => new Version(4, 3);
         public override string Name => "XmrStakRx";
 
         public override string Author => "info@nicehash.com";
@@ -319,9 +319,9 @@ namespace XmrStakRx
         {
             var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> {
-                "libcrypto-1_1-x64.dll", "libssl-1_1-x64.dll",
-                "xmrstak_cuda_backend.dll", "xmrstak_cuda_backend_cuda10_0.dll",
-                "xmrstak_opencl_backend.dll", "xmr-stak-rx.exe"
+                "concrt140.dll", "libcrypto-1_1-x64.dll", "libeay32.dll", "libssl-1_1-x64.dll", "msvcp140.dll", "msvcp140_1.dll", "msvcp140_2.dll",
+                "nvrtc64_90.dll", "nvrtc64_100_0.dll", "nvrtc-builtins64_90.dll", "nvrtc-builtins64_100.dll", "ssleay32.dll", "vccorlib140.dll", 
+                "vcruntime140.dll", "xmr-stak-rx.exe", "xmrstakrx_cuda_backend.dll", "xmrstakrx_cuda_backend_cuda10_0.dll",  "xmrstakrx_opencl_backend.dll"
             });
         }
 
