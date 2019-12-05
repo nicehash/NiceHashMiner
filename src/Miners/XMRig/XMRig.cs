@@ -14,7 +14,7 @@ namespace XMRig
 {
     public class XMRig : MinerBase
     {
-        private double DevFee = 5.0;
+        private double DevFee = 1.0;
         private int _apiPort;
         protected readonly HttpClient _httpClient = new HttpClient();
 
