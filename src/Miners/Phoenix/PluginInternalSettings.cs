@@ -258,6 +258,23 @@ namespace Phoenix
                     ID = "phoenix_logsmaxsize",
                     ShortName = "-logsmaxsize",
                 },
+
+                /// <summary>
+                /// Load a file with configuration options that will be added to the command-line options.
+                /// Note that the order is important. For example, if we have a config.txt file that contains -cclock 1000
+                /// and we specify command line -cclock 1100 -config config.txt, the options from the config.txt file will take
+                /// precedence and the resulting -cclock will be 1000. If the order is reversed (-config config.txt -cclock 1100)
+                /// then the second option takes precedence and the resulting -cclock will be 1100. Note that only one -config
+                /// option is allowed. Also note that if you reload the config file with 'c' key or with the remote interface,
+                /// its options will take precedence over whatever you have specified in the command-line.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_config",
+                    ShortName = "-config",
+                },
+
                 /// <summary>
                 /// Another way to lower the GPU usage. Bigger n values mean less GPU utilization; the default is 0.
                 /// You may specify this option per-GPU.
@@ -420,15 +437,6 @@ namespace Phoenix
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "phoenix_mt",
                     ShortName = "-mt"
-                },
-                /// <summary>
-                /// Do not reset memory timing level to 0 when closing
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "phoenix_leavemt",
-                    ShortName = "-leavemt"
                 },
                 /// <summary>
                 /// Pause a GPU when temp is >= n deg C (0 for default; i.e. off)
