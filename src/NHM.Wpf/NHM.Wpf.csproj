@@ -77,6 +77,7 @@
     <Compile Include="Converters\LoadValueToText.cs" />
     <Compile Include="Converters\StatusColorConverter.cs" />
     <Compile Include="Converters\TemperatureValueToText.cs" />
+    <Compile Include="IThemeSetter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
@@ -336,6 +337,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Shadows.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Tooltips.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

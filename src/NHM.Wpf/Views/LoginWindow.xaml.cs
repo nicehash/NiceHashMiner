@@ -21,18 +21,16 @@ namespace NHM.Wpf.Views
 
         private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
         {
-            SwitchTheme();
+            SwitchTheme(false);
             var drawingBrushFromResources = this.FindResource("drawingBrush_NightCircleNH") as DrawingBrush;
             drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
-            this.Background = new SolidColorBrush(Color.FromRgb(1, 13, 21));
         }
 
         private void CheckBoxMode_Unchecked(object sender, RoutedEventArgs e)
         {
-            SwitchTheme();
+            SwitchTheme(true);
             var drawingBrushFromResources = this.FindResource("drawingBrush_circleNH") as DrawingBrush;
             drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
-            this.Background = new SolidColorBrush(Color.FromRgb(255,255,255));
         }
 
         private void Register_OnClick(object sender, RoutedEventArgs e)

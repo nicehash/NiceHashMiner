@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using NHM.Wpf.Views.Common.NHBase.Utils;
+using NHMCore.Configs;
 using System;
 using System.Drawing;
 using System.Windows;
@@ -34,15 +35,16 @@ namespace NHM.Wpf.Views.Common.NHBase
 
         public Grid NHMIcon { get; private set; }
 
-        bool nextTheme = false;
-        public void SwitchTheme()
+        public void SwitchTheme(bool isLight)
         {
-            nextTheme = !nextTheme;
             if (NHMIcon != null)
             {
-                var b = nextTheme ? System.Windows.Application.Current.FindResource("NHMLogoDarkBrush") : System.Windows.Application.Current.FindResource("NHMLogoLightBrush"); ;
-                NHMIcon.Background = b as DrawingBrush;
-            }
+                var icon = isLight ? System.Windows.Application.Current.FindResource("NHMLogoLightBrush") : System.Windows.Application.Current.FindResource("NHMLogoDarkBrush");
+                var windowBackground = isLight ? new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255)) : new SolidColorBrush(System.Windows.Media.Color.FromRgb(1, 13, 21));
+                NHMIcon.Background = icon as DrawingBrush;
+                this.Background = windowBackground;
+                GUISettings.Instance.DisplayTheme = isLight ? "Light" : "Dark";
+            }           
         }
 
         static BaseDialogWindow()

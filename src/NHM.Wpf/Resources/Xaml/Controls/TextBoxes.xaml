@@ -13,7 +13,7 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Padding" Value="16,0,0,0" />
-        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
 
         <Style.Resources>
             <Style TargetType="{x:Type Border}">
@@ -25,22 +25,7 @@
         </Style.Resources>
     </Style>
     
-    <Style TargetType="TextBox" x:Key="smallInputBox">
+    <Style TargetType="TextBox" x:Key="smallInputBox" BasedOn="{StaticResource inputBox}">
         <Setter Property="Width" Value="160" />
-        <Setter Property="Height" Value="40" />
-        <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Padding" Value="16,0,0,0" />
-        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
-
-        <Style.Resources>
-            <Style TargetType="{x:Type Border}">
-                <Setter Property="CornerRadius" Value="4" />
-                <Setter Property="BorderThickness" Value="0" />
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="BorderBrush" Value="Transparent" />
-            </Style>
-        </Style.Resources>
     </Style>
 </ResourceDictionary>

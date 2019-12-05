@@ -2,7 +2,6 @@
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
-using NHM.Wpf.ViewModels.Settings;
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
@@ -80,8 +79,9 @@ namespace NHM.Wpf.ViewModels
         #region settingsLists
 
         public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
-        public IReadOnlyList<string> ThemeOptions => _themeList;
 
+
+        public IReadOnlyList<string> ThemeOptions => _themeList;
         private List<string> _themeList = new List<string>{ "Light", "Dark" };
 
         #endregion settingsLists
@@ -107,18 +107,6 @@ namespace NHM.Wpf.ViewModels
         public TranslationsSettings TranslationsSettings => TranslationsSettings.Instance;
         public WarningSettings WarningSettings => WarningSettings.Instance;
         #endregion Exposed settings
-
-        private string _theme = GUISettings.Instance.DisplayTheme;
-        public string Theme
-        {
-            get => _theme;
-            set
-            {
-                _theme = value;
-                OnPropertyChanged();
-            }
-        }
-
 
         #region Currency-related properties
 

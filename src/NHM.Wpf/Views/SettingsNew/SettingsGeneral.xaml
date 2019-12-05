@@ -91,7 +91,7 @@
                 <Label Content="Apperance" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                 <StackPanel Orientation="Vertical">
                     <Label Content="Theme" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding GUISettings.DisplayTheme, Mode=TwoWay}" />
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding GUISettings.DisplayTheme, Mode=TwoWay}" />
                 </StackPanel>
             </WrapPanel>
             <!--NHM and PLUGINS UPDATE-->

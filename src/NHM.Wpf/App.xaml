@@ -16,6 +16,8 @@
                 <!--windows styles-->
                 <ResourceDictionary Source="Views/Common/NHBase/NHBaseWindowStyles.xaml"/>
                 <ResourceDictionary Source="Views/Common/NHBase/NHMMainWindowStyle.xaml"/>
+                <!--tooltips-->
+                <ResourceDictionary Source="Resources/Xaml/Tooltips.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="views:EulaWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>

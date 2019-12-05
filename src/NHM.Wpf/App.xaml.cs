@@ -149,8 +149,8 @@ namespace NHM.Wpf
 
             Translations.SelectedLanguage = TranslationsSettings.Instance.Language;
 
-            //var login = new LoginWindow { };
-            //var nek = login.ShowDialog();
+            var login = new LoginWindow { };
+            var nek = login.ShowDialog();
 
             // Check sys requirements
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();
