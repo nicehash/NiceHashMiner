@@ -7,7 +7,16 @@ namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
-        // TODO split into single and multiple devices
+
+        internal static async Task SetDeviceEnabledState(ComputeDevice dev, bool enabled)
+        {
+            if (!enabled)
+            {
+                await StopDevice(dev, false);
+            }
+            dev.Enabled = enabled;
+        }
+
         public static async Task SetDeviceEnabledState(object sender, (string uuid, bool enabled) args)
         {
             var (uuid, enabled) = args;
@@ -26,17 +35,11 @@ namespace NHMCore
                     devicesToSet.Add(devWithUUID);
                 }
             }
-            // execute enabling/disabling
-            foreach (var dev in devicesToSet)
-            {
-                if (!enabled)
-                {
-                    // TODO here we might want to await them all instead of each individually 
-                    await StopDevice(dev);
-                }
+            var tasks = devicesToSet.Select(dev => SetDeviceEnabledState(dev, enabled));
+            // await tasks
+            await Task.WhenAll(tasks);
+            await UpdateDevicesToMineTask();
 
-                dev.Enabled = enabled;
-            }
             Configs.ConfigManager.GeneralConfigFileCommit();
 
             // finally refresh state
