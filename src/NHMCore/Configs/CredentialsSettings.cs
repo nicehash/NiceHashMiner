@@ -10,12 +10,14 @@ namespace NHMCore.Configs
         private CredentialsSettings()
         {
             _stringProps = new NotifyPropertyChangedHelper<string>(OnPropertyChanged);
+            _boolProps = new NotifyPropertyChangedHelper<bool>(OnPropertyChanged);
             BitcoinAddress = "";
             WorkerName = "worker1";
             RigGroup = "";
         }
         // TODO maybe this should be removed 
         private readonly NotifyPropertyChangedHelper<string> _stringProps;
+        private readonly NotifyPropertyChangedHelper<bool> _boolProps;
 
         public string BitcoinAddress
         {
@@ -23,13 +25,19 @@ namespace NHMCore.Configs
             internal set
             {
                 _stringProps.Set(nameof(BitcoinAddress), value);
-                OnPropertyChanged(nameof(IsCredentialsValid));
+                IsBitcoinAddressValid = CredentialValidators.ValidateBitcoinAddress(BitcoinAddress);
+                OnPropertyChanged(nameof(IsCredentialValid));
             }
         }
         public string WorkerName
         {
             get => _stringProps.Get(nameof(WorkerName));
-            internal set => _stringProps.Set(nameof(WorkerName), value);
+            internal set
+            {
+                _stringProps.Set(nameof(WorkerName), value);
+                IsWorkerNameValid = CredentialValidators.ValidateWorkerName(WorkerName);
+                OnPropertyChanged(nameof(IsCredentialValid));
+            }
         }
 
         public string RigGroup
@@ -38,10 +46,19 @@ namespace NHMCore.Configs
             internal set => _stringProps.Set(nameof(RigGroup), value);
         }
 
-        public bool IsCredentialsValid
+        public bool IsBitcoinAddressValid
         {
-            get => CredentialValidators.ValidateBitcoinAddress(BitcoinAddress);
+            get => _boolProps.Get(nameof(IsBitcoinAddressValid));
+            private set => _boolProps.Set(nameof(IsBitcoinAddressValid), value);
         }
+
+        public bool IsWorkerNameValid
+        {
+            get => _boolProps.Get(nameof(IsWorkerNameValid));
+            private set => _boolProps.Set(nameof(IsWorkerNameValid), value);
+        }
+
+        public bool IsCredentialValid => IsBitcoinAddressValid && IsWorkerNameValid;
 
         //C#7
         public (string btc, string worker, string group) GetCredentials()

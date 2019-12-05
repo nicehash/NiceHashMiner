@@ -314,7 +314,7 @@ namespace NiceHashMiner.Forms
 
             // ComboBox
             {
-                comboBox_Language.SelectedIndex = GetLanguageIndexFromCode(GUISettings.Instance.Language);
+                comboBox_Language.SelectedIndex = GetLanguageIndexFromCode(TranslationsSettings.Instance.Language);
 
 
                 comboBox_TimeUnit.SelectedItem = Tr(GUISettings.Instance.TimeUnit.ToString());

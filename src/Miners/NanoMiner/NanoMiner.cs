@@ -106,36 +106,55 @@ namespace NanoMiner
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
-            var benchHashes = 0d;
-            var benchIters = 0;
-            var benchHashResult = 0d;
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
-
-            bp.CheckData = (string data) =>
-            {
-                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total speed:");
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
-
-                if (found)
-                {
-                    benchHashes += hashrate;
-                    benchIters++;
-
-                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
-                }
-
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
-                    Success = benchIters >= targetBenchIters
-                };
-            };
+            bp.CheckData = null;
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
+            double benchHashesSum = 0;
+            int benchIters = 0;
+            var ticks = benchmarkTime / 10; // on each 10 seconds tick
+            var result = new BenchmarkResult();
+            for (var tick = 0; tick < ticks; tick++)
+            {
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+                await Task.Delay(10 * 1000, stop); // 10 seconds delay
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+
+                var ad = await GetMinerStatsDataAsync();
+                if (ad.AlgorithmSpeedsPerDevice.Count == 1)
+                {
+                    // all single GPUs and single speeds
+                    try
+                    {
+                        var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                        if (gpuSpeed == 0) continue; 
+                        benchHashesSum += gpuSpeed;
+                        benchIters++;
+                        double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
+                        // save each result step
+                        result = new BenchmarkResult
+                        {
+                            AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                            Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
+                        };
+                    }
+                    catch (Exception e)
+                    {
+                        if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+                        Logger.Error(_logGroup, $"benchmarking error: {e.Message}");
+                    }
+                }
+            }
+            // await benchmark task
+            await t;
+            if (stop.IsCancellationRequested)
+            {
+                return t.Result;
+            }
+
+            // return API result
+            return result;
         }
 
         protected override string MiningCreateCommandLine()

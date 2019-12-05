@@ -21,11 +21,11 @@ namespace LolMinerBeam
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.8.8",
-                ExePath = new List<string> { "0.8.8", "lolMiner.exe" },
+                BinVersion = "0.9.2",
+                ExePath = new List<string> { "0.9.2", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.8.8/lolMiner_v088_Win64.zip", // original source
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.92/lolMiner_v092_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -35,9 +35,9 @@ namespace LolMinerBeam
             };
         }
 
-        public override Version Version => new Version(3, 1);
+        public override Version Version => new Version(4, 1);
 
-        public override string Name => "LolMinerBeam";
+        public override string Name => "lolMiner";
 
         public override string Author => "info@nicehash.com";
 
@@ -132,9 +132,9 @@ namespace LolMinerBeam
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             if (ids.Count() == 0) return false;
-            if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 4)
+            if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 1)
             {
-                if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.BeamV2) return true;
+                if (device.DeviceType == DeviceType.AMD && ids.FirstOrDefault() == AlgorithmType.GrinCuckatoo31) return true;
             }
             return false;
         }

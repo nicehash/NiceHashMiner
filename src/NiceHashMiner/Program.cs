@@ -17,21 +17,12 @@ namespace NiceHashMiner
 {
     static class Program
     {
-#if TESTNET
-        private static readonly string BuildTag = "TESTNET";
-#elif TESTNETDEV
-        private static readonly string BuildTag = "TESTNETDEV";
-#else
-        private static readonly string BuildTag = "PRODUCTION";
-#endif
-
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
     [STAThread]
         static void Main(string[] argv)
         {
-            NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS(BuildTag);
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Application.ExecutablePath);
@@ -114,7 +105,7 @@ namespace NiceHashMiner
             }
 
             // if config created show language select
-            if (string.IsNullOrEmpty(GUISettings.Instance.Language))
+            if (string.IsNullOrEmpty(TranslationsSettings.Instance.Language))
             {
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
                 {
@@ -122,13 +113,13 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    GUISettings.Instance.Language = "en";
+                    TranslationsSettings.Instance.Language = "en";
                     ConfigManager.GeneralConfigFileCommit();
                 }
 
             }
             Translations.LanguageChanged += (s, e) => FormHelpers.TranslateAllOpenForms();
-            Translations.SelectedLanguage = GUISettings.Instance.Language;
+            Translations.SelectedLanguage = TranslationsSettings.Instance.Language;
 
             // if system requirements are not ensured it will fail the program
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();

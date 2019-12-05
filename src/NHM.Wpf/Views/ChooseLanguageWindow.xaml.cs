@@ -1,52 +1,22 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using NHM.Wpf.Properties;
+﻿using NHM.Wpf.ViewModels;
 using NHM.Wpf.Views.Common;
 using NHM.Wpf.Views.Common.NHBase;
+using System.Windows;
 
 namespace NHM.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for ChooseLanguageWindow.xaml
     /// </summary>
-    public partial class ChooseLanguageWindow : BaseDialogWindow, INotifyPropertyChanged
+    public partial class ChooseLanguageWindow : BaseDialogWindow
     {
-        private int _selectedLangIndex = 0;
-        public int SelectedLangIndex
-        {
-            get => _selectedLangIndex;
-            set
-            {
-                _selectedLangIndex = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private IEnumerable<string> _langNames;
-        public IEnumerable<string> LangNames
-        {
-            get => _langNames;
-            set
-            {
-                _langNames = value;
-                OnPropertyChanged();
-            }
-        }
+        private readonly ChooseLanguageVM _vm;
 
         public ChooseLanguageWindow()
         {
             InitializeComponent();
+            _vm = this.AssertViewModel<ChooseLanguageVM>();
             WindowUtils.InitWindow(this);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void OkButton_OnClick(object sender, RoutedEventArgs e)
@@ -61,6 +31,7 @@ namespace NHM.Wpf.Views
 
         private void Window_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            _vm?.Dispose();
             WindowUtils.Window_OnClosing(this);
         }
     }

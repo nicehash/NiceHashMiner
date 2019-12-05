@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHM.DeviceMonitoring;
 
 namespace NHMCore.Configs
 {
@@ -16,22 +17,20 @@ namespace NHMCore.Configs
             }
         }
 
-        private bool _disableDeviceStatusMonitoring = false;
         public bool DisableDeviceStatusMonitoring
         {
-            get => _disableDeviceStatusMonitoring;
+            get => DeviceMonitorManager.DisableDeviceStatusMonitoring;
             set {
-                _disableDeviceStatusMonitoring = value;
+                DeviceMonitorManager.DisableDeviceStatusMonitoring = value;
                 OnPropertyChanged(nameof(DisableDeviceStatusMonitoring));
             }
         }
 
-        private bool _disableDevicePowerModeSettings = true;
         public bool DisableDevicePowerModeSettings
         {
-            get => _disableDevicePowerModeSettings;
+            get => DeviceMonitorManager.DisableDevicePowerModeSettings;
             set {
-                _disableDevicePowerModeSettings = value;
+                DeviceMonitorManager.DisableDevicePowerModeSettings = value;
                 OnPropertyChanged(nameof(DisableDevicePowerModeSettings));
             }
         }

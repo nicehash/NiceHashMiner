@@ -21,11 +21,19 @@ namespace NHMCore.Switching
         /// <summary>
         /// True iff there has been at least one SMA update
         /// </summary>
-#if FORCE_MINING || FORCE_PROFITABLE
-        public static bool HasData { get => true; private set { } }
-#else
-        public static bool HasData { get; private set; }
-#endif
+        public static bool _hasData = false;
+        public static bool HasData
+        {
+            get
+            {
+                if (BuildOptions.FORCE_MINING || BuildOptions.FORCE_PROFITABLE) return true;
+                return _hasData;
+            }
+            private set
+            {
+                _hasData = value;
+            }
+        }
 
         // private static Dictionary<AlgorithmType, List<double>> _recentPaying;
 
@@ -51,9 +59,10 @@ namespace NHMCore.Switching
                     if (cacheDict?.TryGetValue(algo, out paying) ?? false)
                         HasData = true;
 
-#if FORCE_MINING || FORCE_PROFITABLE
-                    paying = 10000;
-#endif
+                    if (BuildOptions.FORCE_MINING || BuildOptions.FORCE_PROFITABLE)
+                    {
+                        paying = 10000;
+                    }
 
                     _currentPayingRates[algo] = paying;
                 }
@@ -76,10 +85,10 @@ namespace NHMCore.Switching
                     if (_currentPayingRates.ContainsKey(algo))
                     {
                         _currentPayingRates[algo] = newSma[algo];
-#if FORCE_PROFITABLE
-                        var paying = 1;
-                        _currentPayingRates[algo] = paying;
-#endif
+                        if (BuildOptions.FORCE_MINING || BuildOptions.FORCE_PROFITABLE)
+                        {
+                            _currentPayingRates[algo] = 1000;
+                        }
                     }
                 }
 
@@ -106,10 +115,10 @@ namespace NHMCore.Switching
                 _currentPayingRates[algo] = paying;
             }
 
-#if FORCE_PROFITABLE
-            paying = 1;
-            _currentPayingRates[algo] = paying;
-#endif
+            if (BuildOptions.FORCE_MINING || BuildOptions.FORCE_PROFITABLE)
+            {
+                _currentPayingRates[algo] = 1000;
+            }
 
             HasData = true;
         }

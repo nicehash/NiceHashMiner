@@ -10,16 +10,6 @@ namespace NHMCore.Mining.Grouping
         {
             Device = device;
 
-#if FORCE_MINING
-            foreach (var algo in Device.AlgorithmSettings)
-            {
-                if (algo.Enabled)
-                {
-                    algo.BenchmarkSpeed = 1000;
-                    Algorithms.Add(algo);
-                }
-            }
-#else
             foreach (var algo in Device.AlgorithmSettings)
             {
                 var isAlgoMiningCapable = GroupSetupUtils.IsAlgoMiningCapable(algo);
@@ -28,7 +18,6 @@ namespace NHMCore.Mining.Grouping
                     Algorithms.Add(algo);
                 }
             }
-#endif
         }
 
 

@@ -12,7 +12,7 @@ namespace NHM.DeviceMonitoring
     public static class DeviceMonitorManager
     {
         public static bool DisableDeviceStatusMonitoring { get; set; } = false;
-        public static bool DisableDevicePowerModeSettings { get; set; } = false;
+        public static bool DisableDevicePowerModeSettings { get; set; } = true;
         public static Task<List<DeviceMonitor>> GetDeviceMonitors(IEnumerable<BaseDevice> devices, bool isDCHDriver)
         {
             return Task.Run(() => {

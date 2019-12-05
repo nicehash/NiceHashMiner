@@ -81,8 +81,10 @@ namespace NHMCore.Mining.Plugins
             {
                 var ver = OnlineInfo?.PluginVersion ?? null;
                 var isNHPlugin = "info@nicehash.com" == OnlineInfo?.PluginAuthor;
-                // current supported major versions start with 3, if not version 3 mark as incompatible
-                if (isNHPlugin && ver != null && ver.Major != 3) return false;
+                // current supported major versions are 3-4 inclusive
+                if (isNHPlugin && ver != null) {
+                    return ver.Major == 3 || ver.Major == 4;
+                }
                 // here we assume it is compatible so allow install
                 return true;
             }

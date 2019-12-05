@@ -231,8 +231,8 @@ namespace NHMCore.Configs.Data
         }
         public string Language
         {
-            get => GUISettings.Instance.Language;
-            set => GUISettings.Instance.Language = value;
+            get => TranslationsSettings.Instance.Language;
+            set => TranslationsSettings.Instance.Language = value;
         }
         public bool MinimizeToTray
         {

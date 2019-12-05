@@ -25,11 +25,11 @@ namespace XmrStak
             // https://github.com/nicehash/xmr-stak/releases (fork of https://github.com/fireice-uk/xmr-stak/releases) current nhm-2.10.7
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "nhm-2.10.7",
+                BinVersion = "nhm-2.10.8",
                 ExePath = new List<string> { "xmr-stak.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.7/xmr-stak_2.10.7_73102cc.7z", // nh fork of original
+                    "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.7/nhm-xmr-stak-win64-2.10.8.7z", // nh fork of original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -46,7 +46,7 @@ namespace XmrStak
 
         public override string PluginUUID => "3d4e56b0-7238-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(3, 0);
+        public override Version Version => new Version(4, 1);
         public override string Name => "XmrStak";
 
         public override string Author => "info@nicehash.com";

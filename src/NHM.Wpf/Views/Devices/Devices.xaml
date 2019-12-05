@@ -32,10 +32,10 @@
         <!--STATS-->
         <Grid Grid.Row="0" Margin="0,40,0,24">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="149" />
-                <ColumnDefinition Width="197" />
-                <ColumnDefinition Width="162" />
-                <ColumnDefinition Width="164" />
+                <ColumnDefinition Width="149*" />
+                <ColumnDefinition Width="197*" />
+                <ColumnDefinition Width="162*" />
+                <ColumnDefinition Width="164*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Border  BorderThickness="1" Background="#fde3c6" BorderBrush="Transparent" CornerRadius="4"/>

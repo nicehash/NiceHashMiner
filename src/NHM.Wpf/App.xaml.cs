@@ -26,13 +26,6 @@ namespace NHM.Wpf
     /// </summary>
     public partial class App : Application
     {
-#if TESTNET
-        private static readonly string BuildTag = "TESTNET";
-#elif TESTNETDEV
-        private static readonly string BuildTag = "TESTNETDEV";
-#else
-        private static readonly string BuildTag = "PRODUCTION";
-#endif
         private const string Tag = "NICEHASH";
 
         private void App_OnStartup(object sender, StartupEventArgs e)
@@ -43,7 +36,6 @@ namespace NHM.Wpf
             return;
 #endif
 
-            NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS(BuildTag);
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -140,25 +132,22 @@ namespace NHM.Wpf
             }
 
             // Chose lang
-            if (string.IsNullOrEmpty(GUISettings.Instance.Language))
+            if (string.IsNullOrEmpty(TranslationsSettings.Instance.Language))
             {
-                var langToSet = "en";
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
                 {
-                    var lang = new ChooseLanguageWindow
-                    {
-                        LangNames = Translations.GetAvailableLanguagesNames()
-                    };
-
+                    var lang = new ChooseLanguageWindow{};
                     lang.ShowDialog();
-                    langToSet = Translations.GetLanguageCodeFromIndex(lang.SelectedLangIndex);
                 }
-
-                GUISettings.Instance.Language = langToSet;
+                // check if user didn't choose anything
+                if (string.IsNullOrEmpty(TranslationsSettings.Instance.Language))
+                {
+                    TranslationsSettings.Instance.Language = "en";
+                }
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            Translations.SelectedLanguage = GUISettings.Instance.Language;
+            Translations.SelectedLanguage = TranslationsSettings.Instance.Language;
 
             var login = new LoginWindow { };
             var nek = login.ShowDialog();

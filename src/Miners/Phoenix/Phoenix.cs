@@ -14,25 +14,26 @@ using System.Threading.Tasks;
 
 namespace Phoenix
 {
-    public class Phoenix : ClaymoreBase, IBeforeStartMining
+    public class Phoenix : MinerBase, IBeforeStartMining
     {
-        public Phoenix(string uuid, Dictionary<string, int> mappedIDs) : base(uuid, mappedIDs)
-        {}
+        private const double DevFee = 0.65;
 
-        public new double DevFee
+        private int _apiPort;
+        private string _devices;
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
+
+        public Phoenix(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
-            get
-            {
-                return 0.65;
-            }
+            _mappedDeviceIds = mappedIDs;
         }
 
-        public override string CreateCommandLine(string username)
+        public string CreateCommandLine(string username)
         {
-            var cmd = base.CreateCommandLine(username);
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? " -amd" : " -nvidia";
-         
-            return cmd + deviceType;
+            var cmd = $"-pool {urlWithPort} -wal {username} -proto 4 {deviceType} -gpus {_devices} -wdog 0 -gbase 0 {_extraLaunchParameters}";
+
+            return cmd;
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
@@ -66,7 +67,7 @@ namespace Phoenix
 
             // local benchmark
             // TODO hardcoded epoch
-            var commandLine = $"-di {_devices} {_extraLaunchParameters} -benchmark 200 -wd 0 {deviceType}";
+            var commandLine = $"-gpus {_devices} -gbase 0 -bench 200 -wdog 0 {deviceType} {_extraLaunchParameters}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
@@ -132,6 +133,26 @@ namespace Phoenix
                     Logger.Error(_logGroup, $"BeforeStartMining error while deleting file '{deleteFile}': {e.Message}");
                 }
             }
+        }
+
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by _mappedDeviceIds
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
+            return pairsList;
+        }
+
+        protected override void Init()
+        {
+            var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
+            _devices = string.Join("", mappedDevIDs);
+        }
+
+        protected override string MiningCreateCommandLine()
+        {
+            _apiPort = GetAvaliablePort();
+            return CreateCommandLine(_username) + $" -mport 127.0.0.1:-{_apiPort}";
         }
     }
 }

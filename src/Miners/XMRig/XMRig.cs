@@ -14,7 +14,7 @@ namespace XMRig
 {
     public class XMRig : MinerBase
     {
-        private double DevFee = 5.0;
+        private double DevFee = 1.0;
         private int _apiPort;
         protected readonly HttpClient _httpClient = new HttpClient();
 
@@ -26,6 +26,8 @@ namespace XMRig
                 {
                     case AlgorithmType.CryptoNightR:
                         return "cn/r";
+                    case AlgorithmType.RandomXmonero:
+                        return "rx/0";
                     default:
                         return "";
                 }
@@ -134,6 +136,10 @@ namespace XMRig
                 {
                     Logger.Error(_logGroup, $"Init failed: {e.Message}");
                 }
+            }
+            else
+            {
+                _extraLaunchParameters += " --donate-level=1";
             }
         }
 

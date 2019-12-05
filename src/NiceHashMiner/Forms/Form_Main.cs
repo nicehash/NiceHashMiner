@@ -1,4 +1,3 @@
-//#define SHOW_TDP_SETTINGS
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -24,6 +23,7 @@ using static NHMCore.Translations;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NHMCore.ApplicationState;
+using NHM.Common;
 
 namespace NiceHashMiner
 {
@@ -103,7 +103,7 @@ namespace NiceHashMiner
             textBoxBTCAddress.DataBindings.AddSafeBinding("Text", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.BitcoinAddress), false, DataSourceUpdateMode.OnPropertyChanged);
             textBoxWorkerName.DataBindings.AddSafeBinding("Text", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.WorkerName), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            linkLabelCheckStats.DataBindings.AddSafeBinding("Enabled", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.IsCredentialsValid), false, DataSourceUpdateMode.OnPropertyChanged);
+            linkLabelCheckStats.DataBindings.AddSafeBinding("Enabled", CredentialsSettings.Instance, nameof(CredentialsSettings.Instance.IsBitcoinAddressValid), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // mining /benchmarking
             buttonPlugins.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
@@ -333,10 +333,12 @@ namespace NiceHashMiner
                     ApplicationStateManager.StopAllDevice();
                 }
             }
-#if SHOW_TDP_SETTINGS
-            var form_TDP = new Form_TDPSettings();
-            form_TDP.Show();
-#endif
+
+            if (BuildOptions.SHOW_TDP_SETTINGS)
+            {
+                var form_TDP = new Form_TDPSettings();
+                form_TDP.Show();
+            }
         }
 
         private void UpdateGlobalRate(double totalRate)
@@ -391,7 +393,7 @@ namespace NiceHashMiner
 
         private void LinkLabelCheckStats_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (CredentialsSettings.Instance.IsCredentialsValid == false) return;
+            if (CredentialsSettings.Instance.IsBitcoinAddressValid == false) return;
             ApplicationStateManager.VisitMiningStatsPage();
         }
 

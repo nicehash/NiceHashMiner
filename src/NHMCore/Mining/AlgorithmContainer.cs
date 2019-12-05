@@ -101,25 +101,14 @@ namespace NHMCore.Mining
         /// <summary>
         /// Hashrate in H/s set by benchmark or user
         /// </summary>
-
-#if FORCE_MINING
         public double BenchmarkSpeed
         {
             get
             {
-                return 1000;
-            }
-            set
-            {
-                Algorithm.Speeds[0] = 1000;
-                NotifySpeedChanged();
-            }
-        }
-#else
-        public double BenchmarkSpeed
-        {
-            get
-            {
+                if (BuildOptions.FORCE_MINING)
+                {
+                    return 1000;
+                }
                 return Algorithm.Speeds[0];
             }
             set
@@ -128,7 +117,6 @@ namespace NHMCore.Mining
                 NotifySpeedChanged();
             }
         }
-#endif
 
         public double SecondaryBenchmarkSpeed
         {
@@ -263,9 +251,11 @@ namespace NHMCore.Mining
         {
             get
             {
-#if FORCE_MINING
-                return 1000;
-#endif
+                if (BuildOptions.FORCE_MINING)
+                {
+                    return 1000;
+                }
+
                 if (!_updateEstimatedProfitCalled) return -2;
                 
                 if (EstimatedProfitAllSMAPresent && EstimatedProfitAllSMAPositiveOrZero)
