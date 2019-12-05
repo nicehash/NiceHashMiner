@@ -44,15 +44,15 @@
             <Border Background="Transparent" BorderBrush="Transparent" BorderThickness="0" CornerRadius="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="96" />
+                        <ColumnDefinition Width="96*" />
                         <ColumnDefinition Width="1" />
-                        <ColumnDefinition Width="96" />
+                        <ColumnDefinition Width="96*" />
                         <ColumnDefinition Width="1" />
-                        <ColumnDefinition Width="199" />
+                        <ColumnDefinition Width="199*" />
                         <ColumnDefinition Width="1" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="199*" />
                         <ColumnDefinition Width="1" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="199*" />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
