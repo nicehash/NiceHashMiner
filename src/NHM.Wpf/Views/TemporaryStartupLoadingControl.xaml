@@ -20,7 +20,7 @@
             <DrawingBrush x:Name="drawingBrushNH" Drawing="{Binding Drawing, Source={StaticResource drawingBrush_circleNH}}"/>
         </Grid.Background>
 
-        <Grid Margin="0,250" Width="Auto" Height="Auto">
+        <Grid Margin="0,200" Width="Auto" Height="Auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

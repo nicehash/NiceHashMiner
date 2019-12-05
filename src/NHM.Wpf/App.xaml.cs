@@ -132,25 +132,22 @@ namespace NHM.Wpf
             }
 
             // Chose lang
-            if (string.IsNullOrEmpty(GUISettings.Instance.Language))
+            if (string.IsNullOrEmpty(TranslationsSettings.Instance.Language))
             {
-                var langToSet = "en";
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
                 {
-                    var lang = new ChooseLanguageWindow
-                    {
-                        LangNames = Translations.GetAvailableLanguagesNames()
-                    };
-
+                    var lang = new ChooseLanguageWindow{};
                     lang.ShowDialog();
-                    langToSet = Translations.GetLanguageCodeFromIndex(lang.SelectedLangIndex);
                 }
-
-                GUISettings.Instance.Language = langToSet;
+                // check if user didn't choose anything
+                if (string.IsNullOrEmpty(TranslationsSettings.Instance.Language))
+                {
+                    TranslationsSettings.Instance.Language = "en";
+                }
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            Translations.SelectedLanguage = GUISettings.Instance.Language;
+            Translations.SelectedLanguage = TranslationsSettings.Instance.Language;
 
             //var login = new LoginWindow { };
             //var nek = login.ShowDialog();

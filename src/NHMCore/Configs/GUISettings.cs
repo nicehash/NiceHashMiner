@@ -88,20 +88,15 @@ namespace NHMCore.Configs
             }
         }
 
-        public string Language
-        {
-#if WPF
-            get;
-            set;
-#else
-            get => TranslationsSettings.Instance.Language;
-            set
-            {
-                TranslationsSettings.Instance.Language = value;
-                OnPropertyChanged(nameof(Language));
-            }
-#endif
-        }
+        //public string Language
+        //{
+        //    get => TranslationsSettings.Instance.Language;
+        //    set
+        //    {
+        //        TranslationsSettings.Instance.Language = value;
+        //        OnPropertyChanged(nameof(Language));
+        //    }
+        //}
 
         private string _displayTheme = "Light";
         public string DisplayTheme

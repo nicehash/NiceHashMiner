@@ -87,6 +87,7 @@
     <Compile Include="Converters\NulBoolToBoolConverter.cs" />
     <Compile Include="Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="Converters\TranslatingConverter.cs" />
+    <Compile Include="ViewModels\ChooseLanguageVM.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\BenchAlgo.cs" />
