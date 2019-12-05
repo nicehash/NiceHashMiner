@@ -69,13 +69,8 @@ namespace NHM.Wpf.ViewModels
         public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
 
 
-
-        public IReadOnlyList<ThemeOption> ThemeOptions => _themeList;
-
-        private List<ThemeOption> _themeList = new List<ThemeOption> {
-            new ThemeOption(){ThemeName = "Light", ThemeLogo = new System.Windows.Media.DrawingBrush() },
-            new ThemeOption(){ThemeName = "Dark", ThemeLogo = new System.Windows.Media.DrawingBrush()}
-        };
+        public IReadOnlyList<string> ThemeOptions => _themeList;
+        private List<string> _themeList = new List<string>{ "Light", "Dark" };
 
         #endregion settingsLists
 
@@ -372,11 +367,5 @@ namespace NHM.Wpf.ViewModels
             // TODO same as StartMining comment
             await ApplicationStateManager.StopAllDevice();
         }
-    }
-
-    public class ThemeOption
-    {
-        public string ThemeName;
-        public System.Windows.Media.DrawingBrush ThemeLogo;
     }
 }

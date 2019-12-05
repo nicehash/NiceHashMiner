@@ -24,12 +24,4 @@
             </Style>
         </Style.Resources>
     </Style>
-
-    <DataTemplate x:Key="cmbTemplate">
-        <StackPanel>
-            <Bitmap Width="30" Height="30" Stretch="Fill" Source="{Binding ThemeLogo}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,15,0"/>
-            <Label Content="{Binding ThemeName}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-        </StackPanel>
-    </DataTemplate>
-
 </ResourceDictionary>
