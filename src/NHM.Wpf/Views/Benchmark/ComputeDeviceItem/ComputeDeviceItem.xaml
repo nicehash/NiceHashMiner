@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Benchmark.ComputeDeviceItem"
+             xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels.Models"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:DeviceData}">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter Property="LineHeight" Value="1.5" />

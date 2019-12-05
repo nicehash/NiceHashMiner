@@ -29,6 +29,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             InitializeComponent();
 
             DataContextChanged += ComputeDeviceItem_DataContextChanged;
+            AlgorithmsGrid.Visibility = Visibility.Collapsed;
         }
 
         private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
