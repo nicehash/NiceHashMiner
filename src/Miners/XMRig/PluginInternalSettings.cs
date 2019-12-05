@@ -38,6 +38,33 @@ namespace XMRig
                     LongName = "--cpu-priority"
                 },
                 /// <summary>
+                /// maximum CPU threads count (in percentage) hint for autoconfig
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrig_cpu_max_threads",
+                    LongName = "--cpu-max-threads-hint="
+                },
+                /// <summary>
+                /// number of 2 MB pages for persistent memory pool, -1 (auto), 0 (disable)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrig_cpu_mem_pool",
+                    LongName = "--cpu-memory-pool="
+                },
+                /// <summary>
+                /// prefer maximum hashrate rather than system response/stability
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "xmrig_cpu_no_yield",
+                    LongName = "--cpu-no-yield"
+                },
+                /// <summary>
                 /// disable huge pages support
                 /// </summary>
                 new MinerOption
@@ -47,13 +74,40 @@ namespace XMRig
                     LongName = "--no-huge-pages"
                 },
                 /// <summary>
-                /// disable colored output
+                /// ASM optimizations, possible values: auto, none, intel, ryzen, bulldozer
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrig_asm",
+                    LongName = "--asm="
+                },
+                /// <summary>
+                /// threads count to initialize RandomX dataset
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrig_rx_init",
+                    LongName = "--randomx-init="
+                },
+                /// <summary>
+                /// disable NUMA support for RandomX
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionIsParameter,
-                    ID = "xmrig_no_color",
-                    LongName = "--no-color"
+                    ID = "xmrig_rx_no_numa",
+                    LongName = "--randomx-no-numa"
+                },
+                /// <summary>
+                /// RandomX mode: auto, fast, light
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrig_rx_mode",
+                    LongName = "--randomx-mode="
                 },
                 /// <summary>
                 /// donate level, default 5% (5 minutes in 100 minutes)
@@ -104,15 +158,6 @@ namespace XMRig
                     LongName = "--log-file="
                 },
                 /// <summary>
-                /// ASM optimizations, possible values: auto, none, intel, ryzen, bulldozer
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "xmrig_asm",
-                    LongName = "--asm="
-                },
-                /// <summary>
                 /// print hashrate report every N seconds
                 /// </summary>
                 new MinerOption
@@ -120,6 +165,24 @@ namespace XMRig
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "xmrig_print_time",
                     LongName = "--print-time="
+                },
+                /// <summary>
+                /// print health report every N seconds
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrig_health_print_time",
+                    LongName = "--health-print-time="
+                },
+                /// <summary>
+                /// disable colored output
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "xmrig_no_color",
+                    LongName = "--no-color"
                 }
             }
         };
