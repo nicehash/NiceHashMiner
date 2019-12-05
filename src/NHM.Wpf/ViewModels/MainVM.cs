@@ -41,7 +41,19 @@ namespace NHM.Wpf.ViewModels
                 OnPropertyChanged(nameof(DeviceGPUCount));
                 OnPropertyChanged(nameof(DeviceCPUCount));
                 OnPropertyChanged(nameof(PerDeviceDisplayString));
+                OnPropertyChanged(nameof(CPUs));
+                OnPropertyChanged(nameof(GPUs));
             }
+        }
+
+        public IEnumerable<DeviceData> CPUs
+        {
+            get => _devices?.Where(d => d.Dev.DeviceType == DeviceType.CPU) ?? Enumerable.Empty<DeviceData>();
+        }
+
+        public IEnumerable<DeviceData> GPUs
+        {
+            get => _devices?.Where(d => d.Dev.DeviceType != DeviceType.CPU) ?? Enumerable.Empty<DeviceData>();
         }
 
         public int DeviceGPUCount => _devices?.Where(d => d.Dev.DeviceType != DeviceType.CPU).Count() ?? 0;
