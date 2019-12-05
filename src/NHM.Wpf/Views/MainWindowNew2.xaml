@@ -14,7 +14,7 @@
         xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
         mc:Ignorable="d"
         Title="MainWindowNew2" Height="600" Width="800"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
