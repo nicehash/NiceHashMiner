@@ -48,7 +48,7 @@
             <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
                     <StackPanel Orientation="Vertical">
                         <Label Content="Time Unit" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" />
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" />
                 </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
@@ -67,7 +67,7 @@
                     <Label Content="Select Your Service Location" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-            <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding StratumService.MiningLocationNames}" SelectedIndex="{Binding StratumService.ServiceLocation, Mode=TwoWay}" />
+            <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding StratumService.MiningLocationNames}" SelectedIndex="{Binding StratumService.ServiceLocation, Mode=TwoWay}" />
             </WrapPanel>
             <!--LOCALIZATION-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
@@ -75,11 +75,11 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Orientation="Vertical">
                         <Label Content="Language" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}"  SelectedIndex="{Binding TranslationsSettings.LanguageIndex, Mode=TwoWay}" />
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}"  SelectedIndex="{Binding TranslationsSettings.LanguageIndex, Mode=TwoWay}" />
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <Label Content="Currency" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}"
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" 
                               ItemsSource="{Binding BalanceAndExchangeRates.FiatCurrencyOptions}"
                               SelectedItem="{Binding BalanceAndExchangeRates.SelectedFiatCurrency, Mode=TwoWay}"
                               IsEnabled="{Binding BalanceAndExchangeRates.HasFiatCurrencyOptions}" />
@@ -91,7 +91,7 @@
                 <Label Content="Apperance" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                 <StackPanel Orientation="Vertical">
                     <Label Content="Theme" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding GUISettings.DisplayTheme, Mode=TwoWay}" />
+                <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding GUISettings.DisplayTheme, Mode=TwoWay}" />
                 </StackPanel>
             </WrapPanel>
             <!--NHM and PLUGINS UPDATE-->
