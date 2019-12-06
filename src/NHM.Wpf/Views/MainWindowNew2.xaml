@@ -10,6 +10,7 @@
         xmlns:devices="clr-namespace:NHM.Wpf.Views.Devices"
         xmlns:pluginsNew="clr-namespace:NHM.Wpf.Views.Plugins"
         xmlns:settingsNew="clr-namespace:NHM.Wpf.Views.SettingsNew"
+        xmlns:help="clr-namespace:NHM.Wpf.Views.Help"
         xmlns:local="clr-namespace:NHM.Wpf.Views"
         xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
         mc:Ignorable="d"
@@ -58,9 +59,7 @@
                 <settingsNew:Settings DataContext="{Binding .}"/>
             </TabItem>
             <TabItem Header="LEFT_HELP" Name="HelpButton">
-                <Grid Background="White" Opacity="0.5">
-                    <TextBlock Text="HELP TODO" FontSize="50"/>
-                </Grid>
+                <help:Help DataContext="{Binding .}" />
             </TabItem>
         </TabControl>
 

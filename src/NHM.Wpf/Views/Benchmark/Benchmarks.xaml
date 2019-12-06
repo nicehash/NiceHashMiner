@@ -43,9 +43,9 @@
                 Text="Benchmark step "
                 />
 
-            <ProgressBar
+            <ProgressBar Style="{StaticResource progressStyle}"
                 Grid.Row="1" Grid.Column="0"
-                Margin="40,0,0,0" Height="8" Width="240" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                Margin="40,0,0,0" Width="240" HorizontalAlignment="Left" VerticalAlignment="Center" />
             <CheckBox Grid.Row="1" Grid.Column="1"
                       HorizontalAlignment="Right" VerticalAlignment="Center">
                 <TextBlock>Start mining after benchmark</TextBlock>
