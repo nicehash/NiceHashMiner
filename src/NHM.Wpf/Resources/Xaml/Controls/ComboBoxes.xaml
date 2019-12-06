@@ -6,8 +6,8 @@
         <ResourceDictionary Source="../Brushes.xaml" />
         <ResourceDictionary Source="../Fonts/Fonts.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
-    <Style TargetType="ComboBox" x:Key="smallComboBox">
+
+    <Style TargetType="ComboBox" x:Key="smallComboBox" BasedOn="{StaticResource ComboBoxStyle}">
         <Setter Property="Width" Value="160" />
         <Setter Property="Height" Value="40" />
         <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
