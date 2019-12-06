@@ -18,7 +18,7 @@
             <ItemsControl ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" Width="Auto"/>
+                        <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
