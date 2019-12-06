@@ -16,7 +16,7 @@
 
         <Grid Margin="40,10,40,40">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Plugins}">
+                <ItemsControl ItemsSource="{Binding Plugins}" Margin="0,0,4,0">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <localPluginItem:PluginItem Margin="0,16,0,0"></localPluginItem:PluginItem>

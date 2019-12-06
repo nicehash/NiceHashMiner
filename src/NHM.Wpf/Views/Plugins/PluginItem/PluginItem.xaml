@@ -83,7 +83,7 @@
             <Setter Property="FontSize" Value="12"/>
         </Style>
     </UserControl.Resources>
-    <Grid Background="Transparent" Width="Auto" Height="Auto" MaxWidth="720">
+    <Grid Background="Transparent" Width="Auto" Height="Auto" >
 
         <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
             <Border.Effect>
