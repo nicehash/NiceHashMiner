@@ -33,6 +33,7 @@ namespace NHM.Wpf.ViewModels.Models
         public bool Enabled
         {
             get => Dev.Enabled;
+            // TODO set private set and call an async method here
             set
             {
                 ApplicationStateManager.SetDeviceEnabledState(this, (Dev.B64Uuid, value));
@@ -109,6 +110,7 @@ namespace NHM.Wpf.ViewModels.Models
             AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
 
             MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
+            RefreshDiag();
         }
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -175,11 +177,20 @@ namespace NHM.Wpf.ViewModels.Models
             }
         }
 
+        public float Load { get; private set; } = -1;
+
+        public float Temp { get; private set; } = -1;
+
+        public int FanSpeed { get; private set; } = -1;
+
         public void RefreshDiag()
         {
-            Dev.OnPropertyChanged(nameof(Dev.Load));
-            Dev.OnPropertyChanged(nameof(Dev.Temp));
-            Dev.OnPropertyChanged(nameof(Dev.FanSpeed));
+            Load = Dev.Load;
+            Temp = Dev.Temp;
+            FanSpeed = Dev.FanSpeed;
+            OnPropertyChanged(nameof(Load));
+            OnPropertyChanged(nameof(Temp));
+            OnPropertyChanged(nameof(FanSpeed));
         }
 
         public async Task StartStopClick()
