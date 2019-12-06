@@ -239,7 +239,7 @@
             </Grid>
             <!--TODO the progress here is can be collapsed-->
             <Grid Grid.Row="1" Width="Auto" Visibility="{Binding Load.Visibility}" Margin="5">
-                <ProgressBar Width="Auto" Value="{Binding Load.Progress}" />
+                <ProgressBar Width="Auto" Style="{StaticResource progressStyle}" Height="15" Value="{Binding Load.Progress}" />
                 <TextBlock Width="Auto" HorizontalAlignment="Center" Text="{Binding Load.Status}" />
             </Grid>
             <!--our 'expander'-->

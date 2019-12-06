@@ -27,13 +27,13 @@
             </Grid.RowDefinitions>
             <StackPanel>
                 <TextBlock Text="{Binding PrimaryTitle}" HorizontalAlignment="Center" />
-                <ProgressBar Value="{Binding PrimaryProgress.Progress}" Height="30" />
+                <ProgressBar Style="{StaticResource progressStyle}" Value="{Binding PrimaryProgress.Progress}" Height="30" />
                 <TextBlock Text="{Binding PrimaryProgress.Status}" />
             </StackPanel>
             <StackPanel Grid.Row="1" Margin="0,10,0,0"
                     Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolToVis}}">
                 <TextBlock Text="{Binding SecondaryTitle}" HorizontalAlignment="Center" />
-                <ProgressBar Value="{Binding SecondaryProgress.Progress}" Height="30" />
+                <ProgressBar Style="{StaticResource progressStyle}" Value="{Binding SecondaryProgress.Progress}" Height="30" />
                 <TextBlock Text="{Binding SecondaryProgress.Status}" />
             </StackPanel>
         </Grid>
