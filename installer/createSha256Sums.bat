@@ -1,0 +1,1 @@
+.\certUtil -hashfile C:\Users\Domen\Desktop\nhmlRoot\NiceHashMiner\installer\createInstallers.bat SHA256 > out.txt
