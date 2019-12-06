@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Common"
+             xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="20" d:DesignWidth="200">
-    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-        <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}" Foreground="{StaticResource Gray2ColorBrush}" FontSize="14">Location:</TextBlock>
-        <TextBlock FontSize="14" Margin="4,0,0,0">
+             d:DesignHeight="30" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=viewModels:MainVM}">
+    <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal">
+        <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}" Foreground="{StaticResource Gray2ColorBrush}" FontSize="14">Worker name:</TextBlock>
+        <TextBlock FontSize="14" Margin="4,0,0,0" Text="{Binding CredentialsSettings.WorkerName}">
             <TextBlock.Style>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
                     <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}"/>
@@ -20,7 +22,6 @@
                     </Style.Triggers>
                 </Style>
             </TextBlock.Style>
-                            EU - Amsterdam
         </TextBlock>
-    </StackPanel>
+    </WrapPanel>
 </UserControl>
