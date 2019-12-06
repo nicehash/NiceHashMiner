@@ -93,26 +93,16 @@
                           Margin="24,0,0,0"
                           Click="ToggleDisableEnableAllDevices"/>
             </StackPanel>
-
-            <ListView Grid.Row="1" ItemsSource="{Binding Devices}" Width="Auto" Focusable="False" BorderThickness="0" >
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <local:ComputeDeviceItem DataContext="{Binding .}" Margin="0,8,0,0"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="Focusable" Value="false"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="{x:Null}" />
-                                <Setter Property="BorderBrush" Value="{x:Null}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+            
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Devices}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:ComputeDeviceItem DataContext="{Binding .}" Margin="0,8,0,0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
         </Grid>
         <!--Footer-->
         <Grid Grid.Row="2" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
@@ -121,7 +111,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <common:MiningLocation Grid.Column="0"/>
-            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button x:Name="startAllButton"
                         HorizontalAlignment="Right"
                         MaxWidth="200"
@@ -156,7 +146,7 @@
                     </StackPanel>
                 </Button>
                 <common:ViewStatsOnline Margin="24,0,0,0"/>
-            </StackPanel>
+            </WrapPanel>
             
         </Grid>
     </Grid>
