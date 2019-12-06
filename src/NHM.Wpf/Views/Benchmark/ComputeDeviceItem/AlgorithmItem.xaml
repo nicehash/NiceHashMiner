@@ -170,6 +170,7 @@
                           Margin="0,0,16,0" />
                 <!--TODO add context menu and all that-->
                 <Button Style="{DynamicResource SettingsButton}"
+                        IsEnabled="False"
                         Click="AlgorithmSettings_Button_Click"
                         Margin="0,0,16,0">
                 </Button>

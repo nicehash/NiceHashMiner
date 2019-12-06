@@ -139,8 +139,9 @@
             <RowDefinition  Height="50"/>
             <RowDefinition  Height="Auto"/>
         </Grid.RowDefinitions>
+        
         <ToggleButton Grid.Row="0" Style="{DynamicResource HiddenToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click">
-            <Grid Width="720" Height="40">
+            <Grid MinWidth="720" MinHeight="40">
                 <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
                     <Border.Effect>
                         <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
@@ -166,8 +167,9 @@
                                   Margin="0,0,16,0" />
                         <!--TODO add context menu and all that-->
                         <ToggleButton Style="{StaticResource MenuDropdownButton}"
-                                    Click="Action_Button_Click"
-                                    Margin="0,0,16,0" />
+                                      IsEnabled="False"
+                                      Click="Action_Button_Click"
+                                      Margin="0,0,16,0" />
 
                         <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
                     </StackPanel>
