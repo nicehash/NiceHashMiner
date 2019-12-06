@@ -18,18 +18,38 @@
             <RowDefinition Height="86" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="White">
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>-->
-            <!--Change the parent from grid to stackpanel and the button will work. Not entierly sure why it is not working-->
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <ToggleButton Style="{StaticResource StartStopButtonLight}"
                           IsChecked="{Binding MiningState.AnyDeviceRunning, Mode=OneWay}"
+                              VerticalAlignment="Center" HorizontalAlignment="Center"
                           x:Name="StartStopToggleButton"
                           Click="ToggleButtonStartStop_Click" />
-                <TextBlock >Content</TextBlock>
+                <TextBlock
+                    Style="{StaticResource BaseUbuntuTextBlockBold}"
+                    FontSize="14"
+                    Foreground="{StaticResource Gray1ColorBrush}"
+                    TextAlignment="Center"
+                    Margin="0,24,0,0"
+                    Text="Start Demo Mining"
+                    ToolTip="some info"
+                    />
+
+                <!--Complete Credentials info--><!--
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" >
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                    FontSize="12"
+                    Foreground="{StaticResource Gray1ColorBrush}"
+                    TextAlignment="Left"
+                    Text="Complete your mining setup"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <Button>dsfdf</Button>
+                        <Button>dsfdf</Button>
+                        <Button>dsfdf</Button>
+                    </StackPanel>
+                </StackPanel>-->
             </StackPanel>
+            
+
 
         </Grid>
         <Grid Grid.Row="1">
