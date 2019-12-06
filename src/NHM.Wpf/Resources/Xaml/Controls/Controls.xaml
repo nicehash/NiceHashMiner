@@ -10,6 +10,7 @@
         <ResourceDictionary Source="SpinCirclePath.xaml"/>
         <ResourceDictionary Source="TextBoxes.xaml" />
         <ResourceDictionary Source="ComboBoxes.xaml" />
+        <ResourceDictionary Source="ProgressBars.xaml" />
         <!--<ResourceDictionary Source="Next.xaml"/>-->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

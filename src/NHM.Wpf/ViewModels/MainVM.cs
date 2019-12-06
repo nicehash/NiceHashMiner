@@ -108,6 +108,10 @@ namespace NHM.Wpf.ViewModels
         public WarningSettings WarningSettings => WarningSettings.Instance;
         #endregion Exposed settings
 
+        public IEnumerable<HelpNotification> HelpNotificationsList => HelpNotification.HelpNotificationsList;
+        public string LocalVersion => ApplicationStateManager.LocalVersion;
+        public string OnlineVersion => ApplicationStateManager.OnlineVersion;
+
         #region Currency-related properties
 
         // TODO this section getting rather large, maybe good idea to break out into own class

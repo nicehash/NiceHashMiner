@@ -89,6 +89,7 @@
     <Compile Include="Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="Converters\TranslatingConverter.cs" />
     <Compile Include="ViewModels\ChooseLanguageVM.cs" />
+    <Compile Include="ViewModels\HelpNotification.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\BenchAlgo.cs" />
@@ -157,6 +158,12 @@
     </Compile>
     <Compile Include="Views\EulaWindow.xaml.cs">
       <DependentUpon>EulaWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Help\Help.xaml.cs">
+      <DependentUpon>Help.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Help\HelpItem.xaml.cs">
+      <DependentUpon>HelpItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
@@ -265,6 +272,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Controls\MenuDropdownButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Controls\ProgressBars.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -405,6 +416,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EulaWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Help\Help.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Help\HelpItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
