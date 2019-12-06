@@ -32,6 +32,7 @@
                     Margin="0,24,0,0"
                     Text="Start Demo Mining"
                     ToolTip="some info"
+                    Visibility="Collapsed"
                     />
 
                 <!--Complete Credentials info--><!--
