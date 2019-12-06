@@ -16,7 +16,7 @@ namespace NHMCore.ApplicationState
     {
         public static event EventHandler OnExchangeUpdate;
 
-        private static readonly ConcurrentDictionary<string, double> ExchangesFiat = new ConcurrentDictionary<string, double>();
+        private readonly ConcurrentDictionary<string, double> ExchangesFiat = new ConcurrentDictionary<string, double>();
 
         public static BalanceAndExchangeRates Instance { get; } = new BalanceAndExchangeRates();
 
@@ -44,8 +44,8 @@ namespace NHMCore.ApplicationState
             UsdBtcRate = usdBtcRate;
             if (newExchanges != null)
             {
-                _fiatCurrencyKeys.Clear();
                 _fiatCurrencyKeys = newExchanges.Keys.ToList();
+                _fiatCurrencyKeys.Add("USD");
                 _fiatCurrencyKeys.Sort();
                 OnPropertyChanged(nameof(HasFiatCurrencyOptions));
                 OnPropertyChanged(nameof(FiatCurrencyOptions));
