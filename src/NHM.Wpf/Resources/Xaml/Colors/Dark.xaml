@@ -13,6 +13,7 @@
     <Color x:Key="Colors.Dark.Basic.NO_NAME">#FDE3C6</Color>
     <Color x:Key="Colors.Dark.Basic.SuccessColorBckg">#DBEED2</Color>
     <Color x:Key="Colors.Dark.Basic.WarningColorBckg">#FCE9E9</Color>
+    <Color x:Key="Colors.Dark.Basic.NastyGreen">#68B641</Color>
     <!--#endregion Basic colors-->
 
     <!--#region Grey colors-->

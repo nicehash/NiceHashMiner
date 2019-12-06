@@ -33,14 +33,7 @@
                    LineHeight="1.33"
                    Text="Choose Language"
                    />
-        <ComboBox Grid.Row="2" Margin="24,0,24,0" Height="34" Padding="43,9,0,9" FontFamily="{StaticResource UbuntuFontFamily}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}" SelectedIndex="{Binding TranslationsSettings.LanguageIndex}" BorderBrush="White" Background="Yellow" FontSize="14">
-            <ComboBox.ItemContainerStyle>
-                <Style TargetType="ComboBoxItem">
-                    <Setter Property="Background" Value="Yellow"/>
-                    <Setter Property="BorderBrush" Value="Yellow"/>
-                </Style>
-            </ComboBox.ItemContainerStyle>
-        </ComboBox>
+        <ComboBox Grid.Row="2" Margin="24,0,24,0" Height="34" Style="{DynamicResource ComboBoxStyle}" ItemContainerStyle="{StaticResource ItemStyle}" FontFamily="{StaticResource UbuntuFontFamily}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}" SelectedIndex="{Binding TranslationsSettings.LanguageIndex}" FontSize="14" />
         <DockPanel Grid.Row="3" Margin="0,0,24,24" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button DockPanel.Dock="Right" Click="OkButton_OnClick" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsEnabled="{ Binding Path=Enabled }" Style="{StaticResource OKButton}" Content="NEXT" />
         </DockPanel>

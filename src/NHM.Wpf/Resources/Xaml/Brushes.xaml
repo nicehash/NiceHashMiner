@@ -40,6 +40,7 @@
     <SolidColorBrush x:Key="Brushes.Dark.Basic.NO_NAME" Color="{StaticResource Colors.Dark.Basic.NO_NAME}"/>
     <SolidColorBrush x:Key="Brushes.Dark.Basic.SuccessColorBckg" Color="{StaticResource Colors.Dark.Basic.SuccessColorBckg}"/>
     <SolidColorBrush x:Key="Brushes.Dark.Basic.WarningColorBckg" Color="{StaticResource Colors.Dark.Basic.WarningColorBckg}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.NastyGreen" Color="{StaticResource Colors.Dark.Basic.NastyGreen}"/>
     <!--#endregion Dark Basic Brushes-->
 
     <!--#region Dark Grey Brushes-->
