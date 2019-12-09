@@ -102,7 +102,7 @@ namespace NHM.Wpf
             {
                 Logger.Info(Tag, $"TOS differs! agreed: {ToSSetings.Instance.AgreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}");
 
-                var eula = new EulaWindow{};
+                var eula = new EulaWindowFirstLong{};
                 var accepted = eula.ShowDialog();
                 if (accepted.HasValue && eula.AcceptedTos)
                 {
@@ -119,7 +119,7 @@ namespace NHM.Wpf
             // Check 3rd party miners TOS
             if (ToSSetings.Instance.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
             {
-                var thirdPty = new _3rdPartyTosWindow{};
+                var thirdPty = new EulaWindowSecondShort{};
                 thirdPty.ShowDialog();
                 if (!thirdPty.Accepted)
                 {

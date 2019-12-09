@@ -7,11 +7,11 @@ namespace NHM.Wpf.Views
     /// <summary>
     /// Interaction logic for _3rdPartyTosWindow.xaml
     /// </summary>
-    public partial class _3rdPartyTosWindow : BaseDialogWindow
+    public partial class EulaWindowSecondShort : BaseDialogWindow
     {
         public bool Accepted { get; private set; } = false;
 
-        public _3rdPartyTosWindow()
+        public EulaWindowSecondShort()
         {
             InitializeComponent();
 

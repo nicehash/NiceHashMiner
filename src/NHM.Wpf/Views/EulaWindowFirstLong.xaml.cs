@@ -16,11 +16,11 @@ namespace NHM.Wpf.Views
     /// <summary>
     /// Interaction logic for EulaWindow.xaml
     /// </summary>
-    public partial class EulaWindow : BaseDialogWindow
+    public partial class EulaWindowFirstLong : BaseDialogWindow
     {
         public bool AcceptedTos { get; set; } = false;
 
-        public EulaWindow()
+        public EulaWindowFirstLong()
         {
             InitializeComponent();
 

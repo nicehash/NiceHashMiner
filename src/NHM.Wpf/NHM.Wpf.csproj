@@ -112,8 +112,8 @@
     <Compile Include="ViewModels\StartupLoadingVM.cs" />
     <Compile Include="Validators\BtcWorkerValidator.cs" />
     <Compile Include="Validators\ValidatorBase.cs" />
-    <Compile Include="Views\3rdPartyTosWindow.xaml.cs">
-      <DependentUpon>3rdPartyTosWindow.xaml</DependentUpon>
+    <Compile Include="Views\EulaWindowSecondShort.xaml.cs">
+      <DependentUpon>EulaWindowSecondShort.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
@@ -156,8 +156,8 @@
     <Compile Include="Views\Devices\Devices.xaml.cs">
       <DependentUpon>Devices.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\EulaWindow.xaml.cs">
-      <DependentUpon>EulaWindow.xaml</DependentUpon>
+    <Compile Include="Views\EulaWindowFirstLong.xaml.cs">
+      <DependentUpon>EulaWindowFirstLong.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Help\Help.xaml.cs">
       <DependentUpon>Help.xaml</DependentUpon>
@@ -355,7 +355,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\3rdPartyTosWindow.xaml">
+    <Page Include="Views\EulaWindowSecondShort.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -415,7 +415,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\EulaWindow.xaml">
+    <Page Include="Views\EulaWindowFirstLong.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

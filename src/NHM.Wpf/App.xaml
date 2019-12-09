@@ -20,9 +20,9 @@
                 <ResourceDictionary Source="Resources/Xaml/Tooltips.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="views:EulaWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
+            <Style TargetType="views:EulaWindowFirstLong" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:ChooseLanguageWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
-            <Style TargetType="views:_3rdPartyTosWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
+            <Style TargetType="views:EulaWindowSecondShort" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:MainWindowNew2" BasedOn="{StaticResource NHMMainWindowStyle}"/>
 
