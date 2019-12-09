@@ -18,7 +18,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
                 var hasNonZeroSpeeds = speeds.Sum(s => s.Value) > 0;
                 if (hasNonZeroSpeeds)
                 {
-                    return string.Join("+", speeds.Select(s => s.ToString()));
+                    return string.Join(" + ", speeds.Select(s => s.ToString()));
                 }
             }
             return "---";

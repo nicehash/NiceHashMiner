@@ -18,6 +18,7 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
             <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
 
             <Style.Triggers>
@@ -138,43 +139,61 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid Height="40" Width="720">
+    <Grid MinHeight="40" MinWidth="220">
         <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
             </Border.Effect>
         </Border>
-        <Grid >
+        <UniformGrid Columns="6" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="16,0,16,0" >
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Grid Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Style="{DynamicResource TextBoxCol}" HorizontalAlignment="Left" Text="{Binding AlgorithmName}" Margin="16,0,0,0"/>
-                <TextBlock Grid.Column="1" Style="{DynamicResource TextBoxCol}" Text="{Binding PluginName}" Margin="0,0,0,0"/>
-                <TextBlock Grid.Column="2" Style="{DynamicResource TextBoxCol}" Text="{Binding AnnotatedSpeeds, Converter={StaticResource AlgorithmItemSpeedsConverter}}" Margin="0,0,0,0"/>
-                <TextBlock Grid.Column="3" Style="{DynamicResource TextBoxCol}" Text="{Binding CurrentEstimatedProfitStr}" Margin="0,0,0,0"/>
-                <TextBlock Grid.Column="4" Style="{DynamicResource TextBoxCol}" Foreground="{Binding Status, Converter={StaticResource AlgorithmItemStatusStyleConverter}}" Text="{Binding Status}" Margin="0,0,0,0"/>
-            </Grid>
-            <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>-->
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Style="{DynamicResource TextBoxCol}"
+                       Text="{Binding AlgorithmName}"
+                       MaxWidth="120"
+                       HorizontalAlignment="Left"
+                       />
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       Style="{DynamicResource TextBoxCol}"
+                       Text="{Binding PluginName}"
+                       />
+            <TextBlock Grid.Row="0" Grid.Column="2"
+                       Style="{DynamicResource TextBoxCol}"
+                       Text="{Binding AnnotatedSpeeds, Converter={StaticResource AlgorithmItemSpeedsConverter}}"
+                       MaxWidth="100"
+                       />
+            <TextBlock Grid.Row="0" Grid.Column="3"
+                       Style="{DynamicResource TextBoxCol}"
+                       Text="{Binding CurrentEstimatedProfitStr}"
+                       />
+            <TextBlock Grid.Row="0" Grid.Column="4"
+                       Style="{DynamicResource TextBoxCol}"
+                       Foreground="{Binding Status, Converter={StaticResource AlgorithmItemStatusStyleConverter}}"
+                       Text="{Binding Status}"
+                       MaxWidth="120"
+                       />
+            <StackPanel Grid.Row="0" Grid.Column="5"
+                        HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
                 <CheckBox Style="{StaticResource NHMSwitch}"
                           IsChecked="{Binding Enabled, Mode=TwoWay}"
                           Margin="0,0,16,0" />
                 <!--TODO add context menu and all that-->
                 <Button Style="{DynamicResource SettingsButton}"
                         IsEnabled="False"
-                        Click="AlgorithmSettings_Button_Click"
-                        Margin="0,0,16,0">
+                        Click="AlgorithmSettings_Button_Click" >
                 </Button>
             </StackPanel>
-        </Grid>
+        </UniformGrid>
+        
     </Grid>
 </UserControl>

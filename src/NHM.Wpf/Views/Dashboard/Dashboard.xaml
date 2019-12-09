@@ -90,7 +90,7 @@
                     </Grid>
                     <GridSplitter Grid.Column="3" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <StackPanel Grid.Column="4">
-                        <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
                         <!--TODO Bindings here are temp-->
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0" Text="{Binding GlobalRate}" />
@@ -100,7 +100,7 @@
                     </StackPanel>
                     <GridSplitter Grid.Column="5" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <StackPanel Grid.Column="6">
-                        <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
                             <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
@@ -109,7 +109,7 @@
                     </StackPanel>
                     <GridSplitter Grid.Column="7" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <StackPanel Grid.Column="8">
-                        <TextBlock Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
+                        <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">N/A</TextBlock>
                             <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0" Visibility="Collapsed">BTC</TextBlock>

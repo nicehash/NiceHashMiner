@@ -41,24 +41,25 @@
                      TextChanged="TextBoxWorkerName_TextChanged" />
             </WrapPanel>
             <!--MAIN-->
-            <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
-                <Label Content="Main" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <local:SettingsCheckBoxItem Enabled="{Binding MiningProfitSettings.MineRegardlessOfProfit}"
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
+            <Label Content="Main" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <WrapPanel Orientation="Vertical">
+                <Label Content="Time Unit" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                <ComboBox Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" />
+            </WrapPanel>
+
+            <local:SettingsCheckBoxItem Margin="0,24,0,0" Enabled="{Binding MiningProfitSettings.MineRegardlessOfProfit}"
                                             Label="Mine Regardless Of Profit" />
-            <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
-                    <StackPanel Orientation="Vertical">
-                        <Label Content="Time Unit" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" />
-                </StackPanel>
-                    <StackPanel Orientation="Vertical">
-                        <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+            <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.KwhPrice, Mode=TwoWay}" Margin="0,0,24,0"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical">
-                        <Label Content="Mininmum profit ($/day)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningProfitSettings.MinimumProfit, Mode=TwoWay}" Margin="0,0,24,0"/>
-                    </StackPanel>
                 </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Mininmum profit ($/day)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningProfitSettings.MinimumProfit, Mode=TwoWay}" Margin="0,0,24,0"/>
+                </StackPanel>
+            </WrapPanel>
             </WrapPanel>
             <!--SERVICE LOCATION-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">

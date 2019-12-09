@@ -26,7 +26,7 @@
         <Style TargetType="{x:Type ToggleButton}" x:Key="HiddenToggleButton">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
                         <Border
                             x:Name="Chrome"
                             BorderBrush="{TemplateBinding BorderBrush}"
@@ -48,6 +48,8 @@
             </Setter>
             <Setter Property="Background" Value="Transparent"/>
         </Style>
+        
+        
         <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
             <Setter Property="Template">
                 <Setter.Value>
@@ -133,90 +135,116 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="TextBoxButton2" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <TextBlock Text="{TemplateBinding Content}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                    <Setter Property="MaxWidth" Value="100" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                    
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+        </Style>
+
     </UserControl.Resources>
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition  Height="50"/>
-            <RowDefinition  Height="Auto"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <ToggleButton Grid.Row="0" Style="{DynamicResource HiddenToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click">
-            <Grid MinWidth="720" MinHeight="40">
-                <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
-                    <Border.Effect>
-                        <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
-                    </Border.Effect>
-                </Border>
-                <Grid Background="Transparent" >
+
+        <Grid Grid.Row="0" MinWidth="320" Height="40" Margin="40,0,40,0">
+            <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
+                </Border.Effect>
+            </Border>
+            <ToggleButton Style="{DynamicResource HiddenToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click" HorizontalContentAlignment="Stretch" >
+                <Grid Background="Transparent" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
+                    <WrapPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
                         <TextBlock Style="{DynamicResource TextBoxCol}" Foreground="{StaticResource Gray1ColorBrush}" Text="{Binding Dev.NameCount}" Margin="16,0,0,0"/>
                         <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding Dev.Name}" Margin="9,0,0,0"/>
-                    </StackPanel>
+                    </WrapPanel>
                     <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
                         <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding AlgosEnabled}" Margin="0,0,54,0"/>
                         <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding AlgosBenchmarked}" Margin="0,0,54,0"/>
                         <CheckBox Style="{StaticResource NHMSwitch}"
-                                  x:Name="EnableDisableCheckBox"
-                                  IsChecked="{Binding Enabled}"
-                                  Margin="0,0,16,0" />
+                                      x:Name="EnableDisableCheckBox"
+                                      IsChecked="{Binding Enabled}"
+                                      Margin="0,0,16,0" />
                         <!--TODO add context menu and all that-->
                         <ToggleButton Style="{StaticResource MenuDropdownButton}"
-                                      IsEnabled="False"
-                                      Click="Action_Button_Click"
-                                      Margin="0,0,16,0" />
+                                          IsEnabled="False"
+                                          Click="Action_Button_Click"
+                                          Margin="0,0,16,0" />
 
                         <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
                     </StackPanel>
                 </Grid>
-            </Grid>
-        </ToggleButton>
-        
-        
-        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="Transparent" Visibility="Collapsed" Margin="0,20,0,0">
+            </ToggleButton>
+        </Grid>
+
+        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="WhiteSmoke" Visibility="Collapsed" Width="Auto" Margin="40,20,40,0">
             <!--TODO ALGORITHMS HERE-->
             <!--CHECK IF WE NEED SCROLL VIEWER-->
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="720">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Style="{DynamicResource TextBoxButton}" Content="ALGORITHM" Click="SortAlgorithmButtonClick"/>
-                <Button Grid.Column="1" Style="{DynamicResource TextBoxButton}" Content="MINER" Click="SortMinerButtonClick" />
-                <Button Grid.Column="2" Style="{DynamicResource TextBoxButton}" Content="SPEED" Click="SortSpeedButtonClick" />
-                <Button Grid.Column="3" Style="{DynamicResource TextBoxButton}" Content="BTC / 24H" Click="SortPayingButtonClick" />
-                <Button Grid.Column="4" Style="{DynamicResource TextBoxButton}" Content="STATUS" Click="SortStatusButtonClick" />
-                <StackPanel Grid.Column="5" Orientation="Horizontal">
-                    <Button Style="{DynamicResource TextBoxButton}" Content="SELECT / UNSELECT ALL" Click="SortEnabledButtonClick" />
+
+            <UniformGrid Grid.Row="0" Columns="6" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <Button Style="{DynamicResource TextBoxButton2}" Content="ALGORITHM" Click="SortAlgorithmButtonClick" HorizontalAlignment="Left" Margin="16,0,0,0"/>
+                <Button Style="{DynamicResource TextBoxButton2}" Content="MINER" Click="SortMinerButtonClick" />
+                <Button Style="{DynamicResource TextBoxButton2}" Content="SPEED" Click="SortSpeedButtonClick" />
+                <Button Style="{DynamicResource TextBoxButton2}" Content="BTC / 24H" Click="SortPayingButtonClick" />
+                <Button Style="{DynamicResource TextBoxButton2}" Content="STATUS" Click="SortStatusButtonClick" />
+                <!--MAX WITH HERE DEFINES THE GRID-->
+                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="100">
+                    <Button Style="{DynamicResource TextBoxButton2}" Content="SELECT / UNSELECT ALL" Click="SortEnabledButtonClick" />
                     <CheckBox Style="{StaticResource NHMSwitch}"
                               Margin="8,0,0,0" />
-                </StackPanel>
-            </Grid>
-            <StackPanel Grid.Row="1">
-                <ItemsControl ItemsSource="{Binding AlgorithmSettingsCollection}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:AlgorithmItem DataContext="{Binding .}" Margin="0,8,0,0" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <Separator Margin="0,16,0,20" Width="720"/>
-            </StackPanel>
-            
+                </WrapPanel>
+            </UniformGrid>
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding AlgorithmSettingsCollection}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:AlgorithmItem DataContext="{Binding .}" Margin="0,8,0,0" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Separator Grid.Row="2" Margin="0,16,0,20" />
+
         </Grid>
+        
         
     </Grid>
 </UserControl>

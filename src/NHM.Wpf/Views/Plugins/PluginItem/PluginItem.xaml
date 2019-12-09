@@ -316,6 +316,7 @@
                                LineHeight="1.5"
                                HorizontalAlignment="Left"
                                MaxWidth="300"
+                               TextWrapping="WrapWithOverflow"
                                Text="{Binding Plugin.PluginDescription}"/>
                 </StackPanel>
 
