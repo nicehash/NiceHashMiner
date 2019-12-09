@@ -1093,6 +1093,16 @@
       "ru": "Включён",
       "zh_cn": "启用"
     },
+    "Error": {
+      "bg": "Грешка",
+      "es": "Error",
+      "it": "Errore",
+      "pl": "Bład",
+      "pt": "Erro",
+      "ro": "Eroare",
+      "ru": "Ошибка",
+      "zh_cn": "错误"
+    },
     "Error!": {
       "bg": "Грешка!",
       "es": "¡Error!",
