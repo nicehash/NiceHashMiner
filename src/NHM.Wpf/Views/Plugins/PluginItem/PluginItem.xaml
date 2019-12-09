@@ -92,19 +92,15 @@
         </Border>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition  Height="50"/>
+                <RowDefinition  Height="Auto"/>
                 <RowDefinition  Height="Auto"/>
                 <RowDefinition  Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0" HorizontalAlignment="Stretch" Height="50">
+            <Grid Grid.Row="0" HorizontalAlignment="Stretch" Height="Auto" MinHeight="50" MaxHeight="100">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="70*"/>
+                    <ColumnDefinition Width="25*"/>
                 </Grid.ColumnDefinitions>
 
                 <local:PluginIcon Grid.Column="0"
@@ -112,45 +108,46 @@
                                   Style="{StaticResource PluginIconStyle}"
                                   Margin="16,9" />
 
-                <TextBlock Grid.Column="1"
-                           IsEnabled="{Binding Plugin.Supported}"
-                           Style="{StaticResource TextBoxCol}"
-                           FontWeight="Bold"
-                           Foreground="{StaticResource TextColorBrush}"
-                           Margin="0,16,0,16"
-                           Text="{ Binding Plugin.PluginName }"/>
+                <UniformGrid Grid.Column="1" Columns="4">
+                    <TextBlock
+                        IsEnabled="{Binding Plugin.Supported}"
+                        Style="{StaticResource TextBoxCol}"
+                        FontWeight="Bold"
+                        Foreground="{StaticResource TextColorBrush}"
+                        Text="{ Binding Plugin.PluginName }"
+                        TextWrapping="Wrap"
+                        HorizontalAlignment="Left"
+                        />
 
-                <TextBlock Grid.Column="2"
-                           IsEnabled="{Binding Plugin.Supported}"
-                           Style="{StaticResource TextBoxCol}"
-                           Margin="32,0,0,0"
-                           Text="{ Binding Plugin.PluginAuthor }"/>
+                    <TextBlock
+                        IsEnabled="{Binding Plugin.Supported}"
+                        Style="{StaticResource TextBoxCol}"
+                        Margin="4,0,0,0"
+                        TextWrapping="Wrap"
+                        Text="{ Binding Plugin.PluginAuthor }"/>
 
-                <TextBlock Grid.Column="3"
+                    <TextBlock Grid.Column="2"
                            IsEnabled="{Binding Plugin.Supported}"
                            Style="{StaticResource TextBoxCol}"
-                           Margin="32,0,0,0"
+                           Margin="4,0,0,0"
+                           TextWrapping="Wrap"
                            Text="{Binding InstallVersionStatus}"/>
-
-                <!--TODO THIS column seems to be removed-->
-                <TextBlock Grid.Column="4"
-                           Visibility="Collapsed"
-                           IsEnabled="{Binding Plugin.Supported}"
-                           Style="{StaticResource TextBoxCol}"
-                           Margin="32,0,0,0"
-                           Text="---"/>
-
-                <ToggleButton Grid.Column="5"
+                    
+                    <ToggleButton Grid.Column="3"
                               x:Name="DetailsToggleButton"
                               Style="{StaticResource TextBoxToggleButton}"
-                              Margin="32,0,0,0"
+                              Margin="4,0,0,0"
                               Click="ToggleDetailsButton_Click"
-                              HorizontalAlignment="Center"
+                              HorizontalAlignment="Left"
                               VerticalAlignment="Center" >
-                    <TextBlock x:Name="DetailsToggleButtonText" Text="Details"></TextBlock>
-                </ToggleButton>
+                        <TextBlock x:Name="DetailsToggleButtonText"
+                                   Text="Details"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Left"/>
+                    </ToggleButton>
+                </UniformGrid>
 
-                <StackPanel Grid.Column="6"
+                <WrapPanel Grid.Column="2"
                             Orientation="Horizontal"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
@@ -234,7 +231,7 @@
                         </Button.Triggers>
                     </Button>
 
-                </StackPanel>
+                </WrapPanel>
 
             </Grid>
             <!--TODO the progress here is can be collapsed-->
@@ -243,18 +240,19 @@
                 <TextBlock Width="Auto" HorizontalAlignment="Center" Text="{Binding Load.Status}" />
             </Grid>
             <!--our 'expander'-->
-            <Grid Grid.Row="2" x:Name="DetailsGrid" Visibility="Visible" Margin="16,0,16,16">
+            <Grid Grid.Row="2" x:Name="DetailsGrid" Visibility="Visible" Margin="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="122" Width="Auto" />
-                    <ColumnDefinition MinWidth="200" Width="Auto" />
-                    <ColumnDefinition MinWidth="250" Width="*" />
+                    <ColumnDefinition MinWidth="100" Width="50*" />
+                    <ColumnDefinition MinWidth="100" Width="100*" />
+                    <ColumnDefinition MinWidth="100" Width="150*" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
+                <StackPanel Grid.Column="0" Margin="16">
                     <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                                Foreground="{StaticResource TextColorBrush}"
                                FontSize="12"
                                LineHeight="1.5"
                                Text="Supported Devices"
+                               TextWrapping="Wrap"
                                />
                     <ItemsControl x:Name="supportedDevices" ItemsSource="{Binding Plugin.SupportedDevicesAlgorithms, Converter={StaticResource SupportedDevicesConv}}">
                         <ItemsControl.ItemTemplate>
@@ -268,12 +266,13 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-                <StackPanel Grid.Column="1">
+                <StackPanel Grid.Column="1" Margin="16">
                     <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                                Foreground="{StaticResource TextColorBrush}"
                                FontSize="12"
                                LineHeight="1.5"
                                Text="Supported Devices Algorithms"
+                               TextWrapping="Wrap"
                                />
 
                     <ItemsControl x:Name="deviceAlgorithms" Margin="0,4,0,0" ItemsSource="{Binding Plugin.SupportedDevicesAlgorithms, Converter={StaticResource SupportedDevicesAlgorithmsConv}}">
@@ -303,12 +302,13 @@
                     </ItemsControl>
 
                 </StackPanel>
-                <StackPanel Grid.Column="2">
+                <WrapPanel Grid.Column="2" Orientation="Vertical" Margin="16">
                     <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                                Foreground="{StaticResource TextColorBrush}"
                                FontSize="12"
                                LineHeight="1.5"
                                Text="Description"
+                               TextWrapping="Wrap"
                                />
                     <TextBlock Style="{StaticResource BaseUbuntuTextBlock}"
                                Foreground="{StaticResource Gray1ColorBrush}"
@@ -316,9 +316,9 @@
                                LineHeight="1.5"
                                HorizontalAlignment="Left"
                                MaxWidth="300"
-                               TextWrapping="WrapWithOverflow"
+                               TextWrapping="Wrap"
                                Text="{Binding Plugin.PluginDescription}"/>
-                </StackPanel>
+                </WrapPanel>
 
             </Grid>
         </Grid>
