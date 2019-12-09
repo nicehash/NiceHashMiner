@@ -34,50 +34,94 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="149*" />
                 <ColumnDefinition Width="197*" />
-                <ColumnDefinition Width="162*" />
+                <ColumnDefinition Width="197*" />
                 <ColumnDefinition Width="164*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Border  BorderThickness="1" Background="#fde3c6" BorderBrush="Transparent" CornerRadius="4"/>
-                <TextBlock Style="{DynamicResource InfoIcon }" Foreground="#fba342" Margin="0,12,12,0" />
-                <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">DEVICES MINING</TextBlock>
-                <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding MiningState.MiningDeviceStateCount}" />
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding PerDeviceDisplayString}" />
-                </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0"
+                               Style="{DynamicResource InfoIcon }"
+                               HorizontalAlignment="Right"
+                               Margin="0,12,12,0"
+                               Foreground="#fba342"/>
+                    <TextBlock Grid.Row="1"
+                               TextWrapping="Wrap"
+                               FontFamily="{StaticResource UbuntuFontFamily}"
+                               FontSize="12"
+                               Foreground="#fba342"
+                               FontStyle="Normal"
+                               FontStretch="Normal"
+                               FontWeight="Medium"
+                               Margin="24,0,0,0"
+                               Text="DEVICES MINING"
+                               />
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="24,10,0,0">
+                        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding MiningState.MiningDeviceStateCount}" />
+                        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding PerDeviceDisplayString}" />
+                    </StackPanel>
+                </Grid>
             </Grid>
             <Grid Grid.Column="1" Margin="16,0,0,0">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
-                <!--content-->
-                <TextBlock Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
-                <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0">GLOBAL RATE</TextBlock>
-                <!--TODO Bindings here are temp-->
-                <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding GlobalRate}"/>
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding ScaledBtcPerTime}"/>
-                </StackPanel>
-                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,78,0,0" Text="{Binding GlobalRateFiat}"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--content-->
+                    <TextBlock Grid.Row="0" Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,0,0,0">GLOBAL RATE</TextBlock>
+                    <!--TODO Bindings here are temp-->
+                    <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
+                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding GlobalRate}"/>
+                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding ScaledBtcPerTime}"/>
+                    </WrapPanel>
+                    <TextBlock Grid.Row="3" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,10,0,0" Text="{Binding GlobalRateFiat}"/>
+                </Grid>
             </Grid>
             <Grid Grid.Column="2" Margin="16,0,0,0">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
-                <!--content-->
-                <TextBlock Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
-                <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0" Text="UNPAID BALANCE"/>
-                <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
-                </StackPanel>
-                <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,78,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--content-->
+                    <TextBlock Grid.Row="0" Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,0,0,0" Text="UNPAID BALANCE"/>
+                    <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
+                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
+                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
+                    </WrapPanel>
+                    <TextBlock Grid.Row="3" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"/>
+                </Grid>
             </Grid>
             <Grid Grid.Column="3" Margin="16,0,0,0">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
-                <!--content-->
-                <TextBlock Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
-                <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,24,0,0" Text="MY BTC WALLET" />
-                <StackPanel Margin="24,48,0,0" Orientation="Horizontal">
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">N/A</TextBlock>
-                    <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Visibility="Collapsed">BTC</TextBlock>
-                </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--content-->
+                    <TextBlock Grid.Row="0" Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,0,0,0" Text="MY BTC WALLET" />
+                    <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
+                        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">N/A</TextBlock>
+                        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Visibility="Visible">BTC</TextBlock>
+                    </WrapPanel>
+                </Grid>
             </Grid>
         </Grid>
         <!--DEVICES-->
@@ -94,11 +138,11 @@
                           Click="ToggleDisableEnableAllDevices"/>
             </StackPanel>
             
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemsSource="{Binding Devices}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <local:ComputeDeviceItem DataContext="{Binding .}" Margin="0,8,0,0"/>
+                            <local:ComputeDeviceItem DataContext="{Binding .}" Margin="0,8,8,0"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -107,11 +151,11 @@
         <!--Footer-->
         <Grid Grid.Row="2" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="7*" />
             </Grid.ColumnDefinitions>
-            <common:MiningLocation Grid.Column="0"/>
-            <WrapPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+            <common:MiningLocation Grid.Column="0" HorizontalAlignment="Left"/>
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="startAllButton"
                         HorizontalAlignment="Right"
                         MaxWidth="200"

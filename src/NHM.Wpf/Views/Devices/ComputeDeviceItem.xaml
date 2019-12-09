@@ -37,55 +37,65 @@
         <converters:TemperatureValueToText x:Key="TempToText" />
         <converters:LoadValueToText x:Key="LoadToText" />
     </UserControl.Resources>
-    <Grid MinHeight="53" MaxHeight="154" Width="Auto" Background="Transparent">
+    <Grid MinHeight="53" MaxHeight="300" Width="Auto" Background="Transparent">
         <Border BorderThickness="1" Background="#ffffff" BorderBrush="#eeeeee" CornerRadius="4"/>
-        <Grid HorizontalAlignment="Stretch">
+        <Grid HorizontalAlignment="Stretch"  >
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="3*" />
             </Grid.ColumnDefinitions>
 
             <!--first one has flipped style-->
-            <StackPanel Grid.Column="0" HorizontalAlignment="Left" Margin="16,8,0,0">
-                <TextBlock Style="{StaticResource StatusColumnValue}" Text="{ Binding Dev.FullName }" />
-                <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,4,0,0" Text="{Binding DeviceMiningStatsPluginAlgo}"/>
+            <StackPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="16,8,0,8" >
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource StatusColumnValue}" Text="{ Binding Dev.FullName }" />
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource StatusColumnTitle}" Margin="0,4,0,0" Text="{Binding DeviceMiningStatsPluginAlgo}"/>
             </StackPanel>
 
-            <Grid Grid.Column="1" HorizontalAlignment="Left" Width="Auto">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <WrapPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <WrapPanel.Resources>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Setter Property="Margin" Value="10" />
+                    </Style>
+                </WrapPanel.Resources>
 
-                
-                <StackPanel Grid.Column="1">
+                <StackPanel HorizontalAlignment="Left" MinWidth="60">
                     <TextBlock Style="{StaticResource StatusColumnTitle}">Status</TextBlock>
-                    <TextBlock Style="{StaticResource StatusColumnValue}" Foreground="{Binding Dev.State, Converter={StaticResource StatusConv}}" FontWeight="Bold" Margin="0,4,0,0" Text="{Binding Dev.State, Converter={StaticResource TrConv}}" />
+                    <TextBlock Style="{StaticResource StatusColumnValue}"
+                               Foreground="{Binding Dev.State, Converter={StaticResource StatusConv}}"
+                               FontWeight="Bold"
+                               Margin="0,4,0,0"
+                               Text="{Binding Dev.State, Converter={StaticResource TrConv}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="2">
+                <StackPanel MinWidth="45">
                     <TextBlock Style="{StaticResource StatusColumnTitle}">Temp</TextBlock>
-                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0" Text="{Binding Temp, Converter={StaticResource TempToText}}" />
+                    <TextBlock Style="{StaticResource StatusColumnValue}"
+                               Margin="0,4,0,0"
+                               Text="{Binding Temp, Converter={StaticResource TempToText}}" />
                 </StackPanel>
-                <StackPanel Grid.Column="3">
+                <StackPanel MinWidth="30">
                     <TextBlock Style="{StaticResource StatusColumnTitle}">Load</TextBlock>
-                    <TextBlock Style="{StaticResource StatusColumnValue}" Foreground="#68b641" Margin="0,4,0,0" Text="{Binding Load, Converter={StaticResource LoadToText}}"/>
+                    <TextBlock Style="{StaticResource StatusColumnValue}"
+                               Foreground="#68b641"
+                               Margin="0,4,0,0"
+                               Text="{Binding Load, Converter={StaticResource LoadToText}}"/>
                 </StackPanel>
-                <StackPanel Grid.Column="4">
+                <StackPanel MinWidth="30">
                     <TextBlock Style="{StaticResource StatusColumnTitle}">RPM</TextBlock>
-                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0" Text="{Binding FanSpeed}" /> 
+                    <TextBlock Style="{StaticResource StatusColumnValue}"
+                               Margin="0,4,0,0"
+                               Text="{Binding FanSpeed}" /> 
                 </StackPanel>
-                <StackPanel Grid.Column="5">
+                <StackPanel HorizontalAlignment="Right">
                     <TextBlock Style="{StaticResource StatusColumnTitle}">Profitability / 24h</TextBlock>
-                    <TextBlock Style="{StaticResource StatusColumnValue}" Margin="0,4,0,0" Text="{Binding DeviceMiningStatsProfitability}" />
+                    <TextBlock Style="{StaticResource StatusColumnValue}"
+                               Margin="0,4,0,0"
+                               Text="{Binding DeviceMiningStatsProfitability}" />
                 </StackPanel>
-            </Grid>
-            <StackPanel Grid.Column="2" Margin="16,0,0,0" Orientation="Horizontal" HorizontalAlignment="Right">
-                <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{ Binding Enabled, Mode=TwoWay }"/>
+            </WrapPanel>
+
+            <WrapPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
+                <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{ Binding Enabled, Mode=TwoWay }" Margin="16,0,0,0"/>
 
                 <!--Play Button-->
                 <Button IsEnabled="{ Binding CanStart, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,0,0" Click="StartStopButton">
@@ -98,7 +108,7 @@
                     <TextBlock Text="&#xF04B;"/>
                 </Button>
                 <!--Stop Button-->
-                <Button IsEnabled="{ Binding CanStop, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,16,0" Click="StartStopButton">
+                <Button IsEnabled="{ Binding CanStop, UpdateSourceTrigger=PropertyChanged }" HorizontalAlignment="Right" Margin="16,0,0,0" Click="StartStopButton">
                     <Button.Resources>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
@@ -107,7 +117,7 @@
                     </Button.Resources>
                     <TextBlock Text="&#xF04D;"/>
                 </Button>
-            </StackPanel>
+            </WrapPanel>
         </Grid>
     </Grid>
 </UserControl>
