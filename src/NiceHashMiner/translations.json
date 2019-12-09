@@ -488,7 +488,7 @@
       "zh_cn": "测试所有启用算法"
     },
 	"Benchmark result is null": {
-      "ru": "Результат бенчмарка равен нулю"
+      "ru": "Нулевой результат бенчмарка"
     },
     "Benchmark Selected Unbenchmarked Algorithms": {
       "bg": "Тестване на избраните алгоритми, които не са измервани досега",
@@ -569,6 +569,9 @@
       "ro": "Pas Benchmark ( {0} / {1} )",
       "ru": "Шаг бенчмарка ( {0} / {1} )",
       "zh_cn": "测试进度 ( {0} / {1} )"
+    },
+	"Benchmarking": {
+      "ru": "Бенчмарк"
     },
     "Benchmarking (2-4 minutes)...": {
       "bg": "Тест за скорост (2-4 минути)...",
@@ -1449,11 +1452,11 @@
       "pl": "Kiedy włączone, {0} użyje klucza API który wprowadzisz, aby powiadomić Cię o spadku zyskowności poniżej określonego poziomu.\nObejrzyj dodatkowe instrukcje jak to skonfigurować.",
       "pt": "Se habilitado, o {0} usará a chave de API que você fornecerá para notificá-lo quando a lucratividade estiver abaixo da lucratividade que você configurou. \nConsulte as instruções para obter detalhes sobre como configurar essa funcionalidade.",
       "ro": "Când activați, {0} o să utilizeze cheia API furnizată pentru a vă notifica atunci când profitabilitatea a scăzut sub profitabilitatea configurată.\nVedeți instrucțiunile pentru detalii cu privire la configurarea acestei funcționalități.",
-      "ru": "Если включено, {0} будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
+      "ru": "Если включено, {0} будет использовать API-ключ, который вы предоставите,\nчтобы уведомить вас, когда прибыльность снизится ниже указанной вами прибыльности.\nСмотрите инструкции по настройке этой функции.",
       "zh_cn": "IF This Than That，简称IFTTT。 开启此选项后，NiceHash{0}会在收益跌至设定阈值以下时通过您的API密钥来发送提醒。\n预知配置此功能的详细信息，请参见帮助文档。"
     },
     "If 'MineRegardlessOfProfit' is unchecked, {0} will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {
-      "ru": "Если 'Майнить несмотря на прибыль' выключено, {0} остановит майнинг, когда ожидаемая прибыль\nупадёт ниже указанного значения (в выбранной валюте). Допускаются отрицательные значения."
+      "ru": "Если 'Майнить несмотря на прибыль' выключено, {0} остановит майнинг,\nкогда ожидаемая прибыль упадёт ниже указанного значения (в выбранной валюте).\nДопускаются отрицательные значения."
     },
     "India - Chennai": {
       "ru": "Индия - Ченнаи",
@@ -3074,7 +3077,7 @@
       "it": "Quando spuntato, {0} mostrerà un avviso se\nun driver non ottimale è installato.",
       "pl": "Po zaznaczeniu {0} pokaże ostrzeżenie\njeśli wykryje nieoptymalny sterownik.",
       "ro": "Când bifați, {0} o sa genereze o avertizare dacă\no versiune mai puțin optimă de driver este instalată.",
-      "ru": "Если отмечено, {0} будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера.",
+      "ru": "Если отмечено, {0} будет показывать предупреждение,\nкогда установлена не самая оптимальная версия драйвера.",
       "zh_cn": "若选择此复选框，{0} Legacy将会在\n检测到非最优驱动版本时显示警告。"
     },
     "When checked, {0} would issue a warning if\nthe internet connection is not available.": {
