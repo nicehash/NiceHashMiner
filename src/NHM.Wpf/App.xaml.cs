@@ -149,12 +149,21 @@ namespace NHM.Wpf
 
             Translations.SelectedLanguage = TranslationsSettings.Instance.Language;
 
-            var login = new LoginWindow { };
-            var nek = login.ShowDialog();
-
             // Check sys requirements
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();
-            if (!canRun) Shutdown();
+            if (!canRun)
+            {
+                Shutdown();
+                return;
+            }
+
+            // TODO implement login API 
+            // show login if no BTC
+            if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
+            {
+                var login = new LoginWindow { };
+                var nek = login.ShowDialog();
+            }
 
             //var main = new MainWindow() {};
             //main.Show();
