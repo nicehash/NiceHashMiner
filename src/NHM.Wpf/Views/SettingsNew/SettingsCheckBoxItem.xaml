@@ -8,16 +8,17 @@
              d:DesignHeight="30" d:DesignWidth="400">
     <!--TODO style the description-->
     <!--TODO ToggleButton On UserControl -->
-    <StackPanel Orientation="Horizontal"
+    <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="ToggleButtonHidden" Click="ToggleClickHandler" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" >
+        <StackPanel Orientation="Horizontal"
                 ToolTip="{Binding Description}"
                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsCheckBoxItem}}}">
-        <CheckBox Style="{StaticResource NHMSwitch}"
+            <CheckBox Style="{StaticResource NHMSwitch}"
                   x:Name="checkBox"
                   Click="ToggleClickHandler"
                   IsChecked="{Binding Enabled}" />
-        <Label Style="{StaticResource FontsTypography.SmallRegular/Active}"
+            <Label Style="{StaticResource FontsTypography.SmallRegular/Active}"
                Content="{Binding Label}"/>
-        <TextBlock HorizontalAlignment="Right"
+            <TextBlock HorizontalAlignment="Right"
                    FontFamily="{StaticResource FontAwesome}"
                    FontSize="12"
                    Foreground="#cecdcd"
@@ -26,5 +27,6 @@
                    FontWeight="Normal"
                    Margin="0,5,12,0"
                    Text="&#xF05A;" />
-    </StackPanel>
+        </StackPanel>
+    </ToggleButton>
 </UserControl>

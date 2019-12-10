@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -59,6 +60,12 @@ namespace NHM.Wpf.Views.SettingsNew
 
         private void ToggleClickHandler(object sender, RoutedEventArgs e)
         {
+            var tb = e.Source as ToggleButton;
+            if (ToggleButtonHidden == tb)
+            {
+                Enabled = !Enabled;
+            }
+
             ToggleClick?.Invoke(sender, e);
         }
     }

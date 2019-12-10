@@ -23,31 +23,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style TargetType="{x:Type ToggleButton}" x:Key="HiddenToggleButton">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border
-                            x:Name="Chrome"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Margin="0"
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Content="{TemplateBinding Content}"
-                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                Margin="{TemplateBinding Padding}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" Value="Transparent"/>
-        </Style>
+        
         
         
         <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
@@ -178,7 +154,7 @@
                     <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
                 </Border.Effect>
             </Border>
-            <ToggleButton Style="{DynamicResource HiddenToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click" HorizontalContentAlignment="Stretch" >
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click" HorizontalContentAlignment="Stretch" >
                 <Grid Background="Transparent" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
