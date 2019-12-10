@@ -14,8 +14,6 @@ namespace NHM.Wpf.Views
         public EulaWindowSecondShort()
         {
             InitializeComponent();
-
-            WindowUtils.InitWindow(this);
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
@@ -29,16 +27,6 @@ namespace NHM.Wpf.Views
         {
             DialogResult = false;
             Close();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowUtils.SetForceSoftwareRendering(this);
-        }
-
-        private void EulaWindow_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            WindowUtils.Window_OnClosing(this);
         }
     }
 }

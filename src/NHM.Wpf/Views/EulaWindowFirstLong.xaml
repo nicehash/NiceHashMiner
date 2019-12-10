@@ -11,9 +11,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        Topmost="True"
-        Closing="EulaWindow_OnClosing"
-        Loaded="Window_Loaded">
+        Topmost="True" >
 
     <Grid Width="Auto" Height="Auto" Background="Transparent" Margin="0,1,0,0">
         <Grid.RowDefinitions>

@@ -16,23 +16,17 @@ namespace NHM.Wpf.Views
         {
             InitializeComponent();
             _vm = this.AssertViewModel<ChooseLanguageVM>();
-            WindowUtils.InitWindow(this);
+            Closed += ChooseLanguageWindow_Closed;
+        }
+
+        private void ChooseLanguageWindow_Closed(object sender, System.EventArgs e)
+        {
+            _vm?.Dispose();
         }
 
         private void OkButton_OnClick(object sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowUtils.SetForceSoftwareRendering(this);
-        }
-
-        private void Window_OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            _vm?.Dispose();
-            WindowUtils.Window_OnClosing(this);
         }
     }
 }

@@ -2,6 +2,7 @@
 using NHM.Wpf.Views.Common.NHBase.Utils;
 using NHMCore.Configs;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,6 +66,20 @@ namespace NHM.Wpf.Views.Common.NHBase
             SystemEvents.DisplaySettingsChanged += new EventHandler(this.SystemEvents_DisplaySettingsChanged);
             this.AddHandler(Window.MouseLeftButtonUpEvent, new MouseButtonEventHandler(this.OnMouseButtonUp), true);
             this.AddHandler(Window.MouseMoveEvent, new System.Windows.Input.MouseEventHandler(this.OnMouseMove));
+            // extra loaded/closing stuff
+            base.Loaded += new RoutedEventHandler(this.OnLoadedSetRender);
+            base.Closing += new CancelEventHandler(this.OnWindowClosing);
+        }
+
+        private void OnLoadedSetRender(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.InitWindow(this);
+            WindowUtils.SetForceSoftwareRendering(this);
+        }
+
+        private void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            WindowUtils.Window_OnClosing(this);
         }
 
         public T GetRequiredTemplateChild<T>(string childName) where T : DependencyObject

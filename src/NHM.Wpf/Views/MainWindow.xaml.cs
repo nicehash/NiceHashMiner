@@ -33,7 +33,6 @@ namespace NHM.Wpf.Views
             _vm = this.AssertViewModel<MainVM>();
 
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
-            WindowUtils.InitWindow(this);
         }
 
         private async void BenchButton_Click(object sender, RoutedEventArgs e)

@@ -26,8 +26,6 @@ namespace NHM.Wpf.Views
 
             _vm.Devices = devices;
             _vm.OnBenchEnd += OnBenchEnd;
-
-            WindowUtils.InitWindow(this);
         }
 
         private void OnBenchEnd(object sender, BenchEndEventArgs e)
@@ -80,11 +78,6 @@ namespace NHM.Wpf.Views
         {
             // Don't open during bench
             if (_vm.InBenchmark) e.Handled = true;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowUtils.SetForceSoftwareRendering(this);
         }
     }
 }

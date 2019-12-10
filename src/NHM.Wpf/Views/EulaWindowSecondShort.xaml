@@ -16,9 +16,7 @@
         Icon="../Resources/logo.ico" 
         Topmost="True"
         MinWidth="500"
-        MinHeight="300"
-        Closing="EulaWindow_OnClosing"
-        Loaded="Window_Loaded">
+        MinHeight="300" >
     <Grid Width="Auto" Height="Auto">
         <Grid.RowDefinitions>
             <RowDefinition Height="1" />

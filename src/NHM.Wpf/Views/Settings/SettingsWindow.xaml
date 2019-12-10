@@ -9,8 +9,7 @@
         Title="{Binding Title}" 
         Icon="../../Resources/logo.ico" 
         Height="450" Width="800"
-        Closing="SettingsWindow_OnClosing"
-        Loaded="Window_Loaded">
+        Closing="SettingsWindow_OnClosing" >
     <Window.DataContext>
         <vm:SettingsVM />
     </Window.DataContext>

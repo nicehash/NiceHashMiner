@@ -25,9 +25,6 @@ namespace NHM.Wpf.Views
             _vm = this.AssertViewModel<MainVM>();
 
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
-
-            WindowUtils.InitWindow(this);
-
             LoadingBar.Visibility = Visibility.Visible;
         }
 
@@ -49,7 +46,6 @@ namespace NHM.Wpf.Views
         // just in case we add more awaits this signature will await all of them
         private async Task MainWindow_OnLoadedTask()
         {
-            WindowUtils.SetForceSoftwareRendering(this);
             try
             {
                 await _vm.InitializeNhm(LoadingBar.StartupLoader);

@@ -15,9 +15,7 @@
         AllowsTransparency="True"
         Background="Transparent"
         Icon="../Resources/logo.ico"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Loaded="Window_Loaded"
-        Closing="Window_OnClosing">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}" >
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="1" />

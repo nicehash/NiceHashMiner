@@ -32,22 +32,11 @@ namespace NHM.Wpf.Views
             }
             EulaRtb.SelectAll();
             EulaRtb.Selection.ApplyPropertyValue(FontFamilyProperty, FindResource("UbuntuFontFamily") as FontFamily);
-            WindowUtils.InitWindow(this);
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            WindowUtils.SetForceSoftwareRendering(this);
         }
 
         private void EulaRtb_OnLinkClicked(object sender, LinkClickedEventArgs e)
         {
             Process.Start(e.LinkText);
-        }
-
-        private void EulaWindow_OnClosing(object sender, CancelEventArgs e)
-        {
-            WindowUtils.Window_OnClosing(this);
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
