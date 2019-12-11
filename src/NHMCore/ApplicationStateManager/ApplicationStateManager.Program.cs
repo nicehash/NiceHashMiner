@@ -1,6 +1,6 @@
 using NHM.Common;
 using NHM.Common.Enums;
-using NHMCore.Stats;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System.Diagnostics;
 using System.Threading;

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace NHMCore.Stats.Models
+namespace NHMCore.Nhmws.Models
 {
     internal class ExecutedCall
     {

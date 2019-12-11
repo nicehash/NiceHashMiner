@@ -7,7 +7,7 @@ using NHM.UUID;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
-using NHMCore.Stats;
+using NHMCore.Nhmws;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;

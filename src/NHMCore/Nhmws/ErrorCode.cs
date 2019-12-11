@@ -1,5 +1,5 @@
 ﻿
-namespace NHMCore.Stats
+namespace NHMCore.Nhmws
 {
     enum ErrorCode : int
     {

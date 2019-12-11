@@ -1,7 +1,7 @@
 ﻿using NHM.Common.Enums;
 using System;
 
-namespace NHMCore.Stats
+namespace NHMCore.Nhmws
 {
     internal static class StatusCodes
     {

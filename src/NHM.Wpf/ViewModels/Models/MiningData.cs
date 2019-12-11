@@ -3,7 +3,7 @@ using NHM.Common.Enums;
 using NHMCore.ApplicationState;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
-using NHMCore.Stats;
+using NHMCore.Nhmws;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;

@@ -10,7 +10,7 @@ using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
 using NHMCore.Mining.Plugins;
-using NHMCore.Stats;
+using NHMCore.Nhmws;
 using NHMCore.Switching;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

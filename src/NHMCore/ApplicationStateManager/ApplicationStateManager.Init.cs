@@ -5,7 +5,7 @@ using NHM.DeviceMonitoring;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
-using NHMCore.Stats;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
@@ -152,7 +152,7 @@ namespace NHMCore
                 // Init ws connection
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
                 NHWebSocket.SetCredentials(btc, worker, group);
-                _ = Task.Run(() => NHWebSocket.Start(Nhmws.NhmSocketAddress, ExitApplication.Token));
+                _ = Task.Run(() => NHWebSocket.Start(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token));
                 
 
                 // STEP

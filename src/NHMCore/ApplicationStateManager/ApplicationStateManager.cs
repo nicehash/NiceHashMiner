@@ -3,7 +3,7 @@ using NHM.UUID;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
-using NHMCore.Stats;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Linq;

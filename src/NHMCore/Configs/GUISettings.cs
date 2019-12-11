@@ -1,7 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
-using NHMCore.Stats;
+using NHMCore.Nhmws;
 using System.Drawing;
 
 namespace NHMCore.Configs

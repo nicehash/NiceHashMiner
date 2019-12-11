@@ -4,7 +4,7 @@ using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
 using NHMCore.Mining;
-using NHMCore.Stats.Models;
+using NHMCore.Nhmws.Models;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
@@ -17,10 +17,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WebSocketSharp;
 // static imports
-using static NHMCore.Stats.StatusCodes;
+using static NHMCore.Nhmws.StatusCodes;
 using NHLog = NHM.Common.Logger;
 
-namespace NHMCore.Stats
+namespace NHMCore.Nhmws
 {
     static class NHWebSocket
     {
