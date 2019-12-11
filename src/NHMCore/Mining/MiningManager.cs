@@ -5,7 +5,6 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Grouping;
 using NHMCore.Mining.Plugins;
-using NHMCore.Stats;
 using NHMCore.Switching;
 using System;
 using System.Collections.Generic;

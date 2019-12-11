@@ -710,12 +710,11 @@ namespace NHMCore.Stats
             {
                 throw new RpcException("All devices are disabled cannot start", ErrorCode.DisabledDevice);
             }
-            var (success, msg) = ApplicationStateManager.StartAllAvailableDevices();
+            var (success, msg) = await ApplicationStateManager.StartAllAvailableDevicesTask();
             if (!success)
             {
                 throw new RpcException(msg, ErrorCode.RedundantRpc);
             }
-            await ApplicationStateManager.StartMiningTaskWait();
             return true;
         }
 
@@ -732,13 +731,12 @@ namespace NHMCore.Stats
             {
                 throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCode.DisabledDevice);
             }
-            var (success, msg) = ApplicationStateManager.StartDevice(deviceWithUUID);
+            var (success, msg) = await ApplicationStateManager.StartDeviceTask(deviceWithUUID);
             if (!success)
             {
                 // TODO this can also be an error
                 throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCode.RedundantRpc);
             }
-            await ApplicationStateManager.StartMiningTaskWait();
             return true;
         }
 
@@ -764,7 +762,7 @@ namespace NHMCore.Stats
             {
                 throw new RpcException("All devices are disabled cannot stop", ErrorCode.DisabledDevice);
             }
-            var (success, msg) = await ApplicationStateManager.StopAllDevice();
+            var (success, msg) = await ApplicationStateManager.StopAllDevicesTask();
             if (!success)
             {
                 throw new RpcException(msg, ErrorCode.RedundantRpc);
@@ -785,7 +783,7 @@ namespace NHMCore.Stats
             {
                 throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCode.DisabledDevice);
             }
-            var (success, msg) = await ApplicationStateManager.StopDevice(deviceWithUUID);
+            var (success, msg) = await ApplicationStateManager.StopDeviceTask(deviceWithUUID);
             if (!success)
             {
                 // TODO this can also be an error

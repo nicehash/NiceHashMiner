@@ -12,7 +12,7 @@ namespace NHMCore
         {
             if (!enabled)
             {
-                await StopDevice(dev, false);
+                await StopDeviceTask(dev, false);
             }
             dev.Enabled = enabled;
             Configs.ConfigManager.CommitBenchmarksForDevice(dev);

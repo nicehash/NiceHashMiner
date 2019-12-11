@@ -53,12 +53,12 @@ namespace NHMCore.Mining.IdleChecking
                 if (ApplicationStateManager.IsInMainForm)
                 {
                     Logger.Info("IDLECHECK", "Entering idling state");
-                    ApplicationStateManager.StartAllAvailableDevices();
+                    await ApplicationStateManager.StartAllAvailableDevicesTask();
                 }
             }
             else if (MiningState.Instance.IsCurrentlyMining)
             {
-                await ApplicationStateManager.StopAllDevice();
+                await ApplicationStateManager.StopAllDevicesTask();
                 Logger.Info("IDLECHECK", "Resumed from idling");
             }
         }

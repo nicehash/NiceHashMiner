@@ -24,7 +24,7 @@ namespace NHMCore.Utils
                 if (!success || ApplicationStateManager.ExitApplication.Token.IsCancellationRequested) return;
 
                 // stop devices
-                await ApplicationStateManager.StopAllDevice();
+                await ApplicationStateManager.StopAllDevicesTask();
 
                 using (var updater = new Process())
                 {

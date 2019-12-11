@@ -52,7 +52,7 @@ namespace NHMCore
             }
             catch { }
             // stop all mining and benchmarking devices
-            await StopAllDevice();
+            await StopAllDevicesTask();
             MessageBoxManager.Unregister();
         }
 

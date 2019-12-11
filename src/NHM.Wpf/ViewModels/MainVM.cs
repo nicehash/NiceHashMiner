@@ -377,14 +377,13 @@ namespace NHM.Wpf.ViewModels
             // TODO there is a mess of blocking and not-awaited async code down the line, 
             // Just wrapping with Task.Run here for now
 
-            ApplicationStateManager.StartAllAvailableDevices();
-            await ApplicationStateManager.StartMiningTaskWait();
+            await ApplicationStateManager.StartAllAvailableDevicesTask();
         }
 
         public async Task StopMining()
         {
             // TODO same as StartMining comment
-            await ApplicationStateManager.StopAllDevice();
+            await ApplicationStateManager.StopAllDevicesTask();
         }
     }
 }
