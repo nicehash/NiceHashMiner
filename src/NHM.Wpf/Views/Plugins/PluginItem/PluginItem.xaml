@@ -82,6 +82,51 @@
         <Style x:Key="ButtonStyleWOW" BasedOn="{StaticResource BigButtonPrimary}" TargetType="{x:Type Button}">
             <Setter Property="FontSize" Value="12"/>
         </Style>
+
+        <Style TargetType="{x:Type ButtonBase}" x:Key="PluginContextMenuButton" >
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            CornerRadius="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily }"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+            
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!--<Setter Property="Opacity" Value="0.5"/>-->
+                    <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                    <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
     </UserControl.Resources>
     <Grid Background="Transparent" Width="Auto" Height="Auto" >
 
@@ -170,42 +215,28 @@
                                   Click="Button_Click">
                             <ToggleButton.ContextMenu>
                                 <ContextMenu x:Name="PluginActionsButtonContext">
-                                    <ContextMenu.Resources>
-                                        <Style TargetType="{x:Type ContextMenu}">
-                                            <Setter Property="SnapsToDevicePixels" Value="True" />
-                                            <Setter Property="OverridesDefaultStyle" Value="True" />
-                                            <Setter Property="Grid.IsSharedSizeScope" Value="true" />
-                                            <Setter Property="HasDropShadow" Value="True" />
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="{x:Type ContextMenu}">
-                                                        <Border x:Name="Border" Background="{StaticResource PrimaryColorBrush}" BorderThickness="0" CornerRadius="4">
-                                                            <Border.BorderBrush>
-                                                                <SolidColorBrush Color="Green" />
-                                                            </Border.BorderBrush>
-                                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
-                                                        </Border>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="HasDropShadow" Value="true">
-                                                                <Setter TargetName="Border" Property="Padding" Value="0,3,0,3" />
-                                                                <Setter TargetName="Border" Property="CornerRadius" Value="4" />
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </ContextMenu.Resources>
-                                    <MenuItem
-                                    Padding="16,7,16,7"
-                                    Header="Uninstall"
-                                    FontFamily="{StaticResource UbuntuFontFamily}"
-                                    FontSize="14"
-                                    Foreground="{StaticResource Brushes.FontColor.White}"
-                                    FontWeight="Normal"
-                                    FontStretch="Normal"
-                                    FontStyle="Normal"
-                                    Click="Button_Click_Uninstall" />
+                                    <ContextMenu.Template>
+                                        <ControlTemplate>
+                                            <Grid >
+                                                <Border Background="{StaticResource Brushes.FontColor.White}" BorderBrush="{StaticResource Gray2ColorBrush}" BorderThickness="1" CornerRadius="4" >
+                                                    <Border.Effect>
+                                                        <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
+                                                    </Border.Effect>
+                                                </Border>
+                                                <StackPanel>
+                                                    <Button Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}" Content="Uninstall" Click="Button_Click_Uninstall" />
+                                                    <Button Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}" Content="Show Internals" Click="Button_Click_ShowInternals" />
+                                                    <!--TODO hook logic here-->
+                                                    <ToggleButton Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="Autoupdate Plugin " />
+                                                            <CheckBox Style="{StaticResource NHMSwitch}" Margin="4,0,0,0"/>
+                                                        </StackPanel>
+                                                    </ToggleButton>
+                                                </StackPanel>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </ContextMenu.Template>
                                 </ContextMenu>
                             </ToggleButton.ContextMenu>
                         </ToggleButton>

@@ -275,7 +275,7 @@ namespace NHMCore.Mining.Plugins
                     Logger.Info("MinerPluginsManager", $"Downloading missing files for {plugin.PluginUUID}-{plugin.Name}");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
                     var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
-                    await DownloadInternalBins(plugin.PluginUUID, urls.ToList(), downloadProgress, unzipProgress, stop);
+                    await DownloadInternalBins(plugin, urls.ToList(), downloadProgress, unzipProgress, stop);
                 }
             }
         }
@@ -297,7 +297,7 @@ namespace NHMCore.Mining.Plugins
                     Logger.Info("MinerPluginsManager", $"Version mismatch for {plugin.PluginUUID}-{plugin.Name}. Downloading...");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
                     var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
-                    await DownloadInternalBins(plugin.PluginUUID, urls.ToList(), downloadProgress, unzipProgress, stop);
+                    await DownloadInternalBins(plugin, urls.ToList(), downloadProgress, unzipProgress, stop);
                 }
             }
         }
@@ -486,9 +486,11 @@ namespace NHMCore.Mining.Plugins
 
 #region DownloadingInstalling
 
-        public static async Task DownloadInternalBins(string pluginUUID, List<string> urls, IProgress<int> downloadProgress, IProgress<int> unzipProgress, CancellationToken stop)
+        public static async Task DownloadInternalBins(PluginContainer pluginContainer, List<string> urls, IProgress<int> downloadProgress, IProgress<int> unzipProgress, CancellationToken stop)
         {
-            var installingPluginBinsPath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins");
+            var pluginUUID = pluginContainer.PluginUUID;
+            var ver = pluginContainer.Version;
+            var installingPluginBinsPath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins", $"{ver.Major}.{ver.Minor}");
             try
             {
                 if (Directory.Exists(installingPluginBinsPath)) Directory.Delete(installingPluginBinsPath, true);
@@ -582,17 +584,20 @@ namespace NHMCore.Mining.Plugins
             var zipProgressMinerChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.ExtractingMiner, perc)));
 
             var finalState = PluginInstallProgressState.Pending;
-            const string installingPrefix = "installing_";
-            var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");
+            var versionStr = $"{plugin.OnlineInfo.PluginVersion.Major}.{plugin.OnlineInfo.PluginVersion.Minor}";
+            var pluginRootPath = Path.Combine(Paths.MinerPluginsPath(), plugin.PluginUUID);
+            var installDllPath = Path.Combine(pluginRootPath, "dlls", versionStr);
+            var installBinsPath = Path.Combine(pluginRootPath, "bins", versionStr);
             try
             {
-                if (Directory.Exists(installingPluginPath)) Directory.Delete(installingPluginPath, true);
-                //downloadAndInstallUpdate("Starting");
-                Directory.CreateDirectory(installingPluginPath);
+                if (Directory.Exists(installDllPath)) Directory.Delete(installDllPath, true);
+                Directory.CreateDirectory(installDllPath);
+                if (Directory.Exists(installBinsPath)) Directory.Delete(installBinsPath, true);
+                Directory.CreateDirectory(installBinsPath);
 
                 // download plugin dll
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingDownloadingPlugin, 0));
-                var downloadPluginResult = await MinersDownloadManager.DownloadFileAsync(plugin.PluginPackageURL, installingPluginPath, "plugin", downloadPluginProgressChangedEventHandler, stop);
+                var downloadPluginResult = await MinersDownloadManager.DownloadFileAsync(plugin.PluginPackageURL, installDllPath, "plugin", downloadPluginProgressChangedEventHandler, stop);
                 var pluginPackageDownloaded = downloadPluginResult.downloadedFilePath;
                 var downloadPluginOK = downloadPluginResult.success;
                 if (!downloadPluginOK || stop.IsCancellationRequested)
@@ -602,7 +607,7 @@ namespace NHMCore.Mining.Plugins
                 }
                 // unzip 
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingExtractingPlugin, 0));
-                var unzipPluginOK = await ArchiveHelpers.ExtractFileAsync(pluginPackageDownloaded, installingPluginPath, zipProgressPluginChangedEventHandler, stop);
+                var unzipPluginOK = await ArchiveHelpers.ExtractFileAsync(pluginPackageDownloaded, installDllPath, zipProgressPluginChangedEventHandler, stop);
                 if (!unzipPluginOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedExtractingPlugin;
@@ -612,7 +617,7 @@ namespace NHMCore.Mining.Plugins
 
                 // download plugin binary
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingDownloadingMiner, 0));
-                var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(plugin.MinerPackageURL, installingPluginPath, "miner_bins", downloadMinerProgressChangedEventHandler, stop);
+                var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(plugin.MinerPackageURL, installBinsPath, "miner_bins", downloadMinerProgressChangedEventHandler, stop);
                 var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
                 var downloadMinerBinsOK = downloadMinerBinsResult.success;
                 if (!downloadMinerBinsOK || stop.IsCancellationRequested)
@@ -622,8 +627,7 @@ namespace NHMCore.Mining.Plugins
                 }
                 // unzip 
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingExtractingMiner, 0));
-                var binsUnzipPath = Path.Combine(installingPluginPath, "bins");
-                var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, binsUnzipPath, zipProgressMinerChangedEventHandler, stop);
+                var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, installBinsPath, zipProgressMinerChangedEventHandler, stop);
                 if (!unzipMinerBinsOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedExtractingMiner;
@@ -632,25 +636,17 @@ namespace NHMCore.Mining.Plugins
                 File.Delete(binsPackageDownloaded);
 
                 // TODO from here on add the failed plugin load state and success state
-                var loadedPlugins = MinerPluginHost.LoadPlugin(installingPluginPath);
+                var loadedPlugins = MinerPluginHost.LoadPlugin(installDllPath);
                 if (loadedPlugins.Count() == 0)
                 {
                     //downloadAndInstallUpdate($"Loaded ZERO PLUGINS");
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedPluginLoad;
-                    Directory.Delete(installingPluginPath, true);
+                    Directory.Delete(installDllPath, true);
                     return;
                 }
 
                 //downloadAndInstallUpdate("Checking old plugin");
-                var pluginPath = Path.Combine(Paths.MinerPluginsPath(), plugin.PluginUUID);
-                // if there is an old plugin installed remove it
-                if (Directory.Exists(pluginPath))
-                {
-                    // TODO consider saving the internal settings when updating the miner plugin
-                    Directory.Delete(pluginPath, true);
-                }
                 //downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
-                Directory.Move(installingPluginPath, pluginPath);
                 // add or update plugins
                 foreach (var pluginUUID in loadedPlugins)
                 {
@@ -666,6 +662,17 @@ namespace NHMCore.Mining.Plugins
                     // TODO after add or remove plugins we should clean up the device settings
                     if (success)
                     {
+                        var oldInstalledDlls = Directory.GetFiles(pluginRootPath, "*.dll");
+                        foreach (var oldDll in oldInstalledDlls)
+                        {
+                            File.Delete(oldDll);
+                        }
+                        var newDllPath = Directory.GetFiles(installDllPath).FirstOrDefault();
+                        var name = Path.GetFileNameWithoutExtension(newDllPath);
+                        var newVerStr = $"{newPlugin.Version.Major}.{newPlugin.Version.Minor}";
+                        var installedDllPath = Path.Combine(pluginRootPath, $"{name}-{newVerStr}.dll");
+                        File.Copy(newDllPath, installedDllPath);
+
                         newPlugin.AddAlgorithmsToDevices();
                         await newPlugin.DevicesCrossReference(AvailableDevices.Devices.Select(d => d.BaseDevice));
                     }

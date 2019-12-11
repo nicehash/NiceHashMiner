@@ -202,8 +202,9 @@ namespace MinerPluginsPacker
             foreach (var kvp in bundlePluginsDlls)
             {
                 var preinstalledDllPlugin = Path.Combine(exePath, "miner_plugins", kvp.Key);
-                var fileName = Path.GetFileName(kvp.Value);
-                var dllPath = Path.Combine(preinstalledDllPlugin, fileName);
+                var fileName = Path.GetFileNameWithoutExtension(kvp.Value);
+                var version = MinerPluginHost.MinerPlugin[kvp.Key].Version;
+                var dllPath = Path.Combine(preinstalledDllPlugin, $"{fileName}-{version.Major}.{version.Minor}.dll");
                 if (!Directory.Exists(preinstalledDllPlugin))
                 {
                     Directory.CreateDirectory(preinstalledDllPlugin);

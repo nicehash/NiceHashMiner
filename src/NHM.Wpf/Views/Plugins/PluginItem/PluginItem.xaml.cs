@@ -90,7 +90,14 @@ namespace NHM.Wpf.Views.Plugins.PluginItem
 
         private void Button_Click_Uninstall(object sender, RoutedEventArgs e)
         {
+            PluginActionsButtonContext.IsOpen = false;
             _vm.UninstallPlugin();
+        }
+
+        private void Button_Click_ShowInternals(object sender, RoutedEventArgs e)
+        {
+            PluginActionsButtonContext.IsOpen = false;
+            _vm.ShowPluginInternals();
         }
 
         void IThemeSetter.SetTheme(string theme)

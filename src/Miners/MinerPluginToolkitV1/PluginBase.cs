@@ -84,6 +84,7 @@ namespace MinerPluginToolkitV1
         }
 
         // internal settings
+        // TODO expose miner options package for reading ONLY
         protected MinerOptionsPackage MinerOptionsPackage { get; set; } = new MinerOptionsPackage { };
         protected MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; } = new MinerSystemEnvironmentVariables{};
         protected MinerReservedPorts MinerReservedApiPorts { get; set; } = new MinerReservedPorts {};
@@ -128,7 +129,7 @@ namespace MinerPluginToolkitV1
             {
                 throw new Exception("Unable to return cwd and exe paths MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Path == null || MinersBinsUrlsSettings.Path.Count == 0");
             }
-            var paths = new List<string>{ Paths.MinerPluginsPath(), PluginUUID, "bins" };
+            var paths = new List<string>{ Paths.MinerPluginsPath(), PluginUUID, "bins", $"{Version.Major}.{Version.Minor}" };
             paths.AddRange(MinersBinsUrlsSettings.ExePath);
             var binCwd = Path.Combine(paths.GetRange(0, paths.Count - 1).ToArray());
             var binPath = Path.Combine(paths.ToArray());

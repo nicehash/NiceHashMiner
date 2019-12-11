@@ -100,6 +100,7 @@
 
         </WrapPanel>
 
+        <!--TODO add description text "Include this alrogithm in benchmark sessions when plugin gets updated. This will ensure the best possible hash rate."-->
         <ToggleButton Grid.Row="6" x:Name="ToggleButtonHidden" Click="ToggleClickReBenchHandler" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
             <ToggleButton.Template>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">

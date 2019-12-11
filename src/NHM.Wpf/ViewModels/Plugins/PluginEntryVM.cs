@@ -5,6 +5,7 @@ using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using static NHMCore.Translations;
@@ -204,6 +205,12 @@ namespace NHM.Wpf.ViewModels.Plugins
             MinerPluginsManager.RemovePlugin(Plugin.PluginUUID);
 
             CommonInstallOnPropertyChanged();
+        }
+
+        public void ShowPluginInternals()
+        {
+            var pluginPath = Paths.MinerPluginsPath(Plugin.PluginUUID);
+            Process.Start(pluginPath);
         }
 
         private void CommonInstallOnPropertyChanged()
