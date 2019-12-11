@@ -47,7 +47,7 @@ namespace NHMCore
                 var displayNewVer = string.Format(Translations.Tr("IMPORTANT! New version v{0} has\r\nbeen released. Click here to download it."), version);
                 // display new version
                 // notify all components
-                DisplayVersion?.Invoke(null, displayNewVer);
+                //DisplayVersion?.Invoke(null, displayNewVer); // TODO broken make VersionUpdatesState
             }
         }
 
@@ -233,8 +233,6 @@ namespace NHMCore
         public static void UpdateDevicesStatesAndStartDeviceRefreshTimer()
         {
             MiningState.Instance.CalculateDevicesStateChange();
-            RefreshDeviceListView?.Invoke(null, null);
-            StartRefreshDeviceListViewTimer();
         }
 
 

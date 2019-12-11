@@ -40,9 +40,6 @@ namespace NHMCore
             // await tasks
             await Task.WhenAll(tasks);
             await UpdateDevicesToMineTask();
-
-            // finally refresh state
-            RefreshDeviceListView?.Invoke(null, null);
         }
     }
 }

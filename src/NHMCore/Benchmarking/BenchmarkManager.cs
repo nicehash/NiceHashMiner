@@ -1,5 +1,4 @@
 using NHM.Common.Enums;
-using NHMCore.Interfaces;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using System;
@@ -20,8 +19,6 @@ namespace NHMCore.Benchmarking
 
         private static readonly Dictionary<ComputeDevice, AlgorithmContainer> _statusCheckAlgos;
 
-        private static IBenchmarkForm _benchForm;
-
         private static readonly List<Tuple<ComputeDevice, Queue<AlgorithmContainer>>> _benchDevAlgoQueue;
 
         public static event EventHandler<StepUpEventArgs> OnStepUp;
@@ -40,18 +37,6 @@ namespace NHMCore.Benchmarking
                     return _benchDevAlgoQueue;
                 }
             }
-        }
-
-        private static bool _startMiningOnFinish;
-
-        public static bool StartMiningOnFinish
-        {
-            get
-            {
-                // _benchForm for WinForms, field for WPF
-                return _benchForm?.StartMiningOnFinish ?? _startMiningOnFinish;
-            }
-            set => _startMiningOnFinish = value;
         }
 
         public static bool IsBenchmarking => BenchmarkingComputeDeviceHandler.IsBenchmarking;
@@ -182,11 +167,11 @@ namespace NHMCore.Benchmarking
 
 #region Start/Stop methods
 
-        public static void Start(BenchmarkPerformanceType perfType, IBenchmarkForm form)
-        {
-            _benchForm = form;
-            Start(perfType);
-        }
+        //public static void Start(BenchmarkPerformanceType perfType, IBenchmarkForm form)
+        //{
+        //    _benchForm = form;
+        //    Start(perfType);
+        //}
 
         public static void Start(BenchmarkPerformanceType perfType)
         {
@@ -263,7 +248,7 @@ namespace NHMCore.Benchmarking
         {
             InBenchmark = false;
             EthlargementIntegratedPlugin.Instance.Stop();
-            OnBenchmarkEnd?.Invoke(null, new BenchEndEventArgs(_hasFailedAlgorithms, StartMiningOnFinish));
+            //OnBenchmarkEnd?.Invoke(null, new BenchEndEventArgs(_hasFailedAlgorithms, StartMiningOnFinish));
         }
 
         public static void ClearQueue()

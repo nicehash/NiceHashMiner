@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
-    <Compile Include="ApplicationStateManager\ApplicationStateManager.DataVizualizers.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Devices.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Init.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Mining.cs" />
@@ -133,13 +132,6 @@
     <Compile Include="Configs\TranslationsSettings.cs" />
     <Compile Include="Configs\WarningSettings.cs" />
     <Compile Include="IFTTT.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IDevicesStateDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IGlobalMiningRateDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IMiningProfitabilityDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />
-    <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Mining\AlgorithmStatus.cs" />
     <Compile Include="Mining\AvailableDevices.cs" />
     <Compile Include="Mining\ComputeDevice.cs" />
@@ -190,7 +182,6 @@
     <Compile Include="Configs\ConfigManager.cs" />
     <Compile Include="Configs\Data\DeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
-    <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Mining\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Mining\Grouping\MiningDevice.cs" />

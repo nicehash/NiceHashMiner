@@ -1,5 +1,4 @@
 using NHMCore.Configs;
-using NHMCore.Interfaces;
 using NHMCore.Mining;
 using System;
 
@@ -31,19 +30,20 @@ namespace NHMCore
         }
         #endregion
 
+        // TODO put in mining profit state 
         public static void DisplayTotalRate(double totalMiningRate)
         {
-            DisplayGlobalMiningRate?.Invoke(null, totalMiningRate);
+            //DisplayGlobalMiningRate?.Invoke(null, totalMiningRate);
         }
-
+        // TODO put in mining profit state
         public static void DisplayMiningProfitable(bool isProfitable)
         {
-            _DisplayMiningProfitability?.Invoke(null, isProfitable);
+            //_DisplayMiningProfitability?.Invoke(null, isProfitable);
         }
-
+        // TODO put in app state
         public static void DisplayNoInternetConnection(bool noInternet)
         {
-            _DisplayNoInternetConnection?.Invoke(null, noInternet);
+            //_DisplayNoInternetConnection?.Invoke(null, noInternet);
         }
     }
 }

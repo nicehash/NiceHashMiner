@@ -235,8 +235,6 @@ namespace NHMCore
                 StartMiningOnDevices(device);
             }
 
-            RefreshDeviceListView?.Invoke(null, null);
-
             return (started, failReason);
         }
 

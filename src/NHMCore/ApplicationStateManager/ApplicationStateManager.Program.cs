@@ -47,12 +47,10 @@ namespace NHMCore
         {
             try
             {
+                // should close websocket  
                 ExitApplication.Cancel();
             }
             catch { }
-            StopRefreshDeviceListViewTimer();
-            // close websocket
-            //NiceHashStats.EndConnection();
             // stop all mining and benchmarking devices
             await StopAllDevice();
             MessageBoxManager.Unregister();

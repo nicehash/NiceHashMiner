@@ -145,25 +145,6 @@ namespace NHMCore
         }
         #endregion PreventSystemSleepTimer
 
-        #region RefreshDeviceListView timer
-        private static AppTimer _refreshDeviceListViewTimer;
-
-        public static void StartRefreshDeviceListViewTimer()
-        {
-            if (_refreshDeviceListViewTimer?.IsActive ?? false) return;
-            _refreshDeviceListViewTimer = new AppTimer((object sender, ElapsedEventArgs e) => {
-                RefreshDeviceListView?.Invoke(sender, EventArgs.Empty);
-            },
-            2000);
-            _refreshDeviceListViewTimer.Start();
-        }
-        
-        private static void StopRefreshDeviceListViewTimer()
-        {
-            _refreshDeviceListViewTimer?.Stop();
-        }
-        #endregion RefreshDeviceListView timer
-
         #region InternetCheck timer
         private static AppTimer _internetCheckTimer;
 
