@@ -189,8 +189,18 @@
                           Margin="0,0,16,0" />
                 <!--TODO add context menu and all that-->
                 <Button Style="{DynamicResource SettingsButton}"
-                        IsEnabled="False"
+                        IsEnabled="True"
+                        DataContext="{Binding .}"
                         Click="AlgorithmSettings_Button_Click" >
+                    <Button.ContextMenu>
+                        <ContextMenu x:Name="AlgorithmSettingsContextMenu">
+                            <ContextMenu.Template>
+                                <ControlTemplate>
+                                    <local:AlgorithmSettings MaxWidth="392" MaxHeight="789" DataContext="{Binding .}" CloseClick="CloseAlgorithmSettings_Button_Click"  />
+                                </ControlTemplate>
+                            </ContextMenu.Template>
+                        </ContextMenu>
+                    </Button.ContextMenu>
                 </Button>
             </StackPanel>
         </UniformGrid>

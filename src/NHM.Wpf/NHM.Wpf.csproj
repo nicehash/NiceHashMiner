@@ -93,6 +93,7 @@
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\BenchAlgo.cs" />
+    <Compile Include="ViewModels\Models\BenchmarkSettings.cs" />
     <Compile Include="ViewModels\Models\DeviceData.cs" />
     <Compile Include="ViewModels\Models\IMiningData.cs" />
     <Compile Include="ViewModels\Models\LoadProgress.cs" />
@@ -112,14 +113,15 @@
     <Compile Include="ViewModels\StartupLoadingVM.cs" />
     <Compile Include="Validators\BtcWorkerValidator.cs" />
     <Compile Include="Validators\ValidatorBase.cs" />
+    <Compile Include="Views\Benchmark\BenchmarkTypeToStringConverter.cs" />
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml.cs">
+      <DependentUpon>AlgorithmSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EulaWindowSecondShort.xaml.cs">
       <DependentUpon>EulaWindowSecondShort.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Benchmark\AlgorithmSettings.xaml.cs">
-      <DependentUpon>AlgorithmSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Benchmark\Benchmarks.xaml.cs">
       <DependentUpon>Benchmarks.xaml</DependentUpon>
@@ -359,15 +361,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\EulaWindowSecondShort.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BenchmarkWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\AlgorithmSettings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

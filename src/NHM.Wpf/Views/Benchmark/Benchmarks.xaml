@@ -9,12 +9,118 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=viewModels:MainVM}">
+    <UserControl.Resources>
+        <local:BenchmarkTypeToStringConverter x:Key="BenchmarkTypeToStringConverter" />
+        
+        <Style TargetType="{x:Type ButtonBase}" x:Key="PluginContextMenuButton" >
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            CornerRadius="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily }"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!--<Setter Property="Opacity" Value="0.5"/>-->
+                    <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                    <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Grid.Row="0" Margin="40,16,0,16">
+            <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{StaticResource TextColorBrush}" FontSize="14">Benchmark Type:</TextBlock>
+                <Button Margin="4,0,0,0" Click="BenchmarkTypeContextMenuButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <ContentPresenter />
+                        </ControlTemplate>
+                    </Button.Template>
+                    <Button.ContextMenu>
+                        <ContextMenu x:Name="BenchmarkTypeContextMenu">
+                            <ContextMenu.Template>
+                                <ControlTemplate>
+                                    <StackPanel>
+                                        <Grid >
+                                            <Border Background="{StaticResource Brushes.FontColor.White}" BorderBrush="{StaticResource Gray2ColorBrush}" BorderThickness="1" CornerRadius="4" >
+                                                <Border.Effect>
+                                                    <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
+                                                </Border.Effect>
+                                            </Border>
+                                            <StackPanel>
+                                                <Button Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}" Content="{Binding BenchmarkSettings.Standard, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetStandard"/>
+                                                <Separator/>
+                                                <Button Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}" Content="{Binding BenchmarkSettings.Quick, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetQuick"/>
+                                                <Separator/>
+                                                <Button Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}" Content="{Binding BenchmarkSettings.Precise, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetPrecise"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </ContextMenu.Template>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                    <TextBlock Foreground="{StaticResource PrimaryColorBrush}" FontSize="14" LineHeight="1.57" Text="{Binding BenchmarkSettings.SelectedBenchmarkType, Converter={StaticResource BenchmarkTypeToStringConverter}}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+                                <Style.Triggers>
+                                    <Trigger Property ="IsMouseOver" Value="True">
+                                        <Setter Property="TextDecorations">
+                                            <Setter.Value>
+                                                <TextDecorationCollection>
+                                                    <TextDecoration Location="Underline" PenOffset="2">
+                                                        <TextDecoration.Pen>
+                                                            <Pen Thickness="1" Brush="{StaticResource PrimaryColorBrush}"></Pen>
+                                                        </TextDecoration.Pen>
+                                                    </TextDecoration>
+                                                </TextDecorationCollection>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Button>
+            </WrapPanel>
+        </Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -23,7 +129,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Grid Grid.Row="1" Height="88" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
+        <Grid Grid.Row="2" Height="88" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>

@@ -43,6 +43,20 @@ namespace NHM.Wpf.ViewModels.Models
             }
         }
 
+        public bool AllAgorithmsEnabled
+        {
+            get => Dev.AlgorithmSettings.All(a => a.Enabled);
+            // TODO this could be async?
+            set
+            {
+                foreach (var algo in Dev.AlgorithmSettings)
+                {
+                    algo.Enabled = value;
+                }
+                OnPropertyChanged();
+            }
+        }
+
         public List<string> AlgoNames { get; private set; }
 
         // TODO Pending state and error states
@@ -148,6 +162,7 @@ namespace NHM.Wpf.ViewModels.Models
                 OnPropertyChanged(nameof(AlgoOptions));
                 OnPropertyChanged(nameof(AlgosEnabled));
                 OnPropertyChanged(nameof(AlgosBenchmarked));
+                OnPropertyChanged(nameof(AllAgorithmsEnabled));
             }
         }
 

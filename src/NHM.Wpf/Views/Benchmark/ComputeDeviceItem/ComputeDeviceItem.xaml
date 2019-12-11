@@ -202,6 +202,7 @@
                 <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="100">
                     <Button Style="{DynamicResource TextBoxButton2}" Content="SELECT / UNSELECT ALL" Click="SortEnabledButtonClick" />
                     <CheckBox Style="{StaticResource NHMSwitch}"
+                              IsChecked="{Binding AllAgorithmsEnabled, Mode=TwoWay}"
                               Margin="8,0,0,0" />
                 </WrapPanel>
             </UniformGrid>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHMCore.Mining;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,12 +30,34 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
 
         private void AlgorithmItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            //throw new NotImplementedException();
+            if (e.NewValue is AlgorithmContainer)
+            {
+                AlgorithmSettingsContextMenu.DataContext = e.NewValue;
+                return;
+            }
+            throw new Exception("unsupported datacontext type");
         }
 
+        private readonly HashSet<Button> _toggleButtonsGuard = new HashSet<Button>();
         private void AlgorithmSettings_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (sender is Button tButton && !_toggleButtonsGuard.Contains(tButton))
+            {
+                _toggleButtonsGuard.Add(tButton);
+                AlgorithmSettingsContextMenu.IsOpen = true;
+                RoutedEventHandler closedHandler = null;
+                closedHandler += (s, e2) => {
+                    _toggleButtonsGuard.Remove(tButton);
+                    //tButton.IsChecked = false;
+                    AlgorithmSettingsContextMenu.Closed -= closedHandler;
+                };
+                AlgorithmSettingsContextMenu.Closed += closedHandler;
+            }
+        }
 
+        private void CloseAlgorithmSettings_Button_Click(object sender, RoutedEventArgs e)
+        {
+            AlgorithmSettingsContextMenu.IsOpen = false;
         }
     }
 }
