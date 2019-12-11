@@ -122,11 +122,11 @@ namespace NHM.Wpf.ViewModels
         public string StartStopButtonLabel =>
             InBenchmark ? Translations.Tr("Stop benchmark") : Translations.Tr("Start benchmark");
 
-        public bool StartMiningAfterBench
-        {
-            get => BenchmarkManager.StartMiningOnFinish;
-            set => BenchmarkManager.StartMiningOnFinish = value;
-        }
+        //public bool StartMiningAfterBench
+        //{
+        //    get => BenchmarkManager.StartMiningOnFinish;
+        //    set => BenchmarkManager.StartMiningOnFinish = value;
+        //}
 
         public AlgorithmBenchmarkSettingsType AlgoSelection
         {
