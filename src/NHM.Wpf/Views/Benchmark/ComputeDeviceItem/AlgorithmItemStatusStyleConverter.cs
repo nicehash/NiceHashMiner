@@ -21,6 +21,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
                     case AlgorithmStatus.Unprofitable:
                         return Application.Current.FindResource("RedDangerColorBrush");
                     case AlgorithmStatus.Benchmarked:
+                    case AlgorithmStatus.Mining:
                         return Application.Current.FindResource("NastyGreenBrush");
                     case AlgorithmStatus.BenchmarkPending:
                     case AlgorithmStatus.Benchmarking:
@@ -28,6 +29,8 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
                         return Application.Current.FindResource("PrimaryColorBrush");
                     case AlgorithmStatus.NoBenchmark:
                         return Application.Current.FindResource("Gray1ColorBrush");
+                    case AlgorithmStatus.Disabled:
+                        return Application.Current.FindResource("Gray2ColorBrush");
                 }
             }
             return Application.Current.FindResource("Gray1ColorBrush");

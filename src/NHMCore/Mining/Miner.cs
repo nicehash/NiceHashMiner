@@ -46,6 +46,7 @@ namespace NHMCore.Mining
 
         // Now every single miner is based from the Plugins
         private readonly PluginContainer _plugin;
+        private readonly List<AlgorithmContainer> _algos;
         private readonly IMiner _miner;
 
         private readonly SemaphoreSlim _apiSemaphore = new SemaphoreSlim(1, 1);
@@ -55,6 +56,17 @@ namespace NHMCore.Mining
         {
             _plugin = plugin;
             _miner = _plugin.CreateMiner();
+
+            // just so we can set algorithms states
+            _algos = new List<AlgorithmContainer>();
+            foreach (var pair in miningPairs)
+            {
+                var cDev = AvailableDevices.GetDeviceWithUuid(pair.Device.UUID);
+                if (cDev == null) continue;
+                var algoContainer = cDev.AlgorithmSettings.FirstOrDefault(a => a.Algorithm == pair.Algorithm);
+                if (algoContainer == null) continue;
+                _algos.Add(algoContainer);
+            }
 
             MiningPairs = miningPairs;
             IsInit = MiningPairs != null && MiningPairs.Count > 0;
@@ -162,6 +174,7 @@ namespace NHMCore.Mining
             // maxTimeout = ConfigManager.GeneralConfig.CoolDownCheckEnabled
             var maxTimeout = _plugin.GetApiMaxTimeout(MiningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
+            _algos.ForEach(a => a.IsCurrentlyMining = true);
         }
 
         public void Stop()
@@ -172,6 +185,7 @@ namespace NHMCore.Mining
             MiningDataStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             IsRunning = false;
             _miner.StopMining();
+            _algos.ForEach(a => a.IsCurrentlyMining = false);
             //if (_miner is IDisposable disposableMiner)
             //{
             //    disposableMiner.Dispose();

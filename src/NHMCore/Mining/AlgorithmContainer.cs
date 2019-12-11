@@ -29,6 +29,9 @@ namespace NHMCore.Mining
         {
             get
             {
+                if (!Enabled) return AlgorithmStatus.Disabled;
+                if (IsCurrentlyMining) return AlgorithmStatus.Mining;
+
                 // TODO errors
                 if (BenchmarkErrorMessage != null)
                 {
@@ -196,6 +199,7 @@ namespace NHMCore.Mining
             {
                 if (Algorithm != null) Algorithm.Enabled = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(Status));
             }
         }
 
@@ -203,6 +207,8 @@ namespace NHMCore.Mining
         /// Indicates whether this algorithm requires a benchmark
         /// </summary>
         public virtual bool BenchmarkNeeded => BenchmarkSpeed <= 0 && !LastBenchmarkingFailed;
+
+        public bool HasBenchmark => Speeds.Sum() > 0;
 
         protected void NotifySpeedChanged()
         {
@@ -214,6 +220,7 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
             OnPropertyChanged(nameof(Status));
+            OnPropertyChanged(nameof(HasBenchmark));
         }
 
         #endregion
@@ -332,7 +339,31 @@ namespace NHMCore.Mining
 
 #endregion
 
-        public bool IsReBenchmark { get; set; } = false;
+        private bool _isReBenchmark = false;
+        public bool IsReBenchmark
+        {
+            get => _isReBenchmark;
+            set
+            {
+                _isReBenchmark = value;
+                OnPropertyChanged(nameof(IsReBenchmark));
+                OnPropertyChanged(nameof(Status));
+            }
+        }
+
+        private bool _isCurrentlyMining = false;
+        internal bool IsCurrentlyMining
+        {
+            get => _isCurrentlyMining;
+            set
+            {
+                _isCurrentlyMining = value;
+                OnPropertyChanged(nameof(IsCurrentlyMining));
+                OnPropertyChanged(nameof(Status));
+            }
+        }
+
+        
 
         #region Benchmark info
 

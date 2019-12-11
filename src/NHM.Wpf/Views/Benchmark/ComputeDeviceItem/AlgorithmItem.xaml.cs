@@ -1,4 +1,5 @@
-﻿using NHMCore.Mining;
+﻿using NHMCore.Configs;
+using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
     /// </summary>
     public partial class AlgorithmItem : UserControl
     {
+        AlgorithmContainer _algorithmContainer;
         public AlgorithmItem()
         {
             InitializeComponent();
@@ -30,8 +32,9 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
 
         private void AlgorithmItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is AlgorithmContainer)
+            if (e.NewValue is AlgorithmContainer algorithmContainer)
             {
+                _algorithmContainer = algorithmContainer;
                 AlgorithmSettingsContextMenu.DataContext = e.NewValue;
                 return;
             }
@@ -58,6 +61,11 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
         private void CloseAlgorithmSettings_Button_Click(object sender, RoutedEventArgs e)
         {
             AlgorithmSettingsContextMenu.IsOpen = false;
+        }
+
+        private void AlgorithmSettingsContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            ConfigManager.CommitBenchmarksForDevice(_algorithmContainer.ComputeDevice);
         }
     }
 }

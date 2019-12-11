@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -34,10 +35,22 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
                 {
                     _algorithmContainer = algorithmContainer;
                     secondarySpeedPanel.Visibility = _algorithmContainer.IsDual ? Visibility.Visible : Visibility.Collapsed;
+                    ToggleButtonHidden.Visibility = _algorithmContainer.HasBenchmark ? Visibility.Visible : Visibility.Collapsed;
+                    _algorithmContainer.PropertyChanged += _algorithmContainer_PropertyChanged;
                     return;
                 }
                 throw new Exception("unsupported datacontext type");
             };
+        }
+
+        private void _algorithmContainer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(AlgorithmContainer.HasBenchmark):
+                    ToggleButtonHidden.Visibility = _algorithmContainer.HasBenchmark ? Visibility.Visible : Visibility.Collapsed;
+                    return;
+            }
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -50,11 +63,6 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             string queryFull = (sender as TextBox).Text;
 
             var elpParams = queryFull.Split(' ').ToList();
-            List<string> allButLast = null;
-            if (elpParams.Count > 1)
-            {
-                allButLast = elpParams.GetRange(0, elpParams.Count - 1);
-            }
             var query = elpParams.LastOrDefault();
 
             if (query?.Length == 0)
@@ -76,7 +84,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             {
                 // skip if already present 
                 var skipOption = false;
-                foreach (var elpParam in allButLast ?? Enumerable.Empty<string>())
+                foreach (var elpParam in elpParams ?? Enumerable.Empty<string>())
                 {
                     bool longNameContains = generalOption.LongName != null && elpParam.Contains(generalOption.LongName);
                     bool shortNameContains = generalOption.ShortName != null && elpParam.Contains(generalOption.ShortName);
@@ -151,6 +159,15 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
         private void CloseButtonClick(object sender, RoutedEventArgs e)
         {
             CloseClick?.Invoke(sender, e);
+        }
+
+        private void ToggleClickReBenchHandler(object sender, RoutedEventArgs e)
+        {
+            var tb = e.Source as ToggleButton;
+            if (ToggleButtonHidden == tb)
+            {
+                _algorithmContainer.IsReBenchmark = !_algorithmContainer.IsReBenchmark;
+            }
         }
     }
 }

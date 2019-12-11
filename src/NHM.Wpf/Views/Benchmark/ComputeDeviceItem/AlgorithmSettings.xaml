@@ -45,7 +45,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="1"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="24,16,24,16">
@@ -100,7 +100,17 @@
 
         </WrapPanel>
 
-        <Separator Grid.Row="6"/>
-        <Button Grid.Row="7" Style="{StaticResource OKButton}" Width="326" Height="39.7" Content="SAVE" />
+        <ToggleButton Grid.Row="6" x:Name="ToggleButtonHidden" Click="ToggleClickReBenchHandler" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            <ToggleButton.Template>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <ContentPresenter />
+                </ControlTemplate>
+            </ToggleButton.Template>
+            <WrapPanel Margin="24,16,24,16">
+                <TextBlock Style="{StaticResource settingTitle}" Text="Schedule for benchmarking" />
+                <CheckBox x:Name="ReBenchSwitch" Style="{StaticResource NHMSwitch}" Margin="4,0,0,0" IsChecked="{Binding IsReBenchmark}" />
+            </WrapPanel>
+        </ToggleButton>
+        <Separator Grid.Row="7"/>
     </Grid>
 </UserControl>

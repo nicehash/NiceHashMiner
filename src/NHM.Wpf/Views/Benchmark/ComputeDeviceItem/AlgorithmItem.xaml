@@ -193,7 +193,7 @@
                         DataContext="{Binding .}"
                         Click="AlgorithmSettings_Button_Click" >
                     <Button.ContextMenu>
-                        <ContextMenu x:Name="AlgorithmSettingsContextMenu">
+                        <ContextMenu x:Name="AlgorithmSettingsContextMenu" Closed="AlgorithmSettingsContextMenu_Closed">
                             <ContextMenu.Template>
                                 <ControlTemplate>
                                     <local:AlgorithmSettings MaxWidth="392" MaxHeight="789" DataContext="{Binding .}" CloseClick="CloseAlgorithmSettings_Button_Click"  />

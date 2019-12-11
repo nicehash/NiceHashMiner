@@ -2,7 +2,8 @@
 {
     public enum AlgorithmStatus
     {
-        MissingSMA = 0,
+        Disabled = 0,
+        MissingSMA,
         NoBenchmark,
         Benchmarked,
         ReBenchmark,
@@ -10,6 +11,7 @@
         // pending states
         BenchmarkPending,
         Benchmarking,
+        Mining,
         // errors
         ErrorNegativeSMA = 1000,
         ErrorBenchmark,
