@@ -253,6 +253,9 @@ namespace NHM.Wpf.ViewModels
         }
         #endregion MinerPlugins
 
+
+        public BenchmarkSettings BenchmarkSettings { get; } = new BenchmarkSettings();
+
         public MainVM()
             : base(ApplicationStateManager.Title)
         {
