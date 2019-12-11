@@ -120,9 +120,6 @@
     <Compile Include="Views\EulaWindowSecondShort.xaml.cs">
       <DependentUpon>EulaWindowSecondShort.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BenchmarkWindow.xaml.cs">
-      <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Benchmark\Benchmarks.xaml.cs">
       <DependentUpon>Benchmarks.xaml</DependentUpon>
     </Compile>
@@ -366,10 +363,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\EulaWindowSecondShort.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\BenchmarkWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

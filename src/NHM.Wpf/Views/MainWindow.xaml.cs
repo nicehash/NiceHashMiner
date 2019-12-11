@@ -37,13 +37,13 @@ namespace NHM.Wpf.Views
 
         private async void BenchButton_Click(object sender, RoutedEventArgs e)
         {
-            bool startMining;
+            bool startMining = false;
             ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Benchmark;
 
-            using (var bench = new BenchmarkWindow(AvailableDevices.Devices))
-            {
-                startMining = bench.ShowDialog() ?? false;
-            }
+            //using (var bench = new BenchmarkWindow(AvailableDevices.Devices))
+            //{
+            //    startMining = bench.ShowDialog() ?? false;
+            //}
 
             ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
 

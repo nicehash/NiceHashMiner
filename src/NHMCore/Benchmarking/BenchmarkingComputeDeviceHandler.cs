@@ -150,7 +150,6 @@ namespace NHMCore.Benchmarking
                                 // this will drain the container
                                 await BenchmarkNextAlgorithm(_stopCurrentAlgorithmBenchmark.Token);
                                 await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, _stopCurrentAlgorithmBenchmark.Token);
-                                BenchmarkManager.StepUpBenchmarkStepProgress();
                             }
                             catch (Exception e)
                             {
@@ -217,7 +216,6 @@ namespace NHMCore.Benchmarking
             }
             try
             {
-                BenchmarkManager.AddToStatusCheck(nextAlgo.ComputeDevice, nextAlgo);
                 nextAlgo.IsBenchmarking = true;
                 await BenchmarkAlgorithm(nextAlgo, stop);
             }
@@ -232,7 +230,6 @@ namespace NHMCore.Benchmarking
         {
             using (var powerHelper = new PowerHelper(algo.ComputeDevice))
             {
-                BenchmarkManager.AddToStatusCheck(algo.ComputeDevice, algo);
                 var plugin = algo.PluginContainer;
                 var miner = plugin.CreateMiner();
                 var miningPair = new MinerPlugin.MiningPair
@@ -249,6 +246,9 @@ namespace NHMCore.Benchmarking
                 powerHelper.Start();
                 algo.ComputeDevice.State = DeviceState.Benchmarking;
                 var result = await miner.StartBenchmark(stop, PerformanceType);
+                if (stop.IsCancellationRequested) return;
+
+                algo.IsReBenchmark = false; 
                 //EthlargementIntegratedPlugin.Instance.Stop(miningPairs); // TODO check stopping
                 var power = powerHelper.Stop();
                 if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)

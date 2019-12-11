@@ -115,7 +115,7 @@ namespace NHM.Wpf.ViewModels
 
         #endregion
 
-        public bool InBenchmark => BenchmarkManager.InBenchmark;
+        public bool InBenchmark => false; // BenchmarkManager.InBenchmark;
 
         public bool NotInBenchmark => !InBenchmark;
 
@@ -128,15 +128,15 @@ namespace NHM.Wpf.ViewModels
         //    set => BenchmarkManager.StartMiningOnFinish = value;
         //}
 
-        public AlgorithmBenchmarkSettingsType AlgoSelection
-        {
-            get => BenchmarkManager.Selection;
-            set
-            {
-                BenchmarkManager.Selection = value;
-                OnPropertyChanged();
-            }
-        }
+        //public AlgorithmBenchmarkSettingsType AlgoSelection
+        //{
+        //    get => BenchmarkManager.Selection;
+        //    set
+        //    {
+        //        BenchmarkManager.Selection = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
         private BenchmarkPerformanceType _perfType = BenchmarkPerformanceType.Standard;
         public BenchmarkPerformanceType PerfType
@@ -183,7 +183,7 @@ namespace NHM.Wpf.ViewModels
         public ICommand ClearSpeedsCommand { get; }
 
         // The ending stuff needs to happen in the window code behind so just forward here
-        public event EventHandler<BenchEndEventArgs> OnBenchEnd;
+        //public event EventHandler<BenchEndEventArgs> OnBenchEnd;
 
         public BenchmarkViewModel()
             : base(Translations.Tr("Benchmark"))
@@ -192,9 +192,9 @@ namespace NHM.Wpf.ViewModels
 
             _dotTimer.Elapsed += DotTimerOnElapsed;
 
-            BenchmarkManager.InBenchmarkChanged += BenchmarkManagerOnInBenchmarkChanged;
-            BenchmarkManager.OnStepUp += BenchmarkManagerOnOnStepUp;
-            BenchmarkManager.OnBenchmarkEnd += BenchmarkManagerOnBenchmarkEnd;
+            //BenchmarkManager.InBenchmarkChanged += BenchmarkManagerOnInBenchmarkChanged;
+            //BenchmarkManager.OnStepUp += BenchmarkManagerOnOnStepUp;
+            //BenchmarkManager.OnBenchmarkEnd += BenchmarkManagerOnBenchmarkEnd;
 
             UpdateBenchPending();
 
@@ -245,19 +245,19 @@ namespace NHM.Wpf.ViewModels
 
         #endregion
 
-        private void BenchmarkManagerOnBenchmarkEnd(object sender, BenchEndEventArgs e)
-        {
-            _dotTimer.Stop();
-            UpdateBenchPending();
+        //private void BenchmarkManagerOnBenchmarkEnd(object sender, BenchEndEventArgs e)
+        //{
+        //    _dotTimer.Stop();
+        //    UpdateBenchPending();
 
-            OnBenchEnd?.Invoke(this, e);
-        }
+        //    OnBenchEnd?.Invoke(this, e);
+        //}
 
-        private void BenchmarkManagerOnOnStepUp(object sender, StepUpEventArgs e)
-        {
-            BenchesPending = e.AlgorithmCount;
-            BenchesCompleted = e.CurrentIndex;
-        }
+        //private void BenchmarkManagerOnOnStepUp(object sender, StepUpEventArgs e)
+        //{
+        //    BenchesPending = e.AlgorithmCount;
+        //    BenchesCompleted = e.CurrentIndex;
+        //}
 
         private void OnAlgoPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -280,7 +280,7 @@ namespace NHM.Wpf.ViewModels
         private void UpdateBenchPending()
         {
             BenchesCompleted = 0;
-            BenchesPending = BenchmarkManager.CalcBenchDevAlgoQueue();
+            //BenchesPending = BenchmarkManager.CalcBenchDevAlgoQueue();
         }
 
         private void BenchmarkManagerOnInBenchmarkChanged(object sender, bool e)
@@ -294,10 +294,10 @@ namespace NHM.Wpf.ViewModels
 
         private void DotTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
-            foreach (var (_, algo) in BenchmarkManager.GetStatusCheckAlgos())
-            {
-                SelectedAlgos?.FirstOrDefault(a => a.Algo == algo)?.IncrementTicker();
-            }
+            //foreach (var (_, algo) in BenchmarkManager.GetStatusCheckAlgos())
+            //{
+            //    SelectedAlgos?.FirstOrDefault(a => a.Algo == algo)?.IncrementTicker();
+            //}
         }
 
         public void CommitBenchmarks()
@@ -315,23 +315,23 @@ namespace NHM.Wpf.ViewModels
                 return;
             }
 
-            BenchmarkManager.CalcBenchDevAlgoQueue();
+            //BenchmarkManager.CalcBenchDevAlgoQueue();
 
-            if (!BenchmarkManager.HasWork)
-            {
-                MessageBox.Show(Translations.Tr("Current benchmark settings are already executed. There is nothing to do."),
-                    Translations.Tr("Nothing to benchmark"),
-                    MessageBoxButton.OK);
-                return;
-            }
+            //if (!BenchmarkManager.HasWork)
+            //{
+            //    MessageBox.Show(Translations.Tr("Current benchmark settings are already executed. There is nothing to do."),
+            //        Translations.Tr("Nothing to benchmark"),
+            //        MessageBoxButton.OK);
+            //    return;
+            //}
 
             // Set pending status
-            foreach (var devAlgoTuple in BenchmarkManager.BenchDevAlgoQueue)
-            {
-                foreach (var algo in devAlgoTuple.Item2) algo.SetBenchmarkPending();
-            }
+            //foreach (var devAlgoTuple in BenchmarkManager.BenchDevAlgoQueue)
+            //{
+            //    foreach (var algo in devAlgoTuple.Item2) algo.SetBenchmarkPending();
+            //}
 
-            BenchmarkManager.Start(PerfType);
+            //BenchmarkManager.Start(PerfType);
             _dotTimer.Start();
         }
 
@@ -343,9 +343,9 @@ namespace NHM.Wpf.ViewModels
 
         protected override void Dispose(bool disposing)
         {
-            BenchmarkManager.InBenchmarkChanged -= BenchmarkManagerOnInBenchmarkChanged;
-            BenchmarkManager.OnStepUp -= BenchmarkManagerOnOnStepUp;
-            BenchmarkManager.OnBenchmarkEnd -= BenchmarkManagerOnBenchmarkEnd;
+            //BenchmarkManager.InBenchmarkChanged -= BenchmarkManagerOnInBenchmarkChanged;
+            //BenchmarkManager.OnStepUp -= BenchmarkManagerOnOnStepUp;
+            //BenchmarkManager.OnBenchmarkEnd -= BenchmarkManagerOnBenchmarkEnd;
 
             _dotTimer.Dispose();
 
