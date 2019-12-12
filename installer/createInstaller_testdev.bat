@@ -11,6 +11,7 @@ mkdir .\nhmpacker\_files_to_pack\assets
 xcopy /s /i nsis_template .\nhmpacker\_files_to_pack\nsis
 xcopy /s /i .\..\Release .\nhmpacker\_files_to_pack\bins
 copy .\nhm_windows_x.y.z.r-template\EULA.* .\nhmpacker\_files_to_pack\assets
+copy .\createSha256Sums.bat .\nhmpacker\_files_to_pack\assets
 
 rmdir /s /q .\..\src\Tools\MinerPluginsPacker\bin\Release\miner_plugins
 rmdir /s /q .\..\src\Tools\MinerPluginsPacker\bin\Release\plugins_packages
@@ -31,6 +32,7 @@ for %%i in (.\nhmpacker\nhm_windows_1.*.exe) do (
 xcopy /s /i .\..\Release %filename%
 copy .\nhm_windows_x.y.z.r-template\EULA.html %filename%
 copy .\nhm_windows_x.y.z.r-template\EULA.rtf %filename% 
+copy .\createSha256Sums.bat %filename%
 
 xcopy /s /i /y .\..\src\Tools\MinerPluginsPacker\bin\Release\miner_plugins .\%filename%\miner_plugins
 xcopy /s /i /y .\..\src\Tools\MinerPluginsPacker\bin\Release\plugins_packages .\%filename%\plugins_packages
