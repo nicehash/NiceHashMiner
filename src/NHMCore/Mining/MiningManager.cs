@@ -61,7 +61,7 @@ namespace NHMCore.Mining
             {
                 foreach (var groupMiner in _runningMiners.Values)
                 {
-                    groupMiner.End();
+                    await groupMiner.StopTask();
                 }
                 _runningMiners.Clear();
 
@@ -103,7 +103,7 @@ namespace NHMCore.Mining
             {
                 foreach (var groupMiner in _runningMiners.Values)
                 {
-                    groupMiner.End();
+                    await groupMiner.StopTask();
                 }
                 _runningMiners.Clear();
             }
@@ -169,7 +169,7 @@ namespace NHMCore.Mining
                 var miningLocation = StratumService.Instance.SelectedServiceLocation;
                 foreach (var key in _runningMiners.Keys)
                 {
-                    await _runningMiners[key].StartTask(miningLocation, _username);
+                    await _runningMiners[key].StartMinerTask(ApplicationStateManager.ExitApplication.Token, miningLocation, _username);
                 }
             }
             finally
@@ -355,7 +355,6 @@ namespace NHMCore.Mining
                     var stopGroup = _runningMiners[stopKey];
                     _runningMiners.Remove(stopKey);
                     await stopGroup.StopTask();
-                    stopGroup.End();
                 }
                 // start new
                 var miningLocation = StratumService.Instance.SelectedServiceLocation;
@@ -369,7 +368,7 @@ namespace NHMCore.Mining
                         continue;
                     }
                     _runningMiners[startKey] = toStart;
-                    await toStart.StartTask(miningLocation, _username);
+                    await toStart.StartMinerTask(ApplicationStateManager.ExitApplication.Token, miningLocation, _username);
                 }
                 // log scope
                 {
@@ -392,61 +391,36 @@ namespace NHMCore.Mining
             if (hasChanged)
             {
                 MiningDataStats.ClearApiDataGroups();
-                await MinerStatsCheck();
             }
         }
 
-        public static async Task MinerStatsCheck()
-        {
-            await _semaphore.WaitAsync();
-            try
-            {
-                foreach (var m in _runningMiners.Values)
-                {
-                    // skip if not running or if await already in progress
-                    if (!m.IsRunning || m.IsUpdatingApi) continue;
-                    var ad = m.GetSummaryAsync();
-                }
-                // Update GUI
-                //ApplicationStateManager.RefreshRates(); // just update the model
-                // now we shoud have new global/total rate display it
-                var kwhPriceInBtc = BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();
-                var profitInBTC = MiningDataStats.GetProfit(kwhPriceInBtc);
-                ApplicationStateManager.DisplayTotalRate(profitInBTC);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(Tag, $"Error occured while getting mining stats: {e.Message}");
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-            // TODO put this somewhere else maybe
-            await RestartStagnatedMiners();
-        }
-
-        private static async Task RestartStagnatedMiners()
-        {
-            var restartGroups = MinerApiWatchdog.GetTimedoutGroups(DateTime.UtcNow);
-            if (restartGroups == null) return;
-            await _semaphore.WaitAsync();
-            try
-            {
-                var miningLocation = StratumService.Instance.SelectedServiceLocation;
-                foreach (var groupKey in restartGroups)
-                {
-                    if (_runningMiners.ContainsKey(groupKey) == false) continue;
-
-                    Logger.Info(Tag, $"Restarting miner group='{groupKey}' API timestamp exceeded");
-                    await _runningMiners[groupKey].StopTask();
-                    await _runningMiners[groupKey].StartTask(miningLocation, _username);
-                }
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
+        // TODO check the stats calculation
+        //public static async Task MinerStatsCheck()
+        //{
+        //    await _semaphore.WaitAsync();
+        //    try
+        //    {
+        //        foreach (var m in _runningMiners.Values)
+        //        {
+        //            // skip if not running or if await already in progress
+        //            if (!m.IsRunning || m.IsUpdatingApi) continue;
+        //            var ad = m.GetSummaryAsync();
+        //        }
+        //        // Update GUI
+        //        //ApplicationStateManager.RefreshRates(); // just update the model
+        //        // now we shoud have new global/total rate display it
+        //        var kwhPriceInBtc = BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();
+        //        var profitInBTC = MiningDataStats.GetProfit(kwhPriceInBtc);
+        //        ApplicationStateManager.DisplayTotalRate(profitInBTC);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Logger.Error(Tag, $"Error occured while getting mining stats: {e.Message}");
+        //    }
+        //    finally
+        //    {
+        //        _semaphore.Release();
+        //    }
+        //}
     }
 }

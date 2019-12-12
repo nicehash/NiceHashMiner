@@ -59,26 +59,6 @@ namespace NHMCore
             }
         }
 
-        #region MinerStatsCheck
-        private static AppTimer _minerStatsCheck;
-
-        private static void StartMinerStatsCheckTimer()
-        {
-            if (_minerStatsCheck?.IsActive ?? false) return;
-            _minerStatsCheck = new AppTimer(async (object sender, ElapsedEventArgs e) =>
-            {
-                await MiningManager.MinerStatsCheck();
-            },
-            MiningSettings.Instance.MinerAPIQueryInterval * 1000);
-            _minerStatsCheck.Start();
-        }
-
-        private static void StopMinerStatsCheckTimer()
-        {
-            _minerStatsCheck?.Stop();
-        }
-        #endregion MinerStatsCheck
-
 
         #region ComputeDevicesCheck Lost GPU check
         private static AppTimer _cudaDeviceCheckerTimer;

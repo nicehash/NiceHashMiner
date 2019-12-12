@@ -29,25 +29,44 @@ namespace NHMCore.Mining
         protected readonly long MinerID;
 
         private string _minerTag;
-        public string MinerDeviceName { get; set; }
+        private string MinerDeviceName { get; set; }
 
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
 
-        public List<MiningPair> MiningPairs { get; protected set; }
+        private List<MiningPair> MiningPairs { get; set; }
 
-        public bool IsRunning { get; protected set; } = false;
         public string GroupKey { get; protected set; } = "";
 
-        CancellationTokenSource EndMiner { get; } = new CancellationTokenSource();
-        protected bool _isEnded { get; private set; }
+        CancellationTokenSource _endMiner;
 
-        public bool IsUpdatingApi { get; protected set; } = false;
+        private bool IsUpdatingApi { get; set; } = false;
+
+        private object _lock = new object();
+
+        private Task _minerWatchdogTask;
+        private Task MinerWatchdogTask
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _minerWatchdogTask;
+                }
+            }
+            set
+            {
+                lock (_lock)
+                {
+                    _minerWatchdogTask = value;
+                }
+            }
+        }
 
         // Now every single miner is based from the Plugins
         private readonly PluginContainer _plugin;
         private readonly List<AlgorithmContainer> _algos;
-        private readonly IMiner _miner;
+        private readonly IMinerAsyncExtensions _miner;
 
         private readonly SemaphoreSlim _apiSemaphore = new SemaphoreSlim(1, 1);
 
@@ -55,7 +74,8 @@ namespace NHMCore.Mining
         protected Miner(PluginContainer plugin, List<MiningPair> miningPairs, string groupKey)
         {
             _plugin = plugin;
-            _miner = _plugin.CreateMiner();
+            // TODO this is now a must be of type IMinerAsyncExtensions
+            _miner = _plugin.CreateMiner() as IMinerAsyncExtensions;
 
             // just so we can set algorithms states
             _algos = new List<AlgorithmContainer>();
@@ -77,7 +97,7 @@ namespace NHMCore.Mining
         }
 
         // TAG for identifying miner
-        public string MinerTag()
+        private string MinerTag()
         {
             if (_minerTag == null)
             {
@@ -96,7 +116,8 @@ namespace NHMCore.Mining
             return _minerTag;
         }
 
-        public async Task<ApiData> GetSummaryAsync()
+
+        private async Task<ApiData> GetSummaryAsync()
         {
             var apiData = new ApiData();
             if (!IsUpdatingApi)
@@ -162,29 +183,25 @@ namespace NHMCore.Mining
             return apiData;
         }
 
-        // TODO this thing 
-        public void Start(string miningLocation, string username)
+        private async Task<object> StartAsync(CancellationToken stop, string miningLocation, string username)
         {
-            if (_isEnded) return;
             _miner.InitMiningLocationAndUsername(miningLocation, username);
             _miner.InitMiningPairs(MiningPairs);
             EthlargementIntegratedPlugin.Instance.Start(MiningPairs);
-            _miner.StartMining();
-            IsRunning = true;
-            // maxTimeout = ConfigManager.GeneralConfig.CoolDownCheckEnabled
+            var ret = await _miner.StartMiningTask(stop);
             var maxTimeout = _plugin.GetApiMaxTimeout(MiningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
             _algos.ForEach(a => a.IsCurrentlyMining = true);
+            return ret;
         }
 
-        public void Stop()
+        private async Task StopAsync()
         {
             // TODO thing about this case, closing opening on switching
             // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
             MinerApiWatchdog.RemoveGroup(GroupKey);
             MiningDataStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
-            IsRunning = false;
-            _miner.StopMining();
+            await _miner.StopMiningTask();
             _algos.ForEach(a => a.IsCurrentlyMining = false);
             //if (_miner is IDisposable disposableMiner)
             //{
@@ -192,23 +209,85 @@ namespace NHMCore.Mining
             //}
         }
 
-        // TODO check cleanup here
-        public void End()
+
+        public Task StartMinerTask(CancellationToken stop, string miningLocation, string username)
         {
-            try
+            var tsc = new TaskCompletionSource<object>();
+            var wdTask = MinerWatchdogTask;
+            if (wdTask == null || wdTask.IsCompleted)
             {
-                if (EndMiner.IsCancellationRequested) return;
-                _isEnded = true;
-                EndMiner.Cancel();
+                wdTask = Task.Run(() => RunMinerWatchDogLoop(tsc, stop, miningLocation, username));
             }
-            catch (Exception e)
+            else
             {
-                Logger.Info(MinerTag(), $"End: {e.Message}");
+                Logger.Error(MinerTag(), $"Trying to start an already started miner");
+                tsc.SetResult("TODO error trying to start already started miner");
             }
-            finally
+            return tsc.Task;
+        }
+
+        private async Task RunMinerWatchDogLoop(TaskCompletionSource<object> tsc, CancellationToken stop, string miningLocation, string username)
+        {
+            var firstStart = true;
+            using (_endMiner = new CancellationTokenSource())
+            using (var linkedEndMiner = CancellationTokenSource.CreateLinkedTokenSource(stop, _endMiner.Token))
             {
-                Logger.Info(MinerTag(), $"Setting End and Stopping");
-                Stop();
+                Logger.Info(MinerTag(), $"Starting miner watchdog task");
+                while (!linkedEndMiner.IsCancellationRequested)
+                {
+                    if (!firstStart)
+                    {
+                        Logger.Info(MinerTag(), $"Restart Mining in {MiningSettings.Instance.MinerRestartDelayMS}ms");
+                    }
+                    await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, linkedEndMiner.Token);
+                    var result = await StartAsync(linkedEndMiner.Token, miningLocation, username);
+                    if (firstStart)
+                    {
+                        firstStart = false;
+                        tsc.SetResult(result);
+                    }
+                    if (result is bool ok && ok)
+                    {
+                        var runningMinerTask = _miner.MinerProcessTask;
+                        _ = MinerStatsLoop(runningMinerTask, linkedEndMiner.Token);
+                        await runningMinerTask;
+                        // TODO log something here
+                        Logger.Info(MinerTag(), $"Running Miner Task Completed");
+                    }
+                    else
+                    {
+                        // TODO check if the miner file is missing or locked and blacklist the algorithm for a certain period of time 
+                        Logger.Error(MinerTag(), $"StartAsync result: {result}");
+                    }
+                }
+                Logger.Info(MinerTag(), $"Exited miner watchdog");
+            }
+        }
+
+        private async Task MinerStatsLoop(Task runningTask, CancellationToken stop)
+        {
+            // TODO make sure this interval is per miner plugin instead of a global one
+            var minerStatusTickSeconds = MiningSettings.Instance.MinerAPIQueryInterval;
+            var lastMinerStatsCalled = DateTime.MinValue;
+            var checkWaitTime = TimeSpan.FromMilliseconds(50);
+            Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
+            while (isOk())
+            {
+                if (isOk()) await Task.Delay(checkWaitTime); // TODO add cancelation token here
+                var elapsedTime = DateTime.UtcNow - lastMinerStatsCalled;
+                if (isOk() && elapsedTime.TotalSeconds > minerStatusTickSeconds)
+                {
+                    lastMinerStatsCalled = DateTime.UtcNow;
+                    await GetSummaryAsync();
+                }
+                // check if stagnated and restart
+                var restartGroups = MinerApiWatchdog.GetTimedoutGroups(DateTime.UtcNow);
+                if (isOk() && (restartGroups?.Contains(GroupKey) ?? false))
+                {
+                    Logger.Info(MinerTag(), $"Restarting miner group='{GroupKey}' API timestamp exceeded");
+                    await StopAsync();
+                    return;
+                }
             }
         }
 
@@ -216,46 +295,12 @@ namespace NHMCore.Mining
         {
             try
             {
-                if (!IsRunning) return;
-                Logger.Debug(MinerTag(), "BEFORE Stopping");
-                Stop();
-                Logger.Debug(MinerTag(), "AFTER Stopping");
-                if (EndMiner.IsCancellationRequested) return;
-                // wait before going on // TODO state right here
-                await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, EndMiner.Token);
+                _endMiner?.Cancel();
+                await StopAsync();
             }
             catch (Exception e)
             {
                 Logger.Info(MinerTag(), $"Stop: {e.Message}");
-            }
-        }
-
-        public async Task StartTask(string miningLocation, string username)
-        {
-            var startCalled = false;
-            try
-            {
-                if (IsRunning) return;
-                if (EndMiner.IsCancellationRequested) return;
-                // Wait before new start
-                await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, EndMiner.Token);
-                if (EndMiner.IsCancellationRequested) return;
-                Logger.Debug(MinerTag(), "BEFORE Starting");
-                Start(miningLocation, username);
-                startCalled = true;
-                Logger.Debug(MinerTag(), "AFTER Starting");
-            }
-            catch (Exception e)
-            {
-                Logger.Info(MinerTag(), $"Start: {e.Message}");
-            }
-            finally
-            {
-                var stopOrEndCalled = startCalled && (EndMiner.IsCancellationRequested || _isEnded);
-                if (stopOrEndCalled)
-                {
-                    Stop();
-                }
             }
         }
 
