@@ -15,45 +15,57 @@
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Miscellaneous" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.AutoStartMining}"
-                                        Label="Autostart Mining" />
+                                        Label="Autostart Mining"
+                                        Description="{StaticResource autoMining}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.AllowMultipleInstances}"
                                         Label="Allow Multiple Instances" 
-                                        Description="{StaticResource messageTest}" />
+                                        Description="{StaticResource multipleInstances}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.RunAtStartup}"
-                                        Label="Run On Startup" />
+                                        Label="Run On Startup" 
+                                        Description="{StaticResource runOnStartup}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding GUISettings.MinimizeToTray}"
-                                        Label="Minimize To Tray" />
+                                        Label="Minimize To Tray" 
+                                        Description="{StaticResource minimizeTray}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding GUISettings.AutoScaleBTCValues}"
-                                        Label="Autoscale BTC Values" />
+                                        Label="Autoscale BTC Values" 
+                                        Description="{StaticResource scaleBTC}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding WarningSettings.ShowDriverVersionWarning}"
-                                        Label="Show Driver Version Warning" />
+                                        Label="Show Driver Version Warning" 
+                                        Description="{StaticResource driverWarning}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding WarningSettings.DisableWindowsErrorReporting}"
-                                        Label="Disable Windows Error Reporting" />
+                                        Label="Disable Windows Error Reporting" 
+                                        Description="{StaticResource windowsError}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding WarningSettings.ShowInternetConnectionWarning}"
-                                        Label="Show Internet Connection Warning" />
+                                        Label="Show Internet Connection Warning" 
+                                        Description="{StaticResource internetWarning}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding GUISettings.GUIWindowsAlwaysOnTop}"
-                                        Label="Form Windows Always on Top" />
+                                        Label="NiceHash Miner Window Always on Top" 
+                                        Description="{StaticResource alwaysTop}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.ShowGPUPCIeBusIDs}"
-                                        Label="Show GPU PCIe Bus IDs" />
+                                        Label="Show GPU PCIe Bus IDs"
+                                        Description="{StaticResource pcieBusIDs}"/>
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Device Monitoring" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.DisableDeviceStatusMonitoring}"
                                         Label="Disable Device Status Monitoring"
-                                        Description="TODO more info" />
+                                        Description="{StaticResource disableDeviceStatus}" />
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.DisableDevicePowerModeSettings}"
-                                        Label="Disable Device Power Mode Settings" />
+                                        Label="Disable Device Power Mode Settings"
+                                        Description="{StaticResource disableDevicePowerMode}"/>
         </WrapPanel>
         <!--Logging-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Logging" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
             <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.LogToFile}"
-                                        Label="Log To file" />
+                                        Label="Log To file"
+                                        Description="{StaticResource logToFile}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.DebugConsole}"
-                                        Label="Enable Debug Console" />
+                                        Label="Enable Debug Console"
+                                        Description="{StaticResource debugConsole}"/>
             <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" ToolTip="{StaticResource maxLogSize}">
                     <Label Content="Log Max File Size (bytes)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>

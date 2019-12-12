@@ -1,5 +1,36 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
-    <system:String x:Key="messageTest">test test</system:String>
+    
+    <system:String x:Key="walletAddress">User's bitcoin address for mining.</system:String>
+    <system:String x:Key="workerName">To identify the user's computer.</system:String>
+    <system:String x:Key="timeUnit">Sets the time unit to report BTC rates.</system:String>
+    <system:String x:Key="mineRegardless">When checked, NiceHash Miner will mine regardless of profit.</system:String>
+    <system:String x:Key="electricityCost">Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.</system:String>
+    <system:String x:Key="minimumProfit">If 'MineRegardlessOfProfit' is unchecked, NiceHash Miner will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.</system:String>
+    <system:String x:Key="miningLocation">Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency.</system:String>
+    <system:String x:Key="currency">Choose what Currency to Display mining profit.</system:String>
+    <system:String x:Key="language">Changes the default language for NiceHash Miner.</system:String>
+    <system:String x:Key="theme">Choose in which theme you would like to see NiceHash Miner.</system:String>
+    <system:String x:Key="autoMining">When checked, NiceHash Miner will automatically start mining when launched.</system:String>
+    <system:String x:Key="multipleInstances">When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).</system:String>
+    <system:String x:Key="runOnStartup">When checked, NiceHash Miner will run on login.</system:String>
+    <system:String x:Key="minimizeTray">When checked, NiceHash Miner will minimize to tray.</system:String>
+    <system:String x:Key="scaleBTC">Check it, if you would like to see the BTC values autoscale to the appropriate scale.</system:String>
+    <system:String x:Key="driverWarning">When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed.</system:String>
+    <system:String x:Key="windowsError">When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.</system:String>
+    <system:String x:Key="internetWarning">When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available.</system:String>
+    <system:String x:Key="alwaysTop">When checked, NiceHash Miner will be set as Top Most and will be covered only by other Top Most Windows.</system:String>
+    <system:String x:Key="pcieBusIDs">When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.</system:String>
+    <system:String x:Key="disableDeviceStatus">When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).</system:String>
+    <system:String x:Key="disableDevicePowerMode">When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only).</system:String>
+    <system:String x:Key="logToFile">Check it, to log console output to file.</system:String>
+    <system:String x:Key="debugConsole">When checked, it displays debug console.</system:String>
+    <system:String x:Key="maxLogSize">Sets the maximum size for the log file.</system:String>
+    
+    <system:String x:Key="gpuNumber">Number of gpu devices in your system.</system:String>
+    <system:String x:Key="cpuNumber">Number of cpu devices in your system.</system:String>
+
+    <system:String x:Key="scheduleBenchmarking">Include this alrogithm in benchmark sessions when plugin gets updated. This will ensure the best possible hash rate.</system:String>
+    
 </ResourceDictionary>
