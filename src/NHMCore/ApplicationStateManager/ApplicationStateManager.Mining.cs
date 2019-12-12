@@ -16,7 +16,7 @@ namespace NHMCore
     {
         public static string GetUsername()
         {
-            if (MiningState.Instance.IsDemoMining) {
+            if (MiningState.Instance.IsDemoMining || !CredentialsSettings.Instance.IsBitcoinAddressValid) {
                 return DemoUser.BTC;
             }
             var btc = CredentialsSettings.Instance.BitcoinAddress.Trim();

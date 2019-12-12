@@ -632,9 +632,9 @@ namespace NHMCore.Nhmws
             return true;
         }
 
-        private static async Task<bool> miningSetWorker(string worker)
+        private static bool miningSetWorker(string worker)
         {
-            var workerSetResult = await ApplicationStateManager.SetWorkerIfValidOrDifferent(worker, true);
+            var workerSetResult = ApplicationStateManager.SetWorkerIfValidOrDifferent(worker, true);
             switch (workerSetResult)
             {
                 case ApplicationStateManager.SetResult.INVALID:
@@ -869,7 +869,7 @@ namespace NHMCore.Nhmws
                         break;
                     case "mining.set.worker":
                         worker = (string)message.worker;
-                        executed = await miningSetWorker(worker);
+                        executed = miningSetWorker(worker);
                         loginNeeded = executed;
                         break;
                     case "mining.set.group":
