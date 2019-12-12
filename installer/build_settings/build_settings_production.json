@@ -1,0 +1,8 @@
+{
+  "BUILD_TAG": 0,
+  "IS_PLUGINS_TEST_SOURCE": false,
+  "CUSTOM_ENDPOINTS_ENABLED": false,
+  "FORCE_MINING": false,
+  "FORCE_PROFITABLE": false,
+  "SHOW_TDP_SETTINGS": false
+}

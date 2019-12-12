@@ -210,11 +210,11 @@ namespace MinerPluginsPacker
                 }
                 File.Copy(kvp.Value, dllPath);
             }
-            var deleteFolder = Path.Combine(exePath, "miner_plugins", "BrokenMinerPluginUUID");
-            Directory.Delete(deleteFolder, true);
-
-            // dump our plugin packages
+			// dump our plugin packages
             InternalConfigs.WriteFileSettings(Path.Combine(pluginPackagesFolder, "update.json"), PluginPackageInfos);
+			
+            var deleteFolder = Path.Combine(exePath, "miner_plugins", "BrokenMinerPluginUUID");
+            Directory.Delete(deleteFolder, true);          
         }
     }
 }
