@@ -103,65 +103,6 @@ namespace NHMCore.Configs
             {
                 GeneralConfigFileCommit();
             }
-#warning "DELETE this after 1.9.2.18"
-            #region MIGRATE plugin UUIDs
-            var findReplace = new Dictionary<string, string>
-            {
-                { "\"PluginUUID\": \"BMiner\",", "\"PluginUUID\": \"e5fbd330-7235-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"CCMinerTpruvot\",", "\"PluginUUID\": \"2257f160-7236-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"ClaymoreDual\",", "\"PluginUUID\": \"70984aa0-7236-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"cpuminer-opt\",", "\"PluginUUID\": \"92fceb00-7236-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"CryptoDredge\",", "\"PluginUUID\": \"d9c2e620-7236-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"Ethlargement\",", "\"PluginUUID\": \"efd40691-618c-491a-b328-e7e020bda7a3\"," },
-                { "\"PluginUUID\": \"Ewbf\",", "\"PluginUUID\": \"f7d5dfa0-7236-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"ExamplePlugin\",", "\"PluginUUID\": \"455c4d98-a45d-45d6-98ca-499ce866b2c7\"," },
-                { "\"PluginUUID\": \"GMinerCuda9.0+\",", "\"PluginUUID\": \"1b7019d0-7237-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"LolMinerBeam\",", "\"PluginUUID\": \"435f0820-7237-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"MiniZ\",", "\"PluginUUID\": \"59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4\"," },
-                { "\"PluginUUID\": \"NanoMiner\",", "\"PluginUUID\": \"a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4\"," },
-                { "\"PluginUUID\": \"NBMiner\",", "\"PluginUUID\": \"6c07f7a0-7237-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"Phoenix\",", "\"PluginUUID\": \"f5d4a470-e360-11e9-a914-497feefbdfc8\"," },
-                { "\"PluginUUID\": \"SGminerAvemore\",", "\"PluginUUID\": \"bc95fd70-e361-11e9-a914-497feefbdfc8\"," },
-                { "\"PluginUUID\": \"SRBMiner\",", "\"PluginUUID\": \"85f507c0-b2ba-11e9-8e4e-bb1e2c6e76b4\"," },
-                { "\"PluginUUID\": \"TeamRedMiner\",", "\"PluginUUID\": \"abc3e2a0-7237-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"TRex\",", "\"PluginUUID\": \"d47d9b00-7237-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"TTMiner\",", "\"PluginUUID\": \"f1945a30-7237-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"WildRig\",", "\"PluginUUID\": \"2edd8080-9cb6-11e9-a6b8-09e27549d5bb\"," },
-                { "\"PluginUUID\": \"XMRig\",", "\"PluginUUID\": \"1046ea50-c261-11e9-8e4e-bb1e2c6e76b4\"," },
-                { "\"PluginUUID\": \"XmrStak\",", "\"PluginUUID\": \"3d4e56b0-7238-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"ZEnemy\",", "\"PluginUUID\": \"5532d300-7238-11e9-b20c-f9f12eb6d835\"," },
-            };
-            try
-            {
-                var deviceConfigs = Directory.GetFiles(Paths.ConfigsPath(), "device_settings_*.json", SearchOption.TopDirectoryOnly);
-                foreach (var devConfigPath in deviceConfigs)
-                {
-                    try
-                    {
-                        var content = File.ReadAllText(devConfigPath);
-                        var containsNameUUIDs = false;
-                        foreach (var key in findReplace.Keys)
-                        {
-                            if (content.Contains(key))
-                            {
-                                containsNameUUIDs = true;
-                                break;
-                            }
-                        }
-                        if (!containsNameUUIDs) continue;
-                        foreach (var kvp in findReplace)
-                        {
-                            content = content.Replace(kvp.Key, kvp.Value);
-                        }
-                        File.WriteAllText(devConfigPath, content);
-                    }
-                    catch
-                    {}
-                }
-            }
-            catch
-            {}
-            #endregion MIGRATE plugin UUIDs
         }
 
         public static void CreateBackup()
