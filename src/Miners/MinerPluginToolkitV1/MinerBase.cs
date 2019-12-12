@@ -16,7 +16,7 @@ namespace MinerPluginToolkitV1
     /// <summary>
     /// MinerBase class implements most common IMiner features and supports MinerOptionsPackage, MinerSystemEnvironmentVariables, MinerReservedApiPorts integration, process watchdog functionality.
     /// </summary>
-    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
+    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter, IMinerAsyncExtensions
     {
         /// <summary>
         /// This is internal ID counter used for logging
@@ -58,22 +58,10 @@ namespace MinerPluginToolkitV1
             _logGroup = $"Miner{_MINER_COUNT_ID}-{uuid}";
         }
 
-        // if stop is called then consider this miner obsolete
-        HashSet<CancellationTokenSource> _stopMiners = new HashSet<CancellationTokenSource>();
         protected object _lock = new object();
-
-        private enum DesiredRunningState
-        {
-            NotSet,
-            Start,
-            Stop
-        }
 
         private class StopMinerWatchdogException : Exception
         {}
-
-        private DesiredRunningState _desiredState = DesiredRunningState.NotSet;
-        private uint _minerProcessStarted = 0;
 
         public MinerOptionsPackage MinerOptionsPackage { get; set; }
         public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
@@ -145,6 +133,7 @@ namespace MinerPluginToolkitV1
 
         // Parent plugin has this info
         public IBinAndCwdPathsGettter BinAndCwdPathsGettter { get; set; } = null;
+
         public Tuple<string, string> GetBinAndCwdPaths()
         {
             return BinAndCwdPathsGettter.GetBinAndCwdPaths();
@@ -190,141 +179,148 @@ namespace MinerPluginToolkitV1
             return FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
         }
 
-        // TODO check mining pairs
         /// <summary>
-        /// Sets <see cref="DesiredRunningState"/> to Start if not already so. Then creates a miningProcess and awaits for stop token. Also handles restarts of miningProcess in case of errors.
+        /// Obsolete use StartMiningTask (<see cref="IMinerAsyncExtensions"/>)
         /// </summary>
-        public virtual void StartMining()
-        {
-            lock(_lock)
-            {
-                if (_desiredState == DesiredRunningState.Start)
-                {
-                    Logger.Error(_logGroup, $"Trying to start an already started miner");
-                    return;
-                }
-                Logger.Info(_logGroup, $"Starting miner watchdog task");
-                _desiredState = DesiredRunningState.Start;
-            }
+        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask")]
+        public virtual void StartMining() {}
 
+        private void ExitMiningProcess(Process miningProcess)
+        {
+            try
+            {
+                var pid = miningProcess?.Id ?? -1;
+                miningProcess?.CloseMainWindow();
+                // 5 seconds wait for shutdown
+                var hasExited = !miningProcess?.WaitForExit(5 * 1000) ?? false;
+                var stillRunning = pid > -1 ? Process.GetProcessById(pid) != null : false;
+                if (!hasExited || stillRunning)
+                {
+                    miningProcess?.Kill(); // TODO look for another gracefull shutdown
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Info(_logGroup, $"Error occured while stopping the process: {e.Message}");
+            }
+        }
+
+        public Task MinerProcessTask
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _miningProcessTask;
+                }
+            }
+            protected set
+            {
+                lock (_lock)
+                {
+                    _miningProcessTask = value;
+                }
+            }
+        }
+        CancellationTokenSource _stopMinerTaskSource;
+        Task _miningProcessTask;
+
+        public Task<object> StartMiningTask(CancellationToken stop)
+        {
             //const int ERROR_FILE_NOT_FOUND = 0x2;
             //const int ERROR_ACCESS_DENIED = 0x5;
-            Task.Run(() =>
+            // tsc for started process
+            var startProcessTaskCompletionSource = new TaskCompletionSource<object>();
+
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
+            var commandLine = MiningCreateCommandLine();
+            var environmentVariables = GetEnvironmentVariables();
+
+            _miningProcessTask = Task.Run(() =>
             {
-                using (var stopMiner = new CancellationTokenSource())
+                using (_stopMinerTaskSource = new CancellationTokenSource())
+                using (var stopMinerTask = CancellationTokenSource.CreateLinkedTokenSource(stop, _stopMinerTaskSource.Token))
+                using (var miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables))
+                using (var quitMiningProcess = stopMinerTask.Token.Register(() => ExitMiningProcess(miningProcess)))
                 {
+                    // TODO check this lock
                     lock (_lock)
                     {
-                        _stopMiners.Add(stopMiner);
+                        _miningProcess = miningProcess;
                     }
-                    var run = IsStart() && stopMiner.IsCancellationRequested == false;
-                    while (run)
+                    try
                     {
-                        var binPathBinCwdPair = GetBinAndCwdPaths();
-                        var binPath = binPathBinCwdPair.Item1;
-                        var binCwd = binPathBinCwdPair.Item2;
-                        var commandLine = MiningCreateCommandLine();
-                        var environmentVariables = GetEnvironmentVariables();
-
-                        using (var miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables))
+                        // BEFORE
+                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
+                        if (this is IBeforeStartMining bsm)
                         {
-                            lock (_lock)
-                            {
-                                _miningProcess = miningProcess;
-                            }
-                            var quitMiningProcess = stopMiner.Token.Register(() =>
-                            {
-                                try
-                                {
-                                    var pid = miningProcess?.Id ?? -1;
-                                    miningProcess?.CloseMainWindow();
-                                    // 5 seconds wait for shutdown
-                                    var hasExited = !miningProcess?.WaitForExit(5 * 1000) ?? false;
-                                    var stillRunning = pid > -1 ? Process.GetProcessById(pid) != null : false;
-                                    if (!hasExited || stillRunning)
-                                    {
-                                        miningProcess?.Kill(); // TODO look for another gracefull shutdown
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    Logger.Info(_logGroup, $"Error occured while stopping the process: {e.Message}");
-                                }
-                            });
-                            try
-                            {
-                                // mandatory 500ms delay
-                                Task.Delay(500).Wait();
-
-                                // BEFORE
-                                ThrowIfIsStop(stopMiner.IsCancellationRequested);
-                                if (this is IBeforeStartMining bsm)
-                                {
-                                    bsm.BeforeStartMining();
-                                }
-                                ThrowIfIsStop(stopMiner.IsCancellationRequested);
-
-                                // Logging
-                                Logger.Info(_logGroup, $"Starting miner binPath='{binPath}'");
-                                Logger.Info(_logGroup, $"Starting miner binCwd='{binCwd}'");
-                                Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
-                                // TODO this will not print content
-                                var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
-                                Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'"); // TODO log or debug???
-                                ThrowIfIsStop(stopMiner.IsCancellationRequested);
-                                //_stopMiner = new CancellationTokenSource();
-                                {
-                                    if (!miningProcess.Start())
-                                    {
-                                        Logger.Info(_logGroup, $"Error occured while starting a new process: {miningProcess.ToString()}");
-                                        throw new InvalidOperationException("Could not start process: " + miningProcess);
-                                    }
-
-                                    ThrowIfIsStop(stopMiner.IsCancellationRequested);
-                                    if (this is IAfterStartMining asm)
-                                    {
-                                        asm.AfterStartMining();
-                                    }
-                                    ThrowIfIsStop(stopMiner.IsCancellationRequested);
-
-                                    // block loop until process is running
-                                    miningProcess.WaitForExit();
-                                }
-                            }
-                            //catch (Win32Exception ex2)
-                            //{
-                            //    ////if (ex2.NativeErrorCode == ERROR_FILE_NOT_FOUND) throw ex2;
-                            //    //Logger.Info(_logGroup, $"Win32Exception Error occured in StartMining : {ex2.ToString()}");
-                            //    //Task.Delay(MinerToolkit.MinerRestartDelayMS, _stopMiner.Token).Wait();
-                            //}
-                            catch (StopMinerWatchdogException)
-                            {
-                                Logger.Info(_logGroup, $"Watchdog stopped in StartMining");
-                            }
-                            catch (Exception e)
-                            {
-                                Logger.Error(_logGroup, $"Error occured in StartMining : {e.Message}");
-                            }
-                            finally
-                            {
-                                quitMiningProcess.Dispose();
-                                // delay restart
-                                run = IsStart() && stopMiner.IsCancellationRequested == false;
-                                if (run)
-                                {
-                                    Logger.Info(_logGroup, $"Restart Mining in {MinerToolkit.MinerRestartDelayMS}ms");
-                                    Task.Delay(MinerToolkit.MinerRestartDelayMS).Wait();
-                                }
-                            }
+                            bsm.BeforeStartMining();
                         }
+                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
+
+                        // Logging
+                        Logger.Info(_logGroup, $"Starting miner binPath='{binPath}'");
+                        Logger.Info(_logGroup, $"Starting miner binCwd='{binCwd}'");
+                        Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
+                        // TODO this will not print content
+                        var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
+                        Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'"); // TODO log or debug???
+                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
+
+                        if (!miningProcess.Start())
+                        {
+                            Logger.Info(_logGroup, $"Error occured while starting a new process: {miningProcess.ToString()}");
+                            startProcessTaskCompletionSource.SetResult(new InvalidOperationException("Could not start process: " + miningProcess));
+                            return;
+                        }
+
+                        startProcessTaskCompletionSource.SetResult(true);
+
+                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
+                        if (this is IAfterStartMining asm)
+                        {
+                            asm.AfterStartMining();
+                        }
+                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
+                        // block while process is running
+                        miningProcess.WaitForExit();
                     }
-                    Logger.Info(_logGroup, $"Exited miner watchdog");
-                    lock (_lock)
+                    //catch (Win32Exception ex2)
+                    //{
+                    //    ////if (ex2.NativeErrorCode == ERROR_FILE_NOT_FOUND) throw ex2;
+                    //    //Logger.Info(_logGroup, $"Win32Exception Error occured in StartMining : {ex2.ToString()}");
+                    //    //Task.Delay(MinerToolkit.MinerRestartDelayMS, _stopMiner.Token).Wait();
+                    //}
+                    catch (StopMinerWatchdogException)
                     {
-                        _stopMiners.Remove(stopMiner);
+                        Logger.Info(_logGroup, $"Watchdog stopped in StartMining");
+                        startProcessTaskCompletionSource.SetResult(false);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(_logGroup, $"Error occured in StartMining : {e.Message}");
+                        startProcessTaskCompletionSource.SetResult(e);
                     }
                 }
             });
+
+            return startProcessTaskCompletionSource.Task;
+        }
+
+        public async Task StopMiningTask()
+        {
+            try
+            {
+                var waitTask = MinerProcessTask;
+                _stopMinerTaskSource?.Cancel();
+                if (waitTask != null) await waitTask;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logGroup, $"Error occured while StopMiningTask: {e.Message}");
+            }
         }
 
         /// <summary>
@@ -332,47 +328,13 @@ namespace MinerPluginToolkitV1
         /// </summary>
         private void ThrowIfIsStop(bool isTokenCanceled)
         {
-            var isStopped = false;
-            lock (_lock)
-            {
-                isStopped = _desiredState == DesiredRunningState.Stop;
-            }
-            if (isStopped || isTokenCanceled) throw new StopMinerWatchdogException();
+            if (isTokenCanceled) throw new StopMinerWatchdogException();
         }
 
         /// <summary>
-        /// Checks if <see cref="DesiredRunningState"/> is Start
+        /// Obsolete use StopMiningTask (<see cref="IMinerAsyncExtensions"/>)
         /// </summary>
-        private bool IsStart()
-        {
-            lock (_lock)
-            {
-                return _desiredState == DesiredRunningState.Start;
-            }
-        }
-
-        /// <summary>
-        /// Changes <see cref="DesiredRunningState"/> to Stop and sends Cancel token to all miners that need to be stopped
-        /// </summary>
-        public virtual void StopMining()
-        {
-            Logger.Info(_logGroup, $"Stop miner called");
-            lock (_lock)
-            {
-                _desiredState = DesiredRunningState.Stop;
-                Logger.Info(_logGroup, $"Stop miner called: STOP TASKS IN LIST: {_stopMiners.Count}");
-                foreach (var stopMiner in _stopMiners)
-                {
-                    try
-                    {
-                        stopMiner?.Cancel();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(_logGroup, $"Error occured while StopMining: {e.Message}");
-                    }
-                }
-            }
-        }
+        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask")]
+        public virtual void StopMining() {}
     }
 }
