@@ -1,8 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
-using NHMCore.Benchmarking.BenchHelpers;
 using NHMCore.Configs;
-using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Concurrent;
@@ -11,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NHMCore.Benchmarking
+namespace NHMCore.Mining.Benchmarking
 {
     internal class BenchmarkingComputeDeviceHandler
     {

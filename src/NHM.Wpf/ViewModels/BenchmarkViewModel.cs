@@ -1,7 +1,7 @@
 ﻿using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
 using NHMCore;
-using NHMCore.Benchmarking;
+using NHMCore.Mining.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using System;

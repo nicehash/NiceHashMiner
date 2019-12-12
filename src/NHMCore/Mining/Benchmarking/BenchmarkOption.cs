@@ -1,5 +1,5 @@
 ﻿
-namespace NHMCore.Benchmarking
+namespace NHMCore.Mining.Benchmarking
 {
     public enum BenchmarkOption
     {

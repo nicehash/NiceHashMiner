@@ -130,7 +130,7 @@
     <Compile Include="Mining\AlgorithmStatus.cs" />
     <Compile Include="Mining\AvailableDevices.cs" />
     <Compile Include="Mining\ComputeDevice.cs" />
-    <Compile Include="Mining\Benchmarking\BenchHelpers\PowerHelper.cs" />
+    <Compile Include="Mining\Benchmarking\PowerHelper.cs" />
     <Compile Include="Mining\Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Mining\Benchmarking\BenchmarkingComputeDeviceHandler.cs" />
     <Compile Include="Mining\Benchmarking\BenchmarkManager.cs" />

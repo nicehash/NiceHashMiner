@@ -1,7 +1,7 @@
 using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
-using NHMCore.Benchmarking;
+using NHMCore.Mining.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using System.Collections.Concurrent;

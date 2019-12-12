@@ -1,6 +1,6 @@
 ﻿using NHM.Common.Enums;
 
-namespace NHMCore.Benchmarking
+namespace NHMCore.Mining.Benchmarking
 {
     // alias enum
     public class BenchmarkStartSettings

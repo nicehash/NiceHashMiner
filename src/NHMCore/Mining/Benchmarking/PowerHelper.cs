@@ -1,10 +1,9 @@
-﻿using NHMCore.Mining;
-using System;
+﻿using System;
 using System.Timers;
 
-namespace NHMCore.Benchmarking.BenchHelpers
+namespace NHMCore.Mining.Benchmarking
 {
-    public class PowerHelper : IDisposable
+    internal class PowerHelper : IDisposable
     {
         private Timer _timer;
 
