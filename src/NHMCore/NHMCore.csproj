@@ -109,6 +109,7 @@
     <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
     <Compile Include="ApplicationState\BalanceAndExchangeRates.cs" />
     <Compile Include="ApplicationState\MiningState.cs" />
+    <Compile Include="ApplicationState\VersionState.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkingComputeDeviceHandler.cs" />

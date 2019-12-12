@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
 using NHM.MinersDownloader;
+using NHMCore.ApplicationState;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -14,13 +15,13 @@ namespace NHMCore.Utils
         {
             try
             {
-                var url = ApplicationStateManager.GetNewVersionUpdaterUrl();
+                var url = VersionState.Instance.GetNewVersionUpdaterUrl();
                 var downloadRootPath = Path.Combine(Paths.Root, "updaters");
                 if (!Directory.Exists(downloadRootPath))
                 {
                     Directory.CreateDirectory(downloadRootPath);
                 }
-                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, $"nhm_windows_updater_{ApplicationStateManager.OnlineVersion}", downloadProgress, ApplicationStateManager.ExitApplication.Token);
+                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}", downloadProgress, ApplicationStateManager.ExitApplication.Token);
                 if (!success || ApplicationStateManager.ExitApplication.Token.IsCancellationRequested) return;
 
                 // stop devices

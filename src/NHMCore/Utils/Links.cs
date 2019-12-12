@@ -81,8 +81,6 @@ namespace NHMCore.Utils
         public const string VisitReleasesUrl = "https://github.com/NiceHash/NiceHashMiner/releases/";
         public const string VisitNewVersionReleaseUrl = "https://github.com/NiceHash/NiceHashMiner/releases/tag/";
 
-        public const string UpdaterUrlTemplate = "https://github.com/nicehash/NiceHashMiner/releases/download/{VERSION_TAG}/nhm_windows_updater_{VERSION_TAG}.exe";
-
 
         // add btc adress as parameter
 

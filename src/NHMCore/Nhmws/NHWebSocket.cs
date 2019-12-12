@@ -524,7 +524,7 @@ namespace NHMCore.Nhmws
         {
             dynamic message = JsonConvert.DeserializeObject(data);
             string version = message.v3.Value;
-            ApplicationStateManager.OnVersionUpdate(version);
+            VersionState.Instance.OnVersionUpdate(version);
             return Task.Delay(0);
         }
         #endregion VERSION

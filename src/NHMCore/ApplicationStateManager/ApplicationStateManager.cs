@@ -20,66 +20,12 @@ namespace NHMCore
         // change this if TOS changes
         public static int CurrentTosVer => 4;
 
-        #region Version
-        public static string LocalVersion { get; private set; }
-        public static string OnlineVersion { get; private set; }
-
-        public static void OnVersionUpdate(string version)
-        {
-            // update version
-            if (OnlineVersion != version)
-            {
-                OnlineVersion = version;
-            }
-            if (OnlineVersion == null)
-            {
-                return;
-            }
-
-            // check if the online version is greater than current
-            var programVersion = new Version(Application.ProductVersion);
-            var onlineVersion = new Version(OnlineVersion);
-            var ret = programVersion.CompareTo(onlineVersion);
-
-            // not sure why BetaAlphaPostfixString is being checked
-            if (ret < 0 || (ret == 0 && BetaAlphaPostfixString != ""))
-            {
-                var displayNewVer = string.Format(Translations.Tr("IMPORTANT! New version v{0} has\r\nbeen released. Click here to download it."), version);
-                // display new version
-                // notify all components
-                //DisplayVersion?.Invoke(null, displayNewVer); // TODO broken make VersionUpdatesState
-            }
-        }
-
-        public static void VisitNewVersionUrl()
-        {
-            // let's not throw anything if online version is missing just go to releases
-            var url = Links.VisitReleasesUrl;
-            if (OnlineVersion != null)
-            {
-                url = Links.VisitNewVersionReleaseUrl + OnlineVersion;
-            }
-            Helpers.VisitUrlLink(url);
-        }
-
-        public static string GetNewVersionUpdaterUrl()
-        {
-            var template = Links.UpdaterUrlTemplate;
-            var url = "";
-            if (OnlineVersion != null)
-            {
-                url = template.Replace("{VERSION_TAG}", OnlineVersion);
-            }
-            return url;
-        }
-        #endregion
-
-
+        #region Credentials methods
         // execute after 5seconds. Finish execution on last event after 5seconds
         private static DelayedSingleExecActionTask _resetNiceHashStatsCredentialsDelayed = new DelayedSingleExecActionTask
             (
             ResetNiceHashStatsCredentials,
-            new TimeSpan(0,0,5)
+            new TimeSpan(0, 0, 5)
             );
 
         static void ResetNiceHashStatsCredentials()
@@ -105,7 +51,7 @@ namespace NHMCore
             CHANGED
         }
 
-#region BTC setter
+        #region BTC setter
 
         // make sure to pass in trimmedBtc
         public static async Task<SetResult> SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
@@ -135,9 +81,9 @@ namespace NHMCore
             ConfigManager.GeneralConfigFileCommit();
             await RestartMinersIfMining();
         }
-#endregion
+        #endregion
 
-#region Worker setter
+        #region Worker setter
 
         // make sure to pass in trimmed workerName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
@@ -156,7 +102,7 @@ namespace NHMCore
             {
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
             }
-            
+
             return SetResult.CHANGED;
         }
 
@@ -167,9 +113,9 @@ namespace NHMCore
             ConfigManager.GeneralConfigFileCommit();
             await RestartMinersIfMining();
         }
-#endregion
+        #endregion
 
-#region Group setter
+        #region Group setter
 
         // make sure to pass in trimmed GroupName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
@@ -200,7 +146,9 @@ namespace NHMCore
             CredentialsSettings.Instance.RigGroup = groupName;
             ConfigManager.GeneralConfigFileCommit();
         }
-#endregion
+        #endregion
+
+        #endregion Credentials methods
 
         // StartMining function should be called only if all mining requirements are met, btc or demo, valid workername, and sma data
         // don't call this function ever unless credentials are valid or if we will be using Demo mining

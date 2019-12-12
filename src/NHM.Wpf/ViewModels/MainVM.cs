@@ -109,8 +109,10 @@ namespace NHM.Wpf.ViewModels
         #endregion Exposed settings
 
         public IEnumerable<HelpNotification> HelpNotificationsList => HelpNotification.HelpNotificationsList;
-        public string LocalVersion => ApplicationStateManager.LocalVersion;
-        public string OnlineVersion => ApplicationStateManager.OnlineVersion;
+
+        // TODO these versions here will not work
+        public string LocalVersion => VersionState.Instance.ProgramVersion.ToString();
+        public string OnlineVersion => VersionState.Instance.OnlineVersion?.ToString() ?? "N/A";
 
         #region Currency-related properties
 
