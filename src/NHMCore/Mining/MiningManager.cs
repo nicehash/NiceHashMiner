@@ -35,7 +35,7 @@ namespace NHMCore.Mining
 
         public static bool IsMiningEnabled => _miningDevices.Count > 0;
 
-        private static bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
+        //private static bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
 
         static MiningManager()
         {
@@ -91,7 +91,7 @@ namespace NHMCore.Mining
             }
 
             _switchingManager?.Stop();
-            MiningDataStats.ClearApiDataGroups();
+            //MiningDataStats.ClearApiDataGroups();
             //_internetCheckTimer?.Stop();
         }
 
@@ -111,7 +111,7 @@ namespace NHMCore.Mining
             {
                 _semaphore.Release();
             }
-            MiningDataStats.ClearApiDataGroups();
+            //MiningDataStats.ClearApiDataGroups();
         }
 
         #endregion Start/Stop
@@ -387,11 +387,11 @@ namespace NHMCore.Mining
             }
 
             
-            // There is a change in groups, change GUI
-            if (hasChanged)
-            {
-                MiningDataStats.ClearApiDataGroups();
-            }
+            //// There is a change in groups, change GUI
+            //if (hasChanged)
+            //{
+            //    MiningDataStats.ClearApiDataGroups();
+            //}
         }
 
         // TODO check the stats calculation
