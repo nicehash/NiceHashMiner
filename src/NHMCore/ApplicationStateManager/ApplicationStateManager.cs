@@ -79,7 +79,7 @@ namespace NHMCore
             // change in memory and save changes to file
             CredentialsSettings.Instance.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
-            await RestartMinersIfMining();
+            await MiningManager.ChangeUsername(GetUsername());
         }
         #endregion
 
@@ -155,7 +155,6 @@ namespace NHMCore
         private static bool StartMining()
         {
             StartComputeDevicesCheckTimer();
-            StartPreventSleepTimer();
             StartInternetCheckTimer();
             return true;
         }
@@ -164,20 +163,11 @@ namespace NHMCore
         {
             await MiningManager.StopAllMiners();
 
-            PInvokeHelpers.AllowMonitorPowerdownAndSleep();
             StopComputeDevicesCheckTimer();
-            StopPreventSleepTimer();
             StopInternetCheckTimer();
             DisplayNoInternetConnection(false); // hide warning
             DisplayMiningProfitable(true); // hide warning
             return true;
-        }
-
-
-        // TODO this thing should be dropped when we have bindable properties
-        public static void UpdateDevicesStatesAndStartDeviceRefreshTimer()
-        {
-            MiningState.Instance.CalculateDevicesStateChange();
         }
 
 

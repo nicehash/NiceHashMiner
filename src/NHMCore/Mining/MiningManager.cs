@@ -6,7 +6,9 @@ using NHMCore.Configs;
 using NHMCore.Mining.Grouping;
 using NHMCore.Mining.Plugins;
 using NHMCore.Switching;
+using NHMCore.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,112 +22,309 @@ namespace NHMCore.Mining
         private const string Tag = "MiningManager";
         private const string DoubleFormat = "F12";
 
-        private static readonly AlgorithmSwitchingManager _switchingManager;
-        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
-        private static string _username = DemoUser.BTC;
-        private static List<MiningDevice> _miningDevices = new List<MiningDevice>();
-        private static Dictionary<string, Miner> _runningMiners = new Dictionary<string, Miner>();
-
         // assume profitable
         private static bool _isProfitable = true;
         // assume we have internet
         private static bool _isConnectedToInternet = true;
 
-
+        private static object _lock = new object();
         public static bool IsMiningEnabled => _miningDevices.Count > 0;
 
-        //private static bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
+        #region State for mining
+        private static string _username = DemoUser.BTC;
+        private static string _miningLocation = null;
+        private static Dictionary<AlgorithmType, double> _normalizedProfits = null;
+        private static IEnumerable<ComputeDevice> _devices = null;
+
+        // TODO make sure _miningDevices and _runningMiners are in sync
+        private static List<MiningDevice> _miningDevices = new List<MiningDevice>();
+        private static Dictionary<string, Miner> _runningMiners = new Dictionary<string, Miner>();
+        #endregion State for mining
+
+        private enum CommandType
+        {
+
+            DevicesStartStop,
+            
+            StopAllMiners,
+
+            NormalizedProfitsUpdate,
+            MiningLocationChanged,
+            UsernameChanged,
+            
+            // TODO profitability changed
+        }
+        private class Command
+        {
+            public Command(CommandType commandType, object commandParameters)
+            {
+                CommandType = commandType;
+                CommandParameters = commandParameters;
+            }
+            public CommandType CommandType { get; private set; }
+            public object CommandParameters { get; private set; }
+            public TaskCompletionSource<bool> Tsc { get; private set; } = new TaskCompletionSource<bool>();
+        }
+
+        private enum CommandResolutionType
+        {
+            NONE,
+            CheckGroupingAndUpdateMiners,
+            RestartCurrentActiveMiners,
+            StopAllMiners
+        }
+
+        private static ConcurrentQueue<Command> _commandQueue { get; set; } = new ConcurrentQueue<Command>();
+
+        public static Task RunninLoops { get; private set; } = null;
+
+        #region Command Tasks
+        public static Task StopAllMiners()
+        {
+            var command = new Command(CommandType.StopAllMiners, null);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        public static Task ChangeUsername(string username)
+        {
+            var command = new Command(CommandType.UsernameChanged, username);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        public static Task UpdateMiningSession(IEnumerable<ComputeDevice> devices)
+        {
+            var command = new Command(CommandType.DevicesStartStop, devices);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        private static Task NormalizedProfitsUpdate(Dictionary<AlgorithmType, double> normalizedProfits)
+        {
+            var command = new Command(CommandType.NormalizedProfitsUpdate, normalizedProfits);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        private static Task MiningLocationChanged(string miningLocation)
+        {
+            var command = new Command(CommandType.MiningLocationChanged, miningLocation);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        #endregion Command Tasks
+
 
         static MiningManager()
         {
             ApplicationStateManager.OnInternetCheck += OnInternetCheck;
 
-            _switchingManager = new AlgorithmSwitchingManager();
-            _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+            _miningLocation = StratumService.Instance.SelectedServiceLocation;
+
+            StratumService.Instance.PropertyChanged += Instance_PropertyChanged;
+
+            
         }
-        
+
+        public static void StartLoops(CancellationToken stop)
+        {
+            var loop1 = MiningManagerCommandQueueLoop(stop);
+            var loop2 = MiningManagerMainLoop(stop);
+            RunninLoops = Task.WhenAll(loop1, loop2);
+        }
+
+        private static void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(StratumService.SelectedServiceLocation))
+            {
+                _ = MiningLocationChanged(StratumService.Instance.SelectedServiceLocation);
+            }
+        }
+
+        private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
+        {
+            var switchingManager = new AlgorithmSwitchingManager();
+            switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+            switchingManager.ForceUpdate();
+
+            var checkWaitTime = TimeSpan.FromMilliseconds(50);
+            Func<bool> isActive = () => !stop.IsCancellationRequested;
+
+            while (isActive())
+            {
+                if (isActive()) await Task.Delay(checkWaitTime); // TODO add cancelation token here
+                if (_commandQueue.TryDequeue(out var command))
+                {
+                    // check what kind of command is it and ALWAYS set Tsc.Result
+                    // do stuff with the command
+                    var commandExecSuccess = true;
+                    try
+                    {
+                        var commandResolutionType = CommandResolutionType.NONE;
+                        Logger.Debug(Tag, $"Command type {command.CommandType}");
+                        switch (command.CommandType)
+                        {
+                            case CommandType.DevicesStartStop:
+                                commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
+                                if (command.CommandParameters is IEnumerable<ComputeDevice> devices)
+                                {
+                                    _devices = devices;
+                                    Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                                }
+                                break;
+                            case CommandType.NormalizedProfitsUpdate:
+                                commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
+                                if (command.CommandParameters is Dictionary<AlgorithmType, double> profits)
+                                {
+                                    _normalizedProfits = profits;
+                                    Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                                }
+                                break;
+                            case CommandType.UsernameChanged:
+                                commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
+                                if (command.CommandParameters is string username)
+                                {
+                                    _username = username;
+                                    Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                                }
+                                break;
+                            case CommandType.MiningLocationChanged:
+                                commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
+                                if (command.CommandParameters is string location)
+                                {
+                                    _miningLocation = location;
+                                    Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                                }
+                                break;
+                            case CommandType.StopAllMiners:
+                                commandResolutionType = CommandResolutionType.StopAllMiners;
+                                Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                                break;
+
+                            default:
+                                Logger.Debug(Tag, $"command type not handled {command.CommandType}");
+                                break;
+                        }
+                        // tasks to await
+                        Logger.Debug(Tag, $"Command type {command.CommandType} Resolution {commandResolutionType}");
+                        switch (commandResolutionType)
+                        {
+                            case CommandResolutionType.CheckGroupingAndUpdateMiners:
+                                await CheckGroupingAndUpdateMiners(command.CommandType);
+                                break;
+                            case CommandResolutionType.RestartCurrentActiveMiners:
+                                await RestartMiners();
+                                break;
+                            case CommandResolutionType.StopAllMiners:
+                                await StopAllMinersTask();
+                                break;
+                            default:
+                                break;
+                        }
+                        
+                    }
+                    catch (Exception e)
+                    {
+                        commandExecSuccess = false;
+                        // TODO log
+                    }
+                    finally
+                    {
+                        // always set command source completed here
+                        command.Tsc.SetResult(commandExecSuccess);
+                    }                   
+                }
+            }
+            // cleanup
+            switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
+            switchingManager.Stop();
+            foreach (var groupMiner in _runningMiners.Values)
+            {
+                await groupMiner.StopTask();
+            }
+            _runningMiners.Clear();
+            _miningDevices.Clear();
+        }
+
+        private static async Task MiningManagerMainLoop(CancellationToken stop)
+        {
+            var checkWaitTime = TimeSpan.FromMilliseconds(50);
+            Func<bool> isActive = () => !stop.IsCancellationRequested;
+
+            // sleep time setting is minimal 1 minute
+            const int preventSleepIntervalSeconds = 20; // leave this interval, it works
+            var lastPreventSleepIntervalSecondsCalled = DateTime.MinValue;
+
+            while (isActive())
+            {
+                if (isActive()) await Task.Delay(checkWaitTime); // TODO add cancelation token here
+
+                // prevent sleep check
+                var elapsedTime = DateTime.UtcNow - lastPreventSleepIntervalSecondsCalled;
+                if (isActive() && elapsedTime.TotalSeconds > preventSleepIntervalSeconds)
+                {
+                    lastPreventSleepIntervalSecondsCalled = DateTime.UtcNow;
+                    var isMining = IsMiningEnabled;
+                    if (isMining)
+                    {
+                        PInvokeHelpers.PreventSleep();
+                    }
+                    else
+                    {
+                        PInvokeHelpers.AllowMonitorPowerdownAndSleep();
+                    }
+                }
+                // TODO should we check internet interval here???
+            }
+
+            // cleanup
+            PInvokeHelpers.AllowMonitorPowerdownAndSleep();
+        }
+
+
         private static void OnInternetCheck(object sender, bool isConnectedToInternet)
         {
             _isConnectedToInternet = isConnectedToInternet;
         }
 
-
-        #region Start/Stop
-
-        public static async Task StopAllMiners()
+        private static async Task StopAllMinersTask()
         {
             EthlargementIntegratedPlugin.Instance.Stop();
-            await _semaphore.WaitAsync();
-            try
+            foreach (var groupMiner in _runningMiners.Values)
             {
-                foreach (var groupMiner in _runningMiners.Values)
-                {
-                    await groupMiner.StopTask();
-                }
-                _runningMiners.Clear();
-
-                //// TODO enable StabilityAnalyzer
-                //// Speed stability analyzer was here or deviant algo checker
-                //foreach (var miningDev in _miningDevices)
-                //{
-                //    var deviceUuid = miningDev.Device.Uuid;
-                //    foreach (var algorithm in miningDev.Algorithms)
-                //    {
-                //        var speedID = $"{deviceUuid}-{algorithm.AlgorithmStringID}";
-                //        var isDeviant = BenchmarkingAnalyzer.IsDeviant(speedID);
-                //        if (isDeviant)
-                //        {
-                //            var stableSpeeds = BenchmarkingAnalyzer.GetStableSpeeds(speedID);
-                //            if (stableSpeeds != null)
-                //            {
-                //                algorithm.Speeds = stableSpeeds;
-                //            }
-                //        }
-                //    }
-                //}
+                await groupMiner.StopTask();
             }
-            finally
-            {
-                _semaphore.Release();
-            }
-
-            _switchingManager?.Stop();
-            //MiningDataStats.ClearApiDataGroups();
-            //_internetCheckTimer?.Stop();
+            _runningMiners.Clear();
+            _miningDevices.Clear();
         }
 
-        public static async Task PauseAllMiners()
+        // PauseAllMiners doesn't clear _miningDevices
+        private static async Task PauseAllMiners()
         {
             EthlargementIntegratedPlugin.Instance.Stop();
-            await _semaphore.WaitAsync();
-            try
+            foreach (var groupMiner in _runningMiners.Values)
             {
-                foreach (var groupMiner in _runningMiners.Values)
-                {
-                    await groupMiner.StopTask();
-                }
-                _runningMiners.Clear();
+                await groupMiner.StopTask();
             }
-            finally
+        }
+        private static async Task ResumeAllMiners()
+        {
+            foreach (var groupMiner in _runningMiners.Values)
             {
-                _semaphore.Release();
+                await groupMiner.StartMinerTask(ApplicationStateManager.ExitApplication.Token, _miningLocation, _username);
             }
-            //MiningDataStats.ClearApiDataGroups();
         }
 
-        #endregion Start/Stop
-
-        // TODO make Task
-        public static async Task UpdateMiningSession(IEnumerable<ComputeDevice> devices, string username)
+        private static async Task CheckGroupingAndUpdateMiners(CommandType commandType)
         {
-            _switchingManager?.Stop();
-            await _semaphore.WaitAsync();
-            try
+            // first update mining devices
+            if (commandType == CommandType.DevicesStartStop)
             {
-                _username = username;
-                // TODO check out if there is a change
-                _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
+                // TODO should we check new and old miningDevices???
+                var oldMiningDevices = _miningDevices;
+                _miningDevices = GroupSetupUtils.GetMiningDevices(_devices, true);
                 if (_miningDevices.Count > 0)
                 {
                     GroupSetupUtils.AvarageSpeeds(_miningDevices);
@@ -146,37 +345,33 @@ namespace NHMCore.Mining
                     //}
                 }
             }
-            finally
+            // TODO check if there is nothing to check maybe
+            if (_normalizedProfits == null)
             {
-                _semaphore.Release();
+                Logger.Error(Tag, "Profits is null");
+                return;
             }
-            _switchingManager?.ForceUpdate();
+            // TODO if empty stop all miners
+            if (_miningDevices.Count == 0)
+            {
+                Logger.Error(Tag, "_miningDevices.count == 0");
+                return;
+            }
+            await SwichMostProfitableGroupUpMethodTask(_normalizedProfits);
         }
 
-        public static async Task RestartMiners(string username)
+        private static async Task RestartMiners()
         {
-            _switchingManager?.Stop();
-            await _semaphore.WaitAsync();
-            try
+            // STOP
+            foreach (var key in _runningMiners.Keys)
             {
-                _username = username;
-                // STOP
-                foreach (var key in _runningMiners.Keys)
-                {
-                    await _runningMiners[key].StopTask();
-                }
-                // START
-                var miningLocation = StratumService.Instance.SelectedServiceLocation;
-                foreach (var key in _runningMiners.Keys)
-                {
-                    await _runningMiners[key].StartMinerTask(ApplicationStateManager.ExitApplication.Token, miningLocation, _username);
-                }
+                await _runningMiners[key].StopTask();
             }
-            finally
+            // START
+            foreach (var key in _runningMiners.Keys)
             {
-                _semaphore.Release();
+                await _runningMiners[key].StartMinerTask(ApplicationStateManager.ExitApplication.Token, _miningLocation, _username);
             }
-            _switchingManager?.ForceUpdate();
         }
 
 
@@ -223,9 +418,9 @@ namespace NHMCore.Mining
             return shouldMine;
         }
 
-        private static async void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
+        private static void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
-            await SwichMostProfitableGroupUpMethodTask(sender, e);
+            _ = NormalizedProfitsUpdate(e.NormalizedProfits);
         }
 
 
@@ -266,9 +461,9 @@ namespace NHMCore.Mining
             return profitableMiningPairs;
         }
 
-        private static async Task SwichMostProfitableGroupUpMethodTask(object sender, SmaUpdateEventArgs e)
+        private static async Task SwichMostProfitableGroupUpMethodTask(Dictionary<AlgorithmType, double> normalizedProfits)
         {
-            CalculateAndUpdateMiningDevicesProfits(e.NormalizedProfits);
+            CalculateAndUpdateMiningDevicesProfits(normalizedProfits);
             var (currentProfit, prevStateProfit) = GetCurrentAndPreviousProfits();
 
             // log profits scope
@@ -337,61 +532,45 @@ namespace NHMCore.Mining
                 Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {SwitchSettings.Instance.SwitchProfitabilityThreshold}");
             }
 
-            await _semaphore.WaitAsync();
-            var hasChanged = false;
-            try
+            // grouping starting and stopping
+            // group new miners 
+            var newGroupedMiningPairs = GroupingUtils.GetGroupedMiningPairs(GetProfitableMiningPairs());
+            // check newGroupedMiningPairs and running Groups to figure out what to start/stop and keep running
+            var currentRunningGroups = _runningMiners.Keys.ToArray();
+            // check which groupMiners should be stopped and which ones should be started and which to keep running
+            var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
+            var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
+            var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToArray();
+            // first stop currently running
+            foreach (var stopKey in toStopMinerGroupKeys)
             {
-                // group new miners 
-                var newGroupedMiningPairs = GroupingUtils.GetGroupedMiningPairs(GetProfitableMiningPairs());
-                // check newGroupedMiningPairs and running Groups to figure out what to start/stop and keep running
-                var currentRunningGroups = _runningMiners.Keys.ToArray();
-                // check which groupMiners should be stopped and which ones should be started and which to keep running
-                var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
-                var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
-                var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToArray();
-                // first stop currently running
-                foreach (var stopKey in toStopMinerGroupKeys)
-                {
-                    var stopGroup = _runningMiners[stopKey];
-                    _runningMiners.Remove(stopKey);
-                    await stopGroup.StopTask();
-                }
-                // start new
-                var miningLocation = StratumService.Instance.SelectedServiceLocation;
-                foreach (var startKey in toStartMinerGroupKeys)
-                {
-                    var miningPairs = newGroupedMiningPairs[startKey];
-                    var toStart = Miner.CreateMinerForMining(miningPairs, startKey);
-                    if (toStart == null)
-                    {
-                        Logger.Error(Tag, $"CreateMinerForMining for key='{startKey}' returned <null>");
-                        continue;
-                    }
-                    _runningMiners[startKey] = toStart;
-                    await toStart.StartMinerTask(ApplicationStateManager.ExitApplication.Token, miningLocation, _username);
-                }
-                // log scope
-                {
-                    var stopLog = toStopMinerGroupKeys.Length > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
-                    Logger.Info(Tag, $"Stop Old Mining: ({stopLog})");
-                    var startLog = toStartMinerGroupKeys.Length > 0 ? string.Join(",", toStartMinerGroupKeys) : "EMTPY";
-                    Logger.Info(Tag, $"Start New Mining : ({startLog})");
-                    var sameLog = noChangeGroupMinersKeys.Length > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
-                    Logger.Info(Tag, $"No change : ({sameLog})");
-                }
-                hasChanged = toStartMinerGroupKeys.Length > 0 || toStopMinerGroupKeys.Length > 0;
+                var stopGroup = _runningMiners[stopKey];
+                _runningMiners.Remove(stopKey);
+                await stopGroup.StopTask();
             }
-            finally
+            // start new
+            var miningLocation = StratumService.Instance.SelectedServiceLocation;
+            foreach (var startKey in toStartMinerGroupKeys)
             {
-                _semaphore.Release();
+                var miningPairs = newGroupedMiningPairs[startKey];
+                var toStart = Miner.CreateMinerForMining(miningPairs, startKey);
+                if (toStart == null)
+                {
+                    Logger.Error(Tag, $"CreateMinerForMining for key='{startKey}' returned <null>");
+                    continue;
+                }
+                _runningMiners[startKey] = toStart;
+                await toStart.StartMinerTask(ApplicationStateManager.ExitApplication.Token, miningLocation, _username);
             }
-
-            
-            //// There is a change in groups, change GUI
-            //if (hasChanged)
-            //{
-            //    MiningDataStats.ClearApiDataGroups();
-            //}
+            // log scope
+            {
+                var stopLog = toStopMinerGroupKeys.Length > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
+                Logger.Info(Tag, $"Stop Old Mining: ({stopLog})");
+                var startLog = toStartMinerGroupKeys.Length > 0 ? string.Join(",", toStartMinerGroupKeys) : "EMTPY";
+                Logger.Info(Tag, $"Start New Mining : ({startLog})");
+                var sameLog = noChangeGroupMinersKeys.Length > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
+                Logger.Info(Tag, $"No change : ({sameLog})");
+            }
         }
 
         // TODO check the stats calculation

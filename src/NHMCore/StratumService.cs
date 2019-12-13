@@ -30,6 +30,7 @@ namespace NHMCore
                 }
                 _lastSelectedServiceLocation = SelectedServiceLocation;
                 OnPropertyChanged(nameof(ServiceLocation));
+                OnPropertyChanged(nameof(SelectedServiceLocation));
             }
         }
 

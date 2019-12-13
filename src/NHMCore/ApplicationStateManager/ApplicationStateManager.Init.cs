@@ -2,6 +2,7 @@ using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceDetection;
 using NHM.DeviceMonitoring;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
@@ -144,7 +145,7 @@ namespace NHMCore
                 ConfigManager.CommitBenchmarks();
                 /////////////////////////////////////////////
                 /////// from here on we have our devices and Miners initialized
-                UpdateDevicesStatesAndStartDeviceRefreshTimer();
+                MiningState.Instance.CalculateDevicesStateChange();
 
                 // STEP
                 // connect to nhmws
@@ -152,7 +153,7 @@ namespace NHMCore
                 // Init ws connection
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
                 NHWebSocket.SetCredentials(btc, worker, group);
-                _ = Task.Run(() => NHWebSocket.Start(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token));
+                NHWebSocket.StartLoop(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token);
                 
 
                 // STEP
@@ -211,6 +212,8 @@ namespace NHMCore
                         return;
                     }
                 }
+                // fire up mining manager loop
+                MiningManager.StartLoops(ExitApplication.Token);
 
                 // STEP
                 // VC_REDIST check

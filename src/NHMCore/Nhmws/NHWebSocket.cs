@@ -102,6 +102,13 @@ namespace NHMCore.Nhmws
             }
         }
 
+        public static Task MainLoop { get; private set; } = null;
+
+        public static void StartLoop(string address, CancellationToken token)
+        {
+            MainLoop = Task.Run(() => Start(NHM.Common.Nhmws.NhmSocketAddress, token));
+        }
+
         static public async Task Start(string address, CancellationToken token)
         {
             var random = new Random();

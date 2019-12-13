@@ -104,27 +104,6 @@ namespace NHMCore
         }
         #endregion ComputeDevicesCheck Lost GPU check
 
-        #region PreventSystemSleepTimer
-        private static AppTimer _preventSleepTimer;
-
-        private static void StartPreventSleepTimer()
-        {
-            if (_preventSleepTimer?.IsActive ?? false) return;
-            // sleep time setting is minimal 1 minute
-            _preventSleepTimer = new AppTimer((s, e) => {
-                PInvokeHelpers.PreventSleep();
-            },
-            20 * 1000);// leave this interval, it works
-            _preventSleepTimer.Start();
-        }
-
-        // restroe/enable sleep
-        private static void StopPreventSleepTimer()
-        {
-            _preventSleepTimer?.Stop();
-        }
-        #endregion PreventSystemSleepTimer
-
         #region InternetCheck timer
         private static AppTimer _internetCheckTimer;
 
