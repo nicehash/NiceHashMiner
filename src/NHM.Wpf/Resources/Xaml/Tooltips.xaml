@@ -30,7 +30,11 @@
     
     <system:String x:Key="gpuNumber">Number of gpu devices in your system.</system:String>
     <system:String x:Key="cpuNumber">Number of cpu devices in your system.</system:String>
+    <system:String x:Key="unpaidBalance">Amount of BTC not yet paid to you.</system:String>
+    <system:String x:Key="currentProfitability">Estimated current profitability of your system.</system:String>
 
+    <system:String x:Key="devicesMining">Number of devices that are currently mining.</system:String>
+    
     <system:String x:Key="scheduleBenchmarking">Include this alrogithm in benchmark sessions when plugin gets updated. This will ensure the best possible hash rate.</system:String>
     
 </ResourceDictionary>
