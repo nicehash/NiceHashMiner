@@ -76,39 +76,39 @@
                         <ColumnDefinition Width="199*" />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource gpuNumber}">
                             <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
                             <TextBlock Style="{StaticResource DevicesTypeLabelText}">GPU’S</TextBlock>
                         </StackPanel>
                     </Grid>
                     <GridSplitter Grid.Column="1" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
                     <Grid Grid.Column="2">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource cpuNumber}">
                             <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceCPUCount}"/>
                             <TextBlock Style="{StaticResource DevicesTypeLabelText}">CPU</TextBlock>
                         </StackPanel>
                     </Grid>
                     <GridSplitter Grid.Column="3" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
-                    <StackPanel Grid.Column="4">
+                    <StackPanel Grid.Column="4" ToolTip="{StaticResource currentProfitability}">
                         <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
                         <!--TODO Bindings here are temp-->
                         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
                             <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding GlobalRate}" />
                             <TextBlock Style="{StaticResource StatsBTCLabelText}" Margin="0,14,0,0" Text="{Binding ScaledBtcPerTime}" />
                         </WrapPanel>
-                        <TextBlock Style="{StaticResource StatsFiatEstimateText}" Margin="24,8,0,0" Text="{Binding GlobalRateFiat}" />
+                        <TextBlock Style="{StaticResource StatsFiatEstimateText}" Margin="24,8,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
                     </StackPanel>
                     <GridSplitter Grid.Column="5" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
-                    <StackPanel Grid.Column="6">
+                    <StackPanel Grid.Column="6" ToolTip="{StaticResource unpaidBalance}">
                         <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
                         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
                             <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
                             <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="0,14,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
                         </WrapPanel>
-                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" />
+                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
                     </StackPanel>
                     <GridSplitter Grid.Column="7" Width="1" HorizontalAlignment="Stretch" Background="#eeeeee"/>
-                    <StackPanel Grid.Column="8">
+                    <StackPanel Grid.Column="8"  ToolTip="{Binding ExchangeTooltip}">
                         <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">N/A</TextBlock>

@@ -107,7 +107,7 @@
                     <ContentPresenter />
                 </ControlTemplate>
             </ToggleButton.Template>
-            <WrapPanel Margin="24,16,24,16">
+            <WrapPanel Margin="24,16,24,16" ToolTip="{StaticResource scheduleBenchmarking}">
                 <TextBlock Style="{StaticResource settingTitle}" Text="Schedule for benchmarking" />
                 <CheckBox x:Name="ReBenchSwitch" Style="{StaticResource NHMSwitch}" Margin="4,0,0,0" IsChecked="{Binding IsReBenchmark}" />
             </WrapPanel>
