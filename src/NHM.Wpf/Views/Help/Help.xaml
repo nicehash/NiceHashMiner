@@ -18,13 +18,13 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <WrapPanel Grid.Row="0" Orientation="Vertical">
-                <WrapPanel>
-                    <Label Content="NiceHash Miner version: " />
-                    <TextBlock x:Name="tbx_nhmVersionHelp" Text="{Binding LocalVersion}"/>
+                <WrapPanel VerticalAlignment="Center">
+                    <Label Content="NiceHash Miner version: " Style="{StaticResource FontsTypography.NormalRegular/Active}" />
+                    <Label Content="{Binding LocalVersion}" Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
                 </WrapPanel>
                 <WrapPanel>
-                    <Label Content="Latest online version: " />
-                    <TextBlock x:Name="tbx_onlineNhmVersionHelp" Text="{Binding OnlineVersion}"/>
+                    <Label Content="Latest online version: " Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
+                    <Label Content="{Binding OnlineVersion}" Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
                 </WrapPanel>
             </WrapPanel>
             <Grid Grid.Row="1" Margin="0,20,0,0">
