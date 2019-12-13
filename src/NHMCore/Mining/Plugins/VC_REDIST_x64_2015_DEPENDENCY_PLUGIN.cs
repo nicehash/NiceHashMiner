@@ -73,7 +73,7 @@ namespace NHMCore.Mining.Plugins
 
         public string VcRedistBinPath()
         {
-            var binPath = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "bins", "VC_redist.x64_2015_2019.exe");
+            var binPath = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "bins", $"{Version.Major}.{Version.Minor}", "VC_redist.x64_2015_2019.exe");
             return binPath;
         }
 

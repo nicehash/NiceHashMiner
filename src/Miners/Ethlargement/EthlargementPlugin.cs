@@ -116,7 +116,7 @@ namespace Ethlargement
         public virtual string EthlargementBinPath()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", $"{Version.Major}.{Version.Minor}");
             var binPath = Path.Combine(pluginRootBins, "OhGodAnETHlargementPill-r2.exe");
             return binPath;
         }
