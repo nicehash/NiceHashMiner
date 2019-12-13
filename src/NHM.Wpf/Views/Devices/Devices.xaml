@@ -37,7 +37,7 @@
                 <ColumnDefinition Width="197*" />
                 <ColumnDefinition Width="164*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
+            <Grid Grid.Column="0" ToolTip="{StaticResource devicesMining}">
                 <Border  BorderThickness="1" Background="#fde3c6" BorderBrush="Transparent" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -67,7 +67,7 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" Margin="16,0,0,0">
+            <Grid Grid.Column="1" Margin="16,0,0,0" ToolTip="{StaticResource currentProfitability}">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -84,10 +84,10 @@
                         <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding GlobalRate}"/>
                         <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding ScaledBtcPerTime}"/>
                     </WrapPanel>
-                    <TextBlock Grid.Row="3" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,10,0,0" Text="{Binding GlobalRateFiat}"/>
+                    <TextBlock Grid.Row="3" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,10,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="2" Margin="16,0,0,0">
+            <Grid Grid.Column="2" Margin="16,0,0,0" ToolTip="{StaticResource unpaidBalance}">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -103,10 +103,10 @@
                         <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
                         <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
                     </WrapPanel>
-                    <TextBlock Grid.Row="3" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"/>
+                    <TextBlock Grid.Row="3" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="3" Margin="16,0,0,0">
+            <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding ExchangeTooltip}">
                 <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
