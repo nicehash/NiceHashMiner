@@ -35,7 +35,7 @@ namespace XmrStakRx
                 },
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithSingleParameter,
+                    Type = MinerOptionType.OptionIsParameter,
                     ID = "xmrstak_noTest",
                     ShortName = "--noTest",
                 },
