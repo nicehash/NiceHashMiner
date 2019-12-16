@@ -176,6 +176,13 @@ namespace NHM.Wpf.ViewModels.Models
                     OnPropertyChanged(nameof(AlgoOptions));
                     OnPropertyChanged(nameof(AlgosEnabled));
                     OnPropertyChanged(nameof(AlgosBenchmarked));
+                    // update algorithms event handlers here
+                    foreach (var algo in Dev.AlgorithmSettings)
+                    {
+                        algo.PropertyChanged -= AlgoOnPropertyChanged;
+                        algo.PropertyChanged += AlgoOnPropertyChanged;
+                    }
+
                     return;
                 default:
                     break;
