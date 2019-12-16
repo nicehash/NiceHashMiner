@@ -148,6 +148,7 @@
     <Compile Include="Mining\Plugins\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Mining\Plugins\MinerPluginInstallTask.cs" />
     <Compile Include="Mining\Plugins\PluginInstallProgressState.cs" />
+    <Compile Include="Mining\Plugins\PluginInstallRemoveState.cs" />
     <Compile Include="Mining\Plugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
     <Compile Include="Mining\MinerApiWatchdog.cs" />
     <Compile Include="Mining\MiningManager.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="StratumService.cs" />
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\DelayedSingleExecActionTask.cs" />
+    <Compile Include="Utils\ElapsedTimeChecker.cs" />
     <Compile Include="Utils\FirewallRules.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
     <Compile Include="Utils\PInvokeHelpers.cs" />
