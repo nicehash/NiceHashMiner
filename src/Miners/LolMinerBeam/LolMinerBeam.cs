@@ -19,6 +19,8 @@ namespace LolMinerBeam
         private int _apiPort;
         private double DevFee = 1d;
 
+        private string _disableWatchdogParam = "--disablewatchdog 1";
+
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
         protected Dictionary<string, int> _mappedIDs;
@@ -130,6 +132,11 @@ namespace LolMinerBeam
             {
                 _initOrderMirrorApiOrderUUIDs[i] = miningPairs[i].Device.UUID;
             }
+            // if ELP contains watchdog remove default wd-param
+            if (_extraLaunchParameters.Contains("--disablewatchdog"))
+            {
+                _disableWatchdogParam = "";
+            }
         }
 
         protected override string MiningCreateCommandLine()
@@ -143,8 +150,8 @@ namespace LolMinerBeam
             var port = split[2];
 
             var algo = AlgorithmName(_algorithmType);
-
-            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} --devices {_devices} {_extraLaunchParameters}";
+            //--disablewatchdog 1
+            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} {_disableWatchdogParam} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }

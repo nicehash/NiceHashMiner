@@ -292,7 +292,7 @@ namespace XmrStakRx
             ConfigHelpers.WriteConfigFile(poolsConfigFilePath, poolsConfig);
 
             var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
-            var commandLine = $@"--config {folder}\config.txt --poolconf {folder}\pools.txt {deviceConfigParams} {disableDeviceTypes}";
+            var commandLine = $@"--config {folder}\config.txt --poolconf {folder}\pools.txt {deviceConfigParams} {disableDeviceTypes} {_extraLaunchParameters}";
             return commandLine;
         }
 

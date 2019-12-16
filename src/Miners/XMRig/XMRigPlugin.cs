@@ -19,11 +19,11 @@ namespace XMRig
             // https://github.com/xmrig/xmrig
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "5.1.1",
-                ExePath = new List<string> { "xmrig-5.1.1", "xmrig.exe" },
+                BinVersion = "v5.3.0",
+                ExePath = new List<string> { "xmrig-5.3.0", "xmrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/xmrig/xmrig/releases/download/v5.1.1/xmrig-5.1.1-msvc-win64.zip" // original
+                    "https://github.com/xmrig/xmrig/releases/download/v5.3.0/xmrig-5.3.0-msvc-win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -38,7 +38,7 @@ namespace XMRig
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(4, 2);
+        public override Version Version => new Version(4, 3);
 
         public override string Name => "XMRig";
 
@@ -73,7 +73,7 @@ namespace XMRig
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 1)
+                if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 3)
                 {
                     if (ids.FirstOrDefault() == AlgorithmType.RandomXmonero) return true;
                 }
