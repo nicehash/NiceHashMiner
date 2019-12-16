@@ -21,6 +21,7 @@ namespace NHMCore.Mining.Plugins
         FailedExtractingMiner,
         // installing
         FailedPluginLoad,
+        FailedPluginInit,
         FailedUnknown,
         Success,
         Canceled

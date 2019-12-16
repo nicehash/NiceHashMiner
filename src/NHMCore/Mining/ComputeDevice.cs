@@ -42,6 +42,7 @@ namespace NHMCore.Mining
             {
                 if (value == _enabled) return;
                 _enabled = value;
+                StartState = false;
                 State = value ? DeviceState.Stopped : DeviceState.Disabled;
                 OnPropertyChanged();
             }
@@ -63,6 +64,8 @@ namespace NHMCore.Mining
                 NHWebSocket.NotifyStateChanged();
             }
         }
+
+        internal bool StartState { get; set; } = false;
 
         private readonly object _lock = new object();
         private bool _isPendingChange { get; set; } = false;
@@ -110,7 +113,24 @@ namespace NHMCore.Mining
             }
         }
 
-        public List<AlgorithmContainer> AlgorithmSettings { get; protected set; } = new List<AlgorithmContainer>();
+        private List<AlgorithmContainer> _algorithmSettings { get; set; } = new List<AlgorithmContainer>();
+        public List<AlgorithmContainer> AlgorithmSettings
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _algorithmSettings;
+                }
+            }
+            protected set
+            {
+                lock (_lock)
+                {
+                    _algorithmSettings = value;
+                }
+            }
+        }
 
         private List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; set; } = new List<PluginAlgorithmConfig>();
 

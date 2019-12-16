@@ -2,6 +2,7 @@
 using NHM.Common;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -267,17 +268,17 @@ namespace NHMCore.Mining
         private async Task MinerStatsLoop(Task runningTask, CancellationToken stop)
         {
             // TODO make sure this interval is per miner plugin instead of a global one
-            var minerStatusTickSeconds = MiningSettings.Instance.MinerAPIQueryInterval;
-            var lastMinerStatsCalled = DateTime.MinValue;
+            var minerStatusElapsedTimeChecker = new ElapsedTimeChecker(
+                () => TimeSpan.FromSeconds(MiningSettings.Instance.MinerAPIQueryInterval),
+                true);
             var checkWaitTime = TimeSpan.FromMilliseconds(50);
             Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
             while (isOk())
             {
-                if (isOk()) await Task.Delay(checkWaitTime); // TODO add cancelation token here
-                var elapsedTime = DateTime.UtcNow - lastMinerStatsCalled;
-                if (isOk() && elapsedTime.TotalSeconds > minerStatusTickSeconds)
+                if (isOk()) await Task.Delay(checkWaitTime, stop);
+
+                if (isOk() && minerStatusElapsedTimeChecker.CheckAndMarkElapsedTime())
                 {
-                    lastMinerStatsCalled = DateTime.UtcNow;
                     await GetSummaryAsync();
                 }
                 // check if stagnated and restart

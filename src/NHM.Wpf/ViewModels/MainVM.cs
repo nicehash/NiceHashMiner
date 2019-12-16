@@ -5,7 +5,6 @@ using NHM.Wpf.ViewModels.Plugins;
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
-using NHMCore.Configs.Data;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
@@ -374,17 +373,11 @@ namespace NHM.Wpf.ViewModels
         public async Task StartMining()
         {
             if (!await NHSmaData.WaitOnDataAsync(10)) return;
-
-            // this underlying comment shouldn't be true anymore 
-            // TODO there is a mess of blocking and not-awaited async code down the line, 
-            // Just wrapping with Task.Run here for now
-
             await ApplicationStateManager.StartAllAvailableDevicesTask();
         }
 
         public async Task StopMining()
         {
-            // TODO same as StartMining comment
             await ApplicationStateManager.StopAllDevicesTask();
         }
     }

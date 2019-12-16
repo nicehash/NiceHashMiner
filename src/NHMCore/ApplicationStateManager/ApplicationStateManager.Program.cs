@@ -1,6 +1,7 @@
 using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.Mining;
+using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System.Collections.Generic;
@@ -58,6 +59,7 @@ namespace NHMCore
             waitTasks.Add(StopAllDevicesTask());
             waitTasks.Add(MiningManager.RunninLoops);
             waitTasks.Add(NHWebSocket.MainLoop);
+            waitTasks.Add(MinerPluginsManager.RunninLoops);
             await Task.WhenAll(waitTasks.Where(t => t != null));
             MessageBoxManager.Unregister();
         }

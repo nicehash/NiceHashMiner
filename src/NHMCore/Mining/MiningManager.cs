@@ -130,9 +130,14 @@ namespace NHMCore.Mining
 
         public static void StartLoops(CancellationToken stop)
         {
+            RunninLoops = Task.Run(() => StartLoopsTask(stop));
+        }
+
+        public static Task StartLoopsTask(CancellationToken stop)
+        {
             var loop1 = MiningManagerCommandQueueLoop(stop);
             var loop2 = MiningManagerMainLoop(stop);
-            RunninLoops = Task.WhenAll(loop1, loop2);
+            return Task.WhenAll(loop1, loop2);
         }
 
         private static void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -253,19 +258,16 @@ namespace NHMCore.Mining
             var checkWaitTime = TimeSpan.FromMilliseconds(50);
             Func<bool> isActive = () => !stop.IsCancellationRequested;
 
-            // sleep time setting is minimal 1 minute
-            const int preventSleepIntervalSeconds = 20; // leave this interval, it works
-            var lastPreventSleepIntervalSecondsCalled = DateTime.MinValue;
+            // sleep time setting is minimal 1 minute, 19-20s interval
+            var preventSleepIntervalElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromSeconds(19), true);
 
             while (isActive())
             {
                 if (isActive()) await Task.Delay(checkWaitTime); // TODO add cancelation token here
 
                 // prevent sleep check
-                var elapsedTime = DateTime.UtcNow - lastPreventSleepIntervalSecondsCalled;
-                if (isActive() && elapsedTime.TotalSeconds > preventSleepIntervalSeconds)
+                if (isActive() && preventSleepIntervalElapsedTimeChecker.CheckAndMarkElapsedTime())
                 {
-                    lastPreventSleepIntervalSecondsCalled = DateTime.UtcNow;
                     var isMining = IsMiningEnabled;
                     if (isMining)
                     {

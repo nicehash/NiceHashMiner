@@ -29,7 +29,7 @@ namespace NHMCore.Mining.Benchmarking
                 return;
             }
             // create new
-            Task.Run(async () => await CreateBenchmarkingTask(computeDevice, algorithmContainers, performance, startMiningAfterBenchmark));
+            Task.Run(() => CreateBenchmarkingTask(computeDevice, algorithmContainers, performance, startMiningAfterBenchmark));
         }
 
         private static async Task CreateBenchmarkingTask(ComputeDevice computeDevice, IEnumerable<AlgorithmContainer> algorithmContainers, BenchmarkPerformanceType performance, bool startMiningAfterBenchmark = false)
@@ -167,7 +167,7 @@ namespace NHMCore.Mining.Benchmarking
             finally
             {
                 BenchmarkingHandlers.TryRemove(Device, out var _);
-                Device.State = DeviceState.Stopped;
+                Device.State = DeviceState.Stopped; // TODO should this be PENDING state?
                 BenchmarkManager.EndBenchmarkForDevice(Device, showFailed, startMining);
             }
         }

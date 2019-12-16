@@ -106,7 +106,7 @@ namespace NHMCore.Nhmws
 
         public static void StartLoop(string address, CancellationToken token)
         {
-            MainLoop = Task.Run(() => Start(NHM.Common.Nhmws.NhmSocketAddress, token));
+            MainLoop = Task.Run(() => Start(address, token));
         }
 
         static public async Task Start(string address, CancellationToken token)

@@ -140,7 +140,8 @@ namespace NHMCore
                 // load plugins
                 loader.PrimaryProgress?.Report((Tr("Loading miner plugins..."), nextProgPerc()));
                 // Plugin Loading
-                MinerPluginsManager.LoadAndInitMinerPlugins();
+                await MinerPluginsManager.LoadAndInitMinerPlugins();
+                MinerPluginsManager.StartLoops(ExitApplication.Token);
                 // commit again benchmarks after loading plugins
                 ConfigManager.CommitBenchmarks();
                 /////////////////////////////////////////////

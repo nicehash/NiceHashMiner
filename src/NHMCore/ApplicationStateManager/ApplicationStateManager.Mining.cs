@@ -159,13 +159,14 @@ namespace NHMCore
 
         internal static async Task<(bool started, string failReason)> StartDeviceTask(ComputeDevice device, bool skipBenchmark = false, bool executeStart = true)
         {
+            device.StartState = true;
             // we can only start a device it is already stopped
             if (device.State == DeviceState.Disabled)
             {
                 return (false, "Device is disabled");
             }
 
-            if (device.State != DeviceState.Stopped && !skipBenchmark)
+            if (device.State != DeviceState.Stopped && device.State != DeviceState.Error && !skipBenchmark)
             {
                 return (false, "Device already started");
             }
@@ -260,6 +261,7 @@ namespace NHMCore
 
         internal static async Task<(bool stopped, string failReason)> StopDeviceTask(ComputeDevice device, bool executeStop = true)
         {
+            device.StartState = false;
             // we can only stop a device it is mining or benchmarking
             switch (device.State)
             {
@@ -278,6 +280,32 @@ namespace NHMCore
                 default:
                     return (false, $"Cannot handle state {device.State.ToString()} for device {device.Uuid}");
             }
+        }
+
+        // TODO make this smarter 
+        // TODO this is after we are finished with miner plugin install/update/remove
+        internal static async Task RestartDevicesState()
+        {
+            var stopTasks = new List<Task>();
+            var devicesToStart = new List<ComputeDevice>();
+            foreach (var dev in AvailableDevices.Devices)
+            {
+                if (dev.StartState)
+                {
+                    devicesToStart.Add(dev);
+                }
+                stopTasks.Add(StopDeviceTask(dev, false));
+            }
+            stopTasks.Add(UpdateDevicesToMineTask());
+            await Task.WhenAll(stopTasks);
+            var startTasks = new List<Task>();
+            // now attempt restart 
+            foreach (var dev in devicesToStart)
+            {
+                startTasks.Add(StartDeviceTask(dev, false, false));
+            }
+            startTasks.Add(UpdateDevicesToMineTask());
+            await Task.WhenAll(startTasks);
         }
     }
 }
