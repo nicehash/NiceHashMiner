@@ -100,16 +100,6 @@
     <Compile Include="ViewModels\Models\MiningData.cs" />
     <Compile Include="ViewModels\Models\TotalMiningData.cs" />
     <Compile Include="ViewModels\Plugins\PluginEntryVM.cs" />
-    <Compile Include="ViewModels\Settings\AdvancedDevicesVM.cs" />
-    <Compile Include="ViewModels\Settings\AdvancedGeneralVM.cs" />
-    <Compile Include="ViewModels\Settings\AdvancedMiningVM.cs" />
-    <Compile Include="ViewModels\Settings\AdvancedSwitchingVM.cs" />
-    <Compile Include="ViewModels\Settings\GeneralSettingsVM.cs" />
-    <Compile Include="ViewModels\Settings\MiningGeneralVM.cs" />
-    <Compile Include="ViewModels\Settings\ProfitabilitySettingsVM.cs" />
-    <Compile Include="ViewModels\Settings\SettingsBaseVM.cs" />
-    <Compile Include="ViewModels\Settings\SettingsContainerVM.cs" />
-    <Compile Include="ViewModels\Settings\SettingsVM.cs" />
     <Compile Include="ViewModels\StartupLoadingVM.cs" />
     <Compile Include="Validators\BtcWorkerValidator.cs" />
     <Compile Include="Validators\ValidatorBase.cs" />
@@ -167,9 +157,6 @@
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\MainWindowNew2.xaml.cs">
       <DependentUpon>MainWindowNew2.xaml</DependentUpon>
     </Compile>
@@ -197,34 +184,6 @@
     </Compile>
     <Compile Include="Views\SettingsNew\SettingsGeneral.xaml.cs">
       <DependentUpon>SettingsGeneral.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Controls\SettingContainer.xaml.cs">
-      <DependentUpon>SettingContainer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Pages\AdvancedMiningPage.xaml.cs">
-      <DependentUpon>AdvancedMiningPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Pages\AdvancedDevicesPage.xaml.cs">
-      <DependentUpon>AdvancedDevicesPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Pages\AdvancedPage.xaml.cs">
-      <DependentUpon>AdvancedPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Pages\AdvancedSwitchingPage.xaml.cs">
-      <DependentUpon>AdvancedSwitchingPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Pages\GeneralPage.xaml.cs">
-      <DependentUpon>GeneralPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Pages\ISettingsPage.cs" />
-    <Compile Include="Views\Settings\Pages\MiningPage.xaml.cs">
-      <DependentUpon>MiningPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Pages\ProfitabilityPage.xaml.cs">
-      <DependentUpon>ProfitabilityPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\SettingsWindow.xaml.cs">
-      <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -430,10 +389,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\MainWindowNew2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -463,42 +418,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsNew\SettingsGeneral.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\Controls\SettingContainer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\Pages\AdvancedMiningPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\Pages\AdvancedDevicesPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Settings\Pages\AdvancedPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\Pages\AdvancedSwitchingPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\Pages\GeneralPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\Pages\MiningPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\Pages\ProfitabilityPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

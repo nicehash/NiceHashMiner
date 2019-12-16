@@ -6,8 +6,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using NHM.Common;
 using System.Windows.Interop;
-using NHM.Wpf.ViewModels.Settings;
-using NHM.Wpf.Views.Settings.Controls;
+//using NHM.Wpf.ViewModels.Settings;
+//using NHM.Wpf.Views.Settings.Controls;
 using NHMCore;
 
 namespace NHM.Wpf.Views.Common
@@ -143,16 +143,16 @@ namespace NHM.Wpf.Views.Common
             }
         }
 
-        public static void Translate(SettingsContainer sc)
-        {
-            foreach (var child in sc.Children)
-            {
-                Translate(child);
-            }
+        //public static void Translate(SettingsContainer sc)
+        //{
+        //    foreach (var child in sc.Children)
+        //    {
+        //        Translate(child);
+        //    }
 
-            sc.Title = Translations.Tr(sc.Title);
-            sc.Description = Translations.Tr(sc.Description);
-        }
+        //    sc.Title = Translations.Tr(sc.Title);
+        //    sc.Description = Translations.Tr(sc.Description);
+        //}
 
         public static void Translate(TextBlock tb)
         {
@@ -200,9 +200,9 @@ namespace NHM.Wpf.Views.Common
                 case Decorator d:
                     Translate(d.Child);
                     break;
-                case SettingsContainer sc:
-                    Translate(sc);
-                    break;
+                //case SettingsContainer sc:
+                //    Translate(sc);
+                //    break;
                 case ContentControl c:
                     Translate(c);
                     break;
@@ -215,15 +215,15 @@ namespace NHM.Wpf.Views.Common
             }
         }
 
-        public static void Translate(SettingsBaseVM sb)
-        {
-            sb.Name = Translations.Tr(sb.Name);
+        //public static void Translate(SettingsBaseVM sb)
+        //{
+        //    sb.Name = Translations.Tr(sb.Name);
 
-            foreach (var child in sb.Children)
-            {
-                Translate(child);
-            }
-        }
+        //    foreach (var child in sb.Children)
+        //    {
+        //        Translate(child);
+        //    }
+        //}
 
         public static void Translate(object o)
         {
@@ -232,9 +232,9 @@ namespace NHM.Wpf.Views.Common
                 case UIElement u:
                     Translate(u);
                     break;
-                case SettingsBaseVM sb:
-                    Translate(sb);
-                    break;
+                //case SettingsBaseVM sb:
+                //    Translate(sb);
+                //    break;
             }
         }
 

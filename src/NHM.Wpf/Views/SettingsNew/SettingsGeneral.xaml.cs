@@ -1,7 +1,5 @@
-﻿using NHM.Wpf.ViewModels.Settings;
-using NHMCore;
+﻿using NHMCore;
 using System.Diagnostics;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace NHM.Wpf.Views.SettingsNew
