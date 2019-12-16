@@ -23,11 +23,11 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.86",
+                BinVersion = "1.87",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.86/gminer_1_86_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.87/gminer_1_87_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
