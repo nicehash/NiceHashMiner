@@ -30,6 +30,7 @@ namespace NHMCore.Mining
         private static object _lock = new object();
         public static bool IsMiningEnabled => _miningDevices.Count > 0;
 
+        private static CancellationToken stopMiningManager = CancellationToken.None;
         #region State for mining
         private static string _username = DemoUser.BTC;
         private static string _miningLocation = null;
@@ -130,6 +131,7 @@ namespace NHMCore.Mining
 
         public static void StartLoops(CancellationToken stop)
         {
+            stopMiningManager = stop;
             RunninLoops = Task.Run(() => StartLoopsTask(stop));
         }
 
@@ -156,11 +158,11 @@ namespace NHMCore.Mining
 
             var checkWaitTime = TimeSpan.FromMilliseconds(50);
             Func<bool> isActive = () => !stop.IsCancellationRequested;
-
+            Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
             while (isActive())
             {
-                if (isActive()) await Task.Delay(checkWaitTime); // TODO add cancelation token here
-                if (_commandQueue.TryDequeue(out var command))
+                if (isActive()) await Task.Delay(checkWaitTime, stop);
+                if (isActive() && _commandQueue.TryDequeue(out var command))
                 {
                     // check what kind of command is it and ALWAYS set Tsc.Result
                     // do stuff with the command
@@ -242,6 +244,7 @@ namespace NHMCore.Mining
                     }                   
                 }
             }
+            Logger.Info(Tag, "Exiting MiningManagerCommandQueueLoop run cleanup");
             // cleanup
             switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
             switchingManager.Stop();
@@ -260,10 +263,10 @@ namespace NHMCore.Mining
 
             // sleep time setting is minimal 1 minute, 19-20s interval
             var preventSleepIntervalElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromSeconds(19), true);
-
+            Logger.Info(Tag, "Starting MiningManagerMainLoop");
             while (isActive())
             {
-                if (isActive()) await Task.Delay(checkWaitTime); // TODO add cancelation token here
+                if (isActive()) await Task.Delay(checkWaitTime,  stop);
 
                 // prevent sleep check
                 if (isActive() && preventSleepIntervalElapsedTimeChecker.CheckAndMarkElapsedTime())
@@ -280,7 +283,7 @@ namespace NHMCore.Mining
                 }
                 // TODO should we check internet interval here???
             }
-
+            Logger.Info(Tag, "Exiting MiningManagerMainLoop run cleanup");
             // cleanup
             PInvokeHelpers.AllowMonitorPowerdownAndSleep();
         }
@@ -315,7 +318,7 @@ namespace NHMCore.Mining
         {
             foreach (var groupMiner in _runningMiners.Values)
             {
-                await groupMiner.StartMinerTask(ApplicationStateManager.ExitApplication.Token, _miningLocation, _username);
+                await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
             }
         }
 
@@ -372,7 +375,7 @@ namespace NHMCore.Mining
             // START
             foreach (var key in _runningMiners.Keys)
             {
-                await _runningMiners[key].StartMinerTask(ApplicationStateManager.ExitApplication.Token, _miningLocation, _username);
+                await _runningMiners[key].StartMinerTask(stopMiningManager, _miningLocation, _username);
             }
         }
 
@@ -562,7 +565,7 @@ namespace NHMCore.Mining
                     continue;
                 }
                 _runningMiners[startKey] = toStart;
-                await toStart.StartMinerTask(ApplicationStateManager.ExitApplication.Token, miningLocation, _username);
+                await toStart.StartMinerTask(stopMiningManager, miningLocation, _username);
             }
             // log scope
             {
