@@ -161,7 +161,7 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         private void Plugin_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Logger.Debug("PluginEntryVM", $"Plugin_PropertyChanged PropertyName: '{e.PropertyName}'");
+            //Logger.Debug("PluginEntryVM", $"Plugin_PropertyChanged PropertyName: '{e.PropertyName}'");
             if (e.PropertyName == nameof(PluginPackageInfoCR.OnlineInfo) || e.PropertyName == nameof(PluginPackageInfoCR.LocalInfo))
             {
                 OnPropertyChanged(nameof(InstallVersionStatus));
@@ -170,22 +170,6 @@ namespace NHM.Wpf.ViewModels.Plugins
             {
                 OnPropertyChanged(nameof(InstallString));
             }
-        }
-
-        public async Task InstallRemovePlugin()
-        {
-            if (Load.IsInstalling) return;
-
-            if (Plugin.Installed)
-            {
-                MinerPluginsManager.RemovePlugin(Plugin.PluginUUID);
-            }
-            else
-            {
-                await MinerPluginsManager.DownloadAndInstall(Plugin.PluginUUID, Progress);
-            }
-
-            OnPropertyChanged(nameof(InstallString));
         }
 
         public async Task InstallOrUpdatePlugin()
