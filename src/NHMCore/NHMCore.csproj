@@ -107,6 +107,7 @@
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Refactoring.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
     <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
+    <Compile Include="ApplicationState\AppNotificationsState.cs" />
     <Compile Include="ApplicationState\BalanceAndExchangeRates.cs" />
     <Compile Include="ApplicationState\BenchmarkManagerState.cs" />
     <Compile Include="ApplicationState\MiningState.cs" />
@@ -170,6 +171,9 @@
     <Compile Include="Nhmws\NHWebSocket.cs" />
     <Compile Include="Nhmws\StatusCodes.cs" />
     <Compile Include="Nhmws\TimeFactor.cs" />
+    <Compile Include="Notifications\Notification.cs" />
+    <Compile Include="Notifications\NotificationsManager.cs" />
+    <Compile Include="Notifications\NotificationsType.cs" />
     <Compile Include="StratumService.cs" />
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\DelayedSingleExecActionTask.cs" />
