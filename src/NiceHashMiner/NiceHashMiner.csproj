@@ -156,12 +156,6 @@
       <DependentUpon>FormEula.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormHelpers.cs" />
-    <Compile Include="Forms\Form_Benchmark.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Benchmark.Designer.cs">
-      <DependentUpon>Form_Benchmark.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Form_ChooseUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,12 +167,6 @@
     </Compile>
     <Compile Include="Forms\Form_Main.Designer.cs">
       <DependentUpon>Form_Main.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Form_MinerPlugins.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_MinerPlugins.Designer.cs">
-      <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Form_Settings.cs">
       <SubType>Form</SubType>
@@ -211,29 +199,11 @@
     <Compile Include="Forms\Components\AlgorithmSettingsControl.Designer.cs">
       <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\BenchmarkOptions.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\BenchmarkOptions.Designer.cs">
-      <DependentUpon>BenchmarkOptions.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Components\Field.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\Components\Field.Designer.cs">
       <DependentUpon>Field.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Form_ChooseLanguage.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_ChooseLanguage.Designer.cs">
-      <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Form_3rdParty_TOS.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
-      <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MinerFileNotFoundDialog.cs">
       <SubType>Form</SubType>
@@ -251,9 +221,6 @@
     <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
       <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
-      <DependentUpon>BenchmarkOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\DevicesListViewBenchmarkControl.resx">
       <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
@@ -282,23 +249,11 @@
     <EmbeddedResource Include="Forms\FormEula.resx">
       <DependentUpon>FormEula.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Benchmark.resx">
-      <DependentUpon>Form_Benchmark.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
-      <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
-      <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseUpdate.resx">
       <DependentUpon>Form_ChooseUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_MinerPlugins.resx">
-      <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>

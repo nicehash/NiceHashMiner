@@ -9,7 +9,6 @@ using NHM.Common;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
-using NHMCore.Stats;
 using log4net.Core;
 using NiceHashMiner.Forms;
 

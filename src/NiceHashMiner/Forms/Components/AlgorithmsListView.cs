@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using NHMCore;
 using NHMCore.Mining;
-using NHMCore.Interfaces;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -32,8 +31,6 @@ namespace NiceHashMiner.Forms.Components
         }
 
         public IAlgorithmsListView ComunicationInterface { get; set; }
-
-        public IBenchmarkCalculation BenchmarkCalculation { get; set; }
 
         ComputeDevice _computeDevice;
 
