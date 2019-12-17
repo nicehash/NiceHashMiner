@@ -89,71 +89,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.Designer.cs">
-      <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl.Designer.cs">
-      <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Components\DevicesListViewSpeedControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\Components\DevicesListViewSpeedControl.Designer.cs">
       <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesMainBoard.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesMainBoard.Designer.cs">
-      <DependentUpon>DevicesMainBoard.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesMainBoardDevicesListViewSpeedControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesMainBoardDevicesListViewSpeedControl.Designer.cs">
-      <DependentUpon>DevicesMainBoardDevicesListViewSpeedControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\PluginInfoDetails.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\PluginInfoDetails.Designer.cs">
-      <DependentUpon>PluginInfoDetails.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\PluginInfoItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\PluginInfoItem.Designer.cs">
-      <DependentUpon>PluginInfoItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\PluginInfoItemRow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\PluginInfoItemRow.Designer.cs">
-      <DependentUpon>PluginInfoItemRow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\StartupLoadingControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\StartupLoadingControl.Designer.cs">
-      <DependentUpon>StartupLoadingControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\EnterBTCDialogSwitch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\EnterBTCDialogSwitch.Designer.cs">
-      <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormEula.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormEula.Designer.cs">
-      <DependentUpon>FormEula.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormHelpers.cs" />
     <Compile Include="Forms\Form_ChooseUpdate.cs">
@@ -180,74 +120,20 @@
     <Compile Include="Forms\Form_TDPSettings.Designer.cs">
       <DependentUpon>Form_TDPSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\IconEx.cs" />
-    <Compile Include="Forms\LoginForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\LoginForm.Designer.cs">
-      <DependentUpon>LoginForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\AlgorithmsListView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\AlgorithmsListView.Designer.cs">
-      <DependentUpon>AlgorithmsListView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\AlgorithmSettingsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\AlgorithmSettingsControl.Designer.cs">
-      <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Components\Field.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Forms\Components\Field.Designer.cs">
       <DependentUpon>Field.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MinerFileNotFoundDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MinerFileNotFoundDialog.Designer.cs">
-      <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
-    <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
-      <DependentUpon>AlgorithmsListView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
-      <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\DevicesListViewBenchmarkControl.resx">
-      <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\DevicesListViewSpeedControl.resx">
       <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\PluginInfoDetails.resx">
-      <DependentUpon>PluginInfoDetails.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\PluginInfoItem.resx">
-      <DependentUpon>PluginInfoItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\PluginInfoItemRow.resx">
-      <DependentUpon>PluginInfoItemRow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\StartupLoadingControl.resx">
-      <DependentUpon>StartupLoadingControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EnterBTCDialogSwitch.resx">
-      <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormEula.resx">
-      <DependentUpon>FormEula.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseUpdate.resx">
       <DependentUpon>Form_ChooseUpdate.cs</DependentUpon>
@@ -260,12 +146,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_TDPSettings.resx">
       <DependentUpon>Form_TDPSettings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MinerFileNotFoundDialog.resx">
-      <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\LoginForm.resx">
-      <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

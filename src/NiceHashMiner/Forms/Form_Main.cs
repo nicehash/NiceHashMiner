@@ -10,11 +10,8 @@ using Logger = NHM.Common.Logger;
 
 using NHMCore;
 using NHMCore.Configs;
-using NHMCore.Interfaces.DataVisualizer;
 using NHMCore.Mining;
-using NHMCore.Mining.Plugins;
 using NHMCore.Mining.IdleChecking;
-using NHMCore.Stats;
 using NHMCore.Switching;
 using NHMCore.Utils;
 
@@ -27,7 +24,7 @@ using NHM.Common;
 
 namespace NiceHashMiner
 {
-    public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
+    public partial class Form_Main : Form, FormHelpers.ICustomTranslate//, IVersionDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
     {
         private bool _showWarningNiceHashData;
         private bool _exitCalled = false;

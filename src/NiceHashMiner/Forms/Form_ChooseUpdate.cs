@@ -62,7 +62,7 @@ namespace NiceHashMiner.Forms
         private void GithubBtn_Click(object sender, EventArgs e)
         {
             Close();
-            ApplicationStateManager.VisitNewVersionUrl();
+            //ApplicationStateManager.VisitNewVersionUrl();
         }
     }
 }

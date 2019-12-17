@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using NHMCore;
-using NHMCore.Interfaces.DataVisualizer;
 
 namespace NiceHashMiner.Forms
 {
@@ -89,29 +88,10 @@ namespace NiceHashMiner.Forms
 
         static public void SubscribeAllControls(Control c)
         {
-            // data display
-            if (c is IDataVisualizer dv)
-            {
-                ApplicationStateManager.SubscribeStateDisplayer(dv);
-            }
-            // call on all controls
-            foreach (Control childC in c.Controls)
-            {
-                SubscribeAllControls(childC);
-            }
         }
 
         static public void UnsubscribeAllControls(Control c)
         {
-            if (c is IDataVisualizer dv)
-            {
-                ApplicationStateManager.UnsubscribeStateDisplayer(dv);
-            }
-            // call on all controls
-            foreach (Control childC in c.Controls)
-            {
-                SubscribeAllControls(childC);
-            }
         }
     }
 }

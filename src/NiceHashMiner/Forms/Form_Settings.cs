@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.Configs;
-using NHMCore.Interfaces.DataVisualizer;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Utils;
@@ -14,7 +13,7 @@ using static NHMCore.Translations;
 
 namespace NiceHashMiner.Forms
 {
-    public partial class Form_Settings : Form, FormHelpers.ICustomTranslate, IDataVisualizer
+    public partial class Form_Settings : Form, FormHelpers.ICustomTranslate //, IDataVisualizer
     {
         private readonly bool _isInitFinished = false;
         public bool IsRestartNeeded { get; private set; }
