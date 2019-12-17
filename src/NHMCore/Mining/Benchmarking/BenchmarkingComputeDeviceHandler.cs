@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Mining.Benchmarking
 {
-    internal class BenchmarkingComputeDeviceHandler
+    class BenchmarkingComputeDeviceHandler
     {
         #region STATIC
         

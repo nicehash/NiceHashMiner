@@ -1,11 +1,10 @@
 using NHMCore.Mining.Plugins;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace NHMCore.Mining.Benchmarking
 {
-    public static class BenchmarkManager
+    internal static class BenchmarkManager
     {
         public static bool IsBenchmarking => BenchmarkingComputeDeviceHandler.IsBenchmarking;
 
@@ -25,34 +24,23 @@ namespace NHMCore.Mining.Benchmarking
             return true;
         }
 
-        // from deleted NHM.Extensions
-        private static Queue<T> ToQueue<T>(this IEnumerable<T> source)
-        {
-            var queue = new Queue<T>();
-            foreach (var el in source)
-            {
-                queue.Enqueue(el);
-            }
-            return queue;
-        }
-
         // network benchmark starts benchmarking on a device
         // assume device is enabled and it exists
-        public static void StartBenchmarForDevice(ComputeDevice device, BenchmarkStartSettings benchmarkStartSettings)
+        internal static void StartBenchmarForDevice(ComputeDevice device, BenchmarkStartSettings benchmarkStartSettings)
         {
             var startMiningAfterBenchmark = benchmarkStartSettings.StartMiningAfterBenchmark;
             var perfType = benchmarkStartSettings.BenchmarkPerformanceType;
             var benchmarkOption = benchmarkStartSettings.BenchmarkOption;
-            var unbenchmarkedAlgorithms = device.AlgorithmSettings.Where(algo => algo.Enabled && ShouldBenchmark(algo, benchmarkOption)).ToQueue();
+            var unbenchmarkedAlgorithms = device.AlgorithmSettings.Where(algo => algo.Enabled && ShouldBenchmark(algo, benchmarkOption)).ToArray();
             BenchmarkingComputeDeviceHandler.BenchmarkDeviceAlgorithms(device, unbenchmarkedAlgorithms, perfType, startMiningAfterBenchmark);
         }
 
-        public static Task StopBenchmarForDevice(ComputeDevice device)
+        internal static Task StopBenchmarForDevice(ComputeDevice device)
         {
             return BenchmarkingComputeDeviceHandler.StopBenchmarkingDevice(device);
         }
 
-        public static Task Stop()
+        internal static Task Stop()
         {
             return BenchmarkingComputeDeviceHandler.StopBenchmarkingAllDevices();
         }
@@ -61,7 +49,7 @@ namespace NHMCore.Mining.Benchmarking
 
 #region In-bench status updates
 
-        public static void EndBenchmarkForDevice(ComputeDevice device, bool failedAlgos, bool startMiningAfterBenchmark = false)
+        internal static void EndBenchmarkForDevice(ComputeDevice device, bool failedAlgos, bool startMiningAfterBenchmark = false)
         {            
             if (!IsBenchmarking)
             {
@@ -76,7 +64,7 @@ namespace NHMCore.Mining.Benchmarking
             }
         }
 
-        public static void SetCurrentStatus(ComputeDevice dev, AlgorithmContainer algo, string status)
+        internal static void SetCurrentStatus(ComputeDevice dev, AlgorithmContainer algo, string status)
         {
             //var args = new AlgoStatusEventArgs(dev, algo, status);
             // TODO append to NotificationInfo instance 

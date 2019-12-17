@@ -285,23 +285,31 @@ namespace NHMCore.Mining
             // TODO save removed algorithm configs
             var toRemove = AlgorithmSettings.Where(algo => algo.Algorithm.MinerID == pluginUUID);
             if (toRemove.Count() == 0) return;
+            foreach (var removeAlgo in toRemove)
+            {
+                BenchmarkManagerState.Instance.RemoveAlgorithmContainer(removeAlgo);
+            }
             var newList = AlgorithmSettings.Where(algo => toRemove.Contains(algo) == false).ToList();
             AlgorithmSettings = newList;
             OnPropertyChanged(nameof(AlgorithmSettings));
         }
 
-        public void RemovePluginAlgorithms(IEnumerable<AlgorithmContainer> algos)
-        {
-            foreach (var algo in algos)
-            {
-                AlgorithmSettings.Remove(algo);
-            }
-            OnPropertyChanged(nameof(AlgorithmSettings));
-        }
+        //public void RemovePluginAlgorithms(IEnumerable<AlgorithmContainer> algos)
+        //{
+        //    foreach (var algo in algos)
+        //    {
+        //        AlgorithmSettings.Remove(algo);
+        //    }
+        //    OnPropertyChanged(nameof(AlgorithmSettings));
+        //}
 
         public void AddPluginAlgorithms(IEnumerable<AlgorithmContainer> algos)
         {
             AlgorithmSettings.AddRange(algos);
+            foreach (var addAlgo in algos)
+            {
+                BenchmarkManagerState.Instance.AddAlgorithmContainer(addAlgo);
+            }
             OnPropertyChanged(nameof(AlgorithmSettings));
         }
 

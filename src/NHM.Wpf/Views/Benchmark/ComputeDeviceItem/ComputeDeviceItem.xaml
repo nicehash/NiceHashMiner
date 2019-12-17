@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Benchmark.ComputeDeviceItem"
              xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels.Models"
+             xmlns:converters="clr-namespace:NHM.Wpf.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=viewModels:DeviceData}">
@@ -23,7 +24,8 @@
             </Style.Triggers>
         </Style>
 
-        
+        <converters:TranslatingConverter x:Key="TrConv" />
+        <converters:StatusColorConverter x:Key="StatusConv" />
         
         
         <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
@@ -160,10 +162,16 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <WrapPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
-                        <TextBlock Style="{DynamicResource TextBoxCol}" Foreground="{StaticResource Gray1ColorBrush}" Text="{Binding Dev.NameCount}" Margin="16,0,0,0"/>
-                        <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding Dev.Name}" Margin="9,0,0,0"/>
-                    </WrapPanel>
+                    <StackPanel Grid.Column="0">
+                        <WrapPanel  HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
+                            <TextBlock Style="{DynamicResource TextBoxCol}" Foreground="{StaticResource Gray1ColorBrush}" Text="{Binding Dev.NameCount}" Margin="16,0,0,0"/>
+                            <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding Dev.Name}" Margin="9,0,0,0"/>
+                        </WrapPanel>
+                        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
+                            <TextBlock Style="{DynamicResource TextBoxCol}" Foreground="{StaticResource Gray1ColorBrush}" Text="Status" Margin="16,0,0,0"/>
+                            <TextBlock Style="{DynamicResource TextBoxCol}" Foreground="{Binding Dev.State, Converter={StaticResource StatusConv}}" Text="{Binding Dev.State, Converter={StaticResource TrConv}}" Margin="9,0,0,0"/>
+                        </WrapPanel>
+                    </StackPanel>
                     <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
                         <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding AlgosEnabled}" Margin="0,0,54,0"/>
                         <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding AlgosBenchmarked}" Margin="0,0,54,0"/>
@@ -203,7 +211,7 @@
                     <Button Style="{DynamicResource TextBoxButton2}" Content="SELECT ALL" Click="SortEnabledButtonClick" />
                     <CheckBox Style="{StaticResource NHMSwitch}"
                               IsChecked="{Binding AllAgorithmsEnabled, Mode=TwoWay}"
-                              Margin="8,0,0,0" />
+                              Margin="8,0,6,0" />
                 </WrapPanel>
             </UniformGrid>
             <ItemsControl Grid.Row="1" ItemsSource="{Binding AlgorithmSettingsCollection}">

@@ -77,5 +77,10 @@ namespace NHM.Wpf.Views.Benchmark
             _vm.BenchmarkSettings.SelectedBenchmarkType = BenchmarkPerformanceType.Precise;
             BenchmarkTypeContextMenu.IsOpen = false;
         }
+
+        private void BenchmarkButton_Click(object sender, RoutedEventArgs e)
+        {
+            _vm.BenchmarkSettings.StartBenchmark();
+        }
     }
 }

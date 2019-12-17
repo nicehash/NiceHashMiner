@@ -146,14 +146,14 @@
                 Style="{StaticResource BaseUbuntuTextBlockBold}"
                 FontSize="14"
                 Foreground="{StaticResource NastyGreenBrush}"
-                Text="Benchmark step "
+                Text="{Binding BenchmarkSettings.BenchmarksPendingStr}"
                 />
 
             <ProgressBar Style="{StaticResource progressStyle}"
                 Grid.Row="1" Grid.Column="0"
-                Margin="40,0,0,0" Width="240" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                Margin="40,0,0,0" Width="240" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" />
             <CheckBox Grid.Row="1" Grid.Column="1"
-                      HorizontalAlignment="Right" VerticalAlignment="Center">
+                      HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
                 <TextBlock>Start mining after benchmark</TextBlock>
             </CheckBox>
             <Button 
@@ -163,9 +163,11 @@
                 Width="174"
                 Height="40"
                 Margin="0,0,40,0"
+                IsEnabled="{Binding BenchmarkSettings.HasBenchmarkWork}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Content="START BENCHMARK"
+                Click="BenchmarkButton_Click"
                 />
 
         </Grid>

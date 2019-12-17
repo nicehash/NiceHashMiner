@@ -288,16 +288,32 @@ namespace NHMCore
         {
             var stopTasks = new List<Task>();
             var devicesToStart = new List<ComputeDevice>();
+            var devicesToBenchmark = new List<ComputeDevice>();
             foreach (var dev in AvailableDevices.Devices)
             {
                 if (dev.StartState)
                 {
                     devicesToStart.Add(dev);
                 }
+                else if (dev.State == DeviceState.Benchmarking)
+                {
+                    devicesToBenchmark.Add(dev); // TODO should we start benchmarks without starting mining afterwards???
+                }
                 stopTasks.Add(StopDeviceTask(dev, false));
             }
             stopTasks.Add(UpdateDevicesToMineTask());
             await Task.WhenAll(stopTasks);
+
+            foreach (var benchDev in devicesToBenchmark)
+            {
+                BenchmarkManager.StartBenchmarForDevice(benchDev, new BenchmarkStartSettings
+                {
+                    StartMiningAfterBenchmark = true, // TODO should we start mining after benchmark?
+                    BenchmarkPerformanceType = BenchmarkManagerState.Instance.SelectedBenchmarkType,
+                    BenchmarkOption = BenchmarkOption.ZeroOrReBenchOnly
+                });
+            }
+
             var startTasks = new List<Task>();
             // now attempt restart 
             foreach (var dev in devicesToStart)
@@ -306,6 +322,26 @@ namespace NHMCore
             }
             startTasks.Add(UpdateDevicesToMineTask());
             await Task.WhenAll(startTasks);
+        }
+
+        // Check all devices that have (re)benchmarks
+        public static void StartBenchmark()
+        {
+            var devices = AvailableDevices.Devices.Where(device => device.AnyEnabledAlgorithmsNeedBenchmarking() && device.State == DeviceState.Stopped);
+            foreach (var device in devices)
+            {
+                BenchmarkManager.StartBenchmarForDevice(device, new BenchmarkStartSettings
+                {
+                    StartMiningAfterBenchmark = true, // TODO should we start mining after benchmark?
+                    BenchmarkPerformanceType = BenchmarkManagerState.Instance.SelectedBenchmarkType,
+                    BenchmarkOption = BenchmarkOption.ZeroOrReBenchOnly
+                });
+            }
+        }
+
+        public static Task StopBenchmark()
+        {
+            return BenchmarkManager.Stop();
         }
     }
 }

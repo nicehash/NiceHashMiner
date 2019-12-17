@@ -92,8 +92,6 @@
     <Compile Include="ViewModels\HelpNotification.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
-    <Compile Include="ViewModels\Models\BenchAlgo.cs" />
-    <Compile Include="ViewModels\Models\BenchmarkSettings.cs" />
     <Compile Include="ViewModels\Models\DeviceData.cs" />
     <Compile Include="ViewModels\Models\IMiningData.cs" />
     <Compile Include="ViewModels\Models\LoadProgress.cs" />
