@@ -156,7 +156,7 @@ namespace MinerPluginToolkitV1
         #endregion IGetPluginMetaInfo
 
         #region IGetMinerOptionsPackage
-        MinerOptionsPackage GetMinerOptionsPackage() => MinerOptionsPackage;
+        MinerOptionsPackage IGetMinerOptionsPackage.GetMinerOptionsPackage() => MinerOptionsPackage;
         #endregion IGetMinerOptionsPackage
     }
 }
