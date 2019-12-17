@@ -55,7 +55,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -173,6 +174,11 @@
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Notifications\NotificationsManager.cs" />
     <Compile Include="Notifications\NotificationsType.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="StratumService.cs" />
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\DelayedSingleExecActionTask.cs" />
@@ -201,14 +207,9 @@
     <Compile Include="Utils\UpdateHelpers.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -225,18 +226,6 @@
     <None Include="README.md" />
     <None Include="Resources\Eula.rtf" />
     <None Include="translations.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\info_black_18.png" />
-    <Content Include="Resources\info_black_36.png" />
-    <Content Include="Resources\logo.ico" />
-    <Content Include="Resources\NHM_logo_big_light.png" />
-    <Content Include="Resources\NHM_logo_med_light.png" />
-    <Content Include="Resources\NHM_logo_small_light.png" />
-    <Content Include="Resources\NHM_logo_xsmall_light.png" />
-    <Content Include="Resources\NHM_logo_xxsmall_light.png" />
-    <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
-    <Content Include="Resources\NHM_help_50px.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

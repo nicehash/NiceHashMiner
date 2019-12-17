@@ -482,12 +482,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\NHM_logo_big_light.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\logo.ico" />
   </ItemGroup>
   <ItemGroup>
