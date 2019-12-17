@@ -384,6 +384,8 @@ namespace NHMCore.Mining.Plugins
         {
             try
             {
+                if (_plugin is IGetMinerOptionsPackage get) return get.GetMinerOptionsPackage();
+
                 Type typecontroller = typeof(MinerPluginToolkitV1.PluginBase);
                 var propInfo = typecontroller.GetProperty("MinerOptionsPackage", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty);
                 var propInfo2 = typecontroller.GetProperty("MinerOptionsPackage");

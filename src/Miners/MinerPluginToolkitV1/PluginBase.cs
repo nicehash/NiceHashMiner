@@ -14,7 +14,7 @@ using System.Linq;
 namespace MinerPluginToolkitV1
 {
     // TODO add documentation
-    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo
+    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo, IGetMinerOptionsPackage
     {
         protected abstract MinerBase CreateMinerBase();
 
@@ -84,7 +84,6 @@ namespace MinerPluginToolkitV1
         }
 
         // internal settings
-        // TODO expose miner options package for reading ONLY
         protected MinerOptionsPackage MinerOptionsPackage { get; set; } = new MinerOptionsPackage { };
         protected MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; } = new MinerSystemEnvironmentVariables{};
         protected MinerReservedPorts MinerReservedApiPorts { get; set; } = new MinerReservedPorts {};
@@ -155,5 +154,9 @@ namespace MinerPluginToolkitV1
             return PluginMetaInfo;
         }
         #endregion IGetPluginMetaInfo
+
+        #region IGetMinerOptionsPackage
+        MinerOptionsPackage GetMinerOptionsPackage() => MinerOptionsPackage;
+        #endregion IGetMinerOptionsPackage
     }
 }
