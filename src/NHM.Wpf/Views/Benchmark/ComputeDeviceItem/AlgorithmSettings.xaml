@@ -108,10 +108,14 @@
                 </ControlTemplate>
             </ToggleButton.Template>
             <StackPanel Margin="24,16,24,16">
-                <WrapPanel>
-                    <TextBlock Style="{StaticResource settingTitle}" Text="Schedule for benchmarking" />
-                    <CheckBox x:Name="ReBenchSwitch" Style="{StaticResource NHMSwitch}" Margin="4,0,0,0" IsChecked="{Binding IsReBenchmark}" />
-                </WrapPanel>
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Style="{StaticResource settingTitle}" Text="Schedule for benchmarking"  HorizontalAlignment="Left"/>
+                    <CheckBox Grid.Column="1" x:Name="ReBenchSwitch" Style="{StaticResource NHMSwitch}" Margin="4,0,0,0" HorizontalAlignment="Right" IsChecked="{Binding IsReBenchmark}" />
+                </Grid>
                 <TextBlock Style="{StaticResource settingDetail}" Text="{StaticResource scheduleBenchmarking}" TextWrapping="Wrap"/>
             </StackPanel>
         </ToggleButton>
