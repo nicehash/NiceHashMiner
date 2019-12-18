@@ -24,7 +24,7 @@
             <Style TargetType="views:ChooseLanguageWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:EulaWindowSecondShort" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
-            <Style TargetType="views:MainWindowNew2" BasedOn="{StaticResource NHMMainWindowStyle}"/>
+            <Style TargetType="{x:Type views:MainWindow}" BasedOn="{StaticResource NHMMainWindowStyle}"/>
 
             <!--#region base sytles-->
             <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlock">

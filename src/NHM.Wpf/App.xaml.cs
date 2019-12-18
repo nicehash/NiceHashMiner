@@ -167,16 +167,8 @@ namespace NHM.Wpf
                 var nek = login.ShowDialog();
             }
 
-            //var main = new MainWindow() {};
-            //main.Show();
-            //var m2 = new MainWindowNew();
-            //m2.Show();
-            //var m2 = new EulaWindow();
-            //var m2 = new ChooseLanguageWindow();
-            //var m2 = new _3rdPartyTosWindow();
-            //var m2 = new LoginWindow();
-            var m2 = new MainWindowNew2();
-            m2.Show();
+            var main = new MainWindow();
+            main.Show();
 
             //// Set shutdown mode back to default
             //ShutdownMode = ShutdownMode.OnLastWindowClose;

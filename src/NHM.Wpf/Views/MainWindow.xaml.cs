@@ -13,12 +13,12 @@ namespace NHM.Wpf.Views
     /// <summary>
     /// Interaction logic for MainWindowNew2.xaml
     /// </summary>
-    public partial class MainWindowNew2 : NHMMainWindow
+    public partial class MainWindow : NHMMainWindow
     {
         private readonly MainVM _vm;
         private bool _miningStoppedOnClose;
 
-        public MainWindowNew2()
+        public MainWindow()
         {
             InitializeComponent();
 

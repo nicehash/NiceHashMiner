@@ -155,8 +155,8 @@
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MainWindowNew2.xaml.cs">
-      <DependentUpon>MainWindowNew2.xaml</DependentUpon>
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Plugins\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\PluginItemButtonConverters.cs" />
@@ -387,7 +387,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindowNew2.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
