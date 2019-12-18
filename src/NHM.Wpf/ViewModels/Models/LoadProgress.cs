@@ -40,7 +40,13 @@ namespace NHM.Wpf.ViewModels.Models
             {
                 _installProgress = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ProgressString));
             }
+        }
+
+        public string ProgressString
+        {
+            get => $"{_installProgress}%";
         }
 
         private string _installStatus;

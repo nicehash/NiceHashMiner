@@ -13,29 +13,51 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Height="600" Width="600">
-        <Grid.Background>
-            <DrawingBrush x:Name="drawingBrushNH" Drawing="{Binding Drawing, Source={StaticResource drawingBrush_circleNH}}"/>
-        </Grid.Background>
-
-        <Grid Margin="0,200" Width="Auto" Height="Auto">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <StackPanel>
-                <TextBlock Text="{Binding PrimaryTitle}" HorizontalAlignment="Center" />
-                <ProgressBar Style="{StaticResource progressStyle}" Value="{Binding PrimaryProgress.Progress}" Height="30" />
-                <TextBlock Text="{Binding PrimaryProgress.Status}" />
-            </StackPanel>
-            <StackPanel Grid.Row="1" Margin="0,10,0,0"
-                    Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolToVis}}">
-                <TextBlock Text="{Binding SecondaryTitle}" HorizontalAlignment="Center" />
-                <ProgressBar Style="{StaticResource progressStyle}" Value="{Binding SecondaryProgress.Progress}" Height="30" />
-                <TextBlock Text="{Binding SecondaryProgress.Status}" />
-            </StackPanel>
+    <StackPanel Height="600" Width="600" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="White">
+        <Grid Width="216" Height="216">
+            <Grid.Background>
+                <DrawingBrush Drawing="{Binding Drawing, Source={StaticResource drawingBrush_circleNH}}"/>
+            </Grid.Background>
         </Grid>
-    </Grid>
+        <Grid Margin="40,30,40,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding PrimaryProgress.Status}" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PrimaryProgress.ProgressString}" HorizontalAlignment="Right"/>
+
+            <!--<TextBlock Text="{Binding PrimaryTitle}" HorizontalAlignment="Center" />-->
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyle}" Value="{Binding PrimaryProgress.Progress}" Height="30" />
+        </Grid>
+        <!--Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolToVis}}"-->
+        <Grid Margin="40,28,40,0" Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolToVis}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding SecondaryProgress.Status}" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SecondaryProgress.ProgressString}" HorizontalAlignment="Right"/>
+
+            <!--<TextBlock Text="{Binding SecondaryTitle}" HorizontalAlignment="Center" />-->
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyle}" Value="{Binding SecondaryProgress.Progress}" Height="30" />
+        </Grid>
+        <TextBlock Margin="40,28,40,0" Grid.Column="0" Text="Sit tight, NiceHash Miner will start soon…" HorizontalAlignment="Center" FontSize="14"/>
+    </StackPanel>
 </UserControl>
