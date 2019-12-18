@@ -161,7 +161,7 @@ namespace NHMCore.Mining
             Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
             while (isActive())
             {
-                if (isActive()) await Task.Delay(checkWaitTime, stop);
+                if (isActive()) await Task.Delay(checkWaitTime);
                 if (isActive() && _commandQueue.TryDequeue(out var command))
                 {
                     // check what kind of command is it and ALWAYS set Tsc.Result
@@ -266,7 +266,7 @@ namespace NHMCore.Mining
             Logger.Info(Tag, "Starting MiningManagerMainLoop");
             while (isActive())
             {
-                if (isActive()) await Task.Delay(checkWaitTime,  stop);
+                if (isActive()) await Task.Delay(checkWaitTime);
 
                 // prevent sleep check
                 if (isActive() && preventSleepIntervalElapsedTimeChecker.CheckAndMarkElapsedTime())
