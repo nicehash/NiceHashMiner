@@ -4,6 +4,7 @@ using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
 using NHMCore.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -45,6 +46,14 @@ namespace NHMCore
             Helpers.VisitUrlLink(urlLink);
         }
 
+        public static Action ApplicationExit;
+
+        private static void ExecuteApplicationExit()
+        {
+            Application.Exit();
+            ApplicationExit?.Invoke();
+        }
+
         public static CancellationTokenSource ExitApplication { get; } = new CancellationTokenSource();
 
         public static async Task BeforeExit()
@@ -74,7 +83,7 @@ namespace NHMCore
             {
                 pHandle.Start();
             }
-            Application.Exit();
+            ExecuteApplicationExit();
         }
 
         public static bool BurnCalled { get; private set; } = false;
@@ -84,7 +93,7 @@ namespace NHMCore
             BurnCalled = true;
             _ = BeforeExit();
             MessageBox.Show(message, Tr("Error!"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Application.Exit();
+            ExecuteApplicationExit();
         }
 
         // EnsureSystemRequirements will check if all system requirements are met if not it will show an error/warning message box and exit the application

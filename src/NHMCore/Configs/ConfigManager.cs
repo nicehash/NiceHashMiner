@@ -25,8 +25,10 @@ namespace NHMCore.Configs
         private static object _lock = new object();
 
         // backups
-        private static GeneralConfigBackup _generalConfigBackup = new GeneralConfigBackup();
+        private static GeneralConfigBackup _generalConfigBackup = null;
         private static Dictionary<string, DeviceConfig> _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
+
+        public static EventHandler<bool> ShowRestartRequired;
 
         private static void CreateBackupArchive(Version backupVersion)
         {
@@ -110,11 +112,10 @@ namespace NHMCore.Configs
             _generalConfigBackup = new GeneralConfigBackup
             {
                 DebugConsole = LoggingDebugConsoleSettings.Instance.DebugConsole,
-                NVIDIAP0State = MiningSettings.Instance.NVIDIAP0State,
                 LogToFile = LoggingDebugConsoleSettings.Instance.LogToFile,
+                LogMaxFileSize = LoggingDebugConsoleSettings.Instance.LogMaxFileSize,
+                NVIDIAP0State = MiningSettings.Instance.NVIDIAP0State,
                 DisableWindowsErrorReporting = WarningSettings.Instance.DisableWindowsErrorReporting,
-                GUIWindowsAlwaysOnTop = GUISettings.Instance.GUIWindowsAlwaysOnTop,
-                DisableDeviceStatusMonitoring = GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring,
                 DisableDevicePowerModeSettings = GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings,
             };
             _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
@@ -126,12 +127,12 @@ namespace NHMCore.Configs
 
         public static bool IsRestartNeeded()
         {
+            if (_generalConfigBackup == null) return false;
             return LoggingDebugConsoleSettings.Instance.DebugConsole != _generalConfigBackup.DebugConsole
-                   || MiningSettings.Instance.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
                    || LoggingDebugConsoleSettings.Instance.LogToFile != _generalConfigBackup.LogToFile
+                   || LoggingDebugConsoleSettings.Instance.LogMaxFileSize != _generalConfigBackup.LogMaxFileSize
+                   || MiningSettings.Instance.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
                    || WarningSettings.Instance.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
-                   || GUISettings.Instance.GUIWindowsAlwaysOnTop != _generalConfigBackup.GUIWindowsAlwaysOnTop
-                   || GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring != _generalConfigBackup.DisableDeviceStatusMonitoring
                    || GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings != _generalConfigBackup.DisableDevicePowerModeSettings;
         }
 
@@ -139,6 +140,7 @@ namespace NHMCore.Configs
         {
             CommitBenchmarks();
             InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
+            ShowRestartRequired?.Invoke(null, IsRestartNeeded());
         }
 
         private static string GetDeviceSettingsPath(string uuid)
@@ -185,11 +187,10 @@ namespace NHMCore.Configs
         private class GeneralConfigBackup
         {
             public bool DebugConsole { get; set; }
-            public bool NVIDIAP0State { get; set; }
             public bool LogToFile { get; set; }
+            public long LogMaxFileSize { get; set; }
+            public bool NVIDIAP0State { get; set; }
             public bool DisableWindowsErrorReporting { get; set; }
-            public bool GUIWindowsAlwaysOnTop { get; set; }
-            public bool DisableDeviceStatusMonitoring { get; set; }
             public bool DisableDevicePowerModeSettings { get; set; }
         }
 

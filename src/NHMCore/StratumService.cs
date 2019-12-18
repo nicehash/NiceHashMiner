@@ -25,8 +25,8 @@ namespace NHMCore
                 if (_serviceLocation != newValue)
                 {
                     _serviceLocation = newValue;
-                    // service location is different and changed execute potential actions
-                    ConfigManager.GeneralConfigFileCommit();
+                    //// service location is different and changed execute potential actions
+                    //ConfigManager.GeneralConfigFileCommit();
                 }
                 _lastSelectedServiceLocation = SelectedServiceLocation;
                 OnPropertyChanged(nameof(ServiceLocation));

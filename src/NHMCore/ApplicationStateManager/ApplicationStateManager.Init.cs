@@ -117,7 +117,7 @@ namespace NHMCore
                     {
                         Process.Start(Links.NhmNoDevHelp);
                     }
-                    Application.Exit();
+                    ExecuteApplicationExit();
                     return;
                 }
 

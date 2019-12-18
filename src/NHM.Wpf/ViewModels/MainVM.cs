@@ -348,6 +348,8 @@ namespace NHM.Wpf.ViewModels
 
             _updateTimer.Start();
 
+            ConfigManager.CreateBackup();
+
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }

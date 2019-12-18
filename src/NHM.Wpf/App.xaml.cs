@@ -36,6 +36,8 @@ namespace NHM.Wpf
             return;
 #endif
 
+            ApplicationStateManager.ApplicationExit = () => this.Shutdown();
+
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -176,8 +178,8 @@ namespace NHM.Wpf
             var m2 = new MainWindowNew2();
             m2.Show();
 
-            // Set shutdown mode back to default
-            ShutdownMode = ShutdownMode.OnLastWindowClose;
+            //// Set shutdown mode back to default
+            //ShutdownMode = ShutdownMode.OnLastWindowClose;
         }
     }
 }
