@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace NHM.Wpf.Views.SettingsNew
+namespace NHM.Wpf.Views.Settings
 {
     /// <summary>
     /// Interaction logic for Settings.xaml

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace NHM.Wpf.Views.SettingsNew
+namespace NHM.Wpf.Views.Settings
 {
     /// <summary>
     /// Interaction logic for SettingsAdvanced.xaml

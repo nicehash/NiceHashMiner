@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NHM.Wpf.Views.SettingsNew
+namespace NHM.Wpf.Views.Settings
 {
     /// <summary>
     /// Interaction logic for SettingsCheckBoxItem.xaml

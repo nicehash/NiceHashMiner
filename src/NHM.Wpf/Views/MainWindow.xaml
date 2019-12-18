@@ -9,7 +9,7 @@
         xmlns:dashboard="clr-namespace:NHM.Wpf.Views.Dashboard"
         xmlns:devices="clr-namespace:NHM.Wpf.Views.Devices"
         xmlns:pluginsNew="clr-namespace:NHM.Wpf.Views.Plugins"
-        xmlns:settingsNew="clr-namespace:NHM.Wpf.Views.SettingsNew"
+        xmlns:settingsNew="clr-namespace:NHM.Wpf.Views.Settings"
         xmlns:help="clr-namespace:NHM.Wpf.Views.Help"
         xmlns:local="clr-namespace:NHM.Wpf.Views"
         xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"

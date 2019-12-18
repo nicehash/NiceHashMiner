@@ -171,16 +171,16 @@
     <Compile Include="Views\Plugins\Plugins.xaml.cs">
       <DependentUpon>Plugins.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsNew\Settings.xaml.cs">
+    <Compile Include="Views\Settings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsNew\SettingsAdvanced.xaml.cs">
+    <Compile Include="Views\Settings\SettingsAdvanced.xaml.cs">
       <DependentUpon>SettingsAdvanced.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsNew\SettingsCheckBoxItem.xaml.cs">
+    <Compile Include="Views\Settings\SettingsCheckBoxItem.xaml.cs">
       <DependentUpon>SettingsCheckBoxItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsNew\SettingsGeneral.xaml.cs">
+    <Compile Include="Views\Settings\SettingsGeneral.xaml.cs">
       <DependentUpon>SettingsGeneral.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
@@ -403,19 +403,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsNew\Settings.xaml">
+    <Page Include="Views\Settings\Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsNew\SettingsAdvanced.xaml">
+    <Page Include="Views\Settings\SettingsAdvanced.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsNew\SettingsCheckBoxItem.xaml">
+    <Page Include="Views\Settings\SettingsCheckBoxItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SettingsNew\SettingsGeneral.xaml">
+    <Page Include="Views\Settings\SettingsGeneral.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
