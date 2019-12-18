@@ -110,6 +110,7 @@
     <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
     <Compile Include="ApplicationState\BalanceAndExchangeRates.cs" />
     <Compile Include="ApplicationState\BenchmarkManagerState.cs" />
+    <Compile Include="ApplicationState\MinerPluginsManagerState.cs" />
     <Compile Include="ApplicationState\MiningState.cs" />
     <Compile Include="ApplicationState\VersionState.cs" />
     <Compile Include="Configs\CredentialsSettings.cs" />

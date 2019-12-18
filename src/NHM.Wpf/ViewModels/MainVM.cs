@@ -242,16 +242,49 @@ namespace NHM.Wpf.ViewModels
         #endregion
 
         #region MinerPlugins
-        public ObservableCollection<PluginEntryVM> Plugins { get; } = new ObservableCollection<PluginEntryVM>();
-        public void RefreshPlugins()
+        private ObservableCollection<PluginEntryVM> _plugins;
+        public ObservableCollection<PluginEntryVM> Plugins
         {
-            foreach (var plugin in MinerPluginsManager.RankedPlugins)
+            get => _plugins;
+            set
             {
-                var vm = Plugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
-                if (vm != null) continue;
-                Plugins.Add(new PluginEntryVM(plugin));
+                _plugins = value;
+                OnPropertyChanged();
             }
         }
+
+        private void MinerPluginsManagerState_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            lock (_lock)
+            {
+                if (Plugins == null) return; 
+                var rankedPlugins = MinerPluginsManagerState.Instance.RankedPlugins;
+                var rankedPluginsArray = rankedPlugins.ToArray();
+                // add new
+                foreach (var plugin in rankedPluginsArray)
+                {
+                    var vm = Plugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
+                    if (vm != null) continue;
+                    Plugins.Add(new PluginEntryVM(plugin));
+                }
+                // remove missing
+                var remove = Plugins.Where(plugin => rankedPlugins.FirstOrDefault(rankedPlugin => rankedPlugin.PluginUUID == plugin.Plugin.PluginUUID) == null).ToArray();
+                foreach (var rem in remove)
+                {
+                    Plugins.Remove(rem);
+                }
+                // sort
+                var removeUUIDs = remove.Select(rem => rem.Plugin.PluginUUID);
+                var sorted = rankedPlugins.Where(rankedPlugin => !removeUUIDs.Contains(rankedPlugin.PluginUUID)).ToList();
+                var pluginsToSort = Plugins.ToList();
+                for (int i = 0; i < sorted.Count; i++)
+                {
+                    var oldIndex = pluginsToSort.FindIndex(p => p.Plugin == sorted[i]); 
+                    Plugins.Move(oldIndex, i);
+                }
+            }
+        }
+
         #endregion MinerPlugins
 
 
@@ -281,6 +314,9 @@ namespace NHM.Wpf.ViewModels
             };
 
             TimeFactor.OnUnitTypeChanged += (_, unit) => { TimeUnit = unit.ToString(); };
+
+            //MinerPluginsManager.OnCrossReferenceInstalledWithOnlinePlugins += OnCrossReferenceInstalledWithOnlinePlugins;
+            MinerPluginsManagerState.Instance.PropertyChanged += MinerPluginsManagerState_PropertyChanged;
         }
 
         // TODO I don't like this way, a global refresh and notify would be better
@@ -295,6 +331,7 @@ namespace NHM.Wpf.ViewModels
 
         public async Task InitializeNhm(IStartupLoader sl)
         {
+            Plugins = new ObservableCollection<PluginEntryVM>();
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
@@ -302,11 +339,12 @@ namespace NHM.Wpf.ViewModels
 
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
+            BindingOperations.EnableCollectionSynchronization(Plugins, _lock);
             MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
 
             IdleCheckManager.StartIdleCheck();
 
-            RefreshPlugins();
+            //RefreshPlugins();
 
             _updateTimer.Start();
 
