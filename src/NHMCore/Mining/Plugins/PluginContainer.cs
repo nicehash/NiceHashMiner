@@ -6,6 +6,7 @@ using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHMCore.Switching;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,10 +19,6 @@ namespace NHMCore.Mining.Plugins
     // interfaces were used only to implement the container methods
     public class PluginContainer /*: IMinerPlugin , IGetApiMaxTimeout, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IInitInternals*/
     {
-        //https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.completedtask?redirectedfrom=MSDN&view=netframework-4.8#System_Threading_Tasks_Task_CompletedTask
-        // net45 doens't support this so make our own
-        private static Task CompletedTask { get; } = Task.Delay(0);
-
         private static List<PluginContainer> _pluginContainers = new List<PluginContainer>();
         private static List<PluginContainer> _brokenPluginContainers = new List<PluginContainer>();
         internal static object _lock = new object();
@@ -336,9 +333,9 @@ namespace NHMCore.Mining.Plugins
             if (!_devicesCrossReference && _plugin is IDevicesCrossReference impl)
             {
                 _devicesCrossReference = true;
-                return CheckExec(nameof(impl.DevicesCrossReference), () => impl.DevicesCrossReference(devices), CompletedTask);
+                return CheckExec(nameof(impl.DevicesCrossReference), () => impl.DevicesCrossReference(devices), TaskHelpers.CompletedTask);
             }
-            return CompletedTask;
+            return TaskHelpers.CompletedTask;
         }
         #endregion IDevicesCrossReference
 

@@ -19,7 +19,8 @@ namespace NHMCore
                     Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
                 }
                 DisplayMiningProfitable(isProfitable);
-            } else
+            }
+            else
             {
                 if (IFTTTSettings.Instance.UseIFTTT)
                 {
