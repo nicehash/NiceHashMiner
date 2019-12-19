@@ -1,6 +1,8 @@
-﻿using NHM.Wpf.ViewModels;
+﻿using NHM.Common;
+using NHM.Wpf.ViewModels;
 using NHM.Wpf.Views.Common;
 using NHM.Wpf.Views.Common.NHBase;
+using NHM.Wpf.Views.TDPSettings;
 using NHMCore;
 using NHMCore.Configs;
 using System;
@@ -57,6 +59,12 @@ namespace NHM.Wpf.Views
                 // Re-enable managed controls
                 IsEnabled = true;
                 SetTabButtonsEnabled();
+                if (BuildOptions.SHOW_TDP_SETTINGS)
+                {
+                    var tdpWindow = new TDPSettingsWindow();
+                    tdpWindow.DataContext = _vm;
+                    tdpWindow.Show();
+                }
             }
         }
 

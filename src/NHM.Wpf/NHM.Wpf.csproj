@@ -93,6 +93,7 @@
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\DeviceData.cs" />
+    <Compile Include="ViewModels\Models\DeviceDataTDP.cs" />
     <Compile Include="ViewModels\Models\IMiningData.cs" />
     <Compile Include="ViewModels\Models\LoadProgress.cs" />
     <Compile Include="ViewModels\Models\MiningData.cs" />
@@ -186,6 +187,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\TDPSettings\TDPComputeDeviceItem.xaml.cs">
+      <DependentUpon>TDPComputeDeviceItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TDPSettings\TDPSettings.xaml.cs">
+      <DependentUpon>TDPSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TDPSettings\TDPSettingsWindow.xaml.cs">
+      <DependentUpon>TDPSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TemporaryStartupLoadingControl.xaml.cs">
       <DependentUpon>TemporaryStartupLoadingControl.xaml</DependentUpon>
@@ -419,6 +429,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TDPSettings\TDPComputeDeviceItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TDPSettings\TDPSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TDPSettings\TDPSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TemporaryStartupLoadingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -492,6 +514,10 @@
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
+      <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
+      <Name>NHM.DeviceMonitoring</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHMCore\NHMCore.csproj">
       <Project>{43dcaf38-d0c4-4335-983d-650f78461eb2}</Project>

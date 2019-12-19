@@ -44,6 +44,17 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
+        private IEnumerable<DeviceDataTDP> _devicesTDP;
+        public IEnumerable<DeviceDataTDP> DevicesTDP
+        {
+            get => _devicesTDP;
+            set
+            {
+                _devicesTDP = value;
+                OnPropertyChanged();
+            }
+        }
+
         public IEnumerable<DeviceData> CPUs
         {
             get => _devices?.Where(d => d.Dev.DeviceType == DeviceType.CPU) ?? Enumerable.Empty<DeviceData>();
@@ -335,6 +346,7 @@ namespace NHM.Wpf.ViewModels
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
+            DevicesTDP = new ObservableCollection<DeviceDataTDP>(AvailableDevices.Devices.Select(d => new DeviceDataTDP(d)));
             MiningDevs = new ObservableCollection<IMiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
 
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
