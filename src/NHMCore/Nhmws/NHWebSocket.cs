@@ -111,34 +111,47 @@ namespace NHMCore.Nhmws
 
         static public async Task Start(string address, CancellationToken token)
         {
-            var random = new Random();
-            _address = address;
-            NHLog.Info("NHWebSocket-WD", "Starting nhmws watchdog");
-            // TODO use this or just use the application exit source
-            while (!token.IsCancellationRequested)
+            try
             {
-                try
+                var random = new Random();
+                _address = address;
+
+                NHLog.Info("NHWebSocket-WD", "Starting nhmws watchdog");
+                // TODO use this or just use the application exit source
+                while (!token.IsCancellationRequested)
                 {
-                    await NewConnection(token);
-                }
-                catch (Exception e)
-                {
-                    NHLog.Error("NHWebSocket-WD", $"Error occured: {e.Message}");
-                }
-                // if we didn't initialize the restart delay reconnect
-                if (!_isNhmwsRestart && !token.IsCancellationRequested)
-                {
-                    // delays re-connect 10 to 30 seconds
-                    var delaySeconds = 10 + random.Next(0, 20);
-                    NHLog.Info("NHWebSocket-WD", $"Attempting reconnect in {delaySeconds} seconds");
-                    await Task.Delay(delaySeconds * 1000, token);
-                }
-                else if (_isNhmwsRestart && !token.IsCancellationRequested)
-                {
-                    NHLog.Info("NHWebSocket-WD", $"Restarting nhmws SESSION");
+                    try
+                    {
+                        await NewConnection(token);
+                        // after each connection is completed check if we should re-connect or exit the watchdog
+                        // if we didn't initialize the restart delay reconnect
+                        if (!_isNhmwsRestart && !token.IsCancellationRequested)
+                        {
+                            // delays re-connect 10 to 30 seconds
+                            var delaySeconds = 10 + random.Next(0, 20);
+                            NHLog.Info("NHWebSocket-WD", $"Attempting reconnect in {delaySeconds} seconds");
+                            await TaskHelpers.TryDelay(TimeSpan.FromSeconds(delaySeconds), token);
+                        }
+                        else if (_isNhmwsRestart && !token.IsCancellationRequested)
+                        {
+                            NHLog.Info("NHWebSocket-WD", $"Restarting nhmws SESSION");
+                        }
+                    }
+                    catch (TaskCanceledException e)
+                    {
+                        NHLog.Debug("NHWebSocket-WD", $"TaskCanceledException {e.Message}");
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        NHLog.Error("NHWebSocket-WD", $"Error occured: {e.Message}");
+                    }
                 }
             }
-            NHLog.Info("NHWebSocket-WD", "Ending nhmws watchdog");
+            finally
+            {
+                NHLog.Info("NHWebSocket-WD", "Ending nhmws watchdog");
+            }
         }
 
         // TODO add cancelation token
@@ -147,7 +160,6 @@ namespace NHMCore.Nhmws
             NHLog.Info("NHWebSocket", "STARTING nhmws SESSION");
             try
             {
-                // TODO if we fill the Queue before this we should start fresh afterwards
                 // TODO think if we might want to dump prev data????
                 // on each new connection clear the ConcurrentQueues, 
                 _recieveQueue = new ConcurrentQueue<MessageEventArgs>();
@@ -181,7 +193,7 @@ namespace NHMCore.Nhmws
                         if (IsWsAlive) HandleSendMessage();
                         if (IsWsAlive) await HandleReceiveMessage();
                         // TODO add here the last miner status send check
-                        if (IsWsAlive) await Task.Delay(checkWaitTime); // TODO add cancelation token here
+                        if (IsWsAlive) await TaskHelpers.TryDelay(checkWaitTime, stop);
 
                         if (skipMinerStatus) continue;
                         var elapsedTime = DateTime.UtcNow - _lastSendMinerStatusTimestamp.Value;
@@ -434,7 +446,7 @@ namespace NHMCore.Nhmws
             catch
             { }
             SetAlgorithmRates(message.data);
-            return Task.Delay(0); // completed task
+            return TaskHelpers.CompletedTask;
         }
         #endregion SMA
         #region MARKETS
@@ -486,7 +498,7 @@ namespace NHMCore.Nhmws
             {
                 NHLog.Error("NHWebSocket", $"HandleMarkets error: {e.Message}");
             }
-            return Task.Delay(0);
+            return TaskHelpers.CompletedTask;
         }
         #endregion MARKETS
 
@@ -506,7 +518,7 @@ namespace NHMCore.Nhmws
             {
                 NHLog.Error("NHWebSocket", $"SetBalance error: {e.Message}");
             }
-            return Task.Delay(0);
+            return TaskHelpers.CompletedTask;
         }
         #endregion BALANCE
 
@@ -522,7 +534,7 @@ namespace NHMCore.Nhmws
             {
                 NHLog.Error("NHWebSocket", $"SetBalance error: {e.Message}");
             }
-            return Task.Delay(0);
+            return TaskHelpers.CompletedTask;
         }
         #endregion BRUN
 
@@ -532,20 +544,19 @@ namespace NHMCore.Nhmws
             dynamic message = JsonConvert.DeserializeObject(data);
             string version = message.v3.Value;
             VersionState.Instance.OnVersionUpdate(version);
-            return Task.Delay(0);
+            return TaskHelpers.CompletedTask;
         }
         #endregion VERSION
 
         #region EXCHANGE_RATES
         private static Task SetExchangeRates(string origdata)
         {
-            var completed = Task.Delay(0);
             try
             {
                 dynamic message = JsonConvert.DeserializeObject(origdata);
                 string data = message.data.Value;
                 var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
-                if (exchange?.exchanges_fiat == null || exchange.exchanges == null) return completed;
+                if (exchange?.exchanges_fiat == null || exchange.exchanges == null) return TaskHelpers.CompletedTask;
                 double usdBtcRate = -1;
                 foreach (var exchangePair in exchange.exchanges)
                 {
@@ -563,7 +574,7 @@ namespace NHMCore.Nhmws
             {
                 NHLog.Error("NHWebSocket", $"SetExchangeRates error: {e.Message}");
             }
-            return completed;
+            return TaskHelpers.CompletedTask;
         }
         #endregion EXCHANGE_RATES
 
