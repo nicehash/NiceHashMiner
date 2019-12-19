@@ -10,7 +10,6 @@ namespace NHM.Wpf.ViewModels
     {
 
         #region BenchmarkSettings
-        private BenchmarkPerformanceType _selectedBenchmarkType = BenchmarkPerformanceType.Standard;
         public BenchmarkPerformanceType SelectedBenchmarkType
         {
             get => BenchmarkManagerState.Instance.SelectedBenchmarkType;
