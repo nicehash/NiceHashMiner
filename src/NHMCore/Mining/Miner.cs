@@ -229,66 +229,101 @@ namespace NHMCore.Mining
 
         private async Task RunMinerWatchDogLoop(TaskCompletionSource<object> tsc, CancellationToken stop, string miningLocation, string username)
         {
-            var firstStart = true;
-            using (_endMiner = new CancellationTokenSource())
-            using (var linkedEndMiner = CancellationTokenSource.CreateLinkedTokenSource(stop, _endMiner.Token))
+            try
             {
-                Logger.Info(MinerTag(), $"Starting miner watchdog task");
-                while (!linkedEndMiner.IsCancellationRequested)
+                var firstStart = true;
+                using (_endMiner = new CancellationTokenSource())
+                using (var linkedEndMiner = CancellationTokenSource.CreateLinkedTokenSource(stop, _endMiner.Token))
                 {
-                    if (!firstStart)
+                    Logger.Info(MinerTag(), $"Starting miner watchdog task");
+                    while (!linkedEndMiner.IsCancellationRequested)
                     {
-                        Logger.Info(MinerTag(), $"Restart Mining in {MiningSettings.Instance.MinerRestartDelayMS}ms");
-                    }
-                    await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, linkedEndMiner.Token);
-                    var result = await StartAsync(linkedEndMiner.Token, miningLocation, username);
-                    if (firstStart)
-                    {
-                        firstStart = false;
-                        tsc.SetResult(result);
-                    }
-                    if (result is bool ok && ok)
-                    {
-                        var runningMinerTask = _miner.MinerProcessTask;
-                        _ = MinerStatsLoop(runningMinerTask, linkedEndMiner.Token);
-                        await runningMinerTask;
-                        // TODO log something here
-                        Logger.Info(MinerTag(), $"Running Miner Task Completed");
-                    }
-                    else
-                    {
-                        // TODO check if the miner file is missing or locked and blacklist the algorithm for a certain period of time 
-                        Logger.Error(MinerTag(), $"StartAsync result: {result}");
+                        try
+                        {
+                            if (!firstStart)
+                            {
+                                Logger.Info(MinerTag(), $"Restart Mining in {MiningSettings.Instance.MinerRestartDelayMS}ms");
+                            }
+                            await TaskHelpers.TryDelay(MiningSettings.Instance.MinerRestartDelayMS, linkedEndMiner.Token);
+                            var result = await StartAsync(linkedEndMiner.Token, miningLocation, username);
+                            if (firstStart)
+                            {
+                                firstStart = false;
+                                tsc.SetResult(result);
+                            }
+                            if (result is bool ok && ok)
+                            {
+                                var runningMinerTask = _miner.MinerProcessTask;
+                                _ = MinerStatsLoop(runningMinerTask, linkedEndMiner.Token);
+                                await runningMinerTask;
+                                // TODO log something here
+                                Logger.Info(MinerTag(), $"Running Miner Task Completed");
+                            }
+                            else
+                            {
+                                // TODO check if the miner file is missing or locked and blacklist the algorithm for a certain period of time 
+                                Logger.Error(MinerTag(), $"StartAsync result: {result}");
+                            }
+                        }
+                        catch (TaskCanceledException e)
+                        {
+                            Logger.Debug(MinerTag(), $"RunMinerWatchDogLoop TaskCanceledException: {e.Message}");
+                            return;
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Error(MinerTag(), $"RunMinerWatchDogLoop Exception: {e.Message}");
+                        }
                     }
                 }
+            }
+            finally
+            {
                 Logger.Info(MinerTag(), $"Exited miner watchdog");
             }
         }
 
         private async Task MinerStatsLoop(Task runningTask, CancellationToken stop)
         {
-            // TODO make sure this interval is per miner plugin instead of a global one
-            var minerStatusElapsedTimeChecker = new ElapsedTimeChecker(
-                () => TimeSpan.FromSeconds(MiningSettings.Instance.MinerAPIQueryInterval),
-                true);
-            var checkWaitTime = TimeSpan.FromMilliseconds(50);
-            Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
-            while (isOk())
+            try
             {
-                if (isOk()) await Task.Delay(checkWaitTime, stop);
-
-                if (isOk() && minerStatusElapsedTimeChecker.CheckAndMarkElapsedTime())
+                // TODO make sure this interval is per miner plugin instead of a global one
+                var minerStatusElapsedTimeChecker = new ElapsedTimeChecker(
+                    () => TimeSpan.FromSeconds(MiningSettings.Instance.MinerAPIQueryInterval),
+                    true);
+                var checkWaitTime = TimeSpan.FromMilliseconds(50);
+                Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
+                Logger.Info(MinerTag(), $"MinerStatsLoop START");
+                while (isOk())
                 {
-                    await GetSummaryAsync();
+                    try
+                    {
+                        if (isOk()) await TaskHelpers.TryDelay(checkWaitTime, stop);
+                        if (isOk() && minerStatusElapsedTimeChecker.CheckAndMarkElapsedTime()) await GetSummaryAsync();
+                        
+                        // check if stagnated and restart
+                        var restartGroups = MinerApiWatchdog.GetTimedoutGroups(DateTime.UtcNow);
+                        if (isOk() && (restartGroups?.Contains(GroupKey) ?? false))
+                        {
+                            Logger.Info(MinerTag(), $"Restarting miner group='{GroupKey}' API timestamp exceeded");
+                            await StopAsync();
+                            return;
+                        }
+                    }
+                    catch (TaskCanceledException e)
+                    {
+                        Logger.Debug(MinerTag(), $"MinerStatsLoop TaskCanceledException: {e.Message}");
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(MinerTag(), $"Exception {e.Message}");
+                    }
                 }
-                // check if stagnated and restart
-                var restartGroups = MinerApiWatchdog.GetTimedoutGroups(DateTime.UtcNow);
-                if (isOk() && (restartGroups?.Contains(GroupKey) ?? false))
-                {
-                    Logger.Info(MinerTag(), $"Restarting miner group='{GroupKey}' API timestamp exceeded");
-                    await StopAsync();
-                    return;
-                }
+            }
+            finally
+            {
+                Logger.Info(MinerTag(), $"MinerStatsLoop END");
             }
         }
 
