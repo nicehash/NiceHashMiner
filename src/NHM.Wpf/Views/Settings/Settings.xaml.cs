@@ -63,17 +63,7 @@ namespace NHM.Wpf.Views.Settings
         // RESTART doesn't work with debug console and mining running
         private async void Btn_restart_Click(object sender, RoutedEventArgs e)
         {
-            await OnRestart();
-        }
-
-        private async Task OnRestart()
-        {
-            for (int tryIt = 0; tryIt < 5; tryIt++)
-            {
-                await ApplicationStateManager.BeforeExit();
-                ApplicationStateManager.RestartProgram();
-                await Task.Delay(1000);
-            }
+            await ApplicationStateManager.RestartProgram();
         }
     }
 }

@@ -48,7 +48,7 @@ namespace NHMCore
 
         public static Action ApplicationExit;
 
-        private static void ExecuteApplicationExit()
+        public static void ExecuteApplicationExit()
         {
             Application.Exit();
             ApplicationExit?.Invoke();
@@ -56,33 +56,44 @@ namespace NHMCore
 
         public static CancellationTokenSource ExitApplication { get; } = new CancellationTokenSource();
 
+        private static bool _beforeExitCalled = false;
         public static async Task BeforeExit()
         {
+            if (_beforeExitCalled) return;
+            _beforeExitCalled = true;
             try
             {
                 // should close websocket  
                 ExitApplication.Cancel();
+                var waitTasks = new List<Task>();
+                waitTasks.Add(MiningManager.RunninLoops);
+                waitTasks.Add(NHWebSocket.MainLoop);
+                waitTasks.Add(MinerPluginsManager.RunninLoops);
+                await Task.WhenAll(waitTasks.Where(t => t != null));
             }
-            catch { }
-            var waitTasks = new List<Task>();
-            waitTasks.Add(StopAllDevicesTask());
-            waitTasks.Add(MiningManager.RunninLoops);
-            waitTasks.Add(NHWebSocket.MainLoop);
-            waitTasks.Add(MinerPluginsManager.RunninLoops);
-            await Task.WhenAll(waitTasks.Where(t => t != null));
-            MessageBoxManager.Unregister();
+            catch (Exception e)
+            {
+                Logger.Info("BeforeExit", e.Message);
+            }
+            finally
+            {
+                MessageBoxManager.Unregister();
+            }
         }
 
         private static bool _restartCalled = false;
-        public static void RestartProgram()
+        public static async Task RestartProgram()
         {
             if (_restartCalled) return;
             _restartCalled = true;
-            var startInfo = new ProcessStartInfo { FileName = Application.ExecutablePath };
-            using (var pHandle = new Process { StartInfo = startInfo })
-            {
-                pHandle.Start();
-            }
+            await BeforeExit();
+            //var startInfo = new ProcessStartInfo { FileName = Application.ExecutablePath };
+            //using (var pHandle = new Process { StartInfo = startInfo })
+            //{
+            //    pHandle.Start();
+            //}
+            // TODO we can have disable multiple instances so make a helper program that "swaps"/restarts parent/child
+            Process.Start(Application.ExecutablePath);
             ExecuteApplicationExit();
         }
 

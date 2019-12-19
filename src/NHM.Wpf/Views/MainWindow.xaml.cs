@@ -75,6 +75,7 @@ namespace NHM.Wpf.Views
             IsEnabled = false;
             //await _vm.StopMining();
             await ApplicationStateManager.BeforeExit();
+            ApplicationStateManager.ExecuteApplicationExit();
             //Close();
         }
         #endregion Start-Loaded/Closing
