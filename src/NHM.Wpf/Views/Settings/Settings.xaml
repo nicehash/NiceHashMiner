@@ -126,7 +126,8 @@
             <Button
                 Width="136" Height="24"
                 HorizontalAlignment="Left"
-                x:Name="btn_restart" Click="Btn_restart_Click" >
+                x:Name="btn_restart" Click="Btn_restart_Click"
+                ToolTip="Settings change require NiceHash Miner restart">
                 <Button.Resources>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonPrimary}" />
                 </Button.Resources>
