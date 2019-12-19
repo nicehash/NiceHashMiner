@@ -115,6 +115,88 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
+        private static async Task HandleCommand(Command command)
+        {
+            // check what kind of command is it and ALWAYS set Tsc.Result
+            // do stuff with the command
+            var commandExecSuccess = true;
+            try
+            {
+                var commandResolutionType = CommandResolutionType.NONE;
+                Logger.Debug(Tag, $"Command type {command.CommandType}");
+                switch (command.CommandType)
+                {
+                    case CommandType.DevicesStartStop:
+                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
+                        if (command.CommandParameters is IEnumerable<ComputeDevice> devices)
+                        {
+                            _devices = devices;
+                            Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        }
+                        break;
+                    case CommandType.NormalizedProfitsUpdate:
+                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
+                        if (command.CommandParameters is Dictionary<AlgorithmType, double> profits)
+                        {
+                            _normalizedProfits = profits;
+                            Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        }
+                        break;
+                    case CommandType.UsernameChanged:
+                        commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
+                        if (command.CommandParameters is string username)
+                        {
+                            _username = username;
+                            Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        }
+                        break;
+                    case CommandType.MiningLocationChanged:
+                        commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
+                        if (command.CommandParameters is string location)
+                        {
+                            _miningLocation = location;
+                            Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        }
+                        break;
+                    case CommandType.StopAllMiners:
+                        commandResolutionType = CommandResolutionType.StopAllMiners;
+                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        break;
+
+                    default:
+                        Logger.Debug(Tag, $"command type not handled {command.CommandType}");
+                        break;
+                }
+                // tasks to await
+                Logger.Debug(Tag, $"Command type {command.CommandType} Resolution {commandResolutionType}");
+                switch (commandResolutionType)
+                {
+                    case CommandResolutionType.CheckGroupingAndUpdateMiners:
+                        await CheckGroupingAndUpdateMiners(command.CommandType);
+                        break;
+                    case CommandResolutionType.RestartCurrentActiveMiners:
+                        await RestartMiners();
+                        break;
+                    case CommandResolutionType.StopAllMiners:
+                        await StopAllMinersTask();
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            catch (Exception e)
+            {
+                commandExecSuccess = false;
+                Logger.Error(Tag, $"HandleCommand Exception: {e.Message}");
+            }
+            finally
+            {
+                // always set command source completed here
+                command.Tsc.SetResult(commandExecSuccess);
+            }
+        }
+
         #endregion Command Tasks
 
 
@@ -153,139 +235,87 @@ namespace NHMCore.Mining
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
             var switchingManager = new AlgorithmSwitchingManager();
-            switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
-            switchingManager.ForceUpdate();
-
-            var checkWaitTime = TimeSpan.FromMilliseconds(50);
-            Func<bool> isActive = () => !stop.IsCancellationRequested;
-            Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
-            while (isActive())
+            try
             {
-                if (isActive()) await Task.Delay(checkWaitTime);
-                if (isActive() && _commandQueue.TryDequeue(out var command))
-                {
-                    // check what kind of command is it and ALWAYS set Tsc.Result
-                    // do stuff with the command
-                    var commandExecSuccess = true;
-                    try
-                    {
-                        var commandResolutionType = CommandResolutionType.NONE;
-                        Logger.Debug(Tag, $"Command type {command.CommandType}");
-                        switch (command.CommandType)
-                        {
-                            case CommandType.DevicesStartStop:
-                                commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
-                                if (command.CommandParameters is IEnumerable<ComputeDevice> devices)
-                                {
-                                    _devices = devices;
-                                    Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                                }
-                                break;
-                            case CommandType.NormalizedProfitsUpdate:
-                                commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
-                                if (command.CommandParameters is Dictionary<AlgorithmType, double> profits)
-                                {
-                                    _normalizedProfits = profits;
-                                    Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                                }
-                                break;
-                            case CommandType.UsernameChanged:
-                                commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
-                                if (command.CommandParameters is string username)
-                                {
-                                    _username = username;
-                                    Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                                }
-                                break;
-                            case CommandType.MiningLocationChanged:
-                                commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
-                                if (command.CommandParameters is string location)
-                                {
-                                    _miningLocation = location;
-                                    Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                                }
-                                break;
-                            case CommandType.StopAllMiners:
-                                commandResolutionType = CommandResolutionType.StopAllMiners;
-                                Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                                break;
+                switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+                switchingManager.ForceUpdate();
 
-                            default:
-                                Logger.Debug(Tag, $"command type not handled {command.CommandType}");
-                                break;
-                        }
-                        // tasks to await
-                        Logger.Debug(Tag, $"Command type {command.CommandType} Resolution {commandResolutionType}");
-                        switch (commandResolutionType)
-                        {
-                            case CommandResolutionType.CheckGroupingAndUpdateMiners:
-                                await CheckGroupingAndUpdateMiners(command.CommandType);
-                                break;
-                            case CommandResolutionType.RestartCurrentActiveMiners:
-                                await RestartMiners();
-                                break;
-                            case CommandResolutionType.StopAllMiners:
-                                await StopAllMinersTask();
-                                break;
-                            default:
-                                break;
-                        }
-                        
-                    }
-                    catch (Exception e)
+                var checkWaitTime = TimeSpan.FromMilliseconds(50);
+                Func<bool> isActive = () => !stop.IsCancellationRequested;
+                Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
+                while (isActive())
+                {
+                    if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
+                    // command handling
+                    if (isActive() && _commandQueue.TryDequeue(out var command))
                     {
-                        commandExecSuccess = false;
-                        // TODO log
+                        await HandleCommand(command);
                     }
-                    finally
-                    {
-                        // always set command source completed here
-                        command.Tsc.SetResult(commandExecSuccess);
-                    }                   
                 }
             }
-            Logger.Info(Tag, "Exiting MiningManagerCommandQueueLoop run cleanup");
-            // cleanup
-            switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
-            switchingManager.Stop();
-            foreach (var groupMiner in _runningMiners.Values)
+            catch (TaskCanceledException e)
             {
-                await groupMiner.StopTask();
+                Logger.Debug(Tag, $"MiningManagerCommandQueueLoop TaskCanceledException: {e.Message}");
             }
-            _runningMiners.Clear();
-            _miningDevices.Clear();
+            finally
+            {
+                Logger.Info(Tag, "Exiting MiningManagerCommandQueueLoop run cleanup");
+                // cleanup
+                switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
+                switchingManager.Stop();
+                foreach (var groupMiner in _runningMiners.Values)
+                {
+                    await groupMiner.StopTask();
+                }
+                _runningMiners.Clear();
+                _miningDevices.Clear();
+            }
         }
 
         private static async Task MiningManagerMainLoop(CancellationToken stop)
         {
-            var checkWaitTime = TimeSpan.FromMilliseconds(50);
-            Func<bool> isActive = () => !stop.IsCancellationRequested;
-
-            // sleep time setting is minimal 1 minute, 19-20s interval
-            var preventSleepIntervalElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromSeconds(19), true);
-            Logger.Info(Tag, "Starting MiningManagerMainLoop");
-            while (isActive())
+            try
             {
-                if (isActive()) await Task.Delay(checkWaitTime);
+                var checkWaitTime = TimeSpan.FromMilliseconds(50);
+                Func<bool> isActive = () => !stop.IsCancellationRequested;
 
-                // prevent sleep check
-                if (isActive() && preventSleepIntervalElapsedTimeChecker.CheckAndMarkElapsedTime())
+                // sleep time setting is minimal 1 minute, 19-20s interval
+                var preventSleepIntervalElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromSeconds(19), true);
+                Logger.Info(Tag, "Starting MiningManagerMainLoop");
+                while (isActive())
                 {
-                    var isMining = IsMiningEnabled;
-                    if (isMining)
+                    if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
+
+                    // prevent sleep check
+                    if (isActive() && preventSleepIntervalElapsedTimeChecker.CheckAndMarkElapsedTime())
                     {
-                        PInvokeHelpers.PreventSleep();
+                        var isMining = IsMiningEnabled;
+                        if (isMining)
+                        {
+                            PInvokeHelpers.PreventSleep();
+                        }
+                        else
+                        {
+                            PInvokeHelpers.AllowMonitorPowerdownAndSleep();
+                        }
                     }
-                    else
-                    {
-                        PInvokeHelpers.AllowMonitorPowerdownAndSleep();
-                    }
+                    // TODO should we check internet interval here???
                 }
-                // TODO should we check internet interval here???
             }
-            Logger.Info(Tag, "Exiting MiningManagerMainLoop run cleanup");
-            // cleanup
-            PInvokeHelpers.AllowMonitorPowerdownAndSleep();
+            catch (TaskCanceledException e)
+            {
+                Logger.Info(Tag, $"MiningManagerMainLoop TaskCanceledException: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                Logger.Error(Tag, $"TaskCanceledException Exception: {e.Message}");
+            }
+            finally
+            {
+                Logger.Info(Tag, "Exiting MiningManagerMainLoop run cleanup");
+                // cleanup
+                PInvokeHelpers.AllowMonitorPowerdownAndSleep();
+            }            
         }
 
 
@@ -327,8 +357,8 @@ namespace NHMCore.Mining
             // first update mining devices
             if (commandType == CommandType.DevicesStartStop)
             {
-                // TODO should we check new and old miningDevices???
-                var oldMiningDevices = _miningDevices;
+                //// TODO should we check new and old miningDevices???
+                //var oldMiningDevices = _miningDevices;
                 _miningDevices = GroupSetupUtils.GetMiningDevices(_devices, true);
                 if (_miningDevices.Count > 0)
                 {
