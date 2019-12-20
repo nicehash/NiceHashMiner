@@ -108,9 +108,14 @@ namespace NHMCore
                 }
                 AvailableDevices.UncheckCpuIfGpu();
                 FailedRamCheck = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
+                if (FailedRamCheck)
+                {
+                    AvailableNotifications.CreateFailedRamCheckInfo();
+                }
                 // no compatible devices? exit
                 if (AvailableDevices.Devices.Count == 0)
                 {
+                    // keep message box here
                     var result = MessageBox.Show(Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
                         Tr("No Supported Devices"),
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
@@ -135,7 +140,7 @@ namespace NHMCore
 
                 if (!Helpers.IsElevated && !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && AvailableDevices.HasNvidia)
                 {
-                    NotificationsManager.Instance.CreateDeviceMonitoringNvidiaElevateInfo();
+                    AvailableNotifications.CreateDeviceMonitoringNvidiaElevateInfo();
                 }
 
                 #endregion Device Detection
@@ -211,14 +216,7 @@ namespace NHMCore
                 var missingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
                 if (missingMinerBins)
                 {
-                    var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. {0} might not work properly without missing files. Click Yes to reinitialize {0} to try to fix this issue.", NHMProductInfo.Name),
-                        Tr("Warning!"),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (result == DialogResult.Yes)
-                    {
-                        RestartProgram();
-                        return;
-                    }
+                    AvailableNotifications.CreateMissingMinersInfo();
                 }
                 // fire up mining manager loop
                 MiningManager.StartLoops(ExitApplication.Token);
@@ -260,25 +258,5 @@ namespace NHMCore
                 NHWebSocket.NotifyStateChanged();
             }
         }
-
-        // make these non modal
-        //public static void ShowQueryWarnings()
-        //{
-        //    if (query.FailedRamCheck)
-        //    {
-        //        MessageBox.Show(Tr("{0} recommends increasing virtual memory size so that all algorithms would work fine.", NHMProductInfo.Name),
-        //            Tr("Warning!"),
-        //            MessageBoxButtons.OK);
-        //    }
-
-        //    if (query.FailedVidControllerStatus)
-        //    {
-        //        var msg = Tr("We have detected a Video Controller that is not working properly. {0} will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.", NHMProductInfo.Name);
-        //        msg += '\n' + query.FailedVidControllerInfo;
-        //        MessageBox.Show(msg,
-        //            Tr("Warning! Video Controller not operating correctly"),
-        //            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        //    }
-        //}
     }
 }

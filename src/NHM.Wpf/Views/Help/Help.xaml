@@ -33,7 +33,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Label Content="Notifications" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="6,0,0,0">
                         <ItemsControl x:Name="ic_NotificationsList" ItemsSource="{Binding HelpNotificationList}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
