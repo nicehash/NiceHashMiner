@@ -109,6 +109,7 @@
     <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
     <Compile Include="ApplicationState\BalanceAndExchangeRates.cs" />
     <Compile Include="ApplicationState\MiningState.cs" />
+    <Compile Include="ApplicationState\NotificationState.cs" />
     <Compile Include="ApplicationState\VersionState.cs" />
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\DeviceTDPSettings.cs" />

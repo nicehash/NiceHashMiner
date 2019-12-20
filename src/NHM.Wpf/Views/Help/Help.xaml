@@ -11,40 +11,39 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <Grid Background="White" Width="Auto" Height="Auto">
-
-        <Grid Margin="40,10,40,40">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <WrapPanel Grid.Row="0" Orientation="Vertical">
-                <WrapPanel VerticalAlignment="Center">
-                    <Label Content="NiceHash Miner version: " Style="{StaticResource FontsTypography.NormalRegular/Active}" />
-                    <Label Content="{Binding LocalVersion}" Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
-                </WrapPanel>
-                <WrapPanel>
-                    <Label Content="Latest online version: " Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
-                    <Label Content="{Binding OnlineVersion}" Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
-                </WrapPanel>
-            </WrapPanel>
-            <Grid Grid.Row="1" Margin="0,20,0,0">
+        <Border Margin="40,10,40,40" BorderBrush="#eeeeee" BorderThickness="1">
+            <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Border BorderThickness="1" BorderBrush="Black" Width="80" HorizontalAlignment="Left">
-                    <Label Content="Notifications" />
-                </Border>
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <ItemsControl x:Name="ic_NotificationsList" ItemsSource="{Binding HelpNotificationsList}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <local:HelpItem Margin="0,16,0,0"></local:HelpItem>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                <WrapPanel Grid.Row="0" Orientation="Vertical">
+                    <WrapPanel VerticalAlignment="Center">
+                        <Label Content="Running local version: " Style="{StaticResource FontsTypography.NormalRegular/Active}" />
+                        <Label Content="{Binding LocalVersion}" Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label Content="Latest online version: " Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
+                        <Label Content="{Binding OnlineVersion}" Style="{StaticResource FontsTypography.NormalRegular/Active}" Margin="6,0,0,0"/>
+                    </WrapPanel>
+                </WrapPanel>
+                <Grid Grid.Row="1" Margin="0,20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label Content="Notifications" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="ic_NotificationsList" ItemsSource="{Binding HelpNotificationList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:HelpItem Margin="0,16,0,0"></local:HelpItem>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
             </Grid>
-        </Grid>
+        </Border>
     </Grid>
 </UserControl>

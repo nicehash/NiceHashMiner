@@ -11,7 +11,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Text="Error message" Grid.Row="0" Margin="40,0,40,0" />
-        <TextBlock Text="Test bloka" Grid.Row="1" Margin="40,0,40,0" />
+        <TextBlock x:Name="itemErrorTitle" Text="{Binding Notification.NotificationName}" Grid.Row="0" Style="{StaticResource FontsTypography.SmallRegularTextBlock}"/>
+        <TextBlock x:Name="itemErrorContent" Text="{Binding Notification.NotificationContent}" Grid.Row="1" Style="{StaticResource FontsTypography.SmallRegularTextBlock}"/>
     </Grid>
 </UserControl>
