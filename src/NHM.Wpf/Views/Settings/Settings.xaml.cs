@@ -53,6 +53,7 @@ namespace NHM.Wpf.Views.Settings
 
         private async void Btn_default_Click(object sender, RoutedEventArgs e)
         {
+            // keep message box here
             var result = MessageBox.Show(Tr("Are you sure you would like to set everything back to defaults? This will restart {0} automatically.", NHMProductInfo.Name),
                 Tr("Set default settings?"),
                 MessageBoxButton.YesNo, MessageBoxImage.Warning);

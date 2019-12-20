@@ -53,45 +53,8 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        //private void UpdateBenchPending()
-        //{
-        //    BenchesCompleted = 0;
-        //    //BenchesPending = BenchmarkManager.CalcBenchDevAlgoQueue();
-        //}
-
-        //private void BenchmarkManagerOnInBenchmarkChanged(object sender, bool e)
-        //{
-        //    OnPropertyChanged(nameof(InBenchmark));
-        //    OnPropertyChanged(nameof(NotInBenchmark));
-        //    OnPropertyChanged(nameof(SideBarEnabled));
-        //    OnPropertyChanged(nameof(StartStopButtonLabel));
-        //    if (!e) BenchesCompleted = 0;
-        //}
-
         public void StartBenchmark()
         {
-            //if (Devices?.All(d => !d.Enabled) ?? true)
-            //{
-            //    MessageBox.Show(Translations.Tr("No device has been selected there is nothing to benchmark"),
-            //        Translations.Tr("No device selected"),
-            //        MessageBoxButton.OK);
-            //    return;
-            //}
-
-            //if (!BenchmarkManager.HasWork)
-            //{
-            //    MessageBox.Show(Translations.Tr("Current benchmark settings are already executed. There is nothing to do."),
-            //        Translations.Tr("Nothing to benchmark"),
-            //        MessageBoxButton.OK);
-            //    return;
-            //}
-
-            //Set pending status
-            //foreach (var devAlgoTuple in BenchmarkManager.BenchDevAlgoQueue)
-            //{
-            //    foreach (var algo in devAlgoTuple.Item2) algo.SetBenchmarkPending();
-            //}
-
             ApplicationStateManager.StartBenchmark();
         }
 
