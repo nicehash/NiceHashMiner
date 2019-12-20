@@ -53,7 +53,7 @@ namespace NiceHashMiner
             Icon = NHMCore.Properties.Resources.logo;
             errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
             labelWarningNotProfitableOrNoIntenret.Visible = false;
-            InitElevationWarning();
+            //InitElevationWarning();
             this.TopMost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
@@ -208,26 +208,6 @@ namespace NiceHashMiner
             foreach (var control in controls)
             {
                 toolTip1.SetToolTip(control, text);
-            }
-        }
-
-        private void InitElevationWarning()
-        {
-            if (!Helpers.IsElevated && !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
-            {
-                errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
-                linkLabelAdminPrivs.Click += (s, e) =>
-                {
-                    var dialogResult = MessageBox.Show(Tr("Click yes if you wish to run {0} as Administrator.", NHMProductInfo.Name),
-                    Tr("Run as Administrator"),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                        RunAsAdmin.SelfElevate();                    
-                };
-            }
-            else
-            {
-                linkLabelAdminPrivs.Visible = false;
             }
         }
 

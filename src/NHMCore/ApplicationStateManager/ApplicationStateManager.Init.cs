@@ -7,6 +7,7 @@ using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
+using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
@@ -131,6 +132,12 @@ namespace NHMCore
                 }
                 // now init device settings
                 ConfigManager.InitDeviceSettings();
+
+                if (!Helpers.IsElevated && !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && AvailableDevices.HasNvidia)
+                {
+                    NotificationsManager.Instance.CreateDeviceMonitoringNvidiaElevateInfo();
+                }
+
                 #endregion Device Detection
 
                 // TODO ADD STEP AND MESSAGE

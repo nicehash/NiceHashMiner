@@ -1,30 +1,35 @@
 ﻿using NHM.Common;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NHMCore.Notifications
 {
     public class Notification : NotifyChangedBase
     {
-        public NotificationsType NotificationsType { get; } = NotificationsType.Info;
+        public NotificationsType Type { get; } = NotificationsType.Info;
 
         public Notification(string name, string content)
         {
-            NotificationName = name;
+            Name = name;
             NotificationContent = content;
         }
-             
+
+        public Notification(NotificationsType type, string name, string content)
+        {
+            Type = type;
+            Name = name;
+            NotificationContent = content;
+        }
+
+        public List<INotificationBaseAction> Actions { get; } = new List<INotificationBaseAction>();
+
         private string _notificationName { get; set; }
-        public string NotificationName
+        public string Name
         {
             get => _notificationName;
             set
             {
                 _notificationName = value;
-                OnPropertyChanged(nameof(NotificationName));
+                OnPropertyChanged(nameof(Name));
             }
         }
 
@@ -37,6 +42,11 @@ namespace NHMCore.Notifications
                 _notificationContent = value;
                 OnPropertyChanged(nameof(NotificationContent));
             }
+        }
+
+        public void RemoveNotification()
+        {
+            NotificationsManager.Instance.RemoveNotificationFromList(this);
         }
     }
 }

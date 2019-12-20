@@ -1,6 +1,5 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
-using NHM.Wpf.ViewModels.Help;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
 using NHMCore;
@@ -122,8 +121,8 @@ namespace NHM.Wpf.ViewModels
 
         
         #region HelpNotifications
-        private ObservableCollection<NotificationsElementVM> _helpNotificationList;
-        public ObservableCollection<NotificationsElementVM> HelpNotificationList
+        private ObservableCollection<Notification> _helpNotificationList;
+        public ObservableCollection<Notification> HelpNotificationList
         {
             get => _helpNotificationList;
             set
@@ -138,7 +137,7 @@ namespace NHM.Wpf.ViewModels
             lock (_lock)
             {
                 // TODO keep it like this for now but update the collection view in the future
-                HelpNotificationList = new ObservableCollection<NotificationsElementVM>(NotificationsManager.Instance.Notifications.Select(n => new NotificationsElementVM(n)));
+                HelpNotificationList = new ObservableCollection<Notification>(NotificationsManager.Instance.Notifications);
                 OnPropertyChanged(nameof(HelpNotificationList));
             }
         }
@@ -369,7 +368,7 @@ namespace NHM.Wpf.ViewModels
         public async Task InitializeNhm(IStartupLoader sl)
         {
             Plugins = new ObservableCollection<PluginEntryVM>();
-            HelpNotificationList = new ObservableCollection<NotificationsElementVM>();
+            HelpNotificationList = new ObservableCollection<Notification>();
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));

@@ -1,9 +1,9 @@
 ﻿using NHM.Common;
-using System;
+using NHMCore.Utils;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
 {
@@ -40,5 +40,38 @@ namespace NHMCore.Notifications
             }
             OnPropertyChanged(nameof(Notifications));
         }
+
+        public bool RemoveNotificationFromList(Notification notification)
+        {
+            var ok = false;
+            lock (_lock)
+            {
+                ok = _notifications.Remove(notification);
+            }
+            OnPropertyChanged(nameof(Notifications));
+            return ok;
+        }
+
+        // TODO this is here temporary 
+        #region Notifications creation methods
+
+        public void CreateDeviceMonitoringNvidiaElevateInfo()
+        {
+            var notification = new Notification(Translations.Tr("NVIDIA TDP Settings Insufficient Priviledges"), Translations.Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
+            notification.Actions.Add(new NotificationAction {
+                Info = "Run As Administrator",
+                Action = () => {
+                    var dialogResult = MessageBox.Show(Tr("Click yes if you wish to run {0} as Administrator.", NHMProductInfo.Name),
+                        Tr("Run as Administrator"),
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                        RunAsAdmin.SelfElevate();
+                }
+            });
+            AddNotificationToList(notification);
+        }
+
+        #endregion Notifications creation methods
+
     }
 }

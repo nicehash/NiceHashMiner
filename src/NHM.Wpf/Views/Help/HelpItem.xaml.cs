@@ -1,4 +1,4 @@
-﻿using NHM.Wpf.ViewModels.Help;
+﻿using NHMCore.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace NHM.Wpf.Views.Help
     public partial class HelpItem : UserControl
     {
 
-        private NotificationsElementVM _notification;
+        private Notification _notification;
         public HelpItem()
         {
             InitializeComponent();
@@ -31,12 +31,32 @@ namespace NHM.Wpf.Views.Help
 
         private void HelpItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is NotificationsElementVM notification)
+            if (e.NewValue is Notification notification)
             {
                 _notification  = notification;
+                var baseAction = _notification.Actions.FirstOrDefault();
+                if (baseAction is NotificationAction action)
+                {
+                    ActionButton.Content = action.Info;
+                    ActionButton.Click += (s, be) => action.Action?.Invoke();
+                }
+                else
+                {
+                    ActionButton.Visibility = Visibility.Collapsed;
+                }
                 return;
             }
             throw new Exception("unsupported datacontext type");
+        }
+
+        private void RemoveNotification(object sender, RoutedEventArgs e)
+        {
+            _notification.RemoveNotification();
+        }
+
+        private void ExecuteNotificationAction(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
