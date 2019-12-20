@@ -112,6 +112,7 @@
     <Compile Include="ApplicationState\BenchmarkManagerState.cs" />
     <Compile Include="ApplicationState\MinerPluginsManagerState.cs" />
     <Compile Include="ApplicationState\MiningState.cs" />
+    <Compile Include="ApplicationState\NotificationState.cs" />
     <Compile Include="ApplicationState\VersionState.cs" />
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\DeviceTDPSettings.cs" />

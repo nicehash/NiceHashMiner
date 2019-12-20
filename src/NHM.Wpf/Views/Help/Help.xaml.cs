@@ -10,7 +10,7 @@ namespace NHM.Wpf.Views.Help
         public Help()
         {
             InitializeComponent();
-            checkItems();
+            //checkItems();
         }
 
         private void checkItems()

@@ -118,7 +118,14 @@ namespace NHM.Wpf.ViewModels
         public WarningSettings WarningSettings => WarningSettings.Instance;
         #endregion Exposed settings
 
-        public IEnumerable<HelpNotification> HelpNotificationsList => HelpNotification.HelpNotificationsList;
+        public ObservableCollection<HelpNotification> HelpNotificationList { get; } = new ObservableCollection<HelpNotification>();
+        public void RefreshNotifications()
+        {
+            foreach (var notification in NotificationState.Instance.NotificationList)
+            {
+                HelpNotificationList.Add(new HelpNotification(notification.NotificationName, notification.NotificationContent));
+            }
+        }
 
         // TODO these versions here will not work
         public string LocalVersion => VersionState.Instance.ProgramVersion.ToString();
@@ -426,11 +433,18 @@ namespace NHM.Wpf.ViewModels
         {
             if (!await NHSmaData.WaitOnDataAsync(10)) return;
             await ApplicationStateManager.StartAllAvailableDevicesTask();
+
+
+            //test delete after
+            HelpNotificationList.Add(new HelpNotification("start mining", "device started mining"));
         }
 
         public async Task StopMining()
         {
             await ApplicationStateManager.StopAllDevicesTask();
+
+            //test delete after
+            HelpNotificationList.Add(new HelpNotification("stop mining", "device stopped mining"));
         }
     }
 }
