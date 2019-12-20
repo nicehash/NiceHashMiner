@@ -20,7 +20,7 @@ namespace NHM.Wpf.Views.Plugins.PluginItem
     /// <summary>
     /// Interaction logic for PluginItem.xaml
     /// </summary>
-    public partial class PluginItem : UserControl, IThemeSetter
+    public partial class PluginItem : UserControl
     {
         private PluginEntryVM _vm;
         public PluginItem()
@@ -98,12 +98,6 @@ namespace NHM.Wpf.Views.Plugins.PluginItem
         {
             PluginActionsButtonContext.IsOpen = false;
             _vm.ShowPluginInternals();
-        }
-
-        void IThemeSetter.SetTheme(string theme)
-        {
-            var windowBackground = theme != "Light" ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(1, 13, 21)) : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
-            Background = windowBackground;
         }
     }
 }

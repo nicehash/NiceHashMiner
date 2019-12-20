@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 namespace NHM.Wpf.Views.Common.NHBase
 {
-    public partial class BaseDialogWindow : Window
+    public partial class BaseDialogWindow : Window, IThemeSetter
     {
         private HwndSource _hwndSource;
 
@@ -36,18 +36,6 @@ namespace NHM.Wpf.Views.Common.NHBase
 
         public Grid NHMIcon { get; private set; }
 
-        public void SwitchTheme(bool isLight)
-        {
-            if (NHMIcon != null)
-            {
-                var icon = isLight ? System.Windows.Application.Current.FindResource("NHMLogoLightBrush") : System.Windows.Application.Current.FindResource("NHMLogoDarkBrush");
-                var windowBackground = isLight ? new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255)) : new SolidColorBrush(System.Windows.Media.Color.FromRgb(1, 13, 21));
-                NHMIcon.Background = icon as DrawingBrush;
-                this.Background = windowBackground;
-                GUISettings.Instance.DisplayTheme = isLight ? "Light" : "Dark";
-            }           
-        }
-
         static BaseDialogWindow()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(BaseDialogWindow),
@@ -69,6 +57,7 @@ namespace NHM.Wpf.Views.Common.NHBase
             // extra loaded/closing stuff
             base.Loaded += new RoutedEventHandler(this.OnLoadedSetRender);
             base.Closing += new CancelEventHandler(this.OnWindowClosing);
+            ThemeSetterManager.AddThemeSetter(this);
         }
 
         private void OnLoadedSetRender(object sender, RoutedEventArgs e)
@@ -260,6 +249,17 @@ namespace NHM.Wpf.Views.Common.NHBase
 
                 NativeUtils.PostMessage(handle, 274, new IntPtr(num1), IntPtr.Zero);
             }
+        }
+
+        void IThemeSetter.SetTheme(bool isLight)
+        {
+            if (NHMIcon != null)
+            {
+                var icon = isLight ? System.Windows.Application.Current.FindResource("NHMLogoLightBrush") : System.Windows.Application.Current.FindResource("NHMLogoDarkBrush");
+                NHMIcon.Background = icon as DrawingBrush;
+            }
+            var windowBackground = isLight ? System.Windows.Application.Current.FindResource("Brushes.Light.Grey.Grey4Background") : System.Windows.Application.Current.FindResource("Brushes.Dark.Grey.Grey1Background");
+            this.Background = windowBackground as SolidColorBrush;
         }
     }
 }

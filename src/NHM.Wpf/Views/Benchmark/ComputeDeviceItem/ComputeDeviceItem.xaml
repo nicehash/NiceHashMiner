@@ -15,7 +15,7 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
 
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
@@ -54,7 +54,7 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
             <Setter Property="FontSize" Value="16" />
-            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
             <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -73,7 +73,7 @@
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
                     <Setter Property="FontSize" Value="16" />
-                    <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
                     <Setter Property="LineHeight" Value="1.57" />
                     <Setter Property="TextAlignment" Value="Center" />
                 </Style>
@@ -105,7 +105,7 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
             <Setter Property="FontSize" Value="10" />
-            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
             <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -127,7 +127,7 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
                     <Setter Property="FontSize" Value="10" />
-                    <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
                     <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
                     <Setter Property="TextWrapping" Value="Wrap" />
                     <Setter Property="MaxWidth" Value="100" />
@@ -151,7 +151,7 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" MinWidth="320" Height="40" Margin="40,0,40,0">
-            <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
+            <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
                 </Border.Effect>
@@ -191,7 +191,7 @@
             </ToggleButton>
         </Grid>
 
-        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="WhiteSmoke" Visibility="Collapsed" Width="Auto" Margin="40,20,40,0">
+        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="Transparent" Visibility="Collapsed" Width="Auto" Margin="40,20,40,0">
             <!--TODO ALGORITHMS HERE-->
             <!--CHECK IF WE NEED SCROLL VIEWER-->
             <Grid.RowDefinitions>

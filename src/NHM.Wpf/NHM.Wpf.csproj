@@ -79,6 +79,7 @@
     <Compile Include="Converters\TemperatureValueToText.cs" />
     <Compile Include="IThemeSetter.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ThemeSetterManager.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
     <Compile Include="Converters\ConverterBase.cs" />

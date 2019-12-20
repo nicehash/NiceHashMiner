@@ -27,7 +27,7 @@
         <Grid Grid.Row="1" Height="Auto" >
             <TextBlock Margin="24,12,0,0"
                    Style="{StaticResource BaseUbuntuTextBlockBold}"
-                   Foreground="{StaticResource TextColorBrush}"
+                   Foreground="{DynamicResource TextColorBrush}"
                    FontSize="14"
                    LineHeight="1.57"
                    Text="Disclaimer on usage of 3rd party software"

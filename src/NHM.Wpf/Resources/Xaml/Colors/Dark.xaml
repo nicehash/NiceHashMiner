@@ -21,4 +21,6 @@
     <Color x:Key="Colors.Dark.Grey.Grey2Outlines">#40494F</Color>
     <Color x:Key="Colors.Dark.Grey.Grey3OutlineActive">#CECDCD</Color>
     <!--#endregion Grey colors-->
+
+    <Color x:Key="Colors.Dark.Border">#40494F</Color>
 </ResourceDictionary>

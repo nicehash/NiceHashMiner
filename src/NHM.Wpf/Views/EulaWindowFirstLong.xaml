@@ -24,7 +24,7 @@
             <TextBlock 
                 Margin="24,22,0,0"
                 FontFamily="{StaticResource UbuntuFontFamily}"
-                Foreground="{StaticResource TextColorBrush}"
+                Foreground="{DynamicResource TextColorBrush}"
                 FontWeight="Bold"
                 FontStyle="Normal"
                 FontStretch="Normal"
@@ -40,7 +40,7 @@
                          IsReadOnly="True"
                          IsDocumentEnabled="True"
                          FontFamily="{StaticResource UbuntuFontFamily}"
-                         Foreground="{StaticResource TextColorBrush}"
+                         Foreground="{DynamicResource TextColorBrush}"
                          FontSize="14"
                          FontStyle="Normal"
                          FontStretch="Normal"

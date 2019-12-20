@@ -29,6 +29,11 @@
     <SolidColorBrush x:Key="Brushes.Light.Grey.Grey3" Color="{ StaticResource Colors.Light.Grey.Grey3 }" />
     <SolidColorBrush x:Key="Brushes.Light.Grey.Grey4Background" Color="{ StaticResource Colors.Light.Grey.Grey4Background }" />
     <!--#endregion Light Grey brushes-->
+    <!--#region Light Text brushes-->
+    <SolidColorBrush x:Key="Brushes.Light.TextColor" Color="{ StaticResource Colors.Light.Grey.MainBlack }" />
+    <!--#endregion Light Text brushes-->
+
+    <SolidColorBrush x:Key="Brushes.Light.Border" Color="{ StaticResource Colors.Light.Border }" />
 
 
     <!--#region Dark Basic Brushes-->
@@ -49,6 +54,12 @@
     <SolidColorBrush x:Key="Brushes.Dark.Grey.Grey3OutlineActive" Color="{ StaticResource Colors.Dark.Grey.Grey3OutlineActive }"/>
     <!--#endregion Dark Grey Brushes-->
 
+    <!--#region Light Text brushes-->
+    <SolidColorBrush x:Key="Brushes.Dark.TextColor" Color="{ StaticResource Colors.Dark.White }" />
+    <!--#endregion Light Text brushes-->
+
+    <SolidColorBrush x:Key="Brushes.Dark.Border" Color="{ StaticResource Colors.Dark.Border }" />
+
     <!--#region OLD DEPRECIATE-->
     <!--#region Colors-->
     <Color x:Key="NastyGreen">#68B641</Color>
@@ -67,7 +78,6 @@
     <SolidColorBrush x:Key="RedDangerColorBrush" Color="{StaticResource RedDangerColor}" />
     <SolidColorBrush x:Key="PrimaryColorBrush" Color="{StaticResource PrimaryColor}" />
     <SolidColorBrush x:Key="WarningColorBrush" Color="{StaticResource WarningColor}" />
-    <SolidColorBrush x:Key="TextColorBrush" Color="{StaticResource TextColor}" />
     <SolidColorBrush x:Key="Gray1ColorBrush" Color="{StaticResource Gray1Color}" />
     <SolidColorBrush x:Key="Gray2ColorBrush" Color="{StaticResource Gray2Color}" />
 

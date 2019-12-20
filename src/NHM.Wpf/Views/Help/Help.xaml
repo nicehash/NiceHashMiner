@@ -10,7 +10,7 @@
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
-    <Grid Background="White" Width="Auto" Height="Auto">
+    <Grid Background="{DynamicResource BackgroundColor}" Width="Auto" Height="Auto">
         <Border Margin="40,10,40,40" BorderBrush="#eeeeee" BorderThickness="1">
             <Grid >
                 <Grid.RowDefinitions>

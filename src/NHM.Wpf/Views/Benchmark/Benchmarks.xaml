@@ -44,7 +44,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
 
 
             <Style.Triggers>
@@ -65,7 +65,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="40,16,0,16">
             <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                <TextBlock Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{StaticResource TextColorBrush}" FontSize="14">Benchmark Type:</TextBlock>
+                <TextBlock Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{DynamicResource TextColorBrush}" FontSize="14">Benchmark Type:</TextBlock>
                 <Button Margin="4,0,0,0" Click="BenchmarkTypeContextMenuButton_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">

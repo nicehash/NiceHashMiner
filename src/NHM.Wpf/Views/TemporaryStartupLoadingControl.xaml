@@ -17,7 +17,7 @@
             <Style TargetType="{x:Type TextBlock}">
                 <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
                 <Setter Property="FontSize" Value="12" />
-                <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>

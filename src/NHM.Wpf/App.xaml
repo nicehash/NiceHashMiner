@@ -20,6 +20,13 @@
                 <ResourceDictionary Source="Resources/Xaml/Tooltips.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <!--#region Dynamic Theme Properties-->
+            <SolidColorBrush x:Key="BackgroundColor" Color="{DynamicResource Colors.Light.Grey.Grey4Background}" />
+            <SolidColorBrush x:Key="BorderColor" Color="{DynamicResource Colors.Light.Border}" />
+            <SolidColorBrush x:Key="TextColorBrush" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+            <DrawingBrush x:Key="LoginCircle"  Drawing="{DynamicResource LoginCircleLogoLight}" />
+            <!--#endregion Dynamic Theme Properties-->
+
             <Style TargetType="views:EulaWindowFirstLong" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:ChooseLanguageWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:EulaWindowSecondShort" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
@@ -122,7 +129,7 @@
             <!--devices circle count labels-->
             <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeCountText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
                 <Setter Property= "FontSize" Value="40"/>
-                <Setter Property= "Foreground" Value="{StaticResource TextColorBrush}"/>
+                <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
             </Style>
 
             <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
@@ -137,12 +144,12 @@
 
             <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCValueText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
                 <Setter Property= "FontSize" Value="18"/>
-                <Setter Property= "Foreground" Value="{StaticResource TextColorBrush}"/>
+                <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
             </Style>
 
             <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
                 <Setter Property= "FontSize" Value="12"/>
-                <Setter Property= "Foreground" Value="{StaticResource TextColorBrush}"/>
+                <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
             </Style>
 
             <Style TargetType="{x:Type TextBlock}" x:Key="StatsFiatEstimateText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">

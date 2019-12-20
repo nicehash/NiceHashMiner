@@ -13,13 +13,10 @@
       ResizeMode="NoResize"
       WindowStyle="None"
       AllowsTransparency="True"
-      Background="Transparent">
+      Background="{DynamicResource BackgroundColor}">
     <StackPanel Orientation="Vertical">
-        <Rectangle Width="160" Height="160" Margin="0,10,0,0">
-            <Rectangle.Fill>
-                <DrawingBrush x:Name="drawingBrushNH" Drawing="{Binding Drawing, Source={StaticResource drawingBrush_circleNH}}"/>
-            </Rectangle.Fill>
-        </Rectangle>
+        <Rectangle Width="160" Height="160" Margin="0,10,0,0" Fill="{DynamicResource LoginCircle}" />
+
         <Button Style="{StaticResource OKButton}" Margin="0,32,0,0" Content="LOGIN" />
 
 

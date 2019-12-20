@@ -16,7 +16,7 @@
 
         <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="settingDetail">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         </Style>
 
         <Style TargetType="TextBox" x:Key="inputBox">
@@ -37,7 +37,7 @@
             </Style.Resources>
         </Style>
     </UserControl.Resources>
-    <Grid Background="White">
+    <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1"/>
@@ -53,7 +53,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="20" Foreground="{StaticResource TextColorBrush}" Text="Custom Algorithm Settings" />
+            <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="20" Foreground="{DynamicResource TextColorBrush}" Text="Custom Algorithm Settings" />
             <Button Grid.Column="1" HorizontalAlignment="Right" Click="CloseButtonClick">
                 <Button.Resources>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />

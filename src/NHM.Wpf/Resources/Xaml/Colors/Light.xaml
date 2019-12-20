@@ -21,4 +21,6 @@
     <Color x:Key="Colors.Light.Grey.Grey4Background">#FCFCFC</Color>
     <!--#endregion Grey colors-->
 
+    <Color x:Key="Colors.Light.Border">#EEEEEE</Color>
+
 </ResourceDictionary>

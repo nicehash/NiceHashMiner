@@ -97,7 +97,7 @@
                                     <Grid x:Name="NHMIcon" Width="24" Height="24" Background="{StaticResource NHMLogoLightBrush}" />
                                     <TextBlock Margin="8,-8,0,0" 
                                                FontFamily="{StaticResource UbuntuFontFamily}"
-                                               Foreground="{StaticResource TextColorBrush}"
+                                               Foreground="{DynamicResource TextColorBrush}"
                                                FontSize="14"
                                                LineHeight="1.57"
                                                FontWeight="Normal"

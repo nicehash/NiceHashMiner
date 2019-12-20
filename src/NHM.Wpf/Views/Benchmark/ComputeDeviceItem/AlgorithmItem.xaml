@@ -19,7 +19,7 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="WrapWithOverflow" />
-            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
 
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
@@ -140,7 +140,7 @@
         </Style>
     </UserControl.Resources>
     <Grid MinHeight="40" MinWidth="220">
-        <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
+        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
             </Border.Effect>

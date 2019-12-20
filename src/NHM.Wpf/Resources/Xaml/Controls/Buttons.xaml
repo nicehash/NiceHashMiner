@@ -68,7 +68,7 @@
             </Setter.Value>
         </Setter>
         <Setter Property="Background" Value="{StaticResource Brushes.FontColor.White}" />
-        <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BitmapEffect" >

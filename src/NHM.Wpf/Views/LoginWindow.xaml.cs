@@ -1,5 +1,6 @@
 ﻿using NHM.Wpf.Views.Common;
 using NHM.Wpf.Views.Common.NHBase;
+using NHMCore.Configs;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
@@ -21,16 +22,18 @@ namespace NHM.Wpf.Views
 
         private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
         {
-            SwitchTheme(false);
-            var drawingBrushFromResources = this.FindResource("drawingBrush_NightCircleNH") as DrawingBrush;
-            drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
+            GUISettings.Instance.DisplayTheme = "Dark";
+            //SwitchTheme(false);
+            //var drawingBrushFromResources = this.FindResource("drawingBrush_NightCircleNH") as DrawingBrush;
+            //drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
         }
 
         private void CheckBoxMode_Unchecked(object sender, RoutedEventArgs e)
         {
-            SwitchTheme(true);
-            var drawingBrushFromResources = this.FindResource("drawingBrush_circleNH") as DrawingBrush;
-            drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
+            GUISettings.Instance.DisplayTheme = "Light";
+            //SwitchTheme(true);
+            //var drawingBrushFromResources = this.FindResource("drawingBrush_circleNH") as DrawingBrush;
+            //drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
         }
 
         private void Register_OnClick(object sender, RoutedEventArgs e)

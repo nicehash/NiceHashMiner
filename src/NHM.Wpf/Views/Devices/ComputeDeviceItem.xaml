@@ -26,7 +26,7 @@
         </Style>
         <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnValue" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter  Property="FontSize" Value="12"/>
-            <Setter Property= "Foreground" Value="{StaticResource TextColorBrush}"/>
+            <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
         </Style>
         
         
@@ -38,7 +38,7 @@
         <converters:LoadValueToText x:Key="LoadToText" />
     </UserControl.Resources>
     <Grid MinHeight="53" MaxHeight="300" Width="Auto" Background="Transparent">
-        <Border BorderThickness="1" Background="#ffffff" BorderBrush="#eeeeee" CornerRadius="4"/>
+        <Border BorderThickness="1" Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
         <Grid HorizontalAlignment="Stretch"  >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*" />

@@ -42,6 +42,7 @@ namespace NHM.Wpf.Views
         #region Start-Loaded/Closing
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
+            ThemeSetterManager.SetThemeSelectedThemes();
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
         }

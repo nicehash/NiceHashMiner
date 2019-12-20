@@ -23,7 +23,7 @@
             <Setter Property="Text" Value="&#xF05A;"/>
         </Style>
     </UserControl.Resources>
-    <Grid Background="White" Margin="40,0,40,0">
+    <Grid Background="{DynamicResource BackgroundColor}" Margin="40,0,40,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="182" />
             <RowDefinition Height="*" />
@@ -68,7 +68,7 @@
                 </Grid>
             </Grid>
             <Grid Grid.Column="1" Margin="16,0,0,0" ToolTip="{StaticResource currentProfitability}">
-                <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
+                <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -88,7 +88,7 @@
                 </Grid>
             </Grid>
             <Grid Grid.Column="2" Margin="16,0,0,0" ToolTip="{StaticResource unpaidBalance}">
-                <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
+                <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -107,7 +107,7 @@
                 </Grid>
             </Grid>
             <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding ExchangeTooltip}">
-                <Border  BorderThickness="1" BorderBrush="#eeeeee" CornerRadius="4"/>
+                <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -131,7 +131,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" >
-                <TextBlock Text="DISABLE / ENABLE ALL" Style="{StaticResource BaseUbuntuTextBlock}" FontWeight="Regular" FontSize="10" Foreground="{StaticResource TextColorBrush}"/>
+                <TextBlock Text="DISABLE / ENABLE ALL" Style="{StaticResource BaseUbuntuTextBlock}" FontWeight="Regular" FontSize="10" Foreground="{DynamicResource TextColorBrush}"/>
                 <CheckBox Style="{StaticResource NHMSwitch}"
                           IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }"
                           Margin="24,0,0,0"
