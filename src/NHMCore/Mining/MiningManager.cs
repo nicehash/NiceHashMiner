@@ -46,7 +46,6 @@ namespace NHMCore.Mining
         {
 
             DevicesStartStop,
-            
             StopAllMiners,
 
             NormalizedProfitsUpdate,
@@ -72,7 +71,9 @@ namespace NHMCore.Mining
             NONE,
             CheckGroupingAndUpdateMiners,
             RestartCurrentActiveMiners,
-            StopAllMiners
+            StopAllMiners,
+            PauseMining,
+            ResumeMining
         }
 
         private static ConcurrentQueue<Command> _commandQueue { get; set; } = new ConcurrentQueue<Command>();
@@ -152,8 +153,25 @@ namespace NHMCore.Mining
                         break;
                     case CommandType.MiningLocationChanged:
                         commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
-                        if (command.CommandParameters is string location)
+                        var location = command.CommandParameters as string;
+                        //if (command.CommandParameters is string location || command.CommandParameters is null)
                         {
+                            if (_miningLocation == location)
+                            {
+                                commandResolutionType = CommandResolutionType.NONE;
+                                Logger.Debug(Tag, $"Command type {command.CommandType} Location is same no action needed");
+                            }
+                            else if (location == null)
+                            {
+                                commandResolutionType = CommandResolutionType.PauseMining;
+                                Logger.Debug(Tag, $"Command type {command.CommandType} Location is null pause mining");
+                            }
+                            else if (_miningLocation == null)
+                            {
+                                commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
+                                Logger.Debug(Tag, $"Command type {command.CommandType} _miningLocation == null CheckGroupingAndUpdateMiners");
+                            }
+
                             _miningLocation = location;
                             Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
                         }
@@ -179,6 +197,9 @@ namespace NHMCore.Mining
                         break;
                     case CommandResolutionType.StopAllMiners:
                         await StopAllMinersTask();
+                        break;
+                    case CommandResolutionType.PauseMining:
+                        await PauseAllMiners();
                         break;
                     default:
                         break;
@@ -229,6 +250,10 @@ namespace NHMCore.Mining
             if (e.PropertyName == nameof(StratumService.SelectedServiceLocation))
             {
                 _ = MiningLocationChanged(StratumService.Instance.SelectedServiceLocation);
+            }
+            if (e.PropertyName == nameof(StratumService.SelectedFallbackServiceLocation))
+            {
+                _ = MiningLocationChanged(StratumService.Instance.SelectedFallbackServiceLocation);
             }
         }
 
@@ -343,6 +368,7 @@ namespace NHMCore.Mining
             {
                 await groupMiner.StopTask();
             }
+            // TODO set devices to Pending state
         }
         private static async Task ResumeAllMiners()
         {
@@ -350,6 +376,7 @@ namespace NHMCore.Mining
             {
                 await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
             }
+            // TODO resume devices to Mining state
         }
 
         private static async Task CheckGroupingAndUpdateMiners(CommandType commandType)
@@ -380,10 +407,21 @@ namespace NHMCore.Mining
                     //}
                 }
             }
+            if (commandType == CommandType.MiningLocationChanged)
+            {
+                _runningMiners.Clear();
+                // re-init mining devices
+                _miningDevices = GroupSetupUtils.GetMiningDevices(_devices, true);
+                if (_miningDevices.Count > 0)
+                {
+                    GroupSetupUtils.AvarageSpeeds(_miningDevices);
+                }
+            }
             // TODO check if there is nothing to check maybe
             if (_normalizedProfits == null)
             {
                 Logger.Error(Tag, "Profits is null");
+                await PauseAllMiners();
                 return;
             }
             // TODO if empty stop all miners
@@ -392,6 +430,13 @@ namespace NHMCore.Mining
                 Logger.Error(Tag, "_miningDevices.count == 0");
                 return;
             }
+            if (_miningLocation == null)
+            {
+                Logger.Error(Tag, "_miningLocation is null");
+                await PauseAllMiners();
+                return;
+            }
+
             await SwichMostProfitableGroupUpMethodTask(_normalizedProfits);
         }
 

@@ -46,7 +46,7 @@ namespace NHMCore.Mining
         private object _lock = new object();
 
         private Task _minerWatchdogTask;
-        private Task MinerWatchdogTask
+        public Task MinerWatchdogTask
         {
             get
             {
@@ -217,7 +217,7 @@ namespace NHMCore.Mining
             var wdTask = MinerWatchdogTask;
             if (wdTask == null || wdTask.IsCompleted)
             {
-                wdTask = Task.Run(() => RunMinerWatchDogLoop(tsc, stop, miningLocation, username));
+                MinerWatchdogTask = Task.Run(() => RunMinerWatchDogLoop(tsc, stop, miningLocation, username));
             }
             else
             {

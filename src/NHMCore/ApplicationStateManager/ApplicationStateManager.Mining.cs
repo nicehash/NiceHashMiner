@@ -74,42 +74,6 @@ namespace NHMCore
             }
         }
 
-        #region CHECK TO DELETE
-        public static void ResumeMiners()
-        {
-            if (_resumeOldState)
-            {
-               _resumeOldState = false;
-               foreach (var dev in _resumeDevs)
-               {
-                   StartDeviceTask(dev);
-               }
-               _resumeDevs.Clear();
-            }
-            else
-            {
-               // TODO here we probably don't care to wait the Task to complete
-               _ =  MiningManager.ChangeUsername(GetUsername());
-            }
-        }
-
-        private static bool _resumeOldState = false;
-        private static HashSet<ComputeDevice> _resumeDevs = new HashSet<ComputeDevice>();
-        public static void PauseMiners()
-        {
-            _resumeOldState = CurrentForm == CurrentFormState.Main;
-            foreach(var dev in AvailableDevices.Devices)
-            {
-                if (dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Mining)
-                {
-                    _resumeDevs.Add(dev);
-                    StopAllDevicesTask();
-                }
-            }
-        }
-        #endregion CHECK TO DELETE
-
-
         public static async Task<bool> StartSingleDevicePublic(ComputeDevice device)
         {
             if (device.IsPendingChange) return false;

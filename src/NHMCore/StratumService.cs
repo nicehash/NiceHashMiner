@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHMCore.Configs;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NHMCore
 {
@@ -11,9 +12,11 @@ namespace NHMCore
         private StratumService() { }
 
         public string SelectedServiceLocation => MiningLocations[_serviceLocation];
-        private string _lastSelectedServiceLocation = "";
-
-        private bool _callResume = false;
+        public string SelectedFallbackServiceLocation { get; private set; } = null;
+        public bool SelectedServiceLocationOperational { get; private set; } = true;
+        public bool EU_ServiceLocationOperational { get; private set; } = true;
+        public bool USA_ServiceLocationOperational { get; private set; } = true;
+        public bool ServiceLocationsNotOperational { get; private set; } = false;
 
         public int _serviceLocation = 0;
         public int ServiceLocation
@@ -25,10 +28,9 @@ namespace NHMCore
                 if (_serviceLocation != newValue)
                 {
                     _serviceLocation = newValue;
-                    //// service location is different and changed execute potential actions
-                    //ConfigManager.GeneralConfigFileCommit();
+                    // service location is different and changed execute potential actions
+                    ConfigManager.GeneralConfigFileCommit();
                 }
-                _lastSelectedServiceLocation = SelectedServiceLocation;
                 OnPropertyChanged(nameof(ServiceLocation));
                 OnPropertyChanged(nameof(SelectedServiceLocation));
             }
@@ -50,11 +52,13 @@ namespace NHMCore
 
         public void SetEnabled(bool eu, bool usa)
         {
+            // backup old states
             var oldStates = new Dictionary<string, bool>();
             foreach (var kvp in _miningLocations)
             {
                 oldStates[kvp.Key] = kvp.Value.Enabled;
             }
+            // set operational states
             foreach (var key in _miningLocationsEU)
             {
                 _miningLocations[key].Enabled = eu;
@@ -63,6 +67,16 @@ namespace NHMCore
             {
                 _miningLocations[key].Enabled = usa;
             }
+            // check 
+            EU_ServiceLocationOperational = eu;
+            USA_ServiceLocationOperational = usa;
+            ServiceLocationsNotOperational = !eu && !usa;
+            SelectedServiceLocationOperational = _miningLocations[SelectedServiceLocation].Enabled;
+            OnPropertyChanged(nameof(EU_ServiceLocationOperational));
+            OnPropertyChanged(nameof(USA_ServiceLocationOperational));
+            OnPropertyChanged(nameof(ServiceLocationsNotOperational));
+            OnPropertyChanged(nameof(SelectedServiceLocationOperational));
+
             // determine if there is a change
             var hasChange = false;
             foreach (var kvp in oldStates)
@@ -76,42 +90,26 @@ namespace NHMCore
             }
             if (hasChange)
             {
-                // TODO update GUI
-                var lastSelectedServiceLocation = _lastSelectedServiceLocation;
-                // TODO check if we must restart mining
-                var mustRestart = _miningLocations[SelectedServiceLocation].Enabled == false || _callResume;
-                _lastSelectedServiceLocation = SelectedServiceLocation;
-                if (mustRestart)
+                if (SelectedServiceLocationOperational)
                 {
-                    var canSwitchMarket = false;
-                    // take first market to switch
-                    foreach (var key in MiningLocations)
-                    {
-                        if (_miningLocations[key].Enabled)
-                        {
-                            canSwitchMarket = true;
-                            _serviceLocation = _miningLocations[key].Index;
-                            break;
-                        }
-                    }
-                    if (_miningLocations[lastSelectedServiceLocation].Enabled)
-                    {
-                        canSwitchMarket = true;
-                        _serviceLocation = _miningLocations[lastSelectedServiceLocation].Index;
-                    }
-                    if (canSwitchMarket)
-                    {
-                        // restart or resume mining
-                        ApplicationStateManager.ResumeMiners();
-                    }
-                    else
-                    {
-                        _callResume = true;
-                        ApplicationStateManager.PauseMiners();
-                        // TODO notify GUI 
-                    }
+                    OnPropertyChanged(nameof(SelectedServiceLocation));
                 }
-                
+                else if (EU_ServiceLocationOperational)
+                {
+                    SelectedFallbackServiceLocation = _miningLocationsEU.FirstOrDefault();
+                    OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
+                }
+                else if (USA_ServiceLocationOperational)
+                {
+                    SelectedFallbackServiceLocation = _miningLocationsUSA.FirstOrDefault();
+                    OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
+                }
+                else
+                {
+                    // pause mining
+                    SelectedFallbackServiceLocation = null;
+                    OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
+                }
             }
         }
 
