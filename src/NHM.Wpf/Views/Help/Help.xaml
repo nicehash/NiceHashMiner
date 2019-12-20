@@ -37,7 +37,7 @@
                         <ItemsControl x:Name="ic_NotificationsList" ItemsSource="{Binding HelpNotificationList}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <local:HelpItem Margin="0,16,0,0"></local:HelpItem>
+                                    <local:HelpItem DataContext="{Binding .}" Margin="0,16,0,0"></local:HelpItem>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>

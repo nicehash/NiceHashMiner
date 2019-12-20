@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHM.Wpf.ViewModels.Help;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,22 @@ namespace NHM.Wpf.Views.Help
     /// </summary>
     public partial class HelpItem : UserControl
     {
+
+        private NotificationsElementVM _notification;
         public HelpItem()
         {
             InitializeComponent();
+            DataContextChanged += HelpItem_DataContextChanged;
+        }
+
+        private void HelpItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is NotificationsElementVM notification)
+            {
+                _notification  = notification;
+                return;
+            }
+            throw new Exception("unsupported datacontext type");
         }
     }
 }

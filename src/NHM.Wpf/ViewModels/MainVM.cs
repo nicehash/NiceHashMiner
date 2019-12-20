@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.Wpf.ViewModels.Help;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
 using NHMCore;
@@ -10,6 +11,7 @@ using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
+using NHMCore.Notifications;
 using NHMCore.Switching;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -118,14 +120,30 @@ namespace NHM.Wpf.ViewModels
         public WarningSettings WarningSettings => WarningSettings.Instance;
         #endregion Exposed settings
 
-        public ObservableCollection<HelpNotification> HelpNotificationList { get; } = new ObservableCollection<HelpNotification>();
-        public void RefreshNotifications()
+        
+        #region HelpNotifications
+        private ObservableCollection<NotificationsElementVM> _helpNotificationList;
+        public ObservableCollection<NotificationsElementVM> HelpNotificationList
         {
-            foreach (var notification in NotificationState.Instance.NotificationList)
+            get => _helpNotificationList;
+            set
             {
-                HelpNotificationList.Add(new HelpNotification(notification.NotificationName, notification.NotificationContent));
+                _helpNotificationList = value;
+                OnPropertyChanged();
             }
         }
+
+        private void RefreshNotifications_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            lock (_lock)
+            {
+                // TODO keep it like this for now but update the collection view in the future
+                HelpNotificationList = new ObservableCollection<NotificationsElementVM>(NotificationsManager.Instance.Notifications.Select(n => new NotificationsElementVM(n)));
+                OnPropertyChanged(nameof(HelpNotificationList));
+            }
+        }
+
+        #endregion HelpNotifications
 
         // TODO these versions here will not work
         public string LocalVersion => VersionState.Instance.ProgramVersion.ToString();
@@ -335,6 +353,7 @@ namespace NHM.Wpf.ViewModels
 
             //MinerPluginsManager.OnCrossReferenceInstalledWithOnlinePlugins += OnCrossReferenceInstalledWithOnlinePlugins;
             MinerPluginsManagerState.Instance.PropertyChanged += MinerPluginsManagerState_PropertyChanged;
+            NotificationsManager.Instance.PropertyChanged += RefreshNotifications_PropertyChanged;
         }
 
         // TODO I don't like this way, a global refresh and notify would be better
@@ -350,6 +369,7 @@ namespace NHM.Wpf.ViewModels
         public async Task InitializeNhm(IStartupLoader sl)
         {
             Plugins = new ObservableCollection<PluginEntryVM>();
+            HelpNotificationList = new ObservableCollection<NotificationsElementVM>();
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
@@ -359,6 +379,7 @@ namespace NHM.Wpf.ViewModels
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
             BindingOperations.EnableCollectionSynchronization(Plugins, _lock);
+            BindingOperations.EnableCollectionSynchronization(HelpNotificationList, _lock);
             MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
 
             IdleCheckManager.StartIdleCheck();
@@ -436,7 +457,7 @@ namespace NHM.Wpf.ViewModels
 
 
             //test delete after
-            HelpNotificationList.Add(new HelpNotification("start mining", "device started mining"));
+            NotificationsManager.Instance.AddNotificationToList(new Notification("start mining", "device started mining"));
         }
 
         public async Task StopMining()
@@ -444,7 +465,7 @@ namespace NHM.Wpf.ViewModels
             await ApplicationStateManager.StopAllDevicesTask();
 
             //test delete after
-            HelpNotificationList.Add(new HelpNotification("stop mining", "device stopped mining"));
+            NotificationsManager.Instance.AddNotificationToList(new Notification("stop mining", "device stopped mining"));
         }
     }
 }
