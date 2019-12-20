@@ -172,6 +172,7 @@
     <Compile Include="Nhmws\NHWebSocket.cs" />
     <Compile Include="Nhmws\StatusCodes.cs" />
     <Compile Include="Nhmws\TimeFactor.cs" />
+    <Compile Include="Notifications\AvailableNotifications.cs" />
     <Compile Include="Notifications\NotificationAction.cs" />
     <Compile Include="Notifications\INotificationBaseAction.cs" />
     <Compile Include="Notifications\Notification.cs" />
