@@ -89,13 +89,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\Components\DevicesListViewSpeedControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewSpeedControl.cs" />
     <Compile Include="Forms\Components\DevicesListViewSpeedControl.Designer.cs">
       <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormHelpers.cs" />
     <Compile Include="Forms\Form_ChooseUpdate.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,44 +105,16 @@
     <Compile Include="Forms\Form_Main.Designer.cs">
       <DependentUpon>Form_Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Settings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Settings.Designer.cs">
-      <DependentUpon>Form_Settings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Form_TDPSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_TDPSettings.Designer.cs">
-      <DependentUpon>Form_TDPSettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\Field.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\Field.Designer.cs">
-      <DependentUpon>Field.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <EmbeddedResource Include="Forms\Components\DevicesListViewSpeedControl.resx">
       <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\Field.resx">
-      <DependentUpon>Field.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseUpdate.resx">
       <DependentUpon>Form_ChooseUpdate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Settings.resx">
-      <DependentUpon>Form_Settings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_TDPSettings.resx">
-      <DependentUpon>Form_TDPSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
