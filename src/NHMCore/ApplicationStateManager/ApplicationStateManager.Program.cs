@@ -1,8 +1,11 @@
 using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.Mining;
 using NHMCore.Nhmws;
 using NHMCore.Utils;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -51,8 +54,11 @@ namespace NHMCore
                 ExitApplication.Cancel();
             }
             catch { }
-            // stop all mining and benchmarking devices
-            await StopAllDevicesTask();
+            var waitTasks = new List<Task>();
+            waitTasks.Add(StopAllDevicesTask());
+            waitTasks.Add(MiningManager.RunninLoops);
+            waitTasks.Add(NHWebSocket.MainLoop);
+            await Task.WhenAll(waitTasks.Where(t => t != null));
             MessageBoxManager.Unregister();
         }
 

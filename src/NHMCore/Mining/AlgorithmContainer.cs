@@ -2,7 +2,6 @@
 using NHM.Common.Algorithm;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
-using NHMCore.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
 using System;
@@ -71,7 +70,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                return _lastBenchmarkingFailed && !BenchmarkManager.DisableLastBenchmarkingFailed;
+                return _lastBenchmarkingFailed;
             }
             set
             {

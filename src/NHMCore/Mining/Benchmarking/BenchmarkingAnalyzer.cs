@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NHMCore.Benchmarking
+namespace NHMCore.Mining.Benchmarking
 {
-    public class BenchmarkingAnalyzer
+    internal class BenchmarkingAnalyzer
     {
         public struct BenchmarkSpeed
         {

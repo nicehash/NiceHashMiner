@@ -658,6 +658,18 @@ namespace NHMCore.Mining.Plugins
                         PluginContainer.RemovePluginContainer(old);
                     }
                     var newPlugin = PluginContainer.Create(newExternalPlugin);
+                    // TODO/TESTING scope for our fake plugins
+                    try
+                    {
+                        var newPluginDllSettings = Directory.GetFiles(installDllPath, "*.json");
+                        foreach (var jsonFile in newPluginDllSettings)
+                        {
+                            var name = Path.GetFileName(jsonFile);
+                            var installJSONFilePath = Path.Combine(pluginRootPath, name);
+                            File.Copy(jsonFile, installJSONFilePath, true);
+                        }
+                    }
+                    catch { }
                     var success = newPlugin.InitPluginContainer();
                     // TODO after add or remove plugins we should clean up the device settings
                     if (success)

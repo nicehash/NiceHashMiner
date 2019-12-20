@@ -102,6 +102,13 @@ namespace NHMCore.Nhmws
             }
         }
 
+        public static Task MainLoop { get; private set; } = null;
+
+        public static void StartLoop(string address, CancellationToken token)
+        {
+            MainLoop = Task.Run(() => Start(NHM.Common.Nhmws.NhmSocketAddress, token));
+        }
+
         static public async Task Start(string address, CancellationToken token)
         {
             var random = new Random();
@@ -632,9 +639,9 @@ namespace NHMCore.Nhmws
             return true;
         }
 
-        private static async Task<bool> miningSetWorker(string worker)
+        private static bool miningSetWorker(string worker)
         {
-            var workerSetResult = await ApplicationStateManager.SetWorkerIfValidOrDifferent(worker, true);
+            var workerSetResult = ApplicationStateManager.SetWorkerIfValidOrDifferent(worker, true);
             switch (workerSetResult)
             {
                 case ApplicationStateManager.SetResult.INVALID:
@@ -869,7 +876,7 @@ namespace NHMCore.Nhmws
                         break;
                     case "mining.set.worker":
                         worker = (string)message.worker;
-                        executed = await miningSetWorker(worker);
+                        executed = miningSetWorker(worker);
                         loginNeeded = executed;
                         break;
                     case "mining.set.group":

@@ -1,7 +1,7 @@
 using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
-using NHMCore.Benchmarking;
+using NHMCore.Mining.Benchmarking;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using System.Collections.Concurrent;
@@ -16,7 +16,7 @@ namespace NHMCore
     {
         public static string GetUsername()
         {
-            if (MiningState.Instance.IsDemoMining) {
+            if (MiningState.Instance.IsDemoMining || !CredentialsSettings.Instance.IsBitcoinAddressValid) {
                 return DemoUser.BTC;
             }
             var btc = CredentialsSettings.Instance.BitcoinAddress.Trim();
@@ -62,7 +62,7 @@ namespace NHMCore
             var devicesToMine = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining).ToList();
             if (devicesToMine.Count > 0) {
                 StartMining();
-                await MiningManager.UpdateMiningSession(devicesToMine, GetUsername());
+                await MiningManager.UpdateMiningSession(devicesToMine);
             } else {
                 await StopMining();
             }
@@ -74,31 +74,22 @@ namespace NHMCore
             }
         }
 
-        private static async Task RestartMinersIfMining()
-        {
-            // if mining update the mining manager
-            if (MiningState.Instance.IsCurrentlyMining)
-            {
-                await MiningManager.RestartMiners(GetUsername());
-            }
-        }
-
         #region CHECK TO DELETE
         public static void ResumeMiners()
         {
             if (_resumeOldState)
             {
-                _resumeOldState = false;
-                foreach (var dev in _resumeDevs)
-                {
-                    StartDeviceTask(dev);
-                }
-                _resumeDevs.Clear();
+               _resumeOldState = false;
+               foreach (var dev in _resumeDevs)
+               {
+                   StartDeviceTask(dev);
+               }
+               _resumeDevs.Clear();
             }
             else
             {
-                // TODO here we probably don't care to wait the Task to complete
-                _ = RestartMinersIfMining();
+               // TODO here we probably don't care to wait the Task to complete
+               _ =  MiningManager.ChangeUsername(GetUsername());
             }
         }
 

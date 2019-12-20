@@ -59,26 +59,6 @@ namespace NHMCore
             }
         }
 
-        #region MinerStatsCheck
-        private static AppTimer _minerStatsCheck;
-
-        private static void StartMinerStatsCheckTimer()
-        {
-            if (_minerStatsCheck?.IsActive ?? false) return;
-            _minerStatsCheck = new AppTimer(async (object sender, ElapsedEventArgs e) =>
-            {
-                await MiningManager.MinerStatsCheck();
-            },
-            MiningSettings.Instance.MinerAPIQueryInterval * 1000);
-            _minerStatsCheck.Start();
-        }
-
-        private static void StopMinerStatsCheckTimer()
-        {
-            _minerStatsCheck?.Stop();
-        }
-        #endregion MinerStatsCheck
-
 
         #region ComputeDevicesCheck Lost GPU check
         private static AppTimer _cudaDeviceCheckerTimer;
@@ -123,27 +103,6 @@ namespace NHMCore
             _cudaDeviceCheckerTimer?.Stop();
         }
         #endregion ComputeDevicesCheck Lost GPU check
-
-        #region PreventSystemSleepTimer
-        private static AppTimer _preventSleepTimer;
-
-        private static void StartPreventSleepTimer()
-        {
-            if (_preventSleepTimer?.IsActive ?? false) return;
-            // sleep time setting is minimal 1 minute
-            _preventSleepTimer = new AppTimer((s, e) => {
-                PInvokeHelpers.PreventSleep();
-            },
-            20 * 1000);// leave this interval, it works
-            _preventSleepTimer.Start();
-        }
-
-        // restroe/enable sleep
-        private static void StopPreventSleepTimer()
-        {
-            _preventSleepTimer?.Stop();
-        }
-        #endregion PreventSystemSleepTimer
 
         #region InternetCheck timer
         private static AppTimer _internetCheckTimer;

@@ -79,7 +79,7 @@ namespace NHMCore
             // change in memory and save changes to file
             CredentialsSettings.Instance.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
-            await RestartMinersIfMining();
+            await MiningManager.ChangeUsername(GetUsername());
         }
         #endregion
 
@@ -87,7 +87,7 @@ namespace NHMCore
 
         // make sure to pass in trimmed workerName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
-        public static async Task<SetResult> SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
+        public static SetResult SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
         {
             if (workerName == CredentialsSettings.Instance.WorkerName)
             {
@@ -97,7 +97,7 @@ namespace NHMCore
             {
                 return SetResult.INVALID;
             }
-            await SetWorker(workerName);
+            SetWorker(workerName);
             if (!skipCredentialsSet)
             {
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
@@ -106,12 +106,11 @@ namespace NHMCore
             return SetResult.CHANGED;
         }
 
-        private static async Task SetWorker(string workerName)
+        private static void SetWorker(string workerName)
         {
             // change in memory and save changes to file
             CredentialsSettings.Instance.WorkerName = workerName;
             ConfigManager.GeneralConfigFileCommit();
-            await RestartMinersIfMining();
         }
         #endregion
 
@@ -155,9 +154,7 @@ namespace NHMCore
         // And if there are missing mining requirements
         private static bool StartMining()
         {
-            StartMinerStatsCheckTimer();
             StartComputeDevicesCheckTimer();
-            StartPreventSleepTimer();
             StartInternetCheckTimer();
             return true;
         }
@@ -166,21 +163,11 @@ namespace NHMCore
         {
             await MiningManager.StopAllMiners();
 
-            PInvokeHelpers.AllowMonitorPowerdownAndSleep();
-            StopMinerStatsCheckTimer();
             StopComputeDevicesCheckTimer();
-            StopPreventSleepTimer();
             StopInternetCheckTimer();
             DisplayNoInternetConnection(false); // hide warning
             DisplayMiningProfitable(true); // hide warning
             return true;
-        }
-
-
-        // TODO this thing should be dropped when we have bindable properties
-        public static void UpdateDevicesStatesAndStartDeviceRefreshTimer()
-        {
-            MiningState.Instance.CalculateDevicesStateChange();
         }
 
 

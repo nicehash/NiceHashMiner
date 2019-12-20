@@ -26,7 +26,7 @@ namespace NHM.Wpf.Validators
     {
         public override ValidationResult Validate(string value, CultureInfo cultureInfo)
         {
-            var result = Task.Run(async () => await ApplicationStateManager.SetWorkerIfValidOrDifferent(value)).Result;
+            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(value);
 
             if (result == ApplicationStateManager.SetResult.INVALID)
             {

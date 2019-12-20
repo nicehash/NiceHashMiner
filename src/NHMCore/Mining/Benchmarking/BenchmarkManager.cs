@@ -1,15 +1,13 @@
-using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NHMCore.Benchmarking
+namespace NHMCore.Mining.Benchmarking
 {
     public static class BenchmarkManager
     {
         public static bool IsBenchmarking => BenchmarkingComputeDeviceHandler.IsBenchmarking;
-        public static bool DisableLastBenchmarkingFailed { get; set; } = false;
 
 #region Start/Stop methods
 

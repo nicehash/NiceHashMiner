@@ -48,6 +48,18 @@ namespace NHMCore.Mining
             {
                 _apiDataGroups.Remove(removeKey);
                 _minersMiningStats.Remove(removeKey);
+                foreach (var devUUID in deviceUUIDs)
+                {
+                    _devicesMiningStats.Remove(devUUID);
+                }
+            }
+            lock (_devMiningStats)
+            {
+                var toRemove = _devMiningStats.Where(devStat => deviceUUIDs.Contains(devStat.DeviceUUID)).ToArray();
+                foreach (var remove in toRemove)
+                {
+                    _devMiningStats.Remove(remove);
+                }
             }
         }
 

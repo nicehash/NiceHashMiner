@@ -110,12 +110,6 @@
     <Compile Include="ApplicationState\BalanceAndExchangeRates.cs" />
     <Compile Include="ApplicationState\MiningState.cs" />
     <Compile Include="ApplicationState\VersionState.cs" />
-    <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
-    <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
-    <Compile Include="Benchmarking\BenchmarkingComputeDeviceHandler.cs" />
-    <Compile Include="Benchmarking\BenchmarkManager.cs" />
-    <Compile Include="Benchmarking\BenchmarkOption.cs" />
-    <Compile Include="Benchmarking\BenchmarkStartSettings.cs" />
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\DeviceTDPSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
@@ -136,6 +130,12 @@
     <Compile Include="Mining\AlgorithmStatus.cs" />
     <Compile Include="Mining\AvailableDevices.cs" />
     <Compile Include="Mining\ComputeDevice.cs" />
+    <Compile Include="Mining\Benchmarking\PowerHelper.cs" />
+    <Compile Include="Mining\Benchmarking\BenchmarkingAnalyzer.cs" />
+    <Compile Include="Mining\Benchmarking\BenchmarkingComputeDeviceHandler.cs" />
+    <Compile Include="Mining\Benchmarking\BenchmarkManager.cs" />
+    <Compile Include="Mining\Benchmarking\BenchmarkOption.cs" />
+    <Compile Include="Mining\Benchmarking\BenchmarkStartSettings.cs" />
     <Compile Include="Mining\IdleChecking\IdleChangedEventArgs.cs" />
     <Compile Include="Mining\IdleChecking\IdleChecker.cs" />
     <Compile Include="Mining\IdleChecking\IdleCheckManager.cs" />

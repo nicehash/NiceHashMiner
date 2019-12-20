@@ -36,10 +36,10 @@ namespace NHM.Wpf.Views.SettingsNew
         }
 
         // TODO validator can be outside from setting
-        private async void TextBoxWorkerName_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBoxWorkerName_TextChanged(object sender, TextChangedEventArgs e)
         {
             var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
-            var result = await ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
+            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
             if (ApplicationStateManager.SetResult.INVALID == result)
             {
                 //errorProvider1.SetError(textBoxWorkerName, Tr("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long)."));
