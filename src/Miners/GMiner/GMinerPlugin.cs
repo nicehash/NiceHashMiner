@@ -23,11 +23,11 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.87",
+                BinVersion = "1.89",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.87/gminer_1_87_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.89/gminer_1_89_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(4, 3);
+        public override Version Version => new Version(4, 4);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -160,6 +160,11 @@ namespace GMinerPlugin
         {
             try
             {
+                if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 4) {
+                    var isRightGpu = device is CUDADevice gpu && gpu.Name.ToLower().Contains("p104");
+                    var isGrinCuckatoo = ids.FirstOrDefault() == AlgorithmType.GrinCuckatoo31;
+                    if (isRightGpu && isGrinCuckatoo) return true;
+                }
                 var isReBenchVersion = benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 1;
                 var first = ids.FirstOrDefault();
                 var isBenchAlgo = first == AlgorithmType.CuckooCycle;        
