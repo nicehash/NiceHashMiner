@@ -174,47 +174,62 @@ namespace MinerPluginsPacker
 
                 foreach (var plugin in newPlugins)
                 {
-                    if (bundlePlugins.Contains(plugin.PluginUUID))
+                    try
                     {
-                        bundlePluginsDlls.Add(plugin.PluginUUID, filePath);
+                        if (bundlePlugins.Contains(plugin.PluginUUID))
+                        {
+                            bundlePluginsDlls.Add(plugin.PluginUUID, filePath);
+                        }
+
+                        var pluginZipFileName = GetPluginPackageName(plugin);
+                        var dllPackageZip = Path.Combine(pluginPackagesFolder, pluginZipFileName);
+                        Console.WriteLine($"Packaging: {dllPackageZip}");
+                        var fileName = Path.GetFileName(filePath);
+
+                        using (var archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Create))
+                        {
+                            archive.CreateEntryFromFile(filePath, fileName);
+                        }
+
+                        packedPlugins.Add(plugin.PluginUUID);
+                        AddPluginToPluginPackageInfos(plugin);
+
+                    } catch(Exception e)
+                    {
+                        Console.WriteLine(e.Message);
                     }
 
-                    var pluginZipFileName = GetPluginPackageName(plugin);
-                    var dllPackageZip = Path.Combine(pluginPackagesFolder, pluginZipFileName);
-                    Console.WriteLine($"Packaging: {dllPackageZip}");
-                    var fileName = Path.GetFileName(filePath);
-
-                    using (var archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Create))
-                    {
-                        archive.CreateEntryFromFile(filePath, fileName);
-                    }
-
-                    packedPlugins.Add(plugin.PluginUUID);
-                    AddPluginToPluginPackageInfos(plugin);
                 }
             }
-
-            var preinstalledDlls = Path.Combine(exePath, "miner_plugins");
-            if (!Directory.Exists(preinstalledDlls))
+            try
             {
-                Directory.CreateDirectory(preinstalledDlls);
-            }
-            foreach (var kvp in bundlePluginsDlls)
-            {
-                var preinstalledDllPlugin = Path.Combine(exePath, "miner_plugins", kvp.Key);
-                var fileName = Path.GetFileName(kvp.Value);
-                var dllPath = Path.Combine(preinstalledDllPlugin, fileName);
-                if (!Directory.Exists(preinstalledDllPlugin))
+                var preinstalledDlls = Path.Combine(exePath, "miner_plugins");
+                if (!Directory.Exists(preinstalledDlls))
                 {
-                    Directory.CreateDirectory(preinstalledDllPlugin);
+                    Directory.CreateDirectory(preinstalledDlls);
                 }
-                File.Copy(kvp.Value, dllPath);
+                foreach (var kvp in bundlePluginsDlls)
+                {
+                    var preinstalledDllPlugin = Path.Combine(exePath, "miner_plugins", kvp.Key);
+                    var fileName = Path.GetFileName(kvp.Value);
+                    var dllPath = Path.Combine(preinstalledDllPlugin, fileName);
+                    if (!Directory.Exists(preinstalledDllPlugin))
+                    {
+                        Directory.CreateDirectory(preinstalledDllPlugin);
+                    }
+                    File.Copy(kvp.Value, dllPath);
+                }
             }
-            var deleteFolder = Path.Combine(exePath, "miner_plugins", "BrokenMinerPluginUUID");
-            Directory.Delete(deleteFolder, true);
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             // dump our plugin packages
             InternalConfigs.WriteFileSettings(Path.Combine(pluginPackagesFolder, "update.json"), PluginPackageInfos);
+            
+            var deleteFolder = Path.Combine(exePath, "miner_plugins", "BrokenMinerPluginUUID");
+            Directory.Delete(deleteFolder, true);
         }
     }
 }

@@ -110,6 +110,24 @@ namespace XMRig
                     LongName = "--randomx-mode="
                 },
                 /// <summary>
+                /// write custom value (0-15) to Intel MSR register 0x1a4 or disable MSR mod (-1)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrig_wrmsr",
+                    LongName = "--randomx-wrmsr="
+                },
+                /// <summary>
+                /// disable reverting initial MSR values on exit
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "xmrig_no_rdmsr",
+                    LongName = "--randomx-no-rdmsr"
+                },
+                /// <summary>
                 /// donate level, default 5% (5 minutes in 100 minutes)
                 /// </summary>
                 new MinerOption
