@@ -160,6 +160,11 @@ namespace GMinerPlugin
         {
             try
             {
+                if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 4) {
+                    var isRightGpu = device is CUDADevice gpu && gpu.Name.ToLower().Contains("p104");
+                    var isGrinCuckatoo = ids.FirstOrDefault() == AlgorithmType.GrinCuckatoo31;
+                    if (isRightGpu && isGrinCuckatoo) return true;
+                }
                 var isReBenchVersion = benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 1;
                 var first = ids.FirstOrDefault();
                 var isBenchAlgo = first == AlgorithmType.CuckooCycle;        
