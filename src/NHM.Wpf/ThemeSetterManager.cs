@@ -45,19 +45,22 @@ namespace NHM.Wpf
         {
             if (isLight)
             {
-                
                 // LIGHT
+                Application.Current.Resources["NHMLogo"] = Application.Current.FindResource("NHMLogoLightBrush");
+                
                 Application.Current.Resources["BackgroundColor"] = Application.Current.FindResource("Brushes.Light.Grey.Grey4Background");
                 Application.Current.Resources["BorderColor"] = Application.Current.FindResource("Brushes.Light.Border");
-                //Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoLight");
+                Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoLightBrush");
                 Application.Current.Resources["TextColorBrush"] = Application.Current.FindResource("Brushes.Light.TextColor");
             }
             else
             {
                 // DARK
+                Application.Current.Resources["NHMLogo"] = Application.Current.FindResource("NHMLogoDarkBrush");
+                
                 Application.Current.Resources["BackgroundColor"] = Application.Current.FindResource("Brushes.Dark.Grey.Grey1Background");
                 Application.Current.Resources["BorderColor"] = Application.Current.FindResource("Brushes.Dark.Border");
-                //Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoDark");
+                Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoDarkBrush");
                 Application.Current.Resources["TextColorBrush"] = Application.Current.FindResource("Brushes.Dark.TextColor");
             }
             // Set the value

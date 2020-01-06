@@ -22,11 +22,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Height="600" Width="600" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Transparent">
-        <Grid Width="216" Height="216">
-            <Grid.Background>
-                <DrawingBrush Drawing="{Binding Drawing, Source={StaticResource drawingBrush_circleNH}}"/>
-            </Grid.Background>
-        </Grid>
+        <Grid Width="216" Height="216" Background="{DynamicResource LoginCircle}" />
         <Grid Margin="40,30,40,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />

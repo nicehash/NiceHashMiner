@@ -23,17 +23,13 @@ namespace NHM.Wpf.Views
         private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
         {
             GUISettings.Instance.DisplayTheme = "Dark";
-            //SwitchTheme(false);
-            //var drawingBrushFromResources = this.FindResource("drawingBrush_NightCircleNH") as DrawingBrush;
-            //drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
+            ThemeSetterManager.SetTheme(false);
         }
 
         private void CheckBoxMode_Unchecked(object sender, RoutedEventArgs e)
         {
             GUISettings.Instance.DisplayTheme = "Light";
-            //SwitchTheme(true);
-            //var drawingBrushFromResources = this.FindResource("drawingBrush_circleNH") as DrawingBrush;
-            //drawingBrushNH.Drawing = drawingBrushFromResources.Drawing;
+            ThemeSetterManager.SetTheme(true);
         }
 
         private void Register_OnClick(object sender, RoutedEventArgs e)

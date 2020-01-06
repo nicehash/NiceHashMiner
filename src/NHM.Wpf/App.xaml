@@ -21,10 +21,12 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!--#region Dynamic Theme Properties-->
+            <DrawingBrush x:Key="NHMLogo" Drawing="{DynamicResource NHMLogoLight}" />
+
             <SolidColorBrush x:Key="BackgroundColor" Color="{DynamicResource Colors.Light.Grey.Grey4Background}" />
             <SolidColorBrush x:Key="BorderColor" Color="{DynamicResource Colors.Light.Border}" />
             <SolidColorBrush x:Key="TextColorBrush" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
-            <DrawingBrush x:Key="LoginCircle"  Drawing="{DynamicResource LoginCircleLogoLight}" />
+            <DrawingBrush x:Key="LoginCircle" Drawing="{DynamicResource LoginCircleLogoLight}" />
             <!--#endregion Dynamic Theme Properties-->
 
             <Style TargetType="views:EulaWindowFirstLong" BasedOn="{StaticResource BaseDialogWindowStyle}"/>

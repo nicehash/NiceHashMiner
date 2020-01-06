@@ -21,7 +21,7 @@ namespace NHM.Wpf.Views.Dashboard
     /// <summary>
     /// Interaction logic for Dashboard.xaml
     /// </summary>
-    public partial class Dashboard : UserControl
+    public partial class Dashboard : UserControl, IThemeSetter
     {
         private MainVM _vm;
 
@@ -30,6 +30,7 @@ namespace NHM.Wpf.Views.Dashboard
             InitializeComponent();
 
             DataContextChanged += Dashboard_DataContextChanged;
+            ThemeSetterManager.AddThemeSetter(this);
         }
 
         private void Dashboard_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -40,6 +41,12 @@ namespace NHM.Wpf.Views.Dashboard
                 return;
             }
             throw new Exception("Dashboard_DataContextChanged e.NewValue must be of type MainVM");
+        }
+
+        void IThemeSetter.SetTheme(bool isLight)
+        {
+            var style = isLight ? Application.Current.FindResource("StartStopButtonLight") : Application.Current.FindResource("StartStopButtonDark");
+            StartStopToggleButton.Style = style as Style;
         }
 
         private async void ToggleButtonStartStop_Click(object sender, RoutedEventArgs e)

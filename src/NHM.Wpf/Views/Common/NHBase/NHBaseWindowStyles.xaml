@@ -94,7 +94,7 @@
                                            Foreground="Black"
                                            Panel.ZIndex="0"
                                            IsEnabled="{TemplateBinding IsActive}">
-                                    <Grid x:Name="NHMIcon" Width="24" Height="24" Background="{StaticResource NHMLogoLightBrush}" />
+                                    <Grid x:Name="NHMIcon" Width="24" Height="24" Background="{DynamicResource NHMLogo}" />
                                     <TextBlock Margin="8,-8,0,0" 
                                                FontFamily="{StaticResource UbuntuFontFamily}"
                                                Foreground="{DynamicResource TextColorBrush}"

@@ -9,7 +9,7 @@
     <DrawingBrush x:Key="NHMLogoLightBrush" Drawing="{StaticResource NHMLogoLight}" />
     <DrawingBrush x:Key="NHMLogoDarkBrush" Drawing="{StaticResource NHMLogoDark}" />
 
-    <DrawingBrush x:Key="drawingBrush_circleNH" Drawing="{StaticResource LoginCircleLogoLight}" />
-    <DrawingBrush x:Key="drawingBrush_NightCircleNH" Drawing="{StaticResource LoginCircleLogoDark}" />
+    <DrawingBrush x:Key="LoginCircleLogoLightBrush" Drawing="{StaticResource LoginCircleLogoLight}" />
+    <DrawingBrush x:Key="LoginCircleLogoDarkBrush" Drawing="{StaticResource LoginCircleLogoDark}" />
 
 </ResourceDictionary>

@@ -253,11 +253,6 @@ namespace NHM.Wpf.Views.Common.NHBase
 
         void IThemeSetter.SetTheme(bool isLight)
         {
-            if (NHMIcon != null)
-            {
-                var icon = isLight ? System.Windows.Application.Current.FindResource("NHMLogoLightBrush") : System.Windows.Application.Current.FindResource("NHMLogoDarkBrush");
-                NHMIcon.Background = icon as DrawingBrush;
-            }
             var windowBackground = isLight ? System.Windows.Application.Current.FindResource("Brushes.Light.Grey.Grey4Background") : System.Windows.Application.Current.FindResource("Brushes.Dark.Grey.Grey1Background");
             this.Background = windowBackground as SolidColorBrush;
         }

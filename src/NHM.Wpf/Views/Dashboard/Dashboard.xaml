@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="{DynamicResource BackgroundColor}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <ToggleButton Style="{StaticResource StartStopButtonLight}"
+                <ToggleButton Style="{DynamicResource StartStopButtonLight}"
                           IsChecked="{Binding MiningState.AnyDeviceRunning, Mode=OneWay}"
                               VerticalAlignment="Center" HorizontalAlignment="Center"
                           x:Name="StartStopToggleButton"
