@@ -38,6 +38,7 @@ namespace TTMiner
             {
                 //new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
+                new Algorithm(PluginUUID, AlgorithmType.Eaglesong),
             };
             return algorithms;
         }
@@ -48,6 +49,7 @@ namespace TTMiner
             {
                 //case AlgorithmType.MTP: return "mtp";
                 case AlgorithmType.Lyra2REv3: return "LYRA2V3";
+                case AlgorithmType.Eaglesong: return "EAGLESONG";
                 default:
                     return "";
             }
