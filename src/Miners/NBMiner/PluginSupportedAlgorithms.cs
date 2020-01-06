@@ -39,6 +39,7 @@ namespace NBMiner
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
+                new Algorithm(PluginUUID, AlgorithmType.Eaglesong),
             };
             return algorithms;
         }
@@ -50,6 +51,7 @@ namespace NBMiner
                 case AlgorithmType.GrinCuckatoo31: return "cuckatoo";
                 case AlgorithmType.CuckooCycle: return "cuckoo_ae";
                 case AlgorithmType.GrinCuckarood29: return "cuckarood";
+                case AlgorithmType.Eaglesong: return "eaglesong";
                 default: return "";
             }
         }

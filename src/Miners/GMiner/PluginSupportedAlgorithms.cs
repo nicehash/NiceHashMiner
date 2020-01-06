@@ -43,6 +43,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
+                new Algorithm(PluginUUID, AlgorithmType.Eaglesong),
             };
             return algorithms;
         }
@@ -53,6 +54,7 @@ namespace GMinerPlugin
             {
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
+                new Algorithm(PluginUUID, AlgorithmType.Eaglesong),
             };
             return algorithms;
         }
@@ -73,6 +75,8 @@ namespace GMinerPlugin
                     return "cuckarood29";
                 case AlgorithmType.BeamV2:
                     return "beamhashII";
+                case AlgorithmType.Eaglesong:
+                    return "eaglesong";
                 default:
                     return "";
             }
