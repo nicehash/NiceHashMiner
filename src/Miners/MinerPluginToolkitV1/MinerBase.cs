@@ -82,6 +82,8 @@ namespace MinerPluginToolkitV1
 
         public MinerBenchmarkTimeSettings MinerBenchmarkTimeSettings { get; set; }
 
+        public IPluginSupportedAlgorithmsSettings PluginSupportedAlgorithms { get; set; }
+
         abstract public Task<ApiData> GetMinerStatsDataAsync();
 
         abstract protected void Init();

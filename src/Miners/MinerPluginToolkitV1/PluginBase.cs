@@ -13,8 +13,9 @@ using System.Linq;
 
 namespace MinerPluginToolkitV1
 {
+    using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
     // TODO add documentation
-    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo
+    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo, IPluginSupportedAlgorithmsSettings
     {
         protected abstract MinerBase CreateMinerBase();
 
@@ -81,6 +82,9 @@ namespace MinerPluginToolkitV1
 
             var fileMinersBinsUrlsSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinersBinsUrlsSettings, "MinersBinsUrlsSettings.json");
             if (fileMinersBinsUrlsSettings != null) MinersBinsUrlsSettings = fileMinersBinsUrlsSettings;
+
+            var filePluginSupportedAlgorithmsSettings = InternalConfigs.InitInternalSetting(pluginRoot, PluginSupportedAlgorithmsSettings, "PluginSupportedAlgorithmsSettings.json");
+            if (filePluginSupportedAlgorithmsSettings != null) PluginSupportedAlgorithmsSettings = filePluginSupportedAlgorithmsSettings;
         }
 
         // internal settings
@@ -91,6 +95,8 @@ namespace MinerPluginToolkitV1
         protected MinerBenchmarkTimeSettings MinerBenchmarkTimeSettings { get; set; } = new MinerBenchmarkTimeSettings { };
 
         protected MinersBinsUrlsSettings MinersBinsUrlsSettings { get; set; } = new MinersBinsUrlsSettings { };
+
+        public PluginSupportedAlgorithmsSettings PluginSupportedAlgorithmsSettings { get; set; } = new PluginSupportedAlgorithmsSettings();
 
         #endregion IInitInternals
 
@@ -154,5 +160,93 @@ namespace MinerPluginToolkitV1
             return PluginMetaInfo;
         }
         #endregion IGetPluginMetaInfo
+
+        #region IPluginSupportedAlgorithmsSettings
+        public virtual bool UnsafeLimits()
+        {
+            return PluginSupportedAlgorithmsSettings.EnableUnsafeRAMLimits;
+        }
+
+        public virtual Dictionary<DeviceType, List<AlgorithmType>> SupportedDevicesAlgorithmsDict()
+        {
+            DeviceType[] deviceTypes = new DeviceType[] { DeviceType.CPU, DeviceType.AMD, DeviceType.NVIDIA };
+            var ret = new Dictionary<DeviceType, List<AlgorithmType>> { };
+            foreach (var deviceType in deviceTypes)
+            {
+                var algos = GetSupportedAlgorithmsForDeviceType(deviceType);
+                if (algos == null || algos.Count == 0) continue;
+                ret[deviceType] = algos.SelectMany(a => a.IDs).ToList();
+            }
+            return ret;
+        }
+
+        public virtual List<Algorithm> GetSupportedAlgorithmsForDeviceType(DeviceType deviceType)
+        {
+            switch (deviceType)
+            {
+                case DeviceType.CPU:
+                    return PluginSupportedAlgorithmsSettings.CPU_Algorithms?.Select(sas => sas.ToAlgorithm(PluginUUID)).ToList();
+                case DeviceType.AMD:
+                    return PluginSupportedAlgorithmsSettings.AMD_Algorithms?.Select(sas => sas.ToAlgorithm(PluginUUID)).ToList();
+                case DeviceType.NVIDIA:
+                    return PluginSupportedAlgorithmsSettings.NVIDIA_Algorithms?.Select(sas => sas.ToAlgorithm(PluginUUID)).ToList();
+            }
+            return null;
+        }
+
+        public virtual string AlgorithmName(params AlgorithmType[] algorithmTypes)
+        {
+            if (algorithmTypes.Length == 1)
+            {
+                var id = algorithmTypes[0];
+                if (PluginSupportedAlgorithmsSettings.AlgorithmNames != null && PluginSupportedAlgorithmsSettings.AlgorithmNames.ContainsKey(id))
+                {
+                    return PluginSupportedAlgorithmsSettings.AlgorithmNames[id];
+                }
+            }
+            // TODO throw 
+            return "";
+        }
+
+        public virtual double DevFee(params AlgorithmType[] algorithmTypes)
+        {
+            if (algorithmTypes.Length == 1)
+            {
+                var id = algorithmTypes[0];
+                if (PluginSupportedAlgorithmsSettings.AlgorithmFees != null && PluginSupportedAlgorithmsSettings.AlgorithmFees.ContainsKey(id))
+                {
+                    return PluginSupportedAlgorithmsSettings.AlgorithmFees[id];
+                }
+            }
+            return PluginSupportedAlgorithmsSettings.DefaultFee;
+        }
+        #endregion IPluginSupportedAlgorithmsSettings
+
+        protected Dictionary<AlgorithmType, ulong> GetCustomMinimumMemoryPerAlgorithm(DeviceType deviceType)
+        {
+            List<SAS> sass = null;
+            var ret = new Dictionary<AlgorithmType, ulong>();
+            switch (deviceType)
+            {
+                case DeviceType.CPU:
+                    sass = PluginSupportedAlgorithmsSettings.CPU_Algorithms;
+                    break;
+                case DeviceType.AMD:
+                    sass = PluginSupportedAlgorithmsSettings.AMD_Algorithms;
+                    break;
+                case DeviceType.NVIDIA:
+                    sass = PluginSupportedAlgorithmsSettings.NVIDIA_Algorithms;
+                    break;
+            }
+            if (sass != null)
+            {
+                var customRAMLimits = sass.Where(sas => sas.NonDefaultRAMLimit.HasValue);
+                foreach (var el in customRAMLimits)
+                {
+                    ret[el.IDs.First()] = el.NonDefaultRAMLimit.Value;
+                }
+            }
+            return ret;
+        }
     }
 }

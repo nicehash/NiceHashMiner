@@ -25,7 +25,7 @@ namespace MinerPluginToolkitV1
         public const ulong MinGrinCuckarood29Memory = 6012951136; // 5.6GB
 
 
-        public static readonly Dictionary<AlgorithmType, ulong> minMemoryPerAlgo = new Dictionary<AlgorithmType, ulong>
+        private static readonly Dictionary<AlgorithmType, ulong> _minMemoryPerAlgo = new Dictionary<AlgorithmType, ulong>
         {
             { AlgorithmType.DaggerHashimoto, MinDaggerHashimotoMemory },
             { AlgorithmType.ZHash, MinZHashMemory},
@@ -45,8 +45,32 @@ namespace MinerPluginToolkitV1
             var filterAlgorithms = new List<AlgorithmType>();
             foreach (var algo in algos)
             {
-                if (minMemoryPerAlgo.ContainsKey(algo) == false) continue;
-                var minRam = minMemoryPerAlgo[algo];
+                if (_minMemoryPerAlgo.ContainsKey(algo) == false) continue;
+                var minRam = _minMemoryPerAlgo[algo];
+                if (Ram < minRam) filterAlgorithms.Add(algo);
+            }
+            return filterAlgorithms;
+        }
+
+        public static List<AlgorithmType> InsufficientDeviceMemoryAlgorithnmsCustom(ulong Ram, IEnumerable<AlgorithmType> algos, Dictionary<AlgorithmType, ulong> minMemoryPerAlgo)
+        {
+            // fill check
+            var check = new Dictionary<AlgorithmType, ulong>();
+            foreach (var kvp in minMemoryPerAlgo)
+            {
+                check[kvp.Key] = kvp.Value;
+            }
+            // now fill the rest
+            foreach (var kvp in _minMemoryPerAlgo)
+            {
+                if (check.ContainsKey(kvp.Key)) continue; // only fill if the key is missing 
+                check[kvp.Key] = kvp.Value;
+            }
+            var filterAlgorithms = new List<AlgorithmType>();
+            foreach (var algo in algos)
+            {
+                if (_minMemoryPerAlgo.ContainsKey(algo) == false) continue;
+                var minRam = _minMemoryPerAlgo[algo];
                 if (Ram < minRam) filterAlgorithms.Add(algo);
             }
             return filterAlgorithms;
@@ -60,6 +84,12 @@ namespace MinerPluginToolkitV1
         public static List<Algorithm> FilterInsufficientRamAlgorithmsList(ulong Ram, List<Algorithm> algos)
         {
             var filterAlgos = InsufficientDeviceMemoryAlgorithnms(Ram, algos.Select(a => a.FirstAlgorithmType));
+            return FilterAlgorithmsList(algos, filterAlgos);
+        }
+
+        public static List<Algorithm> FilterInsufficientRamAlgorithmsListCustom(ulong Ram, List<Algorithm> algos, Dictionary<AlgorithmType, ulong> minMemoryPerAlgo)
+        {
+            var filterAlgos = InsufficientDeviceMemoryAlgorithnmsCustom(Ram, algos.Select(a => a.FirstAlgorithmType), minMemoryPerAlgo);
             return FilterAlgorithmsList(algos, filterAlgos);
         }
     }
