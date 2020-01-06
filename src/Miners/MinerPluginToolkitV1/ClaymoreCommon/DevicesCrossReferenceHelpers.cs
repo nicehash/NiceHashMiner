@@ -50,7 +50,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
                         }
                         catch (Exception e)
                         {
-                            // TODO log
+                            Logger.Error("MinerPluginToolkitV1.ClaymoreCommon.ReadLinesUntil", $"Error occured while getting miner output: {e.Message}");
                         }
                     };
                     ct.Token.Register(() => getDevicesHandleStop("from cancel token"));

@@ -172,7 +172,6 @@ namespace MinerPluginToolkitV1
             return environmentVariables == null;
         }
 
-        // TODO make one with Start NiceHashProcess
         /// <summary>
         /// CreateMiningProcess creates a new process used in mining
         /// </summary>
@@ -189,7 +188,7 @@ namespace MinerPluginToolkitV1
                     // common settings
                     UseShellExecute = IsUseShellExecute(environmentVariables),
                 },
-                EnableRaisingEvents = true, // TODO check out this one
+                EnableRaisingEvents = true,
             };
 
             // add environment if any
@@ -242,7 +241,7 @@ namespace MinerPluginToolkitV1
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
                 },
-                EnableRaisingEvents = true, // TODO check out this one
+                EnableRaisingEvents = true,
             };
             // add environment if any
             if (environmentVariables != null)

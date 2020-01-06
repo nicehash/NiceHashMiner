@@ -245,7 +245,6 @@ namespace MinerPluginToolkitV1
                 using (var miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables))
                 using (var quitMiningProcess = stopMinerTask.Token.Register(() => ExitMiningProcess(miningProcess)))
                 {
-                    // TODO check this lock
                     lock (_lock)
                     {
                         _miningProcess = miningProcess;
@@ -264,9 +263,8 @@ namespace MinerPluginToolkitV1
                         Logger.Info(_logGroup, $"Starting miner binPath='{binPath}'");
                         Logger.Info(_logGroup, $"Starting miner binCwd='{binCwd}'");
                         Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
-                        // TODO this will not print content
                         var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
-                        Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'"); // TODO log or debug???
+                        Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'");
                         ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
 
                         if (!miningProcess.Start())
