@@ -111,18 +111,21 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
+        [Obsolete("Enabling WMI is mandatory and is checked in the 'ApplicationStateManager.Program.SystemRequirementsEnsured()'")]
         public static void CreateIsWmiEnabledInfo()
         {
             var notification = new Notification(NotificationsType.Fatal, Tr("Windows Management Instrumentation Error"), Tr("NiceHash Miner cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
+        [Obsolete("Mandatory is checked in the 'ApplicationStateManager.Program.SystemRequirementsEnsured()'")]
         public static void CreateIsNet45Info()
         {
             var notification = new Notification(NotificationsType.Fatal, Tr(".Net Framework Error"), Tr("NiceHash Miner requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
+        [Obsolete("Mandatory is checked in the 'ApplicationStateManager.Program.SystemRequirementsEnsured()'")]
         public static void CreateIs64BitOSInfo()
         {
             var notification = new Notification(NotificationsType.Fatal, Tr("Operating System Error"), Tr("NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86."));

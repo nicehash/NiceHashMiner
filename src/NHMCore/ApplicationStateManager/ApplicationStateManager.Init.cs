@@ -22,8 +22,6 @@ namespace NHMCore
     {
         private static bool isInitFinished = false;
 
-        public static bool FailedRamCheck { get; internal set; }
-
         private class LoaderConverter : IStartupLoader
         {
             public IProgress<(string, int)> PrimaryProgress { get; }
@@ -107,8 +105,8 @@ namespace NHMCore
                     AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
                 }
                 AvailableDevices.UncheckCpuIfGpu();
-                FailedRamCheck = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
-                if (FailedRamCheck)
+                var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
+                if (!ramCheckOK)
                 {
                     AvailableNotifications.CreateFailedRamCheckInfo();
                 }
