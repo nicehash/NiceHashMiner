@@ -260,10 +260,6 @@
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\BMiner\BMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BMiner_PLUGIN'))">
-      <Project>{da54e8c4-73d8-4f1a-be84-0d548b77a2c0}</Project>
-      <Name>BMiner</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\BrokenMiner\BrokenMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BrokenMiner_PLUGIN'))">
       <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
       <Name>BrokenMiner</Name>
