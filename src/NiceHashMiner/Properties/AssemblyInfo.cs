@@ -21,7 +21,7 @@ using System.Runtime.InteropServices;
 #endif
 
 [assembly: AssemblyCompany("H-BIT, d.o.o.")]
-[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2019")]
+[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2020")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
