@@ -19,7 +19,7 @@ namespace Ethlargement
     {
         public virtual string PluginUUID => "efd40691-618c-491a-b328-e7e020bda7a3";
 
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 3);
         public string Name => "Ethlargement";
 
         public string Author => "info@nicehash.com";
@@ -39,7 +39,7 @@ namespace Ethlargement
         // register in GetSupportedAlgorithms and filter in InitInternals
         private static Dictionary<string, string> _registeredSupportedDevices = new Dictionary<string, string>();
 
-        private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.MTP };
+        private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.MTP, AlgorithmType.Eaglesong };
 
         private bool IsServiceDisabled => !ServiceEnabled && _registeredSupportedDevices.Count > 0;
 
