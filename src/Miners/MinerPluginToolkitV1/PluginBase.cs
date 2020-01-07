@@ -44,6 +44,7 @@ namespace MinerPluginToolkitV1
         {
             var miner = CreateMinerBase();
             miner.BinAndCwdPathsGettter = this; // set the paths interface
+            miner.PluginSupportedAlgorithms = this; // set the paths interface
             // set internal settings
             if (MinerOptionsPackage != null) miner.MinerOptionsPackage = MinerOptionsPackage;
             if (MinerSystemEnvironmentVariables != null) miner.MinerSystemEnvironmentVariables = MinerSystemEnvironmentVariables;
