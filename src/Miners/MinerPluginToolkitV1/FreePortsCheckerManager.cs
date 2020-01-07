@@ -65,7 +65,5 @@ namespace MinerPluginToolkitV1
             }
             return -1; // we can't retrive free port
         }
-
-        // TODO add implement get random port
     }
 }

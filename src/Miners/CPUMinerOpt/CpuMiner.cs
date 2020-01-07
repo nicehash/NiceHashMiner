@@ -33,7 +33,6 @@ namespace CpuMinerOpt
 
             if (!string.IsNullOrEmpty(summaryApiResult))
             {
-                // TODO return empty
                 try
                 {
                     var summaryOptvals = summaryApiResult.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -76,7 +75,6 @@ namespace CpuMinerOpt
             var binCwd = binPathBinCwdPair.Item2;
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-            // TODO benchmark process add after benchmark
 
             double benchHashesSum = 0;
             double benchHashResult = 0;
@@ -154,7 +152,6 @@ namespace CpuMinerOpt
         //public void AfterStartMining()
         //{
         //    int pid = _miningProcess?.Id  ?? - 1;
-        //    // TODO C# can have this shorter
         //    if (_affinityMask != 0 && pid != -1)
         //    {
         //        var okMsg = ProcessHelpers.AdjustAffinity(pid, _affinityMask);

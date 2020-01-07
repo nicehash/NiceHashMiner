@@ -94,7 +94,7 @@ namespace LolMinerBeam
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedDeviceIds.Count == 0) return;
-            // TODO will block
+            // will block
             var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--benchmark BEAM --longstats 60 --devices -1", new List<string> { "Start Benchmark..." });
             var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices.ToList());

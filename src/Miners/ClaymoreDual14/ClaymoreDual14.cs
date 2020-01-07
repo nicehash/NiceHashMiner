@@ -22,7 +22,7 @@ namespace ClaymoreDual14
         }
 
 
-        // TODO figure out how to fix API workaround without this started time
+        // figure out how to fix API workaround without this started time
         private DateTime _started;
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)

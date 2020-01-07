@@ -79,7 +79,7 @@ namespace MiniZ
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedDeviceIds.Count == 0) return;
-            // TODO will block
+            // will block
             var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-ci");
             var mappedDevs = DevicesListParser.ParseMiniZOutput(output, devices.ToList());

@@ -126,7 +126,7 @@ namespace LolMinerBeam
         {
             _devices = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
 
-            // ???????? TODO GetSortedMiningPairs is now sorted so this thing probably makes no sense anymore
+            // ???????? GetSortedMiningPairs is now sorted so this thing probably makes no sense anymore
             var miningPairs = _miningPairs.ToList();
             for (int i = 0; i < miningPairs.Count; i++)
             {

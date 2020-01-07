@@ -96,7 +96,6 @@ namespace GMinerPlugin
                     var algorithms = GetSupportedAlgorithmsForDevice(amd);
                     if (algorithms.Count > 0) supported.Add(amd, algorithms);
                 }
-                // TODO we don't check GMiner minimum driver version
                 if (gpu is CUDADevice cuda)
                 {
                     var algorithms = GetSupportedAlgorithmsForDevice(cuda);

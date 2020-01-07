@@ -54,7 +54,7 @@ namespace CpuMinerOpt
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            // TODO set is intel/amd
+            // set is intel/amd
             var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
             IsIntel = IsIntelCpu(cpus);
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();

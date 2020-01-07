@@ -47,6 +47,5 @@ namespace NHM.Common.Algorithm
         public IList<double> Speeds { get; private set; }
         public bool Enabled { get; set; } = true;
         public string ExtraLaunchParameters { get; set; } = "";
-        // TODO power usage???
     }
 }

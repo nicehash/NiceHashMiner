@@ -69,7 +69,7 @@ namespace TeamRedMiner
                     var speedHS = deviceStats.KHS_av * 1000;
                     totalSpeed += speedHS;
                     perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speedHS * (1 - DevFee * 0.01)) });
-                    // TODO check PowerUsage API
+                    // check PowerUsage API
                 }
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = totalPowerUsage;

@@ -5,7 +5,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
 {
     public static class SgminerOptionsPackage
     {
-        // TODO remove redundant/duplicated long/short names after ELP parser is fixed
+        // remove redundant/duplicated long/short names after ELP parser is fixed
         public static readonly MinerOptionsPackage DefaultMinerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption>

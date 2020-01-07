@@ -213,7 +213,6 @@ namespace MinerPluginToolkitV1
                     return PluginSupportedAlgorithmsSettings.AlgorithmNames[id];
                 }
             }
-            // TODO throw 
             return "";
         }
 

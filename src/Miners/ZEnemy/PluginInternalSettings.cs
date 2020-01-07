@@ -50,7 +50,7 @@ namespace ZEnemy
                     ShortName = "--cpu-priority",
                     DefaultValue = "3"
                 },
-                //TODO WARNING this functionality can overlap with already implemented one!!!
+                //WARNING this functionality can overlap with already implemented one!!!
                 /// <summary>
                 /// set process affinity to cpu core(s), mask 0x3 for cores 0 and 1
                 /// </summary>

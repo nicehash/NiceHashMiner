@@ -54,8 +54,6 @@ namespace MinerPluginToolkitV1.SgminerCommon
             }
         }
 
-        // TODO implement if all devices alive function check
-
         public static ApiData ParseApiDataFromApiDevsRoot(ApiDevsRoot apiDevsResult, AlgorithmType algorithmType, IEnumerable<BaseDevice> miningDevices, string logGroup)
         {
             var ad = new ApiData();
@@ -85,7 +83,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
                     totalSpeed += speedHS;
                     var algoSpeedPair = new AlgorithmTypeSpeedPair(algorithmType, speedHS);
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { algoSpeedPair });
-                    // TODO check PowerUsage API
+                    // check PowerUsage API
                 }
                 var totalAlgoSpeedPair = new AlgorithmTypeSpeedPair(algorithmType, totalSpeed);
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair>() { totalAlgoSpeedPair };

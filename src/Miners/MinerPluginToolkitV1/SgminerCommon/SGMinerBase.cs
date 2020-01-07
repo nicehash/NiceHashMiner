@@ -79,10 +79,10 @@ namespace MinerPluginToolkitV1.SgminerCommon
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            // TODO dagger takes a long time
+            // dagger takes a long time
             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             // AVEMORE needs time to build kernels for each platform and this takes quite a while
-            // TODO avemore takes REALLY LONG TIME TO BUILD KERNELS!!!! ADD kernel build checks
+            // avemore takes REALLY LONG TIME TO BUILD KERNELS!!!! ADD kernel build checks
             // determine benchmark time 
             // settup times
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds

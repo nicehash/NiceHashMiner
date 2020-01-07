@@ -13,13 +13,12 @@ using System.Threading.Tasks;
 
 namespace TTMiner
 {
-    // TODO get ordered API data
     public class TTMiner : MinerBase, IAfterStartMining
     {
         private int _apiPort;
         private string _devices;
         private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
-        // TODO figure out how to fix API workaround without this started time
+        // figure out how to fix API workaround without this started time
         private DateTime _started;
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();

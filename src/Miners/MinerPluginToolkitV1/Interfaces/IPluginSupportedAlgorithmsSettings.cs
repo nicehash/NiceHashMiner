@@ -9,7 +9,6 @@ namespace MinerPluginToolkitV1.Interfaces
     {
         PluginSupportedAlgorithmsSettings PluginSupportedAlgorithmsSettings { get; }
 
-        // TODO rename to enable unsafe limits
         bool UnsafeLimits();
 
         Dictionary<DeviceType, List<AlgorithmType>> SupportedDevicesAlgorithmsDict();

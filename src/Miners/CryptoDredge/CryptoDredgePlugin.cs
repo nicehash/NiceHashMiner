@@ -19,7 +19,7 @@ namespace CryptoDredge
             // https://github.com/technobyl/CryptoDredge/releases | https://cryptodredge.org/ | https://bitcointalk.org/index.php?topic=4807821.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                // TODO BinVersion github and bitcointalk missmatch
+                // BinVersion github and bitcointalk missmatch
                 BinVersion = "0.22.0",
                 ExePath = new List<string> { "CryptoDredge_0.22.0", "CryptoDredge.exe" },
                 Urls = new List<string>

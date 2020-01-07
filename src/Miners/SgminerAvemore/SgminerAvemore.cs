@@ -53,7 +53,7 @@ namespace SgminerAvemore
             var benchmarkTimeout = TimeSpan.FromMinutes(10);
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = await MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            // TODO check kernels
+
             return true;
         }
 

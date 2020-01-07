@@ -32,7 +32,7 @@ namespace BrokenMiner
         Dictionary<BaseDevice, IReadOnlyList<Algorithm>> IMinerPlugin.GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            // TODO this will break the default loader
+            // this will break the default loader
             ////// Fake device 
             //var gpu = new BaseDevice(DeviceType.NVIDIA, "FAKE-d97bdb7c-4155-9124-31b7-4743e16d3ac0", "GTX 1070 Ti", 0);
             //supported.Add(gpu, new List<Algorithm>() { new Algorithm("BrokenMinerPluginUUID", AlgorithmType.ZHash), new Algorithm("BrokenMinerPluginUUID", AlgorithmType.DaggerHashimoto) });

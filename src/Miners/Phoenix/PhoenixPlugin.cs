@@ -109,8 +109,7 @@ namespace Phoenix
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedIDs.Count == 0) return;
-            // TODO will block
-
+            
             var containsAMD = devices.Any(dev => dev.DeviceType == DeviceType.AMD);
             var containsNVIDIA = devices.Any(dev => dev.DeviceType == DeviceType.NVIDIA);
 
