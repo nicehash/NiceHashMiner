@@ -85,7 +85,7 @@ namespace NHMCore.Nhmws
 
         static private readonly LoginMessage _login = new LoginMessage
         {
-            version = "NHML/" + Application.ProductVersion,
+            version = "NHM/" + Application.ProductVersion,
             protocol = 3
         };
 
