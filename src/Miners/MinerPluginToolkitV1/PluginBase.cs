@@ -16,6 +16,7 @@ namespace MinerPluginToolkitV1
     // TODO add documentation
     public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo, IPluginSupportedAlgorithmsSettings
     {
+        public static bool IS_CALLED_FROM_PACKER { get; set; } = false;
         protected abstract MinerBase CreateMinerBase();
 
         #region IMinerPlugin
@@ -104,6 +105,7 @@ namespace MinerPluginToolkitV1
         protected void InitInsideConstuctorPluginSupportedAlgorithmsSettings()
         {
             PluginSupportedAlgorithmsSettings = DefaultPluginSupportedAlgorithmsSettings;
+            if (IS_CALLED_FROM_PACKER) return;
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
             var filePluginSupportedAlgorithmsSettings = InternalConfigs.InitInternalSetting(pluginRoot, PluginSupportedAlgorithmsSettings, "PluginSupportedAlgorithmsSettings.json");
             if (filePluginSupportedAlgorithmsSettings != null) PluginSupportedAlgorithmsSettings = filePluginSupportedAlgorithmsSettings;
