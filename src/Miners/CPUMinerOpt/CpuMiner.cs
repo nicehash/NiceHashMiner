@@ -19,12 +19,9 @@ namespace CpuMinerOpt
         private int _apiPort;
         private double DevFee = 0d;
 
-        public CpuMiner(string uuid, Func<AlgorithmType, string> algorithmName) : base(uuid)
+        public CpuMiner(string uuid) : base(uuid)
         {
-            _algorithmName = algorithmName;
         }
-
-        protected Func<AlgorithmType, string> _algorithmName;
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
@@ -71,7 +68,7 @@ namespace CpuMinerOpt
 
             var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var algo = _algorithmName(_algorithmType);
+            var algo = PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
             var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
@@ -138,7 +135,7 @@ namespace CpuMinerOpt
             _apiPort = GetAvaliablePort();
             // instant non blocking
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var algo = _algorithmName(_algorithmType);
+            var algo = PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo={algo} --url={url} --user={username} --api-bind={_apiPort} {_extraLaunchParameters}";
             return commandLine;

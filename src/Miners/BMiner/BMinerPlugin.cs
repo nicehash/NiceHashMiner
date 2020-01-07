@@ -10,11 +10,13 @@ using System.Linq;
 
 namespace BMiner
 {
-    public class BMinerPlugin : PluginBase
+    public partial class BMinerPlugin : PluginBase
     {
         // mandatory constructor
         public BMinerPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://www.bminer.me/releases/ current v 15.7.6
@@ -31,13 +33,13 @@ namespace BMiner
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Bminer is a cryptocurrency miner that runs on modern AMD / NVIDIA GPUs.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "e5fbd330-7235-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
         public override string Name => "BMiner";
 
         public override string Author => "info@nicehash.com";
@@ -49,7 +51,7 @@ namespace BMiner
             var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>();
             foreach (var gpu in amdGpus)
             {
-                var algorithms = GetAMDSupportedAlgorithms(gpu).ToList();
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
             // CUDA 9.2+ driver 397.44
@@ -59,7 +61,7 @@ namespace BMiner
                 var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
                 foreach (var gpu in cudaGpus)
                 {
-                    var algos = GetCUDASupportedAlgorithms(gpu).ToList();
+                    var algos = GetSupportedAlgorithmsForDevice(gpu);
                     if (algos.Count > 0) supported.Add(gpu, algos);
                 }
             }
@@ -67,25 +69,9 @@ namespace BMiner
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetCUDASupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
-        }
-
-        private IEnumerable<Algorithm> GetAMDSupportedAlgorithms(AMDDevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID).ToList();
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
-        }
-
         protected override MinerBase CreateMinerBase()
         {
-            return new BMiner(PluginUUID, PluginSupportedAlgorithms.AlgorithmName, PluginSupportedAlgorithms.DevFee);
+            return new BMiner(PluginUUID);
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

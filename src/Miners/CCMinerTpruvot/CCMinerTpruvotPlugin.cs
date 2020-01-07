@@ -9,10 +9,12 @@ using System.Linq;
 
 namespace CCMinerTpruvot
 {
-    public class CCMinerTpruvotPlugin : PluginBase
+    public partial class CCMinerTpruvotPlugin : PluginBase
     {
         public CCMinerTpruvotPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://github.com/tpruvot/ccminer/releases current 2.3.1
@@ -28,13 +30,13 @@ namespace CCMinerTpruvot
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "NVIDIA miner for Lyra2REv3 and X16R.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "2257f160-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
         public override string Name => "CCMinerTpruvot";
 
         public override string Author => "info@nicehash.com";
@@ -52,19 +54,11 @@ namespace CCMinerTpruvot
 
             foreach (var gpu in cudaGpus)
             {
-                var algorithms = GetSupportedAlgorithms(gpu);
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
-        }
-
-        private List<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

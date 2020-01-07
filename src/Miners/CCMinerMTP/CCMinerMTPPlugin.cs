@@ -10,10 +10,12 @@ using System.Linq;
 namespace CCMinerMTP
 {
 #warning "MTP only plugin. Do not instantiate this and do not publish this plugin"
-    public abstract class CCMinerMTPPlugin : PluginBase
+    public abstract partial class CCMinerMTPPlugin : PluginBase
     {
         public CCMinerMTPPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
@@ -31,13 +33,13 @@ namespace CCMinerMTP
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Nvidia miner for MTP algorithm.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         //public override string PluginUUID => "MISSING";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
         public override string Name => "CCMinerMTP";
 
         public override string Author => "info@nicehash.com";
@@ -55,19 +57,11 @@ namespace CCMinerMTP
 
             foreach (var gpu in cudaGpus)
             {
-                var algorithms = GetSupportedAlgorithms(gpu);
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
-        }
-
-        private List<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

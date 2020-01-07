@@ -10,10 +10,12 @@ using System.Linq;
 
 namespace CpuMinerOpt
 {
-    public class CPUMinerPlugin : PluginBase
+    public partial class CPUMinerPlugin : PluginBase
     {
         public CPUMinerPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
@@ -31,13 +33,13 @@ namespace CpuMinerOpt
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Miner for CPU devices.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "cpuminer-opt";
 
@@ -47,7 +49,7 @@ namespace CpuMinerOpt
 
         protected override MinerBase CreateMinerBase()
         {
-            return new CpuMiner(PluginUUID, PluginSupportedAlgorithms.AlgorithmName);
+            return new CpuMiner(PluginUUID);
         }
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
@@ -59,7 +61,7 @@ namespace CpuMinerOpt
 
             foreach (var cpu in cpus)
             {
-                supported.Add(cpu, PluginSupportedAlgorithms.GetSupportedAlgorithmsCPU(PluginUUID));
+                supported.Add(cpu, GetSupportedAlgorithmsForDevice(cpu));
             }
 
             return supported;
