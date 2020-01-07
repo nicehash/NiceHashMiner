@@ -22,18 +22,13 @@ namespace NanoMiner
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
-        public NanoMiner(string uuid, Dictionary<string, int> mappedIDs, Func<AlgorithmType, string> algorithmName, Func<AlgorithmType, double> devFee) : base(uuid)
+        public NanoMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
             _mappedIDs = mappedIDs;
-            _algorithmName = algorithmName;
-            _devFee = devFee;
         }
 
-        readonly Func<AlgorithmType, string> _algorithmName;
-        readonly Func<AlgorithmType, double> _devFee;
-
-        protected virtual string AlgorithmName(AlgorithmType algorithmType) => _algorithmName(algorithmType);
-        private double DevFee => _devFee(_algorithmType);
+        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
+        private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
         {

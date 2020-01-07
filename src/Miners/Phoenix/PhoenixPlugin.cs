@@ -13,10 +13,12 @@ using System.Threading.Tasks;
 
 namespace Phoenix
 {
-    public class PhoenixPlugin : PluginBase, IDevicesCrossReference
+    public partial class PhoenixPlugin : PluginBase, IDevicesCrossReference
     {
         public PhoenixPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
@@ -34,13 +36,13 @@ namespace Phoenix
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Phoenix Miner is fast Ethash miner that supports both AMD and Nvidia cards(including in mixed mining rigs).",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "f5d4a470-e360-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(4, 1);
+        public override Version Version => new Version(5, 0);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -73,7 +75,7 @@ namespace Phoenix
 
             foreach (var gpu in supportedGpus)
             {
-                var algorithms = GetSupportedAlgorithms(gpu).ToList();
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
                 if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
             }
 
@@ -92,13 +94,6 @@ namespace Phoenix
             return isSupported && isDriverSupported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
-        }
         public override bool CanGroup(MiningPair a, MiningPair b)
         {
             var isSameDeviceType = a.Device.DeviceType == b.Device.DeviceType;

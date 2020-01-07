@@ -12,10 +12,12 @@ using MinerPluginToolkitV1.Interfaces;
 
 namespace GMinerPlugin
 {
-    public class GMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class GMinerPlugin : PluginBase, IDevicesCrossReference
     {
         public GMinerPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
@@ -33,7 +35,7 @@ namespace GMinerPlugin
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "GMiner - High-performance miner for NVIDIA and AMD GPUs.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -91,33 +93,18 @@ namespace GMinerPlugin
                 ++pcieId;
                 if (gpu is AMDDevice amd)
                 {
-                    var algorithms = GetAMDSupportedAlgorithms(amd).ToList();
+                    var algorithms = GetSupportedAlgorithmsForDevice(amd);
                     if (algorithms.Count > 0) supported.Add(amd, algorithms);
                 }
                 // TODO we don't check GMiner minimum driver version
                 if (gpu is CUDADevice cuda)
                 {
-                    var algorithms = GetCUDASupportedAlgorithms(cuda);
+                    var algorithms = GetSupportedAlgorithmsForDevice(cuda);
                     if (algorithms.Count > 0) supported.Add(cuda, algorithms);
                 }
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetCUDASupportedAlgorithms(CUDADevice gpu) {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
-        }
-
-        IReadOnlyList<Algorithm> GetAMDSupportedAlgorithms(AMDDevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         private static bool IsSupportedAMDDevice(BaseDevice dev)

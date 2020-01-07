@@ -19,14 +19,9 @@ namespace MinerPluginToolkitV1.Configs
         [JsonProperty("algorithm_fees")]
         public Dictionary<AlgorithmType, double> AlgorithmFees { get; set; } = null;
 
-        [JsonProperty("cpu_algorithms")]
-        public List<SupportedAlgorithmSettings> CPU_Algorithms { get; set; } = null;
+        [JsonProperty("device_algorithms")]
+        public Dictionary<DeviceType, List<SupportedAlgorithmSettings>> Algorithms { get; set; } = null;
 
-        [JsonProperty("amd_algorithms")]
-        public List<SupportedAlgorithmSettings> AMD_Algorithms { get; set; } = null;
-
-        [JsonProperty("nvidia_algorithms")]
-        public List<SupportedAlgorithmSettings> NVIDIA_Algorithms { get; set; } = null;
         // for single algos
         [JsonProperty("plugin_algorithm_name")]
         public Dictionary<AlgorithmType, string> AlgorithmNames { get; set; } = null;

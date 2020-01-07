@@ -15,10 +15,12 @@ using XmrStakRx.Configs;
 
 namespace XmrStakRx
 {
-    public class XmrStakRxPlugin : PluginBase, IXmrStakRxConfigHandler
+    public partial class XmrStakRxPlugin : PluginBase, IXmrStakRxConfigHandler
     {
         public XmrStakRxPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
@@ -36,18 +38,13 @@ namespace XmrStakRx
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "XMR-Stak is a universal open source stratum pool miner. This miner supports x86-64 CPUs, AMD and NVIDIA GPUs.",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.CPU, new List<AlgorithmType>{ AlgorithmType.RandomXmonero } },
-                    { DeviceType.NVIDIA, new List<AlgorithmType>{ AlgorithmType.RandomXmonero } },
-                    { DeviceType.AMD, new List<AlgorithmType>{ AlgorithmType.RandomXmonero } }
-                }
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "4aec5ec0-10f8-11ea-bad3-8dea21141bbb";
 
-        public override Version Version => new Version(4, 6);
+        public override Version Version => new Version(5, 0);
         public override string Name => "XmrStakRx";
 
         public override string Author => "info@nicehash.com";
@@ -77,7 +74,7 @@ namespace XmrStakRx
             // CPU 
             foreach (var dev in devicesToAdd)
             {
-                var algorithms = GetSupportedAlgorithms(dev);
+                var algorithms = GetSupportedAlgorithmsForDevice(dev);
                 if (algorithms.Count > 0)
                 {
                     supported.Add(dev, algorithms);
@@ -91,17 +88,6 @@ namespace XmrStakRx
 
 
             return supported;
-        }
-
-        private List<Algorithm> GetSupportedAlgorithms(BaseDevice dev)
-        {
-            // multiple OpenCL GPUs seem to freeze the whole system
-            var AMD_DisabledByDefault = dev.DeviceType != DeviceType.AMD;
-            var algos = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.RandomXmonero) { Enabled = AMD_DisabledByDefault },
-            };
-            return algos;
         }
 
         protected override MinerBase CreateMinerBase()

@@ -13,7 +13,6 @@ using System.Linq;
 
 namespace MinerPluginToolkitV1
 {
-    using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
     // TODO add documentation
     public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo, IPluginSupportedAlgorithmsSettings
     {
@@ -98,6 +97,17 @@ namespace MinerPluginToolkitV1
 
         public PluginSupportedAlgorithmsSettings PluginSupportedAlgorithmsSettings { get; set; } = new PluginSupportedAlgorithmsSettings();
 
+        // we must define this for every miner plugin
+        protected abstract PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings { get; }
+        
+        protected void InitInsideConstuctorPluginSupportedAlgorithmsSettings()
+        {
+            PluginSupportedAlgorithmsSettings = DefaultPluginSupportedAlgorithmsSettings;
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var filePluginSupportedAlgorithmsSettings = InternalConfigs.InitInternalSetting(pluginRoot, PluginSupportedAlgorithmsSettings, "PluginSupportedAlgorithmsSettings.json");
+            if (filePluginSupportedAlgorithmsSettings != null) PluginSupportedAlgorithmsSettings = filePluginSupportedAlgorithmsSettings;
+        }
+
         #endregion IInitInternals
 
         #region IReBenchmarkChecker
@@ -174,24 +184,20 @@ namespace MinerPluginToolkitV1
             foreach (var deviceType in deviceTypes)
             {
                 var algos = GetSupportedAlgorithmsForDeviceType(deviceType);
-                if (algos == null || algos.Count == 0) continue;
-                ret[deviceType] = algos.SelectMany(a => a.IDs).ToList();
+                if (algos.Count == 0) continue;
+                ret[deviceType] = new HashSet<AlgorithmType>(algos.SelectMany(a => a.IDs)).ToList();
             }
             return ret;
         }
 
         public virtual List<Algorithm> GetSupportedAlgorithmsForDeviceType(DeviceType deviceType)
         {
-            switch (deviceType)
+            if (PluginSupportedAlgorithmsSettings.Algorithms?.ContainsKey(deviceType) ?? false)
             {
-                case DeviceType.CPU:
-                    return PluginSupportedAlgorithmsSettings.CPU_Algorithms?.Select(sas => sas.ToAlgorithm(PluginUUID)).ToList();
-                case DeviceType.AMD:
-                    return PluginSupportedAlgorithmsSettings.AMD_Algorithms?.Select(sas => sas.ToAlgorithm(PluginUUID)).ToList();
-                case DeviceType.NVIDIA:
-                    return PluginSupportedAlgorithmsSettings.NVIDIA_Algorithms?.Select(sas => sas.ToAlgorithm(PluginUUID)).ToList();
+                var sass = PluginSupportedAlgorithmsSettings.Algorithms[deviceType];
+                return sass.Select(sas => sas.ToAlgorithm(PluginUUID)).ToList();
             }
-            return null;
+            return new List<Algorithm>(); // return empty
         }
 
         public virtual string AlgorithmName(params AlgorithmType[] algorithmTypes)
@@ -213,7 +219,7 @@ namespace MinerPluginToolkitV1
             if (algorithmTypes.Length == 1)
             {
                 var id = algorithmTypes[0];
-                if (PluginSupportedAlgorithmsSettings.AlgorithmFees != null && PluginSupportedAlgorithmsSettings.AlgorithmFees.ContainsKey(id))
+                if (PluginSupportedAlgorithmsSettings.AlgorithmFees?.ContainsKey(id) ?? false)
                 {
                     return PluginSupportedAlgorithmsSettings.AlgorithmFees[id];
                 }
@@ -224,22 +230,10 @@ namespace MinerPluginToolkitV1
 
         protected Dictionary<AlgorithmType, ulong> GetCustomMinimumMemoryPerAlgorithm(DeviceType deviceType)
         {
-            List<SAS> sass = null;
             var ret = new Dictionary<AlgorithmType, ulong>();
-            switch (deviceType)
+            if (PluginSupportedAlgorithmsSettings.Algorithms?.ContainsKey(deviceType) ?? false)
             {
-                case DeviceType.CPU:
-                    sass = PluginSupportedAlgorithmsSettings.CPU_Algorithms;
-                    break;
-                case DeviceType.AMD:
-                    sass = PluginSupportedAlgorithmsSettings.AMD_Algorithms;
-                    break;
-                case DeviceType.NVIDIA:
-                    sass = PluginSupportedAlgorithmsSettings.NVIDIA_Algorithms;
-                    break;
-            }
-            if (sass != null)
-            {
+                var sass = PluginSupportedAlgorithmsSettings.Algorithms[deviceType];
                 var customRAMLimits = sass.Where(sas => sas.NonDefaultRAMLimit.HasValue);
                 foreach (var el in customRAMLimits)
                 {
@@ -247,6 +241,18 @@ namespace MinerPluginToolkitV1
                 }
             }
             return ret;
+        }
+
+        public IReadOnlyList<Algorithm> GetSupportedAlgorithmsForDevice(BaseDevice dev)
+        {
+            var deviceType = dev.DeviceType;
+            var algorithms = GetSupportedAlgorithmsForDeviceType(deviceType);
+            if (UnsafeLimits() || dev is CPUDevice) return algorithms;
+            // GPU RAM filtering
+            var gpu = dev as IGpuDevice;
+            var ramLimits = GetCustomMinimumMemoryPerAlgorithm(deviceType);
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsListCustom(gpu.GpuRam, algorithms, ramLimits);
+            return filteredAlgorithms;
         }
     }
 }

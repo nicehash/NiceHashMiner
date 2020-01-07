@@ -11,10 +11,12 @@ using System.Threading.Tasks;
 
 namespace TTMiner
 {
-    public class TTMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class TTMinerPlugin : PluginBase, IDevicesCrossReference
     {
         public TTMinerPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
@@ -22,7 +24,7 @@ namespace TTMiner
             // https://bitcointalk.org/index.php?topic=5025783.0 current 3.0.10 // TODO update
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "3.1.1",
+                BinVersion = "3.2.2",
                 ExePath = new List<string> { "TT-Miner.exe" },
                 Urls = new List<string>
                 {
@@ -33,7 +35,7 @@ namespace TTMiner
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "TT-Miner is mining software for NVIDIA devices.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -65,19 +67,11 @@ namespace TTMiner
             foreach (var gpu in cudaGpus)
             {
                 _mappedDeviceIds[gpu.UUID] = gpu.ID; //lazy init -> TT-Miner sorts devices as we do
-                var algos = GetSupportedAlgorithms(gpu).ToList();
+                var algos = GetSupportedAlgorithmsForDevice(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)

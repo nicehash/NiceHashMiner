@@ -10,10 +10,12 @@ using System.Linq;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : PluginBase
+    public partial class TeamRedMinerPlugin : PluginBase
     {
         public TeamRedMinerPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
@@ -30,13 +32,13 @@ namespace TeamRedMiner
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Miner for AMD gpus.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "abc3e2a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(4, 1);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "TeamRedMiner";
 
@@ -66,19 +68,11 @@ namespace TeamRedMiner
 
             foreach (var gpu in amdGpus)
             {
-                var algorithms = GetSupportedAlgorithms(gpu);
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

@@ -17,16 +17,10 @@ namespace CryptoDredge
         private string _devices;
         private int _apiPort;
 
-        public CryptoDredge(string uuid, Func<AlgorithmType, string> algorithmName, Func<AlgorithmType, double> devFee) : base(uuid)
-        {
-            _algorithmName = algorithmName;
-            _devFee = devFee;
-        }
+        public CryptoDredge(string uuid) : base(uuid)
+        {}
 
-        readonly Func<AlgorithmType, string> _algorithmName;
-        readonly Func<AlgorithmType, double> _devFee;
-
-        private double DevFee => _devFee(_algorithmType);
+        private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         private struct IdPowerHash
         {
@@ -189,7 +183,7 @@ namespace CryptoDredge
             _apiPort = GetAvaliablePort();
             // instant non blocking
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var algo = _algorithmName(_algorithmType);
+            var algo = PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo {algo} --url {url} --user {_username} -b 127.0.0.1:{_apiPort} --device {_devices} --no-watchdog {_extraLaunchParameters}";
             return commandLine;

@@ -9,10 +9,12 @@ using System.Linq;
 
 namespace EWBF
 {
-    public class EwbfPlugin : PluginBase
+    public partial class EwbfPlugin : PluginBase
     {
         public EwbfPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://bitcointalk.org/index.php?topic=4466962.0
@@ -29,13 +31,13 @@ namespace EWBF
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "EWBF is Cuda Equihash Miner.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "Ewbf";
 
@@ -60,19 +62,11 @@ namespace EWBF
 
             foreach (var gpu in cudaGpus)
             {
-                var algorithms = GetSupportedAlgorithms(gpu);
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

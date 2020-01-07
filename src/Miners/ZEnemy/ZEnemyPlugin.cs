@@ -10,12 +10,12 @@ using System.Linq;
 
 namespace ZEnemy
 {
-    public class ZEnemyPlugin : PluginBase
+    public partial class ZEnemyPlugin : PluginBase
     {
         public ZEnemyPlugin()
         {
-            // mandatory setting
-            PluginSupportedAlgorithmsSettings = PluginSupportedAlgorithms.DefaultPluginSupportedAlgorithmsSettings;
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
@@ -55,20 +55,11 @@ namespace ZEnemy
 
             foreach (var gpu in cudaGpus)
             {
-                var algos = GetSupportedAlgorithms(gpu).ToList();
+                var algos = GetSupportedAlgorithmsForDevice(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = GetSupportedAlgorithmsForDeviceType(DeviceType.NVIDIA);
-            if (UnsafeLimits()) return algorithms;
-            var ramLimits = GetCustomMinimumMemoryPerAlgorithm(DeviceType.NVIDIA);
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsListCustom(gpu.GpuRam, algorithms, ramLimits);
-            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

@@ -13,10 +13,12 @@ using System.Threading.Tasks;
 
 namespace ClaymoreDual14
 {
-    public class ClaymoreDual14Plugin : PluginBase, IDevicesCrossReference
+    public partial class ClaymoreDual14Plugin : PluginBase, IDevicesCrossReference
     {
         public ClaymoreDual14Plugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://bitcointalk.org/index.php?topic=1433925.0 current v15.0
@@ -33,13 +35,13 @@ namespace ClaymoreDual14
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Miner for AMD and NVIDIA cards, supporting Dual mining.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "70984aa0-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "ClaymoreDual";
 
@@ -96,9 +98,7 @@ namespace ClaymoreDual14
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID).ToList();
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            var filteredAlgorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
             if(gpu is AMDDevice amd && (amd.Codename.ToLower().Contains("gfx10") || amd.Name.ToLower().Contains("navi")))
             {
                 filteredAlgorithms = filteredAlgorithms.Where(algo => algo.IDs.Count == 1).ToList();

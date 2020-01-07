@@ -14,6 +14,7 @@ namespace XMRig
 {
     public class XMRig : MinerBase
     {
+        // TODO DevFee 
         private double DevFee = 1.0;
         private int _apiPort;
         protected readonly HttpClient _httpClient = new HttpClient();
@@ -22,15 +23,7 @@ namespace XMRig
         {
             get
             {
-                switch (_algorithmType)
-                {
-                    case AlgorithmType.CryptoNightR:
-                        return "cn/r";
-                    case AlgorithmType.RandomXmonero:
-                        return "rx/0";
-                    default:
-                        return "";
-                }
+                return PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
             }
         }
 

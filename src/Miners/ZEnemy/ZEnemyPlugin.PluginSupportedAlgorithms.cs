@@ -6,15 +6,21 @@ using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.Suppo
 
 namespace ZEnemy
 {
-    internal static class PluginSupportedAlgorithms
+    public partial class ZEnemyPlugin
     {
-        internal static PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings = new PluginSupportedAlgorithmsSettings
+        protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             DefaultFee = 1.0,
-            NVIDIA_Algorithms = new List<SAS>
+            Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
-                new SAS(AlgorithmType.X16R),
-                new SAS(AlgorithmType.X16Rv2),
+                {
+                    DeviceType.NVIDIA,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.X16R),
+                        new SAS(AlgorithmType.X16Rv2),
+                    }
+                }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
