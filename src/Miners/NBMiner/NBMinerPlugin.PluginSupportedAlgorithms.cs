@@ -27,6 +27,8 @@ namespace NBMiner
                         new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.Eaglesong),
+                        // new SAS(AlgorithmType.DaggerHashimoto), // needs different protocol settings
+                        new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto),
                     }
                 },
                 // TODO
@@ -43,6 +45,7 @@ namespace NBMiner
                 { AlgorithmType.CuckooCycle, "cuckoo_ae" },
                 { AlgorithmType.GrinCuckarood29, "cuckarood" },
                 { AlgorithmType.Eaglesong, "eaglesong" },
+                { AlgorithmType.DaggerHashimoto, "ethash" },
             }
         };
     }
