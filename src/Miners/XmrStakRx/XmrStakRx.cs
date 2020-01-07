@@ -53,14 +53,10 @@ namespace XmrStakRx
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
-            switch (algorithmType)
-            {
-                case AlgorithmType.RandomXmonero: return "randomx";
-                default: return "";
-            }
+            return PluginSupportedAlgorithms.AlgorithmName(algorithmType);
         }
 
-        protected virtual double DevFee => 0d;
+        protected virtual double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         private IEnumerable<int> GetThreadsForDeviceUUID(string uuid)
         {

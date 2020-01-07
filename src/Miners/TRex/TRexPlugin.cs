@@ -9,10 +9,12 @@ using System.Linq;
 
 namespace TRex
 {
-    public class TRexPlugin : PluginBase
+    public partial class TRexPlugin : PluginBase
     {
         public TRexPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
@@ -30,13 +32,13 @@ namespace TRex
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "T-Rex is a versatile cryptocurrency mining software for NVIDIA devices.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "d47d9b00-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "TRex";
 
@@ -50,19 +52,11 @@ namespace TRex
 
             foreach (var gpu in cudaGpus)
             {
-                var algos = GetSupportedAlgorithms(gpu).ToList();
+                var algos = GetSupportedAlgorithmsForDevice(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

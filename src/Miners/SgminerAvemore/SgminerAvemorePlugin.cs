@@ -10,10 +10,12 @@ using System.Linq;
 
 namespace SgminerAvemore
 {
-    public class SgminerAvemorePlugin : PluginBase
+    public partial class SgminerAvemorePlugin : PluginBase
     {
         public SgminerAvemorePlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
@@ -30,13 +32,13 @@ namespace SgminerAvemore
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "This is a multi-threaded multi-pool GPU miner.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "bc95fd70-e361-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
         public override string Name => "SGminerAvemore";
 
         public override string Author => "info@nicehash.com";
@@ -50,19 +52,11 @@ namespace SgminerAvemore
 
             foreach (var gpu in amdGpus)
             {
-                var algorithms = GetSupportedAlgorithms(gpu);
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
-        }
-
-        private List<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

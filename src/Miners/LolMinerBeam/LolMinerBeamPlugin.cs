@@ -11,10 +11,12 @@ using System.Threading.Tasks;
 
 namespace LolMinerBeam
 {
-    public class LolMinerBeamPlugin : PluginBase, IDevicesCrossReference
+    public partial class LolMinerBeamPlugin : PluginBase, IDevicesCrossReference
     {
         public LolMinerBeamPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
@@ -31,11 +33,11 @@ namespace LolMinerBeam
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Miner for AMD and NVIDIA gpus.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
-        public override Version Version => new Version(4, 2);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "lolMiner";
 
@@ -65,7 +67,7 @@ namespace LolMinerBeam
             {
                 _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
-                var algorithms = GetSupportedAlgorithms(gpu).ToList();
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
                 if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
             }
 
@@ -82,24 +84,6 @@ namespace LolMinerBeam
         {
             var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 2 && gpu.IsOpenCLBackendEnabled;
             return isSupported && isDriverSupported;
-        }
-
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
-        {
-            var isAMD = gpu is AMDDevice;
-            List<Algorithm> algorithms;
-            if (isAMD)
-            {
-                algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
-            }
-            else
-            {
-                // NVIDIA OpenCL backend stability is questionable
-                algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
-            }
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

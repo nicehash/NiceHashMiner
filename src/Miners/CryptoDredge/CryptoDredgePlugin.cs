@@ -9,10 +9,12 @@ using System.Linq;
 
 namespace CryptoDredge
 {
-    public class CryptoDredgePlugin : PluginBase
+    public partial class CryptoDredgePlugin : PluginBase
     {
         public CryptoDredgePlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://github.com/technobyl/CryptoDredge/releases | https://cryptodredge.org/ | https://bitcointalk.org/index.php?topic=4807821.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
@@ -28,11 +30,11 @@ namespace CryptoDredge
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Simple in use and highly optimized cryptocurrency mining software with stable power consumption.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
         public override string Name => "CryptoDredge";
 
         public override string Author => "info@nicehash.com";
@@ -50,24 +52,16 @@ namespace CryptoDredge
 
             foreach (var gpu in cudaGpus)
             {
-                var algos = GetSupportedAlgorithms(gpu);
+                var algos = GetSupportedAlgorithmsForDevice(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
 
             return supported;
         }
 
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID).ToList();
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
-        }
-
         protected override MinerBase CreateMinerBase()
         {
-            return new CryptoDredge(PluginUUID, PluginSupportedAlgorithms.AlgorithmName, PluginSupportedAlgorithms.DevFee);
+            return new CryptoDredge(PluginUUID);
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

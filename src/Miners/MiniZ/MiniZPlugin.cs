@@ -12,10 +12,12 @@ using System.Threading.Tasks;
 
 namespace MiniZ
 {
-    public class MiniZPlugin : PluginBase, IDevicesCrossReference
+    public partial class MiniZPlugin : PluginBase, IDevicesCrossReference
     {
         public MiniZPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version
@@ -32,12 +34,12 @@ namespace MiniZ
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "miniZ is a fast and friendly Equihash miner.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "MiniZ";
 
@@ -67,19 +69,11 @@ namespace MiniZ
             {
                 _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
-                var algos = GetSupportedAlgorithms(gpu).ToList();
+                var algos = GetSupportedAlgorithmsForDevice(gpu).ToList();
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)

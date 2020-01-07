@@ -10,10 +10,12 @@ using System.Linq;
 
 namespace ZEnemy
 {
-    public class ZEnemyPlugin : PluginBase
+    public partial class ZEnemyPlugin : PluginBase
     {
         public ZEnemyPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
@@ -32,11 +34,11 @@ namespace ZEnemy
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Zealot/Enemy (z-enemy) NVIDIA GPU miner.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "ZEnemy";
 
@@ -53,19 +55,11 @@ namespace ZEnemy
 
             foreach (var gpu in cudaGpus)
             {
-                var algos = GetSupportedAlgorithms(gpu).ToList();
+                var algos = GetSupportedAlgorithmsForDevice(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsNVIDIA(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

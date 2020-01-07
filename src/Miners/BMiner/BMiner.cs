@@ -19,18 +19,12 @@ namespace BMiner
         private int _apiPort;
         private readonly HttpClient _http = new HttpClient();
 
-        public BMiner(string uuid, Func<AlgorithmType, string> algorithmName, Func<AlgorithmType, double> devFee) : base(uuid)
-        {
-            _algorithmName = algorithmName;
-            _devFee = devFee;
-        }
+        public BMiner(string uuid) : base(uuid)
+        {}
 
-        readonly Func<AlgorithmType, string> _algorithmName;
-        readonly Func<AlgorithmType, double> _devFee;
+        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
-        protected virtual string AlgorithmName(AlgorithmType algorithmType) => _algorithmName(algorithmType);
-
-        private double DevFee => _devFee(_algorithmType);
+        private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {

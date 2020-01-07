@@ -12,10 +12,12 @@ using System.Threading.Tasks;
 
 namespace NanoMiner
 {
-    public class NanoMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class NanoMinerPlugin : PluginBase, IDevicesCrossReference
     {
         public NanoMinerPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases
@@ -31,13 +33,13 @@ namespace NanoMiner
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Nanominer is a versatile tool for mining cryptocurrencies which are based on Ethash, Ubqhash, Cuckaroo29, CryptoNight (v6, v7, v8, R, ReverseWaltz) and RandomHash (PascalCoin) algorithms.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "NanoMiner";
 
@@ -65,7 +67,7 @@ namespace NanoMiner
 
             foreach (var gpu in supportedGpus)
             {
-                var algorithms = GetSupportedAlgorithms(gpu);
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
                 if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
             }
 
@@ -84,17 +86,9 @@ namespace NanoMiner
             return isSupported && isDriverSupported;
         }
 
-        List<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID).ToList();
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
-        }
-
         protected override MinerBase CreateMinerBase()
         {
-            return new NanoMiner(PluginUUID, _mappedIDs, PluginSupportedAlgorithms.AlgorithmName, PluginSupportedAlgorithms.DevFee);
+            return new NanoMiner(PluginUUID, _mappedIDs);
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)

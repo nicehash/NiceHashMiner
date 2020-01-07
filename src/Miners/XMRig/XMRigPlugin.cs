@@ -10,10 +10,12 @@ using System.Linq;
 
 namespace XMRig
 {
-    public class XMRigPlugin : PluginBase
+    public partial class XMRigPlugin : PluginBase
     {
         public XMRigPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://github.com/xmrig/xmrig
@@ -29,16 +31,13 @@ namespace XMRig
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "CryptoNight and RandomX (Monero) CPU miner",
-                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>>
-                {
-                    { DeviceType.CPU, new List<AlgorithmType>{ AlgorithmType.CryptoNightR, AlgorithmType.RandomXmonero } }
-                }
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(4, 4);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "XMRig";
 
@@ -54,11 +53,7 @@ namespace XMRig
 
             var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
             foreach (var cpu in cpus) {
-                supported.Add(cpu, new List<Algorithm>
-                {
-                    new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
-                    new Algorithm(PluginUUID, AlgorithmType.RandomXmonero)
-                });
+                supported.Add(cpu, GetSupportedAlgorithmsForDevice(cpu));
             }
 
             return supported;

@@ -10,11 +10,13 @@ using System.Linq;
 namespace Ethminer
 {
 #warning "MARK abstract. This is due to API stats blocking so we don't want this instantiated"
-    public abstract class EthminerPlugin : PluginBase
+    public abstract partial class EthminerPlugin : PluginBase
     {
         // mandatory constructor
         public EthminerPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://github.com/ethereum-mining/ethminer/releases
@@ -30,13 +32,13 @@ namespace Ethminer
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Ethminer is an Ethash GPU mining worker",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         //public override string PluginUUID => "TODO";
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
         public override string Name => "Ethminer";
 
         public override string Author => "info@nicehash.com";
@@ -55,7 +57,7 @@ namespace Ethminer
 
             foreach (var gpu in supportedGpus)
             {
-                var algorithms = GetSupportedAlgorithms(gpu).ToList();
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
                 if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
             }
 
@@ -72,14 +74,6 @@ namespace Ethminer
         {
             var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 3;
             return isSupported && isDriverSupported;
-        }
-
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsGPU(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

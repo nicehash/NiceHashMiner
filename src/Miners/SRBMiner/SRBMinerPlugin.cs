@@ -12,10 +12,12 @@ using System.Threading.Tasks;
 
 namespace SRBMiner
 {
-    public class SRBMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class SRBMinerPlugin : PluginBase, IDevicesCrossReference
     {
         public SRBMinerPlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://www.srbminer.com/download.html current v1.9.3
@@ -32,11 +34,11 @@ namespace SRBMiner
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "SRBMiner AMD GPU Miner is a Windows software made for mining cryptocurrencies based on Cryptonight algorithm.",
-                SupportedDevicesAlgorithms = PluginSupportedAlgorithms.SupportedDevicesAlgorithmsDict()
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
-        public override Version Version => new Version(4, 0);
+        public override Version Version => new Version(5, 0);
 
         public override string Name => "SRBMiner";
 
@@ -56,19 +58,11 @@ namespace SRBMiner
             foreach (var gpu in amdGpus.Where(gpu => gpu is AMDDevice))
             {
                 _mappedDeviceIds[gpu.UUID] = ++indexAMD;
-                var algorithms = GetSupportedAlgorithms(gpu);
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
-        }
-
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
-        {
-            var algorithms = PluginSupportedAlgorithms.GetSupportedAlgorithmsAMD(PluginUUID);
-            if (PluginSupportedAlgorithms.UnsafeLimits(PluginUUID)) return algorithms;
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
         }
 
         public override bool CanGroup(MiningPair a, MiningPair b)

@@ -58,6 +58,28 @@ namespace MinerPluginsPacker
             return pluginZipFileName;
         }
 
+        private static void CheckPluginMetaData(IMinerPlugin plugin)
+        {
+            if (plugin is IPluginSupportedAlgorithmsSettings pluginSettings)
+            {
+                var supportedDevicesAlgorithms = pluginSettings.SupportedDevicesAlgorithmsDict();
+                var supportedDevicesAlgorithmsCount = supportedDevicesAlgorithms.Select(dict => dict.Value.Count).Sum();
+                if (supportedDevicesAlgorithmsCount == 0) throw new Exception($"{plugin.Name}-{plugin.PluginUUID} NO algorithms");
+
+                foreach (var kvp in supportedDevicesAlgorithms)
+                {
+                    foreach (var algo in kvp.Value)
+                    {
+                        var name = pluginSettings.AlgorithmName(algo);
+                        if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+                        {
+                            throw new Exception($"{plugin.Name}-{plugin.PluginUUID} Invalid name '{name}' for algorithm type '{algo.ToString()}'");
+                        }
+                    }
+                }
+            }
+        }
+
         private static void AddPluginToPluginPackageInfos(IMinerPlugin plugin)
         {
             var version = new MajorMinorVersion(plugin.Version.Major, plugin.Version.Minor);
@@ -70,6 +92,10 @@ namespace MinerPluginsPacker
             else if (version.major == 4)
             {
                 pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v4.x/" + GetPluginPackageName(plugin);
+            }
+            else if (version.major == 5)
+            {
+                pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v5.x/" + GetPluginPackageName(plugin);
             }
             else
             {
@@ -171,6 +197,18 @@ namespace MinerPluginsPacker
                 var newPlugins = MinerPluginHost.MinerPlugin
                     .Where(kvp => packedPlugins.Contains(kvp.Key) == false)
                     .Select(kvp => kvp.Value);
+
+                foreach (var plugin in newPlugins)
+                {
+                    try
+                    {
+                        CheckPluginMetaData(plugin);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"CheckPluginMetaData ERROR!!!!!!!!! {e.Message}");
+                    }
+                }
 
                 foreach (var plugin in newPlugins)
                 {
