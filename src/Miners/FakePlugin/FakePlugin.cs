@@ -18,6 +18,9 @@ namespace FakePlugin
     /// </summary>
     public class FakePlugin : PluginBase
     {
+        // TODO implement this one
+        //protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => throw new NotImplementedException();
+
         //public override string PluginUUID => "1d21d950-1d9d-11ea-8dad-816592d8b973";
         //public override string PluginUUID => "12a1dc50-1d9d-11ea-8dad-816592d8b973";
         public override string PluginUUID => "24c913d0-1d9d-11ea-8dad-816592d8b973";
@@ -117,7 +120,6 @@ namespace FakePlugin
         }
 
         public override string Author => "info@nicehash.com";
-
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
