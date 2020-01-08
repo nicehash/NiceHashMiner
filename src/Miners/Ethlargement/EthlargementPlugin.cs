@@ -19,7 +19,7 @@ namespace Ethlargement
     {
         public virtual string PluginUUID => "efd40691-618c-491a-b328-e7e020bda7a3";
 
-        public Version Version => new Version(1, 3);
+        public Version Version => new Version(1, 4);
         public string Name => "Ethlargement";
 
         public string Author => "info@nicehash.com";
@@ -45,6 +45,8 @@ namespace Ethlargement
 
         private static Dictionary<string, AlgorithmType> _devicesUUIDActiveAlgorithm = new Dictionary<string, AlgorithmType>();
 
+        private static bool ShouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => _supportedAlgorithms.Contains(kvp.Value));
+
         private static object _startStopLock = new object();
 
         public void Start(IEnumerable<MiningPair> miningPairs)
@@ -64,8 +66,7 @@ namespace Ethlargement
                     var algorithmType = pair.Algorithm.FirstAlgorithmType;
                     _devicesUUIDActiveAlgorithm[uuid] = algorithmType;
                 }
-                var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => _supportedAlgorithms.Contains(kvp.Value));
-                if (shouldRun)
+                if (ShouldRun)
                 {
                     StartEthlargementProcess();
                 }
@@ -104,8 +105,7 @@ namespace Ethlargement
                     {
                         _devicesUUIDActiveAlgorithm[uuid] = AlgorithmType.NONE;
                     }
-                    var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => _supportedAlgorithms.Contains(kvp.Value));
-                    if (!shouldRun)
+                    if (!ShouldRun)
                     {
                         StopEthlargementProcess();
                     }
@@ -147,8 +147,7 @@ namespace Ethlargement
             await Task.Delay(1000);
             // TODO add delay and check if it is running
             // lock and check
-            var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => kvp.Value == AlgorithmType.DaggerHashimoto);
-            if (shouldRun)
+            if (ShouldRun)
             {
                 StartEthlargementProcess();
             }
