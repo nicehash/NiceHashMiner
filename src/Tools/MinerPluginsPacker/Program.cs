@@ -138,6 +138,7 @@ namespace MinerPluginsPacker
         // TODO add more options 
         static void Main(string[] args)
         {
+            PluginBase.IS_CALLED_FROM_PACKER = true;
             if (args.Length < 1)
             {
                 Console.WriteLine("Set miner plugins root path");

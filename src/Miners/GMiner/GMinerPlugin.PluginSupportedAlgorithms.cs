@@ -23,7 +23,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                         new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.BeamV2),
-                        new SAS(AlgorithmType.Eaglesong),
+                        //new SAS(AlgorithmType.Eaglesong),
                     }
                 },
                 {
