@@ -232,10 +232,11 @@ namespace NHMCore.Mining
             
         }
 
-        public static void StartLoops(CancellationToken stop)
+        public static void StartLoops(CancellationToken stop, string username)
         {
             stopMiningManager = stop;
             RunninLoops = Task.Run(() => StartLoopsTask(stop));
+            ChangeUsername(username);
         }
 
         public static Task StartLoopsTask(CancellationToken stop)
