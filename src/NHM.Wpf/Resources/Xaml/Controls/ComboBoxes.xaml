@@ -20,7 +20,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                    <Border x:Name="gd" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}, Path=Background}">
+                    <Border x:Name="gd" Padding="15,10,0,0" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}, Path=Background}">
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
