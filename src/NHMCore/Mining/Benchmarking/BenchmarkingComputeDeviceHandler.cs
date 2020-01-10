@@ -149,6 +149,10 @@ namespace NHMCore.Mining.Benchmarking
                                 await BenchmarkNextAlgorithm(_stopCurrentAlgorithmBenchmark.Token);
                                 await Task.Delay(MiningSettings.Instance.MinerRestartDelayMS, _stopCurrentAlgorithmBenchmark.Token);
                             }
+                            catch (TaskCanceledException e)
+                            {
+                                Logger.Debug("BenchmarkHandler", $"TaskCanceledException occurred in benchmark task: {e.Message}");
+                            }
                             catch (Exception e)
                             {
                                 Logger.Error("BenchmarkHandler", $"Exception occurred in benchmark task: {e.Message}");
