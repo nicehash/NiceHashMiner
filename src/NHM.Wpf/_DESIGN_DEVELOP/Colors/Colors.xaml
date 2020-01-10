@@ -13,9 +13,9 @@
             <Setter Property="Margin" Value="0,8,0,0" />
         </Style>
     </UserControl.Resources>
-    <StackPanel Background="White">
+    <Grid Background="White" Height="Auto" Width="Auto">
         <ScrollViewer >
-            <ItemsControl>
+            <ItemsControl Background="White">
                 <TextBlock Text="Light Mode" />
                 <TextBlock Text="Basic Colors" />
                 <Separator/>
@@ -148,8 +148,36 @@
                         <TextBlock>Grey3OutlineActive</TextBlock>
                     </Grid>
                 </ItemsControl>
+
                 
+                <TextBlock Text="THEME COLORS" />
+                <Separator/>
+                <ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="2"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <StackPanel HorizontalAlignment="Center" Background="AliceBlue">
+                        <TextBlock Foreground="{StaticResource TextColorBrush-Primary.Light}" Text="TextColorBrush-Primary.Light" FontSize="20"/>
+                        <Grid Background="{StaticResource TextColorBrush-Primary.Light}" />
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center" Background="AliceBlue">
+                        <TextBlock Foreground="{StaticResource TextColorBrush-Regular.Dark}" Text="TextColorBrush-Regular.Dark" FontSize="20"/>
+                        <Grid Background="{StaticResource TextColorBrush-Regular.Dark}" />
+                    </StackPanel>
+                    
+                    <StackPanel HorizontalAlignment="Center" Background="AliceBlue">
+                        <TextBlock Foreground="{StaticResource TextColorBrush-Regular.Light}" Text="TextColorBrush-Regular.Light" FontSize="20"/>
+                        <Grid Background="{StaticResource TextColorBrush-Regular.Light}" />
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center" Background="AliceBlue">
+                        <TextBlock Foreground="{StaticResource TextColorBrush-Regular.Dark}" Text="TextColorBrush-Regular.Dark" FontSize="20"/>
+                        <Grid Background="{StaticResource TextColorBrush-Regular.Dark}" />
+                    </StackPanel>
+                </ItemsControl>
+
             </ItemsControl>
         </ScrollViewer>
-    </StackPanel>
+    </Grid>
 </UserControl>

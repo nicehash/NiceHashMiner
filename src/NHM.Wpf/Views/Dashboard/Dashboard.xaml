@@ -11,6 +11,103 @@
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <Style TargetType="Button" x:Key="CompleteCredentialsButton" >
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily }"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+
+            <Setter Property="BorderBrush" Value="#eeeeee" />
+            
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+        <!--#region Dashboard styles -->
+        <!--devices circle count labels-->
+        <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeCountText" >
+            <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property= "FontSize" Value="40"/>
+            <Setter Property= "FontWeight" Value="Bold"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "LineHeight" Value="0.8"/>
+            <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeLabelText">
+            <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "FontWeight" Value="Bold"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "LineHeight" Value="1.5"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
+        </Style>
+        <!--stats-->
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatsTitleText">
+            <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Medium}"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "FontWeight" Value="500"/>
+            <Setter Property= "LineHeight" Value="2"/>
+            <Setter Property= "FontSize" Value="10"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCValueText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="18"/>
+            <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatsFiatEstimateText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
+        </Style>
+
+        <!--#endregion Dashboard styles -->
+    </UserControl.Resources>
     <Grid Background="Transparent" Height="Auto" Width="Auto" Margin="40,0,40,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -18,7 +115,11 @@
             <RowDefinition Height="86" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="{DynamicResource BackgroundColor}">
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <ToggleButton Style="{DynamicResource StartStopButtonLight}"
                           IsChecked="{Binding MiningState.AnyDeviceRunning, Mode=OneWay}"
                               VerticalAlignment="Center" HorizontalAlignment="Center"
@@ -30,28 +131,53 @@
                     Foreground="{StaticResource Gray1ColorBrush}"
                     TextAlignment="Center"
                     Margin="0,24,0,0"
-                    Text="Start Demo Mining"
+                    Text="{ Binding Dashboard.StatusText }"
                     ToolTip="some info"
-                    Visibility="Collapsed"
+                    Visibility="Visible"
                     />
-
-                <!--Complete Credentials info--><!--
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" >
-                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+            </StackPanel>
+            <!--Complete Credentials info-->
+            <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Stretch" Visibility="{Binding Dashboard.CompleteBTCVisibility }">
+                <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                     FontSize="12"
                     Foreground="{StaticResource Gray1ColorBrush}"
                     TextAlignment="Left"
                     Text="Complete your mining setup"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                        <Button>dsfdf</Button>
-                        <Button>dsfdf</Button>
-                        <Button>dsfdf</Button>
-                    </StackPanel>
-                </StackPanel>-->
+                <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button Style="{StaticResource CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Wallet Address" Click="EnterBTCWallet_Button_Click">
+                        <Button.ContextMenu>
+                            <ContextMenu x:Name="BTCWalletContextMenu" >
+                                <ContextMenu.Template>
+                                    <ControlTemplate>
+                                        <Grid Background="{DynamicResource BackgroundColor}">
+                                            <Border CornerRadius="4" BorderThickness="1" BorderBrush="{DynamicResource BorderColor}"/>
+                                            <WrapPanel Margin="24,0,24,16" Orientation="Vertical" >
+                                                <Label Content="Wallet" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+                                                <StackPanel Orientation="Horizontal" ToolTip="{StaticResource walletAddress}">
+                                                    <Label Content="Wallet Address" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                                                    <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                                                </StackPanel>
+                                                <TextBox Style="{StaticResource inputBox}"
+                                                             x:Name="textBoxBTCAddress"
+                                                             Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
+                                                             TextChanged="TextBoxBitcoinAddress_TextChanged" />
+                                                <TextBlock Margin="0,8,0,0">
+                                                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                                                            How to create a Wallet Address?
+                                                        </Hyperlink>
+                                                </TextBlock>
+                                            </WrapPanel>
+                                        </Grid>
+
+                                    </ControlTemplate>
+                                </ContextMenu.Template>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                    <!--<Button>Name Your Worker</Button>
+                        <Button>dsfdf</Button>-->
+                </WrapPanel>
             </StackPanel>
-            
-
-
         </Grid>
         <Grid Grid.Row="1">
             <!--shadow border-->

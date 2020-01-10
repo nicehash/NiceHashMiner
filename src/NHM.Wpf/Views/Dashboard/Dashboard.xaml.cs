@@ -3,6 +3,7 @@ using NHMCore;
 using NHMCore.ApplicationState;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,6 +65,47 @@ namespace NHM.Wpf.Views.Dashboard
             else
             {
                 await _vm.StartMining();
+            }
+        }
+
+        private readonly HashSet<Button> _toggleButtonsGuard = new HashSet<Button>();
+        private void EnterBTCWallet_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button tButton && !_toggleButtonsGuard.Contains(tButton))
+            {
+                _toggleButtonsGuard.Add(tButton);
+                BTCWalletContextMenu.IsOpen = true;
+                RoutedEventHandler closedHandler = null;
+                closedHandler += (s, e2) => {
+                    _toggleButtonsGuard.Remove(tButton);
+                    //tButton.IsChecked = false;
+                    BTCWalletContextMenu.Closed -= closedHandler;
+                };
+                BTCWalletContextMenu.Closed += closedHandler;
+            }
+        }
+
+        private void AddressHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(e.Uri.AbsoluteUri);
+        }
+
+        private async void TextBoxBitcoinAddress_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBoxBTCAddress = sender as TextBox;
+            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
+            var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
+            if (ApplicationStateManager.SetResult.INVALID == result)
+            {
+                //errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
+            }
+            else if (ApplicationStateManager.SetResult.CHANGED == result)
+            {
+                BTCWalletContextMenu.IsOpen = false;
+            }
+            else
+            {
+                //errorProvider1.SetError(textBoxBTCAddress, "");
             }
         }
     }

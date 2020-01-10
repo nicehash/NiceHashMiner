@@ -38,7 +38,18 @@
         <converters:LoadValueToText x:Key="LoadToText" />
     </UserControl.Resources>
     <Grid MinHeight="53" MaxHeight="300" Width="Auto" Background="Transparent">
-        <Border BorderThickness="1" Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
+        <Border BorderThickness="1" Background="{DynamicResource BackgroundColor}" CornerRadius="4" >
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
         <Grid HorizontalAlignment="Stretch"  >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*" />

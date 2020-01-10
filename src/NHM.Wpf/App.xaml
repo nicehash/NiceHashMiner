@@ -23,9 +23,7 @@
             <!--#region Dynamic Theme Properties-->
             <DrawingBrush x:Key="NHMLogo" Drawing="{DynamicResource NHMLogoLight}" />
 
-            <SolidColorBrush x:Key="BackgroundColor" Color="{DynamicResource Colors.Light.Grey.Grey4Background}" />
-            <SolidColorBrush x:Key="BorderColor" Color="{DynamicResource Colors.Light.Border}" />
-            <SolidColorBrush x:Key="TextColorBrush" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+            
             <DrawingBrush x:Key="LoginCircle" Drawing="{DynamicResource LoginCircleLogoLight}" />
             <!--#endregion Dynamic Theme Properties-->
 
@@ -78,15 +76,22 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
-                            <Border Background="{TemplateBinding Background}">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
                 <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="False">
+                        <Setter Property="Background" Value="{ DynamicResource BackgroundColor }" />
+                        <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
+                    </Trigger>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
+                        <Setter Property="Background" Value="{ DynamicResource PrimaryColorBrush }" />
+                        <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
                     </Trigger>
 
                 </Style.Triggers>
@@ -94,7 +99,7 @@
                 <Style.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="4" />
-                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="BorderBrush" Value="Transparent" />
                     </Style>
@@ -127,39 +132,7 @@
 
             <!--#endregion common buttons-->
 
-            <!--#region Dashboard styles -->
-            <!--devices circle count labels-->
-            <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeCountText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                <Setter Property= "FontSize" Value="40"/>
-                <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
-            </Style>
-
-            <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                <Setter Property= "FontSize" Value="10"/>
-                <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
-            </Style>
-            <!--stats-->
-            <Style TargetType="{x:Type TextBlock}" x:Key="StatsTitleText" BasedOn="{StaticResource BaseUbuntuTextBlockMedium}">
-                <Setter Property= "FontSize" Value="12"/>
-                <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
-            </Style>
-
-            <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCValueText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                <Setter Property= "FontSize" Value="18"/>
-                <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
-            </Style>
-
-            <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                <Setter Property= "FontSize" Value="12"/>
-                <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
-            </Style>
-
-            <Style TargetType="{x:Type TextBlock}" x:Key="StatsFiatEstimateText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                <Setter Property= "FontSize" Value="12"/>
-                <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
-            </Style>
-
-            <!--#endregion Dashboard styles -->
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,5 +1,6 @@
 ﻿using NHMCore;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace NHM.Wpf.Views.Settings
@@ -12,6 +13,8 @@ namespace NHM.Wpf.Views.Settings
         public SettingsGeneral()
         {
             InitializeComponent();
+            LanguageSettings.Visibility = AppRuntimeSettings.ShowLanguage ? Visibility.Visible : Visibility.Collapsed;
+            ThemeSettings.Visibility = AppRuntimeSettings.ThemeSettingsEnabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void AddressHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)

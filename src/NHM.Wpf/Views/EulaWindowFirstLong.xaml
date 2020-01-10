@@ -12,7 +12,11 @@
         AllowsTransparency="True"
         Background="Transparent"
         Topmost="True" >
-
+    <nhb:BaseDialogWindow.Resources>
+        <Style TargetType="TextBlock" x:Key="Terms-of-service" BasedOn="{StaticResource FontsTypography.Body-2-Regular}">
+            <Setter Property="LineHeight" Value="1.57" />
+        </Style>
+    </nhb:BaseDialogWindow.Resources>
     <Grid Width="Auto" Height="Auto" Background="Transparent" Margin="0,1,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="1" />
@@ -22,14 +26,8 @@
         <Separator Grid.Row="0" Margin="16,0,16,0" Background="#eeeeee"></Separator>
         <Grid Grid.Row="1" Height="Auto">
             <TextBlock 
+                Style="{StaticResource Terms-of-service}"
                 Margin="24,22,0,0"
-                FontFamily="{StaticResource UbuntuFontFamily}"
-                Foreground="{DynamicResource TextColorBrush}"
-                FontWeight="Bold"
-                FontStyle="Normal"
-                FontStretch="Normal"
-                FontSize="14"
-                LineHeight="1.57"    
                 Text="Terms of service"/>
             
             <RichTextBox x:Name="EulaRtb"
@@ -39,12 +37,13 @@
                          HorizontalScrollBarVisibility="Auto"
                          IsReadOnly="True"
                          IsDocumentEnabled="True"
-                         FontFamily="{StaticResource UbuntuFontFamily}"
+                         FontFamily="{StaticResource Ubuntu-Regular}"
                          Foreground="{DynamicResource TextColorBrush}"
                          FontSize="14"
                          FontStyle="Normal"
                          FontStretch="Normal"
                          FontWeight="Normal"
+                         TextBlock.LineHeight="1.57"
                          Height="Auto"
                          Background="#fafafa"
                          BorderThickness="1" >

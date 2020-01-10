@@ -54,8 +54,9 @@
                     <Condition Property="IsMouseOver" Value="False" />
                 </MultiTrigger.Conditions>
                 <MultiTrigger.Setters>
-                    <Setter Property="Background" Value="{StaticResource Brushes.FontColor.White}" />
-                    <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+                    <Setter Property="Background" Value="{ DynamicResource BackgroundColor }" />
+                    <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
                     <Setter Property="BitmapEffect" >
                         <Setter.Value>
                             <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
@@ -70,8 +71,9 @@
                     <Condition Property="IsMouseOver" Value="True" />
                 </MultiTrigger.Conditions>
                 <MultiTrigger.Setters>
-                    <Setter Property="Background" Value="{StaticResource Brushes.FontColor.White}" />
-                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                    <Setter Property="Background" Value="{ DynamicResource PrimaryColorBrush }" />
+                    <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
                     <Setter Property="BitmapEffect" >
                         <Setter.Value>
                             <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="1" Opacity="0.2" />

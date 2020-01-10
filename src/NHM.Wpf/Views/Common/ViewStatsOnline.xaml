@@ -6,33 +6,32 @@
              xmlns:local="clr-namespace:NHM.Wpf.Views.Common"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="200">
-    <Button Click="Click_VisitStatsOnline">
-        <Button.Template>
-            <ControlTemplate TargetType="{x:Type Button}">
-                <ContentPresenter />
-            </ControlTemplate>
-        </Button.Template>
-        <TextBlock Foreground="{StaticResource PrimaryColorBrush}" FontSize="14" LineHeight="1.57">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-                    <Style.Triggers>
-                        <Trigger Property ="IsMouseOver" Value="True">
-                            <Setter Property="TextDecorations">
-                                <Setter.Value>
-                                    <TextDecorationCollection>
-                                        <TextDecoration Location="Underline" PenOffset="4">
-                                            <TextDecoration.Pen>
-                                                <Pen Thickness="2" Brush="{StaticResource PrimaryColorBrush}"></Pen>
-                                            </TextDecoration.Pen>
-                                        </TextDecoration>
-                                    </TextDecorationCollection>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-                        View Stats Online
-        </TextBlock>
+    <Button Click="Click_VisitStatsOnline" Style="{StaticResource ButtonTextBlock}" Content="View Stats Online">
+        <Button.Resources>
+            <Style TargetType="{x:Type TextBlock}" >
+                <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+                <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="FontStretch" Value="Normal" />
+                <Setter Property="FontStyle" Value="Normal" />
+                <Setter Property="LineHeight" Value="1.57" />
+                <Style.Triggers>
+                    <Trigger Property ="IsMouseOver" Value="True">
+                        <Setter Property="TextDecorations">
+                            <Setter.Value>
+                                <TextDecorationCollection>
+                                    <TextDecoration Location="Underline" PenOffset="4">
+                                        <TextDecoration.Pen>
+                                            <Pen Thickness="2" Brush="{StaticResource PrimaryColorBrush}"></Pen>
+                                        </TextDecoration.Pen>
+                                    </TextDecoration>
+                                </TextDecorationCollection>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Button.Resources>
     </Button>
 </UserControl>

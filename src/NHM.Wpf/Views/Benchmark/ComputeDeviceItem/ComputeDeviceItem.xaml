@@ -10,18 +10,29 @@
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=viewModels:DeviceData}">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol" BasedOn="{StaticResource BaseUbuntuTextBlock}">
-            <Setter Property="LineHeight" Value="1.5" />
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxCol">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
             <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
-
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.5" />
                 </Trigger>
             </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxColDev" BasedOn="{StaticResource local.TextBoxCol}">
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush}" />
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxColStatus" BasedOn="{StaticResource local.TextBoxCol}">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
         </Style>
 
         <converters:TranslatingConverter x:Key="TrConv" />
@@ -79,52 +90,10 @@
                 </Style>
             </Style.Resources>
         </Style>
-        <Style TargetType="{x:Type Button}" x:Key="TextBoxButton">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ButtonBase}">
-                        <Border
-                            x:Name="Chrome"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Margin="0"
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Content="{TemplateBinding Content}"
-                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                Margin="{TemplateBinding Padding}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
-            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
 
-        <Style x:Key="TextBoxButton2" TargetType="Button">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <TextBlock Text="{TemplateBinding Content}" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+        <Style x:Key="AlgorithmHeaderTextBoxButton" TargetType="Button" BasedOn="{StaticResource ButtonTextBlock}">
             <Style.Resources>
                 <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
                     <Setter Property="FontSize" Value="10" />
                     <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
@@ -133,7 +102,7 @@
                     <Setter Property="MaxWidth" Value="100" />
                     <Setter Property="VerticalAlignment" Value="Center" />
                     <Setter Property="HorizontalAlignment" Value="Center" />
-                    
+
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
@@ -146,15 +115,25 @@
     </UserControl.Resources>
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" MinWidth="320" Height="40" Margin="40,0,40,0">
-            <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
+        <Grid Grid.Row="0" MinWidth="320" Height="56" Margin="40,0,40,0">
+            <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
                 </Border.Effect>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
             </Border>
             <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click" HorizontalContentAlignment="Stretch" >
                 <Grid Background="Transparent" HorizontalAlignment="Stretch" >
@@ -164,17 +143,17 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0">
                         <WrapPanel  HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
-                            <TextBlock Style="{DynamicResource TextBoxCol}" Foreground="{StaticResource Gray1ColorBrush}" Text="{Binding Dev.NameCount}" Margin="16,0,0,0"/>
-                            <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding Dev.Name}" Margin="9,0,0,0"/>
+                            <TextBlock Style="{DynamicResource local.TextBoxColDev}" Foreground="{StaticResource Gray1ColorBrush}" Text="{Binding Dev.NameCount}" Margin="16,0,0,0"/>
+                            <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding Dev.Name}" Margin="9,0,0,0"/>
                         </WrapPanel>
-                        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
-                            <TextBlock Style="{DynamicResource TextBoxCol}" Foreground="{StaticResource Gray1ColorBrush}" Text="Status" Margin="16,0,0,0"/>
-                            <TextBlock Style="{DynamicResource TextBoxCol}" Foreground="{Binding Dev.State, Converter={StaticResource StatusConv}}" Text="{Binding Dev.State, Converter={StaticResource TrConv}}" Margin="9,0,0,0"/>
+                        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock Style="{DynamicResource local.TextBoxColDev}" Foreground="{StaticResource Gray1ColorBrush}" Text="Status" Margin="16,0,0,0"/>
+                            <TextBlock Style="{DynamicResource local.TextBoxCol}" Foreground="{Binding Dev.State, Converter={StaticResource StatusConv}}" Text="{Binding Dev.State, Converter={StaticResource TrConv}}" Margin="9,0,0,0"/>
                         </WrapPanel>
                     </StackPanel>
                     <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
-                        <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding AlgosEnabled}" Margin="0,0,54,0"/>
-                        <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding AlgosBenchmarked}" Margin="0,0,54,0"/>
+                        <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding AlgosEnabled}" Margin="0,0,54,0"/>
+                        <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding AlgosBenchmarked}" Margin="0,0,54,0"/>
                         <CheckBox Style="{StaticResource NHMSwitch}"
                                       x:Name="EnableDisableCheckBox"
                                       IsChecked="{Binding Enabled}"
@@ -201,14 +180,14 @@
             </Grid.RowDefinitions>
 
             <UniformGrid Grid.Row="0" Columns="6" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Button Style="{DynamicResource TextBoxButton2}" Content="ALGORITHM" Click="SortAlgorithmButtonClick" HorizontalAlignment="Left" Margin="16,0,0,0"/>
-                <Button Style="{DynamicResource TextBoxButton2}" Content="MINER" Click="SortMinerButtonClick" />
-                <Button Style="{DynamicResource TextBoxButton2}" Content="SPEED" Click="SortSpeedButtonClick" />
-                <Button Style="{DynamicResource TextBoxButton2}" Content="BTC / 24H" Click="SortPayingButtonClick" />
-                <Button Style="{DynamicResource TextBoxButton2}" Content="STATUS" Click="SortStatusButtonClick" />
+                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="ALGORITHM" Click="SortAlgorithmButtonClick" HorizontalAlignment="Left" Margin="16,0,0,0"/>
+                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="MINER" Click="SortMinerButtonClick" />
+                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SPEED" Click="SortSpeedButtonClick" />
+                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="BTC / 24H" Click="SortPayingButtonClick" />
+                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="STATUS" Click="SortStatusButtonClick" />
                 <!--MAX WITH HERE DEFINES THE GRID-->
                 <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="100">
-                    <Button Style="{DynamicResource TextBoxButton2}" Content="SELECT ALL" Click="SortEnabledButtonClick" />
+                    <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SELECT ALL" Click="SortEnabledButtonClick" />
                     <CheckBox Style="{StaticResource NHMSwitch}"
                               IsChecked="{Binding AllAgorithmsEnabled, Mode=TwoWay}"
                               Margin="8,0,6,0" />
@@ -226,7 +205,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Separator Grid.Row="2" Margin="0,16,0,20" />
+            <Separator Grid.Row="2" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
 
         </Grid>
         

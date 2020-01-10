@@ -134,7 +134,7 @@ namespace NHM.Wpf
             }
 
             // Chose lang
-            if (string.IsNullOrEmpty(TranslationsSettings.Instance.Language))
+            if (string.IsNullOrEmpty(TranslationsSettings.Instance.Language) && AppRuntimeSettings.ShowLanguage)
             {
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
                 {
@@ -146,6 +146,12 @@ namespace NHM.Wpf
                 {
                     TranslationsSettings.Instance.Language = "en";
                 }
+                ConfigManager.GeneralConfigFileCommit();
+            }
+            else if (string.IsNullOrEmpty(TranslationsSettings.Instance.Language) && !AppRuntimeSettings.ShowLanguage)
+            {
+                // while we have locale disabled set english
+                TranslationsSettings.Instance.Language = "en";
                 ConfigManager.GeneralConfigFileCommit();
             }
 
@@ -161,7 +167,7 @@ namespace NHM.Wpf
 
             // TODO implement login API 
             // show login if no BTC
-            if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
+            if (!CredentialsSettings.Instance.IsBitcoinAddressValid && AppRuntimeSettings.ShowLoginWindow)
             {
                 var login = new LoginWindow { };
                 var nek = login.ShowDialog();

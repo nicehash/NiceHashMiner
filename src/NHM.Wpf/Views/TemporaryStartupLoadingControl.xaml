@@ -14,10 +14,13 @@
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
-            <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Style TargetType="{x:Type TextBlock}" x:Key="ProgressTextBlock" BasedOn="{StaticResource FontsTypography.Caption-Primary}">
+                <Setter Property="LineHeight" Value="1.5" />
+            </Style>
+            
+            <Style TargetType="{x:Type TextBlock}" x:Key="MainInfoTextBlock" BasedOn="{StaticResource FontsTypography.Body-1-Regular}">
+                <Setter Property="LineHeight" Value="1.57" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -32,11 +35,11 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding PrimaryProgress.Status}" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PrimaryProgress.ProgressString}" HorizontalAlignment="Right"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding PrimaryProgress.Status}" Style="{StaticResource ProgressTextBlock}" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PrimaryProgress.ProgressString}" Style="{StaticResource ProgressTextBlock}" HorizontalAlignment="Right"/>
 
             <!--<TextBlock Text="{Binding PrimaryTitle}" HorizontalAlignment="Center" />-->
-            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyle}" Value="{Binding PrimaryProgress.Progress}" Height="30" />
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyleNHMInit}" Value="{Binding PrimaryProgress.Progress}" Height="30" />
         </Grid>
         <!--Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolToVis}}"-->
         <Grid Margin="40,28,40,0" Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolToVis}}">
@@ -48,12 +51,12 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding SecondaryProgress.Status}" HorizontalAlignment="Left"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SecondaryProgress.ProgressString}" HorizontalAlignment="Right"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding SecondaryProgress.Status}" Style="{StaticResource ProgressTextBlock}" HorizontalAlignment="Left"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SecondaryProgress.ProgressString}" Style="{StaticResource ProgressTextBlock}" HorizontalAlignment="Right"/>
 
             <!--<TextBlock Text="{Binding SecondaryTitle}" HorizontalAlignment="Center" />-->
-            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyle}" Value="{Binding SecondaryProgress.Progress}" Height="30" />
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyleNHMInit}" Value="{Binding SecondaryProgress.Progress}" Height="30" />
         </Grid>
-        <TextBlock Margin="40,28,40,0" Grid.Column="0" Text="Sit tight, NiceHash Miner will start soon…" HorizontalAlignment="Center" FontSize="14"/>
+        <TextBlock Margin="40,28,40,0" Grid.Column="0" Text="Sit tight, NiceHash Miner will start soon…" Style="{StaticResource MainInfoTextBlock}" />
     </StackPanel>
 </UserControl>

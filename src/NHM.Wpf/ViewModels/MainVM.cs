@@ -100,6 +100,8 @@ namespace NHM.Wpf.ViewModels
 
         public string PerDeviceDisplayString => $"/ {_devices?.Count() ?? 0}";
 
+        public DashboardViewModel Dashboard { get; } = new DashboardViewModel();
+
         #region Exposed settings
         public BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
         public MiningState MiningState => MiningState.Instance;

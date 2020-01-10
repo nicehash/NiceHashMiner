@@ -433,8 +433,8 @@
 
 
     </UserControl.Resources>
-    <Grid Background="#fcfcfc">
-        <ScrollViewer RenderTransformOrigin="0,0.5">
+    <Grid Background="#fcfcfc" >
+        <ScrollViewer RenderTransformOrigin="0,0.5" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Visible">
             <StackPanel Background="Aqua">
                 <TextBlock Style="{StaticResource FontsTypography.Heading1}" Text="Components" FontSize="30" FontWeight="Bold" Margin="64,70,0,0"/>
                 <Separator />

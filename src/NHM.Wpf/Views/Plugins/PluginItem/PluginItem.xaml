@@ -83,57 +83,26 @@
             <Setter Property="FontSize" Value="12"/>
         </Style>
 
-        <Style TargetType="{x:Type ButtonBase}" x:Key="PluginContextMenuButton" >
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ButtonBase}">
-                        <Border
-                            x:Name="Chrome"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Margin="0"
-                            CornerRadius="0"
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Content="{TemplateBinding Content}"
-                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                Margin="{TemplateBinding Padding}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily }"/>
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Setter Property="FontStretch" Value="Normal" />
-            <Setter Property="FontStyle" Value="Normal" />
+        <Style TargetType="{x:Type ButtonBase}" x:Key="local.PluginContextMenuButton" BasedOn="{StaticResource ContextMenuButton}">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
-            
-
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <!--<Setter Property="Opacity" Value="0.5"/>-->
-                    <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
-                    <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
-                </Trigger>
-            </Style.Triggers>
-
         </Style>
     </UserControl.Resources>
     <Grid Background="Transparent" Width="Auto" Height="Auto" >
 
-        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
+        <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
             </Border.Effect>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
         </Border>
         <Grid Background="Transparent">
             <Grid.RowDefinitions>
@@ -218,16 +187,16 @@
                                     <ContextMenu.Template>
                                         <ControlTemplate>
                                             <Grid >
-                                                <Border Background="{StaticResource Brushes.FontColor.White}" BorderBrush="{StaticResource Gray2ColorBrush}" BorderThickness="1" CornerRadius="4" >
+                                                <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
                                                     <Border.Effect>
                                                         <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
                                                     </Border.Effect>
                                                 </Border>
                                                 <StackPanel>
-                                                    <Button Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}" Content="Uninstall" Click="Button_Click_Uninstall" />
-                                                    <Button Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}" Content="Show Internals" Click="Button_Click_ShowInternals" />
+                                                    <Button Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButton}" Content="Uninstall" Click="Button_Click_Uninstall" />
+                                                    <Button Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButton}" Content="Show Internals" Click="Button_Click_ShowInternals" />
                                                     <!--TODO hook logic here-->
-                                                    <ToggleButton Padding="16,7,16,7" Style="{StaticResource PluginContextMenuButton}">
+                                                    <ToggleButton Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButton}">
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Text="Autoupdate Plugin " />
                                                             <CheckBox Style="{StaticResource NHMSwitch}" Margin="4,0,0,0"/>

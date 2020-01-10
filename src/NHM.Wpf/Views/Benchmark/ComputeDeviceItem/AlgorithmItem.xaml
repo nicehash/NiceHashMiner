@@ -11,24 +11,26 @@
     <UserControl.Resources>
         <local:AlgorithmItemStatusStyleConverter x:Key="AlgorithmItemStatusStyleConverter" />
         <local:AlgorithmItemSpeedsConverter x:Key="AlgorithmItemSpeedsConverter" />
-        
-        
-        <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol" BasedOn="{StaticResource BaseUbuntuTextBlock}">
-            <Setter Property="LineHeight" Value="1.5" />
+
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxCol">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
             <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
-
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.5" />
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
-        <Style TargetType="Button" x:Key="SettingsButton" >
+
+        <Style TargetType="Button" x:Key="local.SettingsButton" >
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
@@ -76,8 +78,9 @@
                         <Condition Property="IsMouseOver" Value="False" />
                     </MultiTrigger.Conditions>
                     <MultiTrigger.Setters>
-                        <Setter Property="Background" Value="{StaticResource Brushes.FontColor.White}" />
-                        <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+                        <Setter Property="Background" Value="{ DynamicResource BackgroundColor }" />
+                        <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
                         <Setter Property="BitmapEffect" >
                             <Setter.Value>
                                 <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
@@ -92,8 +95,9 @@
                         <Condition Property="IsMouseOver" Value="True" />
                     </MultiTrigger.Conditions>
                     <MultiTrigger.Setters>
-                        <Setter Property="Background" Value="{StaticResource Brushes.FontColor.White}" />
-                        <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                        <Setter Property="Background" Value="{ DynamicResource PrimaryColorBrush }" />
+                        <Setter Property="BorderBrush" Value="{ DynamicResource PrimaryColorBrush }" />
+                        <Setter Property="Foreground" Value="#FFFFFF" />
                         <Setter Property="BitmapEffect" >
                             <Setter.Value>
                                 <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="1" Opacity="0.2" />
@@ -140,10 +144,20 @@
         </Style>
     </UserControl.Resources>
     <Grid MinHeight="40" MinWidth="220">
-        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
+        <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
             </Border.Effect>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
         </Border>
         <UniformGrid Columns="6" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="16,0,16,0" >
             <!--<Grid.RowDefinitions>
@@ -158,26 +172,26 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>-->
             <TextBlock Grid.Row="0" Grid.Column="0"
-                       Style="{DynamicResource TextBoxCol}"
+                       Style="{DynamicResource local.TextBoxCol}"
                        Text="{Binding AlgorithmName}"
                        MaxWidth="120"
                        HorizontalAlignment="Left"
                        />
             <TextBlock Grid.Row="0" Grid.Column="1"
-                       Style="{DynamicResource TextBoxCol}"
+                       Style="{DynamicResource local.TextBoxCol}"
                        Text="{Binding PluginName}"
                        />
             <TextBlock Grid.Row="0" Grid.Column="2"
-                       Style="{DynamicResource TextBoxCol}"
+                       Style="{DynamicResource local.TextBoxCol}"
                        Text="{Binding AnnotatedSpeeds, Converter={StaticResource AlgorithmItemSpeedsConverter}}"
                        MaxWidth="100"
                        />
             <TextBlock Grid.Row="0" Grid.Column="3"
-                       Style="{DynamicResource TextBoxCol}"
+                       Style="{DynamicResource local.TextBoxCol}"
                        Text="{Binding CurrentEstimatedProfitStr}"
                        />
             <TextBlock Grid.Row="0" Grid.Column="4"
-                       Style="{DynamicResource TextBoxCol}"
+                       Style="{DynamicResource local.TextBoxCol}"
                        Foreground="{Binding Status, Converter={StaticResource AlgorithmItemStatusStyleConverter}}"
                        Text="{Binding Status}"
                        MaxWidth="120"
@@ -188,7 +202,7 @@
                           IsChecked="{Binding Enabled, Mode=TwoWay}"
                           Margin="0,0,16,0" />
                 <!--TODO add context menu and all that-->
-                <Button Style="{DynamicResource SettingsButton}"
+                <Button Style="{DynamicResource local.SettingsButton}"
                         IsEnabled="True"
                         DataContext="{Binding .}"
                         Click="AlgorithmSettings_Button_Click" >

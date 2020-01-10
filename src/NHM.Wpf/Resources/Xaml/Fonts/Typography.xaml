@@ -4,9 +4,154 @@
 
     <!--#region Fonts-->
     <FontFamily x:Key="UbuntuFontFamily">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu</FontFamily>
+    <FontFamily x:Key="Ubuntu">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu</FontFamily>
+    <FontFamily x:Key="Ubuntu-Light">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Light</FontFamily>
+    <FontFamily x:Key="Ubuntu-Bold">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Bold</FontFamily>
+    <FontFamily x:Key="Ubuntu-Medium">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Medium</FontFamily>
+    <FontFamily x:Key="Ubuntu-Regular">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Regular</FontFamily>
     <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Free Solid</FontFamily>
     <!--#endregion Fonts-->
+
+
+    <Style x:Key="FontsTypography.Heading-1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Title-Black" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Title-White" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundColor}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Headline-Regular" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Headline-White" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundColor}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Button-White" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Medium}" />
+        <Setter Property="FontSize" Value="16" />
+        <!--500-->
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="#ffffff" />
+    </Style>
+
+    <!--<Style x:Key="FontsTypography.XX" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-XX}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        --><!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;--><!--
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>-->
+
+
+    <!--<Style x:Key="FontsTypography.XX" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-XX}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        --><!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;--><!--
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>-->
+
+
+    <!--#region BODY-->
+    <Style x:Key="FontsTypography.Body-1-Regular" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
     
+    <Style x:Key="FontsTypography.Body-2-Regular" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+    <!--#endregion BODY-->
+
+    <Style x:Key="FontsTypography.Caption-White" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundColor}" />
+    </Style>
+
+
+    <Style x:Key="FontsTypography.Caption-Primary" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+
+
     <!-- HEADING 1 -->
     <Style x:Key="FontsTypography.Heading1" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
@@ -241,5 +386,12 @@
         <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
     </Style>
     <!-- END OF TINY BOLD -->
+
     
+    
+    <Style x:Key="FontsTypography.NiceHash-Miner" TargetType="TextBlock" BasedOn="{StaticResource FontsTypography.Body-1-Regular}">
+        <Setter Property="LineHeight" Value="1.57"/>
+        <!--letter-spacing: normal;-->
+    </Style>
+
 </ResourceDictionary>

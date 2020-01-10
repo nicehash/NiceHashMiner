@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NHM.Wpf._DESIGN_DEVELOP"
         xmlns:localComponents="clr-namespace:NHM.Wpf._DESIGN_DEVELOP.Components"
+        xmlns:localColors="clr-namespace:NHM.Wpf._DESIGN_DEVELOP.Colors"
         mc:Ignorable="d"
         Title="__DESIGN_DEVELOP" Height="450" Width="800">
     <Grid>
-        <localComponents:Components></localComponents:Components>
+        <localColors:Colors></localColors:Colors>
     </Grid>
 </Window>

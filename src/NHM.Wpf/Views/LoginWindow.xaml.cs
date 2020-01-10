@@ -1,6 +1,7 @@
 ﻿using NHM.Wpf.Views.Common;
 using NHM.Wpf.Views.Common.NHBase;
 using NHMCore.Configs;
+using NHMCore.Utils;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
@@ -34,8 +35,7 @@ namespace NHM.Wpf.Views
 
         private void Register_OnClick(object sender, RoutedEventArgs e)
         {
-            var hyperlink = (Hyperlink)sender;
-            Process.Start(hyperlink.NavigateUri.ToString());
+            Process.Start(Links.Register);
         }
 
         private void ManuallyEnterBtc_OnClick(object sender, RoutedEventArgs e)

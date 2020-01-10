@@ -39,7 +39,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
                 _deviceData = dd;
                 return;
             }
-            throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
+            //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
         }
 
         private void Collapse()

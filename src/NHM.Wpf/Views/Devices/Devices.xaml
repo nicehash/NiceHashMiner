@@ -12,16 +12,57 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <Style TargetType="TextBlock" x:Key="InfoIcon">
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="#cecdcd"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
             <Setter Property="FontStyle" Value="Normal"/>
             <Setter Property="FontStretch" Value="Normal"/>
             <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
             <Setter Property="Text" Value="&#xF05A;"/>
         </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.InfoTitle" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Medium}"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush}"/>
+            <Setter Property="FontWeight" Value="500"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="LineHeight" Value="2"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.InfoBTCValue" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1.4"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.InfoBTCValuePart" BasedOn="{StaticResource local.InfoBTCValue}" >
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="LineHeight" Value="1.5"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.InfoFiatValue" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1.5"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}" Margin="40,0,40,0">
         <Grid.RowDefinitions>
@@ -29,7 +70,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="86" />
         </Grid.RowDefinitions>
-        <!--STATS-->
+        <!--#region STATS-->
         <Grid Grid.Row="0" Margin="0,40,0,24">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="149*" />
@@ -38,32 +79,19 @@
                 <ColumnDefinition Width="164*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" ToolTip="{StaticResource devicesMining}">
-                <Border  BorderThickness="1" Background="#fde3c6" BorderBrush="Transparent" CornerRadius="4"/>
+                <Border BorderThickness="1" Background="#fde3c6" BorderBrush="Transparent" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"
-                               Style="{DynamicResource InfoIcon }"
-                               HorizontalAlignment="Right"
-                               Margin="0,12,12,0"
-                               Foreground="#fba342"/>
-                    <TextBlock Grid.Row="1"
-                               TextWrapping="Wrap"
-                               FontFamily="{StaticResource UbuntuFontFamily}"
-                               FontSize="12"
-                               Foreground="#fba342"
-                               FontStyle="Normal"
-                               FontStretch="Normal"
-                               FontWeight="Medium"
-                               Margin="24,0,0,0"
-                               Text="DEVICES MINING"
-                               />
+                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Foreground="{StaticResource PrimaryColorBrush}" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{DynamicResource local.InfoTitle }" Foreground="{StaticResource PrimaryColorBrush}" Margin="24,0,0,0"
+                               Text="DEVICES MINING" />
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="24,10,0,0">
-                        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding MiningState.MiningDeviceStateCount}" />
-                        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#fba342" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding PerDeviceDisplayString}" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue }" Foreground="{StaticResource PrimaryColorBrush}" Text="{Binding MiningState.MiningDeviceStateCount}" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart }" Foreground="{StaticResource PrimaryColorBrush}" Margin="2,6,0,0" Text="{Binding PerDeviceDisplayString}" />
                     </StackPanel>
                 </Grid>
             </Grid>
@@ -77,14 +105,14 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <!--content-->
-                    <TextBlock Grid.Row="0" Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
-                    <TextBlock Grid.Row="1" TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,0,0,0">GLOBAL RATE</TextBlock>
+                    <TextBlock Grid.Row="0" Style="{ DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="GLOBAL RATE" />
                     <!--TODO Bindings here are temp-->
                     <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
-                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding GlobalRate}"/>
-                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding ScaledBtcPerTime}"/>
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="{Binding GlobalRate}"/>
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Margin="2,6,0,0" Text="{Binding ScaledBtcPerTime}"/>
                     </WrapPanel>
-                    <TextBlock Grid.Row="3" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,10,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
+                    <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}"  Margin="24,10,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
                 </Grid>
             </Grid>
             <Grid Grid.Column="2" Margin="16,0,0,0" ToolTip="{StaticResource unpaidBalance}">
@@ -97,13 +125,13 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <!--content-->
-                    <TextBlock Grid.Row="0" Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
-                    <TextBlock Grid.Row="1" TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,0,0,0" Text="UNPAID BALANCE"/>
+                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="UNPAID BALANCE"/>
                     <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
-                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
-                        <TextBlock TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Margin="2,6,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
                     </WrapPanel>
-                    <TextBlock Grid.Row="3" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
+                    <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
                 </Grid>
             </Grid>
             <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding ExchangeTooltip}">
@@ -115,15 +143,16 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <!--content-->
-                    <TextBlock Grid.Row="0" Style="{DynamicResource InfoIcon }" Margin="0,12,12,0" />
-                    <TextBlock Grid.Row="1" TextWrapping="Wrap" FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#959595" FontStyle="Normal" FontStretch="Normal" FontWeight="Medium" Margin="24,0,0,0" Text="MY BTC WALLET" />
+                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="MY BTC WALLET" />
                     <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
-                        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="18" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold">N/A</TextBlock>
-                        <TextBlock FontFamily="{StaticResource UbuntuFontFamily}" FontSize="12" Foreground="#3a3939" FontStyle="Normal" FontStretch="Normal" FontWeight="Bold" Margin="2,6,0,0" Visibility="Visible">BTC</TextBlock>
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="N/A" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Margin="2,6,0,0" Visibility="Visible" Text="BTC" />
                     </WrapPanel>
                 </Grid>
             </Grid>
         </Grid>
+        <!--#endregion STATS-->
         <!--DEVICES-->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

@@ -263,6 +263,7 @@ namespace NHMCore.Mining.Plugins
                 Func<bool> isActive = () => !stop.IsCancellationRequested;
 
 
+                // TODO set this interval somwhere
                 // periodically update the plugin list
                 var getOnlineMinerPluginsElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromMinutes(30), false);
 

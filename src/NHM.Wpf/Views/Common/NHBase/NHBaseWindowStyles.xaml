@@ -95,14 +95,8 @@
                                            Panel.ZIndex="0"
                                            IsEnabled="{TemplateBinding IsActive}">
                                     <Grid x:Name="NHMIcon" Width="24" Height="24" Background="{DynamicResource NHMLogo}" />
-                                    <TextBlock Margin="8,-8,0,0" 
-                                               FontFamily="{StaticResource UbuntuFontFamily}"
-                                               Foreground="{DynamicResource TextColorBrush}"
-                                               FontSize="14"
-                                               LineHeight="1.57"
-                                               FontWeight="Normal"
-                                               FontStretch="Normal"
-                                               FontStyle="Normal"
+                                    <TextBlock Margin="8,-8,0,0"
+                                               Style="{DynamicResource FontsTypography.NiceHash-Miner}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Center">NiceHash Miner</TextBlock>
                                 </TextBlock>

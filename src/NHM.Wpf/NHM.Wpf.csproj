@@ -74,6 +74,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppRuntimeSettings.cs" />
     <Compile Include="Converters\LoadValueToText.cs" />
     <Compile Include="Converters\StatusColorConverter.cs" />
     <Compile Include="Converters\TemperatureValueToText.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="Converters\TranslatingConverter.cs" />
     <Compile Include="ViewModels\ChooseLanguageVM.cs" />
+    <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\DeviceData.cs" />
@@ -105,6 +107,9 @@
     <Compile Include="Views\Benchmark\BenchmarkTypeToStringConverter.cs" />
     <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml.cs">
       <DependentUpon>AlgorithmSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItemHeader.xaml.cs">
+      <DependentUpon>ComputeDeviceItemHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\EulaWindowSecondShort.xaml.cs">
       <DependentUpon>EulaWindowSecondShort.xaml</DependentUpon>
@@ -206,6 +211,9 @@
     <Compile Include="_DESIGN_DEVELOP\Components\Components.xaml.cs">
       <DependentUpon>Components.xaml</DependentUpon>
     </Compile>
+    <Compile Include="_DESIGN_DEVELOP\Components\ThemeSwitch.xaml.cs">
+      <DependentUpon>ThemeSwitch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml.cs">
       <DependentUpon>__DESIGN_DEVELOP.xaml</DependentUpon>
     </Compile>
@@ -249,6 +257,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Xaml\Controls\ScrollBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Xaml\Controls\SpinCirclePath.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -266,6 +278,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Controls\TextBoxes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Controls\ToolTip.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -326,6 +342,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItemHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -450,6 +470,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="_DESIGN_DEVELOP\Components\Components.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="_DESIGN_DEVELOP\Components\ThemeSwitch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

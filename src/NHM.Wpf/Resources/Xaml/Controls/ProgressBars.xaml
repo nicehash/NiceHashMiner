@@ -31,5 +31,32 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="progressStyleNHMInit" TargetType="{x:Type ProgressBar}">
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="100" />
+        <Setter Property="Height" Value="8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar" >
+                    <Grid x:Name="Root">
+                        <Border 
+            Name="PART_Track" 
+            CornerRadius="20" 
+            Background="{StaticResource Brushes.Dark.Basic.SuccessColorBckg}"
+            BorderBrush="{StaticResource Brushes.Dark.Basic.SuccessColorBckg}"
+            BorderThickness="2" />
+                        <Border 
+            Name="PART_Indicator" 
+            CornerRadius="16" 
+            Background="{StaticResource Brushes.Dark.Basic.NastyGreen}" 
+            BorderBrush="{StaticResource Brushes.Dark.Basic.NastyGreen}" 
+            BorderThickness="2" 
+            HorizontalAlignment="Left" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>
