@@ -6,6 +6,7 @@ using NHM.Common;
 using NHM.MinersDownloader;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
 using System.Collections.Concurrent;
@@ -409,6 +410,7 @@ namespace NHMCore.Mining.Plugins
                 var hasUrls = urls.Any();
                 if (hasMissingFiles && hasUrls && !plugin.IsBroken)
                 {
+                    AvailableNotifications.CreateMissingMinerBinsInfo(plugin.Name);
                     Logger.Info("MinerPluginsManager", $"Downloading missing files for {plugin.PluginUUID}-{plugin.Name}");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
                     var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
@@ -744,10 +746,12 @@ namespace NHMCore.Mining.Plugins
                     }
                     if (installResult == PluginInstallProgressState.Success)
                     {
+                        AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, true);
                         _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.InstallOrUpdateSuccess, PluginInstallRemoveState.InstallOrUpdate);
                     }
                     else
                     {
+                        AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, false);
                         _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.InstallOrUpdateFailed, PluginInstallRemoveState.InstallOrUpdate);
                     }
                 }

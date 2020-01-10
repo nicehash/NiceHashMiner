@@ -131,5 +131,25 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Fatal, Tr("Operating System Error"), Tr("NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateNhmUpdateInfo()
+        {
+            var notification = new Notification(NotificationsType.Info, Tr("NiceHash Miner Update"), Tr("New version of NiceHash Miner is available."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreatePluginUpdateInfo(string pluginName, bool success)
+        {
+            var sentence = "was installed";
+            if (!success) sentence = "was not installed";      
+            var notification = new Notification(NotificationsType.Info, Tr("Miner Plugin Update"), Tr($"New version of {pluginName} " +sentence));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateMissingMinerBinsInfo(string pluginName)
+        {
+            var notification = new Notification(NotificationsType.Info, Tr("Missing miner binaries"), Tr($"Some of the {pluginName} binaries are missing from the installation folder."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

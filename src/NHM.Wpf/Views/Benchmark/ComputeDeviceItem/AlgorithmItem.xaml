@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <local:AlgorithmItemStatusStyleConverter x:Key="AlgorithmItemStatusStyleConverter" />
         <local:AlgorithmItemSpeedsConverter x:Key="AlgorithmItemSpeedsConverter" />
+        <local:AlgorithmItemStatusTextConverter x:Key="AlgorithmItemStatusTextConverter" />
 
 
         <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxCol">
@@ -193,7 +194,7 @@
             <TextBlock Grid.Row="0" Grid.Column="4"
                        Style="{DynamicResource local.TextBoxCol}"
                        Foreground="{Binding Status, Converter={StaticResource AlgorithmItemStatusStyleConverter}}"
-                       Text="{Binding Status}"
+                       Text="{Binding Status, Converter={StaticResource AlgorithmItemStatusTextConverter}}"
                        MaxWidth="120"
                        />
             <StackPanel Grid.Row="0" Grid.Column="5"
