@@ -40,7 +40,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type ToggleButton}" x:Key="WindowTabButtonStyle2">
+    <Style TargetType="{x:Type ToggleButton}" x:Key="local.WindowTabButtonStyle2">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
@@ -77,67 +77,6 @@
         </Style.Triggers>
     </Style>
 
-    <Style TargetType="{x:Type ToggleButton}" x:Key="WindowTabButtonStyle">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ButtonBase}">
-                    <Border
-                            x:Name="Chrome"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Margin="0"
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="True">
-                        <ContentPresenter
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Content="{TemplateBinding Content}"
-                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                Margin="{TemplateBinding Padding}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-            </Trigger>
-        </Style.Triggers>
-        <Style.Resources>
-            <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
-                <Setter Property="FontSize" Value="14" />
-                <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
-                <Setter Property="LineHeight" Value="1.57" />
-                <Setter Property="TextAlignment" Value="Center" />
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}" Value="True">
-                        <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}"  Value="True">
-                        <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-                        <Setter Property="TextDecorations">
-                            <Setter.Value>
-                                <TextDecorationCollection>
-                                    <TextDecoration Location="Underline" PenOffset="4">
-                                        <TextDecoration.Pen>
-                                            <Pen Thickness="2" Brush="{StaticResource PrimaryColorBrush}"></Pen>
-                                        </TextDecoration.Pen>
-                                    </TextDecoration>
-                                </TextDecorationCollection>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </Style.Resources>
-    </Style>
 
     <Style TargetType="local:NHMMainWindow" x:Key="NHMMainWindowStyle">
         <Setter Property="Background" Value="White"/>
@@ -195,19 +134,19 @@
                                     
                                     
                                     <StackPanel Orientation="Horizontal" Margin="0,32,0,0">
-                                        <ToggleButton x:Name="DashboardButton" Style="{StaticResource WindowTabButtonStyle}"
+                                        <ToggleButton x:Name="DashboardButton" Style="{StaticResource TabButton}"
                                                 Margin="40,0,0,0" >
                                             <TextBlock Text="Dashboard" />
                                         </ToggleButton>
-                                        <ToggleButton x:Name="DevicesButton" Style="{StaticResource WindowTabButtonStyle}"
+                                        <ToggleButton x:Name="DevicesButton" Style="{StaticResource TabButton}"
                                                 Margin="24,0,0,0">
                                             <TextBlock Text="Devices" />
                                         </ToggleButton>
-                                        <ToggleButton x:Name="BenchmarkButton" Style="{StaticResource WindowTabButtonStyle}"
+                                        <ToggleButton x:Name="BenchmarkButton" Style="{StaticResource TabButton}"
                                                 Margin="24,0,0,0">
                                             <TextBlock Text="Benchmark" />
                                         </ToggleButton>
-                                        <ToggleButton x:Name="PluginsButton" Style="{StaticResource WindowTabButtonStyle}"
+                                        <ToggleButton x:Name="PluginsButton" Style="{StaticResource TabButton}"
                                                 Margin="24,0,0,0">
                                             <TextBlock Text="Plugins" />
                                         </ToggleButton>
@@ -229,12 +168,12 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <ToggleButton x:Name="SettingsButton" Style="{StaticResource WindowTabButtonStyle2}"
+                                    <ToggleButton x:Name="SettingsButton" Style="{StaticResource local.WindowTabButtonStyle2}"
                                             fa:Awesome.Content="Gear" 
                                             TextElement.FontSize="20"
                                             Grid.Column="0"
                                             Margin="0,0,20,0"/>
-                                    <ToggleButton x:Name="HelpButton" Style="{StaticResource WindowTabButtonStyle2}"
+                                    <ToggleButton x:Name="HelpButton" Style="{StaticResource local.WindowTabButtonStyle2}"
                                             fa:Awesome.Content="QuestionCircle" 
                                             TextElement.FontSize="20"
                                             Grid.Column="1"

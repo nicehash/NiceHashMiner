@@ -60,6 +60,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
         {
             var tb = e.Source as ToggleButton;
             if (EnableDisableCheckBox == tb) return; // don't trigger algo dropdown if we click disable button
+            if (ToggleButtonActions == tb) return; // don't trigger algo dropdown if we click disable button
             if (tb.IsChecked.Value)
             {
                 Expand();
@@ -70,9 +71,21 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             }
         }
 
+        private readonly HashSet<ToggleButton> _toggleButtonsGuard = new HashSet<ToggleButton>();
         private void Action_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
+            {
+                _toggleButtonsGuard.Add(tButton);
+                DeviceActionsButtonContext.IsOpen = true;
+                RoutedEventHandler closedHandler = null;
+                closedHandler += (s, e2) => {
+                    _toggleButtonsGuard.Remove(tButton);
+                    tButton.IsChecked = false;
+                    DeviceActionsButtonContext.Closed -= closedHandler;
+                };
+                DeviceActionsButtonContext.Closed += closedHandler;
+            }
         }
 
         #region Algorithm sorting
@@ -106,5 +119,11 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             _deviceData?.OrderAlgorithmsByEnabled();
         }
         #endregion Algorithm sorting
+
+        private void Button_Click_ClearAllSpeeds(object sender, RoutedEventArgs e)
+        {
+            DeviceActionsButtonContext.IsOpen = false;
+            _deviceData.ClearAllSpeeds();
+        }
     }
 }

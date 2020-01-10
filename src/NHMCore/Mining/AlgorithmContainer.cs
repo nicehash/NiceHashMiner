@@ -57,7 +57,22 @@ namespace NHMCore.Mining
             PluginContainer = pluginContainer;
             Algorithm = algorithm;
             ComputeDevice = computeDevice;
+
+            computeDevice.PropertyChanged += ComputeDevice_PropertyChanged;
+            OnPropertyChanged(nameof(IsUserEditable));
         }
+
+        private void ComputeDevice_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (nameof(NHMCore.Mining.ComputeDevice.State) == e.PropertyName)
+            {
+                var miningOrBenchmarking = ComputeDevice.State == DeviceState.Benchmarking || ComputeDevice.State == DeviceState.Mining;
+                IsUserEditable = !miningOrBenchmarking;
+                OnPropertyChanged(nameof(IsUserEditable));
+            }
+        }
+
+        public bool IsUserEditable { get; private set; } = true;
 
         /// <summary>
         /// Used for converting SMA values to BTC/H/Day

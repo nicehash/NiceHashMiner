@@ -457,16 +457,16 @@ namespace NHM.Wpf.ViewModels
             await ApplicationStateManager.StartAllAvailableDevicesTask();
 
 
-            //test delete after
-            NotificationsManager.Instance.AddNotificationToList(new Notification("start mining", "device started mining"));
+            ////test delete after
+            //NotificationsManager.Instance.AddNotificationToList(new Notification("start mining", "device started mining"));
         }
 
         public async Task StopMining()
         {
             await ApplicationStateManager.StopAllDevicesTask();
 
-            //test delete after
-            NotificationsManager.Instance.AddNotificationToList(new Notification("stop mining", "device stopped mining"));
+            ////test delete after
+            //NotificationsManager.Instance.AddNotificationToList(new Notification("stop mining", "device stopped mining"));
         }
     }
 }

@@ -37,6 +37,7 @@
 
         <converters:TranslatingConverter x:Key="TrConv" />
         <converters:StatusColorConverter x:Key="StatusConv" />
+        <local:DeviceStatusVisibilityConverter x:Key="DeviceStatusVisibilityConverter" />
         
         
         <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
@@ -160,9 +161,28 @@
                                       Margin="0,0,16,0" />
                         <!--TODO add context menu and all that-->
                         <ToggleButton Style="{StaticResource MenuDropdownButton}"
-                                          IsEnabled="False"
-                                          Click="Action_Button_Click"
-                                          Margin="0,0,16,0" />
+                                      x:Name="ToggleButtonActions"
+                                      Click="Action_Button_Click"
+                                      Margin="0,0,16,0" >
+                            <ToggleButton.ContextMenu>
+                                <ContextMenu x:Name="DeviceActionsButtonContext">
+                                    <ContextMenu.Template>
+                                        <ControlTemplate>
+                                            <Grid >
+                                                <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
+                                                    <Border.Effect>
+                                                        <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
+                                                    </Border.Effect>
+                                                </Border>
+                                                <StackPanel>
+                                                    <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="Clear all speeds" Click="Button_Click_ClearAllSpeeds" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </ContextMenu.Template>
+                                </ContextMenu>
+                            </ToggleButton.ContextMenu>
+                        </ToggleButton>
 
                         <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
                     </StackPanel>
@@ -186,7 +206,7 @@
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="BTC / 24H" Click="SortPayingButtonClick" />
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="STATUS" Click="SortStatusButtonClick" />
                 <!--MAX WITH HERE DEFINES THE GRID-->
-                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="100">
+                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="100" Visibility="{Binding Dev.State, Converter={StaticResource DeviceStatusVisibilityConverter}}">
                     <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SELECT ALL" Click="SortEnabledButtonClick" />
                     <CheckBox Style="{StaticResource NHMSwitch}"
                               IsChecked="{Binding AllAgorithmsEnabled, Mode=TwoWay}"

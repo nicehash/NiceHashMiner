@@ -16,67 +16,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="{x:Type ToggleButton}" x:Key="TabButton">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ButtonBase}">
-                        <Border
-                            x:Name="Chrome"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Margin="0"
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="True">
-                            <ContentPresenter
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Content="{TemplateBinding Content}"
-                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                Margin="{TemplateBinding Padding}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-                </Trigger>
-            </Style.Triggers>
-            <Style.Resources>
-                <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
-                    <Setter Property="FontSize" Value="14" />
-                    <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
-                    <Setter Property="LineHeight" Value="1.57" />
-                    <Setter Property="TextAlignment" Value="Center" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}" Value="True">
-                            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}"  Value="True">
-                            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-                            <Setter Property="TextDecorations">
-                                <Setter.Value>
-                                    <TextDecorationCollection>
-                                        <TextDecoration Location="Underline" PenOffset="4">
-                                            <TextDecoration.Pen>
-                                                <Pen Thickness="2" Brush="{StaticResource PrimaryColorBrush}"></Pen>
-                                            </TextDecoration.Pen>
-                                        </TextDecoration>
-                                    </TextDecorationCollection>
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Style.Resources>
-        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -98,7 +37,7 @@
                     </ToggleButton>
                 </StackPanel>
             </StackPanel>
-            <Border Grid.Row="1" BorderBrush="#eeeeee" BorderThickness="1" Margin="40,10,40,0">
+            <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" Margin="40,10,40,0">
                 <TabControl x:Name="MainTabs" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Panel.ZIndex="0">
                     <TabItem Header="General" Name="GeneralTab">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >

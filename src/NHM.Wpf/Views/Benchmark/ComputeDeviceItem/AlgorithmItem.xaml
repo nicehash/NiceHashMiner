@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <local:AlgorithmItemStatusStyleConverter x:Key="AlgorithmItemStatusStyleConverter" />
         <local:AlgorithmItemSpeedsConverter x:Key="AlgorithmItemSpeedsConverter" />
+        <local:AlgorithmItemStatusVisibilityConverter x:Key="AlgorithmItemStatusVisibilityConverter" />
 
 
         <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxCol">
@@ -23,6 +24,7 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.5" />
@@ -197,14 +199,20 @@
                        MaxWidth="120"
                        />
             <StackPanel Grid.Row="0" Grid.Column="5"
-                        HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                        HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" x:Name="SettingsPanel"
+                        Visibility="{Binding IsUserEditable, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}">
                 <CheckBox Style="{StaticResource NHMSwitch}"
                           IsChecked="{Binding Enabled, Mode=TwoWay}"
+                          Click="EnableChanged"
+                          x:Name="SettingsPanelCheckBox"
+                          Visibility="{Binding IsUserEditable, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}"
                           Margin="0,0,16,0" />
                 <!--TODO add context menu and all that-->
                 <Button Style="{DynamicResource local.SettingsButton}"
                         IsEnabled="True"
                         DataContext="{Binding .}"
+                        x:Name="SettingsPanelButtonSettings"
+                        Visibility="{Binding IsUserEditable, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}"
                         Click="AlgorithmSettings_Button_Click" >
                     <Button.ContextMenu>
                         <ContextMenu x:Name="AlgorithmSettingsContextMenu" Closed="AlgorithmSettingsContextMenu_Closed">

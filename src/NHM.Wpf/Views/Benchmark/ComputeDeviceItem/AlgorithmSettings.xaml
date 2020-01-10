@@ -113,7 +113,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Style="{StaticResource settingTitle}" Text="Schedule for benchmarking"  HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="0" Style="{StaticResource settingTitle}" Text="Schedule for re-benchmarking"  HorizontalAlignment="Left"/>
                     <CheckBox Grid.Column="1" x:Name="ReBenchSwitch" Style="{StaticResource NHMSwitch}" Margin="4,0,0,0" HorizontalAlignment="Right" IsChecked="{Binding IsReBenchmark}" />
                 </Grid>
                 <TextBlock Style="{StaticResource settingDetail}" Text="{StaticResource scheduleBenchmarking}" TextWrapping="Wrap"/>

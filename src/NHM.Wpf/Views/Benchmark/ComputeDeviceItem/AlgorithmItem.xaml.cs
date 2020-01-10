@@ -1,4 +1,5 @@
-﻿using NHMCore.Configs;
+﻿using NHM.Common.Enums;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,11 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
         }
 
         private void AlgorithmSettingsContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            ConfigManager.CommitBenchmarksForDevice(_algorithmContainer.ComputeDevice);
+        }
+
+        private void EnableChanged(object sender, RoutedEventArgs e)
         {
             ConfigManager.CommitBenchmarksForDevice(_algorithmContainer.ComputeDevice);
         }

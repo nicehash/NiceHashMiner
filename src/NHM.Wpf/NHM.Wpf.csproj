@@ -105,12 +105,14 @@
     <Compile Include="Validators\BtcWorkerValidator.cs" />
     <Compile Include="Validators\ValidatorBase.cs" />
     <Compile Include="Views\Benchmark\BenchmarkTypeToStringConverter.cs" />
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemStatusVisibilityConverter.cs" />
     <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml.cs">
       <DependentUpon>AlgorithmSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItemHeader.xaml.cs">
       <DependentUpon>ComputeDeviceItemHeader.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceStatusVisibilityConverter.cs" />
     <Compile Include="Views\EulaWindowSecondShort.xaml.cs">
       <DependentUpon>EulaWindowSecondShort.xaml</DependentUpon>
     </Compile>
@@ -274,6 +276,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Controls\Switches.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Controls\TabButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

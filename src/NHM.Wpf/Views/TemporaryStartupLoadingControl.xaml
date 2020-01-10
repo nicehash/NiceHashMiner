@@ -39,7 +39,7 @@
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PrimaryProgress.ProgressString}" Style="{StaticResource ProgressTextBlock}" HorizontalAlignment="Right"/>
 
             <!--<TextBlock Text="{Binding PrimaryTitle}" HorizontalAlignment="Center" />-->
-            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyleNHMInit}" Value="{Binding PrimaryProgress.Progress}" Height="30" />
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyleNHMInit}" Margin="0,8,0,0" Value="{Binding PrimaryProgress.Progress}" Height="30" />
         </Grid>
         <!--Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolToVis}}"-->
         <Grid Margin="40,28,40,0" Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolToVis}}">
@@ -55,8 +55,8 @@
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SecondaryProgress.ProgressString}" Style="{StaticResource ProgressTextBlock}" HorizontalAlignment="Right"/>
 
             <!--<TextBlock Text="{Binding SecondaryTitle}" HorizontalAlignment="Center" />-->
-            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyleNHMInit}" Value="{Binding SecondaryProgress.Progress}" Height="30" />
+            <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyleNHMInit}" Margin="0,8,0,0" Value="{Binding SecondaryProgress.Progress}" Height="30" />
         </Grid>
-        <TextBlock Margin="40,28,40,0" Grid.Column="0" Text="Sit tight, NiceHash Miner will start soon…" Style="{StaticResource MainInfoTextBlock}" />
+        <TextBlock Margin="40,32,40,0" Grid.Column="0" Text="Sit tight, NiceHash Miner will start soon…" Style="{StaticResource MainInfoTextBlock}" />
     </StackPanel>
 </UserControl>

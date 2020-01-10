@@ -228,6 +228,15 @@ namespace NHM.Wpf.ViewModels.Models
                     break;
             }
         }
+
+        public void ClearAllSpeeds()
+        {
+            foreach (var a in Dev.AlgorithmSettings)
+            {
+                a.ClearSpeeds();
+            }
+        }
+
         #region AlgorithmSettingsCollection SORTING
         private enum SortColumn
         {

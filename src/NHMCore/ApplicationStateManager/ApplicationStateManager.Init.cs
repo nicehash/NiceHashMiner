@@ -217,7 +217,7 @@ namespace NHMCore
                     AvailableNotifications.CreateMissingMinersInfo();
                 }
                 // fire up mining manager loop
-                MiningManager.StartLoops(ExitApplication.Token);
+                MiningManager.StartLoops(ExitApplication.Token, GetUsername());
 
                 // STEP
                 // VC_REDIST check
