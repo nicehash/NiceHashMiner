@@ -105,6 +105,7 @@
     <Compile Include="Validators\BtcWorkerValidator.cs" />
     <Compile Include="Validators\ValidatorBase.cs" />
     <Compile Include="Views\Benchmark\BenchmarkTypeToStringConverter.cs" />
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemStatusTextConverter.cs" />
     <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml.cs">
       <DependentUpon>AlgorithmSettings.xaml</DependentUpon>
     </Compile>
