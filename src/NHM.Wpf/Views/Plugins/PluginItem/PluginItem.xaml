@@ -58,8 +58,8 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
-        
+
+
         <Style TargetType="local:PluginIcon" x:Key="local.PluginIconStyle">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
@@ -144,7 +144,7 @@
                 </Style>
             </Border.Style>
         </Border>
-        <Grid Background="Transparent">
+        <Grid Background="Transparent" x:Name="mainPluginGrid">
             <Grid.RowDefinitions>
                 <RowDefinition  Height="Auto"/>
                 <RowDefinition  Height="Auto"/>
