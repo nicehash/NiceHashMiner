@@ -149,6 +149,7 @@
     <Compile Include="Mining\MiningStats\MinerMiningStats.cs" />
     <Compile Include="Mining\Plugins\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Mining\Plugins\MinerPluginInstallTask.cs" />
+    <Compile Include="Mining\Plugins\MinerPluginsUpdaterSettings.cs" />
     <Compile Include="Mining\Plugins\PluginInstallProgressState.cs" />
     <Compile Include="Mining\Plugins\PluginInstallRemoveState.cs" />
     <Compile Include="Mining\Plugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />

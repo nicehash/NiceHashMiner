@@ -265,7 +265,7 @@ namespace NHMCore.Mining.Plugins
 
                 // TODO set this interval somwhere
                 // periodically update the plugin list
-                var getOnlineMinerPluginsElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromMinutes(30), false);
+                var getOnlineMinerPluginsElapsedTimeChecker = new ElapsedTimeChecker(MinerPluginsUpdaterSettings.CheckPluginsInterval, false);
 
 
                 // TODO for now every minute check
