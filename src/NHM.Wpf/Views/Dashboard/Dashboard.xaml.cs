@@ -1,6 +1,7 @@
 ﻿using NHM.Wpf.ViewModels;
 using NHMCore;
 using NHMCore.ApplicationState;
+using NHMCore.Configs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -107,6 +108,14 @@ namespace NHM.Wpf.Views.Dashboard
             else
             {
                 //errorProvider1.SetError(textBoxBTCAddress, "");
+            }
+        }
+
+        private void ButtonBTCWallet_Click(object sender, RoutedEventArgs e)
+        {
+            if (CredentialsSettings.Instance.BitcoinAddress != "")
+            {
+                BTCWalletContextMenu.IsOpen = false;
             }
         }
     }

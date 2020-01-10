@@ -48,7 +48,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
 
             <Setter Property="BorderBrush" Value="#eeeeee" />
-            
+
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.5"/>
@@ -152,7 +152,6 @@
                                         <Grid Background="{DynamicResource BackgroundColor}">
                                             <Border CornerRadius="4" BorderThickness="1" BorderBrush="{DynamicResource BorderColor}"/>
                                             <WrapPanel Margin="24,0,24,16" Orientation="Vertical" >
-                                                <Label Content="Wallet" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                                                 <StackPanel Orientation="Horizontal" ToolTip="{StaticResource walletAddress}">
                                                     <Label Content="Wallet Address" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                                                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
@@ -161,14 +160,16 @@
                                                              x:Name="textBoxBTCAddress"
                                                              Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
                                                              TextChanged="TextBoxBitcoinAddress_TextChanged" />
-                                                <TextBlock Margin="0,8,0,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Margin="0,8,0,0">
                                                         <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                                                             How to create a Wallet Address?
                                                         </Hyperlink>
-                                                </TextBlock>
+                                                    </TextBlock>
+                                                    <Button Content="Save" Style="{StaticResource OKButton}" Height="20" Width="100" Margin="40,7,0,0" Click="ButtonBTCWallet_Click"/>
+                                                </StackPanel>
                                             </WrapPanel>
                                         </Grid>
-
                                     </ControlTemplate>
                                 </ContextMenu.Template>
                             </ContextMenu>
