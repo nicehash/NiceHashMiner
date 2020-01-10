@@ -16,6 +16,35 @@
         <localConv:PluginItemButtonStyleConverter x:Key="PluginItemButtonStyleConverter" />
         <localConv:PluginItemVisibilityConverter x:Key="PluginItemVisibilityConverter" />
 
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxBase">
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxPluginName" BasedOn="{StaticResource local.TextBoxBase}">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="LineHeight" Value="1.57" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxPluginInfo" BasedOn="{StaticResource local.TextBoxBase}">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular }" />
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush }" />
+        </Style>
+
         <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter Property="LineHeight" Value="1.5" />
             <Setter Property="FontSize" Value="12" />
@@ -29,7 +58,9 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="local:PluginIcon" x:Key="PluginIconStyle">
+        
+        
+        <Style TargetType="local:PluginIcon" x:Key="local.PluginIconStyle">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.5" />
@@ -37,7 +68,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
+        <Style TargetType="{x:Type ToggleButton}" x:Key="local.TextBoxToggleButton">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
@@ -61,7 +92,8 @@
                 </Setter.Value>
             </Setter>
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}"/>
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
             <Style.Triggers>
@@ -71,20 +103,28 @@
             </Style.Triggers>
             <Style.Resources>
                 <Style TargetType="{x:Type TextBlock}">
-                    <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}"/>
                     <Setter Property="FontSize" Value="14" />
                     <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-                    <Setter Property="LineHeight" Value="1.57" />
+                    <Setter Property="LineHeight" Value="1.5" />
                     <Setter Property="TextAlignment" Value="Right" />
                 </Style>
             </Style.Resources>
         </Style>
-        <Style x:Key="ButtonStyleWOW" BasedOn="{StaticResource BigButtonPrimary}" TargetType="{x:Type Button}">
-            <Setter Property="FontSize" Value="12"/>
-        </Style>
 
         <Style TargetType="{x:Type ButtonBase}" x:Key="local.PluginContextMenuButton" BasedOn="{StaticResource ContextMenuButton}">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="{x:Type ButtonBase}" x:Key="local.PluginContextMenuButtonRed" BasedOn="{StaticResource ContextMenuButton}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!--<Setter Property="Opacity" Value="0.5"/>-->
+                    <Setter Property="Background" Value="{StaticResource RedDangerColorBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource BackgroundColor}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <Grid Background="Transparent" Width="Auto" Height="Auto" >
@@ -119,37 +159,32 @@
 
                 <local:PluginIcon Grid.Column="0"
                                   IsEnabled="{Binding Plugin.Supported}"
-                                  Style="{StaticResource PluginIconStyle}"
+                                  Style="{StaticResource local.PluginIconStyle}"
                                   Margin="16,9" />
 
                 <UniformGrid Grid.Column="1" Columns="4">
                     <TextBlock
                         IsEnabled="{Binding Plugin.Supported}"
-                        Style="{StaticResource TextBoxCol}"
-                        FontWeight="Bold"
-                        Foreground="{DynamicResource TextColorBrush}"
+                        Style="{StaticResource local.TextBoxPluginName}"
                         Text="{ Binding Plugin.PluginName }"
-                        TextWrapping="Wrap"
                         HorizontalAlignment="Left"
                         />
 
                     <TextBlock
                         IsEnabled="{Binding Plugin.Supported}"
-                        Style="{StaticResource TextBoxCol}"
+                        Style="{StaticResource local.TextBoxPluginInfo}"
                         Margin="4,0,0,0"
-                        TextWrapping="Wrap"
                         Text="{ Binding Plugin.PluginAuthor }"/>
 
                     <TextBlock Grid.Column="2"
                            IsEnabled="{Binding Plugin.Supported}"
-                           Style="{StaticResource TextBoxCol}"
+                           Style="{StaticResource local.TextBoxPluginInfo}"
                            Margin="4,0,0,0"
-                           TextWrapping="Wrap"
                            Text="{Binding InstallVersionStatus}"/>
                     
                     <ToggleButton Grid.Column="3"
                               x:Name="DetailsToggleButton"
-                              Style="{StaticResource TextBoxToggleButton}"
+                              Style="{StaticResource local.TextBoxToggleButton}"
                               Margin="4,0,0,0"
                               Click="ToggleDetailsButton_Click"
                               HorizontalAlignment="Left"
@@ -193,8 +228,8 @@
                                                     </Border.Effect>
                                                 </Border>
                                                 <StackPanel>
-                                                    <Button Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButton}" Content="Uninstall" Click="Button_Click_Uninstall" />
                                                     <Button Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButton}" Content="Show Internals" Click="Button_Click_ShowInternals" />
+                                                    <Separator Background="{DynamicResource BorderColor}"/>
                                                     <!--TODO hook logic here-->
                                                     <ToggleButton Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButton}">
                                                         <StackPanel Orientation="Horizontal">
@@ -202,6 +237,8 @@
                                                             <CheckBox Style="{StaticResource NHMSwitch}" Margin="4,0,0,0"/>
                                                         </StackPanel>
                                                     </ToggleButton>
+                                                    <Separator Background="{DynamicResource BorderColor}"/>
+                                                    <Button Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButtonRed}" Content="Uninstall" Click="Button_Click_Uninstall" />
                                                 </StackPanel>
                                             </Grid>
                                         </ControlTemplate>

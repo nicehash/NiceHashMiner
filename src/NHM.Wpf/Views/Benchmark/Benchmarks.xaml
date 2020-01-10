@@ -36,9 +36,9 @@
                                             </Border>
                                             <StackPanel>
                                                 <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding BenchmarkSettings.Standard, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetStandard"/>
-                                                <Separator/>
+                                                <Separator Background="{DynamicResource BorderColor}"/>
                                                 <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding BenchmarkSettings.Quick, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetQuick"/>
-                                                <Separator/>
+                                                <Separator Background="{DynamicResource BorderColor}"/>
                                                 <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding BenchmarkSettings.Precise, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetPrecise"/>
                                             </StackPanel>
                                         </Grid>

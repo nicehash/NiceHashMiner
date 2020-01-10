@@ -15,10 +15,10 @@ namespace NHM.Wpf.Views.Plugins.PluginItem.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var style = Application.Current.FindResource("BigButtonPrimary");
+            var style = Application.Current.FindResource("ButtonPluginInstall");
             if (value is bool installed && installed)
             {
-                return Application.Current.FindResource("BigButtonWhite");
+                return Application.Current.FindResource("ButtonPluginRemove");
             }
             return style;
         }

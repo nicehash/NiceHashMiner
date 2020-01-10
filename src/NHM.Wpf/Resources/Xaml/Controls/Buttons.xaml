@@ -30,7 +30,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily }"/>
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold }"/>
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="FontStretch" Value="Normal" />
@@ -40,6 +40,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
+                <!--<Setter Property="BorderBrush" Value="{DynamicResource PrimaryColorBrush}" />-->
                 <Setter Property="Opacity" Value="0.5"/>
             </Trigger>
         </Style.Triggers>
@@ -62,13 +63,21 @@
     </Style>
 
     <Style x:Key="BigButtonWhite" TargetType="Button" BasedOn="{StaticResource BigButton}">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Medium }"/>
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontStretch" Value="Normal" />
+        <Setter Property="FontStyle" Value="Normal" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="BitmapEffect" >
             <Setter.Value>
                 <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
             </Setter.Value>
         </Setter>
-        <Setter Property="Background" Value="{StaticResource Brushes.FontColor.White}" />
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
         <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BitmapEffect" >
@@ -93,6 +102,16 @@
         <Setter Property="Height" Value="40"/>
     </Style>
     <!--#endregion common-->
+
+    <Style TargetType="{x:Type Button}" x:Key="ButtonPluginInstall" BasedOn="{StaticResource BigButtonPrimary}">
+        <Setter Property="FontSize" Value="10" />
+    </Style>
+
+    <Style TargetType="{x:Type Button}" x:Key="ButtonPluginRemove" BasedOn="{StaticResource BigButtonWhite}">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
 
     <!--#region settingsSwitch-->
     <Style TargetType="{x:Type Button}" x:Key="SwitchButton">
