@@ -97,6 +97,7 @@ namespace NHM.Wpf.Views.Dashboard
             var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
             if (ApplicationStateManager.SetResult.INVALID == result)
             {
+                textBoxBTCAddress.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFromString("Red");
                 //errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
             }
             else if (ApplicationStateManager.SetResult.CHANGED == result)
