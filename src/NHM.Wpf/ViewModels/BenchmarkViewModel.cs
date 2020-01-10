@@ -23,7 +23,7 @@ namespace NHM.Wpf.ViewModels
 
         public int BenchmarksPending => BenchmarkManagerState.Instance.BenchmarksPending;
 
-        public string BenchmarksPendingStr => Translations.Tr("Pending Benchmarks {0}", BenchmarkManagerState.Instance.BenchmarksPending);
+        public string BenchmarksPendingStr => Translations.Tr("Pending Benchmarks: {0}", BenchmarkManagerState.Instance.BenchmarksPending);
 
         public bool HasBenchmarkWork => BenchmarkManagerState.Instance.HasBenchmarkWork;
         public bool CanStartBenchmaring => BenchmarkManagerState.Instance.HasBenchmarkWork;
