@@ -8,18 +8,21 @@ namespace NHMCore.Utils
 // TESTNET
         public const string VisitUrl_TESTNET = "https://test.nicehash.com";
         public const string CheckStats_TESTNET = "https://test.nicehash.com/mining/stats";
+        public const string CheckStatsRig_TESTNET = "https://test.nicehash.com/my/mining/rigs/{RIG_ID}";
         public const string Register_TESTNET = "NO_URL";
         //public const string Login_TESTNET = "NO_URL";
         public const string NhmPayingFaq_TESTNET = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid"; // ADD TESTNET
 // TESTNETDEV
         public const string VisitUrl_TESTNETDEV = "https://test-dev.nicehash.com";
         public const string CheckStats_TESTNETDEV = "https://test-dev.nicehash.com/mining/stats";
+        public const string CheckStatsRig_TESTNETDEV = "https://test-dev.nicehash.com/my/mining/rigs/{RIG_ID}";
         public const string Register_TESTNETDEV = "NO_URL";
         //public const string Login_TESTNETDEV = "NO_URL";
         public const string NhmPayingFaq_TESTNETDEV = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";  // ADD TESTNETDEV
 // PRODUCTION
         public const string VisitUrl_PRODUCTION = "https://nicehash.com";
         public const string CheckStats_PRODUCTION = "https://nicehash.com/my/mining/stats";
+        public const string CheckStatsRig_PRODUCTION = "https://www.nicehash.com/my/mining/rigs/{RIG_ID}";
         public const string Register_PRODUCTION = "https://nicehash.com/my/register";
         //public const string Login_PRODUCTION = "NO_URL";
         public const string NhmPayingFaq_PRODUCTION = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
@@ -45,6 +48,17 @@ namespace NHMCore.Utils
                 return CheckStats_PRODUCTION;
             }
         }
+        public static string CheckStatsRig
+        {
+            get
+            {
+                if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return CheckStatsRig_TESTNET;
+                if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return CheckStatsRig_TESTNETDEV;
+                //BuildTag.PRODUCTION
+                return CheckStatsRig_PRODUCTION;
+            }
+        }
+
         public static string Register
         {
             get
