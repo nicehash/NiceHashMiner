@@ -139,7 +139,31 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
 
-            
+            <Style TargetType="TextBlock" x:Key="CheckIcon" >
+                <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontStyle" Value="Normal" />
+                <Setter Property="FontStretch" Value="Normal" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="Foreground" Value="{StaticResource SuccessBgColorBrush}" />
+                <Setter Property="Text" Value="&#xf00c;" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="AlertIcon" >
+                <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontStyle" Value="Normal" />
+                <Setter Property="FontStretch" Value="Normal" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
+                <Setter Property="Text" Value="&#xf071;" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
