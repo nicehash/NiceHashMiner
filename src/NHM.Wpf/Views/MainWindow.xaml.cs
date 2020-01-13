@@ -25,6 +25,7 @@ namespace NHM.Wpf.Views
             InitializeComponent();
 
             _vm = this.AssertViewModel<MainVM>();
+            Title = ApplicationStateManager.Title;
 
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             LoadingBar.Visibility = Visibility.Visible;
