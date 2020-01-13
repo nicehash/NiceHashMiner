@@ -11,7 +11,7 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <Grid Background="{DynamicResource BackgroundColor}" Width="Auto" Height="Auto">
-        <Border Margin="40,10,40,40" BorderBrush="#eeeeee" BorderThickness="1">
+        <Border Margin="40,10,40,40" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -33,11 +33,11 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Label Content="Notifications" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="6,0,0,0">
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="6,0,0,0">
                         <ItemsControl x:Name="ic_NotificationsList" ItemsSource="{Binding HelpNotificationList}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <local:HelpItem DataContext="{Binding .}" Margin="0,16,0,0"></local:HelpItem>
+                                    <local:HelpItem DataContext="{Binding .}" Margin="0,16,0,0"  />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>

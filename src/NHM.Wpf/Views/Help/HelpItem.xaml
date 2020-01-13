@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=nhmMining:Notification}">
-    <Border BorderBrush="#eeeeee" BorderThickness="2" Margin="0,0,10,0">
+    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" Margin="6" Padding="12">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -21,7 +21,7 @@
             </WrapPanel>
             <WrapPanel Grid.Row="1">
                 <TextBlock Text="Content: " Style="{StaticResource FontsTypography.SmallRegularTextBlock}" />
-                <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="Wrap" Grid.Row="1" Style="{StaticResource FontsTypography.SmallRegularTextBlock}"/>
+                <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Grid.Row="1" Style="{StaticResource FontsTypography.SmallRegularTextBlock}"/>
             </WrapPanel>
             <StackPanel Grid.Row="2" Height="64" VerticalAlignment="Bottom" Background="Transparent" Margin="0,10,40,0" Orientation="Horizontal">
                 <Button
