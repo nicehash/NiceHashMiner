@@ -14,7 +14,7 @@
         <ResourceDictionary Source="InvisibleToggleButton.xaml"/>
          <ResourceDictionary Source="ToolTip.xaml"/> 
          <ResourceDictionary Source="TabButton.xaml"/> 
-        <!-- <ResourceDictionary Source="ScrollBar.xaml"/> -->
+         <ResourceDictionary Source="ScrollBar.xaml"/> 
         <!--<ResourceDictionary Source="Next.xaml"/>-->
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
