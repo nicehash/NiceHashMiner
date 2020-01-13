@@ -83,22 +83,21 @@
     </UserControl.Resources>
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" MinWidth="320" Height="Auto" Margin="40,0,40,0">
-            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" HorizontalContentAlignment="Stretch" >
+        <Grid Grid.Row="0" MinWidth="320" Height="Auto" Margin="40,0,40,0" VerticalAlignment="Center">
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
                 <Grid Background="Transparent" HorizontalAlignment="Stretch" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ComputeDeviceItemHeader}}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal">
-                        <WrapPanel  HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
-                            <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding Label}" Margin="16,0,0,0"/>
-                        </WrapPanel>
+                        <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding Label}" Margin="16,0,0,0"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
+                    <WrapPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
                         <TextBlock Style="{DynamicResource TextBoxCol}" Text="ENABLED" Margin="0,0,54,0"/>
                         <TextBlock Style="{DynamicResource TextBoxCol}" Text="BENCHED" Margin="0,0,54,0"/>
                         <CheckBox     Visibility="Hidden"
@@ -111,9 +110,8 @@
                                         Style="{StaticResource MenuDropdownButton}"
                                           IsEnabled="False"
                                           Margin="0,0,16,0" />
-
-                        <ToggleButton Visibility="Hidden" x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Margin="0,0,16,0" />
-                    </StackPanel>
+                    </WrapPanel>
+                    <ToggleButton Grid.Column="2" Visibility="Hidden" x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Margin="0,0,16,0" />
                 </Grid>
             </ToggleButton>
         </Grid>

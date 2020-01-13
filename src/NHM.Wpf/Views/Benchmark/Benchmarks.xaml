@@ -13,7 +13,7 @@
         <local:BenchmarkTypeToStringConverter x:Key="BenchmarkTypeToStringConverter" />
         
     </UserControl.Resources>
-    <Grid>
+    <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -71,7 +71,7 @@
                 </Button>
             </WrapPanel>
         </Grid>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
             <StackPanel>
                 <localComputeDeviceItem:ComputeDeviceItemHeader Label="CPU" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
                 <ItemsControl ItemsSource="{Binding CPUs}">
@@ -91,7 +91,7 @@
                 </ItemsControl>
             </StackPanel>
         </ScrollViewer>
-        <Grid Grid.Row="2" Height="88" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent">
+        <Grid Grid.Row="2" MinHeight="88" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -108,6 +108,7 @@
                 Style="{StaticResource BaseUbuntuTextBlockBold}"
                 FontSize="14"
                 Foreground="{StaticResource NastyGreenBrush}"
+                TextWrapping="Wrap"
                 Text="{Binding BenchmarkSettings.BenchmarksPendingStr}"
                 />
 

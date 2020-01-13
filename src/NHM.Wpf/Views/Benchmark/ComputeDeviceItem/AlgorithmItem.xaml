@@ -25,7 +25,7 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
-            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+            <Setter Property="TextWrapping" Value="Wrap" />
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.5" />
@@ -146,7 +146,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid MinHeight="40" MinWidth="220">
+    <Grid MinHeight="50" MinWidth="220">
         <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
@@ -177,7 +177,6 @@
             <TextBlock Grid.Row="0" Grid.Column="0"
                        Style="{DynamicResource local.TextBoxCol}"
                        Text="{Binding AlgorithmName}"
-                       MaxWidth="120"
                        HorizontalAlignment="Left"
                        />
             <TextBlock Grid.Row="0" Grid.Column="1"
@@ -187,7 +186,6 @@
             <TextBlock Grid.Row="0" Grid.Column="2"
                        Style="{DynamicResource local.TextBoxCol}"
                        Text="{Binding AnnotatedSpeeds, Converter={StaticResource AlgorithmItemSpeedsConverter}}"
-                       MaxWidth="100"
                        />
             <TextBlock Grid.Row="0" Grid.Column="3"
                        Style="{DynamicResource local.TextBoxCol}"
@@ -197,24 +195,25 @@
                        Style="{DynamicResource local.TextBoxCol}"
                        Foreground="{Binding Status, Converter={StaticResource AlgorithmItemStatusStyleConverter}}"
                        Text="{Binding Status, Converter={StaticResource AlgorithmItemStatusTextConverter}}"
-                       MaxWidth="120"
                        />
-            <StackPanel Grid.Row="0" Grid.Column="5"
-                        HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" x:Name="SettingsPanel"
-                        Visibility="{Binding IsUserEditable, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}">
+            <WrapPanel Grid.Row="0" Grid.Column="5"
+                       HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" x:Name="SettingsPanel"
+                       Visibility="{Binding IsUserEditable, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}"
+                       >
                 <CheckBox Style="{StaticResource NHMSwitch}"
                           IsChecked="{Binding Enabled, Mode=TwoWay}"
                           Click="EnableChanged"
                           x:Name="SettingsPanelCheckBox"
                           Visibility="{Binding IsUserEditable, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}"
-                          Margin="0,0,16,0" />
+                          Margin="0,0,8,0" />
                 <!--TODO add context menu and all that-->
                 <Button Style="{DynamicResource local.SettingsButton}"
                         IsEnabled="True"
                         DataContext="{Binding .}"
                         x:Name="SettingsPanelButtonSettings"
                         Visibility="{Binding IsUserEditable, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}"
-                        Click="AlgorithmSettings_Button_Click" >
+                        Click="AlgorithmSettings_Button_Click"
+                        Margin="8,0,0,0">
                     <Button.ContextMenu>
                         <ContextMenu x:Name="AlgorithmSettingsContextMenu" Closed="AlgorithmSettingsContextMenu_Closed">
                             <ContextMenu.Template>
@@ -225,7 +224,7 @@
                         </ContextMenu>
                     </Button.ContextMenu>
                 </Button>
-            </StackPanel>
+            </WrapPanel>
         </UniformGrid>
         
     </Grid>
