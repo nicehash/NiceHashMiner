@@ -76,6 +76,7 @@
     </ApplicationDefinition>
     <Compile Include="AppRuntimeSettings.cs" />
     <Compile Include="Converters\LoadValueToText.cs" />
+    <Compile Include="Converters\NulBoolToVisibilityConverterFalse.cs" />
     <Compile Include="Converters\StatusColorConverter.cs" />
     <Compile Include="Converters\TemperatureValueToText.cs" />
     <Compile Include="IThemeSetter.cs" />
