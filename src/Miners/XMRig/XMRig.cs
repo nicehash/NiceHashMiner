@@ -1,10 +1,12 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace XMRig
 {
-    public class XMRig : MinerBase
+    public class XMRig : MinerBase, IBeforeStartMining
     {
         // TODO DevFee 
         private double DevFee = 1.0;
@@ -159,5 +161,38 @@ namespace XMRig
             return CreateCommandLine(_username);
         }
 
+
+        private static HashSet<string> _deleteConfigs = new HashSet<string> { "config.json" };
+        private static bool IsDeleteConfigFile(string file)
+        {
+            foreach (var conf in _deleteConfigs)
+            {
+                if (file.Contains(conf)) return true;
+            }
+            return false;
+        }
+        void IBeforeStartMining.BeforeStartMining()
+        {
+            //if user wants to manually tweek with config file we let him do that - WARNING some functionalities might not work (benchmarking, api data)
+            if (_extraLaunchParameters.Contains("--config="))
+            {
+                return;
+            }
+            var binCwd = GetBinAndCwdPaths().Item2;
+            var txtFiles = Directory.GetFiles(binCwd, "*.json", SearchOption.AllDirectories)
+                .Where(file => IsDeleteConfigFile(file))
+                .ToArray();
+            foreach (var deleteFile in txtFiles)
+            {
+                try
+                {
+                    File.Delete(deleteFile);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(_logGroup, $"BeforeStartMining error while deleting file '{deleteFile}': {e.Message}");
+                }
+            }
+        }
     }
 }
