@@ -46,6 +46,7 @@ namespace NHM.UUID
             const string keyPath = hklm + @"\SOFTWARE\Microsoft\Cryptography";
             const string value = "MachineGuid";
 
+            // main deterministic
             try
             {
                 var readValue = Registry.GetValue(keyPath, value, new object());
@@ -55,6 +56,30 @@ namespace NHM.UUID
             {
                 Logger.Error("NHM.UUID", $"GetMachineGuid: {e.Message}");
             }
+            // fallback deterministic
+            try
+            {
+                //const string userKeyPath = @"Software\" + "";
+                const string valueFallback = "MachineGuidNhmGen";
+                var rkFallback = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true);
+                var fallbackUUIDValue = rkFallback.GetValue(valueFallback, null);
+                string genUUID = "";
+                if (fallbackUUIDValue == null)
+                {
+                    genUUID = System.Guid.NewGuid().ToString();
+                    rkFallback?.SetValue(valueFallback, genUUID);
+                }
+                else if (fallbackUUIDValue is string regUUID)
+                {
+                    genUUID = regUUID;
+                }
+                return genUUID;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("NHM.UUID", $"Fallback: {e.Message}");
+            }
+            // last resort fallback always different 
             // fallback
             Logger.Warn("NHM.UUID", $"GetMachineGuid FALLBACK");
             return System.Guid.NewGuid().ToString();
