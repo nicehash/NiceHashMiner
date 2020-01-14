@@ -1,4 +1,6 @@
 ﻿using NHMCore;
+using NHMCore.Configs;
+using NHMCore.Utils;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -53,6 +55,33 @@ namespace NHM.Wpf.Views.Settings
             {
                 textBoxWorkerName.BorderBrush = SystemColors.ControlDarkBrush;
                 //errorProvider1.SetError(textBoxWorkerName, "");
+            }
+        }
+
+        private void TextBoxBitcoinAddress_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
+            var btcOK = CredentialValidators.ValidateBitcoinAddress(trimmedBtcText);
+            if (btcOK)
+            {
+                textBoxBTCAddress.BorderBrush = SystemColors.ControlDarkBrush;
+            }
+            else
+            {
+                textBoxBTCAddress.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFromString("Red");
+            }
+        }
+
+        private void TextBoxBitcoinAddress_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (CredentialsSettings.Instance.IsBitcoinAddressValid)
+            {
+                textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
+                textBoxBTCAddress.BorderBrush = SystemColors.ControlDarkBrush;
+            }
+            else
+            {
+                textBoxBTCAddress.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFromString("Red");
             }
         }
     }
