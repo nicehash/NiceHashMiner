@@ -109,6 +109,8 @@ namespace NHM.Common.Enums
         RandomXmonero = 47,
         //[Obsolete("UNUSED Algorithm")]
         Eaglesong = 48,
+        //[Obsolete("UNUSED Algorithm")]
+        Cuckaroom = 49,
         #endregion // NiceHashAPI
     }
 
