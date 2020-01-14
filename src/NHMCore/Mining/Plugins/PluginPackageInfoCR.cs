@@ -40,9 +40,10 @@ namespace NHMCore.Mining.Plugins
             {
                 var ver = OnlineInfo?.PluginVersion ?? null;
                 var isNHPlugin = "info@nicehash.com" == OnlineInfo?.PluginAuthor;
-                // current supported major versions are 3-4 inclusive
+                // 5 brings new interfaces + Eaglesong, 6 new algo Cuckaroom
+                // current supported major versions are 5-6 inclusive (older not supported)
                 if (isNHPlugin && ver != null) {
-                    return ver.Major == 3 || ver.Major == 4 || ver.Major == 5;
+                    return ver.Major == 5 || ver.Major == 6;
                 }
                 // here we assume it is compatible so allow install
                 return true;
