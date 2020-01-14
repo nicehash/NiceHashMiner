@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:common="clr-namespace:NHM.Wpf.Views.Common"
              xmlns:local="clr-namespace:NHM.Wpf.Views.Devices"
+             xmlns:converters="clr-namespace:NHM.Wpf.Converters"
              xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -12,6 +13,9 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <UserControl.Resources>
+        <converters:NulBoolToBoolConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
+        
         <Style TargetType="TextBlock" x:Key="local.InfoIcon">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -145,9 +149,9 @@
                     <!--content-->
                     <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
                     <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="MY BTC WALLET" />
-                    <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
-                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="N/A" />
-                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Margin="2,6,0,0" Visibility="Visible" Text="BTC" />
+                    <WrapPanel Grid.Row="2" Margin="24,10,0,2" Orientation="Horizontal">
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
                     </WrapPanel>
                 </Grid>
             </Grid>
@@ -160,10 +164,10 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" >
-                <TextBlock Text="DISABLE / ENABLE ALL" Style="{StaticResource BaseUbuntuTextBlock}" FontWeight="Regular" FontSize="10" Foreground="{DynamicResource TextColorBrush}"/>
+                <TextBlock Text="ENABLE ALL" Style="{StaticResource BaseUbuntuTextBlock}" FontWeight="Regular" FontSize="10" Foreground="{DynamicResource TextColorBrush}"/>
                 <CheckBox Style="{StaticResource NHMSwitch}"
                           IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }"
-                          Margin="24,0,0,0"
+                          Margin="24,0,12,0"
                           Click="ToggleDisableEnableAllDevices"/>
             </StackPanel>
             

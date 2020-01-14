@@ -12,7 +12,7 @@
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
-    <Grid Background="Transparent" Width="Auto" Height="Auto">
+    <Grid Background="{DynamicResource BackgroundColor}" Width="Auto" Height="Auto">
 
         <Grid Margin="40,10,40,40">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">

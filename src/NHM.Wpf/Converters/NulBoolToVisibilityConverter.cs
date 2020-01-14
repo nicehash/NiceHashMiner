@@ -19,7 +19,8 @@ namespace NHM.Wpf.Converters
             var invert = parameter is string s && int.TryParse(s, out var i) && i > 0;
 
             // XOR will use the opposite answer if invert is true
-            return value == null ^ invert ? Visibility.Collapsed : Visibility.Visible;
+            var ret = value == null ^ invert ? Visibility.Collapsed : Visibility.Visible;
+            return ret;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

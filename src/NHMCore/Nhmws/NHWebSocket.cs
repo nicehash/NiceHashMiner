@@ -215,6 +215,10 @@ namespace NHMCore.Nhmws
                     NHLog.Info("NHWebSocket", "Exited Loop");
                 }
             }
+            catch (TaskCanceledException e)
+            {
+                NHLog.Debug("NHWebSocket", $"TaskCanceledException {e.Message}");
+            }
             finally
             {
                 NHLog.Info("NHWebSocket", "ENDING nhmws SESSION");

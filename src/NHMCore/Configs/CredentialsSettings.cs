@@ -27,6 +27,7 @@ namespace NHMCore.Configs
                 _stringProps.Set(nameof(BitcoinAddress), value);
                 IsBitcoinAddressValid = CredentialValidators.ValidateBitcoinAddress(BitcoinAddress);
                 OnPropertyChanged(nameof(IsCredentialValid));
+                OnPropertyChanged(nameof(IsBitcoinAddressValid));
             }
         }
         public string WorkerName
@@ -46,10 +47,15 @@ namespace NHMCore.Configs
             internal set => _stringProps.Set(nameof(RigGroup), value);
         }
 
+        public bool _isBitcoinAddressValid = false;
         public bool IsBitcoinAddressValid
         {
-            get => _boolProps.Get(nameof(IsBitcoinAddressValid));
-            private set => _boolProps.Set(nameof(IsBitcoinAddressValid), value);
+            get => _isBitcoinAddressValid;
+            private set
+            {
+                _isBitcoinAddressValid = value;
+                OnPropertyChanged(nameof(IsBitcoinAddressValid));
+            }
         }
 
         public bool IsWorkerNameValid

@@ -168,6 +168,9 @@
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NHMDialogWindow.xaml.cs">
+      <DependentUpon>NHMDialogWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Plugins\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\PluginItemButtonConverters.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
@@ -426,6 +429,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\NHMDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

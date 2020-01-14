@@ -17,10 +17,11 @@ namespace NHM.Wpf.Converters
         {
             // Explicit XAML parameters will come in as strings, here we say if it is a number > 0 
             // then we invert (show the opposite visibility)
-            var invert = parameter is string s && int.TryParse(s, out var i) && i > 0;
+            var b = (bool)value;
 
             // XOR will use the opposite answer if invert is true
-            return !(value == null ^ invert) ? Visibility.Collapsed : Visibility.Visible;
+            var ret = !b ? Visibility.Visible : Visibility.Collapsed;
+            return ret;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

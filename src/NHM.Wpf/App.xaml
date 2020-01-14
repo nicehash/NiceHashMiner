@@ -31,6 +31,7 @@
             <Style TargetType="views:ChooseLanguageWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:EulaWindowSecondShort" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
+            <Style TargetType="views:NHMDialogWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="{x:Type views:MainWindow}" BasedOn="{StaticResource NHMMainWindowStyle}"/>
 
             <!--#region base sytles-->

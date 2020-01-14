@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Dashboard"
              xmlns:common="clr-namespace:NHM.Wpf.Views.Common"
+             xmlns:converters="clr-namespace:NHM.Wpf.Converters"
              xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
@@ -12,6 +13,10 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <UserControl.Resources>
+        <converters:NulBoolToBoolConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
+
+
         <Style TargetType="Button" x:Key="CompleteCredentialsButton" >
             <Setter Property="Template">
                 <Setter.Value>
@@ -89,32 +94,37 @@
             <Setter Property= "LineHeight" Value="2"/>
             <Setter Property= "FontSize" Value="10"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
         <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCValueText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
             <Setter Property= "FontSize" Value="18"/>
             <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
         <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
             <Setter Property= "FontSize" Value="12"/>
             <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
         <Style TargetType="{x:Type TextBlock}" x:Key="StatsFiatEstimateText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
             <Setter Property= "FontSize" Value="12"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
         <!--#endregion Dashboard styles -->
     </UserControl.Resources>
-    <Grid Background="Transparent" Height="Auto" Width="Auto" Margin="40,0,40,0">
+    <Grid Background="{DynamicResource BackgroundColor}" Height="Auto" Width="Auto" Margin="40,0,40,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="128" />
+            <RowDefinition Height="308*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="128*" MaxHeight="150" MinHeight="128" />
             <RowDefinition Height="86" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Background="{DynamicResource BackgroundColor}">
+        <Grid Grid.Row="0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="4*" />
                 <RowDefinition Height="1*" />
@@ -136,8 +146,10 @@
                     Visibility="Visible"
                     />
             </StackPanel>
-            <!--Complete Credentials info-->
-            <StackPanel Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Stretch" Visibility="{Binding Dashboard.CompleteBTCVisibility }">
+        </Grid>
+        <!--Complete Credentials info-->
+        <Grid Grid.Row="1" Margin="0,0,0,16" Visibility="{Binding Dashboard.CompleteBTCVisibility }">
+            <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Stretch" Visibility="{Binding Dashboard.CompleteBTCVisibility }">
                 <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                     FontSize="12"
                     Foreground="{StaticResource Gray1ColorBrush}"
@@ -180,7 +192,8 @@
                 </WrapPanel>
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="1">
+        
+        <Grid Grid.Row="2">
             <!--shadow border-->
             <Border BorderBrush="Transparent" BorderThickness="0" Background="White">
                 <Border.Effect>
@@ -226,7 +239,7 @@
                         </StackPanel>
                     </Grid>
                     <GridSplitter Grid.Row="1" Grid.Column="4" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
-                    <StackPanel Grid.Row="1" Grid.Column="5" ToolTip="{StaticResource currentProfitability}" Background="{DynamicResource BackgroundColor}">
+                    <StackPanel Grid.Row="1" Grid.Column="5" Background="{DynamicResource BackgroundColor}" ToolTip="{StaticResource currentProfitability}" >
                         <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
                         <!--TODO Bindings here are temp-->
                         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
@@ -236,7 +249,7 @@
                         <TextBlock Style="{StaticResource StatsFiatEstimateText}" Margin="24,8,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
                     </StackPanel>
                     <GridSplitter Grid.Row="1" Grid.Column="6" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
-                    <StackPanel Grid.Row="1" Grid.Column="7" ToolTip="{StaticResource unpaidBalance}" Background="{DynamicResource BackgroundColor}">
+                    <StackPanel Grid.Row="1" Grid.Column="7" Background="{DynamicResource BackgroundColor}" ToolTip="{StaticResource unpaidBalance}" >
                         <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
                         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
                             <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
@@ -245,20 +258,17 @@
                         <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
                     </StackPanel>
                     <GridSplitter Grid.Row="1" Grid.Column="8" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
-                    <StackPanel Grid.Row="1" Grid.Column="9"  ToolTip="{Binding ExchangeTooltip}" Background="{DynamicResource BackgroundColor}">
+                    <StackPanel Grid.Row="1" Grid.Column="9" Background="{DynamicResource BackgroundColor}" ToolTip="{Binding ExchangeTooltip}" >
                         <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,0">N/A</TextBlock>
-                            <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="4,14,0,0" Visibility="Collapsed">BTC</TextBlock>
-                        </StackPanel>
-                        <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0" Visibility="Collapsed" >≈ $ 7527,32</TextBlock>
+                        <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,4" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
+                        <TextBlock Style="{StaticResource StatsBTCLabelText}" Margin="24,14,0,4" TextWrapping="Wrap" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
                     </StackPanel>
                     <GridSplitter Grid.Row="1" Grid.Column="10" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
                     <GridSplitter Grid.Row="2" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
                 </Grid>
             </Border>
         </Grid>
-        <Grid Grid.Row="2" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
+        <Grid Grid.Row="3" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
