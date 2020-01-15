@@ -80,26 +80,24 @@ namespace MinerPluginsPacker
             }
         }
 
+        private static int[] _supportedMajorverLinks = new int[] { 3, 4, 5, 6 };
+        private static bool IsMajorVersionLinkSupported(int major)
+        {
+            return _supportedMajorverLinks.Contains(major);
+        }
+
         private static void AddPluginToPluginPackageInfos(IMinerPlugin plugin)
         {
             var version = new MajorMinorVersion(plugin.Version.Major, plugin.Version.Minor);
 
             string pluginPackageURL = null;
-            if (version.major == 3)
+            if (IsMajorVersionLinkSupported(version.major))
             {
-                pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v3.x/" + GetPluginPackageName(plugin);
-            }
-            else if (version.major == 4)
-            {
-                pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v4.x/" + GetPluginPackageName(plugin);
-            }
-            else if (version.major == 5)
-            {
-                pluginPackageURL = "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v5.x/" + GetPluginPackageName(plugin);
+                pluginPackageURL = $"https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v{version.major}.x/" + GetPluginPackageName(plugin);
             }
             else
             {
-                //throw new Exception("Plugin version not supported");
+                throw new Exception($"Plugin version '{version.major}' not supported. Make sure you add the download link for this version");
             }
             string minerPackageURL = null;
             if (plugin is IMinerBinsSource binsSource)
@@ -183,7 +181,7 @@ namespace MinerPluginsPacker
                 //"4aec5ec0-10f8-11ea-bad3-8dea21141bbb", // XmrStakRxPlugin
                 "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4", // XMRig
             };
-            var bundlePluginsDlls = new Dictionary<string, string>();
+            var bundlePluginsDlls = new Dictionary<string, string>(); 
 
             foreach (var filePath in dllFiles)
             {
@@ -207,52 +205,67 @@ namespace MinerPluginsPacker
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"CheckPluginMetaData ERROR!!!!!!!!! {e.Message}");
+                        Console.WriteLine($"\t\tCheckPluginMetaData ERROR!!!!!!!!! {e.Message}");
                     }
+
                 }
 
                 foreach (var plugin in newPlugins)
                 {
-                    if (bundlePlugins.Contains(plugin.PluginUUID))
+                    try
                     {
-                        bundlePluginsDlls.Add(plugin.PluginUUID, filePath);
+                        if (bundlePlugins.Contains(plugin.PluginUUID))
+                        {
+                            bundlePluginsDlls.Add(plugin.PluginUUID, filePath);
+                        }
+
+                        var pluginZipFileName = GetPluginPackageName(plugin);
+                        var dllPackageZip = Path.Combine(pluginPackagesFolder, pluginZipFileName);
+                        Console.WriteLine($"Packaging: {dllPackageZip}");
+                        var fileName = Path.GetFileName(filePath);
+
+                        using (var archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Create))
+                        {
+                            archive.CreateEntryFromFile(filePath, fileName);
+                        }
+
+                        packedPlugins.Add(plugin.PluginUUID);
+                        AddPluginToPluginPackageInfos(plugin);
+
+                    } catch(Exception e)
+                    {
+                        Console.WriteLine($"\t\t{e.Message}");
                     }
 
-                    var pluginZipFileName = GetPluginPackageName(plugin);
-                    var dllPackageZip = Path.Combine(pluginPackagesFolder, pluginZipFileName);
-                    Console.WriteLine($"Packaging: {dllPackageZip}");
-                    var fileName = Path.GetFileName(filePath);
-
-                    using (var archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Create))
-                    {
-                        archive.CreateEntryFromFile(filePath, fileName);
-                    }
-
-                    packedPlugins.Add(plugin.PluginUUID);
-                    AddPluginToPluginPackageInfos(plugin);
                 }
             }
-
-            var preinstalledDlls = Path.Combine(exePath, "miner_plugins");
-            if (!Directory.Exists(preinstalledDlls))
+            try
             {
-                Directory.CreateDirectory(preinstalledDlls);
-            }
-            foreach (var kvp in bundlePluginsDlls)
-            {
-                var preinstalledDllPlugin = Path.Combine(exePath, "miner_plugins", kvp.Key);
-                var fileName = Path.GetFileNameWithoutExtension(kvp.Value);
-                var version = MinerPluginHost.MinerPlugin[kvp.Key].Version;
-                var dllPath = Path.Combine(preinstalledDllPlugin, $"{fileName}-{version.Major}.{version.Minor}.dll");
-                if (!Directory.Exists(preinstalledDllPlugin))
+                var preinstalledDlls = Path.Combine(exePath, "miner_plugins");
+                if (!Directory.Exists(preinstalledDlls))
                 {
-                    Directory.CreateDirectory(preinstalledDllPlugin);
+                    Directory.CreateDirectory(preinstalledDlls);
                 }
-                File.Copy(kvp.Value, dllPath);
+                foreach (var kvp in bundlePluginsDlls)
+                {
+                    var preinstalledDllPlugin = Path.Combine(exePath, "miner_plugins", kvp.Key);
+                    var fileName = Path.GetFileName(kvp.Value);
+                    var dllPath = Path.Combine(preinstalledDllPlugin, fileName);
+                    if (!Directory.Exists(preinstalledDllPlugin))
+                    {
+                        Directory.CreateDirectory(preinstalledDllPlugin);
+                    }
+                    File.Copy(kvp.Value, dllPath);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine($"\t\t{e.Message}");
+            }
+
             // dump our plugin packages
             InternalConfigs.WriteFileSettings(Path.Combine(pluginPackagesFolder, "update.json"), PluginPackageInfos);
-
+            
             var deleteFolder = Path.Combine(exePath, "miner_plugins", "BrokenMinerPluginUUID");
             Directory.Delete(deleteFolder, true);
         }
