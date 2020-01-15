@@ -8,7 +8,20 @@ namespace LolMinerBeam
 {
     public partial class LolMinerBeamPlugin
     {
-        internal static List<SAS> SupportedGPUAlgos(bool enabled)
+        const ulong AMD_8GBMemory = 8UL << 30; // 4GB
+        internal static List<SAS> SupportedAMDAlgos()
+        {
+            return new List<SAS>
+                    {
+                        new SAS(AlgorithmType.GrinCuckarood29),
+                        new SAS(AlgorithmType.GrinCuckatoo31),
+                        new SAS(AlgorithmType.BeamV2),
+                        new SAS(AlgorithmType.Cuckaroom) { NonDefaultRAMLimit = AMD_8GBMemory },
+                    };
+        }
+
+        // NVIDIA OpenCL backend is not really that stable
+        internal static List<SAS> SupportedNVIDIAOpenCLAlgos(bool enabled = false)
         {
             return new List<SAS>
                     {
@@ -17,6 +30,7 @@ namespace LolMinerBeam
                         new SAS(AlgorithmType.BeamV2) {Enabled = enabled },
                     };
         }
+
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // fixed fee
@@ -25,11 +39,11 @@ namespace LolMinerBeam
             {
                 {
                     DeviceType.NVIDIA,
-                    SupportedGPUAlgos(false) // dsable NVIDIA by default
+                    SupportedNVIDIAOpenCLAlgos(false) // dsable NVIDIA by default
                 },
                 {
                     DeviceType.AMD,
-                    SupportedGPUAlgos(true)
+                    SupportedAMDAlgos()
                 },
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
@@ -37,6 +51,7 @@ namespace LolMinerBeam
                 { AlgorithmType.GrinCuckarood29, "GRIN-AD29" },
                 { AlgorithmType.GrinCuckatoo31, "GRIN-AT31" },
                 { AlgorithmType.BeamV2, "BEAM-II" },
+                { AlgorithmType.Cuckaroom, "GRIN-C29M" },
             }
         };
     }
