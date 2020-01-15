@@ -51,7 +51,7 @@ namespace LolMinerBeam
                 { AlgorithmType.GrinCuckarood29, "GRIN-AD29" },
                 { AlgorithmType.GrinCuckatoo31, "GRIN-AT31" },
                 { AlgorithmType.BeamV2, "BEAM-II" },
-                { AlgorithmType.Cuckaroom, "GRIN-C29M" },
+                { AlgorithmType.Cuckaroom, "FLOO-C29M" },
             }
         };
     }
