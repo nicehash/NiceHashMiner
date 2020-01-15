@@ -109,6 +109,8 @@ namespace NHM.Common.Enums
         RandomXmonero = 47,
         //[Obsolete("UNUSED Algorithm")]
         Eaglesong = 48,
+        //[Obsolete("UNUSED Algorithm")]
+        Cuckaroom = 49,
         #endregion // NiceHashAPI
     }
 
@@ -128,6 +130,7 @@ namespace NHM.Common.Enums
                 case AlgorithmType.GrinCuckatoo31:
                 case AlgorithmType.CuckooCycle:
                 case AlgorithmType.GrinCuckarood29:
+                case AlgorithmType.Cuckaroom:
                     return "G/s";
                 default:
                     return "H/s";

@@ -16,7 +16,7 @@ namespace NBMiner
     public class NBMiner : MinerBase, IDisposable
     {
 
-        public AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
+        protected AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
         private int _apiPort;
         private string _devices = "";
         private readonly HttpClient _http = new HttpClient();
@@ -38,9 +38,10 @@ namespace NBMiner
                 if (_algorithmSecondType != AlgorithmType.NONE) return 3.0;
                 return PluginSupportedAlgorithms.DevFee(_algorithmType);
             }
-}
+        }
 
-public NBMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+
+        public NBMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
             _mappedIDs = mappedIDs;
         }

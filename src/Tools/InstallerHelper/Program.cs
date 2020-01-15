@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHM.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,8 +28,7 @@ namespace InstallerHelper
             string TRADEMARK = "NICEHASH ®";
             
             string APP_ID = "com.nicehash.nhm";
-            #warning "APP_GUID #2 THE APP_GUID MUST BE EQUAL TO THE INSTALLER HELPER ONE. REFACTOR THIS PART"
-            string APP_GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
+            string APP_GUID_ = APP_GUID.GUID;
 
             string BuildTag = "";
             if(BASE_NAME.Contains("TESTNETDEV"))
@@ -54,7 +54,7 @@ namespace InstallerHelper
             $"!define APP_ID \"{APP_ID}\"\n" +
             "; TODO check if this needs to be always re-generated(UUID-v5 is used in electron-builder)\n" +
             "; TODO this is uuid4 and check if we need to generate this\n" +
-            $"!define APP_GUID \"{APP_GUID}\"\n" +
+            $"!define APP_GUID \"{APP_GUID_}\"\n" +
             $"!define APP_DESCRIPTION \"{APP_DESCRIPTION}\"\n\n" +
 
             "!macro addVersionInfo\n" +

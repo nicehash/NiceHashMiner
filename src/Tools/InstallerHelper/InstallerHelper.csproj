@@ -49,6 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\NHM.Common\NHM.Common.csproj">
+      <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
+      <Name>NHM.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

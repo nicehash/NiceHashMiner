@@ -10,8 +10,11 @@ namespace GMinerPlugin
         public string bus_id { get; set; }
         public string name { get; set; }
         public double speed { get; set; }
+        public double speed2 { get; set; }
         public int accepted_shares { get; set; }
+        public int accepted_shares2 { get; set; }
         public int rejected_shares { get; set; }
+        public int rejected_shares2 { get; set; }
         public int temperature { get; set; }
         public int temperature_limit { get; set; }
         public int power_usage { get; set; }
