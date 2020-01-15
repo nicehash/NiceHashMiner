@@ -130,6 +130,7 @@ namespace NHM.Common.Enums
                 case AlgorithmType.GrinCuckatoo31:
                 case AlgorithmType.CuckooCycle:
                 case AlgorithmType.GrinCuckarood29:
+                case AlgorithmType.Cuckaroom:
                     return "G/s";
                 default:
                     return "H/s";
