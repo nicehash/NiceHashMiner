@@ -19,6 +19,7 @@ namespace GMinerPlugin
     // benchmark is 
     public class GMiner : MinerBase
     {
+        protected AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
         private const double DevFee = 2.0;
         private HttpClient _httpClient;
         private int _apiPort;
@@ -33,18 +34,32 @@ namespace GMinerPlugin
             _mappedDeviceIds = mappedDeviceIds;
         }
 
-        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
+        protected virtual string AlgorithmName()
+        {
+            if (_algorithmSecondType != AlgorithmType.NONE)
+            {
+                var ret = $"{PluginSupportedAlgorithms.AlgorithmName(_algorithmType)}+{PluginSupportedAlgorithms.AlgorithmName(_algorithmSecondType)}";
+                return ret;
+            }
+            // default single algo
+            return PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
+        }
 
         private string CreateCommandLine(string username)
         {
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
 
-            var algo = AlgorithmName(_algorithmType);
+            var algo = AlgorithmName();
 
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-
-            var cmd = $"-a {algo} --server {urlWithPort} -u {username} -d {_devices} -w 0 --api {_apiPort} {_extraLaunchParameters}";
+            var cmd = $"-a {algo} --proto stratum --server {urlWithPort} -u {username} -d {_devices} -w 0 --api {_apiPort} {_extraLaunchParameters}";
+            if (_algorithmSecondType != AlgorithmType.NONE)
+            {
+                var urlWithPort2 = StratumServiceHelpers.GetLocationUrl(_algorithmSecondType, _miningLocation, NhmConectionType.NONE);
+                // --algo eth+ckb --server eth.2miners.com:2020 --user 0x5218597d48333d4a70cce91e810007b37e2937b5 --dserver ckb.2miners.com:6464 --duser ckb1qyq9v9yc2pmauycldz4e4ejuxdmvph0xpazq4nh3ph
+                cmd = $"-a {algo} --proto stratum --server {urlWithPort} -u {username} --proto stratum --dserver {urlWithPort2} --duser {username} -d {_devices} -w 0 --api {_apiPort} {_extraLaunchParameters}";
+            }
 
             if (_algorithmType == AlgorithmType.ZHash)
             {
@@ -68,18 +83,41 @@ namespace GMinerPlugin
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
+                var totalSpeed2 = 0d;
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
                 {
                     var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == _mappedDeviceIds[gpu.UUID]).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed;
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed * (1 - DevFee * 0.01)) });
+                    totalSpeed2 += currentDevStats.speed2;
+                    if (_algorithmSecondType == AlgorithmType.NONE)
+                    {
+                        perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed * (1 - DevFee * 0.01)) });
+                    }
+                    else
+                    {
+                        // only one dual algo here
+                        perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() {
+                            new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed * (1 - 3.0 * 0.01)),
+                            new AlgorithmTypeSpeedPair(_algorithmSecondType, currentDevStats.speed2 * (1 - DevFee * 0.01))
+                        });
+                    }
                     var kPower = currentDevStats.power_usage * 1000;
                     totalPowerUsage += kPower;
                     perDevicePowerInfo.Add(gpu.UUID, kPower);
                 }
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                if (_algorithmSecondType == AlgorithmType.NONE)
+                {
+                    ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                }
+                else
+                {
+                    ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> {
+                        new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - 3.0 * 0.01)),
+                        new AlgorithmTypeSpeedPair(_algorithmSecondType, totalSpeed2 * (1 - DevFee * 0.01)),
+                    };
+                }
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
@@ -93,7 +131,7 @@ namespace GMinerPlugin
             return ad;
         }
 
-        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
             // settup times
@@ -114,6 +152,7 @@ namespace GMinerPlugin
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
 
             double benchHashesSum = 0;
+            double benchHashesSum2 = 0;
             int benchIters = 0;
             var ticks = benchmarkTime / 10; // on each 10 seconds tick
             var result = new BenchmarkResult();
@@ -129,16 +168,37 @@ namespace GMinerPlugin
                     // all single GPUs and single speeds
                     try
                     {
-                        var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
-                        benchHashesSum += gpuSpeed;
-                        benchIters++;
-                        double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
-                        // save each result step
-                        result = new BenchmarkResult
+                        if (_algorithmSecondType == AlgorithmType.NONE)
                         {
-                            AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
-                            Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
-                        };
+                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                            benchHashesSum += gpuSpeed;
+                            benchIters++;
+                            double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
+                                                                                    // save each result step
+                            result = new BenchmarkResult
+                            {
+                                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                                Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
+                            };
+                        }
+                        else
+                        {
+                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                            var gpuSpeed2 = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().LastOrDefault().Speed;
+                            benchHashesSum += gpuSpeed;
+                            benchHashesSum2 += gpuSpeed2;
+                            benchIters++;
+                            double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
+                                                                                    // save each result step
+                            double benchHashResult2 = (benchHashesSum2 / benchIters); // fee is subtracted from API readings
+                                                                                      // save each result step
+                            result = new BenchmarkResult
+                            {
+                                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult), new AlgorithmTypeSpeedPair(_algorithmSecondType, benchHashResult2) },
+                                Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
+                            };
+                        }
+
                     }
                     catch (Exception e)
                     {
@@ -153,10 +213,11 @@ namespace GMinerPlugin
             {
                 return t.Result;
             }
-            
+
             // return API result
             return result;
         }
+
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
@@ -170,6 +231,11 @@ namespace GMinerPlugin
         {
             var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
             _devices = string.Join(" ", mappedDevIDs);
+
+            var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
+            _algorithmSecondType = dualType.Item1;
+            var ok = dualType.Item2;
+            if (!ok) _algorithmSecondType = AlgorithmType.NONE;
         }
 
         protected override string MiningCreateCommandLine()

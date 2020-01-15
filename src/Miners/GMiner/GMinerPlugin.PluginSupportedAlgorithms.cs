@@ -12,6 +12,10 @@ namespace GMinerPlugin
         {
             // fee fixed
             DefaultFee = 2.0,
+            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            {
+                { AlgorithmType.Cuckaroom, 3.0 },
+            },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
@@ -23,7 +27,10 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                         new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.BeamV2),
-                        //new SAS(AlgorithmType.Eaglesong),
+                        new SAS(AlgorithmType.Eaglesong),
+                        // 3%fee on dagger 2% fee on eaglesong
+                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong),
+                        new SAS(AlgorithmType.Cuckaroom),
                     }
                 },
                 {
@@ -44,6 +51,8 @@ namespace GMinerPlugin
                 { AlgorithmType.GrinCuckarood29, "cuckarood29" },
                 { AlgorithmType.BeamV2, "beamhashII" },
                 { AlgorithmType.Eaglesong, "eaglesong" },
+                { AlgorithmType.Cuckaroom, "cuckaroom29" },
+                { AlgorithmType.DaggerHashimoto, "ethash" },
             }
         };
     }
