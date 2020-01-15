@@ -3,10 +3,6 @@ using MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -17,7 +13,7 @@ namespace NHMCore.Mining.Plugins
             [JsonProperty("use_user_settings")]
             public bool UseUserSettings { get; set; } = false;
 
-            [JsonProperty("filtered_algorithms")]
+            [JsonProperty("check_plugins_interval")]
             public TimeSpan CheckPluginsInterval = TimeSpan.FromMinutes(30);
         }
 
