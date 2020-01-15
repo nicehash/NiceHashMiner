@@ -23,6 +23,7 @@ namespace MinerPluginToolkitV1
         public const ulong MinX16Rv2Mem = 2UL << 30; // 2GB
         public const ulong MinMTPMem = 5UL << 30; // 5GB
         public const ulong MinGrinCuckarood29Memory = 6012951136; // 5.6GB
+        public const ulong MinGrinCuckaroomMemory = 6012951136; // 5.6GB // TODO check the RAM limits
 
 
         private static readonly Dictionary<AlgorithmType, ulong> _minMemoryPerAlgo = new Dictionary<AlgorithmType, ulong>
@@ -38,6 +39,7 @@ namespace MinerPluginToolkitV1
             { AlgorithmType.X16Rv2, MinX16Rv2Mem },
             { AlgorithmType.MTP, MinMTPMem },
             { AlgorithmType.GrinCuckarood29, MinGrinCuckarood29Memory },
+            { AlgorithmType.Cuckaroom, MinGrinCuckaroomMemory },
         };
 
         public static List<AlgorithmType> InsufficientDeviceMemoryAlgorithnms(ulong Ram, IEnumerable<AlgorithmType> algos)
