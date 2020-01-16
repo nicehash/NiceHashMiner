@@ -20,13 +20,12 @@ namespace NHM.Wpf.ViewModels.Models
     /// </summary>
     public class DeviceData : NotifyChangedBase
     {
-        
-
+        const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
 
         public DeviceMiningStats DeviceMiningStats { get; private set; } = null;
-        public string DeviceMiningStatsProfitability { get; private set; } = "---";
-        public string DeviceMiningStatsPluginAlgo { get; private set; } = "---";
+        public string DeviceMiningStatsProfitability { get; private set; } = MISSING_INFO;
+        public string DeviceMiningStatsPluginAlgo { get; private set; } = MISSING_INFO;
 
         public ObservableCollection<AlgorithmContainer> AlgorithmSettingsCollection { get; private set; } = new ObservableCollection<AlgorithmContainer>();
 
@@ -133,8 +132,8 @@ namespace NHM.Wpf.ViewModels.Models
             if (e.NewItems == null)
             {
                 DeviceMiningStats = null;
-                DeviceMiningStatsProfitability = "---";
-                DeviceMiningStatsPluginAlgo = "---";
+                DeviceMiningStatsProfitability = MISSING_INFO;
+                DeviceMiningStatsPluginAlgo = MISSING_INFO;
             }
             else
             {
@@ -203,13 +202,21 @@ namespace NHM.Wpf.ViewModels.Models
 
         public float Temp { get; private set; } = -1;
 
-        public int FanSpeed { get; private set; } = -1;
+        public int _fanSpeed = -1;
+        public string FanSpeed
+        {
+            get
+            {
+                if (_fanSpeed < 0) return MISSING_INFO;
+                return $"{_fanSpeed}";
+            }
+        }
 
         public void RefreshDiag()
         {
             Load = Dev.Load;
             Temp = Dev.Temp;
-            FanSpeed = Dev.FanSpeed;
+            _fanSpeed = Dev.FanSpeed;
             OnPropertyChanged(nameof(Load));
             OnPropertyChanged(nameof(Temp));
             OnPropertyChanged(nameof(FanSpeed));

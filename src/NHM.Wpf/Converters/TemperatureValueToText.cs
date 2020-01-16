@@ -11,7 +11,7 @@ namespace NHM.Wpf.Converters
             //return Translations.Tr(value);
             if (value is float temp && temp > -1)
             {
-                return $"{temp:F2}ºC";
+                return $"{temp:F0}ºC";
             }
             return "- - -";
         }

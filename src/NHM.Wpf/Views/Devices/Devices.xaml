@@ -13,7 +13,7 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <converters:NulBoolToBoolConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
         <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
         
         <Style TargetType="TextBlock" x:Key="local.InfoIcon">

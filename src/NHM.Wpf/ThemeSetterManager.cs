@@ -18,8 +18,7 @@ namespace NHM.Wpf
         {
             if (e.PropertyName == nameof(GUISettings.DisplayTheme))
             {
-                IsLight = GUISettings.Instance.DisplayTheme == "Light";
-                SetTheme(IsLight);
+                SetTheme(GUISettings.Instance.DisplayTheme);
             }
         }
 
@@ -41,6 +40,12 @@ namespace NHM.Wpf
             SetTheme(IsLight);
         }
 
+        internal static void SetTheme(string displayTheme)
+        {
+            IsLight = displayTheme == "Light";
+            SetTheme(IsLight);
+        }
+        
         internal static void SetTheme(bool isLight)
         {
             if (isLight)

@@ -207,7 +207,8 @@
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="MINER" Click="SortMinerButtonClick" />
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SPEED" Click="SortSpeedButtonClick" />
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="BTC / 24H" Click="SortPayingButtonClick" />
-                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="STATUS" Click="SortStatusButtonClick" />
+                <!--margin here to fix off align-->
+                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="STATUS" Click="SortStatusButtonClick" Margin="-40,0,0,0"/>
                 <!--MAX WITH HERE DEFINES THE GRID-->
                 <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="100" Visibility="{Binding Dev.State, Converter={StaticResource DeviceStatusVisibilityConverter}}">
                     <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SELECT ALL" Click="SortEnabledButtonClick" Margin="0,0,4,0"
