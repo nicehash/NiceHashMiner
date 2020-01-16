@@ -63,7 +63,7 @@
                     <Label Content="Time Unit" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-                <ComboBox Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" />
+                <ComboBox Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" SelectionChanged="ComboBox_SelectionChanged" />
             </WrapPanel>
 
             <local:SettingsCheckBoxItem Margin="0,24,0,0" Enabled="{Binding MiningProfitSettings.MineRegardlessOfProfit}"
@@ -104,7 +104,8 @@
                             <Label Content="Language" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
                             <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                         </StackPanel>
-                        <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}"  SelectedIndex="{Binding TranslationsSettings.LanguageIndex, Mode=TwoWay}" />
+                        <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}"  SelectedIndex="{Binding TranslationsSettings.LanguageIndex, Mode=TwoWay}"
+                                  SelectionChanged="ComboBox_SelectionChanged"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" ToolTip="{StaticResource currency}">
@@ -114,7 +115,8 @@
                     <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" 
                               ItemsSource="{Binding BalanceAndExchangeRates.FiatCurrencyOptions}"
                               SelectedItem="{Binding BalanceAndExchangeRates.SelectedFiatCurrency, Mode=TwoWay}"
-                              IsEnabled="{Binding BalanceAndExchangeRates.HasFiatCurrencyOptions}" />
+                              IsEnabled="{Binding BalanceAndExchangeRates.HasFiatCurrencyOptions}"
+                              SelectionChanged="ComboBox_SelectionChanged"/>
                     </StackPanel>
                 </StackPanel>
             </WrapPanel>
@@ -126,7 +128,7 @@
                         <Label Content="Theme" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding GUISettings.DisplayTheme, Mode=TwoWay}" />
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding GUISettings.DisplayTheme, Mode=TwoWay}" SelectionChanged="ComboBox_SelectionChanged" />
                 </StackPanel>
             </WrapPanel>
             <!--NHM and PLUGINS UPDATE-->
