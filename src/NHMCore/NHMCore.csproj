@@ -230,7 +230,6 @@
     </Compile>
     <None Include="README.md" />
     <None Include="Resources\Eula.rtf" />
-    <None Include="translations.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
