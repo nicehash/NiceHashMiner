@@ -1,3 +1,4 @@
+using Microsoft.Win32;
 using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceDetection;
@@ -78,6 +79,12 @@ namespace NHMCore
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
+
+                if (DeviceDetection.DetectionResult.IsDCHDriver) 
+                {
+                    AvailableNotifications.CreateWarningNVIDIADCHInfo();
+                }
+
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
                 var index = 0;
@@ -139,6 +146,14 @@ namespace NHMCore
                 if (!Helpers.IsElevated && !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && AvailableDevices.HasNvidia)
                 {
                     AvailableNotifications.CreateDeviceMonitoringNvidiaElevateInfo();
+                }
+                if (AvailableDevices.HasCpu)
+                {
+                    AvailableNotifications.CreateEnableLargePagesInfo();
+                }
+                if (AvailableDevices.HasAmd)
+                {
+                    AvailableNotifications.CreateEnableComputeModeAMDInfo();
                 }
 
                 #endregion Device Detection
@@ -209,6 +224,22 @@ namespace NHMCore
                     if (ExitApplication.IsCancellationRequested) return;
                 }
 
+                //var shouldAutoIncreaseVRAM = Registry.CurrentUser.GetValue(@"Software\" + APP_GUID.GUID + @"\AutoIncreaseVRAM", false);
+                //if (shouldAutoIncreaseVRAM == null)
+                //{
+                //    AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
+                //} else
+                //{
+                //    if ((bool)shouldAutoIncreaseVRAM == true)
+                //    {
+                //        var vramSum = AvailableDevices.AvailNvidiaGpuRam + AvailableDevices.AvailAmdGpuRam;
+                //    }
+                //}
+
+                if (!WindowsDefender.IsAlreadySet())
+                {
+                    AvailableNotifications.CreateAddWindowsDefenderExceptionInfo();
+                }
 
                 // re-check after download we should have all miner files
                 var missingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;

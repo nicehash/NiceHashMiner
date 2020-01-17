@@ -57,6 +57,11 @@ namespace NHMCore.Mining.Benchmarking
                 EthlargementIntegratedPlugin.Instance.Stop();
             }
 
+            if (failedAlgos)
+            {
+                Notifications.AvailableNotifications.CreateFailedBenchmarksInfo(device);
+            }
+
             if (startMiningAfterBenchmark)
             {
                 // TODO attempt to schedule devices to start in batch
