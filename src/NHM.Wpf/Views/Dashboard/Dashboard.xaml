@@ -17,7 +17,7 @@
         <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
 
 
-        <Style TargetType="Button" x:Key="CompleteCredentialsButton" >
+        <Style TargetType="Button" x:Key="local.CompleteCredentialsButton" >
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ButtonBase}">
@@ -66,27 +66,29 @@
         </Style>
         <!--#region Dashboard styles -->
         <!--devices circle count labels-->
-        <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeCountText" >
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.DevicesTypeCountText" >
             <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
             <Setter Property= "FontSize" Value="40"/>
             <Setter Property= "FontWeight" Value="Bold"/>
             <Setter Property= "FontStyle" Value="Normal"/>
             <Setter Property= "FontStretch" Value="Normal"/>
             <Setter Property= "LineHeight" Value="0.8"/>
+            <Setter Property= "HorizontalAlignment" Value="Center"/>
             <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
         </Style>
 
-        <Style TargetType="{x:Type TextBlock}" x:Key="DevicesTypeLabelText">
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.DevicesTypeLabelText">
             <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
             <Setter Property= "FontSize" Value="12"/>
             <Setter Property= "FontWeight" Value="Bold"/>
             <Setter Property= "FontStyle" Value="Normal"/>
             <Setter Property= "FontStretch" Value="Normal"/>
             <Setter Property= "LineHeight" Value="1.5"/>
+            <Setter Property= "HorizontalAlignment" Value="Center"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
         </Style>
         <!--stats-->
-        <Style TargetType="{x:Type TextBlock}" x:Key="StatsTitleText">
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.StatsTitleText">
             <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Medium}"/>
             <Setter Property= "FontStyle" Value="Normal"/>
             <Setter Property= "FontStretch" Value="Normal"/>
@@ -97,19 +99,19 @@
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
-        <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCValueText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.StatsBTCValueText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
             <Setter Property= "FontSize" Value="18"/>
             <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
-        <Style TargetType="{x:Type TextBlock}" x:Key="StatsBTCLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.StatsBTCLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
             <Setter Property= "FontSize" Value="12"/>
             <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
-        <Style TargetType="{x:Type TextBlock}" x:Key="StatsFiatEstimateText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.StatsFiatEstimateText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
             <Setter Property= "FontSize" Value="12"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
             <Setter Property="TextWrapping" Value="Wrap" />
@@ -140,13 +142,18 @@
                 <RowDefinition Height="4*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <ToggleButton Style="{DynamicResource StartStopButtonLight}"
-                          IsChecked="{Binding MiningState.AnyDeviceRunning, Mode=OneWay}"
+            <DockPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto" Height="Auto">
+                <ToggleButton DockPanel.Dock="Top" Style="{DynamicResource StartStopButtonLight}"
+                              IsChecked="{Binding MiningState.AnyDeviceRunning, Mode=OneWay}"
                               VerticalAlignment="Center" HorizontalAlignment="Center"
-                          x:Name="StartStopToggleButton"
-                          Click="ToggleButtonStartStop_Click" />
+                              x:Name="StartStopToggleButton"
+                              Click="ToggleButtonStartStop_Click">
+                    <ToggleButton.Effect>
+                        <DropShadowEffect BlurRadius="50" ShadowDepth="20" Direction="-75" Opacity="0.1"/>
+                    </ToggleButton.Effect>
+                </ToggleButton> 
                 <TextBlock
+                    DockPanel.Dock="Bottom"
                     Style="{StaticResource BaseUbuntuTextBlockBold}"
                     FontSize="14"
                     Foreground="{StaticResource Gray1ColorBrush}"
@@ -156,7 +163,7 @@
                     ToolTip="some info"
                     Visibility="Visible"
                     />
-            </StackPanel>
+            </DockPanel>
         </Grid>
         <!--Complete Credentials info-->
         <Grid Grid.Row="1" Margin="0,0,0,16" Visibility="{Binding Dashboard.CompleteBTCVisibility }">
@@ -165,7 +172,7 @@
                     TextAlignment="Left"
                     Text="Complete your mining setup"/>
                 <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
-                    <Button Style="{StaticResource CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Wallet Address" Click="EnterBTCWallet_Button_Click">
+                    <Button Style="{StaticResource local.CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Wallet Address" Click="EnterBTCWallet_Button_Click">
                         <Button.ContextMenu>
                             <ContextMenu x:Name="BTCWalletContextMenu" >
                                 <ContextMenu.Template>
@@ -232,41 +239,41 @@
                 <GridSplitter Grid.Row="1" Grid.Column="0" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
                 <Grid Grid.Row="1" Grid.Column="1" Background="{DynamicResource BackgroundColor}">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource gpuNumber}">
-                        <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
-                        <TextBlock Style="{StaticResource DevicesTypeLabelText}">GPU’S</TextBlock>
+                        <TextBlock Style="{StaticResource local.DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
+                        <TextBlock Style="{StaticResource local.DevicesTypeLabelText}">GPU’S</TextBlock>
                     </StackPanel>
                 </Grid>
                 <GridSplitter Grid.Row="1" Grid.Column="2" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
                 <Grid Grid.Row="1" Grid.Column="3" Background="{DynamicResource BackgroundColor}">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource cpuNumber}">
-                        <TextBlock Style="{StaticResource DevicesTypeCountText}" Text="{Binding DeviceCPUCount}"/>
-                        <TextBlock Style="{StaticResource DevicesTypeLabelText}">CPU</TextBlock>
+                        <TextBlock Style="{StaticResource local.DevicesTypeCountText}" Text="{Binding DeviceCPUCount}"/>
+                        <TextBlock Style="{StaticResource local.DevicesTypeLabelText}">CPU</TextBlock>
                     </StackPanel>
                 </Grid>
                 <GridSplitter Grid.Row="1" Grid.Column="4" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
                 <StackPanel Grid.Row="1" Grid.Column="5" Background="{DynamicResource BackgroundColor}" ToolTip="{StaticResource currentProfitability}" >
-                    <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
                     <!--TODO Bindings here are temp-->
                     <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
-                        <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding GlobalRate}" />
-                        <TextBlock Style="{StaticResource StatsBTCLabelText}" Margin="0,14,0,0" Text="{Binding ScaledBtcPerTime}" />
+                        <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding GlobalRate}" />
+                        <TextBlock Style="{StaticResource local.StatsBTCLabelText}" Margin="0,14,0,0" Text="{Binding ScaledBtcPerTime}" />
                     </WrapPanel>
-                    <TextBlock Style="{StaticResource StatsFiatEstimateText}" Margin="24,8,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
+                    <TextBlock Style="{StaticResource local.StatsFiatEstimateText}" Margin="24,8,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
                 </StackPanel>
                 <GridSplitter Grid.Row="1" Grid.Column="6" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
                 <StackPanel Grid.Row="1" Grid.Column="7" Background="{DynamicResource BackgroundColor}" ToolTip="{StaticResource unpaidBalance}" >
-                    <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
                     <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
-                        <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
-                        <TextBlock Style="{StaticResource StatsBTCLabelText}"  Margin="0,14,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
+                        <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
+                        <TextBlock Style="{StaticResource local.StatsBTCLabelText}"  Margin="0,14,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
                     </WrapPanel>
-                    <TextBlock Style="{StaticResource StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
+                    <TextBlock Style="{StaticResource local.StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
                 </StackPanel>
                 <GridSplitter Grid.Row="1" Grid.Column="8" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
                 <StackPanel Grid.Row="1" Grid.Column="9" Background="{DynamicResource BackgroundColor}" ToolTip="{Binding ExchangeTooltip}" >
-                    <TextBlock TextWrapping="Wrap" Style="{StaticResource StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
-                    <TextBlock Style="{StaticResource StatsBTCValueText}" Margin="24,8,0,4" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
-                    <TextBlock Style="{StaticResource StatsBTCLabelText}" Margin="24,14,0,4" TextWrapping="Wrap" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
+                    <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="24,8,0,4" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
+                    <TextBlock Style="{StaticResource local.StatsBTCLabelText}" Margin="24,14,0,4" TextWrapping="Wrap" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
                 </StackPanel>
                 <GridSplitter Grid.Row="1" Grid.Column="10" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
                 <GridSplitter Grid.Row="2" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>

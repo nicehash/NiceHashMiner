@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Views.Plugins.PluginItem"
              xmlns:localConv="clr-namespace:NHM.Wpf.Views.Plugins.PluginItem.Converters"
+             xmlns:converters="clr-namespace:NHM.Wpf.Converters"
              xmlns:vmPlugins="clr-namespace:NHM.Wpf.ViewModels.Plugins"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -15,6 +16,9 @@
         <localConv:CompatibleVisibilityConverter x:Key="CompatibleVisibilityConverter" />
         <localConv:PluginItemButtonStyleConverter x:Key="PluginItemButtonStyleConverter" />
         <localConv:PluginItemVisibilityConverter x:Key="PluginItemVisibilityConverter" />
+
+        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
 
         <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxBase">
             <Setter Property="FontWeight" Value="Normal" />
@@ -220,7 +224,7 @@
                     <!--<CheckBox Style="{StaticResource NHMSwitch}"
                               Visibility="{Binding Plugin.Installed, Converter={StaticResource PluginItemVisibilityConverter}}"
                               Margin="0,0,16,0" />-->
-                    <StackPanel x:Name="swapStackPanel" Margin="0,0,16,0">
+                    <StackPanel x:Name="swapStackPanel" Margin="0,0,16,0" Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverter}}">
                         <Path Style="{StaticResource SpinCirclePath}"
                               Visibility="{Binding SpinningCircleVisibility}"
                               x:Name="spinCirclePath"
@@ -264,11 +268,19 @@
 
                     <Button Style="{Binding Plugin.Installed, Converter={StaticResource PluginItemButtonStyleConverter}}"
                             IsEnabled="{Binding InstallButtonEnabled}"
+                            Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverter}}"
                             Width="105" Height="24"
                             Margin="0,0,16,0"
                             Content="{Binding InstallString }"
                             Click="Button_Click_1"
                             />
+
+                    <TextBlock Style="{StaticResource local.TextBoxPluginName}"
+                               Foreground="{StaticResource RedDangerColorBrush}"
+                               FontSize="12"
+                               Margin="0,0,16,0"
+                               Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverterFalse}}"
+                               Text="NOT COMPATIBLE. Update NiceHash Miner" />
 
 
                 </WrapPanel>
