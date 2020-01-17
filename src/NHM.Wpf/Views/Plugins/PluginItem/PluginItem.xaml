@@ -151,6 +151,9 @@
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
                             <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=DetailsToggleButton, Path=IsChecked}" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}"/>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
