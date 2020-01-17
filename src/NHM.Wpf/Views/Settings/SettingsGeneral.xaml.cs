@@ -84,5 +84,10 @@ namespace NHM.Wpf.Views.Settings
                 textBoxBTCAddress.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFromString("Red");
             }
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ConfigManager.GeneralConfigFileCommit();
+        }
     }
 }

@@ -128,16 +128,16 @@ namespace NHM.Wpf.ViewModels.Plugins
                         statusText = Tr("Pending Install");
                         break;
                     case PluginInstallProgressState.DownloadingMiner:
-                        statusText = Tr("Downloading Miner: {0} %", $"{progress:F2}");
+                        statusText = Tr("Downloading Miner: {0}%", progress);
                         break;
                     case PluginInstallProgressState.DownloadingPlugin:
-                        statusText = Tr("Downloading Plugin: {0} %", $"{progress:F2}");
+                        statusText = Tr("Downloading Plugin: {0}%", progress);
                         break;
                     case PluginInstallProgressState.ExtractingMiner:
-                        statusText = Tr("Extracting Miner: {0} %", $"{progress:F2}");
+                        statusText = Tr("Extracting Miner: {0}%", progress);
                         break;
                     case PluginInstallProgressState.ExtractingPlugin:
-                        statusText = Tr("Extracting Plugin: {0} %", $"{progress:F2}");
+                        statusText = Tr("Extracting Plugin: {0}%", progress);
                         break;
                     default:
                         statusText = Tr("Pending Install");

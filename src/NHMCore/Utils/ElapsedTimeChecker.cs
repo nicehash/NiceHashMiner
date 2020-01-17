@@ -18,7 +18,7 @@ namespace NHMCore.Utils
             }
             else
             {
-                _lastElapsedDateTime = DateTime.UtcNow + _elapsedTimeSpanInterval();
+                _lastElapsedDateTime = DateTime.UtcNow;
             }
         }
 

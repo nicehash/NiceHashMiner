@@ -37,7 +37,7 @@
             </Setter>
         </Style>
     </nhb:BaseDialogWindow.Resources>
-    <Grid Background="Transparent" Opacity="1" >
+    <Grid Background="Transparent" Opacity="1.0" >
         <!--Get rid of this crap-->
         <local:TemporaryStartupLoadingControl x:Name="LoadingBar" Visibility="Collapsed" Panel.ZIndex="1" Padding="0,88,0,0"/>
 

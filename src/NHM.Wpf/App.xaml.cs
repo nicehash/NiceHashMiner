@@ -66,6 +66,8 @@ namespace NHM.Wpf
             // Initialize config
             ConfigManager.InitializeConfig();
 
+            ThemeSetterManager.SetTheme(GUISettings.Instance.DisplayTheme);
+
             // Check multiple instances
             if (!MiscSettings.Instance.AllowMultipleInstances)
             {

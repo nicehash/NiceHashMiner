@@ -18,6 +18,7 @@ namespace NHM.Wpf.Views
         public LoginWindow()
         {
             InitializeComponent();
+            HideIconAndTitle = true;
             WindowUtils.Translate(this);
         }
 

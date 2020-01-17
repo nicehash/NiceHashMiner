@@ -58,21 +58,19 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:BaseDialogWindow}">
-
                     <Grid Background="Transparent" x:Name="WindowRoot">
-                        <!--TODO drop shaddow-->
-                        <Border Background="White" CornerRadius="5" BorderThickness="1" BorderBrush="Black">
-                            <Border.BitmapEffect>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
-                            </Border.BitmapEffect>
-                        </Border>
+                        <!--round window-->
+                        <Border Background="{DynamicResource BackgroundColor}" CornerRadius="5" BorderThickness="0" BorderBrush="Transparent" />
                         <Grid x:Name="LayoutRoot"
-                              Background="{TemplateBinding Background}">
+                              Background="{DynamicResource BackgroundColor}" Margin="2">
+                            <!--SHADOWS HERE DEGRADE PERFORMANCE. IF WE ENABLE THEM BACK SET MARGIN ON GRID TO 2-->
+                            <!--<Grid.Effect>
+                                <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Quality"  Opacity="0.1"/>
+                            </Grid.Effect>-->
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            
                             <!--TitleBar-->
                             <Grid x:Name="PART_HeaderBar">
                                 <Grid.ColumnDefinitions>
@@ -98,7 +96,8 @@
                                     <TextBlock Margin="8,-8,0,0"
                                                Style="{DynamicResource FontsTypography.NiceHash-Miner}"
                                                VerticalAlignment="Center"
-                                               HorizontalAlignment="Center">NiceHash Miner</TextBlock>
+                                               HorizontalAlignment="Center"
+                                               x:Name="WindowTitle">NiceHash Miner</TextBlock>
                                 </TextBlock>
 
                                 <Grid x:Name="WindowControlsGrid"

@@ -13,7 +13,7 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <converters:NulBoolToBoolConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
         <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
         
         <Style TargetType="TextBlock" x:Key="local.InfoIcon">
@@ -110,7 +110,7 @@
                     </Grid.RowDefinitions>
                     <!--content-->
                     <TextBlock Grid.Row="0" Style="{ DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
-                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="GLOBAL RATE" />
+                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="CURRENT PROFITABILITY" />
                     <!--TODO Bindings here are temp-->
                     <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
                         <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="{Binding GlobalRate}"/>

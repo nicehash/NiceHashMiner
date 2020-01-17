@@ -20,7 +20,7 @@ namespace NHM.Wpf.ViewModels
             {
                 var ret = "";
                 // Start/Stop
-                ret += !_isRunning ? "Start " : "";
+                ret += !_isRunning ? "Start Mining" : "";
                 var statuses = new string[] { null, null };
                 if (_isMining)
                 {

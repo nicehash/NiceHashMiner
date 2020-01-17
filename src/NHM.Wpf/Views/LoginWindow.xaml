@@ -23,14 +23,18 @@
             <Setter Property="FontStyle" Value="Normal" />
             <Setter Property="LineHeight" Value="1.5" />
             <Setter Property="TextAlignment" Value="Center" />
-        </Style>
-
-        <Style x:Key="local.Register-a-New-Account" TargetType="TextBlock" BasedOn="{StaticResource local.TextBlockBase}">
             <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryColorBrush}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
-        <Style x:Key="local.Enter-Bitcoin-Addres" TargetType="TextBlock" BasedOn="{StaticResource local.TextBlockBase}">
-            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+        <Style x:Key="local.TextButton" TargetType="Button" BasedOn="{StaticResource ButtonTextBlock}">
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource local.TextBlockBase}" />
+            </Style.Resources>
         </Style>
 
     </nhb:BaseDialogWindow.Resources>
@@ -40,17 +44,10 @@
         <Button Style="{StaticResource OKButton}" Margin="0,32,0,0" Content="LOGIN" />
 
 
-        <Button Style="{StaticResource ButtonTextBlock}" Margin="0,40,0,0" HorizontalAlignment="Center" Content="Register a New Account" Click="Register_OnClick">
-            <Button.Resources>
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource local.Register-a-New-Account}" />
-            </Button.Resources>
-        </Button>
-        <Button Style="{StaticResource ButtonTextBlock}" Margin="0,16,0,0" HorizontalAlignment="Center" Content="Enter Bitcoin Address Manually" Click="ManuallyEnterBtc_OnClick">
-            <Button.Resources>
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource local.Enter-Bitcoin-Addres}" />
-            </Button.Resources>
-        </Button>
-        
-        <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{StaticResource NHMSwitchTheme}" Margin="0,0,10,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />
+        <Button Style="{StaticResource local.TextButton}" Margin="0,40,0,0" HorizontalAlignment="Center" Content="Register a New Account" Click="Register_OnClick" />
+        <Button Style="{StaticResource local.TextButton}" Margin="0,16,0,0" HorizontalAlignment="Center" Content="Enter Bitcoin Address Manually" Click="ManuallyEnterBtc_OnClick" />
+
+
+        <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{StaticResource NHMSwitchTheme}" Margin="0,0,24,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />
     </StackPanel>
 </nhb:BaseDialogWindow>

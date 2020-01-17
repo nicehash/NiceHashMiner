@@ -1,4 +1,5 @@
 ﻿using NHM.Wpf.ViewModels.Models;
+using NHMCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
+using static NHMCore.Translations;
 
 namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
 {
@@ -37,6 +40,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             if (e.NewValue is DeviceData dd)
             {
                 _deviceData = dd;
+                DeviceActionsButtonContext.DataContext = dd;
                 return;
             }
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
@@ -122,8 +126,26 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
 
         private void Button_Click_ClearAllSpeeds(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show(Tr("Are you sure you would like to clear all speeds for {0}?", _deviceData.Dev.FullName),
+                Tr("Set default settings?"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning);
             DeviceActionsButtonContext.IsOpen = false;
-            _deviceData.ClearAllSpeeds();
+            if (result == MessageBoxResult.Yes)
+            {
+                _deviceData.ClearAllSpeeds();
+            }
+        }
+
+        private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)
+        {
+            DeviceActionsButtonContext.IsOpen = false;
+            await ApplicationStateManager.StopSingleDevicePublic(_deviceData.Dev);
+        }
+
+        private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
+        {
+            DeviceActionsButtonContext.IsOpen = false;
+            await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
         }
     }
 }

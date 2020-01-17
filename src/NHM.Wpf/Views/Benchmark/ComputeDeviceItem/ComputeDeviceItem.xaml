@@ -35,6 +35,8 @@
             <Setter Property="FontWeight" Value="Normal" />
         </Style>
 
+        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
         <converters:TranslatingConverter x:Key="TrConv" />
         <converters:StatusColorConverter x:Key="StatusConv" />
         <local:DeviceStatusVisibilityConverter x:Key="DeviceStatusVisibilityConverter" />
@@ -132,11 +134,14 @@
                             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
                                 <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=AlgorithmsGridToggleButtonHidden, Path=IsChecked}" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}"/>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
             </Border>
-            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click" HorizontalContentAlignment="Stretch" >
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click" HorizontalContentAlignment="Stretch">
                 <Grid Background="Transparent" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -163,21 +168,25 @@
                                       Margin="0,0,8,0" />
                             <!--TODO add context menu and all that-->
                             <ToggleButton Style="{StaticResource MenuDropdownButton}"
-                                      x:Name="ToggleButtonActions"
-                                      Click="Action_Button_Click"
-                                      Margin="8,0,16,0" >
+                                          DataContext="{Binding .}"
+                                          x:Name="ToggleButtonActions"
+                                          Click="Action_Button_Click"
+                                          Margin="8,0,16,0" >
                                 <ToggleButton.ContextMenu>
                                     <ContextMenu x:Name="DeviceActionsButtonContext">
                                         <ContextMenu.Template>
                                             <ControlTemplate>
-                                                <Grid >
+                                                <Grid DataContext="{Binding .}">
                                                     <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
                                                         <Border.Effect>
                                                             <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
                                                         </Border.Effect>
                                                     </Border>
                                                     <StackPanel>
-                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="Clear all speeds" Click="Button_Click_ClearAllSpeeds" />
+                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StopBenchmarking" />
+                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStart, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Start Benchmark" Click="Button_Click_StartBenchmarking" />
+                                                        <!--<Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StartBenchmarking" />-->
+                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanClearAllSpeeds, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Clear all speeds" Click="Button_Click_ClearAllSpeeds" />
                                                     </StackPanel>
                                                 </Grid>
                                             </ControlTemplate>
@@ -207,7 +216,8 @@
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="MINER" Click="SortMinerButtonClick" />
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SPEED" Click="SortSpeedButtonClick" />
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="BTC / 24H" Click="SortPayingButtonClick" />
-                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="STATUS" Click="SortStatusButtonClick" />
+                <!--margin here to fix off align-->
+                <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="STATUS" Click="SortStatusButtonClick" Margin="-40,0,0,0"/>
                 <!--MAX WITH HERE DEFINES THE GRID-->
                 <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="100" Visibility="{Binding Dev.State, Converter={StaticResource DeviceStatusVisibilityConverter}}">
                     <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SELECT ALL" Click="SortEnabledButtonClick" Margin="0,0,4,0"

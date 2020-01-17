@@ -10,11 +10,16 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool bVal && !bVal)
+            if (value is AlgorithmStatus state)
             {
-                return Visibility.Hidden;
+                switch (state)
+                {
+                    case AlgorithmStatus.Benchmarking:
+                    case AlgorithmStatus.Mining:
+                        return Visibility.Visible;
+                }
             }
-            return Visibility.Visible;
+            return Visibility.Hidden;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
