@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NHMCore.Notifications
 {
@@ -40,6 +41,18 @@ namespace NHMCore.Notifications
             lock (_lock)
             {
                 ok = _notifications.Remove(notification);
+            }
+            OnPropertyChanged(nameof(Notifications));
+            return ok;
+        }
+
+        public bool RemoveNotificationFromList(string notificationName)
+        {
+            var ok = false;
+            lock (_lock)
+            {
+                var removedNotification = _notifications.Where(notification => notification.Name == notificationName).FirstOrDefault();
+                ok = _notifications.Remove(removedNotification);
             }
             OnPropertyChanged(nameof(Notifications));
             return ok;

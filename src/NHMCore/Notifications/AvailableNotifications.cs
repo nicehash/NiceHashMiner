@@ -267,5 +267,23 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
+        public static void CreateUnavailablePrimaryMarketLocationInfo()
+        {
+            //clear "market notifications"
+            NotificationsManager.Instance.RemoveNotificationFromList(Tr("Primary mining location unavailable"));
+            NotificationsManager.Instance.RemoveNotificationFromList(Tr("All mining locations unavailable"));
+
+            var notification = new Notification(NotificationsType.Warning, Tr("Primary mining location unavailable"), Tr($"Primary mining location is unavailable. Switching to fallback location."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateUnavailableAllMarketsLocationInfo()
+        {
+            //clear "market notifications"
+            NotificationsManager.Instance.RemoveNotificationFromList(Tr("Primary mining location unavailable"));
+
+            var notification = new Notification(NotificationsType.Warning, Tr("All mining locations unavailable"), Tr($"All mining locations are unavailable. Mining will be stopped."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

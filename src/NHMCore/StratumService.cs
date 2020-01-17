@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHMCore.Configs;
+using NHMCore.Notifications;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -92,21 +93,26 @@ namespace NHMCore
             {
                 if (SelectedServiceLocationOperational)
                 {
+                    NotificationsManager.Instance.RemoveNotificationFromList(Translations.Tr("Primary mining location unavailable"));
+                    NotificationsManager.Instance.RemoveNotificationFromList(Translations.Tr("All mining locations unavailable"));
                     OnPropertyChanged(nameof(SelectedServiceLocation));
                 }
                 else if (EU_ServiceLocationOperational)
                 {
+                    AvailableNotifications.CreateUnavailablePrimaryMarketLocationInfo();
                     SelectedFallbackServiceLocation = _miningLocationsEU.FirstOrDefault();
                     OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
                 }
                 else if (USA_ServiceLocationOperational)
                 {
+                    AvailableNotifications.CreateUnavailablePrimaryMarketLocationInfo();
                     SelectedFallbackServiceLocation = _miningLocationsUSA.FirstOrDefault();
                     OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
                 }
                 else
                 {
                     // pause mining
+                    AvailableNotifications.CreateUnavailableAllMarketsLocationInfo();
                     SelectedFallbackServiceLocation = null;
                     OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
                 }
