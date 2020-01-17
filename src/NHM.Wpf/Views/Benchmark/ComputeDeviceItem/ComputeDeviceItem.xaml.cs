@@ -1,4 +1,5 @@
 ﻿using NHM.Wpf.ViewModels.Models;
+using NHMCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             if (e.NewValue is DeviceData dd)
             {
                 _deviceData = dd;
+                DeviceActionsButtonContext.DataContext = dd;
                 return;
             }
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
@@ -124,6 +126,18 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
         {
             DeviceActionsButtonContext.IsOpen = false;
             _deviceData.ClearAllSpeeds();
+        }
+
+        private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)
+        {
+            DeviceActionsButtonContext.IsOpen = false;
+            await ApplicationStateManager.StopSingleDevicePublic(_deviceData.Dev);
+        }
+
+        private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
+        {
+            DeviceActionsButtonContext.IsOpen = false;
+            await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
         }
     }
 }

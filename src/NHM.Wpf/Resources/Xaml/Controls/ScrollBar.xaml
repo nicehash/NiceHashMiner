@@ -4,6 +4,10 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../Brushes.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
+    <!--REFERENCE
+    https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/scrollbar-styles-and-templates-->
+
     <!--#region CONTROL COLORS-->
     <!--Control colors.-->
     <Color x:Key="WindowColor">#FFE8EDF9</Color>

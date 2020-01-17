@@ -98,7 +98,8 @@
                                     <TextBlock Margin="8,-8,0,0"
                                                Style="{DynamicResource FontsTypography.NiceHash-Miner}"
                                                VerticalAlignment="Center"
-                                               HorizontalAlignment="Center">NiceHash Miner</TextBlock>
+                                               HorizontalAlignment="Center"
+                                               x:Name="WindowTitle">NiceHash Miner</TextBlock>
                                 </TextBlock>
 
                                 <Grid x:Name="WindowControlsGrid"

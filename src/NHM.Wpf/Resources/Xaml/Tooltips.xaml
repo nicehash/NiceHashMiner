@@ -35,6 +35,6 @@
 
     <system:String x:Key="devicesMining">Number of devices that are currently mining.</system:String>
     
-    <system:String x:Key="scheduleBenchmarking">Include this alrogithm in benchmark sessions when plugin gets updated. This will ensure the best possible hash rate.</system:String>
+    <system:String x:Key="scheduleBenchmarking">Include this alrogithm in benchmark sessions (on next benchmark or device start). This will ensure the best possible hash rate.</system:String>
     
 </ResourceDictionary>

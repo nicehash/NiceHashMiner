@@ -127,6 +127,17 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="UserControl.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
     <Grid Background="Transparent" Width="Auto" Height="Auto" >
 
         <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
@@ -254,19 +265,8 @@
                             Margin="0,0,16,0"
                             Content="{Binding InstallString }"
                             Click="Button_Click_1"
-                            >
-                        <Button.Triggers>
-                            <EventTrigger RoutedEvent="Button.Click">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </Button.Triggers>
-                    </Button>
+                            />
+
 
                 </WrapPanel>
 

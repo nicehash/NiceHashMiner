@@ -35,6 +35,8 @@
             <Setter Property="FontWeight" Value="Normal" />
         </Style>
 
+        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
         <converters:TranslatingConverter x:Key="TrConv" />
         <converters:StatusColorConverter x:Key="StatusConv" />
         <local:DeviceStatusVisibilityConverter x:Key="DeviceStatusVisibilityConverter" />
@@ -163,21 +165,25 @@
                                       Margin="0,0,8,0" />
                             <!--TODO add context menu and all that-->
                             <ToggleButton Style="{StaticResource MenuDropdownButton}"
-                                      x:Name="ToggleButtonActions"
-                                      Click="Action_Button_Click"
-                                      Margin="8,0,16,0" >
+                                          DataContext="{Binding .}"
+                                          x:Name="ToggleButtonActions"
+                                          Click="Action_Button_Click"
+                                          Margin="8,0,16,0" >
                                 <ToggleButton.ContextMenu>
                                     <ContextMenu x:Name="DeviceActionsButtonContext">
                                         <ContextMenu.Template>
                                             <ControlTemplate>
-                                                <Grid >
+                                                <Grid DataContext="{Binding .}">
                                                     <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
                                                         <Border.Effect>
                                                             <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
                                                         </Border.Effect>
                                                     </Border>
                                                     <StackPanel>
-                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="Clear all speeds" Click="Button_Click_ClearAllSpeeds" />
+                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanClearAllSpeeds, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Clear all speeds" Click="Button_Click_ClearAllSpeeds" />
+                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StopBenchmarking" />
+                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStart, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Start Benchmark" Click="Button_Click_StartBenchmarking" />
+                                                        <!--<Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StartBenchmarking" />-->
                                                     </StackPanel>
                                                 </Grid>
                                             </ControlTemplate>

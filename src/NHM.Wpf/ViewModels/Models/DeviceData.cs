@@ -56,6 +56,9 @@ namespace NHM.Wpf.ViewModels.Models
             }
         }
 
+        public bool CanClearAllSpeeds => !(Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining);
+        public bool CanStopBenchmark => Dev.State == DeviceState.Benchmarking;
+
         public List<string> AlgoNames { get; private set; }
 
         // TODO Pending state and error states
@@ -191,6 +194,8 @@ namespace NHM.Wpf.ViewModels.Models
                 OnPropertyChanged(nameof(ButtonLabel));
                 OnPropertyChanged(nameof(CanStart));
                 OnPropertyChanged(nameof(CanStop));
+                OnPropertyChanged(nameof(CanClearAllSpeeds));
+                OnPropertyChanged(nameof(CanStopBenchmark));
             }
             else if (e.PropertyName == nameof(Dev.Enabled))
             {

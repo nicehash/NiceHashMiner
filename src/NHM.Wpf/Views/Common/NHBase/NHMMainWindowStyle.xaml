@@ -79,33 +79,36 @@
 
 
     <Style TargetType="local:NHMMainWindow" x:Key="NHMMainWindowStyle">
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="MinHeight" Value="320"/>
         <Setter Property="MinWidth" Value="480"/>
+        <Setter Property="MinWidth" Value="480"/>
+        <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
         <Setter Property="Title" Value="{Binding Title}"/>
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
                 <WindowChrome GlassFrameThickness="1" 
                               ResizeBorderThickness="4"
-                              CaptionHeight="0"/>
+                              CaptionHeight="0">
+                </WindowChrome>
             </Setter.Value>
         </Setter>
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:NHMMainWindow}">
-
-                    <Grid Background="Transparent" x:Name="WindowRoot">
-                        <!--TODO drop shaddow-->
-                        <Border Background="White" Opacity="1" CornerRadius="2" BorderThickness="1" BorderBrush="Black">
-                            <Border.BitmapEffect>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
-                            </Border.BitmapEffect>
-                        </Border>
+                    <Grid Background="Transparent" x:Name="WindowRoot" >
                         <Grid x:Name="LayoutRoot"
-                              Background="{TemplateBinding Background}">
+                              Background="{TemplateBinding Background}" Margin="2">
+                            <Grid.Effect>
+                                <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" ShadowDepth="2" Opacity="0.5"/>
+                            </Grid.Effect>
+                            <!--<Grid.BitmapEffect>
+                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="1.2" />
+                            </Grid.BitmapEffect>-->
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="60"/>
                                 <RowDefinition Height="*"/>

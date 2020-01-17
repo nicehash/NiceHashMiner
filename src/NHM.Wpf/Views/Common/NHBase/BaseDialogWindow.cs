@@ -35,6 +35,7 @@ namespace NHM.Wpf.Views.Common.NHBase
         public WindowState PreviousState { get; private set; }
 
         public Grid NHMIcon { get; private set; }
+        public TextBlock WindowTitle { get; private set; }
 
         static BaseDialogWindow()
         {
@@ -86,6 +87,12 @@ namespace NHM.Wpf.Views.Common.NHBase
             this.CloseButton = this.GetRequiredTemplateChild<System.Windows.Controls.Button>("CloseButton");
             this.HeaderBar = this.GetRequiredTemplateChild<Grid>("PART_HeaderBar");
             NHMIcon = this.GetRequiredTemplateChild<Grid>("NHMIcon");
+            WindowTitle = this.GetRequiredTemplateChild<TextBlock>("WindowTitle");
+
+            if (HideIconAndTitle)
+            {
+                HideIconAndTitleMethod();
+            }
 
             if (this.LayoutRoot != null && this.WindowState == WindowState.Maximized)
             {
@@ -255,6 +262,13 @@ namespace NHM.Wpf.Views.Common.NHBase
         {
             var windowBackground = isLight ? System.Windows.Application.Current.FindResource("Brushes.Light.Grey.Grey4Background") : System.Windows.Application.Current.FindResource("Brushes.Dark.Grey.Grey1Background");
             this.Background = windowBackground as SolidColorBrush;
+        }
+
+        protected bool HideIconAndTitle { get; set; } = false;
+        private void HideIconAndTitleMethod()
+        {
+            if (NHMIcon != null) NHMIcon.Visibility = Visibility.Hidden;
+            if (WindowTitle != null) WindowTitle.Visibility = Visibility.Hidden;
         }
     }
 }
