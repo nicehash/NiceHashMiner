@@ -101,5 +101,10 @@ namespace NHMCore.Utils
         // help and faq
         public const string NhmHelp = "https://github.com/nicehash/NiceHashMiner/";
         public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMiner/wiki/Troubleshooting#nosupportdev";
+
+        //nvidia help
+        public const string NvidiaDriversHelp = "https://www.nvidia.com/download/find.aspx";
+        public const string AVHelp = "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%253F";
+        public const string LargePagesHelp = "https://www.nicehash.com/blog/post/how-to-optimize-cpu-mining-performance-for-monero-random-x?utm_source=NHM&utm_medium=referral&utm_campaign=optimize%20cpu";      
     }
 }
