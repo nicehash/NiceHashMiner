@@ -136,6 +136,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FakePlugin", "src\Miners\Fa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddWindowsDefenderExclusion", "src\Tools\AddWindowsDefenderExclusion\AddWindowsDefenderExclusion.csproj", "{536F9EC0-ED69-484C-A31E-8E4B597DED50}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmdComputeModeSwitcher", "src\Tools\AmdComputeModeSwitcher\AmdComputeModeSwitcher.csproj", "{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -1568,6 +1570,30 @@ Global
 		{536F9EC0-ED69-484C-A31E-8E4B597DED50}.Release|Win32.Build.0 = Release|Any CPU
 		{536F9EC0-ED69-484C-A31E-8E4B597DED50}.Release|x64.ActiveCfg = Release|Any CPU
 		{536F9EC0-ED69-484C-A31E-8E4B597DED50}.Release|x64.Build.0 = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|Win32.Build.0 = Debug|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|x64.Build.0 = Debug|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.FillSMA|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.FillSMA|Any CPU.Build.0 = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.FillSMA|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.FillSMA|Mixed Platforms.Build.0 = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.FillSMA|Win32.ActiveCfg = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.FillSMA|Win32.Build.0 = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.FillSMA|x64.ActiveCfg = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.FillSMA|x64.Build.0 = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Release|Win32.Build.0 = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Release|x64.ActiveCfg = Release|Any CPU
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1626,6 +1652,7 @@ Global
 		{D54AEE68-4025-441F-855F-3612E1F4DEFC} = {F40126B4-5B3B-4085-B47D-A5EF4B51570C}
 		{4DBB2AA4-F105-4F90-841C-4B2BF5949405} = {F40126B4-5B3B-4085-B47D-A5EF4B51570C}
 		{536F9EC0-ED69-484C-A31E-8E4B597DED50} = {BB931C9A-EE48-42A6-B5F3-3A193B1A051A}
+		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A} = {BB931C9A-EE48-42A6-B5F3-3A193B1A051A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E8897DC-99C6-4585-A2BA-CB194F3B1AB7}
