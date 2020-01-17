@@ -60,14 +60,11 @@
                 <ControlTemplate TargetType="{x:Type local:BaseDialogWindow}">
 
                     <Grid Background="Transparent" x:Name="WindowRoot">
-                        <!--TODO drop shaddow-->
-                        <Border Background="White" CornerRadius="5" BorderThickness="1" BorderBrush="Black">
-                            <Border.BitmapEffect>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
-                            </Border.BitmapEffect>
-                        </Border>
                         <Grid x:Name="LayoutRoot"
-                              Background="{TemplateBinding Background}">
+                              Background="{TemplateBinding Background}" Margin="2">
+                            <Grid.Effect>
+                                <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Quality"  Opacity="0.1"/>
+                            </Grid.Effect>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="40"/>
                                 <RowDefinition Height="*"/>

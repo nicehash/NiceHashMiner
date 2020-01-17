@@ -26,6 +26,13 @@ namespace NHM.Wpf.Views.Common.NHBase
 
         protected Dictionary<ToggleButtonType, ToggleButton> Tabs { get; private set; } = new Dictionary<ToggleButtonType, ToggleButton>();
 
+        private bool HideInitTabButtonVisibility(string name)
+        {
+            if ("MinimizeButton" == name) return false; 
+            if ("CloseButton" == name) return false; 
+            return true;
+        }
+
         protected abstract void OnTabSelected(ToggleButtonType tabType);
 
         public override void OnApplyTemplate()
@@ -37,6 +44,10 @@ namespace NHM.Wpf.Views.Common.NHBase
                 if (tabButtom == null) throw new Exception($"Template Missing ToggleButton with name '{name}'. Make sure your Sytle template contains ToggleButton with name '{name}'.");
                 tabButtom.Click += TabButtonButton_Click;
                 tabButtom.IsEnabled = false;
+                if (HideInitTabButtonVisibility(name))
+                {
+                    tabButtom.Visibility = Visibility.Hidden;
+                }
                 Tabs[key] = tabButtom;
             }
 
@@ -48,6 +59,7 @@ namespace NHM.Wpf.Views.Common.NHBase
             foreach (var kvp in Tabs)
             {
                 kvp.Value.IsEnabled = true;
+                kvp.Value.Visibility = Visibility.Visible;
             }
             const ToggleButtonType initTab = ToggleButtonType.DashboardButton;
             _lastSelected = initTab;

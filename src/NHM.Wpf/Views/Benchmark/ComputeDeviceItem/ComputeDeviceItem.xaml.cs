@@ -16,6 +16,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using static NHMCore.Translations;
+
 namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
 {
     /// <summary>
@@ -124,8 +126,14 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
 
         private void Button_Click_ClearAllSpeeds(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show(Tr("Are you sure you would like to clear all speeds for {0}?", _deviceData.Dev.FullName),
+                Tr("Set default settings?"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning);
             DeviceActionsButtonContext.IsOpen = false;
-            _deviceData.ClearAllSpeeds();
+            if (result == MessageBoxResult.Yes)
+            {
+                _deviceData.ClearAllSpeeds();
+            }
         }
 
         private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)

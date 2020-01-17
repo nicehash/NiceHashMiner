@@ -104,7 +104,8 @@
                         <Grid x:Name="LayoutRoot"
                               Background="{TemplateBinding Background}" Margin="2">
                             <Grid.Effect>
-                                <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" ShadowDepth="2" Opacity="0.5"/>
+                                <!--<DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" ShadowDepth="2" Opacity="0.5"/>-->
+                                <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Quality"  Opacity="0.1"/>
                             </Grid.Effect>
                             <!--<Grid.BitmapEffect>
                                 <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="1.2" />
@@ -136,7 +137,7 @@
                                            IsEnabled="{TemplateBinding IsActive}">
                                     
                                     
-                                    <StackPanel Orientation="Horizontal" Margin="0,32,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,32,0,0" x:Name="PageTabTextButtonsStackPanel">
                                         <ToggleButton x:Name="DashboardButton" Style="{StaticResource TabButton}"
                                                 Margin="40,0,0,0" >
                                             <TextBlock Text="Dashboard" />
