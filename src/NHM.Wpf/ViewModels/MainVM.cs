@@ -326,6 +326,7 @@ namespace NHM.Wpf.ViewModels
 
 
         public BenchmarkViewModel BenchmarkSettings { get; } = new BenchmarkViewModel();
+        public DevicesViewModel DevicesViewModel { get; } = new DevicesViewModel();
 
         public MainVM()
             : base(ApplicationStateManager.Title)

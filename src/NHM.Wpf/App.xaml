@@ -23,7 +23,7 @@
             <!--#region Dynamic Theme Properties-->
             <DrawingBrush x:Key="NHMLogo" Drawing="{DynamicResource NHMLogoLight}" />
 
-            
+
             <DrawingBrush x:Key="LoginCircle" Drawing="{DynamicResource LoginCircleLogoLight}" />
             <!--#endregion Dynamic Theme Properties-->
 
@@ -33,6 +33,23 @@
             <Style TargetType="views:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:NHMDialogWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="{x:Type views:MainWindow}" BasedOn="{StaticResource NHMMainWindowStyle}"/>
+
+
+            <!--#region MiningDevices panel-->
+
+            <SolidColorBrush x:Key="MiningDevices.Warning" Color="{StaticResource Colors.Dark.Basic.MainColor}" />
+            <SolidColorBrush x:Key="MiningDevices.Good" Color="{StaticResource Colors.Dark.Basic.SuccessColor}" />
+            <SolidColorBrush x:Key="MiningDevices.Error" Color="{StaticResource Colors.Dark.Basic.WarningColor}" />
+
+            <SolidColorBrush x:Key="MiningDevices" Color="{DynamicResource Colors.Dark.Basic.MainColor}" />
+
+            <SolidColorBrush x:Key="MiningDevicesBackground.Warning" Color="{StaticResource Colors.Dark.Basic.NO_NAME}" />
+            <SolidColorBrush x:Key="MiningDevicesBackground.Good" Color="{StaticResource Colors.Dark.Basic.SuccessColorBckg}" />
+            <SolidColorBrush x:Key="MiningDevicesBackground.Error" Color="{StaticResource Colors.Dark.Basic.WarningColorBckg}" />
+
+            <SolidColorBrush x:Key="MiningDevicesBackground" Color="{StaticResource Colors.Dark.Basic.NO_NAME}" />
+
+            <!--#endregion MiningDevices panel-->
 
             <!--#region base sytles-->
             <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlock">
@@ -49,7 +66,6 @@
             <Style TargetType="{x:Type TextBlock}" x:Key="BaseUbuntuTextBlockMedium" BasedOn="{StaticResource BaseUbuntuTextBlock}">
                 <Setter Property= "FontWeight" Value="Medium"/>
             </Style>
-
             <!--#endregion base sytles-->
 
             <!--#region common buttons-->

@@ -93,6 +93,7 @@
     <Compile Include="Converters\TranslatingConverter.cs" />
     <Compile Include="ViewModels\ChooseLanguageVM.cs" />
     <Compile Include="ViewModels\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\DevicesViewModel.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\DeviceData.cs" />

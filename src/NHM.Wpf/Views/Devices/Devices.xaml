@@ -83,19 +83,19 @@
                 <ColumnDefinition Width="164*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" ToolTip="{StaticResource devicesMining}">
-                <Border BorderThickness="1" Background="#fde3c6" BorderBrush="Transparent" CornerRadius="4"/>
+                <Border BorderThickness="1" Background="{ DynamicResource MiningDevicesBackground }" BorderBrush="Transparent" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Foreground="{StaticResource PrimaryColorBrush}" Margin="0,12,12,0" />
-                    <TextBlock Grid.Row="1" Style="{DynamicResource local.InfoTitle }" Foreground="{StaticResource PrimaryColorBrush}" Margin="24,0,0,0"
+                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Foreground="{DynamicResource MiningDevices}" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{DynamicResource local.InfoTitle }" Foreground="{DynamicResource MiningDevices}" Margin="24,0,0,0"
                                Text="DEVICES MINING" />
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="24,10,0,0">
-                        <TextBlock Style="{DynamicResource local.InfoBTCValue }" Foreground="{StaticResource PrimaryColorBrush}" Text="{Binding MiningState.MiningDeviceStateCount}" />
-                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart }" Foreground="{StaticResource PrimaryColorBrush}" Margin="2,6,0,0" Text="{Binding PerDeviceDisplayString}" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue }" Foreground="{DynamicResource MiningDevices}" Text="{Binding DevicesViewModel.RunningDevices }" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart }" Foreground="{DynamicResource MiningDevices}" Margin="2,6,0,0" Text="{Binding DevicesViewModel.RunnableDevicesDisplayString }" />
                     </StackPanel>
                 </Grid>
             </Grid>
