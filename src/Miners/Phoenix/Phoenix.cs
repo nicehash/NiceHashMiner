@@ -146,7 +146,7 @@ namespace Phoenix
         protected override void Init()
         {
             var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
-            _devices = string.Join("", mappedDevIDs);
+            _devices = string.Join(",", mappedDevIDs);
         }
 
         protected override string MiningCreateCommandLine()
