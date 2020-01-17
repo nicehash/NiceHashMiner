@@ -12,6 +12,8 @@
     <system:String x:Key="currency">Choose what Currency to Display mining profit.</system:String>
     <system:String x:Key="language">Changes the default language for NiceHash Miner.</system:String>
     <system:String x:Key="theme">Choose in which theme you would like to see NiceHash Miner.</system:String>
+    <system:String x:Key="autoUpdateNHM">When checked, NiceHash Miner will get automatically updated.</system:String>
+    <system:String x:Key="autoUpdateMiner">When checked, miner plugins will get automatically updated.</system:String>
     <system:String x:Key="autoMining">When checked, NiceHash Miner will automatically start mining when launched.</system:String>
     <system:String x:Key="multipleInstances">When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).</system:String>
     <system:String x:Key="runOnStartup">When checked, NiceHash Miner will run on login.</system:String>
