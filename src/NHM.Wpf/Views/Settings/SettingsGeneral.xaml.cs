@@ -18,6 +18,12 @@ namespace NHM.Wpf.Views.Settings
             InitializeComponent();
             LanguageSettings.Visibility = AppRuntimeSettings.ShowLanguage ? Visibility.Visible : Visibility.Collapsed;
             ThemeSettings.Visibility = AppRuntimeSettings.ThemeSettingsEnabled ? Visibility.Visible : Visibility.Collapsed;
+            if (CredentialsSettings.Instance.IsBitcoinAddressValid)
+            {
+                textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
+                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+            }
         }
 
         private void AddressHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
@@ -64,11 +70,13 @@ namespace NHM.Wpf.Views.Settings
             var btcOK = CredentialValidators.ValidateBitcoinAddress(trimmedBtcText);
             if (btcOK)
             {
-                textBoxBTCAddress.BorderBrush = SystemColors.ControlDarkBrush;
+                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
             }
             else
             {
-                textBoxBTCAddress.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFromString("Red");
+                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxBad") as Style;
+                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
             }
         }
 
@@ -77,11 +85,13 @@ namespace NHM.Wpf.Views.Settings
             if (CredentialsSettings.Instance.IsBitcoinAddressValid)
             {
                 textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
-                textBoxBTCAddress.BorderBrush = SystemColors.ControlDarkBrush;
+                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
             }
             else
             {
-                textBoxBTCAddress.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFromString("Red");
+                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
             }
         }
 

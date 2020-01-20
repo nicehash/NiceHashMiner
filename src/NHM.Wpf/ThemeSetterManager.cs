@@ -57,6 +57,9 @@ namespace NHM.Wpf
                 Application.Current.Resources["BorderColor"] = Application.Current.FindResource("Brushes.Light.Border");
                 Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoLightBrush");
                 Application.Current.Resources["TextColorBrush"] = Application.Current.FindResource("Brushes.Light.TextColor");
+
+                Application.Current.Resources["TextBoxBackGroundColor"] = Application.Current.FindResource("TextBoxBackGroundColor.Light");
+                Application.Current.Resources["ComboBoxBackGroundColor"] = Application.Current.FindResource("ComboBoxBackGroundColor.Light");
             }
             else
             {
@@ -67,6 +70,9 @@ namespace NHM.Wpf
                 Application.Current.Resources["BorderColor"] = Application.Current.FindResource("Brushes.Dark.Border");
                 Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoDarkBrush");
                 Application.Current.Resources["TextColorBrush"] = Application.Current.FindResource("Brushes.Dark.TextColor");
+
+                Application.Current.Resources["TextBoxBackGroundColor"] = Application.Current.FindResource("TextBoxBackGroundColor.Dark");
+                Application.Current.Resources["ComboBoxBackGroundColor"] = Application.Current.FindResource("ComboBoxBackGroundColor.Dark");
             }
             // Set the value
             foreach (var setter in _themeSetters)
