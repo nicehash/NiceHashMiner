@@ -27,11 +27,12 @@
                 <Button
                 Width="136" Height="24"
                 HorizontalAlignment="Left"
-                x:Name="RemoveButton" Click="RemoveNotification" >
+                x:Name="RemoveButton" Click="RemoveNotification" Content="Remove" >
                     <Button.Resources>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonWhite}" />
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonWhite}">
+                            <Setter Property="FontSize" Value="10" />
+                        </Style>
                     </Button.Resources>
-                    <Label FontFamily="{StaticResource UbuntuFontFamily}" Style="{StaticResource FontsTypography.TinyBold/Active}">Remove</Label>
                 </Button>
                 <Button
                 Width="136" Height="24"
