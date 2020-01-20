@@ -15,6 +15,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Margin="0"
                             CornerRadius="4"
+                            BorderThickness="{TemplateBinding BorderThickness}"
                             Background="{TemplateBinding Background}"
                             SnapsToDevicePixels="True">
                         <ContentPresenter
@@ -50,6 +51,7 @@
     <Style x:Key="BigButtonPrimary" TargetType="Button" BasedOn="{StaticResource BigButton}">
         <Setter Property="Background" Value="{StaticResource Brushes.Gradient}" />
         <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+        <Setter Property="BorderThickness" Value="0" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
@@ -70,15 +72,16 @@
         <Setter Property="FontStyle" Value="Normal" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="BitmapEffect" >
+        <Setter Property="BorderThickness" Value="1" />
+        <!--<Setter Property="BitmapEffect" >
             <Setter.Value>
                 <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
             </Setter.Value>
-        </Setter>
+        </Setter>-->
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
         <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Style.Triggers>
+        <!--<Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BitmapEffect" >
                     <Setter.Value>
@@ -86,7 +89,7 @@
                     </Setter.Value>
                 </Setter>
             </Trigger>
-        </Style.Triggers>
+        </Style.Triggers>-->
     </Style>
     
     <!--#region common-->
