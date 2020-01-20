@@ -25,11 +25,11 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.94",
+                BinVersion = "1.95",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.94/gminer_1_94_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.95/gminer_1_95_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -41,7 +41,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(6, 1);
+        public override Version Version => new Version(6, 2);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -146,15 +146,9 @@ namespace GMinerPlugin
         {
             try
             {
-                if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 4) {
-                    var isRightGpu = device is CUDADevice gpu && gpu.Name.ToLower().Contains("p104");
-                    var isGrinCuckatoo = ids.FirstOrDefault() == AlgorithmType.GrinCuckatoo31;
-                    if (isRightGpu && isGrinCuckatoo) return true;
+                if (benchmarkedPluginVersion.Major == 6 && benchmarkedPluginVersion.Minor < 2) {
+                    return ids.FirstOrDefault() == AlgorithmType.Cuckaroom;
                 }
-                var isReBenchVersion = benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 1;
-                var first = ids.FirstOrDefault();
-                var isBenchAlgo = first == AlgorithmType.CuckooCycle;        
-                return isReBenchVersion && isBenchAlgo;
             }
             catch (Exception e)
             {
