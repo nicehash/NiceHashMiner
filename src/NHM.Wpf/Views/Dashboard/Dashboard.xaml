@@ -130,6 +130,17 @@
 
         <!--#endregion Dashboard styles -->
     </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="UserControl.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
     <Grid Background="{DynamicResource BackgroundColor}" Height="Auto" Width="Auto" Margin="40,0,40,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="308*" />
@@ -151,18 +162,23 @@
                     <ToggleButton.Effect>
                         <DropShadowEffect BlurRadius="50" ShadowDepth="20" Direction="-75" Opacity="0.1"/>
                     </ToggleButton.Effect>
-                </ToggleButton> 
-                <TextBlock
-                    DockPanel.Dock="Bottom"
-                    Style="{StaticResource BaseUbuntuTextBlockBold}"
-                    FontSize="14"
-                    Foreground="{StaticResource Gray1ColorBrush}"
-                    TextAlignment="Center"
-                    Margin="0,24,0,0"
-                    Text="{ Binding Dashboard.StatusText }"
-                    ToolTip="some info"
-                    Visibility="Visible"
-                    />
+                </ToggleButton>
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,24,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"> 
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                               FontSize="14"
+                               Foreground="{StaticResource Gray1ColorBrush}"
+                               TextAlignment="Center"
+                               Text="{ Binding Dashboard.StatusText }"
+                               ToolTip="{ Binding Dashboard.StatusToolTip }"
+                               Visibility="Visible" />
+                    <Path Style="{StaticResource SpinCirclePath}"
+                            Visibility="{Binding Dashboard.ShowProgress, Converter={StaticResource NulBoolToVisibilityConverter}}"
+                            x:Name="spinCirclePath"
+                            Width="20"
+                            Height="20"
+                            Margin="8,0,0,0"
+                            Stretch="Fill" />
+                </StackPanel>
             </DockPanel>
         </Grid>
         <!--Complete Credentials info-->

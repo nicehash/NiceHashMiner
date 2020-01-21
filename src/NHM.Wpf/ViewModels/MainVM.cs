@@ -119,6 +119,8 @@ namespace NHM.Wpf.ViewModels
         public ToSSetings ToSSetings => ToSSetings.Instance;
         public TranslationsSettings TranslationsSettings => TranslationsSettings.Instance;
         public WarningSettings WarningSettings => WarningSettings.Instance;
+
+        public UpdateSettings UpdateSettings => UpdateSettings.Instance;
         #endregion Exposed settings
 
         
