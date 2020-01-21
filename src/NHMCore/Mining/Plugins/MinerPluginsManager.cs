@@ -411,11 +411,12 @@ namespace NHMCore.Mining.Plugins
                 var hasUrls = urls.Any();
                 if (hasMissingFiles && hasUrls && !plugin.IsBroken)
                 {
-                    AvailableNotifications.CreateMissingMinerBinsInfo(plugin.Name);
                     Logger.Info("MinerPluginsManager", $"Downloading missing files for {plugin.PluginUUID}-{plugin.Name}");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
                     var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
                     await DownloadInternalBins(plugin, urls.ToList(), downloadProgress, unzipProgress, stop);
+                    // check if we have missing files after the download 
+                    if (plugin.CheckBinaryPackageMissingFiles().Any()) AvailableNotifications.CreateMissingMinerBinsInfo(plugin.Name);
                 }
             }
         }
