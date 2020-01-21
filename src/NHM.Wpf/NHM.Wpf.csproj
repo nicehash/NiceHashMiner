@@ -332,6 +332,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Xaml\Icons\MiningAxeIconDark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Xaml\Icons\MoonCircleDark.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
