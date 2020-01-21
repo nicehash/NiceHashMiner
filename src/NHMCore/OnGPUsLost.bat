@@ -1,4 +1,4 @@
-:: This script contains two option how you can "repair" lost GPU
+﻿:: This script contains two option how you can "repair" lost GPU
 :: Default option (option 1) will restart your entire rig, you can also uncomment "NirCMD" to make a screenshot befor reboot (you need to place NirCMD in NHML directory under "NirCMD\nircmd.exe")
 :: Second option will use nvidiaInspector to restart display drivers, you need to place "NvidiaInspector" in NHML directory under "NV_Inspector\nvidiaInspector.exe", this will set GPU profile (OC etc.) to default so it will also select MSI Afterburner profile
 :: Option 1 is used by default, if you whant to use Option 2 you need to change line "set OPTION=1" to "set OPTION=2"
