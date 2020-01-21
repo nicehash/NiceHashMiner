@@ -7,7 +7,7 @@ using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
 {
-    public class AvailableNotifications
+    public static class AvailableNotifications
     {
         public static void CreateDeviceMonitoringNvidiaElevateInfo()
         {
@@ -246,17 +246,18 @@ namespace NHMCore.Notifications
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Increase virtual memory",
-                Action = () => {
-                    var dialogResult = MessageBox.Show(Tr("Select the OK button to automatically increase virtual memory."),
-                        Tr("Increase virtual memory"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.OK)
-                    {
-                        //TODO auto increase vram
-                        //var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, true);
-                        //key.SetValue("AutoIncreaseVRAM", true); //set key to "true"
-                    }
-                }
+                // TODO here 
+                //Action = () => {
+                //    var dialogResult = MessageBox.Show(Tr("Select the OK button to automatically increase virtual memory."),
+                //        Tr("Increase virtual memory"),
+                //        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //    if (dialogResult == DialogResult.OK)
+                //    {
+                //        //TODO auto increase vram
+                //        //var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, true);
+                //        //key.SetValue("AutoIncreaseVRAM", true); //set key to "true"
+                //    }
+                //}
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
