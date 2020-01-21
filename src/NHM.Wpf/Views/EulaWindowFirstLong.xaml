@@ -11,6 +11,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
+        WindowStartupLocation="CenterScreen"
         Topmost="True" >
     <nhb:BaseDialogWindow.Resources>
         <Style TargetType="TextBlock" x:Key="Terms-of-service" BasedOn="{StaticResource FontsTypography.Body-2-Regular}">

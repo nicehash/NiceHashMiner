@@ -40,12 +40,12 @@
             <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" Margin="40,10,40,0">
                 <TabControl x:Name="MainTabs" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Panel.ZIndex="0">
                     <TabItem Header="General" Name="GeneralTab">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
                             <local:SettingsGeneral />
                         </ScrollViewer>
                     </TabItem>
                     <TabItem Header="Advanced" Name="AdvancedTab">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
                             <local:SettingsAdvanced />
                         </ScrollViewer>
                     </TabItem>
@@ -56,11 +56,12 @@
             <Button
                 Width="136" Height="24"
                 HorizontalAlignment="Left"
-                x:Name="btn_default" Click="Btn_default_Click" >
+                x:Name="btn_default" Click="Btn_default_Click" Content="RESET TO DEFAULT">
                 <Button.Resources>
-                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonWhite}" />
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonWhite}">
+                        <Setter Property="FontSize" Value="10" />
+                    </Style>
                 </Button.Resources>
-                <Label FontFamily="{StaticResource UbuntuFontFamily}" Style="{StaticResource FontsTypography.TinyBold/Active}">RESET TO DEFAULT</Label>
             </Button>
             <Button
                 Width="136" Height="24"

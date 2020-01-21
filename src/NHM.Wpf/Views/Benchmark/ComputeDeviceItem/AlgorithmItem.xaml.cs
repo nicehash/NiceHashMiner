@@ -1,4 +1,8 @@
-﻿using NHM.Common.Enums;
+﻿// TODO decide what to use here
+//#define USE_MODAL 
+
+
+using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using System;
@@ -24,9 +28,18 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
     public partial class AlgorithmItem : UserControl
     {
         AlgorithmContainer _algorithmContainer;
+#if USE_MODAL
+        readonly AlgorithmSettings _algorithmSettings;
+#endif
         public AlgorithmItem()
         {
             InitializeComponent();
+#if USE_MODAL
+            _algorithmSettings = new AlgorithmSettings();
+            _algorithmSettings.MaxWidth = 392;
+            _algorithmSettings.MaxHeight = 798;
+            _algorithmSettings.CloseClick += (s, e) => CustomDialogManager.HideCurrentModal();
+#endif
 
             DataContextChanged += AlgorithmItem_DataContextChanged;
         }
@@ -37,6 +50,9 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             {
                 _algorithmContainer = algorithmContainer;
                 AlgorithmSettingsContextMenu.DataContext = e.NewValue;
+#if USE_MODAL
+                _algorithmSettings.DataContext = e.NewValue;
+#endif
                 return;
             }
             throw new Exception("unsupported datacontext type");
@@ -45,18 +61,23 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
         private readonly HashSet<Button> _toggleButtonsGuard = new HashSet<Button>();
         private void AlgorithmSettings_Button_Click(object sender, RoutedEventArgs e)
         {
+#if USE_MODAL
+            CustomDialogManager.ShowDialog(_algorithmSettings);
+#else
             if (sender is Button tButton && !_toggleButtonsGuard.Contains(tButton))
             {
                 _toggleButtonsGuard.Add(tButton);
                 AlgorithmSettingsContextMenu.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
-                closedHandler += (s, e2) => {
+                closedHandler += (s, e2) =>
+                {
                     _toggleButtonsGuard.Remove(tButton);
                     //tButton.IsChecked = false;
                     AlgorithmSettingsContextMenu.Closed -= closedHandler;
                 };
                 AlgorithmSettingsContextMenu.Closed += closedHandler;
             }
+#endif
         }
 
         private void CloseAlgorithmSettings_Button_Click(object sender, RoutedEventArgs e)

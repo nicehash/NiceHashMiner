@@ -2,6 +2,7 @@
 using NHM.Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace NHMCore.Mining.Plugins
@@ -9,6 +10,18 @@ namespace NHMCore.Mining.Plugins
     // cross referenced local and online
     public class PluginPackageInfoCR : NotifyChangedBase
     {
+        public PluginPackageInfoCR(string pluginUUID)
+        {
+            // check auto update
+            try
+            {
+                IsAutoUpdateEnabled = !File.Exists(Paths.MinerPluginsPath(pluginUUID, "disable_autoupdates"));
+            }
+            catch (Exception e)
+            {
+                Logger.Debug("PluginPackageInfoCR constructor", $"PluginPackageInfoCR {e.Message}");
+            }
+        }
         private PluginPackageInfo _onlineInfo { get; set; }
         public PluginPackageInfo OnlineInfo
         {
@@ -166,6 +179,36 @@ namespace NHMCore.Mining.Plugins
                 // prefer local over online
                 var desc = LocalInfo?.PluginDescription ?? OnlineInfo?.PluginDescription ?? "N/A";
                 return desc;
+            }
+        }
+
+        // TODO this shouldn't be here
+        private bool _isAutoUpdateEnabled = true;
+        public bool IsAutoUpdateEnabled
+        {
+            get
+            {
+                return _isAutoUpdateEnabled;
+            }
+            set
+            {
+                _isAutoUpdateEnabled = value;
+                try
+                {
+                    var disableAutoUpdatesFile = Paths.MinerPluginsPath(PluginUUID, "disable_autoupdates");
+                    if (value)
+                    {
+                        File.Delete(disableAutoUpdatesFile);
+                    }
+                    else
+                    {
+                        File.Create(disableAutoUpdatesFile);
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+                OnPropertyChanged(nameof(IsAutoUpdateEnabled));
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using System;
@@ -31,23 +32,44 @@ namespace NHM.Wpf.ViewModels
                     statuses[1] = "Benchmarking";
                 }
                 ret += string.Join("/", statuses.Where(s => s != null));
-                if (_isMining || _isBenchmarking)
+                return Translations.Tr(ret);
+            }
+        }
+
+        public string StatusToolTip
+        {
+            get
+            {
+                var ret = "";
+                // Start/Stop
+                ret += !_isRunning ? "Start " : "Stop ";
+                var statuses = new string[] { null, null };
+                if (_isMining)
                 {
-                    ret += $" {new string('.', _dots)}";
+                    statuses[0] = "Mining";
                 }
-                return ret;
+                if (_isBenchmarking)
+                {
+                    statuses[1] = "Benchmarking";
+                }
+                ret += string.Join("/", statuses.Where(s => s != null));
+                return Translations.Tr(ret);
+            }
+        }
+
+        public bool ShowProgress
+        {
+            get
+            {
+                return _isRunning || _isMining || _isBenchmarking;
             }
         }
 
         public Visibility CompleteBTCVisibility { get; private set; } = Visibility.Visible;
 
-
-        private readonly Timer _updateTimer;
-
         private bool _isRunning = false;
         private bool _isMining = false;
         private bool _isBenchmarking = false;
-        private int _dots = 0;
         private static object _lock = new object();
 
         public DashboardViewModel()
@@ -58,26 +80,9 @@ namespace NHM.Wpf.ViewModels
             MiningStateInstance_PropertyChanged(this, null);
             CompleteBTCVisibility = CredentialsSettings.Instance.IsBitcoinAddressValid ? Visibility.Collapsed : Visibility.Visible;
             OnPropertyChanged(nameof(CompleteBTCVisibility));
-
-
-            _updateTimer = new Timer(1000);
-            _updateTimer.Elapsed += (s,e) =>
-            {
-                lock (_lock)
-                {
-                    if (_isMining || _isBenchmarking)
-                    {
-                        _dots = (_dots + 1) % 4;
-                        OnPropertyChanged(nameof(StatusText));
-                    }
-                    else if (_dots != 0)
-                    {
-                        _dots = 0;
-                        OnPropertyChanged(nameof(StatusText));
-                    }
-                }
-            };
-            _updateTimer.Start();
+            OnPropertyChanged(nameof(StatusText));
+            OnPropertyChanged(nameof(StatusToolTip));
+            OnPropertyChanged(nameof(ShowProgress));
 
             //if (MiningState.Instance.IsNotBenchmarkingOrMining)
             //{
@@ -100,6 +105,8 @@ namespace NHM.Wpf.ViewModels
             }
 
             OnPropertyChanged(nameof(StatusText));
+            OnPropertyChanged(nameof(StatusToolTip));
+            OnPropertyChanged(nameof(ShowProgress));
         }
 
         private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

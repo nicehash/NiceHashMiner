@@ -119,6 +119,8 @@ namespace NHM.Wpf.ViewModels
         public ToSSetings ToSSetings => ToSSetings.Instance;
         public TranslationsSettings TranslationsSettings => TranslationsSettings.Instance;
         public WarningSettings WarningSettings => WarningSettings.Instance;
+
+        public UpdateSettings UpdateSettings => UpdateSettings.Instance;
         #endregion Exposed settings
 
         
@@ -230,11 +232,10 @@ namespace NHM.Wpf.ViewModels
                 {
                     ScaledBtcPerTime = MBtcPerTime;
                     scale = 1;
+                    var retScaled = $"{(sum / scale):F5}";
+                    return retScaled;
                 }
-                else
-                {
-                    ScaledBtcPerTime = BtcPerTime;
-                }
+                ScaledBtcPerTime = BtcPerTime;
                 var ret = $"{(sum / scale):F8}";
                 return ret;
             }
@@ -326,6 +327,7 @@ namespace NHM.Wpf.ViewModels
 
 
         public BenchmarkViewModel BenchmarkSettings { get; } = new BenchmarkViewModel();
+        public DevicesViewModel DevicesViewModel { get; } = new DevicesViewModel();
 
         public MainVM()
             : base(ApplicationStateManager.Title)
@@ -347,6 +349,14 @@ namespace NHM.Wpf.ViewModels
                 {
                     Currency = BalanceAndExchangeRates.Instance.SelectedFiatCurrency;
                     OnPropertyChanged(nameof(FiatBalance));
+                }
+            };
+
+            VersionState.Instance.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(VersionState.OnlineVersion))
+                {
+                    OnPropertyChanged(nameof(OnlineVersion));
                 }
             };
 

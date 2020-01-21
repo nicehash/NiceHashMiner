@@ -12,6 +12,22 @@
     <SolidColorBrush x:Key="TextColorBrush" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
     <!--#endregion DynamicColors-->
 
+    <!--#region Blur background panel-->
+
+    <SolidColorBrush x:Key="MODAL_WINDOW_BLUR_Background.Light" Color="#fcfcfc" />
+    <SolidColorBrush x:Key="MODAL_WINDOW_BLUR_Background.Dark" Color="#3a3939" />
+    <SolidColorBrush x:Key="MODAL_WINDOW_BLUR_Background" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+
+    <SolidColorBrush x:Key="MiningDevices" Color="{DynamicResource Colors.Dark.Basic.MainColor}" />
+
+    <SolidColorBrush x:Key="MiningDevicesBackground.Warning" Color="{StaticResource Colors.Dark.Basic.NO_NAME}" />
+    <SolidColorBrush x:Key="MiningDevicesBackground.Good" Color="{StaticResource Colors.Dark.Basic.SuccessColorBckg}" />
+    <SolidColorBrush x:Key="MiningDevicesBackground.Error" Color="{StaticResource Colors.Dark.Basic.WarningColorBckg}" />
+
+    <SolidColorBrush x:Key="MiningDevicesBackground" Color="{StaticResource Colors.Dark.Basic.NO_NAME}" />
+
+    <!--#endregion Blur background panel-->
+
     <SolidColorBrush x:Key="TextColorBrush-Primary.Light" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
     <SolidColorBrush x:Key="TextColorBrush-Regular.Light" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
     <SolidColorBrush x:Key="TextColorBrush-Secondary.Light" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />

@@ -130,6 +130,17 @@
 
         <!--#endregion Dashboard styles -->
     </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="UserControl.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
     <Grid Background="{DynamicResource BackgroundColor}" Height="Auto" Width="Auto" Margin="40,0,40,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="308*" />
@@ -151,18 +162,23 @@
                     <ToggleButton.Effect>
                         <DropShadowEffect BlurRadius="50" ShadowDepth="20" Direction="-75" Opacity="0.1"/>
                     </ToggleButton.Effect>
-                </ToggleButton> 
-                <TextBlock
-                    DockPanel.Dock="Bottom"
-                    Style="{StaticResource BaseUbuntuTextBlockBold}"
-                    FontSize="14"
-                    Foreground="{StaticResource Gray1ColorBrush}"
-                    TextAlignment="Center"
-                    Margin="0,24,0,0"
-                    Text="{ Binding Dashboard.StatusText }"
-                    ToolTip="some info"
-                    Visibility="Visible"
-                    />
+                </ToggleButton>
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,24,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"> 
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                               FontSize="14"
+                               Foreground="{StaticResource Gray1ColorBrush}"
+                               TextAlignment="Center"
+                               Text="{ Binding Dashboard.StatusText }"
+                               ToolTip="{ Binding Dashboard.StatusToolTip }"
+                               Visibility="Visible" />
+                    <Path Style="{StaticResource SpinCirclePath}"
+                            Visibility="{Binding Dashboard.ShowProgress, Converter={StaticResource NulBoolToVisibilityConverter}}"
+                            x:Name="spinCirclePath"
+                            Width="20"
+                            Height="20"
+                            Margin="8,0,0,0"
+                            Stretch="Fill" />
+                </StackPanel>
             </DockPanel>
         </Grid>
         <!--Complete Credentials info-->
@@ -172,37 +188,8 @@
                     TextAlignment="Left"
                     Text="Complete your mining setup"/>
                 <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
-                    <Button Style="{StaticResource local.CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Wallet Address" Click="EnterBTCWallet_Button_Click">
-                        <Button.ContextMenu>
-                            <ContextMenu x:Name="BTCWalletContextMenu" >
-                                <ContextMenu.Template>
-                                    <ControlTemplate>
-                                        <Grid Background="{DynamicResource BackgroundColor}">
-                                            <Border CornerRadius="4" BorderThickness="1" BorderBrush="{DynamicResource BorderColor}"/>
-                                            <WrapPanel Margin="24,0,24,16" Orientation="Vertical" >
-                                                <StackPanel Orientation="Horizontal" ToolTip="{StaticResource walletAddress}">
-                                                    <Label Content="Wallet Address" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
-                                                    <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-                                                </StackPanel>
-                                                <TextBox Style="{StaticResource inputBox}"
-                                                             x:Name="textBoxBTCAddress"
-                                                             Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
-                                                             TextChanged="TextBoxBitcoinAddress_TextChanged" />
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Margin="0,8,0,0">
-                                                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
-                                                            How to create a Wallet Address?
-                                                        </Hyperlink>
-                                                    </TextBlock>
-                                                    <Button Content="Save" Style="{StaticResource OKButton}" Height="20" Width="100" Margin="40,7,0,0" Click="ButtonBTCWallet_Click"/>
-                                                </StackPanel>
-                                            </WrapPanel>
-                                        </Grid>
-                                    </ControlTemplate>
-                                </ContextMenu.Template>
-                            </ContextMenu>
-                        </Button.ContextMenu>
-                    </Button>
+                    <Button Style="{StaticResource local.CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Wallet Address" Click="EnterBTCWallet_Button_Click" />
+
                     <!--<Button>Name Your Worker</Button>
                         <Button>dsfdf</Button>-->
                 </WrapPanel>
@@ -284,7 +271,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <common:MiningLocation
+            <common:WorkernamePanel
                 Grid.Column="0"
                 HorizontalAlignment="Left"
                 />

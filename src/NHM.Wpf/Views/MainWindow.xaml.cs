@@ -30,6 +30,7 @@ namespace NHM.Wpf.Views
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             LoadingBar.Visibility = Visibility.Visible;
             Topmost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
+            CustomDialogManager.MainWindow = this;
         }
 
         private void GUISettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

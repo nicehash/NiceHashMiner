@@ -9,5 +9,6 @@
         <ResourceDictionary Source="SunCircleLight.xaml"/>
         <ResourceDictionary Source="MoonCircleDark.xaml"/>
         <ResourceDictionary Source="MiningAxeIcon.xaml"/>
+        <ResourceDictionary Source="MiningAxeIconDark.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

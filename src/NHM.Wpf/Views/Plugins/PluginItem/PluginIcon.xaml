@@ -7,14 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Border
+        x:Name="border"
         Width="48"
         Height="32"
+        BorderThickness="1"
+        BorderBrush="{DynamicResource BorderColor}"
         Background="#eeeeee" CornerRadius="4"
         HorizontalAlignment="Center"
         VerticalAlignment="Center" >
         <Grid Width="21.5" Height="23.4">
             <Grid.Background>
-                <DrawingBrush Drawing="{StaticResource MiningAxeIcon}" />
+                <DrawingBrush x:Name="iconBrush" Drawing="{DynamicResource MiningAxeIcon}" />
             </Grid.Background>
         </Grid>
     </Border>

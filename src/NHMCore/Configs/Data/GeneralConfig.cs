@@ -316,6 +316,19 @@ namespace NHMCore.Configs.Data
         }
         #endregion Global Device settings
 
+        #region UpdateSettings
+        public bool AutoUpdateNiceHashMiner
+        {
+            get => UpdateSettings.Instance.AutoUpdateNiceHashMiner;
+            set => UpdateSettings.Instance.AutoUpdateNiceHashMiner = value;
+        }
+        public bool AutoUpdateMinerPlugins
+        {
+            get => UpdateSettings.Instance.AutoUpdateMinerPlugins;
+            set => UpdateSettings.Instance.AutoUpdateMinerPlugins = value;
+        }
+        #endregion UpdateSettings
+
         // methods
         public void SetDefaults()
         {

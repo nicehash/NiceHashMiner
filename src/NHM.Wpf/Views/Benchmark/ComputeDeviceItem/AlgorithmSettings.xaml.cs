@@ -57,6 +57,8 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
         {
             bool found = false;
             var border = (resultStack.Parent as ScrollViewer).Parent as Border;
+            border.Background = Application.Current.Resources["BackgroundColor"] as Brush;
+            border.BorderBrush = Application.Current.Resources["BorderColor"] as Brush;
             var minerOptionsPackage = _algorithmContainer.PluginContainer.GetMinerOptionsPackage();
             if (minerOptionsPackage == null) return;
 
@@ -126,6 +128,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             // A little style...   
             block.Margin = new Thickness(2, 3, 2, 3);
             block.Cursor = Cursors.Hand;
+            block.Foreground = Application.Current.Resources["TextColorBrush"] as Brush;
 
             // Mouse events   
             block.MouseLeftButtonUp += (sender, e) =>
@@ -143,7 +146,7 @@ namespace NHM.Wpf.Views.Benchmark.ComputeDeviceItem
             block.MouseEnter += (sender, e) =>
             {
                 TextBlock b = sender as TextBlock;
-                b.Background = Brushes.PeachPuff;
+                b.Background = Application.Current.Resources["BorderColor"] as Brush;
             };
 
             block.MouseLeave += (sender, e) =>

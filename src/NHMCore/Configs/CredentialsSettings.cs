@@ -38,6 +38,7 @@ namespace NHMCore.Configs
                 _stringProps.Set(nameof(WorkerName), value);
                 IsWorkerNameValid = CredentialValidators.ValidateWorkerName(WorkerName);
                 OnPropertyChanged(nameof(IsCredentialValid));
+                OnPropertyChanged(nameof(WorkerName));
             }
         }
 

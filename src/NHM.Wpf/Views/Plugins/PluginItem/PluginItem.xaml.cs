@@ -34,6 +34,7 @@ namespace NHM.Wpf.Views.Plugins.PluginItem
         private void PluginEntry_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             _vm = e.NewValue as PluginEntryVM; // ?? throw new InvalidOperationException("DataContext must be of type `PluginEntryVM`");
+            PluginActionsButtonContext.DataContext = _vm;
             if (!_vm.Plugin.Supported)
             {
                 mainPluginGrid.ToolTip = "Not compatible with your hardware.";

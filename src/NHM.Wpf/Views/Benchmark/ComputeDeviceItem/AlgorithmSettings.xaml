@@ -9,33 +9,16 @@
              d:DesignHeight="789" d:DesignWidth="392"
              d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
     <UserControl.Resources>
-        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="settingTitle">
+        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="local.SettingTitle">
             <Setter Property="FontSize" Value="20" />
             <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
         </Style>
 
-        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="settingDetail">
+        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="local.SettingDetail">
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         </Style>
 
-        <Style TargetType="TextBox" x:Key="inputBox">
-            <Setter Property="Width" Value="344" />
-            <Setter Property="Height" Value="40" />
-            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="16,0,0,0" />
-
-            <Style.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="4" />
-                    <Setter Property="BorderThickness" Value="0" />
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                </Style>
-            </Style.Resources>
-        </Style>
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -68,28 +51,28 @@
 
         <!--FIRST SPEED-->
         <WrapPanel Grid.Row="2" Margin="24,16,24,16">
-            <TextBlock Style="{StaticResource settingTitle}" Text="Benchmark Speed (H/s)" />
-            <TextBlock Style="{StaticResource settingDetail}" Margin="0,8,0,0" Text="Fine tune algorithm ratios by manually settings benchmark speeds for each algorithm." TextWrapping="Wrap"/>
+            <TextBlock Style="{StaticResource local.SettingTitle}" Text="Benchmark Speed (H/s)" />
+            <TextBlock Style="{StaticResource local.SettingDetail}" Margin="0,8,0,0" Text="Fine tune algorithm ratios by manually settings benchmark speeds for each algorithm." TextWrapping="Wrap"/>
             <TextBox Style="{StaticResource inputBox}" Text="{Binding BenchmarkSpeed}" Margin="0,16,0,0" />
         </WrapPanel>
 
         <!--SECOND SPEED-->
         <WrapPanel Grid.Row="3" Margin="24,16,24,16" x:Name="secondarySpeedPanel">
-            <TextBlock Style="{StaticResource settingTitle}" Text="Secondary Benchmark Speed (H/s)" />
-            <TextBlock Style="{StaticResource settingDetail}" Text="Speed for the secondary algorithm when using dual mining." TextWrapping="Wrap"/>
+            <TextBlock Style="{StaticResource local.SettingTitle}" Text="Secondary Benchmark Speed (H/s)" />
+            <TextBlock Style="{StaticResource local.SettingDetail}" Text="Speed for the secondary algorithm when using dual mining." TextWrapping="Wrap"/>
             <TextBox Style="{StaticResource inputBox}" Text="{Binding SecondaryBenchmarkSpeed}" Margin="0,16,0,0" />
         </WrapPanel>
 
         <!--Power Usage-->
         <WrapPanel Grid.Row="4" Margin="24,16,24,16">
-            <TextBlock Style="{StaticResource settingTitle}" Text="Power Usage (W)" />
-            <TextBlock Style="{StaticResource settingDetail}" Text="The power used by this algorithm in Watts and Algorithm profits will deduct power costs when this and electricity cost are above 0." TextWrapping="Wrap"/>
+            <TextBlock Style="{StaticResource local.SettingTitle}" Text="Power Usage (W)" />
+            <TextBlock Style="{StaticResource local.SettingDetail}" Text="The power used by this algorithm in Watts and Algorithm profits will deduct power costs when this and electricity cost are above 0." TextWrapping="Wrap"/>
             <TextBox Style="{StaticResource inputBox}" Text="{Binding PowerUsage}" Margin="0,16,0,0" />
         </WrapPanel>
 
         <WrapPanel Grid.Row="5" Margin="24,16,24,16">
-            <TextBlock Style="{StaticResource settingTitle}" Text="Extra Launch Parameters:" />
-            <TextBlock Style="{StaticResource settingDetail}" Text="Additional launch parameters when launching miner and this algorithm." TextWrapping="Wrap"/>
+            <TextBlock Style="{StaticResource local.SettingTitle}" Text="Extra Launch Parameters:" />
+            <TextBlock Style="{StaticResource local.SettingDetail}" Text="Additional launch parameters when launching miner and this algorithm." TextWrapping="Wrap"/>
             <TextBox Style="{StaticResource inputBox}" Text="{Binding ExtraLaunchParameters}" TextWrapping="Wrap" Margin="0,16,0,0" KeyUp="TextBox_KeyUp" Name="textBox">
             </TextBox>
             <Border Width="298" MaxHeight="300" BorderBrush="Black" BorderThickness="1" Visibility="Collapsed">
@@ -113,12 +96,12 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Style="{StaticResource settingTitle}" Text="Schedule for re-benchmarking"  HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="0" Style="{StaticResource local.SettingTitle}" Text="Schedule for re-benchmarking"  HorizontalAlignment="Left"/>
                     <CheckBox Grid.Column="1" x:Name="ReBenchSwitch" Style="{StaticResource NHMSwitch}" Margin="4,0,0,0" HorizontalAlignment="Right" IsChecked="{Binding IsReBenchmark}" />
                 </Grid>
-                <TextBlock Style="{StaticResource settingDetail}" Text="{StaticResource scheduleBenchmarking}" TextWrapping="Wrap"/>
+                <TextBlock Style="{StaticResource local.SettingDetail}" Text="{StaticResource scheduleBenchmarking}" TextWrapping="Wrap"/>
             </StackPanel>
         </ToggleButton>
-        <Separator Grid.Row="7"/>
+        <Separator Grid.Row="7" Background="{DynamicResource BorderColor}"/>
     </Grid>
 </UserControl>

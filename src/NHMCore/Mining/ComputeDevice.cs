@@ -237,6 +237,7 @@ namespace NHMCore.Mining
             Enabled = true;
 
             GlobalDeviceSettings.Instance.PropertyChanged += OnShowGPUPCIeBusIDs;
+            this.PropertyChanged += BenchmarkManagerState.Instance.ComputeDeviceOnPropertyChanged;
         }
 
         public void UpdateEstimatePaying(Dictionary<AlgorithmType, double> paying)

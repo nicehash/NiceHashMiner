@@ -282,7 +282,7 @@ namespace NHMCore.Mining.Plugins
                     {
                         if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
 
-                        if (isActive() && getOnlineMinerPluginsElapsedTimeChecker.CheckAndMarkElapsedTime())
+                        if (isActive() && getOnlineMinerPluginsElapsedTimeChecker.CheckAndMarkElapsedTime() && UpdateSettings.Instance.AutoUpdateMinerPlugins)
                         {
                             Logger.Debug("MinerPluginsManager", $"Checking for plugin updates");
                             // TODO Cross refference online plugins
@@ -300,11 +300,12 @@ namespace NHMCore.Mining.Plugins
                                     // plugin updates cases
                                     var installed = packageInfoCR.Value.Installed;
                                     var supportedAndCompatible = packageInfoCR.Value.CompatibleNHPluginVersion && packageInfoCR.Value.Supported;
+                                    var updatesEnabled = packageInfoCR.Value.IsAutoUpdateEnabled;
                                     var canUpdate = supportedAndCompatible && installed && packageInfoCR.Value.HasNewerVersion;
                                     var compatibleNotInstalled = !installed && supportedAndCompatible && false; // disable by default
                                     var isInstalling = MinerPluginInstallTasks.ContainsKey(pluginUUID);
 
-                                    if (!isInstalling && (canUpdate || compatibleNotInstalled))
+                                    if (updatesEnabled && !isInstalling && (canUpdate || compatibleNotInstalled))
                                     {
                                         Logger.Debug("MinerPluginsManager", $"Main loop Install/Update {packageInfoCR.Key}");
 
@@ -545,7 +546,7 @@ namespace NHMCore.Mining.Plugins
                 };
                 if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
                 {
-                    PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR{};
+                    PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
                 }
                 PluginsPackagesInfosCRs[uuid].LocalInfo = localPluginInfo;
             }
@@ -558,7 +559,7 @@ namespace NHMCore.Mining.Plugins
                 var uuid = online.PluginUUID;
                 if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
                 {
-                    PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR{};
+                    PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
                 }
                 PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
                 if (online.SupportedDevicesAlgorithms != null)

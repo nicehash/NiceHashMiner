@@ -131,7 +131,7 @@ namespace NHMCore.ApplicationState
             if (GUISettings.Instance.AutoScaleBTCValues && _btcBalance < 0.1)
             {
                 var scaled = (_btcBalance ?? 0) * 1000;
-                DisplayBTCBalance = $"{scaled:F8}";
+                DisplayBTCBalance = $"{scaled:F5}";
                 DisplayBTCSymbol = "mBTC";
             }
             else
