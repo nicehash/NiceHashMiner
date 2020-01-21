@@ -1,0 +1,119 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Benchmark.ComputeDeviceItem.ComputeDeviceItemHeader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels.Models"
+             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}" x:Key="TextBoxCol">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                </Trigger>
+
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <RotateTransform Angle="90" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+                    <Setter Property="LineHeight" Value="1.57" />
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" MinWidth="320" Height="Auto" Margin="40,0,40,0" VerticalAlignment="Center">
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                <Grid Background="Transparent" HorizontalAlignment="Stretch" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:ComputeDeviceItemHeader}}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Style="{DynamicResource TextBoxCol}" Text="{Binding Label}" Margin="16,0,0,0"/>
+                    </StackPanel>
+                    <WrapPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
+                        <TextBlock Style="{DynamicResource TextBoxCol}" Text="ENABLED" Margin="0,0,54,0"/>
+                        <TextBlock Style="{DynamicResource TextBoxCol}" Text="BENCHED" Margin="0,0,54,0"/>
+                        <CheckBox     Visibility="Hidden"
+                                      Style="{StaticResource NHMSwitch}"
+                                      x:Name="EnableDisableCheckBox"
+                                      IsChecked="{Binding Enabled}"
+                                      Margin="0,0,0,0" />
+                        <!--TODO add context menu and all that-->
+                        <ToggleButton   Visibility="Hidden"
+                                        Style="{StaticResource MenuDropdownButton}"
+                                          IsEnabled="False"
+                                          Margin="0,0,16,0" />
+                    </WrapPanel>
+                    <ToggleButton Grid.Column="2" Visibility="Hidden" x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Margin="0,0,16,0" />
+                </Grid>
+            </ToggleButton>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Icons">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="NHMLogoLight.xaml"/>
+        <ResourceDictionary Source="NHMLogoDark.xaml"/>
+        <ResourceDictionary Source="LoginCircleLogoLight.xaml"/>
+        <ResourceDictionary Source="LoginCircleLogoDark.xaml"/>
+        <ResourceDictionary Source="SunCircleLight.xaml"/>
+        <ResourceDictionary Source="MoonCircleDark.xaml"/>
+        <ResourceDictionary Source="MiningAxeIcon.xaml"/>
+        <ResourceDictionary Source="MiningAxeIconDark.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

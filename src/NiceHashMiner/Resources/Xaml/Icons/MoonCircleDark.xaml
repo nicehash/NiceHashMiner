@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Icons">
+    <DrawingGroup x:Key="MoonCircleDark">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0,0,40,40" />
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Opacity="1">
+            <DrawingGroup Opacity="1" Transform="-1,0,0,1,30,5">
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="#FF000000">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="#FF5856D6">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+            <GeometryDrawing Brush="#FFFCFCFC">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry FillRule="Nonzero" Figures="M24.727,16.273L24,14.333 23.273,16.273 21.333,17 23.273,17.727 24,19.667 24.727,17.727 26.667,17z M24.121,11.121L22.667,11.667 24.121,12.212 24.667,13.667 25.212,12.212 26.667,11.667 25.212,11.121 24.667,9.667z" />
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#FFFCFCFC">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry FillRule="Nonzero" Figures="M22.222,20.022A5.34,5.34,0,0,1,18.667,15A5.34,5.34,0,0,1,22.222,9.978A0.668,0.668,0,0,0,22.222,8.721A6.628,6.628,0,0,0,20,8.333A6.674,6.674,0,0,0,13.333,15A6.674,6.674,0,0,0,20,21.667C20.75,21.667,21.498,21.537,22.223,21.279A0.667,0.667,0,0,0,22.222,20.022z M20,20.333A5.34,5.34,0,0,1,14.667,15A5.34,5.34,0,0,1,20,9.667L20.01,9.667A6.675,6.675,0,0,0,17.332,15A6.674,6.674,0,0,0,20.008,20.333L20,20.333z" />
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+        </DrawingGroup>
+    </DrawingGroup>
+</ResourceDictionary>

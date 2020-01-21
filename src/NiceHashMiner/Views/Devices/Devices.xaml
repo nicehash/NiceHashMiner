@@ -1,0 +1,244 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Devices.Devices"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:common="clr-namespace:NiceHashMiner.Views.Common"
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Devices"
+             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModels:MainVM />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
+        
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.InfoTitle" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Medium}"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush}"/>
+            <Setter Property="FontWeight" Value="500"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="LineHeight" Value="2"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.InfoBTCValue" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1.4"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.InfoBTCValuePart" BasedOn="{StaticResource local.InfoBTCValue}" >
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="LineHeight" Value="1.5"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.InfoFiatValue" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1.5"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="local.ButtonText" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Medium}"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}"/>
+            <Setter Property="FontWeight" Value="500"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1.4"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Background="{DynamicResource BackgroundColor}" Margin="40,0,40,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="182" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="86" />
+        </Grid.RowDefinitions>
+        <!--#region STATS-->
+        <Grid Grid.Row="0" Margin="0,40,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="149*" />
+                <ColumnDefinition Width="197*" />
+                <ColumnDefinition Width="197*" />
+                <ColumnDefinition Width="164*" />
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" ToolTip="{StaticResource devicesMining}">
+                <Border BorderThickness="1" Background="{ DynamicResource MiningDevicesBackground }" BorderBrush="Transparent" CornerRadius="4"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Foreground="{DynamicResource MiningDevices}" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{DynamicResource local.InfoTitle }" Foreground="{DynamicResource MiningDevices}" Margin="24,0,0,0"
+                               Text="DEVICES MINING" />
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="24,10,0,0">
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue }" Foreground="{DynamicResource MiningDevices}" Text="{Binding DevicesViewModel.RunningDevices }" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart }" Foreground="{DynamicResource MiningDevices}" Margin="2,6,0,0" Text="{Binding DevicesViewModel.RunnableDevicesDisplayString }" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1" Margin="16,0,0,0" ToolTip="{StaticResource currentProfitability}">
+                <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--content-->
+                    <TextBlock Grid.Row="0" Style="{ DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="CURRENT PROFITABILITY" />
+                    <!--TODO Bindings here are temp-->
+                    <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="{Binding GlobalRate}"/>
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Margin="2,6,0,0" Text="{Binding ScaledBtcPerTime}"/>
+                    </WrapPanel>
+                    <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}"  Margin="24,10,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="2" Margin="16,0,0,0" ToolTip="{StaticResource unpaidBalance}">
+                <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--content-->
+                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="UNPAID BALANCE"/>
+                    <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal">
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Margin="2,6,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
+                    </WrapPanel>
+                    <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding ExchangeTooltip}">
+                <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <!--content-->
+                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
+                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="MY BTC WALLET" />
+                    <WrapPanel Grid.Row="2" Margin="24,10,0,2" Orientation="Horizontal">
+                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
+                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
+                    </WrapPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+        <!--#endregion STATS-->
+        <!--DEVICES-->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="24" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ToggleButton Grid.Row="0" Style="{StaticResource ButtonNoBorder}" IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }" Click="ToggleDisableEnableAllDevices" HorizontalAlignment="Right" VerticalAlignment="Center"  >
+                <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" >
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlock}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="ENABLE ALL"  FontWeight="Regular" FontSize="10" Foreground="{DynamicResource TextColorBrush}"/>
+                    <CheckBox Style="{StaticResource NHMSwitch}"
+                              IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }"
+                              Margin="24,0,12,0" />
+                </StackPanel>
+            </ToggleButton>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding Devices}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:ComputeDeviceItem DataContext="{Binding .}" Margin="0,8,8,0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+        <!--Footer-->
+        <Grid Grid.Row="2" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="7*" />
+            </Grid.ColumnDefinitions>
+            <common:WorkernamePanel Grid.Column="0" HorizontalAlignment="Left"/>
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="startAllButton"
+                        HorizontalAlignment="Right"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        MaxWidth="200"
+                        IsEnabled="{Binding MiningState.AnyDeviceStopped}"
+                        Click="StartAllDevicesButtonClick">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                            <Setter Property="Foreground" Value="{StaticResource NastyGreenBrush}" />
+                        </Style>
+                    </Button.Resources>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="17,0,17,0">
+                        <TextBlock Text="&#xF04B;"/>
+                        <TextBlock Style="{DynamicResource local.ButtonText}" Margin="6,0,0,0" Text="START ALL" />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="stopAllButton"
+                        Margin="16,0,0,0"
+                        MaxWidth="200"
+                        HorizontalAlignment="Right"
+                        IsEnabled="{Binding MiningState.AnyDeviceRunning}"
+                        Click="StopAllDevicesButtonClick">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                            <Setter Property="Foreground" Value="{StaticResource RedDangerColorBrush}" />
+                        </Style>
+                    </Button.Resources>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="17,0,17,0">
+                        <TextBlock Text="&#xF04D;" />
+                        <TextBlock Style="{DynamicResource local.ButtonText}" Margin="6,0,0,0" Text="STOP ALL" />
+                    </StackPanel>
+                </Button>
+                <common:ViewStatsOnline Margin="24,0,0,0"/>
+            </WrapPanel>
+            
+        </Grid>
+    </Grid>
+</UserControl>

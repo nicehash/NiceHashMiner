@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Icons">
+    <DrawingGroup x:Key="SunCircleLight">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0,0,40,40" />
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Opacity="1">
+            <DrawingGroup Opacity="1" Transform="-1,0,0,1,30,5">
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="#FF000000">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Opacity="1">
+                    <GeometryDrawing Brush="#FFFBA342">
+                        <GeometryDrawing.Geometry>
+                            <EllipseGeometry RadiusX="10" RadiusY="10" Center="10,10" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+            <DrawingGroup Opacity="1">
+                <GeometryDrawing Brush="#FFFFFFFF">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry FillRule="Nonzero" Figures="M20,11.667A3.337,3.337,0,0,0,16.667,15A3.337,3.337,0,0,0,20,18.333A3.337,3.337,0,0,0,23.333,15A3.337,3.337,0,0,0,20,11.667z M20,17C18.897,17 18,16.103 18,15 18,13.897 18.897,13 20,13 21.103,13 22,13.897 22,15 22,16.103 21.103,17 20,17z M19.333,8.333L20.666,8.333 20.666,10.333 19.333,10.333z M24.243,9.814L25.186,10.757 23.771,12.172 22.828,11.229z M24.666,14.333L26.666,14.333 26.666,15.666 24.666,15.666z M24.243,20.186L22.828,18.771 23.77,17.828 25.185,19.243z M19.333,19.666L20.666,19.666 20.666,21.666 19.333,21.666z M15.758,20.186L14.815,19.243 16.23,17.829 17.172,18.771z M13.333,14.333L15.333,14.333 15.333,15.666 13.333,15.666z M15.758,9.815L17.172,11.229 16.229,12.172 14.815,10.757z" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+</ResourceDictionary>

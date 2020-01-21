@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Plugins.PluginItem.PluginIcon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Plugins.PluginItem"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border
+        x:Name="border"
+        Width="48"
+        Height="32"
+        BorderThickness="1"
+        BorderBrush="{DynamicResource BorderColor}"
+        Background="#eeeeee" CornerRadius="4"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center" >
+        <Grid Width="21.5" Height="23.4">
+            <Grid.Background>
+                <DrawingBrush x:Name="iconBrush" Drawing="{DynamicResource MiningAxeIcon}" />
+            </Grid.Background>
+        </Grid>
+    </Border>
+</UserControl>

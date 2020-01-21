@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Icons">
+
+    <DrawingGroup x:Key="NHMLogoLight">
+        <DrawingGroup x:Name="DrawingLayer">
+            <DrawingGroup.ClipGeometry>
+                <RectangleGeometry Rect="0,0,24,24" />
+            </DrawingGroup.ClipGeometry>
+            <DrawingGroup Opacity="1">
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup>
+                        <DrawingGroup.OpacityMask>
+                            <DrawingBrush ViewportUnits="Absolute" ViewboxUnits="Absolute" Viewport="0,0,24,24" Viewbox="0,0,24,24" Stretch="Uniform" TileMode="None">
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing Brush="#FFFFFFFF">
+                                                <GeometryDrawing.Geometry>
+                                                    <PathGeometry FillRule="EvenOdd" Figures="M0,0L24,0 24,24 0,24z" />
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                        </DrawingGroup>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </DrawingGroup.OpacityMask>
+                        <DrawingGroup>
+                            <DrawingGroup.OpacityMask>
+                                <DrawingBrush ViewportUnits="Absolute" ViewboxUnits="Absolute" Viewport="0,0,24,24" Viewbox="0,0,24,24" Stretch="Uniform" TileMode="None">
+                                    <DrawingBrush.Drawing>
+                                        <DrawingGroup>
+                                            <DrawingGroup Opacity="1">
+                                                <GeometryDrawing Brush="#FFFFFFFF">
+                                                    <GeometryDrawing.Geometry>
+                                                        <PathGeometry FillRule="EvenOdd" Figures="M0,0L24,0 24,24 0,24z" />
+                                                    </GeometryDrawing.Geometry>
+                                                </GeometryDrawing>
+                                            </DrawingGroup>
+                                        </DrawingGroup>
+                                    </DrawingBrush.Drawing>
+                                </DrawingBrush>
+                            </DrawingGroup.OpacityMask>
+                            <GeometryDrawing Brush="#FFF4BE49">
+                                <GeometryDrawing.Geometry>
+                                    <PathGeometry FillRule="EvenOdd" Figures="M12,22.125C6.417,22.125 1.875,17.583 1.875,12 1.875,6.417 6.417,1.875 12,1.875 17.583,1.875 22.125,6.417 22.125,12 22.125,17.583 17.583,22.125 12,22.125 M12,0C5.383,0 0,5.383 0,12 0,18.617 5.383,24 12,24 18.617,24 24,18.617 24,12 24,5.383 18.617,0 12,0" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingGroup>
+                </DrawingGroup>
+                <GeometryDrawing Brush="#FFF4BE49">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry FillRule="EvenOdd" Figures="M17.599,15.66A0.937,0.937,0,0,0,16.304,15.944C16.29,15.966 14.954,18.054 12,18.054 9.107,18.054 7.765,16.053 7.703,15.955A0.937,0.937,0,0,0,6.107,16.939C6.182,17.061 8.018,19.929 12,19.929 15.97,19.929 17.806,17.076 17.883,16.955A0.937,0.937,0,0,0,17.599,15.66 M6.12,11.227C6.12,10.695,6.476,10.365,7.05,10.365L8.838,10.365 8.838,12.097 7.05,12.097C6.476,12.097,6.12,11.764,6.12,11.227z M7.14,7.584L8.838,7.584 8.838,9.197 7.14,9.197C6.554,9.197 6.218,8.903 6.218,8.391 6.218,7.878 6.554,7.584 7.14,7.584z M6.577,13.889C6.577,14.14 6.782,14.345 7.032,14.345 7.283,14.345 7.488,14.14 7.488,13.889L7.488,13.265 8.205,13.265 8.205,13.889C8.205,14.14 8.41,14.345 8.66,14.345 8.91,14.345 9.116,14.14 9.116,13.889L9.116,13.265 9.553,13.265A0.54,0.54,0,0,0,10.088,12.722L10.088,6.96A0.54,0.54,0,0,0,9.553,6.416L9.116,6.416 9.116,5.902A0.457,0.457,0,0,0,8.66,5.446A0.457,0.457,0,0,0,8.205,5.902L8.205,6.416 7.488,6.416 7.488,5.902A0.457,0.457,0,0,0,7.032,5.446A0.457,0.457,0,0,0,6.577,5.902L6.577,6.457C5.586,6.627 4.969,7.333 4.969,8.354 4.969,9.003 5.298,9.488 5.682,9.744 5.168,10.054 4.869,10.607 4.869,11.273 4.869,12.375 5.514,13.1 6.577,13.239L6.577,13.889z M16.947,12.097L15.16,12.097 15.16,10.365 16.948,10.365C17.522,10.365 17.879,10.695 17.879,11.227 17.879,11.764 17.522,12.097 16.949,12.097 M17.779,8.391C17.779,8.903,17.443,9.197,16.857,9.197L15.16,9.197 15.16,7.584 16.857,7.584C17.443,7.584,17.779,7.878,17.779,8.391 M18.316,9.744C18.7,9.488 19.029,9.003 19.029,8.354 19.029,7.334 18.412,6.628 17.422,6.457L17.422,5.902A0.457,0.457,0,0,0,16.966,5.446A0.457,0.457,0,0,0,16.51,5.902L16.51,6.416 15.793,6.416 15.793,5.902A0.457,0.457,0,0,0,15.338,5.446A0.457,0.457,0,0,0,14.882,5.902L14.882,6.416 14.445,6.416A0.54,0.54,0,0,0,13.91,6.96L13.91,12.722C13.91,13.022,14.15,13.265,14.445,13.265L14.882,13.265 14.882,13.889A0.457,0.457,0,0,0,15.793,13.889L15.793,13.265 16.51,13.265 16.51,13.889A0.457,0.457,0,0,0,17.422,13.889L17.422,13.239C18.484,13.1 19.129,12.375 19.129,11.273 19.129,10.607 18.829,10.053 18.316,9.744" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+</ResourceDictionary>

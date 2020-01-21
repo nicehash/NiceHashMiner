@@ -8,8 +8,8 @@
     <ProjectGuid>{BA37612A-6DAF-4569-A1E9-6432E9F3F7FA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NHM.Wpf.Tests</RootNamespace>
-    <AssemblyName>NHM.Wpf.Tests</AssemblyName>
+    <RootNamespace>NiceHashMiner.Tests</RootNamespace>
+    <AssemblyName>NiceHashMiner.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -62,9 +62,9 @@
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NHM.Wpf\NHM.Wpf.csproj">
+    <ProjectReference Include="..\..\NiceHashMiner\NiceHashMiner.csproj">
       <Project>{56653651-3bf1-4a89-a20c-3178c06a29a3}</Project>
-      <Name>NHM.Wpf</Name>
+      <Name>NiceHashMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NHMCore\NHMCore.csproj">
       <Project>{43dcaf38-d0c4-4335-983d-650f78461eb2}</Project>

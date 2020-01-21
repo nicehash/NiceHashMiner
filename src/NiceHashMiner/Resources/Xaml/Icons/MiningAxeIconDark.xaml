@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Icons">
+    <DrawingGroup x:Key="MiningAxeIconDark" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        <DrawingGroup x:Name="DrawingLayer">
+            <DrawingGroup.ClipGeometry>
+                <RectangleGeometry Rect="0,0,22,24" />
+            </DrawingGroup.ClipGeometry>
+            <DrawingGroup.Transform>
+                <TranslateTransform X="6" Y="4" />
+            </DrawingGroup.Transform>
+            <DrawingGroup Opacity="1">
+                <GeometryDrawing Brush="#FF959595">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry FillRule="Nonzero" Figures="M0.188,21.473L3.002,23.355A0.421,0.421,0,0,0,3.59,23.239L13.136,8.967A53.867,53.867,0,0,1,20.229,14.727A0.21,0.21,0,0,0,20.352,14.785L21.304,14.893 21.328,14.894A0.21,0.21,0,0,0,21.504,14.799A0.21,0.21,0,0,0,21.512,14.579C19.694,11.351,17.512,8.593,14.942,6.265L16.022,4.651A0.423,0.423,0,0,0,15.906,4.064L13.092,2.182A0.422,0.422,0,0,0,12.504,2.298L11.609,3.636A34.874,34.874,0,0,0,4.745,0.014A0.217,0.217,0,0,0,4.491,0.093L2.452,3.142A0.212,0.212,0,0,0,2.558,3.459C4.866,4.277,7.228,5.381,9.554,6.709L0.071,20.887A0.423,0.423,0,0,0,0.188,21.473z" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+</ResourceDictionary>

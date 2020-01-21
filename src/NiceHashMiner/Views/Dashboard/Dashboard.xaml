@@ -1,0 +1,284 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Dashboard.Dashboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Dashboard"
+             xmlns:common="clr-namespace:NiceHashMiner.Views.Common"
+             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewModels:MainVM />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
+
+
+        <Style TargetType="Button" x:Key="local.CompleteCredentialsButton" >
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily }"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+
+            <Setter Property="BorderBrush" Value="#eeeeee" />
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+        <!--#region Dashboard styles -->
+        <!--devices circle count labels-->
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.DevicesTypeCountText" >
+            <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property= "FontSize" Value="40"/>
+            <Setter Property= "FontWeight" Value="Bold"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "LineHeight" Value="0.8"/>
+            <Setter Property= "HorizontalAlignment" Value="Center"/>
+            <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.DevicesTypeLabelText">
+            <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "FontWeight" Value="Bold"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "LineHeight" Value="1.5"/>
+            <Setter Property= "HorizontalAlignment" Value="Center"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
+        </Style>
+        <!--stats-->
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.StatsTitleText">
+            <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Medium}"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "FontWeight" Value="500"/>
+            <Setter Property= "LineHeight" Value="2"/>
+            <Setter Property= "FontSize" Value="10"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.StatsBTCValueText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="18"/>
+            <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.StatsBTCLabelText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "Foreground" Value="{DynamicResource TextColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.StatsFiatEstimateText" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.Complete.your.mining.setup">
+            <Setter Property= "FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+            <Setter Property= "FontSize" Value="12"/>
+            <Setter Property= "FontWeight" Value="Bold"/>
+            <Setter Property= "FontStretch" Value="Normal"/>
+            <Setter Property= "FontStyle" Value="Normal"/>
+            <Setter Property= "LineHeight" Value="1.5"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <!--#endregion Dashboard styles -->
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="UserControl.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <Grid Background="{DynamicResource BackgroundColor}" Height="Auto" Width="Auto" Margin="40,0,40,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="308*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="128*" MaxHeight="150" MinHeight="128" />
+            <RowDefinition Height="86" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="4*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto" Height="Auto">
+                <ToggleButton DockPanel.Dock="Top" Style="{DynamicResource StartStopButtonLight}"
+                              IsChecked="{Binding MiningState.AnyDeviceRunning, Mode=OneWay}"
+                              VerticalAlignment="Center" HorizontalAlignment="Center"
+                              x:Name="StartStopToggleButton"
+                              Click="ToggleButtonStartStop_Click">
+                    <ToggleButton.Effect>
+                        <DropShadowEffect BlurRadius="50" ShadowDepth="20" Direction="-75" Opacity="0.1"/>
+                    </ToggleButton.Effect>
+                </ToggleButton>
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,24,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"> 
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                               FontSize="14"
+                               Foreground="{StaticResource Gray1ColorBrush}"
+                               TextAlignment="Center"
+                               Text="{ Binding Dashboard.StatusText }"
+                               ToolTip="{ Binding Dashboard.StatusToolTip }"
+                               Visibility="Visible" />
+                    <Path Style="{StaticResource SpinCirclePath}"
+                            Visibility="{Binding Dashboard.ShowProgress, Converter={StaticResource NulBoolToVisibilityConverter}}"
+                            x:Name="spinCirclePath"
+                            Width="20"
+                            Height="20"
+                            Margin="8,0,0,0"
+                            Stretch="Fill" />
+                </StackPanel>
+            </DockPanel>
+        </Grid>
+        <!--Complete Credentials info-->
+        <Grid Grid.Row="1" Margin="0,0,0,16" Visibility="{Binding Dashboard.CompleteBTCVisibility }">
+            <StackPanel  Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Stretch" Visibility="{Binding Dashboard.CompleteBTCVisibility }">
+                <TextBlock Style="{StaticResource local.Complete.your.mining.setup}"
+                    TextAlignment="Left"
+                    Text="Complete your mining setup"/>
+                <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button Style="{StaticResource local.CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Wallet Address" Click="EnterBTCWallet_Button_Click" />
+
+                    <!--<Button>Name Your Worker</Button>
+                        <Button>dsfdf</Button>-->
+                </WrapPanel>
+            </StackPanel>
+        </Grid>
+        
+        <Grid Grid.Row="2">
+            <!--content border-->
+            <Border Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" />
+            <Grid>
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="50" ShadowDepth="5" Direction="-90" Opacity="0.1"/>
+                </Grid.Effect>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="1" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="96*" />
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="96*" />
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="199*" />
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="199*" />
+                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="199*" />
+                    <ColumnDefinition Width="1" />
+                </Grid.ColumnDefinitions>
+                <GridSplitter Grid.Row="0" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+
+                <GridSplitter Grid.Row="1" Grid.Column="0" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <Grid Grid.Row="1" Grid.Column="1" Background="{DynamicResource BackgroundColor}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource gpuNumber}">
+                        <TextBlock Style="{StaticResource local.DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
+                        <TextBlock Style="{StaticResource local.DevicesTypeLabelText}">GPU’S</TextBlock>
+                    </StackPanel>
+                </Grid>
+                <GridSplitter Grid.Row="1" Grid.Column="2" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <Grid Grid.Row="1" Grid.Column="3" Background="{DynamicResource BackgroundColor}">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource cpuNumber}">
+                        <TextBlock Style="{StaticResource local.DevicesTypeCountText}" Text="{Binding DeviceCPUCount}"/>
+                        <TextBlock Style="{StaticResource local.DevicesTypeLabelText}">CPU</TextBlock>
+                    </StackPanel>
+                </Grid>
+                <GridSplitter Grid.Row="1" Grid.Column="4" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <StackPanel Grid.Row="1" Grid.Column="5" Background="{DynamicResource BackgroundColor}" ToolTip="{StaticResource currentProfitability}" >
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
+                    <!--TODO Bindings here are temp-->
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
+                        <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding GlobalRate}" />
+                        <TextBlock Style="{StaticResource local.StatsBTCLabelText}" Margin="0,14,0,0" Text="{Binding ScaledBtcPerTime}" />
+                    </WrapPanel>
+                    <TextBlock Style="{StaticResource local.StatsFiatEstimateText}" Margin="24,8,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
+                </StackPanel>
+                <GridSplitter Grid.Row="1" Grid.Column="6" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <StackPanel Grid.Row="1" Grid.Column="7" Background="{DynamicResource BackgroundColor}" ToolTip="{StaticResource unpaidBalance}" >
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
+                        <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="0,8,4,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCBalance}" />
+                        <TextBlock Style="{StaticResource local.StatsBTCLabelText}"  Margin="0,14,0,0" Text="{Binding BalanceAndExchangeRates.DisplayBTCSymbol}" />
+                    </WrapPanel>
+                    <TextBlock Style="{StaticResource local.StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
+                </StackPanel>
+                <GridSplitter Grid.Row="1" Grid.Column="8" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <StackPanel Grid.Row="1" Grid.Column="9" Background="{DynamicResource BackgroundColor}" ToolTip="{Binding ExchangeTooltip}" >
+                    <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
+                    <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="24,8,0,4" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
+                    <TextBlock Style="{StaticResource local.StatsBTCLabelText}" Margin="24,14,0,4" TextWrapping="Wrap" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
+                </StackPanel>
+                <GridSplitter Grid.Row="1" Grid.Column="10" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <GridSplitter Grid.Row="2" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="3" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <common:WorkernamePanel
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                />
+            <common:ViewStatsOnline
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                />
+        </Grid>
+    </Grid>
+</UserControl>

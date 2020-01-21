@@ -1,0 +1,183 @@
+﻿<UserControl x:Class="NiceHashMiner._DESIGN_DEVELOP.Colors.Colors"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner._DESIGN_DEVELOP.Colors"
+             mc:Ignorable="d" 
+             d:DesignHeight="2450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="Grid">
+            <Setter Property="Width" Value="140" />
+            <Setter Property="Height" Value="140" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White" Height="Auto" Width="Auto">
+        <ScrollViewer >
+            <ItemsControl Background="White">
+                <TextBlock Text="Light Mode" />
+                <TextBlock Text="Basic Colors" />
+                <Separator/>
+                <ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <Grid Background="{StaticResource Brushes.Light.Basic.MainColor}">
+                        <TextBlock>Main Color</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Basic.SuccessColor}">
+                        <TextBlock>SuccessColor</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                        <TextBlock>NoticeColor</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Basic.WarningColor}">
+                        <TextBlock>WarningColor</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Basic.YellowColor}">
+                        <TextBlock>YellowColor</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Basic.NO_NAME}">
+                        <TextBlock>NO_NAME</TextBlock>
+                    </Grid>
+
+                    <Grid Background="{StaticResource Brushes.Light.Basic.SuccessColorBckg}">
+                        <TextBlock>SuccessColorBckg</TextBlock>
+                    </Grid>
+                    <Grid Background="Transparent" />
+                    <Grid Background="{StaticResource Brushes.Light.Basic.WarningColorBckg}">
+                        <TextBlock>WarningColorBckg</TextBlock>
+                    </Grid>
+                    <Grid Background="Transparent" />
+                </ItemsControl>
+
+                <TextBlock Text="Grey Colors" />
+                <Separator/>
+                <ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <Grid Background="{StaticResource Brushes.Light.Grey.MainBlack}">
+                        <TextBlock>MainBlack</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Grey.Grey1}">
+                        <TextBlock>Grey1</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Grey.Grey2}">
+                        <TextBlock>Grey2</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Grey.Grey3}">
+                        <TextBlock>Grey3</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Light.Grey.Grey4Background}">
+                        <TextBlock>Grey4Background</TextBlock>
+                    </Grid>
+                </ItemsControl>
+
+                <TextBlock Text="Gradient" />
+                <Separator/>
+                <ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <Grid Background="{StaticResource Brushes.Gradient}">
+                        <TextBlock>main graditent</TextBlock>
+                    </Grid>
+                </ItemsControl>
+
+                <TextBlock Text="Dark Mode" />
+                <TextBlock Text="Basic Colors" />
+                <Separator/>
+                <ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <Grid Background="{StaticResource Brushes.Dark.Basic.MainColor}">
+                        <TextBlock>Main Color</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Dark.Basic.SuccessColor}">
+                        <TextBlock>SuccessColor</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Dark.Basic.NoticeColor}">
+                        <TextBlock>NoticeColor</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Dark.Basic.WarningColor}">
+                        <TextBlock>WarningColor</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Dark.Basic.YellowColor}">
+                        <TextBlock>YellowColor</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Dark.Basic.NO_NAME}">
+                        <TextBlock>NO_NAME</TextBlock>
+                    </Grid>
+
+                    <Grid Background="{StaticResource Brushes.Dark.Basic.SuccessColorBckg}">
+                        <TextBlock>SuccessColorBckg</TextBlock>
+                    </Grid>
+                    <Grid Background="Transparent" />
+                    <Grid Background="{StaticResource Brushes.Dark.Basic.WarningColorBckg}">
+                        <TextBlock>WarningColorBckg</TextBlock>
+                    </Grid>
+                    <Grid Background="Transparent" />
+                </ItemsControl>
+
+                <TextBlock Text="Grey Colors" />
+                <Separator/>
+                <ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="5"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <Grid Background="{StaticResource Brushes.Dark.Grey.Grey1Background}">
+                        <TextBlock>Grey1Background</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Dark.Grey.Grey2Outlines}">
+                        <TextBlock>Grey2Outlines</TextBlock>
+                    </Grid>
+                    <Grid Background="{StaticResource Brushes.Dark.Grey.Grey3OutlineActive}">
+                        <TextBlock>Grey3OutlineActive</TextBlock>
+                    </Grid>
+                </ItemsControl>
+
+                
+                <TextBlock Text="THEME COLORS" />
+                <Separator/>
+                <ItemsControl>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="2"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <StackPanel HorizontalAlignment="Center" Background="AliceBlue">
+                        <TextBlock Foreground="{StaticResource TextColorBrush-Primary.Light}" Text="TextColorBrush-Primary.Light" FontSize="20"/>
+                        <Grid Background="{StaticResource TextColorBrush-Primary.Light}" />
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center" Background="AliceBlue">
+                        <TextBlock Foreground="{StaticResource TextColorBrush-Regular.Dark}" Text="TextColorBrush-Regular.Dark" FontSize="20"/>
+                        <Grid Background="{StaticResource TextColorBrush-Regular.Dark}" />
+                    </StackPanel>
+                    
+                    <StackPanel HorizontalAlignment="Center" Background="AliceBlue">
+                        <TextBlock Foreground="{StaticResource TextColorBrush-Regular.Light}" Text="TextColorBrush-Regular.Light" FontSize="20"/>
+                        <Grid Background="{StaticResource TextColorBrush-Regular.Light}" />
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center" Background="AliceBlue">
+                        <TextBlock Foreground="{StaticResource TextColorBrush-Regular.Dark}" Text="TextColorBrush-Regular.Dark" FontSize="20"/>
+                        <Grid Background="{StaticResource TextColorBrush-Regular.Dark}" />
+                    </StackPanel>
+                </ItemsControl>
+
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

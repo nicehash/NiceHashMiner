@@ -1,0 +1,52 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Colors">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Dark.xaml"/>
+        <ResourceDictionary Source="Light.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+    <!--#region DynamicColors-->
+    <SolidColorBrush x:Key="BackgroundColor" Color="{DynamicResource Colors.Light.Grey.Grey4Background}" />
+    <SolidColorBrush x:Key="BorderColor" Color="{DynamicResource Colors.Light.Border}" />
+    <SolidColorBrush x:Key="TextColorBrush" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <!--#endregion DynamicColors-->
+
+    <!--#region Blur background panel-->
+
+    <SolidColorBrush x:Key="MODAL_WINDOW_BLUR_Background.Light" Color="#fcfcfc" />
+    <SolidColorBrush x:Key="MODAL_WINDOW_BLUR_Background.Dark" Color="#3a3939" />
+    <SolidColorBrush x:Key="MODAL_WINDOW_BLUR_Background" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+
+    <SolidColorBrush x:Key="MiningDevices" Color="{DynamicResource Colors.Dark.Basic.MainColor}" />
+
+    <SolidColorBrush x:Key="MiningDevicesBackground.Warning" Color="{StaticResource Colors.Dark.Basic.NO_NAME}" />
+    <SolidColorBrush x:Key="MiningDevicesBackground.Good" Color="{StaticResource Colors.Dark.Basic.SuccessColorBckg}" />
+    <SolidColorBrush x:Key="MiningDevicesBackground.Error" Color="{StaticResource Colors.Dark.Basic.WarningColorBckg}" />
+
+    <SolidColorBrush x:Key="MiningDevicesBackground" Color="{StaticResource Colors.Dark.Basic.NO_NAME}" />
+
+    <!--#endregion Blur background panel-->
+
+    <SolidColorBrush x:Key="TextColorBrush-Primary.Light" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-Regular.Light" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-Secondary.Light" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-Disabled.Light" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-White.Light" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+
+    <SolidColorBrush x:Key="TextColorBrush-Primary.Dark" Color="#FCFCFC" />
+    <SolidColorBrush x:Key="TextColorBrush-Regular.Dark" Color="{DynamicResource Colors.Dark.White}" />
+    <SolidColorBrush x:Key="TextColorBrush-Secondary.Dark" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-Disabled.Dark" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-White.Dark" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+
+    <!--#region Dynamic Text Colors-->
+    
+    <SolidColorBrush x:Key="TextColorBrush-Primary" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-Regular" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-Secondary" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-Disabled" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <SolidColorBrush x:Key="TextColorBrush-White" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
+    <!--#endregion Dynamic Text Colors-->
+
+</ResourceDictionary>

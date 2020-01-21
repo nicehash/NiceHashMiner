@@ -1,0 +1,91 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Colors/Colors.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--Basic colors seem to be the same for Light and Dark mode-->
+    <LinearGradientBrush x:Key="Brushes.Gradient" EndPoint="1,0.5" StartPoint="0,0.5">
+        <GradientStop Color="{StaticResource Colors.Dark.Basic.MainColor}" Offset="0"/>
+        <GradientStop Color="{StaticResource Colors.Dark.Basic.YellowColor}" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="Brushes.FontColor.White" Color="{StaticResource Colors.Dark.White}" />
+
+    <!--#region Light Basic brushes-->
+    <SolidColorBrush x:Key="Brushes.Light.Basic.MainColor" Color="{ StaticResource Colors.Light.Basic.MainColor }" />
+    <SolidColorBrush x:Key="Brushes.Light.Basic.SuccessColor" Color="{ StaticResource Colors.Light.Basic.SuccessColor }" />
+    <SolidColorBrush x:Key="Brushes.Light.Basic.NoticeColor" Color="{ StaticResource Colors.Light.Basic.NoticeColor }" />
+    <SolidColorBrush x:Key="Brushes.Light.Basic.WarningColor" Color="{ StaticResource Colors.Light.Basic.WarningColor }" />
+    <SolidColorBrush x:Key="Brushes.Light.Basic.YellowColor" Color="{ StaticResource Colors.Light.Basic.YellowColor }" />
+    <SolidColorBrush x:Key="Brushes.Light.Basic.NO_NAME" Color="{ StaticResource Colors.Light.Basic.NO_NAME }" />
+    <SolidColorBrush x:Key="Brushes.Light.Basic.SuccessColorBckg" Color="{ StaticResource Colors.Light.Basic.SuccessColorBckg }" />
+    <SolidColorBrush x:Key="Brushes.Light.Basic.WarningColorBckg" Color="{ StaticResource Colors.Light.Basic.WarningColorBckg }" />
+    <!--#endregion Light Basic brushes-->
+    <!--#region Light Grey brushes-->
+    <SolidColorBrush x:Key="Brushes.Light.Grey.MainBlack" Color="{ StaticResource Colors.Light.Grey.MainBlack }" />
+    <SolidColorBrush x:Key="Brushes.Light.Grey.Grey1" Color="{ StaticResource Colors.Light.Grey.Grey1 }" />
+    <SolidColorBrush x:Key="Brushes.Light.Grey.Grey2" Color="{ StaticResource Colors.Light.Grey.Grey2 }" />
+    <SolidColorBrush x:Key="Brushes.Light.Grey.Grey3" Color="{ StaticResource Colors.Light.Grey.Grey3 }" />
+    <SolidColorBrush x:Key="Brushes.Light.Grey.Grey4Background" Color="{ StaticResource Colors.Light.Grey.Grey4Background }" />
+    <!--#endregion Light Grey brushes-->
+    <!--#region Light Text brushes-->
+    <SolidColorBrush x:Key="Brushes.Light.TextColor" Color="{ StaticResource Colors.Light.Grey.MainBlack }" />
+    <!--#endregion Light Text brushes-->
+
+    <SolidColorBrush x:Key="Brushes.Light.Border" Color="{ StaticResource Colors.Light.Border }" />
+
+
+    <!--#region Dark Basic Brushes-->
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.MainColor" Color="{StaticResource Colors.Dark.Basic.MainColor}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.SuccessColor" Color="{StaticResource Colors.Dark.Basic.SuccessColor}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.NoticeColor" Color="{StaticResource Colors.Dark.Basic.NoticeColor}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.WarningColor" Color="{StaticResource Colors.Dark.Basic.WarningColor}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.YellowColor" Color="{StaticResource Colors.Dark.Basic.YellowColor}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.NO_NAME" Color="{StaticResource Colors.Dark.Basic.NO_NAME}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.SuccessColorBckg" Color="{StaticResource Colors.Dark.Basic.SuccessColorBckg}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.WarningColorBckg" Color="{StaticResource Colors.Dark.Basic.WarningColorBckg}"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Basic.NastyGreen" Color="{StaticResource Colors.Dark.Basic.NastyGreen}"/>
+    <!--#endregion Dark Basic Brushes-->
+
+    <!--#region Dark Grey Brushes-->
+    <SolidColorBrush x:Key="Brushes.Dark.Grey.Grey1Background" Color="{ StaticResource Colors.Dark.Grey.Grey1Background }"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Grey.Grey2Outlines" Color="{ StaticResource Colors.Dark.Grey.Grey2Outlines }"/>
+    <SolidColorBrush x:Key="Brushes.Dark.Grey.Grey3OutlineActive" Color="{ StaticResource Colors.Dark.Grey.Grey3OutlineActive }"/>
+    <!--#endregion Dark Grey Brushes-->
+
+    <!--#region Light Text brushes-->
+    <SolidColorBrush x:Key="Brushes.Dark.TextColor" Color="{ StaticResource Colors.Dark.White }" />
+    <!--#endregion Light Text brushes-->
+
+    <SolidColorBrush x:Key="Brushes.Dark.Border" Color="{ StaticResource Colors.Dark.Border }" />
+
+    <!--#region OLD DEPRECIATE-->
+    <!--#region Colors-->
+    <Color x:Key="NastyGreen">#68B641</Color>
+    <Color x:Key="SuccessBgColor">#DBEED2</Color>
+    <Color x:Key="RedDangerColor">#E92424</Color>
+    <Color x:Key="PrimaryColor">#FBA342</Color>
+    <Color x:Key="WarningColor">#FBC241</Color>
+    <Color x:Key="TextColor">#3A3939</Color>
+    <Color x:Key="Gray1Color">#959595</Color>
+    <Color x:Key="Gray2Color">#CECDCD</Color>
+    <!--#endregion Colors-->
+
+    <!--#region Brushes-->
+    <SolidColorBrush x:Key="NastyGreenBrush" Color="{StaticResource NastyGreen}" />
+    <SolidColorBrush x:Key="SuccessBgColorBrush" Color="{StaticResource SuccessBgColor}" />
+    <SolidColorBrush x:Key="RedDangerColorBrush" Color="{StaticResource RedDangerColor}" />
+    <SolidColorBrush x:Key="PrimaryColorBrush" Color="{StaticResource PrimaryColor}" />
+    <SolidColorBrush x:Key="WarningColorBrush" Color="{StaticResource WarningColor}" />
+    <SolidColorBrush x:Key="Gray1ColorBrush" Color="{StaticResource Gray1Color}" />
+    <SolidColorBrush x:Key="Gray2ColorBrush" Color="{StaticResource Gray2Color}" />
+
+    <LinearGradientBrush x:Key="OKButtonGradientBrush" EndPoint="1,0.5" StartPoint="0,0.5">
+        <GradientStop Color="#FFFBA342" Offset="0"/>
+        <GradientStop Color="#FFFBC241" Offset="1"/>
+    </LinearGradientBrush>
+    <!--#endregion Brushes-->
+    <!--#endregion OLD DEPRECIATE-->
+
+</ResourceDictionary>

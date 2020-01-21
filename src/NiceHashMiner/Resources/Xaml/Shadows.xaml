@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml">
+
+    <DropShadowEffect x:Key="Shadows.Shadow0" Opacity="0" />
+    <DropShadowEffect x:Key="Shadows.Shadow1" BlurRadius="4" Opacity="0.4" ShadowDepth="1" Color="#232323"/>
+    <DropShadowEffect x:Key="Shadows.Shadow2" BlurRadius="10" Opacity="0.4" ShadowDepth="1" Color="#232323" />
+    <DropShadowEffect x:Key="Shadows.Shadow3" BlurRadius="16" Opacity="0.4" ShadowDepth="1" Color="#232323" />
+
+</ResourceDictionary>

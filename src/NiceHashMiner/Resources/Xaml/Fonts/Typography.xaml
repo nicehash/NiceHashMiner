@@ -1,0 +1,397 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Fonts">
+
+    <!--#region Fonts-->
+    <FontFamily x:Key="UbuntuFontFamily">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu</FontFamily>
+    <FontFamily x:Key="Ubuntu">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu</FontFamily>
+    <FontFamily x:Key="Ubuntu-Light">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Light</FontFamily>
+    <FontFamily x:Key="Ubuntu-Bold">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Bold</FontFamily>
+    <FontFamily x:Key="Ubuntu-Medium">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Medium</FontFamily>
+    <FontFamily x:Key="Ubuntu-Regular">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Regular</FontFamily>
+    <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Free Solid</FontFamily>
+    <!--#endregion Fonts-->
+
+
+    <Style x:Key="FontsTypography.Heading-1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Title-Black" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Title-White" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundColor}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Headline-Regular" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Headline-White" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundColor}" />
+    </Style>
+
+    <Style x:Key="FontsTypography.Button-White" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Medium}" />
+        <Setter Property="FontSize" Value="16" />
+        <!--500-->
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="#ffffff" />
+    </Style>
+
+    <!--<Style x:Key="FontsTypography.XX" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-XX}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        --><!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;--><!--
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>-->
+
+
+    <!--<Style x:Key="FontsTypography.XX" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-XX}" />
+        <Setter Property="FontSize" Value="30" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        --><!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;--><!--
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>-->
+
+
+    <!--#region BODY-->
+    <Style x:Key="FontsTypography.Body-1-Regular" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+    
+    <Style x:Key="FontsTypography.Body-2-Regular" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+    <!--#endregion BODY-->
+
+    <Style x:Key="FontsTypography.Caption-White" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource BackgroundColor}" />
+    </Style>
+
+
+    <Style x:Key="FontsTypography.Caption-Primary" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontStretch" Value="Normal"/>
+        <Setter Property="FontStyle" Value="Normal"/>
+        <!--<Setter Property="LineHeight" Value="Normal"/>-->
+        <!--letter-spacing: normal;-->
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+    </Style>
+
+
+    <!-- HEADING 1 -->
+    <Style x:Key="FontsTypography.Heading1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextBlock.LineHeight" Value="25.2" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading1/Active" BasedOn="{StaticResource FontsTypography.Heading1}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading1/Disabled" BasedOn="{StaticResource FontsTypography.Heading1}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading1/Secondary" BasedOn="{StaticResource FontsTypography.Heading1}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <!-- END OF HEADING 1 -->
+
+    <!-- HEADING 2 -->
+    <Style x:Key="FontsTypography.Heading2" TargetType="Control">
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextBlock.LineHeight" Value="22.4" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading2/Active" BasedOn="{StaticResource FontsTypography.Heading2}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading2/Disabled" BasedOn="{StaticResource FontsTypography.Heading2}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading2/Secondary" BasedOn="{StaticResource FontsTypography.Heading2}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <!-- END OF HEADING 2 -->
+
+    <!-- HEADING 3 -->
+    <Style x:Key="FontsTypography.Heading3" TargetType="Control">
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="TextBlock.LineHeight" Value="25.2" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading3/Active" BasedOn="{StaticResource FontsTypography.Heading3}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading3/Disabled" BasedOn="{StaticResource FontsTypography.Heading3}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading3/Secondary" BasedOn="{StaticResource FontsTypography.Heading3}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <!-- END OF HEADING 3 -->
+
+    <!-- HEADING 4 -->
+    <Style x:Key="FontsTypography.Heading4" TargetType="Control">
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextBlock.LineHeight" Value="22.4" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading4/Active" BasedOn="{StaticResource FontsTypography.Heading4}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading4/Disabled" BasedOn="{StaticResource FontsTypography.Heading4}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.Heading4/Secondary" BasedOn="{StaticResource FontsTypography.Heading4}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <!-- END OF HEADING 4 -->
+
+    <!-- SMALL LIGHT -->
+    <Style x:Key="FontsTypography.SmallLight" TargetType="Control">
+        <Setter Property="FontWeight" Value="400" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextBlock.LineHeight" Value="18" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallLight/Active" BasedOn="{StaticResource FontsTypography.SmallLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallLight/Disabled" BasedOn="{StaticResource FontsTypography.SmallLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallLight/Secondary" BasedOn="{StaticResource FontsTypography.SmallLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallLight/Link" BasedOn="{StaticResource FontsTypography.SmallLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.MainColor}" />
+    </Style>
+    <!-- END OF SMALL LIGHT -->
+
+    <!-- SMALL REGULAR -->
+    <Style x:Key="FontsTypography.SmallRegular" TargetType="Control">
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextBlock.LineHeight" Value="18" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallRegular/Active" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallRegular/Disabled" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallRegular/Secondary" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallRegularTextBlock" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextBlock.LineHeight" Value="18" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <!-- END OF SMALL REGULAR -->
+
+    <!-- SMALL BOLD -->
+    <Style x:Key="FontsTypography.SmallBold" TargetType="Control">
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextBlock.LineHeight" Value="18" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallBold/Active" BasedOn="{StaticResource FontsTypography.SmallBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallBold/Disabled" BasedOn="{StaticResource FontsTypography.SmallBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallBold/Secondary" BasedOn="{StaticResource FontsTypography.SmallBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <!-- END OF SMALL BOLD -->
+
+    <!-- NORMAL LIGHT -->
+    <Style x:Key="FontsTypography.NormalLight" TargetType="Control">
+        <Setter Property="FontWeight" Value="400" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextBlock.LineHeight" Value="21" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalLight/Active" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalLight/Disabled" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalLight/Secondary" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalLight/Link" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.MainColor}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalLight/White" BasedOn="{StaticResource FontsTypography.NormalLight}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+    </Style>
+    <!-- END OF NORMAL LIGHT -->
+
+    <!-- NORMAL REGULAR -->
+    <Style x:Key="FontsTypography.NormalRegular" TargetType="Control">
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextBlock.LineHeight" Value="21" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalRegular/Active" BasedOn="{StaticResource FontsTypography.NormalRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalRegular/Disabled" BasedOn="{StaticResource FontsTypography.NormalRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalRegular/Secondary" BasedOn="{StaticResource FontsTypography.NormalRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalRegular/Link" BasedOn="{StaticResource FontsTypography.NormalRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.MainColor}" />
+    </Style>
+    <!-- END OF NORMAL REGULAR -->
+
+    <!-- NORMAL BOLD -->
+    <Style x:Key="FontsTypography.NormalBold" TargetType="Control">
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="TextBlock.LineHeight" Value="21" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalBold/Active" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalBold/Disabled" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalBold/Secondary" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalBold/Link" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.MainColor}" />
+    </Style>
+    <Style x:Key="FontsTypography.NormalBold/White" BasedOn="{StaticResource FontsTypography.NormalBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+    </Style>
+    <!-- END OF NORMAL BOLD -->
+
+    <!-- TINY REGULAR -->
+    <Style x:Key="FontsTypography.TinyRegular" TargetType="Control">
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="TextBlock.LineHeight" Value="15" />
+    </Style>
+    <Style x:Key="FontsTypography.TinyRegular/Active" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.TinyRegular/Disabled" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.TinyRegular/Secondary" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <Style x:Key="FontsTypography.TinyRegular/Link" BasedOn="{StaticResource FontsTypography.TinyRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Basic.NoticeColor}" />
+    </Style>
+    <!-- END OF TINY REGULAR -->
+
+    <!-- TINY BOLD -->
+    <Style x:Key="FontsTypography.TinyBold" TargetType="Control">
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="TextBlock.LineHeight" Value="15" />
+    </Style>
+    <Style x:Key="FontsTypography.TinyBold/Active" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.TinyBold/Disabled" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.TinyBold/Secondary" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+    </Style>
+    <Style x:Key="FontsTypography.TinyBold/White" BasedOn="{StaticResource FontsTypography.TinyBold}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+    </Style>
+    <!-- END OF TINY BOLD -->
+
+    
+    
+    <Style x:Key="FontsTypography.NiceHash-Miner" TargetType="TextBlock" BasedOn="{StaticResource FontsTypography.Body-1-Regular}">
+        <Setter Property="LineHeight" Value="1.57"/>
+        <!--letter-spacing: normal;-->
+    </Style>
+
+</ResourceDictionary>

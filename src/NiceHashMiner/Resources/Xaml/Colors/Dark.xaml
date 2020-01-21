@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Colors">
+
+    <Color x:Key="Colors.Dark.White">#FFFFFF</Color>
+
+    <!--#region Basic colors-->
+    <Color x:Key="Colors.Dark.Basic.MainColor">#FBA342</Color>
+    <Color x:Key="Colors.Dark.Basic.SuccessColor">#68B641</Color>
+    <Color x:Key="Colors.Dark.Basic.NoticeColor">#128EDE</Color>
+    <Color x:Key="Colors.Dark.Basic.WarningColor">#E92424</Color>
+    <Color x:Key="Colors.Dark.Basic.YellowColor">#FBC241</Color>
+    <Color x:Key="Colors.Dark.Basic.NO_NAME">#FDE3C6</Color>
+    <Color x:Key="Colors.Dark.Basic.SuccessColorBckg">#DBEED2</Color>
+    <Color x:Key="Colors.Dark.Basic.WarningColorBckg">#FCE9E9</Color>
+    <Color x:Key="Colors.Dark.Basic.NastyGreen">#68B641</Color>
+    <!--#endregion Basic colors-->
+
+    <!--#region Grey colors-->
+    <Color x:Key="Colors.Dark.Grey.Grey1Background">#010D15</Color>
+    <Color x:Key="Colors.Dark.Grey.Grey2Outlines">#40494F</Color>
+    <Color x:Key="Colors.Dark.Grey.Grey3OutlineActive">#CECDCD</Color>
+    <!--#endregion Grey colors-->
+
+    <Color x:Key="Colors.Dark.Border">#40494F</Color>
+</ResourceDictionary>

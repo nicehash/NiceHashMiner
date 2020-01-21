@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.TDPSettings.TDPComputeDeviceItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.TDPSettings"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:DeviceDataTDP}">
+    <Grid>
+        <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
+            </Border.Effect>
+        </Border>
+        <UniformGrid Columns="5" Background="Transparent" HorizontalAlignment="Stretch" IsEnabled="{Binding HasTPDSettings}">
+            <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center">
+                <TextBlock Foreground="{StaticResource Gray1ColorBrush}" Text="{Binding Dev.NameCount}" />
+                <TextBlock Text="{Binding Dev.Name}"/>
+            </StackPanel>
+            <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="{Binding HasTPDSettings}">
+                <TextBlock Foreground="{StaticResource Gray1ColorBrush}" Text="Selected TDP Settings" />
+                <TextBlock Text="{Binding SelectedTPDSettingType}" />
+            </StackPanel>
+            <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="{Binding HasTPDSettings}">
+                <TextBlock Foreground="{StaticResource Gray1ColorBrush}" Text="SIMPLE"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Get"/>
+                    <TextBlock Text="{Binding TPDSimpleValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Set"/>
+                    <TextBox x:Name="textBox_simple" Width="50" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="{Binding HasTPDSettings}">
+                <TextBlock Foreground="{StaticResource Gray1ColorBrush}" Text="PERCENTAGE"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Get" Click="SetSimple"/>
+                    <TextBlock Text="{Binding TPDPercentageValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Set" Click="SetPercentage"/>
+                    <TextBox x:Name="textBox_percentage" Width="50" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="{Binding HasTPDSettings}">
+                <TextBlock Foreground="{StaticResource Gray1ColorBrush}" Text="RAW"/>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Get"/>
+                    <TextBlock Text="{Binding TPDRawValue}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Set" Click="SetRaw"/>
+                    <TextBox x:Name="textBox_raw" Width="50" />
+                </StackPanel>
+            </StackPanel>
+        </UniformGrid>
+    </Grid>
+</UserControl>

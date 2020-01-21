@@ -1,0 +1,138 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Benchmark.Benchmarks"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark"
+             xmlns:localComputeDeviceItem="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:MainVM}">
+    <UserControl.Resources>
+        <local:BenchmarkTypeToStringConverter x:Key="BenchmarkTypeToStringConverter" />
+        
+    </UserControl.Resources>
+    <Grid Background="{DynamicResource BackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="40,16,0,16">
+            <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{DynamicResource TextColorBrush}" FontSize="14">Benchmark Type:</TextBlock>
+                <Button Margin="4,0,0,0" Click="BenchmarkTypeContextMenuButton_Click" Style="{StaticResource ButtonNoBorder}">
+                    <Button.ContextMenu>
+                        <ContextMenu x:Name="BenchmarkTypeContextMenu">
+                            <ContextMenu.Template>
+                                <ControlTemplate>
+                                    <StackPanel>
+                                        <Grid >
+                                            <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
+                                                <Border.Effect>
+                                                    <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
+                                                </Border.Effect>
+                                            </Border>
+                                            <StackPanel>
+                                                <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding BenchmarkSettings.Standard, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetStandard"/>
+                                                <Separator Background="{DynamicResource BorderColor}"/>
+                                                <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding BenchmarkSettings.Quick, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetQuick"/>
+                                                <Separator Background="{DynamicResource BorderColor}"/>
+                                                <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding BenchmarkSettings.Precise, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetPrecise"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </ContextMenu.Template>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                    <TextBlock Foreground="{StaticResource PrimaryColorBrush}" FontSize="14" LineHeight="1.57" Text="{Binding BenchmarkSettings.SelectedBenchmarkType, Converter={StaticResource BenchmarkTypeToStringConverter}}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+                                <Style.Triggers>
+                                    <Trigger Property ="IsMouseOver" Value="True">
+                                        <Setter Property="TextDecorations">
+                                            <Setter.Value>
+                                                <TextDecorationCollection>
+                                                    <TextDecoration Location="Underline" PenOffset="2">
+                                                        <TextDecoration.Pen>
+                                                            <Pen Thickness="1" Brush="{StaticResource PrimaryColorBrush}"></Pen>
+                                                        </TextDecoration.Pen>
+                                                    </TextDecoration>
+                                                </TextDecorationCollection>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Button>
+            </WrapPanel>
+        </Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+            <StackPanel>
+                <localComputeDeviceItem:ComputeDeviceItemHeader Label="CPU" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                <ItemsControl ItemsSource="{Binding CPUs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <localComputeDeviceItem:ComputeDeviceItemHeader Label="GPU" HorizontalAlignment="Stretch" Margin="0,24,0,0" />
+                <ItemsControl ItemsSource="{Binding GPUs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Row="2" MinHeight="88" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock
+                Grid.Row="0" Margin="40,24,0,0"
+                Style="{StaticResource BaseUbuntuTextBlockBold}"
+                FontSize="14"
+                Foreground="{StaticResource NastyGreenBrush}"
+                TextWrapping="Wrap"
+                Text="{Binding BenchmarkSettings.BenchmarksPendingStr}"
+                />
+
+            <ProgressBar Style="{StaticResource progressStyle}"
+                Grid.Row="1" Grid.Column="0"
+                Margin="40,0,0,0" Width="240" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" />
+            <CheckBox Grid.Row="1" Grid.Column="1"
+                      HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
+                <TextBlock>Start mining after benchmark</TextBlock>
+            </CheckBox>
+            <Button 
+                Grid.Row="0" Grid.Column="3"
+                Grid.RowSpan="2"
+                Style="{StaticResource BigButtonPrimary}"
+                Width="174"
+                Height="40"
+                Margin="0,0,40,0"
+                IsEnabled="{Binding BenchmarkSettings.HasBenchmarkWork}"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Content="START BENCHMARK"
+                Click="BenchmarkButton_Click"
+                />
+
+        </Grid>
+    </Grid>
+</UserControl>

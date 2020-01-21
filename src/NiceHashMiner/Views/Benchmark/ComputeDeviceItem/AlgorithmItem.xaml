@@ -1,0 +1,257 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Benchmark.ComputeDeviceItem.AlgorithmItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
+             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
+             xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="720"
+             d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
+    <UserControl.Resources>
+        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
+        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
+        
+        <local:AlgorithmItemStatusStyleConverter x:Key="AlgorithmItemStatusStyleConverter" />
+        <local:AlgorithmItemSpeedsConverter x:Key="AlgorithmItemSpeedsConverter" />
+        <local:AlgorithmItemStatusVisibilityConverter x:Key="AlgorithmItemStatusVisibilityConverter" />
+        <local:AlgorithmItemStatusTextConverter x:Key="AlgorithmItemStatusTextConverter" />
+
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxCol">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Button" x:Key="local.SettingsButton" >
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="#eeeeee"
+                            Margin="0"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome }"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="Content" Value="&#xF013;" />
+
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+
+            <Setter Property="MaxHeight" Value="24"/>
+            <Setter Property="MaxWidth" Value="23.2"/>
+            <Setter Property="MinHeight" Value="24"/>
+            <Setter Property="MinWidth" Value="23.2"/>
+
+            <Style.Triggers>
+                <!--Default-->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <!--<Condition Property="IsChecked" Value="False" />-->
+                        <Condition Property="IsMouseOver" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="Background" Value="{ DynamicResource BackgroundColor }" />
+                        <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
+                        <Setter Property="BitmapEffect" >
+                            <Setter.Value>
+                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
+                            </Setter.Value>
+                        </Setter>
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+                <!--Hover-->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <!--<Condition Property="IsChecked" Value="False" />-->
+                        <Condition Property="IsMouseOver" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="Background" Value="{ DynamicResource PrimaryColorBrush }" />
+                        <Setter Property="BorderBrush" Value="{ DynamicResource PrimaryColorBrush }" />
+                        <Setter Property="Foreground" Value="#FFFFFF" />
+                        <Setter Property="BitmapEffect" >
+                            <Setter.Value>
+                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="1" Opacity="0.2" />
+                            </Setter.Value>
+                        </Setter>
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+                <!--Selected-->
+                <!--
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsChecked" Value="True" />
+                        <Condition Property="IsMouseOver" Value="False" />
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+                        <Setter Property="BitmapEffect" >
+                            <Setter.Value>
+                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
+                            </Setter.Value>
+                        </Setter>
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+                -->
+                <!--Selected hover-->
+                <!--
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsChecked" Value="True" />
+                        <Condition Property="IsMouseOver" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+                        <Setter Property="BitmapEffect" >
+                            <Setter.Value>
+                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                            </Setter.Value>
+                        </Setter>
+                    </MultiTrigger.Setters>
+                </MultiTrigger>-->
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <!--start animation on load-->
+        <EventTrigger RoutedEvent="UserControl.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
+                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
+                    </ObjectAnimationUsingKeyFrames>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <Grid MinHeight="50" MinWidth="220">
+        <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
+            </Border.Effect>
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                            <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+        </Border>
+        <UniformGrid Columns="6" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="16,0,16,0" >
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>-->
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Style="{DynamicResource local.TextBoxCol}"
+                       Text="{Binding AlgorithmName}"
+                       HorizontalAlignment="Left"
+                       />
+            <TextBlock Grid.Row="0" Grid.Column="1"
+                       Style="{DynamicResource local.TextBoxCol}"
+                       Text="{Binding PluginName}"
+                       />
+            <TextBlock Grid.Row="0" Grid.Column="2"
+                       Style="{DynamicResource local.TextBoxCol}"
+                       Text="{Binding AnnotatedSpeeds, Converter={StaticResource AlgorithmItemSpeedsConverter}}"
+                       />
+            <TextBlock Grid.Row="0" Grid.Column="3"
+                       Style="{DynamicResource local.TextBoxCol}"
+                       Text="{Binding CurrentEstimatedProfitStr}"
+                       />
+            <WrapPanel Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Style="{DynamicResource local.TextBoxCol}"
+                       Foreground="{Binding Status, Converter={StaticResource AlgorithmItemStatusStyleConverter}}"
+                       Text="{Binding Status, Converter={StaticResource AlgorithmItemStatusTextConverter}}"
+                       />
+                <Path Style="{StaticResource SpinCirclePath}"
+                      Visibility="{Binding Status, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}"
+                      Margin="4,0,0,0"
+                      x:Name="spinCirclePath"
+                      Width="20"
+                      Height="20"
+                      Stretch="Fill"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Stretch"/>
+            </WrapPanel>
+            <WrapPanel Grid.Row="0" Grid.Column="5"
+                       HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" x:Name="SettingsPanel"
+                       Visibility="{Binding IsUserEditable, Converter={StaticResource NulBoolToVisibilityConverter}}"
+                       >
+                <CheckBox Style="{StaticResource NHMSwitch}"
+                          IsChecked="{Binding Enabled, Mode=TwoWay}"
+                          Click="EnableChanged"
+                          x:Name="SettingsPanelCheckBox"
+                          Visibility="{Binding IsUserEditable, Converter={StaticResource NulBoolToVisibilityConverter}}"
+                          Margin="0,0,8,0" />
+                <!--TODO add context menu and all that-->
+                <Button Style="{DynamicResource local.SettingsButton}"
+                        IsEnabled="True"
+                        DataContext="{Binding .}"
+                        x:Name="SettingsPanelButtonSettings"
+                        Visibility="{Binding IsUserEditable, Converter={StaticResource NulBoolToVisibilityConverter}}"
+                        Click="AlgorithmSettings_Button_Click"
+                        Margin="8,0,0,0">
+                    <Button.ContextMenu>
+                        <ContextMenu x:Name="AlgorithmSettingsContextMenu" Closed="AlgorithmSettingsContextMenu_Closed">
+                            <ContextMenu.Template>
+                                <ControlTemplate>
+                                    <local:AlgorithmSettings MaxWidth="392" MaxHeight="789" DataContext="{Binding .}" CloseClick="CloseAlgorithmSettings_Button_Click"  />
+                                </ControlTemplate>
+                            </ContextMenu.Template>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
+            </WrapPanel>
+        </UniformGrid>
+        
+    </Grid>
+</UserControl>

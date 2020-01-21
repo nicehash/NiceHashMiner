@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Common.WorkernamePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Common"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=viewModels:MainVM}">
+    <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal" ToolTip="{StaticResource workerName}"> 
+        <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}" Foreground="{StaticResource Gray2ColorBrush}" FontSize="14">Worker name:</TextBlock>
+        <Button Margin="4,0,0,0" Click="Click_ChangeWorkername" Style="{StaticResource ButtonTextBlock}" Content="{Binding CredentialsSettings.WorkerName, Mode=OneWay}" x:Name="WorkernameButton">
+            <Button.Resources>
+                <Style TargetType="{x:Type TextBlock}" >
+                    <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+                    <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="FontStretch" Value="Normal" />
+                    <Setter Property="FontStyle" Value="Normal" />
+                    <Setter Property="LineHeight" Value="1.57" />
+                    <Setter Property="Text" Value="{Binding CredentialsSettings.WorkerName, Mode=OneWay}" />
+                    <Style.Triggers>
+                        <Trigger Property ="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Resources>
+        </Button>
+    </WrapPanel>
+</UserControl>

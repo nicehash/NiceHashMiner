@@ -1,0 +1,55 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Icons">
+    <DrawingGroup x:Key="LoginCircleLogoLight">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0,0,162,162" />
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Opacity="1" Transform="1,0,0,1,1,1">
+            <GeometryDrawing>
+                <GeometryDrawing.Pen>
+                    <Pen Brush="#FFF1F1F1" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                </GeometryDrawing.Pen>
+                <GeometryDrawing.Geometry>
+                    <EllipseGeometry RadiusX="46.623" RadiusY="46.623" Center="79.47,79.47" />
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing>
+                <GeometryDrawing.Pen>
+                    <Pen Brush="#FFF5F5F5" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                </GeometryDrawing.Pen>
+                <GeometryDrawing.Geometry>
+                    <EllipseGeometry RadiusX="65.695" RadiusY="65.695" Center="79.47,78.411" />
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing>
+                <GeometryDrawing.Pen>
+                    <Pen Brush="#FFF8F8F8" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                </GeometryDrawing.Pen>
+                <GeometryDrawing.Geometry>
+                    <EllipseGeometry RadiusX="80" RadiusY="80" Center="80,80" />
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing>
+                <GeometryDrawing.Pen>
+                    <Pen Brush="#FFEEEEEE" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+                </GeometryDrawing.Pen>
+                <GeometryDrawing.Geometry>
+                    <EllipseGeometry RadiusX="32" RadiusY="32" Center="80,80" />
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <DrawingGroup Opacity="1">
+                <GeometryDrawing Brush="#FFFBC241">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry FillRule="Nonzero" Figures="M79.52,59C68.754,59 60,67.97 60,79 60,90.03 68.754,99 79.52,99 90.285,99 99.04,90.03 99.04,79 99.04,67.97 90.285,59 79.52,59z M79.52,95.848C70.41,95.848 63.076,88.333 63.076,79 63.076,69.667 70.411,62.152 79.52,62.152 88.63,62.152 95.964,69.667 95.964,79 95.964,88.333 88.629,95.848 79.52,95.848z" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#FFFBC241">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry FillRule="Nonzero" Figures="M88.63,85.121C87.92,84.636 86.973,84.879 86.5,85.606 86.5,85.666 84.311,89.121 79.52,89.121 74.788,89.121 72.658,85.788 72.54,85.606A1.442,1.442,0,0,0,70.47,85.121C69.76,85.545 69.523,86.515 69.937,87.242 70.056,87.424 73.072,92.212 79.52,92.212 85.967,92.212 88.984,87.485 89.102,87.242 89.516,86.515 89.339,85.545 88.629,85.122z M70.706,82.152C70.706,82.576 71.061,82.939 71.476,82.939 71.889,82.939 72.244,82.576 72.244,82.152L72.244,81.122 73.427,81.122 73.427,82.152C73.427,82.576 73.782,82.939 74.197,82.939 74.61,82.939 74.965,82.576 74.965,82.152L74.965,81.122 75.675,81.122C76.148,81.122,76.562,80.697,76.562,80.212L76.562,70.576C76.562,70.091,76.148,69.666,75.675,69.666L74.965,69.666 74.965,68.818C74.965,68.394 74.61,68.03 74.196,68.03 73.782,68.03 73.427,68.394 73.427,68.818L73.427,69.667 72.244,69.667 72.244,68.818C72.244,68.394 71.889,68.03 71.475,68.03 71.061,68.03 70.706,68.394 70.706,68.818L70.706,69.728C69.109,70.03 68.104,71.182 68.104,72.878 68.104,73.97 68.636,74.758 69.287,75.182 68.459,75.727 67.985,76.636 67.985,77.727 67.985,79.545 69.05,80.757 70.765,81L70.765,82.152 70.706,82.152z M71.594,71.667L74.374,71.667 74.374,74.333 71.594,74.333C70.647,74.333 70.114,73.848 70.114,73 70.114,72.152 70.647,71.667 71.594,71.667z M69.937,77.727C69.937,76.818,70.529,76.273,71.475,76.273L74.374,76.273 74.374,79.182 71.475,79.182C70.529,79.182,69.937,78.576,69.937,77.727z M89.812,75.242C90.462,74.818 90.995,74.03 90.995,72.939 90.995,71.242 89.99,70.091 88.393,69.788L88.393,68.878C88.393,68.455 88.038,68.091 87.623,68.091 87.21,68.091 86.855,68.455 86.855,68.879L86.855,69.727 85.672,69.727 85.672,68.879C85.672,68.455 85.317,68.091 84.902,68.091 84.489,68.091 84.134,68.455 84.134,68.879L84.134,69.727 83.424,69.727C82.951,69.727,82.537,70.152,82.537,70.637L82.537,80.212C82.537,80.697,82.951,81.122,83.424,81.122L84.134,81.122 84.134,82.152C84.134,82.576 84.489,82.939 84.903,82.939 85.317,82.939 85.672,82.576 85.672,82.152L85.672,81.122 86.855,81.122 86.855,82.152C86.855,82.576 87.21,82.939 87.624,82.939 88.038,82.939 88.393,82.576 88.393,82.152L88.393,81.06C90.108,80.817 91.173,79.605 91.173,77.787 91.113,76.696 90.64,75.727 89.813,75.241z M88.925,73C88.925,73.848,88.393,74.333,87.446,74.333L84.666,74.333 84.666,71.667 87.446,71.667C88.393,71.667,88.925,72.152,88.925,73z M87.565,79.182L84.666,79.182 84.666,76.272 87.564,76.272C88.511,76.272 89.102,76.818 89.102,77.727 89.102,78.576 88.511,79.182 87.564,79.182z" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+</ResourceDictionary>
