@@ -33,8 +33,6 @@
                          LostFocus="TextBoxBitcoinAddress_LostFocus"
                          >
                 </TextBox>
-                <!--<TextBlock Style="{StaticResource AlertIcon}" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Margin="6,0,0,0" />
-                <TextBlock Style="{StaticResource CheckIcon}" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Margin="6,0,0,0" />-->
             </StackPanel>
             
             <TextBlock Margin="0,8,0,0">
@@ -53,7 +51,9 @@
             <TextBox Style="{StaticResource inputBox}"
                      x:Name="textBoxWorkerName"
                      Text="{Binding CredentialsSettings.WorkerName, Mode=OneWay}"
-                     TextChanged="TextBoxWorkerName_TextChanged" />
+                     TextChanged="TextBoxWorkerName_TextChanged"
+                     KeyUp="TextBoxWorkerName_KeyUp"
+                     LostFocus="TextBoxWorkerName_LostFocus"/>
             </WrapPanel>
             <!--MAIN-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">

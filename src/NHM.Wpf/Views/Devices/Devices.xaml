@@ -174,14 +174,15 @@
                 <RowDefinition Height="24" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" >
-                <TextBlock Text="ENABLE ALL" Style="{StaticResource BaseUbuntuTextBlock}" FontWeight="Regular" FontSize="10" Foreground="{DynamicResource TextColorBrush}"/>
-                <CheckBox Style="{StaticResource NHMSwitch}"
-                          IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }"
-                          Margin="24,0,12,0"
-                          Click="ToggleDisableEnableAllDevices"/>
-            </StackPanel>
-            
+            <ToggleButton Grid.Row="0" Style="{StaticResource ButtonNoBorder}" IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }" Click="ToggleDisableEnableAllDevices" HorizontalAlignment="Right" VerticalAlignment="Center"  >
+                <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center" >
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlock}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="ENABLE ALL"  FontWeight="Regular" FontSize="10" Foreground="{DynamicResource TextColorBrush}"/>
+                    <CheckBox Style="{StaticResource NHMSwitch}"
+                              IsChecked="{Binding MiningState.AllDeviceEnabled, Mode=OneWay }"
+                              Margin="24,0,12,0" />
+                </StackPanel>
+            </ToggleButton>
+
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemsSource="{Binding Devices}">
                     <ItemsControl.ItemTemplate>
@@ -198,7 +199,7 @@
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="7*" />
             </Grid.ColumnDefinitions>
-            <common:MiningLocation Grid.Column="0" HorizontalAlignment="Left"/>
+            <common:WorkernamePanel Grid.Column="0" HorizontalAlignment="Left"/>
             <WrapPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="startAllButton"
                         HorizontalAlignment="Right"

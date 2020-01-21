@@ -6,11 +6,17 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace NHM.Wpf.Views.Common.NHBase
 {
     public abstract class NHMMainWindow : BaseDialogWindow
     {
+
+        Grid _gridLayoutRootOverlay;
+        Grid _gridLayoutRootOverlay_MODAL_WINDOW_ContentGrid;
+        Grid _gridLayoutRootOverlay_MODAL_WINDOW;
+        ContentPresenter _contentPresenter;
         // the template style MUST mirror the enum names!!!
         protected enum ToggleButtonType
         {
@@ -28,8 +34,8 @@ namespace NHM.Wpf.Views.Common.NHBase
 
         private bool HideInitTabButtonVisibility(string name)
         {
-            if ("MinimizeButton" == name) return false; 
-            if ("CloseButton" == name) return false; 
+            if ("MinimizeButton" == name) return false;
+            if ("CloseButton" == name) return false;
             return true;
         }
 
@@ -50,8 +56,25 @@ namespace NHM.Wpf.Views.Common.NHBase
                 }
                 Tabs[key] = tabButtom;
             }
+            _gridLayoutRootOverlay = GetRequiredTemplateChild<Grid>("LayoutRootOverlay");
+            _gridLayoutRootOverlay_MODAL_WINDOW = GetRequiredTemplateChild<Grid>("MODAL_WINDOW_BLUR");
+            _gridLayoutRootOverlay_MODAL_WINDOW_ContentGrid = GetRequiredTemplateChild<Grid>("MODAL_WINDOW_ContentGrid");
+            
+            _gridLayoutRootOverlay_MODAL_WINDOW_ContentGrid.MouseDown += _gridLayoutRootOverlay_MouseDown;
+            _gridLayoutRootOverlay_MODAL_WINDOW.MouseDown += _gridLayoutRootOverlay_MouseDown;
+            _gridLayoutRootOverlay.MouseDown += _gridLayoutRootOverlay_MouseDown;
 
+            _contentPresenter = GetRequiredTemplateChild<ContentPresenter>("MODAL_DIALOG");
+            if (_contentPresenter != null)
+            {
+                _contentPresenter.AddHandler(Grid.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.OnHeaderBarMouseLeftButtonDown));
+            }
             base.OnApplyTemplate();
+        }
+
+        private void _gridLayoutRootOverlay_MouseDown(object sender, MouseEventArgs e)
+        {
+            _gridLayoutRootOverlay.Visibility = Visibility.Hidden;
         }
 
         protected void SetTabButtonsEnabled()
@@ -89,5 +112,17 @@ namespace NHM.Wpf.Views.Common.NHBase
                 foreach (var key in deselectKeys) Tabs[key].IsChecked = false;
             }
         }
+
+        public void ShowContentAsModal(UserControl userControl)
+        {
+            _contentPresenter.Content = userControl;
+            _gridLayoutRootOverlay.Visibility = Visibility.Visible;
+        }
+
+        public void HideModal()
+        {
+            _gridLayoutRootOverlay.Visibility = Visibility.Hidden;
+        }
+
     }
 }

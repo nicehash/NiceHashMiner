@@ -55,9 +55,9 @@
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
-                <Setter Property="BitmapEffect" >
+                <Setter Property="Effect" >
                     <Setter.Value>
-                        <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.4"/>
                     </Setter.Value>
                 </Setter>
             </Trigger>
@@ -81,15 +81,15 @@
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
         <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <!--<Style.Triggers>
+        <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="BitmapEffect" >
+                <Setter Property="Effect" >
                     <Setter.Value>
-                        <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
+                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.4"/>
                     </Setter.Value>
                 </Setter>
             </Trigger>
-        </Style.Triggers>-->
+        </Style.Triggers>
     </Style>
     
     <!--#region common-->
@@ -103,6 +103,15 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Width" Value="168"/>
         <Setter Property="Height" Value="40"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Effect" >
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.1"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <!--#endregion common-->
 
@@ -146,7 +155,7 @@
     
     <!--#endregion settingsSwitch-->
 
-    <Style TargetType="{x:Type Button}" x:Key="ButtonNoBorder">
+    <Style TargetType="{x:Type ButtonBase}" x:Key="ButtonNoBorder">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
@@ -165,7 +174,7 @@
         <Setter Property="Cursor" Value="Hand" />
     </Style>
 
-    <Style TargetType="{x:Type Button}" x:Key="ButtonTextBlock">
+    <Style TargetType="{x:Type ButtonBase}" x:Key="ButtonTextBlock">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">

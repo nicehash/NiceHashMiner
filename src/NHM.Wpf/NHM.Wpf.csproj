@@ -79,6 +79,7 @@
     <Compile Include="Converters\NulBoolToVisibilityConverterFalse.cs" />
     <Compile Include="Converters\StatusColorConverter.cs" />
     <Compile Include="Converters\TemperatureValueToText.cs" />
+    <Compile Include="CustomDialogManager.cs" />
     <Compile Include="IThemeSetter.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ThemeSetterManager.cs" />
@@ -116,6 +117,12 @@
       <DependentUpon>ComputeDeviceItemHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceStatusVisibilityConverter.cs" />
+    <Compile Include="Views\Common\EnterWalletDialog.xaml.cs">
+      <DependentUpon>EnterWalletDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\EnterWorkernameDialog.xaml.cs">
+      <DependentUpon>EnterWorkernameDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\EulaWindowSecondShort.xaml.cs">
       <DependentUpon>EulaWindowSecondShort.xaml</DependentUpon>
     </Compile>
@@ -133,8 +140,8 @@
     <Compile Include="Views\ChooseLanguageWindow.xaml.cs">
       <DependentUpon>ChooseLanguageWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Common\MiningLocation.xaml.cs">
-      <DependentUpon>MiningLocation.xaml</DependentUpon>
+    <Compile Include="Views\Common\WorkernamePanel.xaml.cs">
+      <DependentUpon>WorkernamePanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\NHBase\BaseDialogWindow.cs" />
     <Compile Include="Views\Common\NHBase\BaseDialogWindow.Sizing.cs" />
@@ -361,6 +368,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Common\EnterWalletDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\EnterWorkernameDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\EulaWindowSecondShort.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -381,7 +396,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Common\MiningLocation.xaml">
+    <Page Include="Views\Common\WorkernamePanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -8,6 +8,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=nhmMining:Notification}">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="local.DefaultTextBlock" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="FontWeight" Value="500" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextBlock.LineHeight" Value="18" />
+        </Style>
+    </UserControl.Resources>
     <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" Margin="6" Padding="12">
         <Grid>
             <Grid.RowDefinitions>
@@ -16,33 +25,26 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <WrapPanel Grid.Row="0">
-                <TextBlock Text="Name: " Style="{StaticResource FontsTypography.SmallRegularTextBlock}" />
-                <TextBlock x:Name="itemErrorTitle" Text="{Binding Name}" Grid.Row="0" Style="{StaticResource FontsTypography.SmallRegularTextBlock}"/>
+                <TextBlock x:Name="itemErrorTitle" Text="{Binding Name}" Style="{StaticResource local.DefaultTextBlock}" FontSize="14"/>
             </WrapPanel>
-            <WrapPanel Grid.Row="1">
-                <TextBlock Text="Content: " Style="{StaticResource FontsTypography.SmallRegularTextBlock}" />
-                <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Grid.Row="1" Style="{StaticResource FontsTypography.SmallRegularTextBlock}"/>
+            <WrapPanel Grid.Row="1" Margin="4,4,0,0">
+                <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>
             </WrapPanel>
             <StackPanel Grid.Row="2" Height="64" VerticalAlignment="Bottom" Background="Transparent" Margin="0,10,40,0" Orientation="Horizontal">
-                <Button
-                Width="136" Height="24"
-                HorizontalAlignment="Left"
-                x:Name="RemoveButton" Click="RemoveNotification" Content="Remove" >
-                    <Button.Resources>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonWhite}">
-                            <Setter Property="FontSize" Value="10" />
-                        </Style>
-                    </Button.Resources>
-                </Button>
-                <Button
-                Width="136" Height="24"
-                HorizontalAlignment="Left"
-                x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="10,0,0,0">
-                    <Button.Resources>
-                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonPrimary}" />
-                    </Button.Resources>
-                    <Label FontFamily="{StaticResource UbuntuFontFamily}" Style="{StaticResource FontsTypography.TinyBold/Active}">Action</Label>
-                </Button>
+                <Button Style="{StaticResource BigButtonWhite}"
+                        MinWidth="136"
+                        Width="Auto" Height="24"
+                        FontSize="10"
+                        Padding="24,0,24,0"
+                        HorizontalAlignment="Left"
+                        x:Name="RemoveButton" Click="RemoveNotification" Content="Remove" />
+                <Button Style="{StaticResource BigButtonPrimary}"
+                        MinWidth="136"
+                        Width="Auto" Height="24"
+                        FontSize="10"
+                        Padding="24,0,24,0"
+                        HorizontalAlignment="Left"
+                        x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="10,0,0,0" />
             </StackPanel>
         </Grid>
     </Border>

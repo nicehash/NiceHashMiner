@@ -24,6 +24,11 @@ namespace NHM.Wpf.Views.Settings
                 textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
                 textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
             }
+            if (CredentialsSettings.Instance.IsWorkerNameValid)
+            {
+                textBoxWorkerName.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+            }
         }
 
         private void AddressHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
@@ -31,40 +36,7 @@ namespace NHM.Wpf.Views.Settings
             Process.Start(e.Uri.AbsoluteUri);
         }
 
-        private async void TextBoxBitcoinAddress_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
-            var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
-            if (ApplicationStateManager.SetResult.INVALID == result)
-            {
-                textBoxBTCAddress.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFromString("Red");
-                //errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
-            }
-            else
-            {
-                textBoxBTCAddress.BorderBrush = SystemColors.ControlDarkBrush;
-                //errorProvider1.SetError(textBoxBTCAddress, "");
-            }
-        }
-
-        // TODO validator can be outside from setting
-        private void TextBoxWorkerName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
-            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
-            if (ApplicationStateManager.SetResult.INVALID == result)
-            {
-                textBoxWorkerName.BorderBrush = (SolidColorBrush)new BrushConverter().ConvertFromString("Red");
-                //errorProvider1.SetError(textBoxWorkerName, Tr("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long)."));
-            }
-            else
-            {
-                textBoxWorkerName.BorderBrush = SystemColors.ControlDarkBrush;
-                //errorProvider1.SetError(textBoxWorkerName, "");
-            }
-        }
-
-        private void TextBoxBitcoinAddress_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void ValidateBTCAddr()
         {
             var trimmedBtcText = textBoxBTCAddress.Text.Trim();
             var btcOK = CredentialValidators.ValidateBitcoinAddress(trimmedBtcText);
@@ -80,6 +52,18 @@ namespace NHM.Wpf.Views.Settings
             }
         }
 
+        private async void TextBoxBitcoinAddress_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
+            var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
+            ValidateBTCAddr();
+        }
+
+        private void TextBoxBitcoinAddress_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            ValidateBTCAddr();
+        }
+
         private void TextBoxBitcoinAddress_LostFocus(object sender, RoutedEventArgs e)
         {
             if (CredentialsSettings.Instance.IsBitcoinAddressValid)
@@ -93,6 +77,52 @@ namespace NHM.Wpf.Views.Settings
                 textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
                 textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
             }
+        }
+
+        private void ValidateWorkername()
+        {
+            var trimmedWorkername = textBoxWorkerName.Text.Trim();
+            var btcOK = CredentialValidators.ValidateWorkerName(trimmedWorkername);
+            if (btcOK)
+            {
+                textBoxWorkerName.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+            }
+            else
+            {
+                textBoxWorkerName.Style = Application.Current.FindResource("InputBoxBad") as Style;
+                textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
+            }
+        }
+
+        // TODO validator can be outside from setting
+        private void TextBoxWorkerName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
+            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
+            ValidateWorkername();
+        }
+
+        private void TextBoxWorkerName_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            ValidateWorkername();
+        }
+
+        private void TextBoxWorkerName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            //if (CredentialsSettings.Instance.IsWorkerNameValid)
+            //{
+            //    //// TODO we break binding if we assing this
+            //    //textBoxWorkerName.Text = CredentialsSettings.Instance.WorkerName;
+            //    textBoxWorkerName.Style = Application.Current.FindResource("InputBoxGood") as Style;
+            //    textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+            //}
+            //else
+            //{
+            //    textBoxWorkerName.Style = Application.Current.FindResource("InputBoxGood") as Style;
+            //    textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+            //}
+            ValidateWorkername();
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

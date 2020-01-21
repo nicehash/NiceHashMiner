@@ -100,10 +100,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:NHMMainWindow}">
-                    <Grid Background="Transparent" x:Name="WindowRoot" >
+                    <Grid Background="Transparent" x:Name="WindowRoot">
                         <!--round window-->
                         <Border Background="{DynamicResource BackgroundColor}" CornerRadius="5" BorderThickness="0" BorderBrush="Transparent" />
                         <Grid x:Name="LayoutRoot"
+                              Panel.ZIndex="0"
                               Background="{TemplateBinding Background}" Margin="2">
                             <!--SHADOWS HERE DEGRADE PERFORMANCE. IF WE ENABLE THEM BACK SET MARGIN ON GRID TO 2-->
                             <!--<Grid.Effect>
@@ -202,6 +203,19 @@
                                 <ContentPresenter x:Name="PART_MainContentPresenter" Grid.Row="1"/>
                             </Grid>
                         </Grid>
+
+                        <!--HERE ADD MODALITY LIGHT-->
+                        <Grid x:Name="LayoutRootOverlay" Panel.ZIndex="1"  Visibility="Collapsed">
+                            <Grid x:Name="MODAL_WINDOW_BLUR" Background="{DynamicResource MODAL_WINDOW_BLUR_Background}" Opacity="0.8" />
+                            <Grid x:Name="MODAL_WINDOW_ContentGrid" Width="Auto" Height="Auto" Background="Transparent">
+                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                                    <ContentPresenter x:Name="MODAL_DIALOG" Grid.Row="1"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Grid>
+                        <!--HERE ADD MODALITY DARK--><!--
+                        <Grid x:Name="LayoutRootOverlay"
+                              Panel.ZIndex="1" Background="#3A3939" Opacity="0.8"></Grid>-->
                     </Grid>
 
                 </ControlTemplate>

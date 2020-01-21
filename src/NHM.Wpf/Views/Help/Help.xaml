@@ -10,6 +10,15 @@
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="local.Defaulttext" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="Foreground" Value="{DynamicResource  TextColorBrush}" />
+            <Setter Property="FontWeight" Value="500" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextBlock.LineHeight" Value="21" />
+        </Style>
+    </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}" Width="Auto" Height="Auto">
         <Border Margin="40,10,40,40" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
             <Grid >
@@ -17,14 +26,14 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <WrapPanel Grid.Row="0" Orientation="Vertical">
+                <WrapPanel Grid.Row="0" Orientation="Vertical" Margin="12,8,0,0">
                     <WrapPanel VerticalAlignment="Center">
-                        <Label Content="Running local version: " Style="{StaticResource FontsTypography.NormalRegular/Active}" />
-                        <Label Content="{Binding LocalVersion}" Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
+                        <TextBlock Text="Running local version: " Style="{DynamicResource local.Defaulttext}" />
+                        <TextBlock Text="{Binding LocalVersion}" Style="{StaticResource local.Defaulttext}"/>
                     </WrapPanel>
                     <WrapPanel>
-                        <Label Content="Latest online version: " Style="{StaticResource FontsTypography.NormalRegular/Active}"/>
-                        <Label Content="{Binding OnlineVersion}" Style="{StaticResource FontsTypography.NormalRegular/Active}" Margin="6,0,0,0"/>
+                        <TextBlock Text="Latest online version: " Style="{DynamicResource local.Defaulttext}"/>
+                        <TextBlock Text="{Binding OnlineVersion}" Style="{DynamicResource local.Defaulttext}" Margin="6,0,0,0"/>
                     </WrapPanel>
                 </WrapPanel>
                 <Grid Grid.Row="1" Margin="0,20,0,0">
@@ -32,7 +41,7 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Label Content="Notifications" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+                    <Label Content="Notifications" Margin="12,0,0,0" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="6,0,0,0">
                         <ItemsControl x:Name="ic_NotificationsList" ItemsSource="{Binding HelpNotificationList}">
                             <ItemsControl.ItemTemplate>

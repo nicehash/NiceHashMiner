@@ -30,6 +30,7 @@ namespace NHM.Wpf.Views.Common.NHBase
         public System.Windows.Controls.Button RestoreButton { get; private set; }
         public System.Windows.Controls.Button CloseButton { get; private set; }
         public Grid HeaderBar { get; private set; }
+        public Grid HeaderBar2 { get; private set; }
         public double HeightBeforeMaximize { get; private set; }
         public double WidthBeforeMaximize { get; private set; }
         public WindowState PreviousState { get; private set; }
@@ -88,6 +89,8 @@ namespace NHM.Wpf.Views.Common.NHBase
             this.HeaderBar = this.GetRequiredTemplateChild<Grid>("PART_HeaderBar");
             NHMIcon = this.GetRequiredTemplateChild<Grid>("NHMIcon");
             WindowTitle = this.GetRequiredTemplateChild<TextBlock>("WindowTitle");
+            this.HeaderBar2 = this.GetRequiredTemplateChild<Grid>("PART_HeaderBar2");
+             
 
             if (HideIconAndTitle)
             {
@@ -122,6 +125,11 @@ namespace NHM.Wpf.Views.Common.NHBase
             if (this.HeaderBar != null)
             {
                 this.HeaderBar.AddHandler(Grid.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.OnHeaderBarMouseLeftButtonDown));
+            }
+
+            if (this.HeaderBar2 != null)
+            {
+                this.HeaderBar2.AddHandler(Grid.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.OnHeaderBarMouseLeftButtonDown));
             }
 
             base.OnApplyTemplate();

@@ -36,10 +36,20 @@ namespace NHMCore.ApplicationState
             lock (_lock)
             {
                 var key = GetDeviceAlgorithmVersionKey(algorithmContainer);
-                _algorithmsBenchmarksStates[key] = _benchmarkStatuses.Contains(algorithmContainer.Status);
+                _algorithmsBenchmarksStates[key] = _benchmarkStatuses.Contains(algorithmContainer.Status) && algorithmContainer.ComputeDevice.Enabled;
                 _benchmarksPending = _algorithmsBenchmarksStates.Values.Where(benchStatus => benchStatus).Count();
                 OnPropertyChanged(nameof(BenchmarksPending));
                 OnPropertyChanged(nameof(HasBenchmarkWork));
+            }
+        }
+
+        public void ComputeDeviceOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var computeDevice = sender as ComputeDevice;
+            if (computeDevice == null) return;
+            if (e.PropertyName == nameof(ComputeDevice.Enabled))
+            {
+                foreach (var algorithmContainer in computeDevice.AlgorithmSettings) SetStatus(algorithmContainer);
             }
         }
 
