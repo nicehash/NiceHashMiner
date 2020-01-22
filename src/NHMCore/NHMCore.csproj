@@ -37,7 +37,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Debug\</OutputPath>
+    <OutputPath>..\..\Debug\app\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -47,7 +47,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Release\</OutputPath>
+    <OutputPath>..\..\Release\app\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -130,6 +130,7 @@
     <Compile Include="Configs\UpdateSettings.cs" />
     <Compile Include="Configs\WarningSettings.cs" />
     <Compile Include="IFTTT.cs" />
+    <Compile Include="Launcher.cs" />
     <Compile Include="Mining\AlgorithmStatus.cs" />
     <Compile Include="Mining\AvailableDevices.cs" />
     <Compile Include="Mining\ComputeDevice.cs" />
@@ -411,40 +412,40 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>REM copy translations. Always copy and replace file
-copy /Y "$(ProjectDir)\translations.json" "$(SolutionDir)$(Configuration)\translations.json"
+copy /Y "$(ProjectDir)\translations.json" "$(SolutionDir)$(Configuration)\app\translations.json"
 REM device detection test script
-copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_test.bat" "$(SolutionDir)$(Configuration)\device_detection_test.bat"
+copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_test.bat" "$(SolutionDir)$(Configuration)\app\device_detection_test.bat"
 
 REM copy device detection dll's. Copy only if files don't exist
-If NOT exist "$(SolutionDir)$(Configuration)\cpuid.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cpuid.dll" "$(SolutionDir)$(Configuration)\cpuid.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\cuda_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cuda_device_detection.dll" "$(SolutionDir)$(Configuration)\cuda_device_detection.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcp120.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcr120.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\cpuid.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cpuid.dll" "$(SolutionDir)$(Configuration)\app\cpuid.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\cuda_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cuda_device_detection.dll" "$(SolutionDir)$(Configuration)\app\cuda_device_detection.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcp120.dll" "$(SolutionDir)$(Configuration)\app\msvcp120.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcr120.dll" "$(SolutionDir)$(Configuration)\app\msvcr120.dll"
 REM OpenCL.dll inside a separate folder
-If NOT exist "$(SolutionDir)$(Configuration)\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\OpenCL\"
-if NOT exist "$(SolutionDir)$(Configuration)\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL\OpenCL.dll"
-if NOT exist "$(SolutionDir)$(Configuration)\OpenCL\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\README.md" "$(SolutionDir)$(Configuration)\OpenCL\README.md"
-If NOT exist "$(SolutionDir)$(Configuration)\opencl_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\opencl_device_detection.dll" "$(SolutionDir)$(Configuration)\opencl_device_detection.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\app\OpenCL\"
+if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll"
+if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\README.md" "$(SolutionDir)$(Configuration)\app\OpenCL\README.md"
+If NOT exist "$(SolutionDir)$(Configuration)\app\opencl_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\opencl_device_detection.dll" "$(SolutionDir)$(Configuration)\app\opencl_device_detection.dll"
 REM NVIDIA inside a separate folder
-If NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\" mkdir "$(SolutionDir)$(Configuration)\NVIDIA\"
-if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\nvml.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\nvml.dll" "$(SolutionDir)$(Configuration)\NVIDIA\nvml.dll"
-if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\README.md" "$(SolutionDir)$(Configuration)\NVIDIA\README.md"
-if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\license.txt" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\license.txt" "$(SolutionDir)$(Configuration)\NVIDIA\license.txt"
+If NOT exist "$(SolutionDir)$(Configuration)\app\NVIDIA\" mkdir "$(SolutionDir)$(Configuration)\app\NVIDIA\"
+if NOT exist "$(SolutionDir)$(Configuration)\app\NVIDIA\nvml.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\nvml.dll" "$(SolutionDir)$(Configuration)\app\NVIDIA\nvml.dll"
+if NOT exist "$(SolutionDir)$(Configuration)\app\NVIDIA\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\README.md" "$(SolutionDir)$(Configuration)\app\NVIDIA\README.md"
+if NOT exist "$(SolutionDir)$(Configuration)\app\NVIDIA\license.txt" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\license.txt" "$(SolutionDir)$(Configuration)\app\NVIDIA\license.txt"
 
 
 REM commons dll's for downloaded miners. Copy only if files don't exist. Remove this after plugin system fully replaces integrated miners
 REM create directory
-If NOT exist "$(SolutionDir)$(Configuration)\common\" mkdir "$(SolutionDir)$(Configuration)\common\"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\" mkdir "$(SolutionDir)$(Configuration)\app\common\"
 REM copy over dll's
-If NOT exist "$(SolutionDir)$(Configuration)\common\cudart32_80.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart32_80.dll" "$(SolutionDir)$(Configuration)\common\cudart32_80.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\cudart64_80.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart64_80.dll" "$(SolutionDir)$(Configuration)\common\cudart64_80.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\cudart64_91.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart64_91.dll" "$(SolutionDir)$(Configuration)\common\cudart64_91.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\libcurl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\libcurl.dll" "$(SolutionDir)$(Configuration)\common\libcurl.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp120.dll" "$(SolutionDir)$(Configuration)\common\msvcp120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp140.dll" "$(SolutionDir)$(Configuration)\common\msvcp140.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr110.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr110.dll" "$(SolutionDir)$(Configuration)\common\msvcr110.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\common\msvcr120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\common\vcruntime140.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\cudart32_80.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart32_80.dll" "$(SolutionDir)$(Configuration)\app\common\cudart32_80.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\cudart64_80.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart64_80.dll" "$(SolutionDir)$(Configuration)\app\common\cudart64_80.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\cudart64_91.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart64_91.dll" "$(SolutionDir)$(Configuration)\app\common\cudart64_91.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\libcurl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\libcurl.dll" "$(SolutionDir)$(Configuration)\app\common\libcurl.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp120.dll" "$(SolutionDir)$(Configuration)\app\common\msvcp120.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcp140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp140.dll" "$(SolutionDir)$(Configuration)\app\common\msvcp140.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcr110.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr110.dll" "$(SolutionDir)$(Configuration)\app\common\msvcr110.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\app\common\msvcr120.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\app\common\vcruntime140.dll"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

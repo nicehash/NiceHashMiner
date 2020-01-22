@@ -11,11 +11,15 @@ namespace NHMCore.Utils
     public static class WindowsDefender
     {
         private static int lastIndex = 0;
+
+        // TODO current dir is not same as Root, Launcher and all that
+        //private static string AppDir => Directory.GetCurrentDirectory();
+        private static string AppDir => Paths.Root;
         public static bool IsAlreadySet()
         {
             try
             {
-                var cwd = Directory.GetCurrentDirectory();
+                var cwd = AppDir;
                 var userRegistryKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true);
                 var registrySubKeys = userRegistryKey.GetValueNames().Where(value => value.Contains("WindowsDefenderExclusion")).ToList();
                 foreach (var regVal in registrySubKeys)
@@ -43,10 +47,11 @@ namespace NHMCore.Utils
         {
             try
             {
+                var fileName = Paths.AppRootPath("AddWindowsDefenderExclusion.exe");
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = @"AddWindowsDefenderExclusion.exe",
-                    Arguments = $"add {Directory.GetCurrentDirectory()}",
+                    FileName = fileName,
+                    Arguments = $"add {AppDir}",
                     Verb = "runas",
                     UseShellExecute = true,
                     CreateNoWindow = true
@@ -62,7 +67,7 @@ namespace NHMCore.Utils
                     }
                     else
                     {
-                        var cwd = Directory.GetCurrentDirectory();
+                        var cwd = AppDir;
                         var userRegistryKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true);
                         userRegistryKey.SetValue("WindowsDefenderExclusion" + lastIndex, cwd);
 

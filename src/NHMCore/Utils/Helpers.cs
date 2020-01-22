@@ -195,9 +195,10 @@ namespace NHMCore.Utils
         {
             try
             {
+                var fileName = Paths.AppRootPath("nvidiasetp0state.exe");
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = "nvidiasetp0state.exe",
+                    FileName = fileName,
                     Verb = "runas",
                     UseShellExecute = true,
                     CreateNoWindow = true

@@ -12,7 +12,7 @@ namespace NHM.Common
     public static class Logger
     {
         public static bool Enabled { get; set; }
-        const string _logsRootPath = "logs";
+        private static string _logsRootPath => Paths.RootPath("logs");
         private static bool _isInitSucceess = false;
         private static readonly ILog _log = LogManager.GetLogger(typeof(Logger));
 
