@@ -42,10 +42,11 @@ namespace NHMCore.Utils
         public static bool IsNHMInstalled()
         {
             var isInstalled = false;
-            if (Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, false) != null)
+            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, false))
             {
-                isInstalled = true;
+                isInstalled = key != null;
             }
+                
             return isInstalled;
         }
     }

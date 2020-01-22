@@ -20,20 +20,22 @@ namespace NHMCore.Utils
             try
             {
                 var cwd = AppDir;
-                var userRegistryKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true);
-                var registrySubKeys = userRegistryKey.GetValueNames().Where(value => value.Contains("WindowsDefenderExclusion")).ToList();
-                foreach (var regVal in registrySubKeys)
+                using (var userRegistryKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
                 {
-                    if (userRegistryKey.GetValue(regVal).ToString() == cwd)
+                    var registrySubKeys = userRegistryKey.GetValueNames().Where(value => value.Contains("WindowsDefenderExclusion")).ToList();
+                    foreach (var regVal in registrySubKeys)
                     {
-                        return true;
+                        if (userRegistryKey.GetValue(regVal).ToString() == cwd)
+                        {
+                            return true;
+                        }
                     }
+                    if (registrySubKeys.Count != 0)
+                    {
+                        lastIndex = Convert.ToInt32(registrySubKeys.Last().Substring("WindowsDefenderExclusion".Length)) + 1;
+                    }
+                    return false;
                 }
-                if(registrySubKeys.Count != 0)
-                {
-                    lastIndex = Convert.ToInt32(registrySubKeys.Last().Substring("WindowsDefenderExclusion".Length))+1;
-                }
-                return false;
             }
             catch(Exception ex)
             {
@@ -68,10 +70,11 @@ namespace NHMCore.Utils
                     else
                     {
                         var cwd = AppDir;
-                        var userRegistryKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true);
-                        userRegistryKey.SetValue("WindowsDefenderExclusion" + lastIndex, cwd);
-
-                        Logger.Info("NICEHASH", "addDefenderException all OK");
+                        using (var userRegistryKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
+                        {
+                            userRegistryKey.SetValue("WindowsDefenderExclusion" + lastIndex, cwd);
+                            Logger.Info("NICEHASH", "addDefenderException all OK");
+                        }
                     }
                 }
             }

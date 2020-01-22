@@ -254,7 +254,7 @@ namespace NHMCore.Notifications
                 //    if (dialogResult == DialogResult.OK)
                 //    {
                 //        //TODO auto increase vram
-                //        //var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, true);
+                //        //var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, true); IDisposable put in using
                 //        //key.SetValue("AutoIncreaseVRAM", true); //set key to "true"
                 //    }
                 //}
