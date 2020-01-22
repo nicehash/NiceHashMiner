@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Debug\</OutputPath>
+    <OutputPath>..\..\..\Debug\app\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +27,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\Release\</OutputPath>
+    <OutputPath>..\..\..\Release\app\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -50,4 +50,8 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM copy device detection dll's. Copy only if files don't exist
+If NOT exist "$(SolutionDir)$(Configuration)\runnhmasadmin.exe" copy /Y "$(SolutionDir)$(Configuration)\app\runnhmasadmin.exe" "$(SolutionDir)$(Configuration)\runnhmasadmin.exe"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -11,9 +11,10 @@ namespace NHMCore.Utils
         {
             try
             {
+                var fileName = Paths.AppRootPath("AmdComputeModeSwitcher.exe");
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = @"AmdComputeModeSwitcher.exe",
+                    FileName = fileName,
                     Verb = "runas",
                     UseShellExecute = true,
                     CreateNoWindow = true

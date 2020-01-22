@@ -25,7 +25,7 @@ namespace NHM.DeviceDetection.OpenCL
             try
             {
                 Logger.Info(Tag, "TryQueryOpenCLDevicesAsyncFallback trying to copy OpenCL.dll");
-                File.Copy(Paths.RootPath("OpenCL", "OpenCL.dll"), Paths.Root, true);
+                File.Copy(Paths.AppRootPath("OpenCL", "OpenCL.dll"), Paths.Root, true);
             }
             catch (Exception e)
             {

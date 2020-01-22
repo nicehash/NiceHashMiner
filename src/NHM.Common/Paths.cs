@@ -6,10 +6,16 @@ namespace NHM.Common
     public static class Paths
     {
         public static string Root { get; private set; }  = "";
+        public static string AppRoot { get; private set; }  = "";
 
         public static void SetRoot(string rootPath)
         {
             Root = rootPath;
+        }
+
+        public static void SetAppRoot(string appRootPath)
+        {
+            AppRoot = appRootPath;
         }
 
         // TODO deprecate this one
@@ -35,6 +41,14 @@ namespace NHM.Common
         public static string RootPath(string subPath, params string[] paths)
         {
             var combine = new List<string> { Root, subPath };
+            if (paths.Length > 0) combine.AddRange(paths);
+            var path = Path.Combine(combine.ToArray());
+            return path;
+        }
+
+        public static string AppRootPath(string subPath, params string[] paths)
+        {
+            var combine = new List<string> { AppRoot, subPath };
             if (paths.Length > 0) combine.AddRange(paths);
             var path = Path.Combine(combine.ToArray());
             return path;

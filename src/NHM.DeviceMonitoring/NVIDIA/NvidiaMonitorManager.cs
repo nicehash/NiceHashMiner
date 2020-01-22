@@ -70,7 +70,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
             var nvmlRootPathTag = "DEFAULT";
             if (useNvmlFallback)
             {
-                nvmlRootPath = Paths.RootPath("NVIDIA");
+                nvmlRootPath = Paths.AppRootPath("NVIDIA");
                 nvmlRootPathTag = "FALLBACK";
             }
 

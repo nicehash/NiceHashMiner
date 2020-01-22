@@ -31,9 +31,10 @@ namespace NHM.DeviceDetection
             T result = null;
             try
             {
+                var fileName = Paths.AppRootPath("DeviceDetectionPrinter.exe");
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = "DeviceDetectionPrinter.exe",
+                    FileName = fileName,
                     Arguments = args,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
