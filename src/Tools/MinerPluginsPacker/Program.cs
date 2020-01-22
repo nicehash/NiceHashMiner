@@ -265,9 +265,15 @@ namespace MinerPluginsPacker
 
             // dump our plugin packages
             InternalConfigs.WriteFileSettings(Path.Combine(pluginPackagesFolder, "update.json"), PluginPackageInfos);
-            
-            var deleteFolder = Path.Combine(exePath, "miner_plugins", "BrokenMinerPluginUUID");
-            Directory.Delete(deleteFolder, true);
+
+            try
+            {
+                var deleteFolder = Path.Combine(exePath, "miner_plugins", "BrokenMinerPluginUUID");
+                Directory.Delete(deleteFolder, true);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
