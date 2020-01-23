@@ -99,8 +99,29 @@
                     <TextBox Style="{StaticResource smallInputBox}" Text="{Binding IdleMiningSettings.MinIdleSeconds, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
                 </StackPanel>
             </WrapPanel>
-            
-            
+        </WrapPanel>
+        <!--NVIDIA/CUDA TODO -->
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" Visibility="Collapsed">
+            <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.LogToFile}"
+                                        Label="Log To file"
+                                        Description="{StaticResource logToFile}"/>
+            <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.DebugConsole}"
+                                        Label="Enable Debug Console"
+                                        Description="{StaticResource debugConsole}"/>
+            <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.DebugConsole}"
+                                        Label="Enable Debug Console"
+                                        Description="{StaticResource debugConsole}"/>
+        </WrapPanel>
+        <!--Miners TODO  add restart delay and API bind port. TODO add descriptions-->
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" >
+            <Label Content="Miners" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.HideMiningWindows}"
+                                        Label="Hide Mining Windows"
+                                        />
+            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.MinimizeMiningWindows}"
+                                        Label="Enable Debug Console"
+                                        />
         </WrapPanel>
     </StackPanel>
 </UserControl>
