@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
              xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="800">
+             d:DesignHeight="1000" d:DesignWidth="800">
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
@@ -69,8 +69,38 @@
                     <Label Content="Log Max File Size (bytes)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding LoggingDebugConsoleSettings.LogMaxFileSize, Mode=TwoWay}" Margin="0,0,24,0"/>
+                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding LoggingDebugConsoleSettings.LogMaxFileSize, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
             </StackPanel>
+        </WrapPanel>
+        <!--Idle Mining-->
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
+            <Label Content="Idle Mining" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <local:SettingsCheckBoxItem Enabled="{Binding IdleMiningSettings.IdleWhenNoInternetAccess}"
+                                        Label="Idle When No Internet Access"
+                                        Description="{StaticResource Tooltip.IdleMining.IdleWhenNoInternetAccess}"/>
+            <local:SettingsCheckBoxItem Enabled="{Binding IdleMiningSettings.StartMiningWhenIdle}"
+                                        Label="Start Mining When Idle"
+                                        Description="{StaticResource Tooltip.IdleMining.StartMiningWhenIdle}"/>
+
+            <WrapPanel Orientation="Horizontal" IsEnabled="{Binding IdleMiningSettings.StartMiningWhenIdle}">
+                <StackPanel Orientation="Vertical" Margin="0,16,0,0">
+                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource Tooltip.IdleMining.IdleCheckMethod}">
+                        <Label Content="Idle Check Method" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                    </StackPanel>
+                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding IdleMiningSettings.IdleCheckTypes}" SelectedIndex="{Binding IdleMiningSettings.IdleCheckTypeIndex, Mode=TwoWay}" Width="218" SelectionChanged="ComboBox_SelectionChanged" />
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Margin="0,16,0,0">
+                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource Tooltip.IdleMining.MinIdleSeconds}">
+                        <Label Content="Minimum Idle [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                    </StackPanel>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding IdleMiningSettings.MinIdleSeconds, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+                </StackPanel>
+            </WrapPanel>
+            
+            
         </WrapPanel>
     </StackPanel>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using System.Collections.Generic;
 
 namespace NHMCore.Configs
 {
@@ -63,6 +64,12 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(IdleCheckTypeIndex));
             }
         }
+
+        public static IReadOnlyList<string> IdleCheckTypes { get; } = new List<string>
+        {
+            IdleCheckType.InputTimeout.ToString(),
+            IdleCheckType.SessionLock.ToString(),
+        };
 
         public bool IsIdleCheckTypeInputTimeout
         {
