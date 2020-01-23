@@ -36,7 +36,13 @@ namespace NiceHashMiner
             return;
 #endif
 
-            ApplicationStateManager.ApplicationExit = () => this.Shutdown();
+            ApplicationStateManager.ApplicationExit = () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.Shutdown();
+                });
+            };
             var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
             Launcher.SetIsLauncher(isLauncher);
             // Set working directory to exe

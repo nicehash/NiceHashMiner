@@ -8,7 +8,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using MinerPluginToolkitV1.Configs;
+using System.IO;
+using System;
 
 namespace NHMCore
 {
@@ -307,5 +309,50 @@ namespace NHMCore
         {
             return BenchmarkManager.Stop();
         }
+
+        #region Updater mining state save/restore
+        private static string _miningStateFilePath => Paths.RootPath("DeviceRestoreStates.json");
+        private struct DeviceRestoreState
+        {
+            public bool IsStarted { get; set; }
+            public DeviceState LastState { get; set; }
+        }
+        internal static void SaveMiningState()
+        {
+            var devicesRestoreStates = new Dictionary<string, DeviceRestoreState>();
+            foreach (var dev in AvailableDevices.Devices)
+            {
+                devicesRestoreStates[dev.Uuid] = new DeviceRestoreState { IsStarted = dev.StartState, LastState = dev.State };
+            }
+            InternalConfigs.WriteFileSettings(_miningStateFilePath, devicesRestoreStates);
+        }
+
+        internal static async Task RestoreMiningState()
+        {
+            var devicesRestoreStates = InternalConfigs.ReadFileSettings<Dictionary<string, DeviceRestoreState>>(_miningStateFilePath);
+            if (devicesRestoreStates == null) return;
+            try
+            {
+                File.Delete(_miningStateFilePath);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("ApplicationStateManager.Mining", $"RestoreMiningState Exception: {e.Message}");
+            }
+            // restore states
+            var startTasks = new List<Task>();
+            // now attempt restart 
+            foreach (var devState in devicesRestoreStates)
+            {
+                var dev = AvailableDevices.GetDeviceWithUuid(devState.Key);
+                var shouldStart = devState.Value.IsStarted || devState.Value.LastState == DeviceState.Benchmarking || devState.Value.LastState == DeviceState.Mining;
+                if (dev == null || shouldStart == false) continue;
+                startTasks.Add(StartDeviceTask(dev, false, false));
+            }
+            startTasks.Add(UpdateDevicesToMineTask());
+            await Task.WhenAll(startTasks);
+        }
+
+        #endregion Update state push/pop
     }
 }

@@ -70,6 +70,7 @@ namespace NHMCore
                 waitTasks.Add(MiningManager.RunninLoops);
                 waitTasks.Add(NHWebSocket.MainLoop);
                 waitTasks.Add(MinerPluginsManager.RunninLoops);
+                waitTasks.Add(UpdateHelpers.RunninLoops);
                 await Task.WhenAll(waitTasks.Where(t => t != null));
             }
             catch (Exception e)
