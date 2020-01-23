@@ -79,7 +79,6 @@ namespace NHMCore
             }
             finally
             {
-                MessageBoxManager.Unregister();
             }
         }
 

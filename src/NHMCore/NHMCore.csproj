@@ -258,10 +258,6 @@
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
     </ProjectReference>
-    <ProjectReference Include="..\3rdparty\MessageBoxManager\MessageBoxManager.csproj">
-      <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
-      <Name>MessageBoxManager</Name>
-    </ProjectReference>
     <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
