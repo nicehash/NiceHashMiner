@@ -45,6 +45,7 @@ namespace NiceHashMiner
             };
             var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
             Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
+            Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
             Launcher.SetIsLauncher(isLauncher);
             // Set working directory to exe
             var pathSet = false;

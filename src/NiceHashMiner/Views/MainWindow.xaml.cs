@@ -95,6 +95,18 @@ namespace NiceHashMiner.Views
                     };
                     ShowContentAsModalDialog(nhmUpdatedDialog);
                 }
+
+                if (Launcher.IsUpdatedFailed)
+                {
+                    var nhmUpdatedDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("NiceHash Miner Autoupdate Failed"),
+                        Description = Translations.Tr("NiceHash Miner auto update failed to complete. Autoupdates are disabled until next miner launch."),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed
+                    };
+                    ShowContentAsModalDialog(nhmUpdatedDialog);
+                }
             }
         }
 
