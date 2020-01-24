@@ -116,7 +116,7 @@ namespace NHMCore
                 var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
                 if (!ramCheckOK)
                 {
-                    AvailableNotifications.CreateFailedRamCheckInfo();
+                    AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
                 }
                 // no compatible devices? exit
                 if (AvailableDevices.Devices.Count == 0)
@@ -148,15 +148,16 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateDeviceMonitoringNvidiaElevateInfo();
                 }
+                // TODO add check and only show if not enabled
                 if (AvailableDevices.HasCpu)
                 {
                     AvailableNotifications.CreateEnableLargePagesInfo();
                 }
+                // TODO add check and only show if not enabled
                 if (AvailableDevices.HasAmd)
                 {
                     AvailableNotifications.CreateEnableComputeModeAMDInfo();
                 }
-                AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
 
                 #endregion Device Detection
 

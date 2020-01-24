@@ -80,12 +80,6 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateFailedRamCheckInfo()
-        {
-            var notification = new Notification(NotificationsType.Info, Tr("Ram warning"), Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine."));
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         [Obsolete("Not used anymore, we might add it back in the future")]
         public static void CreateFailedVideoControllerInfo()
         {
@@ -188,7 +182,7 @@ namespace NHMCore.Notifications
 
         public static void CreateIncreaseVirtualMemoryInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, Tr("Increase virtual memory"), Tr("Would you like to increase virtual memory?"));
+            var notification = new Notification(NotificationsType.Warning, Tr("Increase virtual memory"), Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine. Would you like to increase virtual memory?"));
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Help",

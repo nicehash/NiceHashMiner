@@ -46,6 +46,7 @@ namespace NHMCore.Notifications
             return ok;
         }
 
+        // TODO use this instead RemoveNotificationFromList, deterministic keys
         public bool RemoveNotificationFromList(string notificationName)
         {
             var ok = false;
