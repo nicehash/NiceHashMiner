@@ -54,7 +54,7 @@ namespace NHM.MinersDownloader
         {
             var dotAt = urlOrName.LastIndexOf('.');
             if (dotAt < 0) return null;
-            var extSize = urlOrName.Length - dotAt;
+            var extSize = urlOrName.Length - dotAt - 1;
             return urlOrName.Substring(urlOrName.Length - extSize);
         }
 
