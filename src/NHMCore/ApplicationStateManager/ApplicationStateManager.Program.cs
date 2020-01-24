@@ -113,13 +113,13 @@ namespace NHMCore
         }
 
         public static bool BurnCalled { get; private set; } = false;
+        public static Action BurnCalledAction;
         public static void Burn(string message)
         {
             if (BurnCalled) return;
             BurnCalled = true;
             _ = BeforeExit();
-            MessageBox.Show(message, Tr("Error!"), MessageBoxButtons.OK, MessageBoxIcon.Error);
-            ExecuteApplicationExit();
+            BurnCalledAction?.Invoke();
         }
 
         // EnsureSystemRequirements will check if all system requirements are met if not it will show an error/warning message box and exit the application
@@ -156,5 +156,7 @@ namespace NHMCore
 
             return true;
         }
+
+        public static Action NoDeviceAction;
     }
 }

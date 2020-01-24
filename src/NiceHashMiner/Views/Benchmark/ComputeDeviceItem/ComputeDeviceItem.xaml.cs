@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using static NHMCore.Translations;
+using NiceHashMiner.Views.Common;
 
 namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 {
@@ -126,14 +127,16 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void Button_Click_ClearAllSpeeds(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show(Tr("Are you sure you would like to clear all speeds for {0}?", _deviceData.Dev.FullName),
-                Tr("Set default settings?"),
-                MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            DeviceActionsButtonContext.IsOpen = false;
-            if (result == MessageBoxResult.Yes)
+            var nhmConfirmDialog = new CustomDialog()
             {
-                _deviceData.ClearAllSpeeds();
-            }
+                Title = Tr("Set default settings?"),
+                Description = Tr("Are you sure you would like to clear all speeds for {0}?", _deviceData.Dev.FullName),
+                OkText = Tr("Yes"),
+                CancelText = Tr("No")          
+            };
+            DeviceActionsButtonContext.IsOpen = false;
+            nhmConfirmDialog.OKClick += (s, e1) => { _deviceData.ClearAllSpeeds(); };
+            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);         
         }
 
         private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)

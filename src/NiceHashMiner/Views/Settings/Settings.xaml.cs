@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHMCore;
 using NHMCore.Configs;
+using NiceHashMiner.Views.Common;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,19 +52,21 @@ namespace NiceHashMiner.Views.Settings
             OnScreenChange(_isGeneral);
         }
 
-        private async void Btn_default_Click(object sender, RoutedEventArgs e)
+        private void Btn_default_Click(object sender, RoutedEventArgs e)
         {
-            // keep message box here
-            var result = MessageBox.Show(Tr("Are you sure you would like to set everything back to defaults? This will restart {0} automatically.", NHMProductInfo.Name),
-                Tr("Set default settings?"),
-                MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
+            var nhmConfirmDialog = new CustomDialog()
             {
+                Title = Tr("Set default settings?"),
+                Description = Tr("Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically."),
+                OkText = Tr("Yes"),
+                CancelText = Tr("No")
+            };
+            nhmConfirmDialog.OKClick += (s, e1) => { 
                 Translations.SelectedLanguage = "en";
                 ConfigManager.SetDefaults();
-                await ApplicationStateManager.RestartProgram();
-            }
+                Task.Run(() => ApplicationStateManager.RestartProgram());
+            };
+            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
         }
 
         private void ShowRestartRequired(object sender, bool e)
