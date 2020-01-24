@@ -12,6 +12,7 @@ namespace NiceHashMiner.Views.Notifications
             InitializeComponent();
         }
 
+        // TODO show icon for new notification
         private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
         {
             foreach(NHMCore.Notifications.Notification nekaj in ic_NotificationsList.ItemsSource)
