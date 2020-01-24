@@ -10,6 +10,7 @@
         xmlns:devices="clr-namespace:NiceHashMiner.Views.Devices"
         xmlns:pluginsNew="clr-namespace:NiceHashMiner.Views.Plugins"
         xmlns:settingsNew="clr-namespace:NiceHashMiner.Views.Settings"
+        xmlns:notifications="clr-namespace:NiceHashMiner.Views.Notifications"
         xmlns:help="clr-namespace:NiceHashMiner.Views.Help"
         xmlns:local="clr-namespace:NiceHashMiner.Views"
         xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
@@ -57,6 +58,9 @@
             </TabItem>
             <TabItem Header="LEFT_SETTINGS" Name="SettingsButton">
                 <settingsNew:Settings DataContext="{Binding .}"/>
+            </TabItem>
+            <TabItem Header="LEFT_NOTIFICATIOS" Name="NotificationsButton">
+                <notifications:Notifications DataContext="{Binding .}"/>
             </TabItem>
             <TabItem Header="LEFT_HELP" Name="HelpButton">
                 <help:Help DataContext="{Binding .}" />

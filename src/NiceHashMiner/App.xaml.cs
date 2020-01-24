@@ -36,22 +36,41 @@ namespace NiceHashMiner
             return;
 #endif
 
-            ApplicationStateManager.ApplicationExit = () => this.Shutdown();
-
+            ApplicationStateManager.ApplicationExit = () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    this.Shutdown();
+                });
+            };
+            var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
+            Launcher.SetIsLauncher(isLauncher);
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (path != null)
             {
-                Paths.SetRoot(path);
-                Environment.CurrentDirectory = path;
+                if (isLauncher)
+                {
+                    var oneUpPath = Path.Combine(path, @"..\");
+                    Paths.SetRoot(oneUpPath);
+                    Paths.SetAppRoot(path);
+                    // TODO this might be problematic
+                    Environment.CurrentDirectory = oneUpPath;
+                }
+                else
+                {
+                    Paths.SetRoot(path);
+                    Paths.SetAppRoot(path);
+                    Environment.CurrentDirectory = path;
+                }
                 pathSet = true;
             }
 
             // Add common folder to path for launched processes
             const string pathKey = "PATH";
             var pathVar = Environment.GetEnvironmentVariable(pathKey);
-            pathVar += $";{Path.Combine(Environment.CurrentDirectory, "common")}";
+            pathVar += $";{Path.Combine(Paths.AppRoot, "common")}";
             Environment.SetEnvironmentVariable(pathKey, pathVar);
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

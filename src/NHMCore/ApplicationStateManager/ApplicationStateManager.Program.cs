@@ -7,6 +7,7 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,6 +70,7 @@ namespace NHMCore
                 waitTasks.Add(MiningManager.RunninLoops);
                 waitTasks.Add(NHWebSocket.MainLoop);
                 waitTasks.Add(MinerPluginsManager.RunninLoops);
+                waitTasks.Add(UpdateHelpers.RunninLoops);
                 await Task.WhenAll(waitTasks.Where(t => t != null));
             }
             catch (Exception e)
@@ -77,7 +79,6 @@ namespace NHMCore
             }
             finally
             {
-                MessageBoxManager.Unregister();
             }
         }
 
@@ -93,7 +94,21 @@ namespace NHMCore
             //    pHandle.Start();
             //}
             // TODO we can have disable multiple instances so make a helper program that "swaps"/restarts parent/child
-            Process.Start(Application.ExecutablePath);
+            if (!Launcher.IsLauncher)
+            {
+                Process.Start(Application.ExecutablePath);
+            }
+            else
+            {
+                try
+                {
+                    File.Create(Paths.RootPath("do.restart"));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("ApplicationStateManager.Program", $"do.restart error: {e.Message}");
+                }
+            }
             ExecuteApplicationExit();
         }
 

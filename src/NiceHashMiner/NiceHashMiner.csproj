@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Debug\</OutputPath>
+    <OutputPath>..\..\Debug\app\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\Release\</OutputPath>
+    <OutputPath>..\..\Release\app\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -178,6 +178,9 @@
     </Compile>
     <Compile Include="Views\NHMDialogWindow.xaml.cs">
       <DependentUpon>NHMDialogWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Notifications\Notifications.xaml.cs">
+      <DependentUpon>Notifications.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Plugins\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\PluginItemButtonConverters.cs" />
@@ -453,6 +456,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NHMDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Notifications\Notifications.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

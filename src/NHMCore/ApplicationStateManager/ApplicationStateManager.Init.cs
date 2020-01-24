@@ -287,6 +287,12 @@ namespace NHMCore
             {
                 isInitFinished = true;
                 NHWebSocket.NotifyStateChanged();
+
+                // start update checker
+                // updater loops after we finish
+                UpdateHelpers.StartLoops(ExitApplication.Token);
+                // restore last mining states
+                await RestoreMiningState();
             }
         }
     }

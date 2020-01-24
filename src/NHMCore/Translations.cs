@@ -81,7 +81,7 @@ namespace NHMCore
         private static void TryInitTranslations()
         {
             // file in binary root path
-            const string transFilePath = "translations.json";
+            string transFilePath = Paths.AppRootPath("translations.json");
             try
             {
                 var translations = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(transFilePath, Encoding.UTF8));

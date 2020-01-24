@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using NHMCore.Configs;
+using System.Windows.Controls;
 
 namespace NiceHashMiner.Views.Settings
 {
@@ -10,6 +11,16 @@ namespace NiceHashMiner.Views.Settings
         public SettingsAdvanced()
         {
             InitializeComponent();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ConfigManager.GeneralConfigFileCommit();
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ConfigManager.GeneralConfigFileCommit();
         }
     }
 }

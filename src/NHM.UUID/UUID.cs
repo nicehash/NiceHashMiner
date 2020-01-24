@@ -61,19 +61,21 @@ namespace NHM.UUID
             {
                 //const string userKeyPath = @"Software\" + "";
                 const string valueFallback = "MachineGuidNhmGen";
-                var rkFallback = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true);
-                var fallbackUUIDValue = rkFallback.GetValue(valueFallback, null);
-                string genUUID = "";
-                if (fallbackUUIDValue == null)
+                using (var rkFallback = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
                 {
-                    genUUID = System.Guid.NewGuid().ToString();
-                    rkFallback?.SetValue(valueFallback, genUUID);
+                    var fallbackUUIDValue = rkFallback.GetValue(valueFallback, null);
+                    string genUUID = "";
+                    if (fallbackUUIDValue == null)
+                    {
+                        genUUID = System.Guid.NewGuid().ToString();
+                        rkFallback?.SetValue(valueFallback, genUUID);
+                    }
+                    else if (fallbackUUIDValue is string regUUID)
+                    {
+                        genUUID = regUUID;
+                    }
+                    return genUUID;
                 }
-                else if (fallbackUUIDValue is string regUUID)
-                {
-                    genUUID = regUUID;
-                }
-                return genUUID;
             }
             catch (Exception e)
             {

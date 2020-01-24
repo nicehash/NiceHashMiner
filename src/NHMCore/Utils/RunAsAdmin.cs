@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 
 namespace NHMCore.Utils
@@ -21,25 +22,41 @@ namespace NHMCore.Utils
 
         public static void Execute(int pid, string path)
         {
-            try
+            if (Launcher.IsLauncher)
             {
-                var startInfo = new ProcessStartInfo
+                try
                 {
-                    FileName = @"runnhmasadmin.exe",
-                    Arguments = $"{pid} {path}",
-                    Verb = "runas",
-                    UseShellExecute = true,
-                    CreateNoWindow = true
-                };
-                startInfo.WindowStyle = ProcessWindowStyle.Hidden; // used for hidden window
-                using (var runAsAdmin = Process.Start(startInfo))
+                    File.Create(Paths.RootPath("do.runasadmin"));
+                    ApplicationStateManager.ExecuteApplicationExit();
+                }
+                catch(Exception e)
                 {
-                    runAsAdmin.WaitForExit();
+                    Logger.Error("NICEHASH", $"RunAsAdmin IsLauncher error: {e.Message}");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Logger.Error("NICEHASH", $"RunAsAdmin error: {ex.Message}");
+                try
+                {
+                    var fileName = Paths.AppRootPath("runnhmasadmin.exe");
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = fileName,
+                        Arguments = $"{pid} {path}",
+                        Verb = "runas",
+                        UseShellExecute = true,
+                        CreateNoWindow = true
+                    };
+                    startInfo.WindowStyle = ProcessWindowStyle.Hidden; // used for hidden window
+                    using (var runAsAdmin = Process.Start(startInfo))
+                    {
+                        runAsAdmin.WaitForExit();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("NICEHASH", $"RunAsAdmin error: {ex.Message}");
+                }
             }
         }
     }

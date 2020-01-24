@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
 using System;
+using System.IO;
 using System.Security;
 using System.Windows.Forms;
 
@@ -11,6 +12,18 @@ namespace NHMCore.Configs
         public static RunAtStartup Instance { get; } = new RunAtStartup();
         private readonly RegistryKey _rkStartup;
         private bool _enabled = false;
+
+        private string ExePath
+        {
+            get
+            {
+                if (Launcher.IsLauncher)
+                {
+                    return Paths.RootPath("NiceHashMiner.exe");
+                }
+                return Application.ExecutablePath;
+            }
+        }
 
         private RunAtStartup()
         {
@@ -39,7 +52,7 @@ namespace NHMCore.Configs
                     if (value)
                     {
                         // Add NHML to startup registry
-                        _rkStartup?.SetValue(Application.ProductName, Application.ExecutablePath);
+                        _rkStartup?.SetValue(Application.ProductName, ExePath);
                     }
                     else
                     {
@@ -67,7 +80,7 @@ namespace NHMCore.Configs
                 Logger.Error("RunAtStartup", e.Message);
             }
 
-            return startVal == Application.ExecutablePath;
+            return startVal == ExePath;
         }
     }
 }

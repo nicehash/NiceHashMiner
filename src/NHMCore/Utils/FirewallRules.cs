@@ -31,10 +31,12 @@ namespace NHMCore.Utils
         {
             try
             {
+                var fileName = Paths.AppRootPath("FirewallRules.exe");
                 var startInfo = new ProcessStartInfo
                 {
-                    FileName = @"FirewallRules.exe",
-                    Arguments = $"{Directory.GetCurrentDirectory()} update miner_plugins",
+                    FileName = fileName,
+                    //Arguments = $"{Directory.GetCurrentDirectory()} update miner_plugins",
+                    Arguments = $"{Paths.Root} update miner_plugins",
                     Verb = "runas",
                     UseShellExecute = true,
                     CreateNoWindow = true

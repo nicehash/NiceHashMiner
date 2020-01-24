@@ -11,6 +11,7 @@ namespace NHMCore.ApplicationState
         public static VersionState Instance { get; } = new VersionState();
 
         public const string UpdaterUrlTemplate = "https://github.com/nicehash/NiceHashMiner/releases/download/{VERSION_TAG}/nhm_windows_updater_{VERSION_TAG}.exe";
+        public const string ZipUrlTemplate = "https://github.com/nicehash/NiceHashMiner/releases/download/{VERSION_TAG}/nhm_windows_{VERSION_TAG}.exe";
 
         private VersionState()
         {
@@ -95,6 +96,17 @@ namespace NHMCore.ApplicationState
         public string GetNewVersionUpdaterUrl()
         {
             var template = UpdaterUrlTemplate;
+            var url = "";
+            if (OnlineVersionStr != null)
+            {
+                url = template.Replace("{VERSION_TAG}", OnlineVersionStr);
+            }
+            return url;
+        }
+
+        public string GetNewVersionZipUrl()
+        {
+            var template = ZipUrlTemplate;
             var url = "";
             if (OnlineVersionStr != null)
             {
