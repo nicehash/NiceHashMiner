@@ -185,6 +185,9 @@
     <Compile Include="Views\Notifications\Notifications.xaml.cs">
       <DependentUpon>Notifications.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Notifications\NotificationItem.xaml.cs">
+      <DependentUpon>NotificationItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Plugins\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\PluginItemButtonConverters.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
@@ -467,8 +470,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Notifications\Notifications.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Notifications\NotificationItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Plugins\PluginItem\PluginIcon.xaml">
       <SubType>Designer</SubType>
