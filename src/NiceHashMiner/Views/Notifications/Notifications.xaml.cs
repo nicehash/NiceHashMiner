@@ -10,12 +10,17 @@ namespace NiceHashMiner.Views.Notifications
         public Notifications()
         {
             InitializeComponent();
-            //checkItems();
         }
 
-        private void checkItems()
+        private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (ic_NotificationsList.Items.Count == 0) ic_NotificationsList.Items.Add(new Label() { Content = "No new notifications" });
+            foreach(NHMCore.Notifications.Notification nekaj in ic_NotificationsList.ItemsSource)
+            {
+                if(nekaj is NHMCore.Notifications.Notification)
+                {
+                    nekaj.NotificationNew = false;
+                }
+            }   
         }
     }
 }

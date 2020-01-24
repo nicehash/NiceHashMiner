@@ -24,8 +24,9 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <WrapPanel Grid.Row="0">
+            <WrapPanel Grid.Row="0" Orientation="Horizontal">
                 <TextBlock x:Name="itemErrorTitle" Text="{Binding Name}" Style="{StaticResource local.DefaultTextBlock}" FontSize="14"/>
+                <TextBlock Text="{Binding NotificationNew}" Style="{StaticResource local.DefaultTextBlock}" FontSize="14" Margin="15,0,0,0"/>
             </WrapPanel>
             <WrapPanel Grid.Row="1" Margin="4,4,0,0">
                 <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>
