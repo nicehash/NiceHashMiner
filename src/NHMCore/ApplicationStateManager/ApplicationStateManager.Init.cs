@@ -156,6 +156,7 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateEnableComputeModeAMDInfo();
                 }
+                AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
 
                 #endregion Device Detection
 
