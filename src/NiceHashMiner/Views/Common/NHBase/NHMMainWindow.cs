@@ -26,7 +26,7 @@ namespace NiceHashMiner.Views.Common.NHBase
             PluginsButton,
             SettingsButton,
             NotificationsButton,
-            HelpButton,
+            //HelpButton,
         };
 
         private ToggleButtonType? _lastSelected;
