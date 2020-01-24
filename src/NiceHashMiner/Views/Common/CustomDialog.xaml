@@ -81,8 +81,9 @@
         <TextBlock Grid.Row="2"
                    Style="{StaticResource local.WalletSubHeader}"
                    VerticalAlignment="Stretch"
-                   HorizontalAlignment="Left"
-                   Margin="25,8,0,0"
+                   HorizontalAlignment="Center"
+                   TextAlignment="Justify"
+                   Margin="25,8,25,8"
                    Text="{Binding Description}"/>
         <WrapPanel Grid.Row="3" Margin="25,24,24,0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button
