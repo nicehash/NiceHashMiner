@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
              xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="800">
+             d:DesignHeight="1000" d:DesignWidth="800" Loaded="UserControl_Loaded">
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
@@ -127,7 +127,7 @@
             </StackPanel>
         </WrapPanel>
         <!-- NVIDIA/CUDA -->
-        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" >
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="wp_cuda">
             <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.RunScriptOnCUDA_GPU_Lost}"
                                         Label="Run script when CUDA GPU is lost"
