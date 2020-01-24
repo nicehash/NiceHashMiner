@@ -51,6 +51,7 @@
             <Setter Property="LineHeight" Value="1.5" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
     </UserControl.Resources>

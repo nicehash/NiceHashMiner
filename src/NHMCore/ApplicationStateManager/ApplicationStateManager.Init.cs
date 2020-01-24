@@ -121,15 +121,7 @@ namespace NHMCore
                 // no compatible devices? exit
                 if (AvailableDevices.Devices.Count == 0)
                 {
-                    // keep message box here
-                    var result = MessageBox.Show(Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
-                        Tr("No Supported Devices"),
-                        MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                    if (result == DialogResult.OK)
-                    {
-                        Process.Start(Links.NhmNoDevHelp);
-                    }
-                    ExecuteApplicationExit();
+                    NoDeviceAction?.Invoke();
                     return;
                 }
 

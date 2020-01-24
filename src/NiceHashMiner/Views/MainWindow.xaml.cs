@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using NHMCore.Utils;
+using System.Diagnostics;
 
 namespace NiceHashMiner.Views
 {
@@ -32,6 +33,8 @@ namespace NiceHashMiner.Views
             LoadingBar.Visibility = Visibility.Visible;
             Topmost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
             CustomDialogManager.MainWindow = this;
+            SetBurnCalledAction();
+            SetNoDeviceAction();
         }
 
         private void GUISettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -63,6 +66,51 @@ namespace NiceHashMiner.Views
             };
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
+        }
+
+        public void SetBurnCalledAction()
+        {
+            ApplicationStateManager.BurnCalledAction = () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var nhmBurnDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("Burn Error!"),
+                        Description = Translations.Tr("Error during burn"),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed
+                    };
+                    nhmBurnDialog.OnExit += (s,e) => {
+                        ApplicationStateManager.ExecuteApplicationExit();
+                    };
+                    ShowContentAsModalDialog(nhmBurnDialog);
+                });
+            };
+        }
+
+        public void SetNoDeviceAction()
+        {
+            ApplicationStateManager.NoDeviceAction = () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var nhmNoDeviceDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("No Supported Devices"),
+                        Description = Translations.Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
+                        OkText = Translations.Tr("OK"),
+                        CancelText = Translations.Tr("Cancel"),
+                    };
+                    nhmNoDeviceDialog.OKClick += (s, e) => {
+                        Process.Start(Links.NhmNoDevHelp);
+                    };
+                    nhmNoDeviceDialog.OnExit += (s, e) => {
+                        ApplicationStateManager.ExecuteApplicationExit();
+                    };
+                    ShowContentAsModalDialog(nhmNoDeviceDialog);
+                });
+            };
         }
 
         // just in case we add more awaits this signature will await all of them
