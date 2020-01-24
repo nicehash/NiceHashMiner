@@ -75,14 +75,14 @@
                         <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.KwhPrice, Mode=TwoWay}" Margin="0,0,24,0"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.KwhPrice, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource minimumProfit}">
                         <Label Content="Mininmum profit ($/day)" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningProfitSettings.MinimumProfit, Mode=TwoWay}" Margin="0,0,24,0"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningProfitSettings.MinimumProfit, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
                 </StackPanel>
             </WrapPanel>
             </WrapPanel>

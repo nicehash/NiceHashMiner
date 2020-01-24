@@ -129,5 +129,10 @@ namespace NiceHashMiner.Views.Settings
         {
             ConfigManager.GeneralConfigFileCommit();
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ConfigManager.GeneralConfigFileCommit();
+        }
     }
 }

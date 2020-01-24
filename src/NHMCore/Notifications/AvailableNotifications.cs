@@ -239,25 +239,21 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        // TODO finish CreateIncreaseVirtualMemoryInfo
         public static void CreateIncreaseVirtualMemoryInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, Tr("Increase virtual memory"), Tr("Would you like to automatically increase virtual memory?"));
+            var notification = new Notification(NotificationsType.Warning, Tr("Increase virtual memory"), Tr("Would you like to increase virtual memory?"));
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Increase virtual memory",
-                // TODO here 
-                //Action = () => {
-                //    var dialogResult = MessageBox.Show(Tr("Select the OK button to automatically increase virtual memory."),
-                //        Tr("Increase virtual memory"),
-                //        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    if (dialogResult == DialogResult.OK)
-                //    {
-                //        //TODO auto increase vram
-                //        //var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, true);
-                //        //key.SetValue("AutoIncreaseVRAM", true); //set key to "true"
-                //    }
-                //}
+                Action = () => {
+                    var dialogResult = MessageBox.Show(Tr("Select the OK button to be redirected to help page about how to Increase Virtual Memory on Windows."),
+                        Tr("Increase virtual memory"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.OK)
+                    {
+                        Process.Start(Links.VirtualMemoryHelp);
+                    }
+                }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -285,6 +281,19 @@ namespace NHMCore.Notifications
 
             var notification = new Notification(NotificationsType.Warning, Tr("All mining locations unavailable"), Tr($"All mining locations are unavailable. Mining will be stopped."));
             NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateNotProfitableInfo(bool shouldClear)
+        {
+            // clear old state
+            NotificationsManager.Instance.RemoveNotificationFromList(Tr("Mining not profitable"));
+
+            if (!shouldClear)
+            {
+                NotificationsManager.Instance.RemoveNotificationFromList(Tr("Mining not profitable"));
+                var notification = new Notification(NotificationsType.Warning, Tr("Mining not profitable"), Tr($"Currently mining is not profitable. Mining will be stopped."));
+                NotificationsManager.Instance.AddNotificationToList(notification);
+            }
         }
     }
 }
