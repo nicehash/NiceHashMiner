@@ -24,6 +24,22 @@ namespace NHMCore.Utils
 
         public static void StartLoops(CancellationToken stop)
         {
+            // clear old updaters when starting this loop
+            var downloadRootPath = Path.Combine(Paths.Root, "updaters");
+            if (Directory.Exists(downloadRootPath))
+            {
+                var doFiles = Directory.GetFiles(downloadRootPath);
+                foreach (var doFile in doFiles)
+                {
+                    try
+                    {
+                        File.Delete(doFile);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
             RunninLoops = Task.Run(() => {
                 var loop1 = NhmAutoUpdateCheckLoop(stop);
                 return Task.WhenAll(loop1);
@@ -57,7 +73,7 @@ namespace NHMCore.Utils
                         {
                            Directory.CreateDirectory(downloadRootPath);
                         }
-                        var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_zip_{VersionState.Instance.OnlineVersionStr}";
+                        var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_{VersionState.Instance.OnlineVersionStr}";
                         var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, DownloadProgress, ApplicationStateManager.ExitApplication.Token);
                         if (!success)
                         {
