@@ -11,7 +11,10 @@ namespace NHMCore.ApplicationState
         public static VersionState Instance { get; } = new VersionState();
 
         public const string UpdaterUrlTemplate = "https://github.com/nicehash/NiceHashMiner/releases/download/{VERSION_TAG}/nhm_windows_updater_{VERSION_TAG}.exe";
-        public const string ZipUrlTemplate = "https://github.com/nicehash/NiceHashMiner/releases/download/{VERSION_TAG}/nhm_windows_{VERSION_TAG}.exe";
+        public const string ZipUrlTemplate = "https://github.com/nicehash/NiceHashMiner/releases/download/{VERSION_TAG}/nhm_windows_{VERSION_TAG}.zip";
+
+        //public const string UpdaterUrlTemplate = "https://github.com/nicehash/NiceHashMiner3Alpha/releases/download/{VERSION_TAG}/nhm_windows_updater_{VERSION_TAG}.exe";
+        //public const string ZipUrlTemplate = "https://github.com/nicehash/NiceHashMiner3Alpha/releases/download/{VERSION_TAG}/nhm_windows_{VERSION_TAG}.zip";
 
         private VersionState()
         {
