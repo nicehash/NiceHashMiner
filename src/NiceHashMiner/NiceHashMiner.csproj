@@ -170,9 +170,6 @@
     <Compile Include="Views\Help\Help.xaml.cs">
       <DependentUpon>Help.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Help\HelpItem.xaml.cs">
-      <DependentUpon>HelpItem.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
@@ -450,10 +447,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Help\Help.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Help\HelpItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
