@@ -151,6 +151,8 @@ namespace NiceHashMiner
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             ClearAllDoFiles();
+            // Set shutdown mode back to default
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var isUpdater = Environment.GetCommandLineArgs().Contains("-update");
             var isUpdated = Environment.GetCommandLineArgs().Contains("-updated");
             if (isUpdater)
@@ -180,12 +182,14 @@ namespace NiceHashMiner
                 // TODO find latest
                 var isZip = updaterFile.EndsWith(".zip");
 
-                await Task.Delay(5000);
+                //await Task.Delay(5000);
                 if (isZip)
                 {
-                    
-                    var isOk = await UnzipFileAsync(updaterFile, GetRootPath(), null, CancellationToken.None);
-                    await Task.Delay(5000);
+                    var progWindow = new UpdateProgress();
+                    progWindow.Show();
+                    var isOk = await UnzipFileAsync(updaterFile, GetRootPath(), progWindow.Progress, CancellationToken.None);
+                    progWindow.Close();
+                    await Task.Delay(500);
                     // TODO if something goes wrong just restore the current exe process file
                     var restartProcess = new Process
                     {

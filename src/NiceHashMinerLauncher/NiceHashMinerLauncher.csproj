@@ -69,6 +69,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RunAsAdmin.cs" />
+    <Compile Include="UpdateProgress.xaml.cs">
+      <DependentUpon>UpdateProgress.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -98,6 +101,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UpdateProgress.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

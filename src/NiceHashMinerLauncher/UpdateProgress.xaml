@@ -1,0 +1,15 @@
+﻿<Window x:Class="NiceHashMiner.UpdateProgress"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NiceHashMiner"
+        mc:Ignorable="d"
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize"
+        Title="NiceHash Miner Updater" Height="100" Width="300">
+    <StackPanel Margin="6">
+        <TextBlock Text="Updating" />
+        <ProgressBar x:Name="progress" Margin="0,4,0,0" Height="30" />
+    </StackPanel>
+</Window>
