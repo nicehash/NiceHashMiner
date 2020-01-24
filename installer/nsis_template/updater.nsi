@@ -49,5 +49,5 @@ Section "install"
   
   !include "installSection.nsh"
   HideWindow
-  Exec "$INSTDIR\${APP_EXECUTABLE_FILENAME}"
+  Exec "$INSTDIR\${APP_EXECUTABLE_FILENAME} -updated"
 SectionEnd
