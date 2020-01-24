@@ -29,6 +29,17 @@
     <system:String x:Key="logToFile">Check it, to log console output to file.</system:String>
     <system:String x:Key="debugConsole">When checked, it displays debug console.</system:String>
     <system:String x:Key="maxLogSize">Sets the maximum size for the log file.</system:String>
+    <system:String x:Key="runScriptCUDAlost">When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.</system:String>
+    <system:String x:Key="nvidiaP0State">When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.</system:String>
+    <system:String x:Key="useEthlargement">When checked, NiceHash Miner will run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.</system:String>
+    <system:String x:Key="switchMinimum">Fixed part of minimal time (in seconds) before miner switches algorithm.</system:String>
+    <system:String x:Key="switchMaximum">Fixed part of maximum time (in seconds) before miner switches algorithm.</system:String>
+    <system:String x:Key="switchThreshold">Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]</system:String>
+    <system:String x:Key="hideMiningWindows">When checked, mining windows will start hidden.</system:String>
+    <system:String x:Key="minimizeMiningWindows">When checked, mining windows will start minimized.</system:String>
+    <system:String x:Key="minerRestartDelay">Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.</system:String>
+    <system:String x:Key="apiBindStart">Set starting port number from which miner API Bind ports will be set for communication.</system:String>
+    <system:String x:Key="apiQueryInterval">API query interval for ccminer, sgminer cpuminer and ethminer.</system:String>
     
     <system:String x:Key="gpuNumber">Number of gpu devices in your system.</system:String>
     <system:String x:Key="cpuNumber">Number of cpu devices in your system.</system:String>
