@@ -117,6 +117,9 @@
       <DependentUpon>ComputeDeviceItemHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceStatusVisibilityConverter.cs" />
+    <Compile Include="Views\Common\CustomDialog.xaml.cs">
+      <DependentUpon>CustomDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\EnterWalletDialog.xaml.cs">
       <DependentUpon>EnterWalletDialog.xaml</DependentUpon>
     </Compile>
@@ -372,6 +375,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItemHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\CustomDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

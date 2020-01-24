@@ -9,10 +9,16 @@ namespace NHMCore
     public static class Launcher
     {
         public static bool IsLauncher { get; private set; } = false;
+        public static bool IsUpdated { get; private set; } = false;
 
         public static void SetIsLauncher(bool isLauncher)
         {
             IsLauncher = isLauncher;
+        }
+
+        public static void SetIsUpdated(bool isUpdated)
+        {
+            IsUpdated = isUpdated;
         }
     }
 }

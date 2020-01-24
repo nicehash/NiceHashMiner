@@ -20,6 +20,8 @@ namespace NHMCore.Utils
 
         public static Task RunninLoops { get; private set; } = null;
 
+        public static Action OnAutoUpdate;
+
         public static void StartLoops(CancellationToken stop)
         {
             RunninLoops = Task.Run(() => {
@@ -53,19 +55,21 @@ namespace NHMCore.Utils
                         var downloadRootPath = Path.Combine(Paths.Root, "updaters");
                         if (!Directory.Exists(downloadRootPath))
                         {
-                            Directory.CreateDirectory(downloadRootPath);
+                           Directory.CreateDirectory(downloadRootPath);
                         }
                         var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_zip_{VersionState.Instance.OnlineVersionStr}";
                         var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, DownloadProgress, ApplicationStateManager.ExitApplication.Token);
                         if (!success)
                         {
-                            // TODO notify that we cannot download the miner updates file
-                            continue;
+                           // TODO notify that we cannot download the miner updates file
+                           continue;
                         }
 
+                        OnAutoUpdate?.Invoke();
                         // #2 SAVE current state so we can resume it after the client updates
                         ApplicationStateManager.SaveMiningState();
                         await ApplicationStateManager.StopAllDevicesTask();
+                        await Task.Delay(5000); // wait 5 seconds
                         // #3 restart accordingly if launcher or self containd app
                         if (Launcher.IsLauncher)
                         {

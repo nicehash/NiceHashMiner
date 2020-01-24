@@ -9,6 +9,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using NHMCore.Utils;
 
 namespace NiceHashMiner.Views
 {
@@ -45,6 +46,21 @@ namespace NiceHashMiner.Views
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             ThemeSetterManager.SetThemeSelectedThemes();
+            UpdateHelpers.OnAutoUpdate = () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var nhmUpdatedrDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("NiceHash Miner Starting Update"),
+                        Description = Translations.Tr("NiceHash Miner auto updater in progress."),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed,
+                        OkVisible = Visibility.Collapsed,
+                    };
+                    ShowContentAsModalDialog(nhmUpdatedrDialog);
+                });
+            };
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
         }
@@ -67,6 +83,17 @@ namespace NiceHashMiner.Views
                     var tdpWindow = new TDPSettingsWindow();
                     tdpWindow.DataContext = _vm;
                     tdpWindow.Show();
+                }
+                if (Launcher.IsUpdated)
+                {
+                    var nhmUpdatedDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("NiceHash Miner Updated"),
+                        Description = Translations.Tr("Completed NiceHash Miner auto update."),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed
+                    };
+                    ShowContentAsModalDialog(nhmUpdatedDialog);
                 }
             }
         }

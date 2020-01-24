@@ -230,10 +230,12 @@ namespace NiceHashMiner
             // TODO pass parent process PID
             var latestAppDir = GetLatestApp();
             var nhmApp = GetRootPath(latestAppDir, "NiceHashMiner.exe");
+            var args = "-lc";
+            if (isUpdated) args += " -updated";
             var startInfo = new ProcessStartInfo
             {
                 FileName = nhmApp,
-                Arguments = "-lc",
+                Arguments = args,
                 WindowStyle = ProcessWindowStyle.Normal
             };
             var run = true;

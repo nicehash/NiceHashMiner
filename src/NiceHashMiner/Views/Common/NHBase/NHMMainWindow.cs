@@ -73,8 +73,11 @@ namespace NiceHashMiner.Views.Common.NHBase
             base.OnApplyTemplate();
         }
 
+        private bool _isModalDialog = false;
+
         private void _gridLayoutRootOverlay_MouseDown(object sender, MouseEventArgs e)
         {
+            if (_isModalDialog) return;
             _gridLayoutRootOverlay.Visibility = Visibility.Hidden;
         }
 
@@ -114,8 +117,16 @@ namespace NiceHashMiner.Views.Common.NHBase
             }
         }
 
-        public void ShowContentAsModal(UserControl userControl)
+        public void ShowContentAsDialog(UserControl userControl)
         {
+            _isModalDialog = false;
+            _contentPresenter.Content = userControl;
+            _gridLayoutRootOverlay.Visibility = Visibility.Visible;
+        }
+
+        public void ShowContentAsModalDialog(UserControl userControl)
+        {
+            _isModalDialog = true;
             _contentPresenter.Content = userControl;
             _gridLayoutRootOverlay.Visibility = Visibility.Visible;
         }
@@ -123,6 +134,7 @@ namespace NiceHashMiner.Views.Common.NHBase
         public void HideModal()
         {
             _gridLayoutRootOverlay.Visibility = Visibility.Hidden;
+            _isModalDialog = false;
         }
 
     }
