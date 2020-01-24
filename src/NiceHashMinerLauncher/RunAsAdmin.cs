@@ -25,7 +25,7 @@ namespace NiceHashMiner
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = @"runnhmasadmin.exe",
-                    Arguments = $"{pid} {path}",
+                    Arguments = $"{pid} \"{path}\"",
                     Verb = "runas",
                     UseShellExecute = true,
                     CreateNoWindow = true
