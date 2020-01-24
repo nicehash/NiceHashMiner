@@ -30,7 +30,7 @@ namespace NHMCore.Notifications
         {
             lock (_lock)
             {
-                _notifications.Add(notification);
+                _notifications.Insert(0, notification);
             }
             OnPropertyChanged(nameof(Notifications));
         }
