@@ -170,29 +170,37 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
                                     <ToggleButton x:Name="SettingsButton" Style="{StaticResource local.WindowTabButtonStyle2}"
                                             fa:Awesome.Content="Gear" 
-                                            TextElement.FontSize="20"
+                                            TextElement.FontSize="22"
                                             Grid.Column="0"
-                                            Margin="0,0,20,0"/>
-                                    <ToggleButton x:Name="HelpButton" Style="{StaticResource local.WindowTabButtonStyle2}"
-                                            fa:Awesome.Content="QuestionCircle" 
+                                            Margin="0,0,15,0"/>
+                                    
+                                    <ToggleButton x:Name="NotificationsButton" Style="{StaticResource local.WindowTabButtonStyle2}"
+                                            fa:Awesome.Content="Bell" 
                                             TextElement.FontSize="20"
                                             Grid.Column="1"
-                                            Margin="0,0,20,0"/>
+                                            Margin="0,0,14,0"/>
+
+                                    <ToggleButton x:Name="HelpButton" Style="{StaticResource local.WindowTabButtonStyle2}"
+                                            fa:Awesome.Content="QuestionCircle" 
+                                            TextElement.FontSize="22"
+                                            Grid.Column="2"
+                                            Margin="0,0,14,0"/>
 
                                     <Button x:Name="MinimizeButton" Style="{StaticResource WindowButtonStyle}"
                                             fa:Awesome.Content="WindowMinimize" 
-                                            TextElement.FontSize="13"
-                                            Grid.Column="2"
+                                            TextElement.FontSize="16"
+                                            Grid.Column="3"
                                             Margin="0,0,15,0"/>
 
                                     <Button x:Name="CloseButton" Style="{StaticResource WindowButtonStyle}"
                                             fa:Awesome.Content="Times"
-                                            TextElement.FontSize="20"
-                                            Grid.Column="3">
+                                            TextElement.FontSize="24"
+                                            Grid.Column="4">
                                     </Button>
                                 </Grid>
                             </Grid>
