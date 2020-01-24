@@ -5,6 +5,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Grouping;
 using NHMCore.Mining.Plugins;
+using NHMCore.Notifications;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
@@ -493,7 +494,9 @@ namespace NHMCore.Mining
             ApplicationStateManager.DisplayNoInternetConnection(!_isConnectedToInternet);
 
             if (!_isConnectedToInternet && log) Logger.Info(Tag, $"No internet connection! Not able to mine.");
-            
+
+            AvailableNotifications.CreateNotProfitableInfo(isProfitable);
+
             // if profitable and connected to internet mine
             var shouldMine = isProfitable && _isConnectedToInternet;
             return shouldMine;

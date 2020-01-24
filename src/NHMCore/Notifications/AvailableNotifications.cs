@@ -15,13 +15,7 @@ namespace NHMCore.Notifications
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Run As Administrator",
-                Action = () => {
-                    var dialogResult = MessageBox.Show(Tr("Click yes if you wish to run {0} as Administrator.", NHMProductInfo.Name),
-                        Tr("Run as Administrator"),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.Yes)
-                        RunAsAdmin.SelfElevate();
-                }
+                Action = () => { RunAsAdmin.SelfElevate(); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -69,14 +63,8 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Fatal, Tr("No Supported Devices"), Tr("No supported devices are found."));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Get No Supported Devices Help",
-                Action = () => {
-                    var dialogResult = MessageBox.Show(Tr("Select the OK button for help.", NHMProductInfo.Name),
-                        Tr("Help"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.OK)
-                        Process.Start(Links.NhmNoDevHelp);
-                }
+                Info = "Help",
+                Action = () => {Process.Start(Links.NhmNoDevHelp); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -86,15 +74,8 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Error, Tr("Missing miner files"), Tr($"There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {Links.AVHelp}"));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Missing miner files help",
-                Action = () =>
-                {
-                    var dialogResult = MessageBox.Show(Tr("Click OK to reinitialize NiceHash Miner to try to fix this issue.", NHMProductInfo.Name),
-                        Tr("Reinitialize NiceHash Miner"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.OK)
-                        ApplicationStateManager.RestartProgram();
-                }
+                Info = "Restart NiceHash Miner",
+                Action = () => { ApplicationStateManager.RestartProgram(); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -152,14 +133,8 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, Tr("Missing miner binaries"), Tr($"Some of the {pluginName} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application."));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Add folder to Windows Defender Help",
-                Action = () => {
-                    var dialogResult = MessageBox.Show(Tr("Select the OK button for redirect to how-to page."),
-                        Tr("Redirect help"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.OK)
-                        Process.Start(Links.AVHelp);
-                }
+                Info = "Help",
+                Action = () => { Process.Start(Links.AVHelp); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -169,14 +144,8 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, Tr("Nvidia DCH drivers detected"), Tr("Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance."));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Nvidia DCH drivers detected Help",
-                Action = () => {
-                    var dialogResult = MessageBox.Show(Tr("Select the OK button for redirect to drivers download page."),
-                        Tr("Redirect help"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.OK)
-                        Process.Start(Links.NvidiaDriversHelp);
-                }
+                Info = "Help",
+                Action = () => { Process.Start(Links.NvidiaDriversHelp); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -186,16 +155,10 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, Tr("Add Windows Defender Exception"), Tr("Would you like to add NiceHash Miner root folder to the Windows Defender exceptions?"));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Add exception for NiceHash Miner",
-                Action = () => {
-                    var dialogResult = MessageBox.Show(Tr("Select the OK button to add exception."),
-                        Tr("Add exception"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.OK)
-                    {
-                        WindowsDefender.AddException();
-                        NotificationsManager.Instance.RemoveNotificationFromList(notification);
-                    }
+                Info = "Add exception",
+                Action = () => {    
+                    WindowsDefender.AddException();
+                    NotificationsManager.Instance.RemoveNotificationFromList(notification);
                 }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -206,16 +169,8 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, Tr("Swith compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode?"));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Enable AMD mode switcher",
-                Action = () => {
-                    var dialogResult = MessageBox.Show(Tr("Select the OK button to switch between modes."),
-                        Tr("Switch modes"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.OK)
-                    {
-                        AmdModeSwitcher.SwitchAmdComputeMode();
-                    }
-                }
+                Info = "Switch modes",
+                Action = () => { AmdModeSwitcher.SwitchAmdComputeMode(); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -225,39 +180,19 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, Tr("Enable large pages for randomx"), Tr("Would you like to enable large pages when mining with RandomX(CPU)?"));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Enable large pages",
-                Action = () => {
-                    var dialogResult = MessageBox.Show(Tr("Select the OK button to be redirected to help page for optimized mining of RandomX."),
-                        Tr("Enable large pages"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (dialogResult == DialogResult.OK)
-                    {
-                        Process.Start(Links.LargePagesHelp);
-                    }
-                }
+                Info = "Help",
+                Action = () => { Process.Start(Links.LargePagesHelp); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        // TODO finish CreateIncreaseVirtualMemoryInfo
         public static void CreateIncreaseVirtualMemoryInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, Tr("Increase virtual memory"), Tr("Would you like to automatically increase virtual memory?"));
+            var notification = new Notification(NotificationsType.Warning, Tr("Increase virtual memory"), Tr("Would you like to increase virtual memory?"));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Increase virtual memory",
-                // TODO here 
-                //Action = () => {
-                //    var dialogResult = MessageBox.Show(Tr("Select the OK button to automatically increase virtual memory."),
-                //        Tr("Increase virtual memory"),
-                //        MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    if (dialogResult == DialogResult.OK)
-                //    {
-                //        //TODO auto increase vram
-                //        //var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, true); IDisposable put in using
-                //        //key.SetValue("AutoIncreaseVRAM", true); //set key to "true"
-                //    }
-                //}
+                Info = "Help",
+                Action = () => { Process.Start(Links.VirtualMemoryHelp); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -285,6 +220,19 @@ namespace NHMCore.Notifications
 
             var notification = new Notification(NotificationsType.Warning, Tr("All mining locations unavailable"), Tr($"All mining locations are unavailable. Mining will be stopped."));
             NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateNotProfitableInfo(bool shouldClear)
+        {
+            // clear old state
+            NotificationsManager.Instance.RemoveNotificationFromList(Tr("Mining not profitable"));
+
+            if (!shouldClear)
+            {
+                NotificationsManager.Instance.RemoveNotificationFromList(Tr("Mining not profitable"));
+                var notification = new Notification(NotificationsType.Warning, Tr("Mining not profitable"), Tr($"Currently mining is not profitable. Mining will be stopped."));
+                NotificationsManager.Instance.AddNotificationToList(notification);
+            }
         }
     }
 }
