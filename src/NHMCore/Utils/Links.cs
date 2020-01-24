@@ -100,7 +100,7 @@ namespace NHMCore.Utils
 
         // help and faq
         public const string NhmHelp = "https://github.com/nicehash/NiceHashMiner/";
-        public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMiner/wiki/Troubleshooting#nosupportdev";
+        public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMiner/blob/master/doc/Troubleshooting.md#-no-supported-devices";
 
         //nvidia help
         public const string NvidiaDriversHelp = "https://www.nvidia.com/download/find.aspx";

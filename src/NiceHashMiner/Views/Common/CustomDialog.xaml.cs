@@ -103,13 +103,13 @@ namespace NiceHashMiner.Views.Common
 
         private void CancelButtonClicked(object sender, RoutedEventArgs e)
         {
-            if (CloseOnCancel) CustomDialogManager.HideCurrentModal();
+            if (CloseOnCancel) CloseDialog(sender, e);
             CancelClick?.Invoke(this, e);
         }
 
         private void ConfirmButtonClicked(object sender, RoutedEventArgs e)
         {
-            if (CloseOnOk) CustomDialogManager.HideCurrentModal();
+            if (CloseOnOk) CloseDialog(sender, e);
             OKClick?.Invoke(this, e);
         }
     }
