@@ -39,6 +39,7 @@ namespace NHM.DeviceDetection
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
+                    WorkingDirectory = Paths.AppRoot
                 };
                 using (var run = new Process() { StartInfo = startInfo, EnableRaisingEvents = true })
                 using (var ct = new CancellationTokenSource(milliseconds))
