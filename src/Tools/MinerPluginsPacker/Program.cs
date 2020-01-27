@@ -80,7 +80,7 @@ namespace MinerPluginsPacker
             }
         }
 
-        private static int[] _supportedMajorverLinks = new int[] { 3, 4, 5, 6 };
+        private static int[] _supportedMajorverLinks = new int[] { 3, 4, 5, 6, 7 };
         private static bool IsMajorVersionLinkSupported(int major)
         {
             return _supportedMajorverLinks.Contains(major);
