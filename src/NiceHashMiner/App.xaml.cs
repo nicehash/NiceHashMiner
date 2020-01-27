@@ -54,7 +54,7 @@ namespace NiceHashMiner
             {
                 if (isLauncher)
                 {
-                    var oneUpPath = Path.Combine(path, @"..\");
+                    var oneUpPath = new Uri(Path.Combine(path, @"..\")).LocalPath;
                     Paths.SetRoot(oneUpPath);
                     Paths.SetAppRoot(path);
                     // TODO this might be problematic
