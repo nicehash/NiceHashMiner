@@ -86,6 +86,11 @@ namespace NHMCore
                     AvailableNotifications.CreateWarningNVIDIADCHInfo();
                 }
 
+                if (MiscSettings.Instance.UseEthlargement && !Helpers.IsElevated)
+                {
+                    AvailableNotifications.CreateEthlargementElevateInfo();
+                }
+
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
                 var index = 0;

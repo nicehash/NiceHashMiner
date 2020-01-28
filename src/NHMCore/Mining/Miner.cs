@@ -199,7 +199,7 @@ namespace NHMCore.Mining
         private async Task StopAsync()
         {
             // TODO thing about this case, closing opening on switching
-            // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
+            EthlargementIntegratedPlugin.Instance.Stop(MiningPairs);
             MinerApiWatchdog.RemoveGroup(GroupKey);
             MiningDataStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             await _miner.StopMiningTask();

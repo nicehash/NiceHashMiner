@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NiceHashMiner.Views.Dashboard"
              xmlns:common="clr-namespace:NiceHashMiner.Views.Common"
-             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
              xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
@@ -13,10 +12,6 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
-        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
-
-
         <Style TargetType="Button" x:Key="local.CompleteCredentialsButton" >
             <Setter Property="Template">
                 <Setter.Value>

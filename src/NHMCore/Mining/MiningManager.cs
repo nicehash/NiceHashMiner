@@ -54,6 +54,8 @@ namespace NHMCore.Mining
             UsernameChanged,
             
             // TODO profitability changed
+            ProfitabilitySettingsChanged,
+            RunEthlargementChanged
         }
         private class Command
         {
@@ -113,6 +115,13 @@ namespace NHMCore.Mining
         private static Task MiningLocationChanged(string miningLocation)
         {
             var command = new Command(CommandType.MiningLocationChanged, miningLocation);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        private static Task UseEthlargementChanged()
+        {
+            var command = new Command(CommandType.RunEthlargementChanged, null);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -182,6 +191,11 @@ namespace NHMCore.Mining
                         Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
                         break;
 
+                    case CommandType.RunEthlargementChanged:
+                        commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
+                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        break;
+                        
                     default:
                         Logger.Debug(Tag, $"command type not handled {command.CommandType}");
                         break;
@@ -228,8 +242,9 @@ namespace NHMCore.Mining
 
             _miningLocation = StratumService.Instance.SelectedServiceLocation;
 
-            StratumService.Instance.PropertyChanged += Instance_PropertyChanged;
+            StratumService.Instance.PropertyChanged += StratumServiceInstance_PropertyChanged;
 
+            MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             
         }
 
@@ -247,7 +262,7 @@ namespace NHMCore.Mining
             return Task.WhenAll(loop1, loop2);
         }
 
-        private static void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private static void StratumServiceInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(StratumService.SelectedServiceLocation))
             {
@@ -256,6 +271,14 @@ namespace NHMCore.Mining
             if (e.PropertyName == nameof(StratumService.SelectedFallbackServiceLocation))
             {
                 _ = MiningLocationChanged(StratumService.Instance.SelectedFallbackServiceLocation);
+            }
+        }
+
+        private static void MiscSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MiscSettings.UseEthlargement))
+            {
+                _ = UseEthlargementChanged();
             }
         }
 
@@ -296,6 +319,7 @@ namespace NHMCore.Mining
                 }
                 _runningMiners.Clear();
                 _miningDevices.Clear();
+                EthlargementIntegratedPlugin.Instance.Stop();
             }
         }
 

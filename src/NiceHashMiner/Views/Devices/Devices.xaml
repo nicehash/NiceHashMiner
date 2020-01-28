@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:common="clr-namespace:NiceHashMiner.Views.Common"
              xmlns:local="clr-namespace:NiceHashMiner.Views.Devices"
-             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
              xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -13,9 +12,6 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
-        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
-        
         <Style TargetType="TextBlock" x:Key="local.InfoIcon">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>

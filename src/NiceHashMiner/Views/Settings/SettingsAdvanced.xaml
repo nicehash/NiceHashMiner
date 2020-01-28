@@ -135,9 +135,18 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.NVIDIAP0State}"
                                         Label="NVIDIA P0 State"
                                         Description="{StaticResource nvidiaP0State}"/>
-            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.UseEthlargement}"
+            <WrapPanel Orientation="Horizontal">
+                <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.UseEthlargement}"
+                                        IsEnabled="{Binding EthlargementIntegratedPlugin.IsSystemElevated}"
+                                        Visibility="{Binding EthlargementIntegratedPlugin.SystemContainsSupportedDevices, Converter={StaticResource NulBoolToVisibilityConverter}, Mode=OneWay}"
                                         Label="Run Ethlargement"
                                         Description="{StaticResource useEthlargement}"/>
+                <TextBlock Style="{StaticResource AlertIcon}"
+                           Margin="12,0,0,0"
+                           Visibility="{Binding EthlargementIntegratedPlugin.IsSystemElevated, Converter={StaticResource NulBoolToVisibilityConverterFalse}, Mode=OneWay}"
+                           ToolTip="This feature requires Administrator privileges."/>
+            </WrapPanel>
+            
         </WrapPanel>
         <!--Miners-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical" >
