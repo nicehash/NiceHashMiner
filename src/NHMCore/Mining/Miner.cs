@@ -35,7 +35,7 @@ namespace NHMCore.Mining
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
 
-        private List<MiningPair> MiningPairs { get; set; }
+        public List<MiningPair> MiningPairs { get; private set; }
 
         public string GroupKey { get; protected set; } = "";
 

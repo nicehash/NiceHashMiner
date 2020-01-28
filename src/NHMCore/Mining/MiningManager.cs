@@ -52,9 +52,9 @@ namespace NHMCore.Mining
             NormalizedProfitsUpdate,
             MiningLocationChanged,
             UsernameChanged,
-            
+
             // TODO profitability changed
-            ProfitabilitySettingsChanged,
+            MiningProfitSettingsChanged,
             RunEthlargementChanged
         }
         private class Command
@@ -125,6 +125,13 @@ namespace NHMCore.Mining
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
+        private static Task MiningProfitSettingsChanged()
+        {
+            var command = new Command(CommandType.MiningProfitSettingsChanged, null);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+        
 
         private static async Task HandleCommand(Command command)
         {
@@ -195,7 +202,12 @@ namespace NHMCore.Mining
                         commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
                         Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
                         break;
-                        
+
+                    case CommandType.MiningProfitSettingsChanged:
+                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
+                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        break;
+
                     default:
                         Logger.Debug(Tag, $"command type not handled {command.CommandType}");
                         break;
@@ -245,7 +257,7 @@ namespace NHMCore.Mining
             StratumService.Instance.PropertyChanged += StratumServiceInstance_PropertyChanged;
 
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
-            
+            MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
         }
 
         public static void StartLoops(CancellationToken stop, string username)
@@ -280,6 +292,11 @@ namespace NHMCore.Mining
             {
                 _ = UseEthlargementChanged();
             }
+        }
+
+        private static void MiningProfitSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            _ = MiningProfitSettingsChanged();
         }
 
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
@@ -394,16 +411,27 @@ namespace NHMCore.Mining
             {
                 await groupMiner.StopTask();
             }
+            // TODO the pending state breaks start/stop buttons
+            //foreach (var groupMiner in _runningMiners.Values)
+            //{
+            //    foreach (var pair in groupMiner.MiningPairs)
+            //    {
+            //        var cDev = AvailableDevices.GetDeviceWithUuid(pair.Device.UUID);
+            //        if (cDev == null) continue;
+            //        cDev.State = DeviceState.Pending;
+            //    }
+            //}
+            _runningMiners.Clear();
             // TODO set devices to Pending state
         }
-        private static async Task ResumeAllMiners()
-        {
-            foreach (var groupMiner in _runningMiners.Values)
-            {
-                await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
-            }
-            // TODO resume devices to Mining state
-        }
+        //private static async Task ResumeAllMiners()
+        //{
+        //    foreach (var groupMiner in _runningMiners.Values)
+        //    {
+        //        await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
+        //    }
+        //    // TODO resume devices to Mining state
+        //}
 
         private static async Task CheckGroupingAndUpdateMiners(CommandType commandType)
         {
@@ -463,7 +491,7 @@ namespace NHMCore.Mining
                 return;
             }
 
-            await SwichMostProfitableGroupUpMethodTask(_normalizedProfits);
+            await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, CommandType.MiningProfitSettingsChanged == commandType);
         }
 
         private static async Task RestartMiners()
@@ -569,7 +597,7 @@ namespace NHMCore.Mining
             return profitableMiningPairs;
         }
 
-        private static async Task SwichMostProfitableGroupUpMethodTask(Dictionary<AlgorithmType, double> normalizedProfits)
+        private static async Task SwichMostProfitableGroupUpMethodTask(Dictionary<AlgorithmType, double> normalizedProfits, bool skipProfitsThreshold)
         {
             CalculateAndUpdateMiningDevicesProfits(normalizedProfits);
             var (currentProfit, prevStateProfit) = GetCurrentAndPreviousProfits();
@@ -620,7 +648,7 @@ namespace NHMCore.Mining
 
             // check profit threshold
             Logger.Info(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
-            if (prevStateProfit > 0 && currentProfit > 0)
+            if (prevStateProfit > 0 && currentProfit > 0 && !skipProfitsThreshold)
             {
                 var a = Math.Max(prevStateProfit, currentProfit);
                 var b = Math.Min(prevStateProfit, currentProfit);
@@ -638,6 +666,10 @@ namespace NHMCore.Mining
                     return;
                 }
                 Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {SwitchSettings.Instance.SwitchProfitabilityThreshold}");
+            }
+            else if (skipProfitsThreshold)
+            {
+                Logger.Info(Tag, $"Will SWITCH. MiningProfitSettings have changed");
             }
 
             // grouping starting and stopping
