@@ -32,8 +32,18 @@ namespace NHMCore.Notifications
             {
                 notification.NotificationNew = true;
                 _notifications.Insert(0, notification);
+                notification.PropertyChanged += Notification_PropertyChanged;
             }
             OnPropertyChanged(nameof(Notifications));
+            OnPropertyChanged(nameof(NotificationNewCount));
+        }
+
+        private void Notification_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(nameof(Notification.NotificationNew) == e.PropertyName)
+            {
+                OnPropertyChanged(nameof(NotificationNewCount));
+            }
         }
 
         public bool RemoveNotificationFromList(Notification notification)
@@ -42,8 +52,10 @@ namespace NHMCore.Notifications
             lock (_lock)
             {
                 ok = _notifications.Remove(notification);
+                notification.PropertyChanged -= Notification_PropertyChanged;
             }
             OnPropertyChanged(nameof(Notifications));
+            OnPropertyChanged(nameof(NotificationNewCount));
             return ok;
         }
 
@@ -55,9 +67,23 @@ namespace NHMCore.Notifications
             {
                 var removedNotification = _notifications.Where(notification => notification.Name == notificationName).FirstOrDefault();
                 ok = _notifications.Remove(removedNotification);
+                removedNotification.PropertyChanged -= Notification_PropertyChanged;
             }
             OnPropertyChanged(nameof(Notifications));
+            OnPropertyChanged(nameof(NotificationNewCount));
             return ok;
+        }
+
+
+        private int _notificationNewCount { get; set; }
+        public int NotificationNewCount
+        {
+            get => Instance.Notifications.Where(notif => notif.NotificationNew == true).Count();
+            set
+            {
+                _notificationNewCount = value;
+                OnPropertyChanged(nameof(NotificationNewCount));
+            }
         }
     }
 }

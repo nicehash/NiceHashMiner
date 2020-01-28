@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using NHMCore.Utils;
 using System.Diagnostics;
+using NHMCore.Notifications;
 
 namespace NiceHashMiner.Views
 {
@@ -66,6 +67,19 @@ namespace NiceHashMiner.Views
             };
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
+            NotificationsManager.Instance.PropertyChanged += Instance_PropertyChanged;
+            SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
+        }
+
+        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(nameof(NotificationsManager.NotificationNewCount) == e.PropertyName)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
+                });
+            }
         }
 
         public void SetBurnCalledAction()

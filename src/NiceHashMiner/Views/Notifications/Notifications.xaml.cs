@@ -15,11 +15,11 @@ namespace NiceHashMiner.Views.Notifications
         // TODO show icon for new notification
         private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            foreach(NHMCore.Notifications.Notification nekaj in ic_NotificationsList.ItemsSource)
+            foreach(var item in ic_NotificationsList.ItemsSource)
             {
-                if(nekaj is NHMCore.Notifications.Notification)
+                if(item is NHMCore.Notifications.Notification notification)
                 {
-                    nekaj.NotificationNew = false;
+                    notification.NotificationNew = false;
                 }
             }   
         }

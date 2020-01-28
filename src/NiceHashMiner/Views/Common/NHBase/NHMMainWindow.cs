@@ -137,5 +137,23 @@ namespace NiceHashMiner.Views.Common.NHBase
             _isModalDialog = false;
         }
 
+        public void SetNotificationCount(int count)
+        {
+            var notificationButton = GetRequiredTemplateChild<ToggleButton>("NotificationsButton");
+            if(notificationButton != null)
+            {
+                if(count == 0)
+                {
+                    notificationButton.Style = this.FindResource("bellWindowStyle") as Style;
+                    notificationButton.Content = "\uf0f3";
+                }
+                else
+                {
+                    notificationButton.Style = this.FindResource("local.WindowTabButtonNotification") as Style;
+                    notificationButton.Content = count >= 100 ? ":D" : count.ToString();
+                }
+            }
+        }
+
     }
 }
