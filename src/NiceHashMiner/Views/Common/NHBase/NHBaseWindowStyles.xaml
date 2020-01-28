@@ -6,7 +6,7 @@
         <ResourceDictionary Source="../../../Resources/Xaml/NHMLogos.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="{x:Type Button}" x:Key="WindowButtonStyle">
+    <Style TargetType="{x:Type ButtonBase}" x:Key="WindowButtonStyle">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
