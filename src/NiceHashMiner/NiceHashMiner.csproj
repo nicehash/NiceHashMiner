@@ -179,6 +179,7 @@
     <Compile Include="Views\NHMDialogWindow.xaml.cs">
       <DependentUpon>NHMDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Notifications\Converters\NewVisibilityConverter.cs" />
     <Compile Include="Views\Notifications\Notifications.xaml.cs">
       <DependentUpon>Notifications.xaml</DependentUpon>
     </Compile>

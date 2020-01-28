@@ -80,6 +80,10 @@
         <Setter Property="Foreground" Value="#ffffff" />
     </Style>
 
+    <Style x:Key="FontsTypography.Button-White-Small" TargetType="TextBlock" BasedOn="{StaticResource FontsTypography.Button-White}">
+        <Setter Property="FontSize" Value="10" />
+    </Style>
+
     <!--<Style x:Key="FontsTypography.XX" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource Ubuntu-XX}" />
         <Setter Property="FontSize" Value="30" />
