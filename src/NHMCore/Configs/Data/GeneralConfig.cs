@@ -291,6 +291,11 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.RunAtStartup;
             set => MiscSettings.Instance.RunAtStartup = value;
         }
+        public Dictionary<string, bool> ShowNotifications
+        {
+            get => MiscSettings.Instance.ShowNotifications;
+            set => MiscSettings.Instance.ShowNotifications = value;
+        }
         #endregion MiscSettings
 
         #region Global Device settings
@@ -380,6 +385,7 @@ namespace NHMCore.Configs.Data
             KwhPrice = 0;
             DisplayTheme = "Light";
             ShowGPUPCIeBusIDs = false;
+            ShowNotifications = new Dictionary<string, bool>();
 
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;

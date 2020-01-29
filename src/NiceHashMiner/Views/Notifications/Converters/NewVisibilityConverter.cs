@@ -27,4 +27,22 @@ namespace NiceHashMiner.Views.Notifications.Converters
             throw new NotImplementedException();
         }
     }
+
+    public class CheckVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string UUID)
+            {
+                if (string.IsNullOrEmpty(UUID)) return Visibility.Collapsed;
+                return Visibility.Visible;
+            }
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

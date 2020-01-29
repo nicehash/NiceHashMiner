@@ -178,6 +178,7 @@ namespace NHMCore.Notifications
                     }
                 }
             });
+            notification.NotificationUUID = "WindowsDefenderNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -196,6 +197,7 @@ namespace NHMCore.Notifications
                 Info = "Help",
                 Action = () => { Process.Start(Links.AMDComputeModeHelp_PRODUCTION); }
             });
+            notification.NotificationUUID = "AMDModeSwitchNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -207,6 +209,7 @@ namespace NHMCore.Notifications
                 Info = "Help",
                 Action = () => { Process.Start(Links.LargePagesHelp); }
             });
+            notification.NotificationUUID = "LargePagesNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 

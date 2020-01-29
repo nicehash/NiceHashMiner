@@ -28,6 +28,9 @@ namespace NHMCore.Notifications
 
         public void AddNotificationToList(Notification notification)
         {
+            Configs.MiscSettings.Instance.ShowNotifications.TryGetValue(notification.NotificationUUID, out var shouldNotAdd);
+            if (shouldNotAdd) return;
+
             lock (_lock)
             {
                 notification.NotificationNew = true;
