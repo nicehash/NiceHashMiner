@@ -407,7 +407,7 @@ namespace NHMCore.Mining.Plugins
             }            
         }
 
-        public static async Task DevicesCrossReferenceIDsWithMinerIndexes()
+        public static async Task DevicesCrossReferenceIDsWithMinerIndexes(IStartupLoader loader)
         {
             // get devices
             var baseDevices = AvailableDevices.Devices.Select(dev => dev.BaseDevice);
@@ -415,9 +415,24 @@ namespace NHMCore.Mining.Plugins
                 .Where(p => p.IsCompatible)
                 .Where(p => p.Enabled)
                 .ToArray();
+
+            if (checkPlugins.Length > 0 && loader != null) {
+                loader.SecondaryVisible = true;
+                loader.SecondaryTitle = Translations.Tr("Devices Cross Reference");
+                loader?.SecondaryProgress?.Report((Translations.Tr("Pending"), 0));
+            }
+            var pluginDoneCount = 0d;
             foreach (var plugin in checkPlugins)
             {
+                
+                loader?.SecondaryProgress?.Report((Translations.Tr("Cross Reference {0}", plugin.Name), (int)((pluginDoneCount / checkPlugins.Length) * 100)));
                 await plugin.DevicesCrossReference(baseDevices);
+                pluginDoneCount += 1;
+                loader?.SecondaryProgress?.Report((Translations.Tr("Cross Reference {0}", plugin.Name), (int)((pluginDoneCount / checkPlugins.Length) * 100)));
+            }
+            if (loader != null)
+            {
+                loader.SecondaryVisible = false;
             }
         }
 

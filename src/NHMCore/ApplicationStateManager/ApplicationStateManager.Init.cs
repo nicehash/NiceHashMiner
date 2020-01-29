@@ -276,7 +276,7 @@ namespace NHMCore
                 // Cross reference plugin indexes
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
-                await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
+                await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
             }
             catch (Exception e)
             {
