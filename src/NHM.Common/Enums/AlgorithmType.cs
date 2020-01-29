@@ -111,6 +111,7 @@ namespace NHM.Common.Enums
         Eaglesong = 48,
         //[Obsolete("UNUSED Algorithm")]
         Cuckaroom = 49,
+        GrinCuckatoo32 = 50,
         #endregion // NiceHashAPI
     }
 

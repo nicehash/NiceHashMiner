@@ -20,8 +20,26 @@ namespace NHMCore.Utils
 
         public static Task RunninLoops { get; private set; } = null;
 
+        public static Action OnAutoUpdate;
+
         public static void StartLoops(CancellationToken stop)
         {
+            // clear old updaters when starting this loop
+            var downloadRootPath = Path.Combine(Paths.Root, "updaters");
+            if (Directory.Exists(downloadRootPath))
+            {
+                var doFiles = Directory.GetFiles(downloadRootPath);
+                foreach (var doFile in doFiles)
+                {
+                    try
+                    {
+                        File.Delete(doFile);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
             RunninLoops = Task.Run(() => {
                 var loop1 = NhmAutoUpdateCheckLoop(stop);
                 return Task.WhenAll(loop1);
@@ -44,48 +62,57 @@ namespace NHMCore.Utils
                     var isAutoUpdate = UpdateSettings.Instance.AutoUpdateNiceHashMiner;
                     var hasNewVersion = VersionState.Instance.IsNewVersionAvailable;
                     // prevent sleep check
-                    if (isActive() && isAutoUpdate && hasNewVersion)
+                    if (isActive() && isAutoUpdate && hasNewVersion && !Launcher.IsUpdatedFailed)
                     {
-                        // determine what how to update
-                        bool isUpdater = IsNHMInstalled() && IsRunningInstalledApp();
-                        // #1 download updater.exe or zip depending on bin type
-                        var url = isUpdater ? VersionState.Instance.GetNewVersionUpdaterUrl() : VersionState.Instance.GetNewVersionZipUrl();
-                        var downloadRootPath = Path.Combine(Paths.Root, "updaters");
-                        if (!Directory.Exists(downloadRootPath))
+                        try
                         {
-                            Directory.CreateDirectory(downloadRootPath);
-                        }
-                        var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_zip_{VersionState.Instance.OnlineVersionStr}";
-                        var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, DownloadProgress, ApplicationStateManager.ExitApplication.Token);
-                        if (!success)
-                        {
-                            // TODO notify that we cannot download the miner updates file
-                            continue;
-                        }
+                            // determine what how to update
+                            bool isUpdater = IsNHMInstalled() && IsRunningInstalledApp();
+                            // #1 download updater.exe or zip depending on bin type
+                            var url = isUpdater ? VersionState.Instance.GetNewVersionUpdaterUrl() : VersionState.Instance.GetNewVersionZipUrl();
+                            var downloadRootPath = Path.Combine(Paths.Root, "updaters");
+                            if (!Directory.Exists(downloadRootPath))
+                            {
+                                Directory.CreateDirectory(downloadRootPath);
+                            }
+                            var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_{VersionState.Instance.OnlineVersionStr}";
+                            var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, DownloadProgress, ApplicationStateManager.ExitApplication.Token);
+                            if (!success)
+                            {
+                                // TODO notify that we cannot download the miner updates file
+                                continue;
+                            }
 
-                        // #2 SAVE current state so we can resume it after the client updates
-                        ApplicationStateManager.SaveMiningState();
-                        await ApplicationStateManager.StopAllDevicesTask();
-                        // #3 restart accordingly if launcher or self containd app
-                        if (Launcher.IsLauncher)
-                        {
-                            try
+                            OnAutoUpdate?.Invoke();
+                            // #2 SAVE current state so we can resume it after the client updates
+                            ApplicationStateManager.SaveMiningState();
+                            await ApplicationStateManager.StopAllDevicesTask();
+                            await Task.Delay(5000); // wait 5 seconds
+                                                    // #3 restart accordingly if launcher or self containd app
+                            if (Launcher.IsLauncher)
                             {
-                                // TODO here save what version and maybe kind of update we have
-                                File.Create(Paths.RootPath("do.update"));
-                                ApplicationStateManager.ExecuteApplicationExit();
+                                try
+                                {
+                                    // TODO here save what version and maybe kind of update we have
+                                    File.Create(Paths.RootPath("do.update"));
+                                    ApplicationStateManager.ExecuteApplicationExit();
+                                }
+                                catch (Exception e)
+                                {
+                                    Logger.Error("NICEHASH", $"Autoupdate IsLauncher error: {e.Message}");
+                                    // IF we fail restore mining state and show autoupdater failure nofitication
+                                    await ApplicationStateManager.RestoreMiningState();
+                                    // TODO notify that the auto-update wasn't successful
+                                }
                             }
-                            catch (Exception e)
+                            else
                             {
-                                Logger.Error("NICEHASH", $"Autoupdate IsLauncher error: {e.Message}");
-                                // IF we fail restore mining state and show autoupdater failure nofitication
-                                await ApplicationStateManager.RestoreMiningState();
-                                // TODO notify that the auto-update wasn't successful
+                                // TODO non launcher not priority right now
                             }
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            // TODO non launcher not priority right now
+                            Logger.Error(Tag, $"Check autoupdate Exception: {ex.Message}");
                         }
                     }
                 }

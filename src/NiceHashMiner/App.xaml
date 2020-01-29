@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:NiceHashMiner"
              xmlns:views="clr-namespace:NiceHashMiner.Views"
+             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
              Startup="App_OnStartup">
     <Application.Resources>
         <ResourceDictionary>
@@ -180,6 +181,35 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
 
+            <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
+            <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
+            
+            <!--#region Main Menu Button styles --><!--
+            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="minimizeWindowStyle">
+                <Setter Property="Content" Value="&#xf2d1;" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+
+            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="closeWindowStyle">
+                <Setter Property="Content" Value="&#xf00d;" />
+                <Setter Property="FontSize" Value="24" />
+            </Style>
+
+            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="settingsWindowStyle">
+                <Setter Property="Content" Value="&#xf013;" />
+                <Setter Property="FontSize" Value="22" />
+            </Style>
+
+            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="bellWindowStyle">
+                <Setter Property="Content" Value="&#xf0f3;" />
+                <Setter Property="FontSize" Value="22" />
+            </Style>
+
+            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="infoWindowStyle">
+                <Setter Property="Content" Value="&#xf05a;" />
+                <Setter Property="FontSize" Value="22" />
+            </Style>
+            --><!--#endregion Main Menu Button styles -->
 
         </ResourceDictionary>
     </Application.Resources>

@@ -1,4 +1,5 @@
 ﻿using NHMCore.Configs;
+using NHMCore.Mining;
 using System.Windows.Controls;
 
 namespace NiceHashMiner.Views.Settings
@@ -21,6 +22,17 @@ namespace NiceHashMiner.Views.Settings
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ConfigManager.GeneralConfigFileCommit();
+        }
+
+        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (AvailableDevices.HasNvidia)
+            {
+                wp_cuda.Visibility = System.Windows.Visibility.Visible;
+            } else
+            {
+                wp_cuda.Visibility = System.Windows.Visibility.Collapsed;
+            }
         }
     }
 }

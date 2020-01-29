@@ -4,22 +4,22 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace NiceHashMiner.Views.Help
+namespace NiceHashMiner.Views.Notifications
 {
     /// <summary>
-    /// Interaction logic for HelpItem.xaml
+    /// Interaction logic for NotificationItem.xaml
     /// </summary>
-    public partial class HelpItem : UserControl
+    public partial class NotificationItem : UserControl
     {
 
         private Notification _notification;
-        public HelpItem()
+        public NotificationItem()
         {
             InitializeComponent();
-            DataContextChanged += HelpItem_DataContextChanged;
+            DataContextChanged += NotificationItemItem_DataContextChanged;
         }
 
-        private void HelpItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void NotificationItemItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is Notification notification)
             {

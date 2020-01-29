@@ -8,7 +8,7 @@ namespace LolMinerBeam
 {
     public partial class LolMinerBeamPlugin
     {
-        const ulong AMD_8GBMemory = 8UL << 30; // 4GB
+        const ulong AMD_8GBMemory = 7UL << 30; // 7GB but really 8GB
         internal static List<SAS> SupportedAMDAlgos()
         {
             return new List<SAS>
@@ -17,6 +17,7 @@ namespace LolMinerBeam
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.BeamV2),
                         new SAS(AlgorithmType.Cuckaroom) { NonDefaultRAMLimit = AMD_8GBMemory },
+                        new SAS(AlgorithmType.GrinCuckatoo32),
                     };
         }
 
@@ -52,6 +53,7 @@ namespace LolMinerBeam
                 { AlgorithmType.GrinCuckatoo31, "GRIN-AT31" },
                 { AlgorithmType.BeamV2, "BEAM-II" },
                 { AlgorithmType.Cuckaroom, "FLOO-C29M" },
+                { AlgorithmType.GrinCuckatoo32, "GRIN-C32" },
             }
         };
     }

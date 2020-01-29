@@ -209,9 +209,34 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
+        public static void CheckAndDeleteNewVersion3Bins()
+        {
+            try
+            {
+                if (ConfigManager.IsVersionChangedToMajor3)
+                {
+                    string minerPluginsPath = Paths.MinerPluginsPath();
+                    var installedExternalPackages = Directory.GetDirectories(minerPluginsPath);
+                    foreach (var installedPath in installedExternalPackages)
+                    {
+                        try
+                        {
+                            Directory.Delete(Path.Combine(installedPath, "bins"), true);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Error("CheckAndDeleteNewVersion3Bins", e.Message);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("CheckAndDeleteNewVersion3Bins", e.Message);
+            }
+        }
 
-
-#endregion Update miner plugin dlls
+        #endregion Update miner plugin dlls
 
         public static async Task LoadAndInitMinerPlugins()
         {

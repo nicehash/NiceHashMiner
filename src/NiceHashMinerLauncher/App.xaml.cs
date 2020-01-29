@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -79,6 +80,8 @@ namespace NiceHashMiner
             ClearAllXXFiles("tmp.*");
         }
 
+        private static Mutex _mutex = null;
+
         private static string GetLatestApp()
         {
             var path = GetRootPath();
@@ -145,6 +148,16 @@ namespace NiceHashMiner
             }
             // no updater
             return null;
+        }
+
+        public static string GetHashString()
+        {
+            var appPathBytes = Encoding.UTF8.GetBytes(Assembly.GetExecutingAssembly().Location);
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in appPathBytes)
+                sb.Append(b.ToString("X2"));
+
+            return sb.ToString();
         }
 
         private async void App_OnStartup(object sender, StartupEventArgs e)
@@ -225,70 +238,90 @@ namespace NiceHashMiner
             }
             if (isUpdated) await Task.Delay(500);  // so we release the temp files
 
-            ClearAllTmpFiles();
-
-            // TODO pass parent process PID
-            var latestAppDir = GetLatestApp();
-            var nhmApp = GetRootPath(latestAppDir, "NiceHashMiner.exe");
-            var startInfo = new ProcessStartInfo
+            bool createdNew = false;
+            try
             {
-                FileName = nhmApp,
-                Arguments = "-lc",
-                WindowStyle = ProcessWindowStyle.Normal
-            };
-            var run = true;
-            while (run)
-            {
-                run = false;
-                try
+                string appPath = GetHashString();
+                _mutex = new Mutex(true, appPath, out createdNew);
+                if (!createdNew)
                 {
-                    using (var niceHashMiner = new Process { StartInfo = startInfo })
+                    //MessageBox.Show("We have detected you are already running NiceHash Miner. Only a single instance should be running at a time.", "NiceHash Miner Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    // shutdown
+                    Shutdown();
+                    return;
+                }
+                base.OnStartup(e);
+
+                ClearAllTmpFiles();
+
+                // TODO pass parent process PID
+                var latestAppDir = GetLatestApp();
+                var nhmApp = GetRootPath(latestAppDir, "NiceHashMiner.exe");
+                var args = "-lc";
+                if (isUpdated) args += " -updated";
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = nhmApp,
+                    Arguments = args,
+                    WindowStyle = ProcessWindowStyle.Normal
+                };
+                var run = true;
+                while (run)
+                {
+                    run = false;
+                    try
                     {
-                        var hasStarted = niceHashMiner?.Start();
-                        niceHashMiner?.WaitForExit();
-                        // TODO 
-                        Console.WriteLine(niceHashMiner.ExitCode);
-                        // if exit code is 0 then check runasadmin or restart
-                        if (IsRunAsAdmin())
+                        using (var niceHashMiner = new Process { StartInfo = startInfo })
                         {
-                            RunAsAdmin.SelfElevate();
-                        }
-                        else if (IsRestart())
-                        {
-                            ClearAllDoFiles();
-                            run = true;
-                        }
-                        else if (IsUpdate())
-                        {
-                            run = true; // mark to false if updating doesn't fail
-                            ClearAllDoFiles();
-                            var exePath = Assembly.GetExecutingAssembly().Location;
-                            var randomPart = DateTime.UtcNow.Millisecond;
-                            var tmpLauncher = GetRootPath($"tmp.nhm_updater_{randomPart}.exe");
-                            File.Copy(exePath, tmpLauncher, true);
-                            var doUpdate = new Process
+                            var hasStarted = niceHashMiner?.Start();
+                            niceHashMiner?.WaitForExit();
+                            // TODO 
+                            Console.WriteLine(niceHashMiner.ExitCode);
+                            // if exit code is 0 then check runasadmin or restart
+                            if (IsRunAsAdmin())
                             {
-                                StartInfo = new ProcessStartInfo
+                                RunAsAdmin.SelfElevate();
+                            }
+                            else if (IsRestart())
+                            {
+                                ClearAllDoFiles();
+                                run = true;
+                            }
+                            else if (IsUpdate())
+                            {
+                                run = true; // mark to false if updating doesn't fail
+                                ClearAllDoFiles();
+                                var exePath = Assembly.GetExecutingAssembly().Location;
+                                var randomPart = DateTime.UtcNow.Millisecond;
+                                var tmpLauncher = GetRootPath($"tmp.nhm_updater_{randomPart}.exe");
+                                File.Copy(exePath, tmpLauncher, true);
+                                var doUpdate = new Process
                                 {
-                                    FileName = tmpLauncher,
-                                    Arguments = "-update",
-                                    WindowStyle = ProcessWindowStyle.Normal
-                                }
-                            };
-                            var updateStarted = doUpdate.Start();
-                            run = !updateStarted; // set if we are good
+                                    StartInfo = new ProcessStartInfo
+                                    {
+                                        FileName = tmpLauncher,
+                                        Arguments = "-update",
+                                        WindowStyle = ProcessWindowStyle.Normal
+                                    }
+                                };
+                                var updateStarted = doUpdate.Start();
+                                run = !updateStarted; // set if we are good
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                // shutdown
+                Shutdown();
+                return;
             }
-
-            // shutdown
-            Shutdown();
-            return;
+            finally
+            {
+                if (createdNew) _mutex?.ReleaseMutex();
+            }
         }
 
         public static async Task<bool> UnzipFileAsync(string zipLocation, string unzipLocation, IProgress<int> progress, CancellationToken stop)

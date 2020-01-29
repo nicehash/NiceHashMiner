@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
              xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="800">
+             d:DesignHeight="1000" d:DesignWidth="800" Loaded="UserControl_Loaded">
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
@@ -100,28 +100,86 @@
                 </StackPanel>
             </WrapPanel>
         </WrapPanel>
-        <!--NVIDIA/CUDA TODO -->
-        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" Visibility="Collapsed">
-            <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.LogToFile}"
-                                        Label="Log To file"
-                                        Description="{StaticResource logToFile}"/>
-            <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.DebugConsole}"
-                                        Label="Enable Debug Console"
-                                        Description="{StaticResource debugConsole}"/>
-            <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.DebugConsole}"
-                                        Label="Enable Debug Console"
-                                        Description="{StaticResource debugConsole}"/>
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
+            <Label Content="Switching" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="0,16,0,0">
+                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource switchMinimum}">
+                        <Label Content="Switch Minimum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                    </StackPanel>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSeconds.Lower, Mode=TwoWay}" Margin="0,0,24,0" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,16,0,0">
+                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource switchMaximum}">
+                        <Label Content="Switch Maximum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                    </StackPanel>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSeconds.Upper, Mode=TwoWay}" Margin="0,0,24,0" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="0,16,0,0">
+                <StackPanel Orientation="Horizontal" ToolTip="{StaticResource switchThreshold}">
+                    <Label Content="Switch Profitability Threshold:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                    <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                </StackPanel>
+                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchProfitabilityThreshold, Mode=TwoWay}" HorizontalAlignment="Left" Margin="0,0,24,0" />
+            </StackPanel>
         </WrapPanel>
-        <!--Miners TODO  add restart delay and API bind port. TODO add descriptions-->
+        <!-- NVIDIA/CUDA -->
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="wp_cuda">
+            <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.RunScriptOnCUDA_GPU_Lost}"
+                                        Label="Run script when CUDA GPU is lost"
+                                        Description="{StaticResource runScriptCUDAlost}"/>
+            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.NVIDIAP0State}"
+                                        Label="NVIDIA P0 State"
+                                        Description="{StaticResource nvidiaP0State}"/>
+            <WrapPanel Orientation="Horizontal">
+                <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.UseEthlargement}"
+                                        IsEnabled="{Binding EthlargementIntegratedPlugin.IsSystemElevated}"
+                                        Visibility="{Binding EthlargementIntegratedPlugin.SystemContainsSupportedDevices, Converter={StaticResource NulBoolToVisibilityConverter}, Mode=OneWay}"
+                                        Label="Run Ethlargement"
+                                        Description="{StaticResource useEthlargement}"/>
+                <TextBlock Style="{StaticResource AlertIcon}"
+                           Margin="12,0,0,0"
+                           Visibility="{Binding EthlargementIntegratedPlugin.IsSystemElevated, Converter={StaticResource NulBoolToVisibilityConverterFalse}, Mode=OneWay}"
+                           ToolTip="This feature requires Administrator privileges."/>
+            </WrapPanel>
+            
+        </WrapPanel>
+        <!--Miners-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical" >
             <Label Content="Miners" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="0,16,0,0">
+                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource minerRestartDelay}">
+                        <Label Content="Miner Restart Delay [ms]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                    </StackPanel>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.MinerRestartDelayMS, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,16,0,0">
+                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource apiBindStart}">
+                        <Label Content="API Bind port pool start:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                    </StackPanel>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.ApiBindPortPoolStart, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="0,16,0,16">
+                <StackPanel Orientation="Horizontal" ToolTip="{StaticResource apiQueryInterval}">
+                    <Label Content="Miner API Query Interval [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                    <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                </StackPanel>
+                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.MinerAPIQueryInterval, Mode=TwoWay}" HorizontalAlignment="Left" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+            </StackPanel>
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.HideMiningWindows}"
                                         Label="Hide Mining Windows"
-                                        />
+                                        Description="{StaticResource hideMiningWindows}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.MinimizeMiningWindows}"
-                                        Label="Enable Debug Console"
-                                        />
+                                        Label="Minimize Mining Windows"
+                                        Description="{StaticResource minimizeMiningWindows}"/>
         </WrapPanel>
     </StackPanel>
 </UserControl>

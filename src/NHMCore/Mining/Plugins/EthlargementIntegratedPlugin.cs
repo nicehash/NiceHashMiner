@@ -1,4 +1,6 @@
 ﻿
+using NHMCore.Utils;
+
 namespace NHMCore.Mining.Plugins
 {
     public class EthlargementIntegratedPlugin : Ethlargement.Ethlargement
@@ -6,5 +8,7 @@ namespace NHMCore.Mining.Plugins
         public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();
 
         public override string PluginUUID => "Ethlargement";
+
+        public bool IsSystemElevated => Helpers.IsElevated;
     }
 }

@@ -1,14 +1,16 @@
-﻿<UserControl x:Class="NiceHashMiner.Views.Help.HelpItem"
+﻿<UserControl x:Class="NiceHashMiner.Views.Notifications.NotificationItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NiceHashMiner.Views.Help"
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Notifications"
+             xmlns:localConv="clr-namespace:NiceHashMiner.Views.Notifications.Converters"
              xmlns:nhmMining="clr-namespace:NHMCore.Notifications;assembly=NHMCore"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=nhmMining:Notification}">
     <UserControl.Resources>
+        <localConv:NewVisibilityConverter x:Key="NewVisibilityConv" />
         <Style TargetType="TextBlock" x:Key="local.DefaultTextBlock" >
             <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
@@ -24,8 +26,11 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <WrapPanel Grid.Row="0">
-                <TextBlock x:Name="itemErrorTitle" Text="{Binding Name}" Style="{StaticResource local.DefaultTextBlock}" FontSize="14"/>
+            <WrapPanel Grid.Row="0" Orientation="Horizontal" >
+                <TextBlock x:Name="itemErrorTitle" Text="{Binding Name}" Style="{StaticResource local.DefaultTextBlock}" FontSize="14" VerticalAlignment="Center"/>
+                <Border Width="41" Height="24" Margin="15,0,0,0" Background="{StaticResource Brushes.Light.Basic.NoticeColor}" Visibility="{Binding NotificationNew, Converter={StaticResource NewVisibilityConv}}" CornerRadius="2">
+                    <TextBlock Text="NEW" Style="{StaticResource FontsTypography.Button-White-Small}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
             </WrapPanel>
             <WrapPanel Grid.Row="1" Margin="4,4,0,0">
                 <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>

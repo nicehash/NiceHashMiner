@@ -21,6 +21,17 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
+        public static void CreateEthlargementElevateInfo()
+        {
+            var notification = new Notification(NotificationsType.Info, Tr("Ethlargement-Pill Settings Insufficient Permissions"), Tr("Run Ethlargement settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
+            notification.Actions.Add(new NotificationAction
+            {
+                Info = "Run As Administrator",
+                Action = () => { RunAsAdmin.SelfElevate(); }
+            });
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
         public static void CreateConnectionLostInfo()
         {
             var notification = new Notification(NotificationsType.Error, Tr("Check internet connection"), Tr("NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner."));
@@ -78,12 +89,6 @@ namespace NHMCore.Notifications
                 Info = "Restart NiceHash Miner",
                 Action = () => { ApplicationStateManager.RestartProgram(); }
             });
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
-        public static void CreateFailedRamCheckInfo()
-        {
-            var notification = new Notification(NotificationsType.Info, Tr("Ram warning"), Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -196,7 +201,7 @@ namespace NHMCore.Notifications
 
         public static void CreateIncreaseVirtualMemoryInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, Tr("Increase virtual memory"), Tr("Would you like to increase virtual memory?"));
+            var notification = new Notification(NotificationsType.Warning, Tr("Increase virtual memory"), Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine. Would you like to increase virtual memory?"));
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Help",

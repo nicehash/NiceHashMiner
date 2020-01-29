@@ -121,9 +121,11 @@ namespace NiceHashMiner.ViewModels
         public WarningSettings WarningSettings => WarningSettings.Instance;
 
         public UpdateSettings UpdateSettings => UpdateSettings.Instance;
+
+        public EthlargementIntegratedPlugin EthlargementIntegratedPlugin => EthlargementIntegratedPlugin.Instance;
         #endregion Exposed settings
 
-        
+
         #region HelpNotifications
         private ObservableCollection<Notification> _helpNotificationList;
         public ObservableCollection<Notification> HelpNotificationList

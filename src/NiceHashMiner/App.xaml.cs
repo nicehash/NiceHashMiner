@@ -44,6 +44,8 @@ namespace NiceHashMiner
                 });
             };
             var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
+            Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
+            Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
             Launcher.SetIsLauncher(isLauncher);
             // Set working directory to exe
             var pathSet = false;
@@ -52,7 +54,7 @@ namespace NiceHashMiner
             {
                 if (isLauncher)
                 {
-                    var oneUpPath = Path.Combine(path, @"..\");
+                    var oneUpPath = new Uri(Path.Combine(path, @"..\")).LocalPath;
                     Paths.SetRoot(oneUpPath);
                     Paths.SetAppRoot(path);
                     // TODO this might be problematic

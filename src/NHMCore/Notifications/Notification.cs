@@ -42,6 +42,17 @@ namespace NHMCore.Notifications
             }
         }
 
+        private bool _notificationNew { get; set; }
+        public bool NotificationNew
+        {
+            get => _notificationNew;
+            set
+            {
+                _notificationNew = value;
+                OnPropertyChanged(nameof(NotificationNew));
+            }
+        }
+
         private string _notificationContent { get; set; }
         public string NotificationContent
         {

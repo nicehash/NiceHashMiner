@@ -26,7 +26,7 @@ namespace NiceHashMiner.Views.Common.NHBase
             PluginsButton,
             SettingsButton,
             NotificationsButton,
-            HelpButton,
+            //HelpButton,
         };
 
         private ToggleButtonType? _lastSelected;
@@ -73,8 +73,11 @@ namespace NiceHashMiner.Views.Common.NHBase
             base.OnApplyTemplate();
         }
 
+        private bool _isModalDialog = false;
+
         private void _gridLayoutRootOverlay_MouseDown(object sender, MouseEventArgs e)
         {
+            if (_isModalDialog) return;
             _gridLayoutRootOverlay.Visibility = Visibility.Hidden;
         }
 
@@ -114,8 +117,16 @@ namespace NiceHashMiner.Views.Common.NHBase
             }
         }
 
-        public void ShowContentAsModal(UserControl userControl)
+        public void ShowContentAsDialog(UserControl userControl)
         {
+            _isModalDialog = false;
+            _contentPresenter.Content = userControl;
+            _gridLayoutRootOverlay.Visibility = Visibility.Visible;
+        }
+
+        public void ShowContentAsModalDialog(UserControl userControl)
+        {
+            _isModalDialog = true;
             _contentPresenter.Content = userControl;
             _gridLayoutRootOverlay.Visibility = Visibility.Visible;
         }
@@ -123,6 +134,25 @@ namespace NiceHashMiner.Views.Common.NHBase
         public void HideModal()
         {
             _gridLayoutRootOverlay.Visibility = Visibility.Hidden;
+            _isModalDialog = false;
+        }
+
+        public void SetNotificationCount(int count)
+        {
+            var notificationButton = GetRequiredTemplateChild<ToggleButton>("NotificationsButton");
+            if(notificationButton != null)
+            {
+                if(count == 0)
+                {
+                    notificationButton.Style = this.FindResource("bellWindowStyle") as Style;
+                    notificationButton.Content = "\uf0f3";
+                }
+                else
+                {
+                    notificationButton.Style = this.FindResource("local.WindowTabButtonNotification") as Style;
+                    notificationButton.Content = count >= 100 ? ":D" : count.ToString();
+                }
+            }
         }
 
     }

@@ -34,9 +34,6 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="Normal" />
         </Style>
-
-        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
-        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
         <converters:TranslatingConverter x:Key="TrConv" />
         <converters:StatusColorConverter x:Key="StatusConv" />
         <local:DeviceStatusVisibilityConverter x:Key="DeviceStatusVisibilityConverter" />

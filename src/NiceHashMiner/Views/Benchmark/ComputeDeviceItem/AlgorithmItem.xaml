@@ -4,15 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
-             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
              xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore"
              mc:Ignorable="d" 
              d:DesignHeight="40" d:DesignWidth="720"
              d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
     <UserControl.Resources>
-        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
-        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
-        
         <local:AlgorithmItemStatusStyleConverter x:Key="AlgorithmItemStatusStyleConverter" />
         <local:AlgorithmItemSpeedsConverter x:Key="AlgorithmItemSpeedsConverter" />
         <local:AlgorithmItemStatusVisibilityConverter x:Key="AlgorithmItemStatusVisibilityConverter" />

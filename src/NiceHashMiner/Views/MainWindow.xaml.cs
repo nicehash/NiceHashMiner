@@ -9,6 +9,9 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using NHMCore.Utils;
+using System.Diagnostics;
+using NHMCore.Notifications;
 
 namespace NiceHashMiner.Views
 {
@@ -31,6 +34,8 @@ namespace NiceHashMiner.Views
             LoadingBar.Visibility = Visibility.Visible;
             Topmost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
             CustomDialogManager.MainWindow = this;
+            SetBurnCalledAction();
+            SetNoDeviceAction();
         }
 
         private void GUISettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -45,8 +50,81 @@ namespace NiceHashMiner.Views
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             ThemeSetterManager.SetThemeSelectedThemes();
+            UpdateHelpers.OnAutoUpdate = () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var nhmUpdatedrDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("NiceHash Miner Starting Update"),
+                        Description = Translations.Tr("NiceHash Miner auto updater in progress."),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed,
+                        OkVisible = Visibility.Collapsed,
+                    };
+                    ShowContentAsModalDialog(nhmUpdatedrDialog);
+                });
+            };
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
+            NotificationsManager.Instance.PropertyChanged += Instance_PropertyChanged;
+            SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
+        }
+
+        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(nameof(NotificationsManager.NotificationNewCount) == e.PropertyName)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
+                });
+            }
+        }
+
+        public void SetBurnCalledAction()
+        {
+            ApplicationStateManager.BurnCalledAction = () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var nhmBurnDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("Burn Error!"),
+                        Description = Translations.Tr("Error during burn"),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed
+                    };
+                    nhmBurnDialog.OnExit += (s,e) => {
+                        ApplicationStateManager.ExecuteApplicationExit();
+                    };
+                    ShowContentAsModalDialog(nhmBurnDialog);
+                });
+            };
+        }
+
+        public void SetNoDeviceAction()
+        {
+            ApplicationStateManager.NoDeviceAction = () =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var nhmNoDeviceDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("No Supported Devices"),
+                        Description = Translations.Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
+                        OkText = Translations.Tr("OK"),
+                        CancelText = Translations.Tr("Cancel"),
+                    };
+                    nhmNoDeviceDialog.OKClick += (s, e) => {
+                        Process.Start(Links.NhmNoDevHelp);
+                    };
+                    nhmNoDeviceDialog.OnExit += (s, e) => {
+                        ApplicationStateManager.ExecuteApplicationExit();
+                    };
+                    ShowContentAsModalDialog(nhmNoDeviceDialog);
+                });
+            };
         }
 
         // just in case we add more awaits this signature will await all of them
@@ -67,6 +145,29 @@ namespace NiceHashMiner.Views
                     var tdpWindow = new TDPSettingsWindow();
                     tdpWindow.DataContext = _vm;
                     tdpWindow.Show();
+                }
+                if (Launcher.IsUpdated)
+                {
+                    var nhmUpdatedDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("NiceHash Miner Updated"),
+                        Description = Translations.Tr("Completed NiceHash Miner auto update."),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed
+                    };
+                    ShowContentAsModalDialog(nhmUpdatedDialog);
+                }
+
+                if (Launcher.IsUpdatedFailed)
+                {
+                    var nhmUpdatedDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("NiceHash Miner Autoupdate Failed"),
+                        Description = Translations.Tr("NiceHash Miner auto update failed to complete. Autoupdates are disabled until next miner launch."),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed
+                    };
+                    ShowContentAsModalDialog(nhmUpdatedDialog);
                 }
             }
         }

@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NiceHashMiner.Views.Plugins.PluginItem"
              xmlns:localConv="clr-namespace:NiceHashMiner.Views.Plugins.PluginItem.Converters"
-             xmlns:converters="clr-namespace:NiceHashMiner.Converters"
              xmlns:vmPlugins="clr-namespace:NiceHashMiner.ViewModels.Plugins"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -16,9 +15,6 @@
         <localConv:CompatibleVisibilityConverter x:Key="CompatibleVisibilityConverter" />
         <localConv:PluginItemButtonStyleConverter x:Key="PluginItemButtonStyleConverter" />
         <localConv:PluginItemVisibilityConverter x:Key="PluginItemVisibilityConverter" />
-
-        <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
-        <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
 
         <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxBase">
             <Setter Property="FontWeight" Value="Normal" />

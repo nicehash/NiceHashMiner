@@ -10,12 +10,6 @@ namespace NiceHashMiner.Views.Help
         public Help()
         {
             InitializeComponent();
-            //checkItems();
-        }
-
-        private void checkItems()
-        {
-            if (ic_NotificationsList.Items.Count == 0) ic_NotificationsList.Items.Add(new Label() { Content = "No new notifications" });
         }
     }
 }

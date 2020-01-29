@@ -13,7 +13,12 @@ namespace NiceHashMiner
         internal static NHMMainWindow MainWindow { get; set; }
         internal static void ShowDialog(UserControl userControl)
         {
-            MainWindow?.ShowContentAsModal(userControl);
+            MainWindow?.ShowContentAsDialog(userControl);
+        }
+
+        internal static void ShowModalDialog(UserControl userControl)
+        {
+            MainWindow?.ShowContentAsModalDialog(userControl);
         }
 
 

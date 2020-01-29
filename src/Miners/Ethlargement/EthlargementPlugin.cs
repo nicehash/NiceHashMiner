@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Ethlargement
 {
-    public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
+    public class Ethlargement : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
         public virtual string PluginUUID => "efd40691-618c-491a-b328-e7e020bda7a3";
 
@@ -45,7 +45,9 @@ namespace Ethlargement
 
         private static Dictionary<string, AlgorithmType> _devicesUUIDActiveAlgorithm = new Dictionary<string, AlgorithmType>();
 
-        private static bool ShouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => _supportedAlgorithms.Contains(kvp.Value));
+        private static bool ShouldRun => _devicesUUIDActiveAlgorithm.Any(kvp => _supportedAlgorithms.Contains(kvp.Value));
+
+        public bool SystemContainsSupportedDevices => _registeredSupportedDevices.Count > 0;
 
         private static object _startStopLock = new object();
 
@@ -53,7 +55,11 @@ namespace Ethlargement
         {
             lock (_startStopLock)
             {
-                if (IsServiceDisabled) return;
+                if (IsServiceDisabled)
+                {
+                    StopEthlargementProcess();
+                    return;
+                }
 
                 // check if any mining pair is supported and set current active 
                 var supportedUUIDs = _registeredSupportedDevices.Select(kvp => kvp.Key);
@@ -66,6 +72,7 @@ namespace Ethlargement
                     var algorithmType = pair.Algorithm.FirstAlgorithmType;
                     _devicesUUIDActiveAlgorithm[uuid] = algorithmType;
                 }
+
                 if (ShouldRun)
                 {
                     StartEthlargementProcess();
@@ -81,7 +88,11 @@ namespace Ethlargement
         {
             lock (_startStopLock)
             {
-                if (IsServiceDisabled) return;
+                if (IsServiceDisabled)
+                {
+                    StopEthlargementProcess();
+                    return;
+                }
 
                 var stopAll = miningPairs == null;
                 // stop all
@@ -252,6 +263,7 @@ namespace Ethlargement
                 }
             }
             if (_ethlargementSettings.SupportedAlgorithms != null) _supportedAlgorithms = _ethlargementSettings.SupportedAlgorithms;
+            OnPropertyChanged(nameof(SystemContainsSupportedDevices));
         }
 
         protected SupportedDevicesSettings _ethlargementSettings = new SupportedDevicesSettings

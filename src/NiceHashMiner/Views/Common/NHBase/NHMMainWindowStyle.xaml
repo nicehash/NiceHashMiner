@@ -1,12 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:fa="http://schemas.fontawesome.io/icons/"
                     xmlns:local="clr-namespace:NiceHashMiner.Views.Common.NHBase">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="../../../Resources/Xaml/NHMLogos.xaml" />
-    </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="{x:Type Button}" x:Key="WindowButtonStyle">
+    <Style TargetType="{x:Type ButtonBase}" x:Key="WindowButtonStyle">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
@@ -38,6 +34,31 @@
                 <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="minimizeWindowStyle">
+        <Setter Property="Content" Value="&#xf2d1;" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+    
+    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="closeWindowStyle">
+        <Setter Property="Content" Value="&#xf00d;" />
+        <Setter Property="FontSize" Value="24" />
+    </Style>
+    
+    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="settingsWindowStyle">
+        <Setter Property="Content" Value="&#xf013;" />
+        <Setter Property="FontSize" Value="22" />
+    </Style>
+
+    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="bellWindowStyle">
+        <Setter Property="Content" Value="&#xf0f3;" />
+        <Setter Property="FontSize" Value="22" />
+    </Style>
+
+    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="infoWindowStyle">
+        <Setter Property="Content" Value="&#xf05a;" />
+        <Setter Property="FontSize" Value="22" />
     </Style>
 
     <Style TargetType="{x:Type ToggleButton}" x:Key="local.WindowTabButtonStyle2">
@@ -73,6 +94,49 @@
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type ToggleButton}" x:Key="local.WindowTabButtonNotification">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True"
+                            Width="20"
+                            Height="20"
+                            CornerRadius="10">
+                        <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource Brushes.Light.Basic.NoticeColor}"/>
+        <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}"/>
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -155,10 +219,10 @@
                                             <TextBlock Text="Plugins" />
                                         </ToggleButton>
                                     </StackPanel>
-                                
+
                                 </TextBlock>
 
-                                
+
 
                                 <Grid x:Name="WindowControlsGrid"
                                       Grid.Column="2"
@@ -168,39 +232,31 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
+                                        <!--<ColumnDefinition Width="Auto"/>-->
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <ToggleButton x:Name="SettingsButton" Style="{StaticResource local.WindowTabButtonStyle2}"
-                                            fa:Awesome.Content="Gear" 
-                                            TextElement.FontSize="22"
+                                    <ToggleButton x:Name="SettingsButton" Style="{StaticResource settingsWindowStyle}"
                                             Grid.Column="0"
                                             Margin="0,0,15,0"/>
                                     
-                                    <ToggleButton x:Name="NotificationsButton" Style="{StaticResource local.WindowTabButtonStyle2}"
-                                            fa:Awesome.Content="Bell" 
-                                            TextElement.FontSize="20"
+                                    <!--<ToggleButton x:Name="NotificationsButton" Style="{DynamicResource local.WindowTabButtonNotification}"-->
+                                     <ToggleButton x:Name="NotificationsButton" Style="{DynamicResource bellWindowStyle}"
                                             Grid.Column="1"
                                             Margin="0,0,14,0"/>
 
-                                    <ToggleButton x:Name="HelpButton" Style="{StaticResource local.WindowTabButtonStyle2}"
-                                            fa:Awesome.Content="QuestionCircle" 
-                                            TextElement.FontSize="22"
+                                    <!--<ToggleButton x:Name="HelpButton" Style="{StaticResource infoWindowStyle}"
+                                            Visibility="Collapsed"
                                             Grid.Column="2"
-                                            Margin="0,0,14,0"/>
+                                            Margin="0,0,14,0"/>-->
 
-                                    <Button x:Name="MinimizeButton" Style="{StaticResource WindowButtonStyle}"
-                                            fa:Awesome.Content="WindowMinimize" 
-                                            TextElement.FontSize="16"
-                                            Grid.Column="3"
+                                    <Button x:Name="MinimizeButton" Style="{StaticResource minimizeWindowStyle}"
+                                            Grid.Column="2"
                                             Margin="0,0,15,0"/>
 
-                                    <Button x:Name="CloseButton" Style="{StaticResource WindowButtonStyle}"
-                                            fa:Awesome.Content="Times"
-                                            TextElement.FontSize="24"
-                                            Grid.Column="4">
+                                    <Button x:Name="CloseButton" Style="{StaticResource closeWindowStyle}"
+                                            Grid.Column="3">
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -225,7 +281,7 @@
                         <Grid x:Name="LayoutRootOverlay"
                               Panel.ZIndex="1" Background="#3A3939" Opacity="0.8"></Grid>-->
                     </Grid>
-
+                    
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
