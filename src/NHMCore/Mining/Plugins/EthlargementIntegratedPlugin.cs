@@ -10,5 +10,12 @@ namespace NHMCore.Mining.Plugins
         public override string PluginUUID => "Ethlargement";
 
         public bool IsSystemElevated => Helpers.IsElevated;
+        public bool SystemContainsSupportedDevicesNotSystemElevated => SystemContainsSupportedDevices && !Helpers.IsElevated;
+
+        public override void InitInternals()
+        {
+            base.InitInternals();
+            OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
+        }
     }
 }

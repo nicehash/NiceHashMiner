@@ -237,7 +237,7 @@ namespace Ethlargement
 
         #region Internal settings
 
-        public void InitInternals()
+        public virtual void InitInternals()
         {
             // set ethlargement path
             _ethlargementBinPath = EthlargementBinPath();

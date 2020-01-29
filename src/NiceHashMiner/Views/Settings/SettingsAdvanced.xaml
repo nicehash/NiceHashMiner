@@ -146,7 +146,7 @@
                                         Description="{StaticResource useEthlargement}"/>
                 <TextBlock Style="{StaticResource AlertIcon}"
                            Margin="12,0,0,0"
-                           Visibility="{Binding EthlargementIntegratedPlugin.IsSystemElevated, Converter={StaticResource NulBoolToVisibilityConverterFalse}, Mode=OneWay}"
+                           Visibility="{Binding EthlargementIntegratedPlugin.SystemContainsSupportedDevicesNotSystemElevated, Converter={StaticResource NulBoolToVisibilityConverter}, Mode=OneWay}"
                            ToolTip="This feature requires Administrator privileges."/>
             </WrapPanel>
             
