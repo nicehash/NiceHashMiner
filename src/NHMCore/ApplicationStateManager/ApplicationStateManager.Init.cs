@@ -91,6 +91,11 @@ namespace NHMCore
                     AvailableNotifications.CreateEthlargementElevateInfo();
                 }
 
+                if(DeviceDetection.DetectionResult.IsDCHDriver && !DeviceDetection.DetectionResult.IsNvmlFallback)
+                {
+                    AvailableNotifications.CreateNVMLFallbackFailInfo();
+                }
+
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
                 var index = 0;

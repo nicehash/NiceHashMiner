@@ -257,5 +257,11 @@ namespace NHMCore.Notifications
                 NotificationsManager.Instance.AddNotificationToList(notification);
             }
         }
+
+        public static void CreateNVMLFallbackFailInfo()
+        {
+            var notification = new Notification(NotificationsType.Error, Tr("Failed NVML fallback"), Tr($"NiceHash Miner has detected that DCH drivers are installed and NVML fallback method has failed. Please fix your non-DCH driver install."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }
