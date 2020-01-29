@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LolMinerBeam
+namespace LolMiner
 {
     [Serializable]
     internal class Session

@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LolMinerBeam
+namespace LolMiner
 {
-    public partial class LolMinerBeamPlugin : PluginBase, IDevicesCrossReference
+    public partial class LolMinerPlugin : PluginBase, IDevicesCrossReference
     {
-        public LolMinerBeamPlugin()
+        public LolMinerPlugin()
         {
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
@@ -37,7 +37,7 @@ namespace LolMinerBeam
             };
         }
 
-        public override Version Version => new Version(7, 0);
+        public override Version Version => new Version(7, 1);
 
         public override string Name => "lolMiner";
 
@@ -88,7 +88,7 @@ namespace LolMinerBeam
 
         protected override MinerBase CreateMinerBase()
         {
-            return new LolMinerBeam(PluginUUID, _mappedDeviceIds);
+            return new LolMiner(PluginUUID, _mappedDeviceIds);
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)

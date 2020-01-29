@@ -2,7 +2,7 @@
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using System.Collections.Generic;
 
-namespace LolMinerBeam
+namespace LolMiner
 {
     internal static class PluginInternalSettings
     {

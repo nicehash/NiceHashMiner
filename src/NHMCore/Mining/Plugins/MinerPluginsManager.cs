@@ -102,8 +102,8 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_ZEnemy_PLUGIN
                 new ZEnemy.ZEnemyPlugin(),
 #endif
-#if INTEGRATE_LolMinerBeam_PLUGIN
-                new LolMinerBeam.LolMinerBeamPlugin(),
+#if INTEGRATE_LolMiner_PLUGIN
+                new LolMiner.LolMinerPlugin(),
 #endif
 //#if INTEGRATE_SRBMiner_PLUGIN
 //                new SRBMiner.SRBMinerPlugin(),
