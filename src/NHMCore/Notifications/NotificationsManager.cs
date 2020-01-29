@@ -59,22 +59,6 @@ namespace NHMCore.Notifications
             return ok;
         }
 
-        // TODO use this instead RemoveNotificationFromList, deterministic keys
-        public bool RemoveNotificationFromList(string notificationName)
-        {
-            var ok = false;
-            lock (_lock)
-            {
-                var removedNotification = _notifications.Where(notification => notification.Name == notificationName).FirstOrDefault();
-                ok = _notifications.Remove(removedNotification);
-                if (removedNotification != null) removedNotification.PropertyChanged -= Notification_PropertyChanged;
-            }
-            OnPropertyChanged(nameof(Notifications));
-            OnPropertyChanged(nameof(NotificationNewCount));
-            return ok;
-        }
-
-
         private int _notificationNewCount { get; set; }
         public int NotificationNewCount
         {
