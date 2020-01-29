@@ -2,6 +2,7 @@
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using static NHMCore.Translations;
 
@@ -171,11 +172,18 @@ namespace NHMCore.Notifications
 
         public static void CreateEnableComputeModeAMDInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, Tr("Swith compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode?"));
+            // TODO check/fix this functionality
+            //var notification = new Notification(NotificationsType.Warning, Tr("Switch compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode?"));
+            //notification.Actions.Add(new NotificationAction
+            //{
+            //    Info = "Switch modes",
+            //    Action = () => { AmdModeSwitcher.SwitchAmdComputeMode(); }
+            //});
+            var notification = new Notification(NotificationsType.Warning, Tr("Switch compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode for optimized profit?"));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Switch modes",
-                Action = () => { AmdModeSwitcher.SwitchAmdComputeMode(); }
+                Info = "Help",
+                Action = () => { Process.Start(Links.AMDComputeModeHelp_PRODUCTION); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -211,31 +219,41 @@ namespace NHMCore.Notifications
         public static void CreateUnavailablePrimaryMarketLocationInfo()
         {
             //clear "market notifications"
-            NotificationsManager.Instance.RemoveNotificationFromList(Tr("Primary mining location unavailable"));
-            NotificationsManager.Instance.RemoveNotificationFromList(Tr("All mining locations unavailable"));
+            var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market);
+            foreach (var marketNotif in marketNotifications)
+            {
+                NotificationsManager.Instance.RemoveNotificationFromList(marketNotif);
+            }
 
-            var notification = new Notification(NotificationsType.Warning, Tr("Primary mining location unavailable"), Tr($"Primary mining location is unavailable. Switching to fallback location."));
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Market, Tr("Primary mining location unavailable"), Tr($"Primary mining location is unavailable. Switching to fallback location."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateUnavailableAllMarketsLocationInfo()
         {
             //clear "market notifications"
-            NotificationsManager.Instance.RemoveNotificationFromList(Tr("Primary mining location unavailable"));
+            var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market);
+            foreach (var marketNotif in marketNotifications)
+            {
+                NotificationsManager.Instance.RemoveNotificationFromList(marketNotif);
+            }
 
-            var notification = new Notification(NotificationsType.Warning, Tr("All mining locations unavailable"), Tr($"All mining locations are unavailable. Mining will be stopped."));
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Market, Tr("All mining locations unavailable"), Tr($"All mining locations are unavailable. Mining will be stopped."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateNotProfitableInfo(bool shouldClear)
         {
             // clear old state
-            NotificationsManager.Instance.RemoveNotificationFromList(Tr("Mining not profitable"));
+            var profitNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Profit);
+            foreach (var profitNotif in profitNotifications)
+            {
+                NotificationsManager.Instance.RemoveNotificationFromList(profitNotif);
+            }
 
             if (!shouldClear)
             {
-                NotificationsManager.Instance.RemoveNotificationFromList(Tr("Mining not profitable"));
-                var notification = new Notification(NotificationsType.Warning, Tr("Mining not profitable"), Tr($"Currently mining is not profitable. Mining will be stopped."));
+                var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Profit, Tr("Mining not profitable"), Tr($"Currently mining is not profitable. Mining will be stopped."));
                 NotificationsManager.Instance.AddNotificationToList(notification);
             }
         }

@@ -93,8 +93,11 @@ namespace NHMCore
             {
                 if (SelectedServiceLocationOperational)
                 {
-                    NotificationsManager.Instance.RemoveNotificationFromList(Translations.Tr("Primary mining location unavailable"));
-                    NotificationsManager.Instance.RemoveNotificationFromList(Translations.Tr("All mining locations unavailable"));
+                    var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market);
+                    foreach (var marketNotif in marketNotifications)
+                    {
+                        NotificationsManager.Instance.RemoveNotificationFromList(marketNotif);
+                    }
                     OnPropertyChanged(nameof(SelectedServiceLocation));
                 }
                 else if (EU_ServiceLocationOperational)
