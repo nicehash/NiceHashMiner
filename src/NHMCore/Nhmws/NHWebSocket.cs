@@ -168,7 +168,7 @@ namespace NHMCore.Nhmws
                 _notifyMinerStatusAfter.Value = null;
 
                 NHLog.Info("NHWebSocket", "Creating socket");
-                using (_webSocket = new WebSocket(_address, true))
+                using (_webSocket = new WebSocket(_address))
                 {
                     //stop.Register(() => _webSocket.Close(CloseStatusCode.Normal, "Closing CancellationToken"));
                     _webSocket.OnOpen += Login;
