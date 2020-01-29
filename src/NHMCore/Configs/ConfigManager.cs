@@ -124,7 +124,7 @@ namespace NHMCore.Configs
                 { "\"PluginUUID\": \"Ewbf\",", "\"PluginUUID\": \"f7d5dfa0-7236-11e9-b20c-f9f12eb6d835\"," },
                 { "\"PluginUUID\": \"ExamplePlugin\",", "\"PluginUUID\": \"455c4d98-a45d-45d6-98ca-499ce866b2c7\"," },
                 { "\"PluginUUID\": \"GMinerCuda9.0+\",", "\"PluginUUID\": \"1b7019d0-7237-11e9-b20c-f9f12eb6d835\"," },
-                { "\"PluginUUID\": \"LolMinerBeam\",", "\"PluginUUID\": \"435f0820-7237-11e9-b20c-f9f12eb6d835\"," },
+                { "\"PluginUUID\": \"LolMiner\",", "\"PluginUUID\": \"435f0820-7237-11e9-b20c-f9f12eb6d835\"," },
                 { "\"PluginUUID\": \"MiniZ\",", "\"PluginUUID\": \"59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4\"," },
                 { "\"PluginUUID\": \"NanoMiner\",", "\"PluginUUID\": \"a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4\"," },
                 { "\"PluginUUID\": \"NBMiner\",", "\"PluginUUID\": \"6c07f7a0-7237-11e9-b20c-f9f12eb6d835\"," },
