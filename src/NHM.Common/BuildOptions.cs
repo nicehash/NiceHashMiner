@@ -20,33 +20,40 @@ namespace NHM.Common
 
         static BuildOptions()
         {
-            var jsonSettings = new JsonSerializerSettings
+            try
             {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore,
-                Culture = CultureInfo.InvariantCulture
-            };
-            bool isSettingsLoaded = false;
-            const string customSettingsFile = "build_settings.json";
-            if (File.Exists(customSettingsFile))
-            {
-                var customSettings = JsonConvert.DeserializeObject<BuildOptionSettings>(File.ReadAllText(customSettingsFile), jsonSettings);
-                if (customSettings != null)
+                var jsonSettings = new JsonSerializerSettings
                 {
-                    isSettingsLoaded = true;
-                    BUILD_TAG = customSettings.BUILD_TAG;
-                    IS_PLUGINS_TEST_SOURCE = customSettings.IS_PLUGINS_TEST_SOURCE;
-                    CUSTOM_ENDPOINTS_ENABLED = customSettings.CUSTOM_ENDPOINTS_ENABLED;
-                    FORCE_MINING = customSettings.FORCE_MINING;
-                    FORCE_PROFITABLE = customSettings.FORCE_PROFITABLE;
-                    SHOW_TDP_SETTINGS = customSettings.SHOW_TDP_SETTINGS;
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    Culture = CultureInfo.InvariantCulture
+                };
+                bool isSettingsLoaded = false;
+                string customSettingsFile = Paths.RootPath("build_settings.json");
+                if (File.Exists(customSettingsFile))
+                {
+                    var customSettings = JsonConvert.DeserializeObject<BuildOptionSettings>(File.ReadAllText(customSettingsFile), jsonSettings);
+                    if (customSettings != null)
+                    {
+                        isSettingsLoaded = true;
+                        BUILD_TAG = customSettings.BUILD_TAG;
+                        IS_PLUGINS_TEST_SOURCE = customSettings.IS_PLUGINS_TEST_SOURCE;
+                        CUSTOM_ENDPOINTS_ENABLED = customSettings.CUSTOM_ENDPOINTS_ENABLED;
+                        FORCE_MINING = customSettings.FORCE_MINING;
+                        FORCE_PROFITABLE = customSettings.FORCE_PROFITABLE;
+                        SHOW_TDP_SETTINGS = customSettings.SHOW_TDP_SETTINGS;
+                    }
+                }
+                if (!isSettingsLoaded)
+                {
+                    // create defaults
+                    var defaultCustomSettings = new BuildOptionSettings { };
+                    File.WriteAllText(customSettingsFile, JsonConvert.SerializeObject(defaultCustomSettings, Formatting.Indented));
                 }
             }
-            if (!isSettingsLoaded)
+            catch (System.Exception e)
             {
-                // create defaults
-                var defaultCustomSettings = new BuildOptionSettings{};
-                File.WriteAllText(customSettingsFile, JsonConvert.SerializeObject(defaultCustomSettings, Formatting.Indented));
+                Logger.Error("BuildOptions", $"Constructor {e.Message}");
             }
         }
 
