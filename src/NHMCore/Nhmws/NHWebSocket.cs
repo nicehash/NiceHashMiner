@@ -171,6 +171,7 @@ namespace NHMCore.Nhmws
                 NHLog.Info("NHWebSocket", "Creating socket");
                 using (_webSocket = new WebSocket(_address))
                 {
+                    _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
                     //stop.Register(() => _webSocket.Close(CloseStatusCode.Normal, "Closing CancellationToken"));
                     _webSocket.OnOpen += Login;
                     _webSocket.OnMessage += (s, eMsg) => _recieveQueue.Enqueue(eMsg);
