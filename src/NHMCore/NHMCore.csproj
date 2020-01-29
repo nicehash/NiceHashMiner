@@ -314,9 +314,9 @@
       <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
       <Name>GMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\LolMinerBeam\LolMinerBeam.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_LolMinerBeam_PLUGIN'))">
-      <Project>{db7ac204-7b8c-4fa4-8d8c-dc133e534d8a}</Project>
-      <Name>LolMinerBeam</Name>
+    <ProjectReference Include="..\Miners\LolMiner\LolMiner.csproj">
+      <Project>{fbb69b33-8a14-4087-909c-f33791384d35}</Project>
+      <Name>LolMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
       <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>

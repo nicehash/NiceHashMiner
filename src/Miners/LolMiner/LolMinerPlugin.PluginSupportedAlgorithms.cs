@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
-namespace LolMinerBeam
+namespace LolMiner
 {
-    public partial class LolMinerBeamPlugin
+    public partial class LolMinerPlugin
     {
         const ulong AMD_8GBMemory = 7UL << 30; // 7GB but really 8GB
         internal static List<SAS> SupportedAMDAlgos()
