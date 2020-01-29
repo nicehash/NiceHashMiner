@@ -238,6 +238,8 @@ namespace NiceHashMiner
             }
             if (isUpdated) await Task.Delay(500);  // so we release the temp files
 
+            await WindowsUptimeCheck.DelayUptime();
+
             bool createdNew = false;
             try
             {

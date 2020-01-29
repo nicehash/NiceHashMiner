@@ -218,6 +218,7 @@
     <Compile Include="Utils\UpdateHelpers.cs" />
     <Compile Include="Utils\AmdModeSwitcher.cs" />
     <Compile Include="Utils\WindowsDefender.cs" />
+    <Compile Include="Utils\WindowsUptimeCheck.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
