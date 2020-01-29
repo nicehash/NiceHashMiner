@@ -1,8 +1,11 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore;
+using NHMCore.ApplicationState;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -144,8 +147,17 @@ namespace NiceHashMiner.ViewModels.Models
                 if (data != null)
                 {
                     DeviceMiningStats = data;
-                    // TODO this will not deduct power cost and no BTC scaling
-                    DeviceMiningStatsProfitability = data.TotalPayingRate().ToString("0.00000000") + " BTC";
+                    // in BTC
+                    var profitabilityWithCost = data?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0;
+                    if (GUISettings.Instance.AutoScaleBTCValues && profitabilityWithCost < 0.1)
+                    {
+                        var scaled = (profitabilityWithCost) * 1000;
+                        DeviceMiningStatsProfitability = $"{scaled:F5} mBTC";
+                    }
+                    else
+                    {
+                        DeviceMiningStatsProfitability = $"{(profitabilityWithCost):F8} BTC";
+                    }
                     // CryptoDredge / Equihash: 1740.77 Sol/s
                     var algoName = string.Join("+", data.Speeds.Select(s => s.type.ToString()));
                     var speedStr = Helpers.FormatSpeedOutput(data.Speeds);
