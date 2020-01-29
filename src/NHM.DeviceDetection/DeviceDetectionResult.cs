@@ -22,5 +22,6 @@ namespace NHM.DeviceDetection
 
         // AMD
         public IReadOnlyList<AMDDevice> AMDDevices { get; internal set; }
+        public bool IsOpenCLFallback { get; internal set; }
     }
 }

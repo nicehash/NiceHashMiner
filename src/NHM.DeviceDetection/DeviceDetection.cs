@@ -137,6 +137,7 @@ namespace NHM.DeviceDetection
                 Logger.Info(Tag, "DetectAMDDevices ZERO Found.");
                 return;
             }
+            DetectionResult.IsOpenCLFallback = AMD.AMDDetector.IsNVMLFallback;
             // log result
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("");
