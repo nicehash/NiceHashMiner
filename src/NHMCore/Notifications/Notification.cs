@@ -6,6 +6,7 @@ namespace NHMCore.Notifications
     public class Notification : NotifyChangedBase
     {
         public NotificationsType Type { get; } = NotificationsType.Info;
+        public NotificationsGroup Group { get; } = NotificationsGroup.Misc;
 
         public Notification(string name, string content)
         {
@@ -16,6 +17,14 @@ namespace NHMCore.Notifications
         public Notification(NotificationsType type, string name, string content)
         {
             Type = type;
+            Name = name;
+            NotificationContent = content;
+        }
+
+        public Notification(NotificationsType type, NotificationsGroup group, string name, string content)
+        {
+            Type = type;
+            Group = group;
             Name = name;
             NotificationContent = content;
         }

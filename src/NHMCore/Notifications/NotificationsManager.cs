@@ -45,17 +45,5 @@ namespace NHMCore.Notifications
             OnPropertyChanged(nameof(Notifications));
             return ok;
         }
-
-        public bool RemoveNotificationFromList(string notificationName)
-        {
-            var ok = false;
-            lock (_lock)
-            {
-                var removedNotification = _notifications.Where(notification => notification.Name == notificationName).FirstOrDefault();
-                ok = _notifications.Remove(removedNotification);
-            }
-            OnPropertyChanged(nameof(Notifications));
-            return ok;
-        }
     }
 }

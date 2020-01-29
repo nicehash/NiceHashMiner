@@ -178,6 +178,7 @@
     <Compile Include="Notifications\NotificationAction.cs" />
     <Compile Include="Notifications\INotificationBaseAction.cs" />
     <Compile Include="Notifications\Notification.cs" />
+    <Compile Include="Notifications\NotificationsGroup.cs" />
     <Compile Include="Notifications\NotificationsManager.cs" />
     <Compile Include="Notifications\NotificationsType.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
