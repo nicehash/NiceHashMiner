@@ -167,11 +167,18 @@ namespace NHMCore.Notifications
 
         public static void CreateEnableComputeModeAMDInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, Tr("Swith compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode?"));
+            // TODO check/fix this functionality
+            //var notification = new Notification(NotificationsType.Warning, Tr("Switch compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode?"));
+            //notification.Actions.Add(new NotificationAction
+            //{
+            //    Info = "Switch modes",
+            //    Action = () => { AmdModeSwitcher.SwitchAmdComputeMode(); }
+            //});
+            var notification = new Notification(NotificationsType.Warning, Tr("Switch compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode for optimized profit?"));
             notification.Actions.Add(new NotificationAction
             {
-                Info = "Switch modes",
-                Action = () => { AmdModeSwitcher.SwitchAmdComputeMode(); }
+                Info = "Help",
+                Action = () => { Process.Start(Links.AMDComputeModeHelp_PRODUCTION); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
