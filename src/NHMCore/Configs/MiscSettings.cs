@@ -66,5 +66,16 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(RunAtStartup));
             }
         }
+
+        private bool _disableVisualCRedistributableCheck = false;
+        public bool DisableVisualCRedistributableCheck
+        {
+            get => _disableVisualCRedistributableCheck;
+            set
+            {
+                _disableVisualCRedistributableCheck = value;
+                OnPropertyChanged(nameof(DisableVisualCRedistributableCheck));
+            }
+        }
     }
 }

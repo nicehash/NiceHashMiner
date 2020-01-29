@@ -44,6 +44,9 @@
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.ShowGPUPCIeBusIDs}"
                                         Label="Show GPU PCIe Bus IDs"
                                         Description="{StaticResource pcieBusIDs}"/>
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.DisableVisualCRedistributableCheck}"
+                                        Label="Disable Visual C++ Redistributable Check"
+                                        Description="{StaticResource Tooltip.DisableVisualCRedistributableCheck}"/>
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">

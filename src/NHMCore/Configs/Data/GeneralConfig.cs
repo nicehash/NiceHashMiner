@@ -291,6 +291,12 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.RunAtStartup;
             set => MiscSettings.Instance.RunAtStartup = value;
         }
+
+        public bool DisableVisualCRedistributableCheck
+        {
+            get => MiscSettings.Instance.DisableVisualCRedistributableCheck;
+            set => MiscSettings.Instance.DisableVisualCRedistributableCheck = value;
+        }
         #endregion MiscSettings
 
         #region Global Device settings
