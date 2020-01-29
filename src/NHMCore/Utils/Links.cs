@@ -29,6 +29,7 @@ namespace NHMCore.Utils
         //public const string Login_PRODUCTION = "NO_URL";
         public const string NhmPayingFaq_PRODUCTION = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
         public const string AMDComputeModeHelp_PRODUCTION = "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F";
+        public const string AddWDExclusionHelp_PRODUCTION = "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%3F";
 
         public static string VisitUrl
         {

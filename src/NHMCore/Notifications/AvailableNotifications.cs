@@ -158,13 +158,24 @@ namespace NHMCore.Notifications
 
         public static void CreateAddWindowsDefenderExceptionInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, Tr("Add Windows Defender Exception"), Tr("Would you like to add NiceHash Miner root folder to the Windows Defender exceptions?"));
+            var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, Tr("Add Windows Defender Exception Failed"), Tr("Adding exception to Windows Defender failed. Please check the help page."));
+            notificationIfUnsuccessfull.Actions.Add(new NotificationAction
+            {
+                Info = "Help",
+                Action = () => { Process.Start(Links.AddWDExclusionHelp_PRODUCTION); }
+            });
+
+            var notification = new Notification(NotificationsType.Info, Tr("Add Windows Defender Exception"), Tr("Would you like to add NiceHash Miner root folder to the Windows Defender exceptions?"));
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Add exception",
-                Action = () => {    
-                    WindowsDefender.AddException();
+                Action = () => {
+                    var ok = WindowsDefender.AddException();
                     NotificationsManager.Instance.RemoveNotificationFromList(notification);
+                    if (!ok)
+                    {
+                        NotificationsManager.Instance.AddNotificationToList(notificationIfUnsuccessfull);
+                    }
                 }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);

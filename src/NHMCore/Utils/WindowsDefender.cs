@@ -45,7 +45,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public static void AddException()
+        public static bool AddException()
         {
             try
             {
@@ -75,6 +75,7 @@ namespace NHMCore.Utils
                             userRegistryKey.SetValue("WindowsDefenderExclusion" + lastIndex, cwd);
                             Logger.Info("NICEHASH", "addDefenderException all OK");
                         }
+                        return true;
                     }
                 }
             }
@@ -82,6 +83,7 @@ namespace NHMCore.Utils
             {
                 Logger.Error("NICEHASH", $"AddDefenderException error: {ex.Message}");
             }
+            return false;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace AddWindowsDefenderExclusion
             using (var setRule = Process.Start(startInfo))
             {
                 setRule.WaitForExit();
+                Environment.ExitCode = setRule.ExitCode;
             }
         }
 
