@@ -10,6 +10,7 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -863,6 +864,40 @@ namespace NHMCore.Nhmws
             }
         }
 
+        private static void MinerReset(string level)
+        {
+            switch (level)
+            {
+                case "app burn":
+                    HandleBurn("MinerReset app burn called");
+                    break;
+                case "rig restart":
+                    _ = Task.Run(async () => {
+                        await Task.Delay(3*1000);
+                        var startInfo = new ProcessStartInfo
+                        {
+                            FileName = "shutdown",
+                            Arguments = "-r -f -t 0",
+                            CreateNoWindow = true,
+                            UseShellExecute = false
+                        };
+                        using (var reboot = Process.Start(startInfo))
+                        {
+                            reboot.WaitForExit();
+                        }
+                    });
+                    break;
+                //case "system dump":
+                //    // TOOD
+                //    break;
+                //case "benchmarks":
+                //    // TODO
+                //    break;
+                default:
+                    throw new RpcException($"RpcMessage MinerReset operation not supported for level '{level}'", ErrorCode.UnableToHandleRpc);
+            }
+        }
+
         #endregion RpcMessages
 
         static private async Task HandleRpcMessage(string method, string data)
@@ -915,6 +950,9 @@ namespace NHMCore.Nhmws
                         // TODO not supported atm
                         SetPowerMode((string)message.device, (TDPSimpleType)message.power_mode);
                         break;
+                    case "miner.reset":
+                        MinerReset((string)message.level);
+                        break;
                     default:
                         throw new RpcException($"RpcMessage operation not supported for method '{method}'", ErrorCode.UnableToHandleRpc);
                 }
@@ -965,6 +1003,7 @@ namespace NHMCore.Nhmws
                 case "mining.start":
                 case "mining.stop":
                 case "mining.set.power_mode":
+                case "miner.reset":
                     return true;
             }
             return false;
