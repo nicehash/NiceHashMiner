@@ -17,6 +17,7 @@
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
             <Setter Property="FontWeight" Value="500" />
             <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="TextBlock.LineHeight" Value="18" />
         </Style>
         <Style TargetType="{x:Type ToggleButton}" x:Key="local.TextBlockToggleButton">
@@ -64,13 +65,14 @@
             </Style.Resources>
         </Style>
     </UserControl.Resources>
-    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" Margin="6" Padding="12">
-        <Grid>
+    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" Margin="0" Padding="0">
+        <Grid Margin="16,0,16,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
+
+            <Grid Grid.Row="0" MinHeight="64" Height="Auto">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -81,7 +83,7 @@
                         <TextBlock Text="NEW" Style="{StaticResource FontsTypography.Button-White-Small}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                 </WrapPanel>
-                <StackPanel Grid.Column="1" Height="64" Background="Transparent" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" >
+                <WrapPanel Grid.Column="1" Background="Transparent" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <ToggleButton x:Name="InfoToggleButton"
                               Style="{StaticResource local.TextBlockToggleButton}"
                               Margin="0,0,16,0"
@@ -99,6 +101,7 @@
                         FontSize="10"
                         Padding="20,0,22,0"
                         HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
                         x:Name="RemoveButton" Click="RemoveNotification" Content="Remove" />
                     <Button Style="{StaticResource BigButtonPrimaryNotifications}"
                         MinWidth="88"
@@ -107,15 +110,15 @@
                         Padding="24,0,24,0"
                         HorizontalAlignment="Left"
                         x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="16,0,0,0" />
-                </StackPanel>
+                </WrapPanel>
             </Grid>
-            <Grid x:Name="notificationsDetailsGrid" Grid.Row="1" Visibility="Collapsed">
-                <StackPanel Orientation="Vertical">
+            <Grid x:Name="notificationsDetailsGrid" Grid.Row="1" Visibility="Collapsed" Margin="0,0,0,16">
+                <WrapPanel Orientation="Vertical">
                     <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource CheckBoxNormal}" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
                     <WrapPanel Margin="0,8,0,0">
                         <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>
                     </WrapPanel>
-                </StackPanel>
+                </WrapPanel>
             </Grid>
         </Grid>
     </Border>
