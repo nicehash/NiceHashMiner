@@ -2,6 +2,7 @@
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Utils;
+using System.Collections.Generic;
 
 namespace NHMCore.Configs
 {
@@ -44,6 +45,17 @@ namespace NHMCore.Configs
             {
                 _allowMultipleInstances = value;
                 OnPropertyChanged(nameof(AllowMultipleInstances));
+            }
+        }
+
+        private Dictionary<string, bool> _showNotification = new Dictionary<string, bool>();
+        public Dictionary<string, bool> ShowNotifications
+        {
+            get => _showNotification;
+            set
+            {
+                _showNotification = value;
+                OnPropertyChanged(nameof(ShowNotifications));
             }
         }
 

@@ -15,6 +15,7 @@ namespace NHM.DeviceDetection.AMD
     internal static class AMDDetector
     {
         private const string Tag = "AMDDetector";
+        public static bool IsOpenClFallback { get; private set; }
 
         // Ok so this is kinda stupid and probably should be split into OpenCL class but since we currently QueryOpenCLDevices inside AMD we will check for NVIDIA OpenCL backend only after AMD Query is finished
         public static List<OpenCLPlatform> Platforms { get; private set; } = null;
@@ -35,6 +36,7 @@ namespace NHM.DeviceDetection.AMD
                 Logger.Info(Tag, "Found duplicate devices. Trying fallback detection");
                 var openCLResult2 = await OpenCLDetector.TryQueryOpenCLDevicesAsyncFallback();
                 Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback RAW: '{openCLResult2.rawOutput}'");
+                IsOpenClFallback = true;
                 if (DuplicatedDevices(openCLResult2.parsed))
                 {
                     Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback has duplicate files as well... Taking filtering lower platform devices");

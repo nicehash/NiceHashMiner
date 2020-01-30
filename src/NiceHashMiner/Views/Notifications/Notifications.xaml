@@ -13,30 +13,19 @@
     <UserControl.Resources>
         <Style TargetType="TextBlock" x:Key="local.Defaulttext" >
             <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
-            <Setter Property="Foreground" Value="{DynamicResource  TextColorBrush}" />
-            <Setter Property="FontWeight" Value="500" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="TextBlock.LineHeight" Value="21" />
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="TextBlock.LineHeight" Value="18" />
         </Style>
     </UserControl.Resources>
-    <Grid Background="{DynamicResource BackgroundColor}" Width="Auto" Height="Auto">
-        <Border Margin="40,10,40,40" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+    <Grid Background="{DynamicResource BackgroundColor}" Width="Auto" Height="Auto" Margin="40,10,40,40">
             <Grid >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                <WrapPanel Grid.Row="0" Orientation="Vertical" Margin="12,8,0,0">
-                    <WrapPanel VerticalAlignment="Center">
-                        <TextBlock Text="Running local version: " Style="{DynamicResource local.Defaulttext}" />
-                        <TextBlock Text="{Binding LocalVersion}" Style="{StaticResource local.Defaulttext}"/>
-                    </WrapPanel>
-                    <WrapPanel>
-                        <TextBlock Text="Latest online version: " Style="{DynamicResource local.Defaulttext}"/>
-                        <TextBlock Text="{Binding OnlineVersion}" Style="{DynamicResource local.Defaulttext}" Margin="6,0,0,0"/>
-                    </WrapPanel>
-                </WrapPanel>
-                <Grid Grid.Row="1" Margin="0,20,0,0">
+                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
@@ -52,7 +41,16 @@
                         </ItemsControl>
                     </ScrollViewer>
                 </Grid>
+                <WrapPanel Grid.Row="1" Orientation="Horizontal" Margin="12,8,0,0">
+                    <WrapPanel VerticalAlignment="Center">
+                        <TextBlock Text="Running local version: " Style="{DynamicResource local.Defaulttext}" />
+                        <TextBlock Text="{Binding LocalVersion}" Style="{StaticResource local.Defaulttext}" />
+                    </WrapPanel>
+                    <WrapPanel Margin="16,0,0,0">
+                        <TextBlock Text="Latest online version: " Style="{DynamicResource local.Defaulttext}" />
+                        <TextBlock Text="{Binding OnlineVersion}" Style="{DynamicResource local.Defaulttext}" />
+                    </WrapPanel>
+                </WrapPanel>
             </Grid>
-        </Border>
     </Grid>
 </UserControl>

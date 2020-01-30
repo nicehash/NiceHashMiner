@@ -42,6 +42,17 @@ namespace NHMCore.Notifications
             }
         }
 
+        private string _notificationUUID { get; set; } = "";
+        public string NotificationUUID
+        {
+            get => _notificationUUID;
+            set
+            {
+                _notificationUUID = value;
+                OnPropertyChanged(nameof(NotificationUUID));
+            }
+        }
+
         private bool _notificationNew { get; set; }
         public bool NotificationNew
         {
