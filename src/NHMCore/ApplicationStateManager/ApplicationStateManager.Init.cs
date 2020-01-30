@@ -82,11 +82,18 @@ namespace NHMCore
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
 
+                if (DeviceDetection.DetectionResult.IsOpenClFallback)
+                {
+                    AvailableNotifications.CreateOpenClFallbackInfo();
+                }
                 if (DeviceDetection.DetectionResult.IsDCHDriver) 
                 {
                     AvailableNotifications.CreateWarningNVIDIADCHInfo();
                 }
-
+                if (DeviceDetection.DetectionResult.IsDCHDriver && !DeviceDetection.DetectionResult.IsNvmlFallback)
+                {
+                    AvailableNotifications.CreateNVMLFallbackFailInfo();
+                }
                 if (MiscSettings.Instance.UseEthlargement && !Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateEthlargementElevateInfo();

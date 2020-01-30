@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using NHM.Common;
+using System;
+using System.Windows.Controls;
 
 namespace NiceHashMiner.Views.Notifications
 {
@@ -15,13 +17,20 @@ namespace NiceHashMiner.Views.Notifications
         // TODO show icon for new notification
         private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            foreach(var item in ic_NotificationsList.ItemsSource)
+            try
             {
-                if(item is NHMCore.Notifications.Notification notification)
+                foreach (var item in ic_NotificationsList.ItemsSource)
                 {
-                    notification.NotificationNew = false;
+                    if (item is NHMCore.Notifications.Notification notification)
+                    {
+                        notification.NotificationNew = false;
+                    }
                 }
-            }   
+            }
+            catch(Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }           
         }
     }
 }

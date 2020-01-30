@@ -158,15 +158,27 @@ namespace NHMCore.Notifications
 
         public static void CreateAddWindowsDefenderExceptionInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, Tr("Add Windows Defender Exception"), Tr("Would you like to add NiceHash Miner root folder to the Windows Defender exceptions?"));
+            var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, Tr("Add Windows Defender Exception Failed"), Tr("Adding exception to Windows Defender failed. Please check the help page."));
+            notificationIfUnsuccessfull.Actions.Add(new NotificationAction
+            {
+                Info = "Help",
+                Action = () => { Process.Start(Links.AddWDExclusionHelp_PRODUCTION); }
+            });
+
+            var notification = new Notification(NotificationsType.Info, Tr("Add Windows Defender Exception"), Tr("Would you like to add NiceHash Miner root folder to the Windows Defender exceptions?"));
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Add exception",
-                Action = () => {    
-                    WindowsDefender.AddException();
+                Action = () => {
+                    var ok = WindowsDefender.AddException();
                     NotificationsManager.Instance.RemoveNotificationFromList(notification);
+                    if (!ok)
+                    {
+                        NotificationsManager.Instance.AddNotificationToList(notificationIfUnsuccessfull);
+                    }
                 }
             });
+            notification.NotificationUUID = "WindowsDefenderNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -185,6 +197,7 @@ namespace NHMCore.Notifications
                 Info = "Help",
                 Action = () => { Process.Start(Links.AMDComputeModeHelp_PRODUCTION); }
             });
+            notification.NotificationUUID = "AMDModeSwitchNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -196,6 +209,7 @@ namespace NHMCore.Notifications
                 Info = "Help",
                 Action = () => { Process.Start(Links.LargePagesHelp); }
             });
+            notification.NotificationUUID = "LargePagesNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -256,6 +270,18 @@ namespace NHMCore.Notifications
                 var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Profit, Tr("Mining not profitable"), Tr($"Currently mining is not profitable. Mining will be stopped."));
                 NotificationsManager.Instance.AddNotificationToList(notification);
             }
+        }
+
+        public static void CreateNVMLFallbackFailInfo()
+        {
+            var notification = new Notification(NotificationsType.Error, Tr("Failed NVML fallback"), Tr("NiceHash Miner has detected that DCH drivers are installed and NVML fallback method has failed. Please fix your non-DCH driver install."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateOpenClFallbackInfo()
+        {
+            var notification = new Notification(NotificationsType.Error, Tr("Fallback of OpenCL"), Tr("Please check if AMD drivers are installed properly. If they are please remove Intel video driver."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }
 }

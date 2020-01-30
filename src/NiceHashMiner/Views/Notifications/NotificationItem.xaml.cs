@@ -1,4 +1,5 @@
-﻿using NHMCore.Notifications;
+﻿using NHMCore.Configs;
+using NHMCore.Notifications;
 using System;
 using System.Linq;
 using System.Windows;
@@ -39,11 +40,43 @@ namespace NiceHashMiner.Views.Notifications
         private void RemoveNotification(object sender, RoutedEventArgs e)
         {
             _notification.RemoveNotification();
+            if (!string.IsNullOrEmpty(_notification.NotificationUUID))
+            {
+                MiscSettings.Instance.ShowNotifications.Remove(_notification.NotificationUUID);
+                MiscSettings.Instance.ShowNotifications.Add(_notification.NotificationUUID, DontShowAgainCheckBox?.IsChecked ?? false);
+                ConfigManager.GeneralConfigFileCommit();
+            }
         }
 
         private void ExecuteNotificationAction(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void InfoToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (InfoToggleButton.IsChecked.Value)
+            {
+                Expand();
+            }
+            else
+            {
+                Collapse();
+            }
+        }
+
+        private void Collapse()
+        {
+            notificationsDetailsGrid.Visibility = Visibility.Collapsed;
+            InfoToggleButton.IsChecked = false;
+            InfoToggleButtonText.Text = "More Info";
+        }
+
+        private void Expand()
+        {
+            notificationsDetailsGrid.Visibility = Visibility.Visible;
+            InfoToggleButton.IsChecked = true;
+            InfoToggleButtonText.Text = "Less Info";
         }
     }
 }
