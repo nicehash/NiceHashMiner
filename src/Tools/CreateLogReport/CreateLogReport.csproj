@@ -52,4 +52,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM copy device detection dll's. Copy only if files don't exist
+If NOT exist "$(SolutionDir)$(Configuration)\CreateLogReport.exe" copy /Y "$(SolutionDir)$(Configuration)\app\CreateLogReport.exe" "$(SolutionDir)$(Configuration)\CreateLogReport.exe"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
