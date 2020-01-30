@@ -15,7 +15,7 @@ namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
-        public static string RigID { get; } = UUID.GetDeviceB64UUID();
+        public static string RigID() => UUID.GetDeviceB64UUID();
 
         // change this if TOS changes
         public static int CurrentTosVer => 4;

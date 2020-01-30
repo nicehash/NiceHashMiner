@@ -307,7 +307,7 @@ namespace NHMCore.Nhmws
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
-            _login.rig = ApplicationStateManager.RigID;
+            _login.rig = ApplicationStateManager.RigID();
             if (btc != null) _login.btc = btc;
             if (worker != null) _login.worker = worker;
             if (group != null) _login.group = group;

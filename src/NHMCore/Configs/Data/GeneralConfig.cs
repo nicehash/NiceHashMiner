@@ -175,7 +175,7 @@ namespace NHMCore.Configs.Data
         }
         public string Hwid
         {
-            get => ToSSetings.Instance.Hwid;
+            get => ApplicationStateManager.RigID();
             set => ToSSetings.Instance.Hwid = value;
         }
         public int AgreedWithTOS

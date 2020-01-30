@@ -72,7 +72,7 @@ namespace NHMCore.Configs
         {
             // init defaults
             GeneralConfig.SetDefaults();
-            ToSSetings.Instance.Hwid = ApplicationStateManager.RigID;
+            ToSSetings.Instance.Hwid = ApplicationStateManager.RigID();
 
             var asmVersion = new Version(Application.ProductVersion);
 

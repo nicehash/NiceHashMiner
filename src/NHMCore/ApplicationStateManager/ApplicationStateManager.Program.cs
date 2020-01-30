@@ -43,7 +43,7 @@ namespace NHMCore
 
         public static void VisitMiningStatsPage()
         {
-            var urlLink = Links.CheckStatsRig.Replace("{RIG_ID}", RigID);
+            var urlLink = Links.CheckStatsRig.Replace("{RIG_ID}", RigID());
             Helpers.VisitUrlLink(urlLink);
         }
 

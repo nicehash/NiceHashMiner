@@ -22,7 +22,7 @@ namespace NHMCore
                 return DemoUser.BTC;
             }
             var btc = CredentialsSettings.Instance.BitcoinAddress.Trim();
-            return $"{btc}${RigID}";
+            return $"{btc}${RigID()}";
         }
 
         private static ConcurrentQueue<(ComputeDevice, DeviceState)> _scheduleUpdateDevicesToMineStates { get; set; } = new ConcurrentQueue<(ComputeDevice, DeviceState)>();

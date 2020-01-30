@@ -23,8 +23,10 @@ namespace NHM.UUID
             return b64Web;
         }
 
+        private static string _deviceB64UUID = null;
         public static string GetDeviceB64UUID(bool showInfoToHash = false)
         {
+            if (_deviceB64UUID != null) return _deviceB64UUID;
             var cpuSerial = GetCpuID();
             var macUUID = WindowsMacUtils.GetMAC_UUID();
             var guid = GetMachineGuidOrFallback();
@@ -37,7 +39,8 @@ namespace NHM.UUID
             }
             Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
             var hexUuid = GetHexUUID(infoToHash);
-            return $"{0}-{GetB64UUID(hexUuid)}";
+            _deviceB64UUID = $"{0}-{GetB64UUID(hexUuid)}";
+            return _deviceB64UUID;
         }
 
         public static string GetMachineGuidOrFallback()
