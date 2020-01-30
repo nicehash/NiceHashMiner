@@ -116,15 +116,15 @@ namespace LolMiner
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             if (ids.Count() == 0) return false;
-            if (benchmarkedPluginVersion.Major <= 7)
+            if (benchmarkedPluginVersion.Major <= 7 && ids.FirstOrDefault() == AlgorithmType.Cuckaroom)
             {
                 if (benchmarkedPluginVersion.Major == 7 && benchmarkedPluginVersion.Minor == 1) return false;
-                if (device.DeviceType == DeviceType.AMD && ids.FirstOrDefault() == AlgorithmType.Cuckaroom) return true;
+                if (device.DeviceType == DeviceType.AMD) return true;
             }
-            if(benchmarkedPluginVersion.Major <=7 )
+            if(benchmarkedPluginVersion.Major <=7 && ids.FirstOrDefault() == AlgorithmType.GrinCuckatoo32)
             {
                 if (benchmarkedPluginVersion.Major == 7 && benchmarkedPluginVersion.Minor == 2) return false;
-                if (device.DeviceType == DeviceType.AMD && device.Name.ToLower().Contains("navi") && ids.FirstOrDefault() == AlgorithmType.GrinCuckatoo32) return true;
+                if (device.DeviceType == DeviceType.AMD && device.Name.ToLower().Contains("navi")) return true;
             }
 
             return false;
