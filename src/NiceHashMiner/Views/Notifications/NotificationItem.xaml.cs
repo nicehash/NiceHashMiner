@@ -52,5 +52,31 @@ namespace NiceHashMiner.Views.Notifications
         {
 
         }
+
+        private void InfoToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (InfoToggleButton.IsChecked.Value)
+            {
+                Expand();
+            }
+            else
+            {
+                Collapse();
+            }
+        }
+
+        private void Collapse()
+        {
+            notificationsDetailsGrid.Visibility = Visibility.Collapsed;
+            InfoToggleButton.IsChecked = false;
+            InfoToggleButtonText.Text = "More Info";
+        }
+
+        private void Expand()
+        {
+            notificationsDetailsGrid.Visibility = Visibility.Visible;
+            InfoToggleButton.IsChecked = true;
+            InfoToggleButtonText.Text = "Less Info";
+        }
     }
 }

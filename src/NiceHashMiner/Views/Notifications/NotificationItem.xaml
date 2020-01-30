@@ -19,40 +19,104 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="TextBlock.LineHeight" Value="18" />
         </Style>
+        <Style TargetType="{x:Type ToggleButton}" x:Key="local.TextBlockToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}"/>
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                    <Setter Property="LineHeight" Value="1.5" />
+                    <Setter Property="TextAlignment" Value="Right" />
+                </Style>
+            </Style.Resources>
+        </Style>
     </UserControl.Resources>
     <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" Margin="6" Padding="12">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <WrapPanel Grid.Row="0" Orientation="Horizontal" >
-                <TextBlock x:Name="itemErrorTitle" Text="{Binding Name}" Style="{StaticResource local.DefaultTextBlock}" FontSize="14" VerticalAlignment="Center"/>
-                <Border Width="41" Height="24" Margin="15,0,0,0" Background="{StaticResource Brushes.Light.Basic.NoticeColor}" Visibility="{Binding NotificationNew, Converter={StaticResource NewVisibilityConv}}" CornerRadius="2">
-                    <TextBlock Text="NEW" Style="{StaticResource FontsTypography.Button-White-Small}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Border>
-            </WrapPanel>
-            <WrapPanel Grid.Row="1" Margin="4,4,0,0">
-                <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>
-            </WrapPanel>
-            <StackPanel Grid.Row="2" Height="64" Background="Transparent" Margin="0,10,40,0" Orientation="Horizontal">
-                    <Button Style="{StaticResource BigButtonWhite}"
-                        MinWidth="136"
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,0">
+                    <TextBlock x:Name="itemErrorTitle" Text="{Binding Name}" Style="{StaticResource local.DefaultTextBlock}" FontSize="14" VerticalAlignment="Center"/>
+                    <Border Width="41" Height="24" Margin="15,0,0,0" Background="{StaticResource Brushes.Light.Basic.NoticeColor}" Visibility="{Binding NotificationNew, Converter={StaticResource NewVisibilityConv}}" CornerRadius="2">
+                        <TextBlock Text="NEW" Style="{StaticResource FontsTypography.Button-White-Small}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </WrapPanel>
+                <StackPanel Grid.Column="1" Height="64" Background="Transparent" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" >
+                    <ToggleButton x:Name="InfoToggleButton"
+                              Style="{StaticResource local.TextBlockToggleButton}"
+                              Margin="0,0,16,0"
+                              Click="InfoToggleButton_Click"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center" >
+                        <TextBlock x:Name="InfoToggleButtonText"
+                                   Text="More Info"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Left"/>
+                    </ToggleButton>
+                    <Button Style="{StaticResource BigButtonWhiteNotifications}"
+                        MinWidth="88"
                         Width="Auto" Height="24"
                         FontSize="10"
-                        Padding="24,0,24,0"
+                        Padding="20,0,22,0"
                         HorizontalAlignment="Left"
                         x:Name="RemoveButton" Click="RemoveNotification" Content="Remove" />
-                <Button Style="{StaticResource BigButtonPrimary}"
-                        MinWidth="136"
+                    <Button Style="{StaticResource BigButtonPrimaryNotifications}"
+                        MinWidth="88"
                         Width="Auto" Height="24"
                         FontSize="10"
                         Padding="24,0,24,0"
                         HorizontalAlignment="Left"
-                        x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="10,0,0,0" />
-                <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource checkBoxNormal}" Margin="24,0,0,0" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
-            </StackPanel>
+                        x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="16,0,0,0" />
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="notificationsDetailsGrid" Grid.Row="1" Visibility="Collapsed">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource checkBoxNormal}" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
+                    <WrapPanel Margin="0,8,0,0">
+                        <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>
+                    </WrapPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
