@@ -82,7 +82,7 @@ namespace NHMCore
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
 
-                if (DeviceDetection.DetectionResult.IsOpenCLFallback)
+                if (DeviceDetection.DetectionResult.IsOpenClFallback)
                 {
                     AvailableNotifications.CreateOpenClFallbackInfo();
                 }

@@ -111,7 +111,7 @@
             </Grid>
             <Grid x:Name="notificationsDetailsGrid" Grid.Row="1" Visibility="Collapsed">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource checkBoxNormal}" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
+                    <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource CheckBoxNormal}" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
                     <WrapPanel Margin="0,8,0,0">
                         <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>
                     </WrapPanel>
