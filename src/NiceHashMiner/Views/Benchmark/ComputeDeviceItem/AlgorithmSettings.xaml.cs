@@ -172,5 +172,14 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 _algorithmContainer.IsReBenchmark = !_algorithmContainer.IsReBenchmark;
             }
         }
+
+        private void EnableOnlyThisAlgorithmClick(object sender, RoutedEventArgs e)
+        {
+            //_algorithmContainer.Enabled = true;
+            foreach (var algo in _algorithmContainer.ComputeDevice.AlgorithmSettings)
+            {
+                algo.Enabled = algo == _algorithmContainer;
+            }
+        }
     }
 }
