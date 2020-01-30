@@ -76,7 +76,8 @@
                         IconSource="../Resources/logo.ico">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Start (Placeholder)" />
+                    <MenuItem Header="Start All" Click="StartAllMenuItem_Click" x:Name="StartAllTaskbar" />
+                    <MenuItem Header="Stop All" Click="StopAllMenuItem_Click" x:Name="StopAllTaskbar" />
                     <Separator />
                     <MenuItem Header="Close" Click="CloseMenuItem_OnClick" />
                 </ContextMenu>
