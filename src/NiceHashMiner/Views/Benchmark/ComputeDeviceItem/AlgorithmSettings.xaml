@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
              xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore"
              mc:Ignorable="d" 
-             d:DesignHeight="789" d:DesignWidth="392"
+             d:DesignHeight="889" d:DesignWidth="392"
              d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
     <UserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="local.SettingTitle">
@@ -24,6 +24,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -102,6 +103,7 @@
                 <TextBlock Style="{StaticResource local.SettingDetail}" Text="{StaticResource scheduleBenchmarking}" TextWrapping="Wrap"/>
             </StackPanel>
         </ToggleButton>
-        <Separator Grid.Row="7" Background="{DynamicResource BorderColor}"/>
+        <Button Grid.Row="7" Style="{DynamicResource BigButtonPrimary}" Content="Enable only this Algorithm" Click="EnableOnlyThisAlgorithmClick" Margin="24" Height="40" />
+        <Separator Grid.Row="8" Background="{DynamicResource BorderColor}"/>
     </Grid>
 </UserControl>

@@ -18,6 +18,9 @@
         </Setter>
 
         <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity"  Value="0.25" />
+            </Trigger>
             <!--START-->
             <MultiTrigger>
                 <MultiTrigger.Conditions>

@@ -15,6 +15,7 @@ namespace NHMCore.ApplicationState
         private static readonly object _lock = new object();
         // we will have keys and true/false for benchmarks pending. 
         private static readonly Dictionary<string, bool> _algorithmsBenchmarksStates = new Dictionary<string, bool>();
+        private static readonly Dictionary<string, bool> _algorithmsCanStartStates = new Dictionary<string, bool>();
 
         private static string GetDeviceAlgorithmVersionKey(AlgorithmContainer algorithmContainer)
         {
@@ -31,15 +32,30 @@ namespace NHMCore.ApplicationState
             AlgorithmStatus.Benchmarking
         };
 
+        private static AlgorithmStatus[] _startStatuses = new AlgorithmStatus[6] {
+            AlgorithmStatus.NoBenchmark,
+            AlgorithmStatus.Benchmarked,
+            AlgorithmStatus.ReBenchmark,
+            AlgorithmStatus.BenchmarkPending,
+            AlgorithmStatus.Benchmarking,
+            AlgorithmStatus.Mining,
+        };
+
         private void SetStatus(AlgorithmContainer algorithmContainer)
         {
             lock (_lock)
             {
                 var key = GetDeviceAlgorithmVersionKey(algorithmContainer);
                 _algorithmsBenchmarksStates[key] = _benchmarkStatuses.Contains(algorithmContainer.Status) && algorithmContainer.ComputeDevice.Enabled;
+                _algorithmsCanStartStates[key] = _startStatuses.Contains(algorithmContainer.Status) && algorithmContainer.ComputeDevice.Enabled;
                 _benchmarksPending = _algorithmsBenchmarksStates.Values.Where(benchStatus => benchStatus).Count();
+                _canStartCount = _algorithmsCanStartStates.Values.Where(canStartStatus => canStartStatus).Count();
                 OnPropertyChanged(nameof(BenchmarksPending));
                 OnPropertyChanged(nameof(HasBenchmarkWork));
+                OnPropertyChanged(nameof(CanStart));
+                var anyToBench = _algorithmsBenchmarksStates.Where(benchStatus => benchStatus.Key.Contains(algorithmContainer.ComputeDevice.Uuid)).Where(pair => pair.Value).Count();
+                _deviceCanStartBenchmarkingStates[algorithmContainer.ComputeDevice.Uuid] = algorithmContainer.ComputeDevice.State == DeviceState.Stopped && anyToBench > 0;
+                OnPropertyChanged(nameof(CanStartBenchmarking));
             }
         }
 
@@ -50,6 +66,15 @@ namespace NHMCore.ApplicationState
             if (e.PropertyName == nameof(ComputeDevice.Enabled))
             {
                 foreach (var algorithmContainer in computeDevice.AlgorithmSettings) SetStatus(algorithmContainer);
+            }
+            if (e.PropertyName == nameof(ComputeDevice.State))
+            {
+                lock (_lock)
+                {
+                    var anyToBench = _algorithmsBenchmarksStates.Where(benchStatus => benchStatus.Key.Contains(computeDevice.Uuid)).Where(pair => pair.Value).Count();
+                    _deviceCanStartBenchmarkingStates[computeDevice.Uuid] = computeDevice.State == DeviceState.Stopped && anyToBench > 0;
+                    OnPropertyChanged(nameof(CanStartBenchmarking));
+                }
             }
         }
 
@@ -64,6 +89,8 @@ namespace NHMCore.ApplicationState
         }
 
         private int _benchmarksPending = 0;
+        private int _canStartCount = 0;
+        private Dictionary<string, bool> _deviceCanStartBenchmarkingStates = new Dictionary<string, bool>();
 
         private BenchmarkPerformanceType _selectedBenchmarkType = BenchmarkPerformanceType.Standard;
         public BenchmarkPerformanceType SelectedBenchmarkType
@@ -107,6 +134,28 @@ namespace NHMCore.ApplicationState
             }
         }
 
+        public bool CanStart
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _canStartCount > 0;
+                }
+            }
+        }
+
+        public bool CanStartBenchmarking
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _deviceCanStartBenchmarkingStates.Any(canStart => canStart.Value);
+                }
+            }
+        }
+
         internal void AddAlgorithmContainer(AlgorithmContainer algorithmContainer)
         {
             lock (_lock)
@@ -123,9 +172,15 @@ namespace NHMCore.ApplicationState
                 algorithmContainer.PropertyChanged -= AlgorithmContainerOnPropertyChanged;
                 var key = GetDeviceAlgorithmVersionKey(algorithmContainer);
                 _algorithmsBenchmarksStates.Remove(key);
+                _algorithmsCanStartStates.Remove(key);
                 _benchmarksPending = _algorithmsBenchmarksStates.Values.Where(benchStatus => benchStatus).Count();
+                _canStartCount = _algorithmsCanStartStates.Values.Where(canStartStatus => canStartStatus).Count();
                 OnPropertyChanged(nameof(BenchmarksPending));
                 OnPropertyChanged(nameof(HasBenchmarkWork));
+                OnPropertyChanged(nameof(CanStart));
+                var anyToBench = _algorithmsBenchmarksStates.Where(benchStatus => benchStatus.Key.Contains(algorithmContainer.ComputeDevice.Uuid)).Where(pair => pair.Value).Count();
+                _deviceCanStartBenchmarkingStates[algorithmContainer.ComputeDevice.Uuid] = algorithmContainer.ComputeDevice.State == DeviceState.Stopped && anyToBench > 0;
+                OnPropertyChanged(nameof(CanStartBenchmarking));
             }
         }
 

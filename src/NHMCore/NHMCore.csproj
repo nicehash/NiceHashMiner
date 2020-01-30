@@ -412,6 +412,8 @@
 copy /Y "$(ProjectDir)\translations.json" "$(SolutionDir)$(Configuration)\app\translations.json"
 REM device detection test script
 copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_test.bat" "$(SolutionDir)$(Configuration)\app\device_detection_test.bat"
+REM script to reboot if NVIDIA CUDA is down
+copy /Y "$(ProjectDir)\OnGPUsLost.bat" "$(SolutionDir)$(Configuration)\OnGPUsLost.bat"
 
 REM copy device detection dll's. Copy only if files don't exist
 If NOT exist "$(SolutionDir)$(Configuration)\app\cpuid.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cpuid.dll" "$(SolutionDir)$(Configuration)\app\cpuid.dll"

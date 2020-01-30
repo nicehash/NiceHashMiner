@@ -55,60 +55,57 @@
         </Style>
 
     </UserControl.Resources>
-    <Grid MaxHeight="220" MaxWidth="392" Height="Auto" Width="Auto" MinHeight="232" MinWidth="392" Background="{DynamicResource BackgroundColor}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:CustomDialog}}}">
+    <Grid MaxHeight="220" MaxWidth="392" Height="Auto" Width="Auto" MinHeight="200" MinWidth="392" Background="{DynamicResource BackgroundColor}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:CustomDialog}}}">
         <Grid.Effect>
             <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.4"/>
         </Grid.Effect>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Button Grid.Row="0"
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0"
                 Style="{StaticResource local.ExitTextButton}"
                 Content="&#xF00D;"
-                Margin="0,20,20,0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
                 Click="CloseDialog"/>
-        <TextBlock Grid.Row="1"
-                   Style="{StaticResource local.WalletHeader}"
-                   VerticalAlignment="Stretch"
-                   HorizontalAlignment="Left"
-                   Margin="24,0,0,0"
-                   Text="{Binding Title}"/>
-        <TextBlock Grid.Row="2"
-                   Style="{StaticResource local.WalletSubHeader}"
-                   VerticalAlignment="Stretch"
-                   HorizontalAlignment="Center"
-                   TextAlignment="Justify"
-                   Margin="25,8,25,8"
-                   Text="{Binding Description}"/>
-        <WrapPanel Grid.Row="3" Margin="25,24,24,0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button
-                x:Name="CancelButton"
-                Style="{DynamicResource CancelButton}"
-                Visibility="{Binding CancelVisible}"
-                FontSize="10"
-                Width="136"
-                Height="24"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Right"
-                Content="{Binding CancelText}"
-                Click="CancelButtonClicked" />
-            <Button
-                x:Name="ConfirmButton"
-                Style="{DynamicResource OKButton}"
-                Visibility="{Binding OkVisible}"
-                FontSize="10"
-                Width="136"
-                Height="24"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Right"
-                Content="{Binding OkText}"
-                Click="ConfirmButtonClicked"
-                Margin="25,0,0,0"/>
-        </WrapPanel>
+            <TextBlock Grid.Row="1"
+                       Margin="0,15,0,0"
+                       Style="{StaticResource local.WalletHeader}"
+                       VerticalAlignment="Stretch"
+                       HorizontalAlignment="Center"
+                       Text="{Binding Title}"/>
+            <TextBlock Grid.Row="2"
+                       Margin="0,15,0,0"
+                       Style="{StaticResource local.WalletSubHeader}"
+                       VerticalAlignment="Stretch"
+                       HorizontalAlignment="Center"
+                       TextAlignment="Center"
+                       Text="{Binding Description}"/>
+            <WrapPanel Grid.Row="3" Margin="0,30,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <Button
+                    x:Name="CancelButton"
+                    Style="{DynamicResource CancelButton}"
+                    Visibility="{Binding CancelVisible}"
+                    FontSize="10"
+                    Width="136"
+                    Height="24"
+                    Content="{Binding CancelText}"
+                    Click="CancelButtonClicked" />
+                <Button
+                    x:Name="ConfirmButton"
+                    Style="{DynamicResource OKButton}"
+                    Visibility="{Binding OkVisible}"
+                    FontSize="10"
+                    Width="136"
+                    Height="24"
+                    Content="{Binding OkText}"
+                    Click="ConfirmButtonClicked"
+                    Margin="25,0,0,0"/>
+            </WrapPanel>
+        </Grid>
     </Grid>
 </UserControl>
