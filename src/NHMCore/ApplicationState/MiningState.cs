@@ -36,6 +36,12 @@ namespace NHMCore.ApplicationState
             private set => _boolProps.Set(nameof(AllDeviceEnabled), value);
         }
 
+        public bool AnyDeviceEnabled
+        {
+            get => _boolProps.Get(nameof(AnyDeviceEnabled));
+            private set => _boolProps.Set(nameof(AnyDeviceEnabled), value);
+        }
+
         public bool AnyDeviceStopped
         {
             get => _boolProps.Get(nameof(AnyDeviceStopped));
@@ -107,6 +113,7 @@ namespace NHMCore.ApplicationState
             DisabledDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Disabled);
             // Mining state
             AllDeviceEnabled = AvailableDevices.Devices.All(dev => dev.Enabled);
+            AnyDeviceEnabled = AvailableDevices.Devices.Any(dev => dev.Enabled);
             AnyDeviceStopped = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Stopped && (dev.State != DeviceState.Disabled));
             AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;

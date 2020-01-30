@@ -261,6 +261,14 @@ namespace NiceHashMiner.ViewModels.Models
             }
         }
 
+        public void EnablebenchmarkedOnly()
+        {
+            foreach (var a in Dev.AlgorithmSettings)
+            {
+                a.Enabled = a.HasBenchmark;
+            }
+        }
+
         #region AlgorithmSettingsCollection SORTING
         private enum SortColumn
         {

@@ -150,5 +150,11 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             DeviceActionsButtonContext.IsOpen = false;
             await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
         }
+
+        private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)
+        {
+            DeviceActionsButtonContext.IsOpen = false;
+            _deviceData.EnablebenchmarkedOnly();
+        }
     }
 }
