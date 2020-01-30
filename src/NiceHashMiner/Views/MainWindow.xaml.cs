@@ -225,5 +225,15 @@ namespace NiceHashMiner.Views
                 Hide();
         }
         #endregion Minimize to tray stuff
+
+        private void StartAllMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() => _vm.StartMining());
+        }
+
+        private void StopAllMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Task.Run(() => _vm.StopMining());
+        }
     }
 }
