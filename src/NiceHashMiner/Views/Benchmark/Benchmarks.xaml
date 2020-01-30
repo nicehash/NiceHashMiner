@@ -126,7 +126,7 @@
                 Width="174"
                 Height="40"
                 Margin="0,0,40,0"
-                IsEnabled="{Binding BenchmarkSettings.HasBenchmarkWork}"
+                IsEnabled="{Binding BenchmarkSettings.CanStartBenchmaring}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Content="START BENCHMARK"

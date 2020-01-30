@@ -26,7 +26,9 @@ namespace NiceHashMiner.ViewModels
         public string BenchmarksPendingStr => Translations.Tr("Pending Benchmarks: {0}", BenchmarkManagerState.Instance.BenchmarksPending);
 
         public bool HasBenchmarkWork => BenchmarkManagerState.Instance.HasBenchmarkWork;
-        public bool CanStartBenchmaring => BenchmarkManagerState.Instance.HasBenchmarkWork;
+        public bool CanStartBenchmaring => BenchmarkManagerState.Instance.HasBenchmarkWork && BenchmarkManagerState.Instance.CanStartBenchmarking;
+
+        public bool CanStart => BenchmarkManagerState.Instance.CanStart;
 
         public BenchmarkViewModel()
         {
@@ -34,13 +36,20 @@ namespace NiceHashMiner.ViewModels
             OnPropertyChanged(nameof(HasBenchmarkWork));
             OnPropertyChanged(nameof(BenchmarksPending));
             OnPropertyChanged(nameof(BenchmarksPendingStr));
+            OnPropertyChanged(nameof(CanStart));
+            OnPropertyChanged(nameof(CanStartBenchmaring));
         }
 
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(BenchmarkManagerState.HasBenchmarkWork))
+            if (e.PropertyName == nameof(BenchmarkManagerState.CanStart))
+            {
+                OnPropertyChanged(nameof(CanStart));
+            }
+            if (e.PropertyName == nameof(BenchmarkManagerState.HasBenchmarkWork) || e.PropertyName == nameof(BenchmarkManagerState.CanStartBenchmarking))
             {
                 OnPropertyChanged(nameof(HasBenchmarkWork));
+                OnPropertyChanged(nameof(CanStartBenchmaring));
             }
             if (e.PropertyName == nameof(BenchmarkManagerState.BenchmarksPending))
             {
