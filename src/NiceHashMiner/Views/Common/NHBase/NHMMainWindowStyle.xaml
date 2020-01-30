@@ -46,19 +46,34 @@
         <Setter Property="FontSize" Value="24" />
     </Style>
     
-    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="settingsWindowStyle">
+    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ToggleButton}" x:Key="settingsWindowStyle">
         <Setter Property="Content" Value="&#xf013;" />
         <Setter Property="FontSize" Value="22" />
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
-    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="bellWindowStyle">
+    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ToggleButton}" x:Key="bellWindowStyle">
         <Setter Property="Content" Value="&#xf0f3;" />
         <Setter Property="FontSize" Value="22" />
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
-    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="infoWindowStyle">
+    <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ToggleButton}" x:Key="infoWindowStyle">
         <Setter Property="Content" Value="&#xf05a;" />
         <Setter Property="FontSize" Value="22" />
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type ToggleButton}" x:Key="local.WindowTabButtonStyle2">
