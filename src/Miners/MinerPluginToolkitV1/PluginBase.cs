@@ -45,12 +45,13 @@ namespace MinerPluginToolkitV1
         {
             var miner = CreateMinerBase();
             miner.BinAndCwdPathsGettter = this; // set the paths interface
-            miner.PluginSupportedAlgorithms = this; // set the paths interface
+            miner.PluginSupportedAlgorithms = this; // dev fee, algo names
             // set internal settings
             if (MinerOptionsPackage != null) miner.MinerOptionsPackage = MinerOptionsPackage;
             if (MinerSystemEnvironmentVariables != null) miner.MinerSystemEnvironmentVariables = MinerSystemEnvironmentVariables;
             if (MinerReservedApiPorts != null) miner.MinerReservedApiPorts = MinerReservedApiPorts;
             if (MinerBenchmarkTimeSettings != null) miner.MinerBenchmarkTimeSettings = MinerBenchmarkTimeSettings;
+            if (MinerCustomActionSettings != null) miner.MinerCustomActionSettings = MinerCustomActionSettings;
             return miner;
         }
 
@@ -86,6 +87,9 @@ namespace MinerPluginToolkitV1
 
             var filePluginSupportedAlgorithmsSettings = InternalConfigs.InitInternalSetting(pluginRoot, PluginSupportedAlgorithmsSettings, "PluginSupportedAlgorithmsSettings.json");
             if (filePluginSupportedAlgorithmsSettings != null) PluginSupportedAlgorithmsSettings = filePluginSupportedAlgorithmsSettings;
+
+            var fileMinerCustomActionSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinerCustomActionSettings, "MinerCustomActionSettings.json");
+            if (fileMinerCustomActionSettings != null) MinerCustomActionSettings = fileMinerCustomActionSettings;
         }
 
         // internal settings
@@ -96,6 +100,8 @@ namespace MinerPluginToolkitV1
         protected MinerBenchmarkTimeSettings MinerBenchmarkTimeSettings { get; set; } = new MinerBenchmarkTimeSettings { };
 
         protected MinersBinsUrlsSettings MinersBinsUrlsSettings { get; set; } = new MinersBinsUrlsSettings { };
+
+        protected MinerCustomActionSettings MinerCustomActionSettings { get; set; } = new MinerCustomActionSettings { };
 
         public PluginSupportedAlgorithmsSettings PluginSupportedAlgorithmsSettings { get; set; } = new PluginSupportedAlgorithmsSettings();
 

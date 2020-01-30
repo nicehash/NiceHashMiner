@@ -3,6 +3,7 @@ using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
+using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -69,6 +70,7 @@ namespace MinerPluginToolkitV1
         public MinerReservedPorts MinerReservedApiPorts { get; set; }
 
         public MinerBenchmarkTimeSettings MinerBenchmarkTimeSettings { get; set; }
+        public MinerCustomActionSettings MinerCustomActionSettings { get; set; }
 
         public IPluginSupportedAlgorithmsSettings PluginSupportedAlgorithms { get; set; }
 
@@ -181,6 +183,46 @@ namespace MinerPluginToolkitV1
             return FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
         }
 
+        protected virtual void ExecMinerCustomActionSettings(bool startTrueStopFalse)
+        {
+            if (MinerCustomActionSettings == null || !MinerCustomActionSettings.UseUserSettings) return;
+            if (MinerCustomActionSettings.AlgorithmCustomActions == null) return;
+
+            try
+            {
+                var actionScriptsKey = MinerToolkit.GetAlgorithmPortsKey(_miningPairs);
+                if (MinerCustomActionSettings.AlgorithmCustomActions.ContainsKey(actionScriptsKey) == false) return;
+                var actionsEntry = MinerCustomActionSettings.AlgorithmCustomActions[actionScriptsKey];
+                if (actionsEntry == null) return;
+                var exePath = startTrueStopFalse ? actionsEntry.StartExePath : actionsEntry.StopExePath;
+                var exePathWait = startTrueStopFalse ? actionsEntry.StartExePathWaitExec : actionsEntry.StopExePathWaitExec;
+                var pcieBusParams = _miningPairs.Select(p => p.Device).Where(d => d is IGpuDevice).Cast<IGpuDevice>().Select(gpu => gpu.PCIeBusID);
+                var args = string.Join(",", pcieBusParams);
+                if (exePath == null) return;
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    Arguments = args,
+                    //CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Minimized
+                    //UseShellExecute = false
+                };
+                using (var action = Process.Start(startInfo))
+                {
+                    if (exePathWait)
+                    {
+                        // blocking
+                        action.WaitForExit();
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                var commandType = startTrueStopFalse ? "START" : "STOP";
+                Logger.Error(_logGroup, $"ExecMinerCustomActionSettings {commandType} error: {e.Message}");
+            }
+        }
+
         /// <summary>
         /// Obsolete use StartMiningTask (<see cref="IMinerAsyncExtensions"/>)
         /// </summary>
@@ -239,7 +281,7 @@ namespace MinerPluginToolkitV1
             var binCwd = binPathBinCwdPair.Item2;
             var commandLine = MiningCreateCommandLine();
             var environmentVariables = GetEnvironmentVariables();
-
+            var stopActionExec = false;
             _miningProcessTask = Task.Run(() =>
             {
                 using (_stopMinerTaskSource = new CancellationTokenSource())
@@ -269,6 +311,9 @@ namespace MinerPluginToolkitV1
                         Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'");
                         ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
 
+                        // exec START custom scripts if any, must be here if blocking
+                        ExecMinerCustomActionSettings(true);
+
                         if (!miningProcess.Start())
                         {
                             Logger.Info(_logGroup, $"Error occured while starting a new process: {miningProcess.ToString()}");
@@ -286,6 +331,9 @@ namespace MinerPluginToolkitV1
                         ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
                         // block while process is running
                         miningProcess.WaitForExit();
+                        // exec STOP custom scripts if any, must be here if blocking
+                        stopActionExec = true;
+                        ExecMinerCustomActionSettings(false);
                     }
                     //catch (Win32Exception ex2)
                     //{
@@ -302,6 +350,14 @@ namespace MinerPluginToolkitV1
                     {
                         Logger.Error(_logGroup, $"Error occured in StartMining : {e.Message}");
                         startProcessTaskCompletionSource.SetResult(e);
+                    }
+                    finally
+                    {
+                        if (!stopActionExec)
+                        {
+                            // exec STOP custom scripts if any, last resort it will not block but it is a fallback option
+                            ExecMinerCustomActionSettings(false);
+                        }
                     }
                 }
             });
