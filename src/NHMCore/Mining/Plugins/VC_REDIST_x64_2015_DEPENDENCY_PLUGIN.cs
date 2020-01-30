@@ -5,6 +5,7 @@ using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
+using NHMCore.Configs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -86,10 +87,15 @@ namespace NHMCore.Mining.Plugins
         {
             if (IsVcRedistInstalled())
             {
-                Logger.Error("VC_REDIST_x64_2015_DEPENDENCY_PLUGIN", $"Skipping installation minimum version newer already installed");
+                Logger.Info("VC_REDIST_x64_2015_DEPENDENCY_PLUGIN", $"Skipping installation minimum version newer already installed");
                 return;
             }
-            // TODO check if we need to run the insall
+            if (MiscSettings.Instance.DisableVisualCRedistributableCheck)
+            {
+                Logger.Info("VC_REDIST_x64_2015_DEPENDENCY_PLUGIN", $"Skipping installation MiscSettings.Instance.DisableVisualCRedistributableCheck=true");
+                return;
+            }
+
             try
             {
                 var startInfo = new ProcessStartInfo

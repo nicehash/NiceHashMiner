@@ -98,6 +98,9 @@
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
@@ -216,6 +219,7 @@
     <Compile Include="Utils\UpdateHelpers.cs" />
     <Compile Include="Utils\AmdModeSwitcher.cs" />
     <Compile Include="Utils\WindowsDefender.cs" />
+    <Compile Include="Utils\WindowsUptimeCheck.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -258,10 +262,6 @@
     <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj">
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
-      <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
-      <Name>websocket-sharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\BrokenMiner\BrokenMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BrokenMiner_PLUGIN'))">
       <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
@@ -307,9 +307,9 @@
       <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
       <Name>GMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\LolMinerBeam\LolMinerBeam.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_LolMinerBeam_PLUGIN'))">
-      <Project>{db7ac204-7b8c-4fa4-8d8c-dc133e534d8a}</Project>
-      <Name>LolMinerBeam</Name>
+    <ProjectReference Include="..\Miners\LolMiner\LolMiner.csproj">
+      <Project>{fbb69b33-8a14-4087-909c-f33791384d35}</Project>
+      <Name>LolMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
       <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>

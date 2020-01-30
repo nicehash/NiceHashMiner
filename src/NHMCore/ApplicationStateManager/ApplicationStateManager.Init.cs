@@ -56,6 +56,7 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Checking System Specs"), nextProgPerc()));
                 await Task.Run(() => SystemSpecs.QueryWin32_OperatingSystemDataAndLog());
                 await Task.Run(() => FilterOSSpecific.GetWindowsVersion());
+                await WindowsUptimeCheck.DelayUptime();
 
                 // TODO extract in function
                 #region Device Detection
@@ -283,7 +284,7 @@ namespace NHMCore
                 // Cross reference plugin indexes
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
-                await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
+                await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
             }
             catch (Exception e)
             {

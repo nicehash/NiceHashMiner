@@ -11,9 +11,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LolMinerBeam
+namespace LolMiner
 {
-    public class LolMinerBeam : MinerBase
+    public class LolMiner : MinerBase
     {
         private string _devices;
         private int _apiPort;
@@ -27,7 +27,7 @@ namespace LolMinerBeam
 
         private readonly HttpClient _http = new HttpClient();
 
-        public LolMinerBeam (string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        public LolMiner (string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
             _mappedIDs = mappedIDs;
         }

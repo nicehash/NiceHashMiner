@@ -44,6 +44,9 @@
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.ShowGPUPCIeBusIDs}"
                                         Label="Show GPU PCIe Bus IDs"
                                         Description="{StaticResource pcieBusIDs}"/>
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.DisableVisualCRedistributableCheck}"
+                                        Label="Disable Visual C++ Redistributable Check"
+                                        Description="{StaticResource Tooltip.DisableVisualCRedistributableCheck}"/>
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
@@ -143,7 +146,7 @@
                                         Description="{StaticResource useEthlargement}"/>
                 <TextBlock Style="{StaticResource AlertIcon}"
                            Margin="12,0,0,0"
-                           Visibility="{Binding EthlargementIntegratedPlugin.IsSystemElevated, Converter={StaticResource NulBoolToVisibilityConverterFalse}, Mode=OneWay}"
+                           Visibility="{Binding EthlargementIntegratedPlugin.SystemContainsSupportedDevicesNotSystemElevated, Converter={StaticResource NulBoolToVisibilityConverter}, Mode=OneWay}"
                            ToolTip="This feature requires Administrator privileges."/>
             </WrapPanel>
             

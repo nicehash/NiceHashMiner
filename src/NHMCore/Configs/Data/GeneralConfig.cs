@@ -296,6 +296,11 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.ShowNotifications;
             set => MiscSettings.Instance.ShowNotifications = value;
         }
+        public bool DisableVisualCRedistributableCheck
+        {
+            get => MiscSettings.Instance.DisableVisualCRedistributableCheck;
+            set => MiscSettings.Instance.DisableVisualCRedistributableCheck = value;
+        }
         #endregion MiscSettings
 
         #region Global Device settings

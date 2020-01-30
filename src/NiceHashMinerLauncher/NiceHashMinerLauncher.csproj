@@ -72,6 +72,7 @@
     <Compile Include="UpdateProgress.xaml.cs">
       <DependentUpon>UpdateProgress.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WindowsUptimeCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
