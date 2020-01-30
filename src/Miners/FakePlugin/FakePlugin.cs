@@ -19,7 +19,7 @@ namespace FakePlugin
     public class FakePlugin : PluginBase
     {
         // TODO implement this one
-        protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => throw new NotImplementedException();
+        protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings();
 
         //public override string PluginUUID => "12a1dc50-1d9d-11ea-8dad-816592d8b973"; //plugin 1
         //public override string PluginUUID => "1d21d950-1d9d-11ea-8dad-816592d8b973"; //plugin 2
