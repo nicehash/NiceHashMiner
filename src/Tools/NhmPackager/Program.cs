@@ -22,7 +22,8 @@ namespace NhmPackager
             var paths = new List<string> { rootPath };
             foreach (var subPath in subPaths) paths.Add(subPath);
             var ret = Path.Combine(paths.ToArray());
-            return ret;
+            var retAbsolutePath = new Uri(ret).LocalPath;
+            return retAbsolutePath;
         }
 
         private static bool ExecXCopy(string copyFrom, string copyTo)
@@ -44,6 +45,30 @@ namespace NhmPackager
                     Console.WriteLine(line);
                 }
                 return ok && copyRelease.ExitCode == 0;
+            }
+        }
+
+        private static bool ExecPluginsPacker(string exePath, string exeCwd, string args)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = exePath,
+                Arguments = args,
+                WorkingDirectory = exeCwd,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                //RedirectStandardInput = true,
+                CreateNoWindow = true,
+            };
+            using (var proc = new Process { StartInfo = startInfo })
+            {
+                var ok = proc.Start();
+                while (!proc.StandardOutput.EndOfStream)
+                {
+                    string line = proc.StandardOutput.ReadLine();
+                    Console.WriteLine(line);
+                }
+                return ok && proc.ExitCode == 0;
             }
         }
 
@@ -128,6 +153,15 @@ namespace NhmPackager
                 // assume we are in installer folder
                 var nhmReleaseFolder = GetRootPath(@"..\", "Release");
                 ExecXCopy(nhmReleaseFolder, GetRootPath(tmpWorkFolder, "Release"));
+                // run the plugins packer in the installer
+                Console.WriteLine("ExecPluginsPacker START");
+                Console.WriteLine();
+                Console.WriteLine();
+                ExecPluginsPacker(GetRootPath("MinerPluginsPacker.exe"), GetRootPath(tmpWorkFolder, "Release"), GetRootPath(@"..\", "src", "Miners"));
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("ExecPluginsPacker Done. Press any key to continue");
+                Console.ReadKey();
 
                 // #2 
                 DeleteFileIfExists(GetRootPath(tmpWorkFolder, "Release", "build_settings.json"));

@@ -143,7 +143,8 @@ namespace MinerPluginsPacker
                 return;
             }
 
-            var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var exePath = Environment.CurrentDirectory;
             var pluginPackagesFolder = Path.Combine(exePath, "plugins_packages");
             var pluginsSearchRoot = args[0];
 
