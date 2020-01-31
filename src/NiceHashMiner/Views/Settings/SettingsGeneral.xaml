@@ -51,35 +51,35 @@
                      LostFocus="TextBoxWorkerName_LostFocus"/>
             </WrapPanel>
             <!--MAIN-->
-        <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
-            <Label Content="Main" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <WrapPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" ToolTip="{StaticResource timeUnit}">
-                    <Label Content="Time Unit" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
-                    <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
-                </StackPanel>
-                <ComboBox Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" SelectionChanged="ComboBox_SelectionChanged" />
-            </WrapPanel>
+            <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
+                <Label Content="Main" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+                <WrapPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource timeUnit}">
+                        <Label Content="Time Unit" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
+                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                    </StackPanel>
+                    <ComboBox Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" SelectionChanged="ComboBox_SelectionChanged" />
+                </WrapPanel>
 
-            <local:SettingsCheckBoxItem Margin="0,24,0,0" Enabled="{Binding MiningProfitSettings.MineRegardlessOfProfit}"
-                                        Label="Mine Regardless Of Profit"
-                                        Description="{StaticResource mineRegardless}"/>
-            <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource electricityCost}">
-                        <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
-                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                <local:SettingsCheckBoxItem Margin="0,24,0,0" Enabled="{Binding MiningProfitSettings.MineRegardlessOfProfit}"
+                                            Label="Mine Regardless Of Profit"
+                                            Description="{StaticResource mineRegardless}"/>
+                <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" ToolTip="{StaticResource electricityCost}">
+                            <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
+                            <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                        </StackPanel>
+                        <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.KwhPrice, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.KwhPrice, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
-                </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal" ToolTip="{StaticResource minimumProfit}">
-                        <Label Content="Mininmum profit ($/day)" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
-                        <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" ToolTip="{StaticResource minimumProfit}">
+                            <Label Content="Mininmum profit ($/day)" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
+                            <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                        </StackPanel>
+                        <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningProfitSettings.MinimumProfit, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningProfitSettings.MinimumProfit, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
-                </StackPanel>
-            </WrapPanel>
+                </WrapPanel>
             </WrapPanel>
             <!--SERVICE LOCATION-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
@@ -137,5 +137,15 @@
                                             Description="{StaticResource autoUpdateMiner}"
                                             Label="Auto update instaled plugins" />
             </WrapPanel>
-        </StackPanel>
+            <!-- LOG REPORT -->
+            <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
+                <Label Content="Report a bug" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+                <Button Content="Create a log report"
+                        x:Name="CreateLogReportButton"
+                        Style="{StaticResource BigButtonPrimary}"
+                        Height="24"
+                        ToolTip="Click the button to create a zip file of your logs on your desktop."
+                        Click="CreateLogReportButton_Click" />
+        </WrapPanel>
+    </StackPanel>
 </UserControl>

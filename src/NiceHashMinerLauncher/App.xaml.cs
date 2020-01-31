@@ -55,6 +55,11 @@ namespace NiceHashMiner
             return IsDoFile(@"do.update");
         }
 
+        private static bool IsCreateLog()
+        {
+            return IsDoFile(@"do.createLog");
+        }
+
         private static void ClearAllXXFiles(string pattern)
         {
             var path = GetRootPath();
@@ -283,6 +288,37 @@ namespace NiceHashMiner
                             if (IsRunAsAdmin())
                             {
                                 RunAsAdmin.SelfElevate();
+                            }
+                            else if (IsCreateLog())
+                            {
+                                try
+                                {
+                                    run = true;
+                                    ClearAllDoFiles();
+
+                                    var exePath = GetRootPath("CreateLogReport.exe");
+                                    var startLogInfo = new ProcessStartInfo
+                                    {
+                                        FileName = exePath,
+                                        WindowStyle = ProcessWindowStyle.Minimized,
+                                        UseShellExecute = true,
+                                        Arguments = "dontWait",
+                                        CreateNoWindow = true
+                                    };
+                                    using (var doCreateLog = Process.Start(startLogInfo))
+                                    {
+                                        doCreateLog.WaitForExit(10* 1000);
+                                    }
+
+                                    var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
+                                    var desktopZipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "NiceHashMinerLogs.zip");
+                                    File.Copy(tmpZipPath, desktopZipPath, true);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine(ex.Message);
+                                }
+                                ClearAllTmpFiles();
                             }
                             else if (IsRestart())
                             {

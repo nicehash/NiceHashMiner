@@ -57,7 +57,7 @@ namespace CreateLogReport
             var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var filesToPack = Directory.GetFiles(exePath, "*.*", SearchOption.AllDirectories).Where(s => IsPackExtension(s)).ToList();
             //Console.WriteLine(filesToPack.Count);
-            string archiveFileName = "_archive_logs.zip";
+            string archiveFileName = "tmp._archive_logs.zip";
             Console.Write($"Preparing logs archive file '{archiveFileName}'...");
 
             double max = filesToPack.Count;
@@ -92,7 +92,7 @@ namespace CreateLogReport
             Console.WriteLine("Done.");
             Console.WriteLine($"Packed file: '{archiveFileName}'");
             Console.WriteLine("You can close this window. Press any key to close.");
-            Console.ReadKey();
+            if(args.Length == 0) Console.ReadKey();
         }
     }
 }
