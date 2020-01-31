@@ -302,7 +302,7 @@ namespace NiceHashMiner
                                         FileName = exePath,
                                         WindowStyle = ProcessWindowStyle.Minimized,
                                         UseShellExecute = true,
-                                        Arguments = "dontWait",
+                                        Arguments = latestAppDir,
                                         CreateNoWindow = true
                                     };
                                     using (var doCreateLog = Process.Start(startLogInfo))
