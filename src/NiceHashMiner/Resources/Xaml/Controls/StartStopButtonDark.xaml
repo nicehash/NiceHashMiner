@@ -47,6 +47,8 @@
                             <DrawingBrush Drawing="{ DynamicResource StartHover }" />
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="Width" Value="142" />
+                    <Setter Property="Height" Value="142" />
                 </MultiTrigger.Setters>
             </MultiTrigger>
             <!--STOP-->
@@ -75,6 +77,8 @@
                             <DrawingBrush Drawing="{ DynamicResource StopHover }" />
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="Width" Value="142" />
+                    <Setter Property="Height" Value="142" />
                 </MultiTrigger.Setters>
             </MultiTrigger>
         </Style.Triggers>
