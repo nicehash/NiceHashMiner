@@ -1,7 +1,12 @@
-﻿using NHMCore;
+﻿using NHM.Common;
+using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
+using NiceHashMiner.Views.Common;
+using System;
 using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -133,6 +138,24 @@ namespace NiceHashMiner.Views.Settings
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ConfigManager.GeneralConfigFileCommit();
+        }
+
+        private void CreateLogReportButton_Click(object sender, RoutedEventArgs e)
+        {
+            var nhmConfirmDialog = new CustomDialog()
+            { 
+                Title = Translations.Tr("Pack log files?"),
+                Description = Translations.Tr("This will restart your program and create a zip file on Desktop."),
+                OkText = Translations.Tr("Ok"),
+                CancelText = Translations.Tr("Cancel")
+            };
+            nhmConfirmDialog.OKClick += (s, e1) => 
+            {
+                File.Create(Paths.RootPath("do.createLog"));
+                Task.Run(() => ApplicationStateManager.RestartProgram());
+            };
+            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+
         }
     }
 }
