@@ -175,8 +175,8 @@ namespace NHMCore.Utils
         public static bool IsRunningInstalledApp()
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var user = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return path.Contains(user);
+            var localAppData =  Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return path.Contains(localAppData);
         }
     }
 }
