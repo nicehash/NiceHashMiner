@@ -123,6 +123,29 @@
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
+        <Style x:Key="local.statusStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Dashboard.StartStoryboard}" Value="True" >
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard x:Name="miningStoryboard"> 
+                            <Storyboard>
+                                <ColorAnimation 
+                                    AutoReverse="True" 
+                                    Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                    From="{StaticResource Gray1Color}"
+                                    To="{StaticResource PrimaryColor}"
+                                    RepeatBehavior="Forever"
+                                    Duration="0:0:5"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="miningStoryboard" />
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <!--#endregion Dashboard styles -->
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}" Height="Auto" Width="Auto" Margin="40,0,40,0">
@@ -149,7 +172,7 @@
                     </ToggleButton.Effect>
                 </ToggleButton>
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,24,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                    <TextBlock Style="{StaticResource local.statusStyle}"
                                FontSize="14"
                                Foreground="{StaticResource Gray1ColorBrush}"
                                TextAlignment="Center"
