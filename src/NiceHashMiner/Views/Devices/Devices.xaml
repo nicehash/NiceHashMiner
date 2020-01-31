@@ -87,7 +87,8 @@
                 <ColumnDefinition Width="149*" />
                 <ColumnDefinition Width="197*" />
                 <ColumnDefinition Width="197*" />
-                <ColumnDefinition Width="164*" />
+                <!--HIDE LAST BTC WALLET-->
+                <!--<ColumnDefinition Width="164*" />-->
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" ToolTip="{StaticResource devicesMining}">
                 <Border BorderThickness="1" Background="{ DynamicResource MiningDevicesBackground }" BorderBrush="Transparent" CornerRadius="4"/>
@@ -145,7 +146,7 @@
                     <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding ExchangeTooltip}">
+            <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding ExchangeTooltip}" Visibility="Collapsed">
                 <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
