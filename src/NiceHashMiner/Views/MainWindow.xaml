@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:nhb="clr-namespace:NiceHashMiner.Views.Common.NHBase"
         xmlns:benchmark="clr-namespace:NiceHashMiner.Views.Benchmark"
         xmlns:dashboard="clr-namespace:NiceHashMiner.Views.Dashboard"
@@ -68,7 +69,7 @@
 
         
         <!-- Instantiation of taskbar icon for minimize to tray -->
-        <!-- Since this isn't visible setting the grid spot doesn't matter, but it stops XAML complaining --><!--
+        <!-- Since this isn't visible setting the grid spot doesn't matter, but it stops XAML complaining -->
         <tb:TaskbarIcon Grid.Row="0"
                         Grid.Column="0"
                         ToolTipText="NiceHash Miner" 
@@ -82,6 +83,6 @@
                     <MenuItem Header="Close" Click="CloseMenuItem_OnClick" />
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
-        </tb:TaskbarIcon>-->
+        </tb:TaskbarIcon>
     </Grid>
 </nhb:NHMMainWindow>
