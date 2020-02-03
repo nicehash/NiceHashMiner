@@ -202,5 +202,16 @@ namespace NiceHashMiner
             //// Set shutdown mode back to default
             //ShutdownMode = ShutdownMode.OnLastWindowClose;
         }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            Exception ex = e.Exception;
+            Exception ex_inner = ex.InnerException;
+            string msg = ex.Message + "\n\n" + ex.StackTrace + "\n\n" +
+                "Inner Exception:\n" + ex_inner.Message + "\n\n" + ex_inner.StackTrace;
+            MessageBox.Show(msg, "Application Halted!", MessageBoxButton.OK);
+            e.Handled = true;
+            Application.Current.Shutdown();
+        }
     }
 }
