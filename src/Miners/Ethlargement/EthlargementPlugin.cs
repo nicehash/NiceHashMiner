@@ -132,10 +132,18 @@ namespace Ethlargement
             return binPath;
         }
 
+        public virtual string EthlargementCwdPath()
+        {
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", $"{Version.Major}.{Version.Minor}");
+            return pluginRootBins;
+        }
+
 
         #region Ethlargement Process
 
         private static string _ethlargementBinPath = "";
+        private static string _ethlargementCwdPath = "";
 
         private static Process _ethlargementProcess = null;
 
@@ -167,16 +175,8 @@ namespace Ethlargement
         private static void StartEthlargementProcess()
         {
             if (IsEthlargementProcessRunning() == true) return;
-
-            _ethlargementProcess = new Process
-            {
-                StartInfo =
-                {
-                    FileName = _ethlargementBinPath,
-                    //CreateNoWindow = false
-                },
-                EnableRaisingEvents = true
-            };
+            
+            _ethlargementProcess = MinerToolkit.CreateMiningProcess(_ethlargementBinPath, _ethlargementCwdPath, "", null);
             _ethlargementProcess.Exited += ExitEvent;
 
             try
@@ -241,6 +241,7 @@ namespace Ethlargement
         {
             // set ethlargement path
             _ethlargementBinPath = EthlargementBinPath();
+            _ethlargementCwdPath = EthlargementCwdPath();
 
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
 
