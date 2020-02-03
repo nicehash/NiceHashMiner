@@ -4,7 +4,8 @@
              xmlns:local="clr-namespace:NiceHashMiner"
              xmlns:views="clr-namespace:NiceHashMiner.Views"
              xmlns:converters="clr-namespace:NiceHashMiner.Converters"
-             Startup="App_OnStartup">
+             Startup="App_OnStartup"
+             DispatcherUnhandledException="App_DispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

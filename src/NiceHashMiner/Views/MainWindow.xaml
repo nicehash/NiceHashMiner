@@ -67,6 +67,7 @@
             </TabItem>
         </TabControl>
 
+        
         <!-- Instantiation of taskbar icon for minimize to tray -->
         <!-- Since this isn't visible setting the grid spot doesn't matter, but it stops XAML complaining -->
         <tb:TaskbarIcon Grid.Row="0"
