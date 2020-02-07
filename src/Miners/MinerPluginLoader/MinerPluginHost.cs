@@ -68,7 +68,7 @@ namespace MinerPluginLoader
                     }
                     catch (Exception e)
                     {
-                        Logger.Info("MinerPluginHost", $"Error occured while loading dll files: {e.Message}");
+                        Logger.Info("MinerPluginHost", $"Error occured while loading dll '{dllFile}' files: {e.Message}");
                         return null;
                     }
                 })
