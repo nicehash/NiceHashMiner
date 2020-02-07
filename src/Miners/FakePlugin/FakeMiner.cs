@@ -22,13 +22,13 @@ namespace FakePlugin
 
         Random _rand { get; } = new Random();
 
-        private enum MinerState
-        {
-            STOPPED,
-            MINING
-        }
+        //private enum MinerState
+        //{
+        //    STOPPED,
+        //    MINING
+        //}
 
-        MinerState _state = MinerState.STOPPED;
+        //MinerState _state = MinerState.STOPPED;
 
         #endregion members for simulation purposes
 

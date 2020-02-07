@@ -205,7 +205,7 @@ namespace NHMCore.Mining.Plugins
                         File.Create(disableAutoUpdatesFile);
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
                 OnPropertyChanged(nameof(IsAutoUpdateEnabled));

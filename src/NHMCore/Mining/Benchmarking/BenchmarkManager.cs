@@ -65,7 +65,7 @@ namespace NHMCore.Mining.Benchmarking
             if (startMiningAfterBenchmark)
             {
                 // TODO attempt to schedule devices to start in batch
-                ApplicationStateManager.StartDeviceTask(device, true);
+                _ = ApplicationStateManager.StartDeviceTask(device, true);
             }
         }
 

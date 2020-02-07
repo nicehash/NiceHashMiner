@@ -110,6 +110,7 @@ namespace NiceHashMiner.Views.Common.NHBase.Utils
         }
     }
 
+#pragma warning disable 0649
     internal struct NCCALCSIZE_PARAMS
     {
         internal RECT rect0;
@@ -120,4 +121,5 @@ namespace NiceHashMiner.Views.Common.NHBase.Utils
 
         internal IntPtr lppos;
     }
+#pragma warning restore 0649
 }

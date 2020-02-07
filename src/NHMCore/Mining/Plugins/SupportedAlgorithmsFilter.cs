@@ -15,11 +15,13 @@ namespace NHMCore.Mining.Plugins
             [JsonProperty("use_user_settings")]
             public bool UseUserSettings { get; set; } = false;
 
+#pragma warning disable 0618
             [JsonProperty("filtered_algorithms")]
             public List<List<AlgorithmType>> FilteredAlgorithms = new List<List<AlgorithmType>>
             {
                 new List<AlgorithmType> { AlgorithmType.MTP },
             };
+#pragma warning restore 0618
         }
 
 

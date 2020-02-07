@@ -27,6 +27,7 @@ namespace MinerPluginToolkitV1
         public const ulong MinGrin32Mem = 7UL << 30; // 7.0GB (because system acn reserve GPU memory) really this is 8GB
 
 
+#pragma warning disable 0618
         private static readonly Dictionary<AlgorithmType, ulong> _minMemoryPerAlgo = new Dictionary<AlgorithmType, ulong>
         {
             { AlgorithmType.DaggerHashimoto, MinDaggerHashimotoMemory },
@@ -43,6 +44,7 @@ namespace MinerPluginToolkitV1
             { AlgorithmType.Cuckaroom, MinGrinCuckaroomMemory },
             { AlgorithmType.GrinCuckatoo32, MinGrin32Mem },
         };
+#pragma warning restore 0618
 
         public static List<AlgorithmType> InsufficientDeviceMemoryAlgorithnms(ulong Ram, IEnumerable<AlgorithmType> algos)
         {

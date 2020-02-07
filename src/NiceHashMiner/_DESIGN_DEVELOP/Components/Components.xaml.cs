@@ -23,7 +23,7 @@ namespace NiceHashMiner._DESIGN_DEVELOP.Components
     /// </summary>
     public partial class Components : UserControl
     {
-        private static int counter = 0;
+        //private static int counter = 0;
 
         public Components()
         {
