@@ -255,10 +255,6 @@
       <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
       <Name>BrokenMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\CCMinerMTP\CCMinerMTP.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CCMinerMTP_PLUGIN'))">
-      <Project>{c6e4069b-2305-4cda-9f4e-0b79a8599935}</Project>
-      <Name>CCMinerMTP</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\CCMinerTpruvot\CCMinerTpruvot.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CCMinerTpruvot_PLUGIN'))">
       <Project>{3651e4f1-76b9-4634-a8d2-2a05e60c16cb}</Project>
       <Name>CCMinerTpruvot</Name>
@@ -282,10 +278,6 @@
     <ProjectReference Include="..\Miners\Ethminer\Ethminer.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Ethminer_PLUGIN'))">
       <Project>{842790e0-4d0d-4dba-acb3-56a863974342}</Project>
       <Name>Ethminer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\EWBF\EWBF.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_EWBF_PLUGIN'))">
-      <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
-      <Name>EWBF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\ExamplePlugin\ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
       <Project>{dfc88036-796a-4046-b3b6-de9fa56edf28}</Project>
@@ -326,14 +318,6 @@
     <ProjectReference Include="..\Miners\Phoenix\Phoenix.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Phoenix_PLUGIN'))">
       <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
       <Name>Phoenix</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\SgminerAvemore\SgminerAvemore.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_SGminerAvemore_PLUGIN'))">
-      <Project>{f8fc33dc-2f03-4ba3-bdf7-d72ca673e624}</Project>
-      <Name>SgminerAvemore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\SgminerGM\SgminerGM.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_SGminerGM_PLUGIN'))">
-      <Project>{df3e6cda-c809-4c2d-bf95-68e4293e6ec1}</Project>
-      <Name>SgminerGM</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TeamRedMiner_PLUGIN'))">
       <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>

@@ -37,17 +37,8 @@ namespace NHMCore.Mining.Plugins
 #endif
 
 // open source
-//#if INTEGRATE_CCMinerMTP_PLUGIN
-//                new CCMinerMTP.CCMinerMTPPlugin(), // not compatible with new platform
-//#endif
 #if INTEGRATE_CCMinerTpruvot_PLUGIN
                 new CCMinerTpruvot.CCMinerTpruvotPlugin(),
-#endif
-#if INTEGRATE_SGminerAvemore_PLUGIN
-                new SgminerAvemore.SgminerAvemorePlugin(),
-#endif
-#if INTEGRATE_SGminerGM_PLUGIN
-                new SgminerGM.SgminerGMPlugin(),
 #endif
 #if INTEGRATE_XmrStak_PLUGIN
                 new XmrStak.XmrStakPlugin(),
@@ -63,9 +54,6 @@ namespace NHMCore.Mining.Plugins
 //#endif
 
 // 3rd party
-#if INTEGRATE_EWBF_PLUGIN
-                new EWBF.EwbfPlugin(),
-#endif
 #if INTEGRATE_GMiner_PLUGIN
                 new GMinerPlugin.GMinerPlugin(),
 #endif
@@ -95,9 +83,6 @@ namespace NHMCore.Mining.Plugins
 #endif
 #if INTEGRATE_CryptoDredge_PLUGIN
                 new CryptoDredge.CryptoDredgePlugin(),
-#endif
-#if INTEGRATE_BMiner_PLUGIN
-                new BMiner.BMinerPlugin(),
 #endif
 #if INTEGRATE_ZEnemy_PLUGIN
                 new ZEnemy.ZEnemyPlugin(),
