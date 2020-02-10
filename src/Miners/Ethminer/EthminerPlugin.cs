@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Ethminer
 {
-#warning "MARK abstract. This is due to API stats blocking so we don't want this instantiated"
+// "MARK abstract. This is due to API stats blocking so we don't want this instantiated". Remove abstract with nhmproxy release
     public abstract partial class EthminerPlugin : PluginBase
     {
         // mandatory constructor
