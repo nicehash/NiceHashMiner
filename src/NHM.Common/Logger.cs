@@ -6,6 +6,7 @@ using log4net.Repository.Hierarchy;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
 namespace NHM.Common
 {
@@ -139,9 +140,7 @@ namespace NHM.Common
                 }
                 var logFilePath = Path.Combine(_logsRootPath, "log.txt");
 
-                // TODO broken on netstandard
-#if NET45
-                var h = (Hierarchy)LogManager.GetRepository();
+                var h = (Hierarchy)LogManager.GetRepository(Assembly.GetEntryAssembly());
                 h.Root.Level = logLevel;
 
                 // if we don't want file skip
@@ -151,7 +150,6 @@ namespace NHM.Common
                 }
 
                 h.Configured = true;
-#endif
 
                 _isInitSucceess = true;
             }

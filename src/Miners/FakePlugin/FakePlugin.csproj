@@ -1,24 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj" />
     <ProjectReference Include="..\MinerPlugin\MinerPlugin.csproj" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
-    <DefineConstants>TRACE;NET45</DefineConstants>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
-    <DefineConstants>TRACE;NET45</DefineConstants>
+ <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 </Project>
