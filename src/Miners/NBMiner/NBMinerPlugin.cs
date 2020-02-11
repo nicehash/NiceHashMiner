@@ -100,7 +100,7 @@ namespace NBMiner
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
 #if DISABLE_IDevicesCrossReference
-            await Task.Delay(0); // instant complete
+            await Task.CompletedTask;
 #else
 #warning Blocks exit. Check if this is fixed with newer versions
             return;

@@ -452,7 +452,7 @@ namespace NHMCore.Nhmws
             catch
             { }
             SetAlgorithmRates(message.data);
-            return TaskHelpers.CompletedTask;
+            return Task.CompletedTask;
         }
         #endregion SMA
         #region MARKETS
@@ -504,7 +504,7 @@ namespace NHMCore.Nhmws
             {
                 NHLog.Error("NHWebSocket", $"HandleMarkets error: {e.Message}");
             }
-            return TaskHelpers.CompletedTask;
+            return Task.CompletedTask;
         }
         #endregion MARKETS
 
@@ -524,7 +524,7 @@ namespace NHMCore.Nhmws
             {
                 NHLog.Error("NHWebSocket", $"SetBalance error: {e.Message}");
             }
-            return TaskHelpers.CompletedTask;
+            return Task.CompletedTask;
         }
         #endregion BALANCE
 
@@ -540,7 +540,7 @@ namespace NHMCore.Nhmws
             {
                 NHLog.Error("NHWebSocket", $"SetBalance error: {e.Message}");
             }
-            return TaskHelpers.CompletedTask;
+            return Task.CompletedTask;
         }
         #endregion BRUN
 
@@ -550,7 +550,7 @@ namespace NHMCore.Nhmws
             dynamic message = JsonConvert.DeserializeObject(data);
             string version = message.v3.Value;
             VersionState.Instance.OnVersionUpdate(version);
-            return TaskHelpers.CompletedTask;
+            return Task.CompletedTask;
         }
         #endregion VERSION
 
@@ -562,7 +562,7 @@ namespace NHMCore.Nhmws
                 dynamic message = JsonConvert.DeserializeObject(origdata);
                 string data = message.data.Value;
                 var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
-                if (exchange?.exchanges_fiat == null || exchange.exchanges == null) return TaskHelpers.CompletedTask;
+                if (exchange?.exchanges_fiat == null || exchange.exchanges == null) return Task.CompletedTask;
                 double usdBtcRate = -1;
                 foreach (var exchangePair in exchange.exchanges)
                 {
@@ -580,7 +580,7 @@ namespace NHMCore.Nhmws
             {
                 NHLog.Error("NHWebSocket", $"SetExchangeRates error: {e.Message}");
             }
-            return TaskHelpers.CompletedTask;
+            return Task.CompletedTask;
         }
         #endregion EXCHANGE_RATES
 
