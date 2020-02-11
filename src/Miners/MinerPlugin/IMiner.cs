@@ -29,12 +29,12 @@ namespace MinerPlugin
         /// <summary>
         /// Obsolete use StartMiningTask (<see cref="IMinerAsyncExtensions"/>)
         /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask")]
+        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask", true)]
         void StartMining();
         /// <summary>
         /// Obsolete use StopMiningTask (<see cref="IMinerAsyncExtensions"/>)
         /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask")]
+        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask", true)]
         void StopMining();
 
         /// <summary>

@@ -385,13 +385,13 @@ namespace MinerPluginToolkitV1
         /// <summary>
         /// Obsolete use StartMiningTask (<see cref="IMinerAsyncExtensions"/>)
         /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask")]
+        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask", true)]
         public virtual void StartMining() { }
 
         /// <summary>
         /// Obsolete use StopMiningTask (<see cref="IMinerAsyncExtensions"/>)
         /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask")]
+        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask", true)]
         public virtual void StopMining() {}
         #endregion DELETE after nhmproxy
     }
