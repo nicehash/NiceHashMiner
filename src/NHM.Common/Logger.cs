@@ -189,14 +189,11 @@ namespace NHM.Common
         {
             try
             {
-                // TODO broken on netstandard
-#if NET45
-                var h = (Hierarchy)LogManager.GetRepository();
+                var h = (Hierarchy)LogManager.GetRepository(Assembly.GetEntryAssembly());
                 h.Root.Level = logLevel;
 
                 h.Root.AddAppender(CreateConsoleAppender());
                 h.Configured = true;
-#endif
 
                 _isInitSucceess = true;
             }
