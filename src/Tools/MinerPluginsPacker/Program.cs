@@ -158,6 +158,12 @@ namespace MinerPluginsPacker
             {
                 "MinerPlugin",
                 "bin",
+                "BrokenMiner",
+                "Ethlargement",
+                "Ethminer",
+                "ExamplePlugin",
+                "FakePlugin",
+                "SRBMiner",
             };
 
             // get all managed plugin dll's 
