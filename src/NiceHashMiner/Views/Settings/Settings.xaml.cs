@@ -59,7 +59,8 @@ namespace NiceHashMiner.Views.Settings
                 Title = Tr("Set default settings?"),
                 Description = Tr("Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically."),
                 OkText = Tr("Yes"),
-                CancelText = Tr("No")
+                CancelText = Tr("No"),
+                AnimationVisible = Visibility.Collapsed
             };
             nhmConfirmDialog.OKClick += (s, e1) => { 
                 Translations.SelectedLanguage = "en";

@@ -54,15 +54,16 @@ namespace NiceHashMiner.Views
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                    var nhmUpdatedrDialog = new CustomDialog()
+                    var nhmUpdaterDialog = new CustomDialog()
                     {
                         Title = Translations.Tr("NiceHash Miner Starting Update"),
                         Description = Translations.Tr("NiceHash Miner auto updater in progress."),
                         OkText = Translations.Tr("OK"),
                         CancelVisible = Visibility.Collapsed,
                         OkVisible = Visibility.Collapsed,
+                        AnimationVisible = Visibility.Visible
                     };
-                    ShowContentAsModalDialog(nhmUpdatedrDialog);
+                    ShowContentAsModalDialog(nhmUpdaterDialog);
                 });
             };
             await MainWindow_OnLoadedTask();
@@ -93,7 +94,8 @@ namespace NiceHashMiner.Views
                         Title = Translations.Tr("Burn Error!"),
                         Description = Translations.Tr("Error during burn"),
                         OkText = Translations.Tr("OK"),
-                        CancelVisible = Visibility.Collapsed
+                        CancelVisible = Visibility.Collapsed,
+                        AnimationVisible = Visibility.Collapsed
                     };
                     nhmBurnDialog.OnExit += (s,e) => {
                         ApplicationStateManager.ExecuteApplicationExit();
@@ -115,6 +117,7 @@ namespace NiceHashMiner.Views
                         Description = Translations.Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
                         OkText = Translations.Tr("OK"),
                         CancelText = Translations.Tr("Cancel"),
+                        AnimationVisible = Visibility.Collapsed
                     };
                     nhmNoDeviceDialog.OKClick += (s, e) => {
                         Process.Start(Links.NhmNoDevHelp);
@@ -153,7 +156,8 @@ namespace NiceHashMiner.Views
                         Title = Translations.Tr("NiceHash Miner Updated"),
                         Description = Translations.Tr("Completed NiceHash Miner auto update."),
                         OkText = Translations.Tr("OK"),
-                        CancelVisible = Visibility.Collapsed
+                        CancelVisible = Visibility.Collapsed,
+                        AnimationVisible = Visibility.Collapsed
                     };
                     ShowContentAsModalDialog(nhmUpdatedDialog);
                 }
@@ -165,7 +169,8 @@ namespace NiceHashMiner.Views
                         Title = Translations.Tr("NiceHash Miner Autoupdate Failed"),
                         Description = Translations.Tr("NiceHash Miner auto update failed to complete. Autoupdates are disabled until next miner launch."),
                         OkText = Translations.Tr("OK"),
-                        CancelVisible = Visibility.Collapsed
+                        CancelVisible = Visibility.Collapsed,
+                        AnimationVisible = Visibility.Collapsed
                     };
                     ShowContentAsModalDialog(nhmUpdatedDialog);
                 }
