@@ -244,8 +244,7 @@
                                                 <StackPanel>
                                                     <Button Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButton}" Content="Show Internals" Click="Button_Click_ShowInternals" />
                                                     <Separator Background="{DynamicResource BorderColor}"/>
-                                                    <!--TODO hook logic here-->
-                                                    <ToggleButton Padding="16,7,16,7" x:Name="PluginAutoUpdateToggleButton" IsChecked="{Binding Plugin.IsAutoUpdateEnabled, Mode=TwoWay}" Style="{StaticResource local.PluginContextMenuButton}">
+                                                    <ToggleButton Padding="16,7,16,7" x:Name="PluginAutoUpdateToggleButton" IsChecked="{Binding Plugin.IsAutoUpdateEnabled, Mode=TwoWay}" Style="{StaticResource local.PluginContextMenuButton}" Checked="PluginAutoUpdateToggleButton_Checked" Unchecked="PluginAutoUpdateToggleButton_Checked">
                                                         <StackPanel Orientation="Horizontal">
                                                             <TextBlock Text="Autoupdate Plugin " />
                                                             <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{Binding ElementName=PluginAutoUpdateToggleButton, Path=IsChecked, Mode=OneWay}" Margin="4,0,0,0"/>
