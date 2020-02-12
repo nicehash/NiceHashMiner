@@ -135,7 +135,7 @@
 
                 <local:SettingsCheckBoxItem Enabled="{Binding UpdateSettings.AutoUpdateMinerPlugins}"
                                             Description="{StaticResource autoUpdateMiner}"
-                                            Label="Auto update instaled plugins" />
+                                            Label="Auto update installed plugins" />
             </WrapPanel>
             <!-- LOG REPORT -->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">

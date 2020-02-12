@@ -104,5 +104,18 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
             PluginActionsButtonContext.IsOpen = false;
             _vm.ShowPluginInternals();
         }
+
+        private void PluginAutoUpdateToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (e.RoutedEvent == ToggleButton.UncheckedEvent)
+            {
+                _vm.Plugin.IsAutoUpdateEnabled = false;
+            }
+            else
+            {
+                _vm.Plugin.IsAutoUpdateEnabled = true;
+            }
+            _vm.Plugin.OnPropertyChanged(nameof(_vm.Plugin.IsAutoUpdateEnabled));
+        }
     }
 }
