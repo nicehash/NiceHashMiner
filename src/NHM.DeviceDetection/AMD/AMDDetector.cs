@@ -20,6 +20,27 @@ namespace NHM.DeviceDetection.AMD
         // Ok so this is kinda stupid and probably should be split into OpenCL class but since we currently QueryOpenCLDevices inside AMD we will check for NVIDIA OpenCL backend only after AMD Query is finished
         public static List<OpenCLPlatform> Platforms { get; private set; } = null;
 
+        private static string convertSize(double size)
+        {
+            try
+            {
+                string[] units = new string[] { "B", "KB", "MB", "GB", "TB", "PB" };
+                double mod = 1024.0;
+                int i = 0;
+
+                while (size >= mod)
+                {
+                    size /= mod;
+                    i++;
+                }
+                return Math.Round(size, 1) + units[i];
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers)
         {
             var amdDevices = new List<AMDDevice>();
@@ -82,8 +103,10 @@ namespace NHM.DeviceDetection.AMD
                         }
                         var uuidHEX = UUID.GetHexUUID(infoToHashed);
                         var uuid = $"AMD-{uuidHEX}";
-                        
-                        var bd = new BaseDevice(DeviceType.AMD, uuid, name, (int)oclDev.DeviceID);
+                        // append VRAM to distinguish AMD GPUs
+                        var vramPart = convertSize(gpuRAM);
+                        var setName = vramPart != null ? $"{name} {vramPart}" : name;
+                        var bd = new BaseDevice(DeviceType.AMD, uuid, setName, (int)oclDev.DeviceID);
                         var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
                         amdDevices.Add(amdDevice);
                     }
