@@ -130,7 +130,7 @@ namespace NHMCore.Notifications
         {
             var sentence = "was installed";
             if (!success) sentence = "was not installed";      
-            var notification = new Notification(NotificationsType.Info, Tr("Miner Plugin Update"), Tr($"New version of {pluginName} " +sentence));
+            var notification = new Notification(NotificationsType.Info, Tr($"{pluginName} Plugin Update"), Tr($"New version of {pluginName} " +sentence));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
