@@ -252,12 +252,11 @@ namespace NiceHashMiner
                 _mutex = new Mutex(true, appPath, out createdNew);
                 if (!createdNew)
                 {
-                    //MessageBox.Show("We have detected you are already running NiceHash Miner. Only a single instance should be running at a time.", "NiceHash Miner Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    // shutdown
-                    Shutdown();
-                    return;
+                   //MessageBox.Show("We have detected you are already running NiceHash Miner. Only a single instance should be running at a time.", "NiceHash Miner Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                   // shutdown
+                   Shutdown();
+                   return;
                 }
-                base.OnStartup(e);
 
                 ClearAllTmpFiles();
 
