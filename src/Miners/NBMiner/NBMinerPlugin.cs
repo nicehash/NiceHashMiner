@@ -42,7 +42,7 @@ namespace NBMiner
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(5, 0);
+        public override Version Version => new Version(8, 0);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";

@@ -34,7 +34,7 @@ namespace CryptoDredge
             };
         }
 
-        public override Version Version => new Version(5, 0);
+        public override Version Version => new Version(8, 0);
         public override string Name => "CryptoDredge";
 
         public override string Author => "info@nicehash.com";

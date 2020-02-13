@@ -39,7 +39,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(5, 1);
+        public override Version Version => new Version(8, 0);
 
         public override string Name => "ZEnemy";
 
