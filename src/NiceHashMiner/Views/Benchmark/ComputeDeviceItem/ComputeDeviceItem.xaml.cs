@@ -132,7 +132,8 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 Title = Tr("Set default settings?"),
                 Description = Tr("Are you sure you would like to clear all speeds for {0}?", _deviceData.Dev.FullName),
                 OkText = Tr("Yes"),
-                CancelText = Tr("No")          
+                CancelText = Tr("No"),
+                AnimationVisible = Visibility.Collapsed
             };
             DeviceActionsButtonContext.IsOpen = false;
             nhmConfirmDialog.OKClick += (s, e1) => { _deviceData.ClearAllSpeeds(); };

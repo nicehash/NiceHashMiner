@@ -31,6 +31,10 @@ namespace NHMCore.Notifications
             Configs.MiscSettings.Instance.ShowNotifications.TryGetValue(notification.NotificationUUID, out var shouldNotAdd);
             if (shouldNotAdd) return;
 
+            //only have 1 notification of same type
+            var groupNotifications = _notifications.Where(notif => notif.Group == notification.Group).ToList();
+            if (groupNotifications.Count != 0) return;
+
             lock (_lock)
             {
                 notification.NotificationNew = true;
