@@ -86,6 +86,7 @@ namespace NHMCore.Utils
                             OnAutoUpdate?.Invoke();
                             // #2 SAVE current state so we can resume it after the client updates
                             ApplicationStateManager.SaveMiningState();
+                            await Task.Delay(5000); // wait 5 seconds
                             await ApplicationStateManager.StopAllDevicesTask();
                             await Task.Delay(5000); // wait 5 seconds
                                                     // #3 restart accordingly if launcher or self containd app
