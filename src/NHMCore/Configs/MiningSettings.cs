@@ -54,6 +54,7 @@ namespace NHMCore.Configs
                 _hideMiningWindows = value;
                 MinerPluginToolkitV1.MinerToolkit.HideMiningWindows = value;
                 OnPropertyChanged(nameof(HideMiningWindows));
+                OnPropertyChanged(nameof(HideMiningWindowsAlertVisible));
             }
         }
 
@@ -66,6 +67,7 @@ namespace NHMCore.Configs
                 _minimizeMiningWindows = value;
                 MinerPluginToolkitV1.MinerToolkit.MinimizeMiningWindows = value;
                 OnPropertyChanged(nameof(MinimizeMiningWindows));
+                OnPropertyChanged(nameof(HideMiningWindowsAlertVisible));
             }
         }
 
@@ -92,5 +94,8 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(ApiBindPortPoolStart));
             }
         }
+
+
+        public bool HideMiningWindowsAlertVisible => MinimizeMiningWindows && HideMiningWindows;
     }
 }
