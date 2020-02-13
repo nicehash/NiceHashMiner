@@ -208,6 +208,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\SingleInstanceNotice.xaml.cs">
+      <DependentUpon>SingleInstanceNotice.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TDPSettings\TDPComputeDeviceItem.xaml.cs">
       <DependentUpon>TDPComputeDeviceItem.xaml</DependentUpon>
     </Compile>
@@ -490,6 +493,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Settings\SettingsGeneral.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SingleInstanceNotice.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

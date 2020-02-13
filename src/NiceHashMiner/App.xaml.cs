@@ -28,6 +28,18 @@ namespace NiceHashMiner
     {
         private const string Tag = "NICEHASH";
 
+        public static int ParseLauncherPID()
+        {
+            try
+            {
+                var launcherPIDArg = Environment.GetCommandLineArgs().Where(arg => arg.Contains("-PID")).FirstOrDefault();
+                if (launcherPIDArg != null && int.TryParse(launcherPIDArg.Replace("-PID", ""), out var pid)) return pid;
+            }
+            catch
+            {}
+            return -1;
+        }
+
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
 #if __DESIGN_DEVELOP
@@ -44,6 +56,7 @@ namespace NiceHashMiner
                 });
             };
             var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
+            var launcherPID = ParseLauncherPID();
             Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
             Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
             Launcher.SetIsLauncher(isLauncher);
@@ -95,16 +108,20 @@ namespace NiceHashMiner
                 try
                 {
                     var current = Process.GetCurrentProcess();
-                    if (Process.GetProcessesByName(current.ProcessName).Any(p => p.Id != current.Id))
+                    var processesIds = Process.GetProcessesByName(current.ProcessName).Select(p => p.Id);
+                    if (processesIds.Any(pid => pid != current.Id && pid != launcherPID))
                     {
+                        var singleInstanceNotice = new SingleInstanceNotice { };
+                        singleInstanceNotice.ShowDialog();
                         // Shutdown to exit
                         Shutdown();
+                        return;
                     }
                 }
                 catch
                 { }
             }
-            
+
             // Init logger
             Logger.ConfigureWithFile(LoggingDebugConsoleSettings.Instance.LogToFile, Level.Info, LoggingDebugConsoleSettings.Instance.LogMaxFileSize);
 

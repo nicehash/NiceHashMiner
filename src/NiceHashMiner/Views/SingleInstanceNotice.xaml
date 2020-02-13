@@ -1,0 +1,33 @@
+﻿<nhb:BaseDialogWindow x:Class="NiceHashMiner.Views.SingleInstanceNotice"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                      xmlns:nhb="clr-namespace:NiceHashMiner.Views.Common.NHBase"
+                      xmlns:local="clr-namespace:NiceHashMiner.Views"
+                      mc:Ignorable="d" 
+                      Height="200" Width="600"
+                      Topmost="True"
+                      ResizeMode="NoResize"
+                      WindowStyle="None"
+                      AllowsTransparency="True"
+                      Background="{DynamicResource BackgroundColor}">
+    <nhb:BaseDialogWindow.Resources>
+        <Style x:Key="local.TextBlock" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+            <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
+        </Style>
+
+    </nhb:BaseDialogWindow.Resources>
+    <StackPanel Orientation="Vertical">
+        <TextBlock Style="{StaticResource local.TextBlock}" Margin="0,40,0,0" HorizontalAlignment="Center" Text="NiceHash Miner is already running. Allow Multiple Instances to run more than one NiceHash Miner." />
+        <Button Style="{StaticResource OKButton}" Margin="0,32,0,0" Content="CLOSE"  Click="Close"/>
+    </StackPanel>
+</nhb:BaseDialogWindow>
