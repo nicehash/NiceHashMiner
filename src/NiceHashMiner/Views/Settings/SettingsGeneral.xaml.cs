@@ -147,7 +147,8 @@ namespace NiceHashMiner.Views.Settings
                 Title = Translations.Tr("Pack log files?"),
                 Description = Translations.Tr("This will restart your program and create a zip file on Desktop."),
                 OkText = Translations.Tr("Ok"),
-                CancelText = Translations.Tr("Cancel")
+                CancelText = Translations.Tr("Cancel"),
+                AnimationVisible = Visibility.Collapsed
             };
             nhmConfirmDialog.OKClick += (s, e1) => 
             {
