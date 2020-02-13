@@ -1,6 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.ClaymoreCommon;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
@@ -25,33 +24,34 @@ namespace Ethminer
             _started = DateTime.UtcNow;
         }
 
-#warning API doesn't work Read stream blocks
-        public async override Task<ApiData> GetMinerStatsDataAsync()
+        public override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var elapsedSeconds = DateTime.UtcNow.Subtract(_started).Seconds;
-            if (elapsedSeconds < 5)
-            {
-                return new ApiData();
-            }
-            var miningDevices = _miningPairs.Select(pair => pair.Device).ToList();
-            var algorithmTypes = new AlgorithmType[] { _algorithmType };
-            // multiply dagger API data 
-            var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, 0.0, 0.0, algorithmTypes);
-            var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
-            for (var i = 0; i < totalCount; i++)
-            {
-                ad.AlgorithmSpeedsTotal[i].Speed *= 1000; // speed is in khs
-            }
-            var keys = ad.AlgorithmSpeedsPerDevice.Keys.ToArray();
-            foreach (var key in keys)
-            {
-                var devSpeedtotalCount = (ad.AlgorithmSpeedsPerDevice[key])?.Count ?? 0;
-                for (var i = 0; i < devSpeedtotalCount; i++)
-                {
-                    ad.AlgorithmSpeedsPerDevice[key][i].Speed *= 1000; // speed is in khs
-                }
-            }
-            return ad;
+            // this whole API goes out anyways after nhmproxy
+            return null;
+            //var elapsedSeconds = DateTime.UtcNow.Subtract(_started).Seconds;
+            //if (elapsedSeconds < 5)
+            //{
+            //    return new ApiData();
+            //}
+            //var miningDevices = _miningPairs.Select(pair => pair.Device).ToList();
+            //var algorithmTypes = new AlgorithmType[] { _algorithmType };
+            //// multiply dagger API data 
+            //var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, 0.0, 0.0, algorithmTypes);
+            //var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
+            //for (var i = 0; i < totalCount; i++)
+            //{
+            //    ad.AlgorithmSpeedsTotal[i].Speed *= 1000; // speed is in khs
+            //}
+            //var keys = ad.AlgorithmSpeedsPerDevice.Keys.ToArray();
+            //foreach (var key in keys)
+            //{
+            //    var devSpeedtotalCount = (ad.AlgorithmSpeedsPerDevice[key])?.Count ?? 0;
+            //    for (var i = 0; i < devSpeedtotalCount; i++)
+            //    {
+            //        ad.AlgorithmSpeedsPerDevice[key][i].Speed *= 1000; // speed is in khs
+            //    }
+            //}
+            //return ad;
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)

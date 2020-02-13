@@ -88,7 +88,7 @@ namespace NHMCore.Notifications
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Restart NiceHash Miner",
-                Action = () => { ApplicationStateManager.RestartProgram(); }
+                Action = () => { _ = ApplicationStateManager.RestartProgram(); }
             });
             NotificationsManager.Instance.AddNotificationToList(notification);
         }

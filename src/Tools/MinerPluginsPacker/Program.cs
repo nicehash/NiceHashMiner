@@ -148,9 +148,27 @@ namespace MinerPluginsPacker
             var pluginPackagesFolder = Path.Combine(exePath, "plugins_packages");
             var pluginsSearchRoot = args[0];
 
+            var pathMustContain = new List<string>
+            {
+                "obj",
+                "Release",
+                "netstandard2.0",
+            };
+            var pathMustNOTContain = new List<string>
+            {
+                "MinerPlugin",
+                "bin",
+                "BrokenMiner",
+                "Ethlargement",
+                "Ethminer",
+                "ExamplePlugin",
+                "FakePlugin",
+                "SRBMiner",
+            };
+
             // get all managed plugin dll's 
             var dllFiles = Directory.GetFiles(pluginsSearchRoot, "*.dll", SearchOption.AllDirectories)
-                .Where(filePath => !filePath.Contains("MinerPlugin") && filePath.Contains("net45") && filePath.Contains("Release") && !filePath.Contains("bin")).ToList();
+                .Where(filePath => pathMustContain.All(subDir => filePath.Contains(subDir)) && pathMustNOTContain.All(subDir => !filePath.Contains(subDir))).ToList();
 
             var packedPlugins = new HashSet<string>();
 

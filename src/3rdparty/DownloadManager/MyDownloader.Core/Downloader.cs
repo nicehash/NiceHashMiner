@@ -585,7 +585,7 @@ namespace MyDownloader.Core
             // allocs the file on disk
             AllocLocalFile();
 
-            long segmentSize;
+            //long segmentSize;
 
             CalculatedSegment[] calculatedSegments;
 

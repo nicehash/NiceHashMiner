@@ -153,11 +153,11 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateDeviceMonitoringNvidiaElevateInfo();
                 }
-                // TODO add check and only show if not enabled
-                if (AvailableDevices.HasCpu)
-                {
-                    AvailableNotifications.CreateEnableLargePagesInfo();
-                }
+                //// TODO add check and only show if not enabled
+                //if (AvailableDevices.HasCpu)
+                //{
+                //    AvailableNotifications.CreateEnableLargePagesInfo();
+                //}
                 // TODO add check and only show if not enabled
                 if (AvailableDevices.HasAmd)
                 {

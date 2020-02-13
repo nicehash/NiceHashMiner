@@ -223,12 +223,6 @@ namespace MinerPluginToolkitV1
             }
         }
 
-        /// <summary>
-        /// Obsolete use StartMiningTask (<see cref="IMinerAsyncExtensions"/>)
-        /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask")]
-        public virtual void StartMining() {}
-
         private void ExitMiningProcess(Process miningProcess)
         {
             try
@@ -269,7 +263,7 @@ namespace MinerPluginToolkitV1
         CancellationTokenSource _stopMinerTaskSource;
         Task _miningProcessTask;
 
-        public Task<object> StartMiningTask(CancellationToken stop)
+        public virtual Task<object> StartMiningTask(CancellationToken stop)
         {
             //const int ERROR_FILE_NOT_FOUND = 0x2;
             //const int ERROR_ACCESS_DENIED = 0x5;
@@ -365,7 +359,7 @@ namespace MinerPluginToolkitV1
             return startProcessTaskCompletionSource.Task;
         }
 
-        public async Task StopMiningTask()
+        public virtual async Task StopMiningTask()
         {
             try
             {
@@ -387,10 +381,18 @@ namespace MinerPluginToolkitV1
             if (isTokenCanceled) throw new StopMinerWatchdogException();
         }
 
+        #region DELETE after nhmproxy
+        /// <summary>
+        /// Obsolete use StartMiningTask (<see cref="IMinerAsyncExtensions"/>)
+        /// </summary>
+        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask", true)]
+        public virtual void StartMining() { }
+
         /// <summary>
         /// Obsolete use StopMiningTask (<see cref="IMinerAsyncExtensions"/>)
         /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask")]
+        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask", true)]
         public virtual void StopMining() {}
+        #endregion DELETE after nhmproxy
     }
 }

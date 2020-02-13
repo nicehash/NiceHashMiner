@@ -18,8 +18,8 @@ namespace Example
     {
         #region members for simulation purposes
         List<MiningPair> _miningPairs;
-        string _miningLocation;
-        string _username;
+        string _miningLocation = "location";
+        string _username = "DEMO";
         AlgorithmType _algorithmType;
 
         Process _miningProcess;

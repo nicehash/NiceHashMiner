@@ -39,7 +39,9 @@ namespace Ethlargement
         // register in GetSupportedAlgorithms and filter in InitInternals
         private static Dictionary<string, string> _registeredSupportedDevices = new Dictionary<string, string>();
 
+#pragma warning disable 0618
         private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.MTP, AlgorithmType.Eaglesong };
+#pragma warning restore 0618
 
         private bool IsServiceDisabled => !ServiceEnabled && _registeredSupportedDevices.Count > 0;
 

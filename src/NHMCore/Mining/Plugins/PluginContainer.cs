@@ -333,9 +333,9 @@ namespace NHMCore.Mining.Plugins
             if (!_devicesCrossReference && _plugin is IDevicesCrossReference impl)
             {
                 _devicesCrossReference = true;
-                return CheckExec(nameof(impl.DevicesCrossReference), () => impl.DevicesCrossReference(devices), TaskHelpers.CompletedTask);
+                return CheckExec(nameof(impl.DevicesCrossReference), () => impl.DevicesCrossReference(devices), Task.CompletedTask);
             }
-            return TaskHelpers.CompletedTask;
+            return Task.CompletedTask;
         }
         #endregion IDevicesCrossReference
 

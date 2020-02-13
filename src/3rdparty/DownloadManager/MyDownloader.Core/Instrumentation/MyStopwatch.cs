@@ -11,9 +11,10 @@ namespace MyDownloader.Core.Instrumentation
     public class MyStopwatch : IDisposable
     {
         #region Fields
-
+#pragma warning disable 0169
         private Stopwatch internalStopwatch;
         private string name;
+#pragma warning restore 0169
 
         #endregion
 

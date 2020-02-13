@@ -1,4 +1,5 @@
-﻿using MinerPluginToolkitV1;
+﻿#define DISABLE_IDevicesCrossReference
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
@@ -98,7 +99,10 @@ namespace NBMiner
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-#warning Blocks exit
+#if DISABLE_IDevicesCrossReference
+            await Task.CompletedTask;
+#else
+#warning Blocks exit. Check if this is fixed with newer versions
             return;
             if (_mappedIDs.Count == 0) return;
             // TODO will break
@@ -112,6 +116,7 @@ namespace NBMiner
                 var indexID = kvp.Value;
                 _mappedIDs[uuid] = indexID;
             }
+#endif
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

@@ -4,12 +4,8 @@
     <ProjectReference Include="..\MinerPlugin\MinerPlugin.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-
   <PropertyGroup>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
-
 </Project>

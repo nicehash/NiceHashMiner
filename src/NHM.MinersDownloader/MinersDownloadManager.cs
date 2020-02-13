@@ -17,7 +17,7 @@ namespace NHM.MinersDownloader
     public static class MinersDownloadManager
     {
         // don't use this it is faster but less stable
-        public static bool UseMyDownloader { get; set; } = false;
+        public static bool UseMyDownloader { get; set; } = true;
 
         static MinersDownloadManager()
         {
@@ -28,21 +28,23 @@ namespace NHM.MinersDownloader
                    | SecurityProtocolType.Ssl3;
         }
 
-        public static Task<(bool success, string downloadedFilePath)> DownloadFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
+        public static async Task<(bool success, string downloadedFilePath)> DownloadFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
 
             // TODO switch for mega upload
             if (IsMegaUpload(url))
             {
-                return DownlaodWithMegaAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
+                return await DownlaodWithMegaAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
             }
 
-            if (UseMyDownloader)
+            // check if url is valid because if it isn't MyDownloader will block
+            var urlIsValid = await UrlIsValid(url);
+            if (UseMyDownloader && urlIsValid)
             {
-                return DownlaodWithMyDownloaderAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
+                return await DownlaodWithMyDownloaderAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
             }
 
-            return DownloadFileWebClientAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
+            return await DownloadFileWebClientAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
         }
 
         internal static bool IsMegaUpload(string url)
@@ -266,5 +268,47 @@ namespace NHM.MinersDownloader
             return (success, downloadFileLocation);
         }
         #endregion Mega 
+
+
+
+        private static async Task<bool> UrlIsValid(string url)
+        {
+            try
+            {
+                var request = HttpWebRequest.Create(url) as HttpWebRequest;
+                request.Timeout = 5000; //set the timeout to 5 seconds to keep the user from waiting too long for the page to load
+                request.Method = "HEAD"; //Get only the header information -- no need to download any content
+
+                using (var response = await request.GetResponseAsync() as HttpWebResponse)
+                {
+                    int statusCode = (int)response.StatusCode;
+                    if (statusCode >= 100 && statusCode < 400) //Good requests
+                    {
+                        return true;
+                    }
+                    else if (statusCode >= 500 && statusCode <= 510) //Server Errors
+                    {
+                        Logger.Info("MinersDownloadManager", $"The remote server has thrown an internal error. Url is not valid: {url}");
+                        return false;
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.ProtocolError) //400 errors
+                {
+                    return false;
+                }
+                else
+                {
+                    Logger.Error("MinersDownloadManager", $"Unhandled status [{ex.Status}] returned for url: {url}. Ex {ex.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("MinersDownloadManager", $"Could not test url {url}. Ex {ex}");
+            }
+            return false;
+        }
     }
 }

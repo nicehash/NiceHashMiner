@@ -77,7 +77,7 @@ namespace Example
                 // only AMD supports 
                 if (device.DeviceType == DeviceType.AMD)
                 {
-                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.MTP));
+                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.Eaglesong));
                 }
 
                 supported.Add(device, algorithms);

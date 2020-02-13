@@ -429,10 +429,10 @@ namespace XmrStak
             return Tuple.Create(success, configsFullPath);
         }
 
-        public override void StopMining()
+        public override Task StopMiningTask()
         {
             StopSource();
-            base.StopMining();
+            return base.StopMiningTask();
         }
     }
 }
