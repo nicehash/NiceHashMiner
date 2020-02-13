@@ -220,20 +220,18 @@
             </WrapPanel>
             <WrapPanel Grid.Row="0" Grid.Column="5"
                        HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" x:Name="SettingsPanel"
-                       Visibility="{Binding IsUserEditable, Converter={StaticResource NulBoolToVisibilityConverter}}"
+                       IsEnabled="{ Binding IsUserEditable }"
                        >
                 <CheckBox Style="{StaticResource NHMSwitch}"
                           IsChecked="{Binding Enabled, Mode=TwoWay}"
                           Click="EnableChanged"
                           x:Name="SettingsPanelCheckBox"
-                          Visibility="{Binding IsUserEditable, Converter={StaticResource NulBoolToVisibilityConverter}}"
                           Margin="0,0,8,0" />
                 <!--TODO add context menu and all that-->
                 <Button Style="{DynamicResource local.SettingsButton}"
                         IsEnabled="True"
                         DataContext="{Binding .}"
                         x:Name="SettingsPanelButtonSettings"
-                        Visibility="{Binding IsUserEditable, Converter={StaticResource NulBoolToVisibilityConverter}}"
                         Click="AlgorithmSettings_Button_Click"
                         Margin="8,0,0,0">
                     <Button.ContextMenu>

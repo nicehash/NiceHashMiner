@@ -66,10 +66,14 @@
                     </ControlTemplate.Resources>
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
-                            <MultiTrigger.ExitActions>
+                            <!--<MultiTrigger.ExitActions>
                                 <RemoveStoryboard BeginStoryboardName="leftt"></RemoveStoryboard>
                                 <BeginStoryboard Storyboard="{StaticResource right}" x:Name="rightt" ></BeginStoryboard>
-                            </MultiTrigger.ExitActions>
+                            </MultiTrigger.ExitActions>-->
+                            <MultiTrigger.EnterActions>
+                                <RemoveStoryboard BeginStoryboardName="rightt"></RemoveStoryboard>
+                                <BeginStoryboard Storyboard="{StaticResource left}" x:Name="leftt" ></BeginStoryboard>
+                            </MultiTrigger.EnterActions>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsChecked" Value="False"/>
                                 <Condition Property="IsEnabled" Value="True"/>
@@ -83,10 +87,14 @@
                         </MultiTrigger>
                         
                         <MultiTrigger>
-                            <MultiTrigger.ExitActions>
+                            <!--<MultiTrigger.ExitActions>
                                 <RemoveStoryboard BeginStoryboardName="rightt"></RemoveStoryboard>
                                 <BeginStoryboard Storyboard="{StaticResource left}" x:Name="leftt" ></BeginStoryboard>
-                            </MultiTrigger.ExitActions>
+                            </MultiTrigger.ExitActions>-->
+                            <MultiTrigger.EnterActions>
+                                <RemoveStoryboard BeginStoryboardName="leftt"></RemoveStoryboard>
+                                <BeginStoryboard Storyboard="{StaticResource right}" x:Name="rightt" ></BeginStoryboard>
+                            </MultiTrigger.EnterActions>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsChecked" Value="True"/>
                                 <Condition Property="IsEnabled" Value="True"/>
@@ -106,19 +114,25 @@
                                 <Condition Property="IsEnabled" Value="False"/>
                             </MultiTrigger.Conditions>
                             <MultiTrigger.Setters>
-                                <Setter TargetName="button" Property="Background" Value="{StaticResource Gray2ColorBrush}" />
-                                <Setter TargetName="bar" Property="Background" Value="#eeeeee" />
+                                <Setter TargetName="button" Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                                <Setter TargetName="bar" Property="Background" Value="{StaticResource PrimaryColorBrush}" />
+                                <Setter TargetName="button" Property="Margin" Value="16,0,0,0" />
+                                <Setter TargetName="bar" Property="Opacity" Value="0.2" />
+                                <Setter TargetName="button" Property="Opacity" Value="0.5" />
                             </MultiTrigger.Setters>
                         </MultiTrigger>
-                        
+
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsChecked" Value="False"/>
                                 <Condition Property="IsEnabled" Value="False"/>
                             </MultiTrigger.Conditions>
                             <MultiTrigger.Setters>
-                                <Setter TargetName="button" Property="Background" Value="{StaticResource Gray2ColorBrush}" />
+                                <Setter TargetName="button" Property="Background" Value="#eeeeee" />
                                 <Setter TargetName="bar" Property="Background" Value="#eeeeee" />
+                                <Setter TargetName="button" Property="Margin" Value="0,0,0,0" />
+                                <Setter TargetName="bar" Property="Opacity" Value="0.2" />
+                                <Setter TargetName="button" Property="Opacity" Value="0.5" />
                             </MultiTrigger.Setters>
                         </MultiTrigger>
                         <!--#endregion TODO Not working as desired-->
