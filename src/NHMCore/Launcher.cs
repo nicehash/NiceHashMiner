@@ -20,11 +20,19 @@ namespace NHMCore
         public static void SetIsUpdated(bool isUpdated)
         {
             IsUpdated = isUpdated;
+            if (IsUpdated)
+            {
+                Notifications.AvailableNotifications.CreateNhmWasUpdatedInfo(true);
+            }
         }
 
         public static void SetIsUpdatedFailed(bool isUpdatedFailed)
         {
             IsUpdatedFailed = isUpdatedFailed;
+            if (IsUpdatedFailed)
+            {
+                Notifications.AvailableNotifications.CreateNhmWasUpdatedInfo(false);
+            }
         }
     }
 }

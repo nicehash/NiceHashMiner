@@ -127,6 +127,15 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
+        public static void CreateNhmWasUpdatedInfo(bool success)
+        {
+            var sentence = "was updated";
+            if (!success) sentence = "was not updated";
+
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmWasUpdated, Tr("NiceHash Miner was Updated"), Tr($"NiceHash Miner {sentence} to the latest version."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
         public static void CreatePluginUpdateInfo(string pluginName, bool success)
         {
             var sentence = "was installed";
