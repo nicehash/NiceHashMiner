@@ -184,7 +184,7 @@
                 <TextBlock Style="{StaticResource AlertIcon}"
                            Margin="12,0,0,0"
                            Visibility="{Binding MiningSettings.HideMiningWindowsAlertVisible, Converter={StaticResource NulBoolToVisibilityConverter}, Mode=OneWay}"
-                           ToolTip="This feature cannot be used in conjunction with 'Minimize Mining Windows'."/>
+                           ToolTip="This feature cannot be used in conjunction with 'Minimize Mining Windows'. Only 'Minimize Mining Windows' will be used."/>
             </WrapPanel>
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.MinimizeMiningWindows}"
                                         Label="Minimize Mining Windows"
