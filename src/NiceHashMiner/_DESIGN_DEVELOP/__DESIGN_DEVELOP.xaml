@@ -10,6 +10,5 @@
         Title="__DESIGN_DEVELOP" Height="450" Width="800">
     <Grid>
         <!--<localColors:Colors></localColors:Colors>-->
-        <localComponents:Components></localComponents:Components>
     </Grid>
 </Window>

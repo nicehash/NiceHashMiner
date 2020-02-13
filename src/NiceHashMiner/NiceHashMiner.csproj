@@ -44,7 +44,6 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -223,9 +222,6 @@
     </Compile>
     <Compile Include="_DESIGN_DEVELOP\Colors\Colors.xaml.cs">
       <DependentUpon>Colors.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="_DESIGN_DEVELOP\Components\Components.xaml.cs">
-      <DependentUpon>Components.xaml</DependentUpon>
     </Compile>
     <Compile Include="_DESIGN_DEVELOP\Components\ThemeSwitch.xaml.cs">
       <DependentUpon>ThemeSwitch.xaml</DependentUpon>
@@ -514,10 +510,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="_DESIGN_DEVELOP\Colors\Colors.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="_DESIGN_DEVELOP\Components\Components.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
