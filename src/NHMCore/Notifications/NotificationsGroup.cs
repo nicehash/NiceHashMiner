@@ -34,6 +34,7 @@ namespace NHMCore.Notifications
         [Obsolete]
         BitOS64,
         NhmUpdate,
+        NhmWasUpdated,
         PluginUpdate,
         NvidiaDCH,
         WindowsDefenderException,
