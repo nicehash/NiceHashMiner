@@ -311,7 +311,7 @@ namespace NHMCore
         }
 
         #region Updater mining state save/restore
-        private static string _miningStateFilePath => Paths.RootPath("DeviceRestoreStates.json");
+        private static string _miningStateFilePath => Paths.InternalsPath("DeviceRestoreStates.json");
         private struct DeviceRestoreState
         {
             public bool IsStarted { get; set; }
@@ -330,7 +330,20 @@ namespace NHMCore
         internal static async Task RestoreMiningState()
         {
             var devicesRestoreStates = InternalConfigs.ReadFileSettings<Dictionary<string, DeviceRestoreState>>(_miningStateFilePath);
-            if (devicesRestoreStates == null) return;
+            if (devicesRestoreStates == null) {
+                var miningStateFilePathOLD = Paths.RootPath("DeviceRestoreStates.json");
+                // check the old path since older versions will save it there
+                devicesRestoreStates = InternalConfigs.ReadFileSettings<Dictionary<string, DeviceRestoreState>>(miningStateFilePathOLD);
+                try
+                {
+                    File.Delete(miningStateFilePathOLD);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("ApplicationStateManager.Mining", $"RestoreMiningState delete old Exception: {e.Message}");
+                }
+                if (devicesRestoreStates == null) return;
+            }
             try
             {
                 File.Delete(_miningStateFilePath);

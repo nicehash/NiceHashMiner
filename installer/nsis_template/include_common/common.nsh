@@ -63,7 +63,20 @@ Name "${PRODUCT_NAME}"
 
 # this will delete all but configs, backups, internals and miner_plugins
 !macro deleteUserData_KeepNonGeneralSettings
-  Delete "$INSTDIR\*.*"
+  # comment this out since it breaks the installer state restore
+  #Delete "$INSTDIR\*.*"
+  # Because you f-ed up 
+  Delete "$INSTDIR\build_settings.json"
+  Delete "$INSTDIR\CreateLogReport.exe"
+  Delete "$INSTDIR\EULA.html"
+  Delete "$INSTDIR\EULA.rtf"
+  Delete "$INSTDIR\NiceHashMiner.exe"
+  Delete "$INSTDIR\NiceHashMiner.exe.config"
+  Delete "$INSTDIR\NiceHashMiner.pdb"
+  Delete "$INSTDIR\OnGPUsLost.bat"
+  Delete "$INSTDIR\runnhmasadmin.exe"
+  Delete "$INSTDIR\Uninstall NiceHashMiner.exe"
+  # Because you f-ed up
 
   RMDir /R "$INSTDIR\NVIDIA"
   RMDir /R "$INSTDIR\OpenCL"
