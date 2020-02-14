@@ -124,6 +124,15 @@ namespace NHMCore.Notifications
         public static void CreateNhmUpdateInfo()
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmUpdate, Tr("NiceHash Miner Update"), Tr("New version of NiceHash Miner is available."));
+            if (!Configs.UpdateSettings.Instance.AutoUpdateNiceHashMiner)
+            {
+                notification.Actions.Add(new NotificationAction
+                {
+                    Info = "Visit release Page",
+                    Action = () => {Process.Start(Links.VisitReleasesUrl); }
+                });
+            }
+            
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
