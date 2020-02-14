@@ -160,8 +160,9 @@
                 <RowDefinition Height="4*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <DockPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto" Height="Auto">
+            <DockPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Width="Auto" Height="Auto" Grid.RowSpan="2">
                 <ToggleButton DockPanel.Dock="Top" Style="{DynamicResource StartStopButtonLight}"
+                              Margin="0,24,0,0"
                               IsEnabled="{Binding BenchmarkSettings.CanStart}"
                               IsChecked="{Binding MiningState.AnyDeviceRunning, Mode=OneWay}"
                               VerticalAlignment="Center" HorizontalAlignment="Center"

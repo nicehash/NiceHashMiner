@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using NHMCore.Utils;
 using System.Diagnostics;
 using NHMCore.Notifications;
+using NHMCore.ApplicationState;
 
 namespace NiceHashMiner.Views
 {
@@ -69,7 +70,33 @@ namespace NiceHashMiner.Views
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
             NotificationsManager.Instance.PropertyChanged += Instance_PropertyChanged;
+            MiningState.Instance.PropertyChanged += MiningStateInstance_PropertyChanged;
             SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
+        }
+
+        private void MiningStateInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (nameof(MiningState.Instance.IsDemoMining) == e.PropertyName && MiningState.Instance.IsDemoMining)
+            {
+                Logger.Debug("DEMO", MiningState.Instance.IsDemoMining.ToString());
+                Dispatcher.Invoke(() =>
+                {
+                    var demoMiningDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("Demo mining"),
+                        Description = Translations.Tr("You are currently mining in DEMO mode!"),
+                        OkText = Translations.Tr("Ok"),
+                        CancelVisible = Visibility.Collapsed,
+                        AnimationVisible = Visibility.Collapsed,
+                        CloseOnOk = true
+                    };
+                    CustomDialogManager.ShowModalDialog(demoMiningDialog);
+                });
+            }
+            else if(nameof(MiningState.Instance.IsDemoMining) == e.PropertyName && !MiningState.Instance.IsDemoMining)
+            {
+                Logger.Debug("DEMO NOT", MiningState.Instance.IsDemoMining.ToString());
+            }
         }
 
         private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
