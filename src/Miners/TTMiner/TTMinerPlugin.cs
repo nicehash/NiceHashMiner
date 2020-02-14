@@ -41,7 +41,7 @@ namespace TTMiner
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(5, 0);
+        public override Version Version => new Version(8, 0);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 

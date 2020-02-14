@@ -14,7 +14,7 @@ namespace LolMiner
             return new List<SAS>
                     {
                         new SAS(AlgorithmType.GrinCuckarood29),
-                        new SAS(AlgorithmType.GrinCuckatoo31),
+                        new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory},
                         new SAS(AlgorithmType.BeamV2),
                         new SAS(AlgorithmType.Cuckaroom) { NonDefaultRAMLimit = AMD_8GBMemory },
                         new SAS(AlgorithmType.GrinCuckatoo32),
@@ -52,7 +52,7 @@ namespace LolMiner
                 { AlgorithmType.GrinCuckarood29, "GRIN-AD29" },
                 { AlgorithmType.GrinCuckatoo31, "GRIN-AT31" },
                 { AlgorithmType.BeamV2, "BEAM-II" },
-                { AlgorithmType.Cuckaroom, "FLOO-C29M" },
+                { AlgorithmType.Cuckaroom, "GRIN-C29M" },
                 { AlgorithmType.GrinCuckatoo32, "GRIN-C32" },
             }
         };

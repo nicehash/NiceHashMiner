@@ -54,6 +54,122 @@
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
+        <Style x:Key="AnimationStyle" TargetType="Control">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Control">
+                        <ControlTemplate.Resources>
+                            <Storyboard x:Key="Animation0" BeginTime="00:00:00.0" RepeatBehavior="Forever">
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="ellipse0" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+                                    <SplineColorKeyFrame KeyTime="00:00:00.0" Value="{StaticResource Colors.Dark.Basic.MainColor}"/>
+                                    <SplineColorKeyFrame KeyTime="00:00:01.6" Value="White"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+
+                            <Storyboard x:Key="Animation1" BeginTime="00:00:00.2" RepeatBehavior="Forever">
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="ellipse1" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+                                    <SplineColorKeyFrame KeyTime="00:00:00.0" Value="{StaticResource Colors.Dark.Basic.MainColor}"/>
+                                    <SplineColorKeyFrame KeyTime="00:00:01.6" Value="White"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+
+                            <Storyboard x:Key="Animation2" BeginTime="00:00:00.4" RepeatBehavior="Forever">
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="ellipse2" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+                                    <SplineColorKeyFrame KeyTime="00:00:00.0" Value="{StaticResource Colors.Dark.Basic.MainColor}"/>
+                                    <SplineColorKeyFrame KeyTime="00:00:01.6" Value="White"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+
+                            <Storyboard x:Key="Animation3" BeginTime="00:00:00.6" RepeatBehavior="Forever">
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="ellipse3" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+                                    <SplineColorKeyFrame KeyTime="00:00:00.0" Value="{StaticResource Colors.Dark.Basic.MainColor}"/>
+                                    <SplineColorKeyFrame KeyTime="00:00:01.6" Value="White"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+
+                            <Storyboard x:Key="Animation4" BeginTime="00:00:00.8" RepeatBehavior="Forever">
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="ellipse4" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+                                    <SplineColorKeyFrame KeyTime="00:00:00.0" Value="{StaticResource Colors.Dark.Basic.MainColor}"/>
+                                    <SplineColorKeyFrame KeyTime="00:00:01.6" Value="White"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+
+                            <Storyboard x:Key="Animation5" BeginTime="00:00:01.0" RepeatBehavior="Forever">
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="ellipse5" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+                                    <SplineColorKeyFrame KeyTime="00:00:00.0" Value="{StaticResource Colors.Dark.Basic.MainColor}"/>
+                                    <SplineColorKeyFrame KeyTime="00:00:01.6" Value="White"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+
+                            <Storyboard x:Key="Animation6" BeginTime="00:00:01.2" RepeatBehavior="Forever">
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="ellipse6" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+                                    <SplineColorKeyFrame KeyTime="00:00:00.0" Value="{StaticResource Colors.Dark.Basic.MainColor}"/>
+                                    <SplineColorKeyFrame KeyTime="00:00:01.6" Value="White"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+
+                            <Storyboard x:Key="Animation7" BeginTime="00:00:01.4" RepeatBehavior="Forever">
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="ellipse7" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)">
+                                    <SplineColorKeyFrame KeyTime="00:00:00.0" Value="{StaticResource Colors.Dark.Basic.MainColor}"/>
+                                    <SplineColorKeyFrame KeyTime="00:00:01.6" Value="White"/>
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </ControlTemplate.Resources>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsVisible" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard Storyboard="{StaticResource Animation0}" x:Name="Storyboard0" />
+                                    <BeginStoryboard Storyboard="{StaticResource Animation1}" x:Name="Storyboard1"/>
+                                    <BeginStoryboard Storyboard="{StaticResource Animation2}" x:Name="Storyboard2"/>
+                                    <BeginStoryboard Storyboard="{StaticResource Animation3}" x:Name="Storyboard3"/>
+                                    <BeginStoryboard Storyboard="{StaticResource Animation4}" x:Name="Storyboard4"/>
+                                    <BeginStoryboard Storyboard="{StaticResource Animation5}" x:Name="Storyboard5"/>
+                                    <BeginStoryboard Storyboard="{StaticResource Animation6}" x:Name="Storyboard6"/>
+                                    <BeginStoryboard Storyboard="{StaticResource Animation7}" x:Name="Storyboard7"/>
+                                </Trigger.EnterActions>
+
+                                <Trigger.ExitActions>
+                                    <StopStoryboard BeginStoryboardName="Storyboard0"/>
+                                    <StopStoryboard BeginStoryboardName="Storyboard1"/>
+                                    <StopStoryboard BeginStoryboardName="Storyboard2"/>
+                                    <StopStoryboard BeginStoryboardName="Storyboard3"/>
+                                    <StopStoryboard BeginStoryboardName="Storyboard4"/>
+                                    <StopStoryboard BeginStoryboardName="Storyboard5"/>
+                                    <StopStoryboard BeginStoryboardName="Storyboard6"/>
+                                    <StopStoryboard BeginStoryboardName="Storyboard7"/>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Canvas Height="40" Width="40">
+                                    <Canvas.Resources>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Width" Value="5"/>
+                                            <Setter Property="Height" Value="5" />
+                                            <Setter Property="Fill" Value="Transparent" />
+                                        </Style>
+                                    </Canvas.Resources>
+
+                                    <Ellipse x:Name="ellipse0" Canvas.Left="0.875" Canvas.Top="10.5"/>
+                                    <Ellipse x:Name="ellipse1" Canvas.Left="3.25" Canvas.Top="3.5" />
+                                    <Ellipse x:Name="ellipse2" Canvas.Left="10.25" Canvas.Top="0.375"/>
+                                    <Ellipse x:Name="ellipse3" Canvas.Left="17.375" Canvas.Top="3.375"/>
+                                    <Ellipse x:Name="ellipse4" Canvas.Left="20.25" Canvas.Top="10.375" />
+                                    <Ellipse x:Name="ellipse5" Canvas.Left="17.375" Canvas.Top="17.25"/>
+                                    <Ellipse x:Name="ellipse6" Canvas.Left="10.375" Canvas.Top="19.875"/>
+                                    <Ellipse x:Name="ellipse7" Canvas.Left="3.5" Canvas.Top="17.125"  />
+                                    <Ellipse Width="30" Height="30" Canvas.Left="8.75" Canvas.Top="8" Visibility="Hidden"/>
+                                </Canvas>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </UserControl.Resources>
     <Grid MaxHeight="220" MaxWidth="392" Height="Auto" Width="Auto" MinHeight="200" MinWidth="392" Background="{DynamicResource BackgroundColor}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:CustomDialog}}}">
         <Grid.Effect>
@@ -61,6 +177,7 @@
         </Grid.Effect>
         <Grid Margin="15">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -85,7 +202,8 @@
                        HorizontalAlignment="Center"
                        TextAlignment="Center"
                        Text="{Binding Description}"/>
-            <WrapPanel Grid.Row="3" Margin="0,30,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Control Grid.Row="3" Style="{StaticResource AnimationStyle}" Margin="0,20,0,-25" Visibility="{Binding AnimationVisible}" />
+            <WrapPanel Grid.Row="4" Margin="0,30,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
                 <Button
                     x:Name="CancelButton"
                     Style="{DynamicResource CancelButton}"

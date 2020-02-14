@@ -31,7 +31,7 @@ namespace NiceHashMiner.ViewModels
                 {
                     statuses[1] = "Benchmarking";
                 }
-                ret += string.Join("/", statuses.Where(s => s != null));
+                ret += string.Join(" / ", statuses.Where(s => s != null));
                 return Translations.Tr(ret);
             }
         }
