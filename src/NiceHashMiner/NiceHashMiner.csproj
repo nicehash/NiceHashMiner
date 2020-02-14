@@ -116,6 +116,9 @@
     <Compile Include="Views\Common\EnterWalletDialog.xaml.cs">
       <DependentUpon>EnterWalletDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\EnterWalletDialogDemo.xaml.cs">
+      <DependentUpon>EnterWalletDialogDemo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\EnterWorkernameDialog.xaml.cs">
       <DependentUpon>EnterWorkernameDialog.xaml</DependentUpon>
     </Compile>
@@ -381,6 +384,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Common\EnterWalletDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\EnterWalletDialogDemo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
