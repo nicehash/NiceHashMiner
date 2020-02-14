@@ -78,24 +78,11 @@ namespace NiceHashMiner.Views
         {
             if (nameof(MiningState.Instance.IsDemoMining) == e.PropertyName && MiningState.Instance.IsDemoMining)
             {
-                Logger.Debug("DEMO", MiningState.Instance.IsDemoMining.ToString());
                 Dispatcher.Invoke(() =>
                 {
-                    var demoMiningDialog = new CustomDialog()
-                    {
-                        Title = Translations.Tr("Demo mining"),
-                        Description = Translations.Tr("You are currently mining in DEMO mode!"),
-                        OkText = Translations.Tr("Ok"),
-                        CancelVisible = Visibility.Collapsed,
-                        AnimationVisible = Visibility.Collapsed,
-                        CloseOnOk = true
-                    };
+                    var demoMiningDialog = new EnterWalletDialogDemo();
                     CustomDialogManager.ShowModalDialog(demoMiningDialog);
                 });
-            }
-            else if(nameof(MiningState.Instance.IsDemoMining) == e.PropertyName && !MiningState.Instance.IsDemoMining)
-            {
-                Logger.Debug("DEMO NOT", MiningState.Instance.IsDemoMining.ToString());
             }
         }
 
