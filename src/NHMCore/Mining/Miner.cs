@@ -229,6 +229,10 @@ namespace NHMCore.Mining
 
         private async Task RunMinerWatchDogLoop(TaskCompletionSource<object> tsc, CancellationToken stop, string miningLocation, string username)
         {
+            // if we fail 3 times in a row under certain conditions mark on of them
+            const int maxRestartCount = 3;
+            int restartCount = 0;
+            const int minRestartTimeInSeconds = 15;
             try
             {
                 var firstStart = true;
@@ -236,8 +240,9 @@ namespace NHMCore.Mining
                 using (var linkedEndMiner = CancellationTokenSource.CreateLinkedTokenSource(stop, _endMiner.Token))
                 {
                     Logger.Info(MinerTag(), $"Starting miner watchdog task");
-                    while (!linkedEndMiner.IsCancellationRequested)
+                    while (!linkedEndMiner.IsCancellationRequested && (restartCount < maxRestartCount))
                     {
+                        var startTime = DateTime.UtcNow;
                         try
                         {
                             if (!firstStart)
@@ -273,6 +278,19 @@ namespace NHMCore.Mining
                         catch (Exception e)
                         {
                             Logger.Error(MinerTag(), $"RunMinerWatchDogLoop Exception: {e.Message}");
+                        }
+                        finally
+                        {
+                            var endTime = DateTime.UtcNow;
+                            var elapsedSeconds = (endTime - startTime).TotalSeconds - (MiningSettings.Instance.MinerRestartDelayMS);
+                            if (elapsedSeconds < minRestartTimeInSeconds) restartCount++;
+                            if(restartCount >= maxRestartCount)
+                            {
+                                var firstAlgo = _algos.FirstOrDefault();
+                                Random randWait = new Random();
+                                firstAlgo.IgnoreUntil = DateTime.UtcNow.AddMinutes(randWait.Next(20, 30));
+                                await MiningManager.MinerRestartLoopNotify();
+                            }
                         }
                     }
                 }

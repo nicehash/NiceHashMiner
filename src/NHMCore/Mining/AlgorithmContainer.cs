@@ -23,6 +23,8 @@ namespace NHMCore.Mining
         public Version ConfigVersion { get; internal set; } = new Version(1, 0);
         public Version PluginVersion => PluginContainer?.Version;
 
+        public DateTime IgnoreUntil { get; internal set; } = DateTime.UtcNow;
+
         // status is always calculated
         public AlgorithmStatus Status
         {
