@@ -52,9 +52,9 @@
 
     <system:String x:Key="Tooltip.IdleMining.IdleWhenNoInternetAccess">If enabled NiceHash Miner will stop mining without internet connectivity</system:String>
     <system:String x:Key="Tooltip.IdleMining.StartMiningWhenIdle">Automatically start mining when computer is idle and stop mining when computer is being used.</system:String>
-    <system:String x:Key="Tooltip.IdleMining.IdleCheckMethod">Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds."</system:String>
-    <system:String x:Key="Tooltip.IdleMining.MinIdleSeconds">When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts."</system:String>
-    <system:String x:Key="Tooltip.DisableVisualCRedistributableCheck">NiceHash Miner will disable Visual Studio C++ Redistributable checking."</system:String>
+    <system:String x:Key="Tooltip.IdleMining.IdleCheckMethod">Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds.</system:String>
+    <system:String x:Key="Tooltip.IdleMining.MinIdleSeconds">When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts.</system:String>
+    <system:String x:Key="Tooltip.DisableVisualCRedistributableCheck">NiceHash Miner will disable Visual Studio C++ Redistributable checking.</system:String>
     
     
 </ResourceDictionary>

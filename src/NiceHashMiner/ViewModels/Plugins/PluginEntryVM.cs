@@ -24,14 +24,14 @@ namespace NiceHashMiner.ViewModels.Plugins
                 // order really matters
                 if (Load.IsInstalling && Plugin.Supported)
                 {
-                    if (!Plugin.Installed) return Translations.Tr("INSTALLING");
-                    if (Plugin.HasNewerVersion) return Translations.Tr("UPDATING");
+                    if (!Plugin.Installed) return Tr("INSTALLING");
+                    if (Plugin.HasNewerVersion) return Tr("UPDATING");
                 }
 
-                if (Plugin.HasNewerVersion) return Translations.Tr("UPDATE");
-                if (Plugin.Installed) return Translations.Tr("INSTALLED");
-                if (Plugin.Supported) return Translations.Tr("INSTALL");
-                return Translations.Tr("Not Supported");
+                if (Plugin.HasNewerVersion) return Tr("UPDATE");
+                if (Plugin.Installed) return Tr("INSTALLED");
+                if (Plugin.Supported) return Tr("INSTALL");
+                return Tr("Not Supported");
             }
         }
 
@@ -43,7 +43,7 @@ namespace NiceHashMiner.ViewModels.Plugins
                 var onlineVer = Plugin?.OnlineInfo?.PluginVersion ?? null;
                 if (!Plugin.Installed && onlineVer != null)
                 {
-                    return $"{onlineVer.Major}.{onlineVer.Minor} (Online)";
+                    return string.Format(Tr("{0}.{1} (Online)"), onlineVer.Major, onlineVer.Minor);
                 }
                 if (Plugin.Installed && Plugin.HasNewerVersion && localVer != null && onlineVer != null)
                 {
@@ -51,15 +51,13 @@ namespace NiceHashMiner.ViewModels.Plugins
                 }
                 if (Plugin.Installed && !Plugin.HasNewerVersion && localVer != null)
                 {
-                    // TODO translate
-                    return $"{localVer.Major}.{localVer.Minor} (Latest)";
+                    return string.Format(Tr("{0}.{1} (Latest)"), onlineVer.Major, onlineVer.Minor);
                 }
                 if (localVer != null)
                 {
-                    // TODO Tranlsate
-                    return $"{localVer.Major}.{localVer.Minor} (Local)";
+                    return string.Format(Tr("{0}.{1} (Local)"), onlineVer.Major, onlineVer.Minor);
                 }
-                return Translations.Tr("N/A");
+                return Tr("N/A");
             }
         }
 

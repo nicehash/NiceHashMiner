@@ -246,7 +246,7 @@
                                                     <Separator Background="{DynamicResource BorderColor}"/>
                                                     <ToggleButton Padding="16,7,16,7" x:Name="PluginAutoUpdateToggleButton" IsChecked="{Binding Plugin.IsAutoUpdateEnabled, Mode=TwoWay}" Style="{StaticResource local.PluginContextMenuButton}" Checked="PluginAutoUpdateToggleButton_Checked" Unchecked="PluginAutoUpdateToggleButton_Checked">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="Autoupdate Plugin " />
+                                                            <TextBlock Text="Autoupdate Plugin" />
                                                             <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{Binding ElementName=PluginAutoUpdateToggleButton, Path=IsChecked, Mode=OneWay}" Margin="4,0,0,0"/>
                                                         </StackPanel>
                                                     </ToggleButton>

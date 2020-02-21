@@ -62,7 +62,7 @@
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Logging" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
             <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.LogToFile}"
-                                        Label="Log To file"
+                                        Label="Log To File"
                                         Description="{StaticResource logToFile}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding LoggingDebugConsoleSettings.DebugConsole}"
                                         Label="Enable Debug Console"
