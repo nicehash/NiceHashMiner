@@ -1525,7 +1525,7 @@
       "pl": "Nieprawidłowy identyfikator!\n\nUżyj liter i liczb ze zbioru (Aa-Zz, 0-9), maks. 15 znaków.",
       "pt": "Nome do worker inválido!\n\nDigite um nome válido (Aa-Zz, 0-9, até 15 caracteres).",
       "ro": "Nume muncitor!\n\nVă rugăm introduceți un nume valid de muncitor (Aa-Zz, 0-9, până la 15 caractere lungime).",
-      "ru": "Неверное имя компьютера!\n\nПожалуйста, введите правильное имя компьютера (Aa-Zz, 0-9, длиной до 15 символов).",
+      "ru": "Неверное имя воркера!\n\nПожалуйста, введите правильное имя воркера (Aa-Zz, 0-9, длиной до 15 символов).",
       "zh_cn": "矿工名无效！\n\n请输入有效的矿工名（仅限大小写英文字母与数字，最多7个字符长度）。"
     },
     "Japan - Tokyo": {
@@ -3093,7 +3093,7 @@
       "pl": "Identyfikator:",
       "pt": "Nome do Worker:",
       "ro": "Nume muncitor:",
-      "ru": "Имя компьютера:",
+      "ru": "Имя воркера:",
       "zh_cn": "矿工名:"
     },
     "Year": {
@@ -3173,32 +3173,53 @@
       "ru": "{0}: Файл {1} не найден!\n\nУбедитесь, пожалуйста, что этот файл доступен и что ваш антивирус не блокирует приложение.\nОбратитесь, пожалуйста, к разделу \"My anti-virus is blocking the application\" \nв разделе решения проблем ({2}).\n\nМожет понадобиться повторная загрузка {3}.",
       "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载{3}。"
     },
-    "Click yes if you with to run {0} as Administrator.": {},
-    "Show GPU PCIe Bus IDs": {},
-    "When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.": {},
-    "Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {},
+    "Click yes if you with to run {0} as Administrator.": {
+      "ru": "Нажмите «Да», если хотите запустить {0} от имени Администратора."
+    },
+    "Show GPU PCIe Bus IDs": {
+      "ru": "Отображать ID шин PCIe для видеокарт"
+    },
+    "When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.": {
+      "ru": "Если отмечено, ID шин PCIe для видеокарт будут отображаться рядом с именем устройства."
+    },
+    "Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
+      "ru": "Неверный Биткоин-адрес! {0} начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!"
+    },
     "MissingSMA": {
-      "en": "Missing SMA"
+      "en": "Missing SMA",
+      "ru": "SMA отсутствует"
     },
     "NoBenchmark": {
-      "en": "No Benchmark"
+      "en": "No Benchmark",
+      "ru": "Бенчмарк отсутствует"
     },
-    "Benchmarked": {},
+    "Benchmarked": {
+      "ru": "Бенчмарк пройден"
+    },
     "ReBencmark": {
-      "en": "Retry Benchmark"
+      "en": "Retry Benchmark",
+      "ru": "Повторить бенчмарк"
     },
-    "Unprofitable": {},
+    "Unprofitable": {
+      "ru": "Неприбыльно"
+    },
     "BenchmarkPending": {
-      "en": "Benchmark Pending"
+      "en": "Benchmark Pending",
+      "ru": "Ожидание бенчмарка"
     },
-    "Benchmarking": {},
+    "Benchmarking": {
+      "ru": "Бенчмарк"
+    },
     "ErrorNegativeSMA": {
-      "en": "Error: Negative SMA"
+      "en": "Error: Negative SMA",
+      "ru": "Ошибка: Отрицательный SMA"
     },
     "ErrorBenchmark": {
-      "en": "Error during Benchmark"
+      "en": "Error during Benchmark",
+      "ru": "Ошибка прохождения бенчмарка"
     },
-    "Error": {}
+    "Error": {
+      "ru": "Ошибка"
+    }
   }
 }
-
