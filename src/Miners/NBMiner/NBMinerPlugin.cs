@@ -1,4 +1,4 @@
-﻿#define DISABLE_IDevicesCrossReference
+﻿//#define DISABLE_IDevicesCrossReference
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
@@ -26,11 +26,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v26.2",
+                BinVersion = "v27.2",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v26.2/NBMiner_26.2_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v27.2/NBMiner_27.2_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,14 +42,14 @@ namespace NBMiner
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(8, 1);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
-        private bool isSupportedVersion(int major, int minor)
+        private static bool isSupportedVersion(int major, int minor)
         {
             var nbMinerSMSupportedVersions = new List<Version>
             {
@@ -70,26 +70,46 @@ namespace NBMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            // Require 377.xx
-            var minDrivers = new Version(377, 0);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+            var gpus = devices
+                .Where(dev => dev is IGpuDevice)
+                .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNvidiaDevice(dev))
+                .Cast<IGpuDevice>()
+                .OrderBy(gpu => gpu.PCIeBusID);
 
-            var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && isSupportedVersion(gpu.SM_major, gpu.SM_minor))
-                .Cast<CUDADevice>()
-                .OrderBy(dev => dev.PCIeBusID)
-                .ToList();
-
-            var pcieID = 0;
-            foreach (var gpu in cudaGpus)
+            var pcieId = 0; // NBMiner sortes devices by PCIe
+            foreach (var gpu in gpus)
             {
-                _mappedIDs[gpu.UUID] = pcieID;
-                ++pcieID;
-                var algos = GetSupportedAlgorithmsForDevice(gpu);
-                if (algos.Count > 0) supported.Add(gpu, algos);
+                _mappedIDs[gpu.UUID] = pcieId;
+                ++pcieId;
+                if (gpu is AMDDevice amd)
+                {
+                    var algorithms = GetSupportedAlgorithmsForDevice(amd);
+                    if (algorithms.Count > 0) supported.Add(amd, algorithms);
+                }
+                if (gpu is CUDADevice cuda)
+                {
+                    var algorithms = GetSupportedAlgorithmsForDevice(cuda);
+                    if (algorithms.Count > 0) supported.Add(cuda, algorithms);
+                }
             }
 
             return supported;
+        }
+
+        private static bool IsSupportedNvidiaDevice(BaseDevice dev)
+        {
+            var minDrivers = new Version(377, 0);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+            var device = dev as CUDADevice;
+            var isSupported = isSupportedVersion(device.SM_major, device.SM_minor);
+            return isDriverSupported && isSupported;
+
+        }
+
+        private static bool IsSupportedAMDDevice(BaseDevice dev)
+        {
+            var isSupported = dev is AMDDevice gpu && Checkers.IsGcn4(gpu);
+            return isSupported;
         }
 
         protected override MinerBase CreateMinerBase()
@@ -103,19 +123,26 @@ namespace NBMiner
             await Task.CompletedTask;
 #else
 #warning Blocks exit. Check if this is fixed with newer versions
-            return;
-            if (_mappedIDs.Count == 0) return;
-            // TODO will break
-            var minerBinPath = GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json --no-watchdog --platform 1"); // NVIDIA only
-            var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices.ToList());
-
-            foreach (var kvp in mappedDevs)
+            //return;
+            try
             {
-                var uuid = kvp.Key;
-                var indexID = kvp.Value;
-                _mappedIDs[uuid] = indexID;
+                if (_mappedIDs.Count == 0) return;
+                // TODO will break
+                var minerBinPath = GetBinAndCwdPaths().Item1;
+                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json --no-watchdog"); // AMD + NVIDIA
+                var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices.ToList());
+
+                foreach (var kvp in mappedDevs)
+                {
+                    var uuid = kvp.Key;
+                    var indexID = kvp.Value;
+                    _mappedIDs[uuid] = indexID;
+                }
+            } catch(Exception ex)
+            {
+                Logger.Error("NBMiner", $"Error during DevicesCrossReference: {ex.Message}");
             }
+
 #endif
         }
 
