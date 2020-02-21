@@ -283,7 +283,14 @@ namespace NHMCore.Mining
                         {
                             var endTime = DateTime.UtcNow;
                             var elapsedSeconds = (endTime - startTime).TotalSeconds - (MiningSettings.Instance.MinerRestartDelayMS);
-                            if (elapsedSeconds < minRestartTimeInSeconds) restartCount++;
+                            if (elapsedSeconds < minRestartTimeInSeconds)
+                            {
+                                restartCount++;
+                            }
+                            else
+                            {
+                                restartCount = 0;
+                            }
                             if(restartCount >= maxRestartCount)
                             {
                                 var firstAlgo = _algos.FirstOrDefault();
