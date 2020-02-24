@@ -31,13 +31,13 @@ namespace NBMiner
                         new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30  },
                     }
                 },
-                // TODO
-                //{
-                //    DeviceType.AMD,
-                //    new List<SAS>
-                //    {
-                //    }
-                //}
+                {
+                    DeviceType.AMD,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30  },
+                    }
+                }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {

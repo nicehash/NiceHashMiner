@@ -1,6 +1,9 @@
 ﻿using MinerPlugin;
 using NHM.Common.Enums;
+using NHMCore.Notifications;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NHMCore.Mining.Grouping
 {
@@ -113,7 +116,12 @@ namespace NHMCore.Mining.Grouping
 
             // find max paying value and save key
             double maxProfit = double.NegativeInfinity;
-            foreach (var algo in Algorithms)
+            var validAlgorithms = Algorithms.Where(algo => algo.IgnoreUntil <= DateTime.UtcNow);
+            if (validAlgorithms.Count() == 0)
+            {
+                AvailableNotifications.CreateNoAvailableAlgorithmsInfo();
+            }
+            foreach (var algo in validAlgorithms)
             {
                 if (maxProfit < algo.CurrentNormalizedProfit)
                 {
