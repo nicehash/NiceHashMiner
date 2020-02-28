@@ -11,7 +11,6 @@ using NHMCore.Nhmws;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -160,8 +159,7 @@ namespace NHMCore
                 //    AvailableNotifications.CreateEnableLargePagesInfo();
                 //}
                 // TODO add check and only show if not enabled
-                var listOfComputeAmdDevs = new List<string>() { "rx 570", "rx 580" };
-                if (AvailableDevices.Devices.Any(d => d.DeviceType == DeviceType.AMD && listOfComputeAmdDevs.Any(str => d.Name.ToLower().Contains(str))))
+                if (AvailableDevices.HasAmd)
                 {
                     AvailableNotifications.CreateEnableComputeModeAMDInfo();
                 }
