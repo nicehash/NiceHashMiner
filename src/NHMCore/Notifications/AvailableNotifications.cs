@@ -239,7 +239,7 @@ namespace NHMCore.Notifications
             //    Info = "Switch modes",
             //    Action = () => { AmdModeSwitcher.SwitchAmdComputeMode(); }
             //});
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.ComputeModeAMD, Tr("Switch compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode for optimized profit?"));
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.ComputeModeAMD, Tr("Switch compute/graphic mode"), Tr("We have detected that you have RX 570/580 gpu in your system. Would you like to switch between compute and graphic mode for optimized profit?"));
             notification.Actions.Add(new NotificationAction
             {
                 Info = "Help",
