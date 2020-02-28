@@ -1175,7 +1175,7 @@
       "pl": "Dodatkowe parametry startu",
       "pt": "Parametros extras para iniciar",
       "ro": "Parametrii Lansare Extra",
-      "ru": "Дополнительные параметры",
+      "ru": "Дополнительные параметры запуска",
       "zh_cn": "额外运行参数"
     },
     "Failed - try Precise": {
@@ -3221,159 +3221,473 @@
     "Error": {
       "ru": "Ошибка"
     },
-    "NVIDIA TDP Settings Insufficient Permissions": {},
-    "Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {},
-    "Ethlargement-Pill Settings Insufficient Permissions": {},
-    "Run Ethlargement settings due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {},
-    "Run As Administrator": {},
-    "NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner.": {},
-    "No enabled devices": {},
-    "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {},
-    "Demo mode mining": {},
-    "You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer.\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {},
-    "Unable to get profitability data": {},
-    "No supported devices are found.": {},
-    "Help": {},
-    "Missing miner files": {},
-    "There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}": {},
-    "Restart NiceHash Miner": {},
-    "NiceHash Miner Update": {},
-    "New version of NiceHash Miner is available.": {},
-    "Visit release Page": {},
-    "NiceHash Miner was Updated": {},
-    "NiceHash Miner was updated to the latest version.": {},
-    "NiceHash Miner was not updated to the latest version.": {},
-    "New version of {0} {1}.\n": {},
-    "Miner Plugin Update": {},
-    "Missing miner binaries": {},
-    "Some of the {0} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application.": {},
-    "Nvidia DCH drivers detected": {},
-    "Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance.": {},
-    "Add Windows Defender Exception Failed": {},
-    "Adding exception to Windows Defender failed. Please check the help page.": {},
-    "Add Windows Defender Exception": {},
-    "Would you like to add NiceHash Miner root folder to the Windows Defender exceptions?": {},
-    "Add exception": {},
-    "Switch compute/graphic mode": {},
-    "Would you like to switch between compute and graphic mode for optimized profit?": {},
-    "Enable large pages for randomx": {},
-    "Would you like to enable large pages when mining with RandomX(CPU)?": {},
-    "Increase virtual memory": {},
-    "NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine. Would you like to increase virtual memory?": {},
-    "Failed benchmarks": {},
-    "Some benchmarks for {0} failed to execute. Check benchmark tab for more info.": {},
-    "Primary mining location unavailable": {},
-    "Primary mining location is unavailable. Switching to fallback location.": {},
-    "All mining locations unavailable": {},
-    "All mining locations are unavailable. Mining will be stopped.": {},
-    "Mining not profitable": {},
-    "Currently mining is not profitable. Mining will be stopped.": {},
-    "Failed NVML fallback": {},
-    "NiceHash Miner has detected that DCH drivers are installed and NVML fallback method has failed. Please fix your non-DCH driver install.": {},
-    "Fallback of OpenCL": {},
-    "Please check if AMD drivers are installed properly. If they are please remove Intel video driver.": {},
-    "Wallet": {},
-    "Wallet Address": {},
-    "Worker": {},
-    "Worker Name": {},
-    "Main": {},
-    "Time Unit": {},
-    "Mine Regardless Of Profit": {},
-    "Electricity Const (/KWh)": {},
-    "Minimum Profit ($/day)": {},
-    "Service Location": {},
-    "Select Your Service Location": {},
-    "Localization": {},
-    "Language": {},
-    "Currency": {},
-    "Apperance": {},
-    "Theme": {},
-    "NiceHash Miner and Plugins Update": {},
-    "Auto update NiceHash Miner": {},
-    "Auto update installed plugins": {},
-    "Report a bug": {},
-    "Create a log report": {},
-    "Miscellaneous": {},
-    "Run On Startup": {},
-    "NiceHash Miner Window Always on Top": {},
-    "Disable Visual C++ Redistributable Check": {},
-    "Device Monitoring": {},
-    "Logging": {},
-    "Enable Debug Console": {},
-    "Log Max File Size (bytes)": {},
-    "Idle Mining": {},
-    "Idle Check Method": {},
-    "Minimum Idle [s]": {},
-    "Switching": {},
-    "Switch Minimum [s]": {},
-    "Switch Maximum [s]": {},
-    "Switch Profitability Threshold": {},
-    "NVIDIA/CUDA": {},
-    "Miners": {},
-    "Hide Mining Widnows": {},
-    "When checked, NiceHash Miner will mine regardless of profit.": {},
-    "If 'MineRegardlessOfProfit' is unchecked, NiceHash Miner will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {},
-    "Changes the default language for NiceHash Miner.": {},
-    "Choose in which theme you would like to see NiceHash Miner.": {},
-    "When checked, NiceHash Miner will get automatically updated.": {},
-    "When checked, miner plugins will get automatically updated.": {},
-    "When checked, NiceHash Miner will automatically start mining when launched.": {},
-    "When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).": {},
-    "When checked, NiceHash Miner will run on login.": {},
-    "When checked, NiceHash Miner will minimize to tray.": {},
-    "When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed.": {},
-    "When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {},
-    "When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available.": {},
-    "When checked, NiceHash Miner will be set as Top Most and will be covered only by other Top Most Windows.": {},
-    "When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {},
-    "When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only).": {},
-    "When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {},
-    "When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {},
-    "When checked, NiceHash Miner will run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.": {},
-    "Fixed part of minimal time (in seconds) before miner switches algorithm.": {},
-    "Fixed part of maximum time (in seconds) before miner switches algorithm.": {},
-    "When checked, mining windows will start hidden.": {},
-    "Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.": {},
-    "Number of gpu devices in your system.": {},
-    "Number of cpu devices in your system.": {},
-    "Amount of BTC not yet paid to you.": {},
-    "Estimated current profitability of your system.": {},
-    "Number of devices that are currently mining.": {},
-    "Include this alrogithm in benchmark sessions (on next benchmark or device start). This will ensure the best possible hash rate.": {},
-    "If enabled NiceHash Miner will stop mining without internet connectivity": {},
-    "NiceHash Miner will disable Visual Studio C++ Redistributable checking.": {},
-    "{0}.{1} (Online)": {},
-    "{0}.{1} (Latest)": {},
-    "{0}.{1} (Local)": {},
-    "Not Supported": {},
-    "INSTALL": {},
-    "INSTALLED": {},
-    "UPDATE": {},
-    "UPDATING": {},
-    "INSTALLING": {},
-    "Pending Install": {},
-    "Downloading Miner: {0}%": {},
-    "Downloading Plugin: {0}%": {},
-    "Extracting Miner: {0}%": {},
-    "Extracting Plugin: {0}%": {},
-    "Details": {},
-    "Show Internals": {},
-    "Autoupdate Plugin": {},
-    "Uninstall": {},
-    "NOT COMPATIBLE. Update NiceHash Miner": {},
-    "Supported Devices": {},
-    "Supported Devices Algorithms": {},
-    "Description": {},
-    "DEVICES MINING": {},
-    "CURRENT PROFITABILITY": {},
-    "ENABLE ALL": {},
-    "START ALL": {},
-    "STOP ALL": {},
-    "View Stats Online": {},
-    "Start Mining": {},
-    "Mining / Benchmarking": {},
-    "Complete your mining setup": {},
-    "+ Add Wallet Address": {},
-    "GPU’S": {}
+    "NVIDIA TDP Settings Insufficient Permissions": {
+      "ru": "Недостаточно разрешений для настройки TDP для NVIDIA"
+    },
+    "Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {
+      "ru": "Настройка режима энергопотребления отключена из-за отсутствия разрешений. Если вы хотите использовать эту функцию, вам необходимо запустить программу от имени Администратора."
+    },
+    "Ethlargement-Pill Settings Insufficient Permissions": {
+      "ru": "Недостаточно разрешений для настройки таблетки Ethlargement"
+    },
+    "Can't Run Ethlargement settings due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {
+      "ru": "Невозможно запустить настройку Ethlargement из-за отсутствия разрешений. Если вы хотите использовать эту функцию, вам необходимо запустить программу от имени Администратора."
+    },
+    "Run As Administrator": {
+      "ru": "Запуск от имени Администратора"
+    },
+    "NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner.": {
+      "ru": "NiceHash Miner запрашивает интернет-соединение для работы. Убедитесь, что вы подключены к интернету перед запуском NiceHash Miner."
+    },
+    "No enabled devices": {
+      "ru": "Включенные устройства отсутствуют"
+    },
+    "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {
+      "ru": "NiceHash Miner не может начать майнинг. Убедитесь, что хотя бы одно устройство включено с хотя бы одним включённым и прошедшим бенчмарк алгоритмом."
+    },
+    "Demo mode mining": {
+      "ru": "Майнинг в режиме демо"
+    },
+    "You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer.\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
+      "ru": "Вы не ввели Биткоин-адрес. NiceHash Miner начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер.\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!"
+    },
+    "Unable to get profitability data": {
+      "ru": "Невозможно получить данные прибыльности"
+    },
+    "No supported devices are found.": {
+      "ru": "Поддерживаемые устройства не найдены."
+    },
+    "Help": {
+      "ru": "Справка"
+    },
+    "Missing miner files": {
+      "ru": "Отсутствуют файлы майнера"
+    },
+    "There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}": {
+      "ru": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner может не работать правильно без недостающих файлов. Проверьте, пожалуйста, следующий пост в блоге: {0}"
+    },
+    "Restart NiceHash Miner": {
+      "ru": "Перезапустить NiceHash Miner"
+    },
+    "NiceHash Miner Update": {
+      "ru": "Обновление NiceHash Miner"
+    },
+    "New version of NiceHash Miner is available.": {
+      "ru": "Доступна новая версия NiceHash Miner"
+    },
+    "Visit release Page": {
+      "ru": "Посетите страницу выпуска"
+    },
+    "NiceHash Miner was Updated": {
+      "ru": "NiceHash Miner был обновлен"
+    },
+    "NiceHash Miner was updated to the latest version.": {
+      "ru": "NiceHash Miner был обновлен до последней версии."
+    },
+    "NiceHash Miner was not updated to the latest version.": {
+      "ru": "NiceHash Miner не был обновлен до последней версии."
+    },
+    "New version of {0} {1}.\n": {
+      "ru": "Новая версия {0} {1}.\n"
+    },
+    "was installed": {
+      "ru": "была установлена"
+    },
+    "was not installed": {
+      "ru": "не была установлена"
+    },
+    "Miner Plugin Update": {
+      "ru": "Обновление плагина майнера"
+    },
+    "Missing miner binaries": {
+      "ru": "Отсутствуют исполнительные файлы майнера"
+    },
+    "Some of the {0} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application.": {
+      "ru": "Некоторые исполнительные файлы {0} отсутствуют в папке установки. Пожалуйста, убедитесь, что файлы доступны и что ваш антивирус не блокирует приложение."
+    },
+    "Nvidia DCH drivers detected": {
+      "ru": "Обнаружены драйверы DCH Nvidia"
+    },
+    "Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance.": {
+      "ru": "Обнаруженные драйверы не рекомендованы для майнинга с помощью NiceHash Miner. Пожалуйста, измените их для оптимальной производительности."
+    },
+    "Add Windows Defender Exception Failed": {
+      "ru": "Добавление исключения в Защитник Windows не удалось"
+    },
+    "Adding exception to Windows Defender failed. Please check the help page.": {
+      "ru": "Добавление исключения в Защитник Windows не удалось. Пожалуйста, проверьте страницу справки."
+    },
+    "Add Windows Defender Exception": {
+      "ru": "Добавление исключения в Защитник Windows"
+    },
+    "Would you like to add NiceHash Miner root folder to the Windows Defender exceptions?": {
+      "ru": "Добавить корневую папку NiceHash Miner в список исключений Защитника Windows?"
+    },
+    "Add exception": {
+      "ru": "Добавить исключение"
+    },
+    "Switch compute/graphic mode": {
+      "ru": "Переключение режима вычислить/видеокарта"
+    },
+    "Would you like to switch between compute and graphic mode for optimized profit?": {
+      "ru": "Переключить режим вычислить/видеокарта для оптимального заработка?"
+    },
+    "Enable large pages for randomx": {
+      "ru": "Включить большие страницы для randomx"
+    },
+    "Would you like to enable large pages when mining with RandomX(CPU)?": {
+      "ru": "Включить большие страницы для майнинга RandomX на процессоре?"
+    },
+    "Increase virtual memory": {
+      "ru": "Увеличить виртуальную память"
+    },
+    "NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine. Would you like to increase virtual memory?": {
+      "ru": "NiceHash Miner рекомендует увеличить виртуальную память для правильной работы всех алгоритмов. Увеличить виртуальную память?"
+    },
+    "Failed benchmarks": {
+      "ru": "Сбой бенчмарка"
+    },
+    "Some benchmarks for {0} failed to execute. Check benchmark tab for more info.": {
+      "ru": "Произошел сбой некоторых тестов для {0}. Проверьте вкладку Бенчмарк для получения дополнительной информации."
+    },
+    "Primary mining location unavailable": {
+      "ru": "Основная локация майнинга недоступна"
+    },
+    "Primary mining location is unavailable. Switching to fallback location.": {
+      "ru": "Основная локация майнинга недоступна. Переключение на резервную локацию."
+    },
+    "All mining locations unavailable": {
+      "ru": "Все локации майнинга недоступны"
+    },
+    "All mining locations are unavailable. Mining will be stopped.": {
+      "ru": "Все локации майнинга недоступны. Майнинг будет остановлен."
+    },
+    "Mining not profitable": {
+      "ru": "Майнинг не является прибыльным"
+    },
+    "Currently mining is not profitable. Mining will be stopped.": {
+      "ru": "На данный момент майнинг не является прибыльным. Майнинг будет остановлен."
+    },
+    "Failed NVML fallback": {
+      "ru": "Сбой резервного подключения к NVML"
+    },
+    "NiceHash Miner has detected that DCH drivers are installed and NVML fallback method has failed. Please fix your non-DCH driver install.": {
+      "ru": "NiceHash Miner обнаружил, что установлены драйверы DCH и произошел сбой метода NVML fallback. Пожалуйста, исправьте установку ваших драйверов, которые не являются DCH."
+    },
+    "Fallback of OpenCL": {
+      "ru": "Резервный запуск OpenCL"
+    },
+    "Please check if AMD drivers are installed properly. If they are please remove Intel video driver.": {
+      "ru": "Пожалуйста, убедитесь, что драйверы AMD установлены правильно. Если это так, пожалуйста, удалите драйвер Intel."
+    },
+    "Wallet": {
+      "ru": "Кошелек"
+    },
+    "Wallet Address": {
+      "ru": "Адрес кошелька"
+    },
+    "Worker": {
+      "ru": "Воркер"
+    },
+    "Worker Name": {
+      "ru": "Имя воркера"
+    },
+    "Main": {
+      "ru": "Основные"
+    },
+    "Time Unit": {
+      "ru": "Единица времени"
+    },
+    "Mine Regardless Of Profit": {
+      "ru": "Майнить независимо от дохода"
+    },
+    "Electricity Cost (/KWh)": {
+      "ru": "Стоимость электроэнергии (/кВт.ч)"
+    },
+    "Minimum Profit ($/day)": {
+      "ru": "Минимальная прибыль ($/день)"
+    },
+    "Service Location": {
+      "ru": "Локация сервиса"
+    },
+    "Select Your Service Location": {
+      "ru": "Выберите вашу локацию сервиса"
+    },
+    "Localization": {
+      "ru": "Локализация"
+    },
+    "Language": {
+      "ru": "Язык"
+    },
+    "Currency": {
+      "ru": "Валюта"
+    },
+    "Apperance": {
+      "ru": "Вид"
+    },
+    "Theme": {
+      "ru": "Тема"
+    },
+    "NiceHash Miner and Plugins Update": {
+      "ru": "Обновление NiceHash Miner и плагинов"
+    },
+    "Auto update NiceHash Miner": {
+      "ru": "Автоматическое обновление NiceHash Miner"
+    },
+    "Auto update installed plugins": {
+      "ru": "Автоматическое обновление установленных плагинов"
+    },
+    "Report a bug": {
+      "ru": "Отчет об ошибке"
+    },
+    "Create a log report": {
+      "ru": "Создать отчет"
+    },
+    "Miscellaneous": {
+      "ru": "Разные"
+    },
+    "Run On Startup": {
+      "ru": "Запуск при загрузке системы"
+    },
+    "NiceHash Miner Window Always on Top": {
+      "ru": "Окна NiceHash Miner всегда сверху"
+    },
+    "Disable Visual C++ Redistributable Check": {
+      "ru": "Отключить проверку Visual C++ Redistributable"
+    },
+    "Device Monitoring": {
+      "ru": "Мониторинг устройств"
+    },
+    "Logging": {
+      "ru": "Логирование"
+    },
+    "Enable Debug Console": {
+      "ru": "Включить консоль отладки"
+    },
+    "Log Max File Size (bytes)": {
+      "ru": "Макс. размер лог-файла (байты)"
+    },
+    "Idle Mining": {
+      "ru": "Простой майнинга"
+    },
+    "Idle Check Method": {
+      "ru": "Метод проверки простоя"
+    },
+    "Minimum Idle [s]": {
+      "ru": "Минимальный простой [с]"
+    },
+    "Switching": {
+      "ru": "Переключение"
+    },
+    "Switch Minimum [s]": {
+      "ru": "Минимум переключения [с]"
+    },
+    "Switch Maximum [s]": {
+      "ru": "Максимум переключения [с]"
+    },
+    "Switch Profitability Threshold": {
+      "ru": "Порог переключения прибыльности"
+    },
+    "NVIDIA/CUDA": {
+      "ru": "NVIDIA/CUDA"
+    },
+    "Miners": {
+      "ru": "Майнеры"
+    },
+    "Hide Mining Widnows": {
+      "ru": "Спрятать окна майнинга"
+    },
+    "When checked, NiceHash Miner will mine regardless of profit.": {
+      "ru": "Если отмечено, NiceHash Miner будет майнить независимо от дохода."
+    },
+    "If 'MineRegardlessOfProfit' is unchecked, NiceHash Miner will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {
+      "ru": "Если 'Майнить независимо от дохода' не отмечено, NiceHash Miner остановит майнинг, \nкогда приблизительный доход будет ниже указанной суммы (в выбранной валюте). Отрицательные значения допускаются."
+    },
+    "Changes the default language for NiceHash Miner.": {
+      "ru": "Изменяет язык по умолчанию для NiceHash Miner."
+    },
+    "Choose in which theme you would like to see NiceHash Miner.": {
+      "ru": "Выберите в какой теме вы хотели бы видеть NiceHash Miner."
+    },
+    "When checked, NiceHash Miner will get automatically updated.": {
+      "ru": "Если отмечено, NiceHash Miner будет обновляться автоматически."
+    },
+    "When checked, miner plugins will get automatically updated.": {
+      "ru": "Если отмечено, плагины майнера будут обновляться автоматически."
+    },
+    "When checked, NiceHash Miner will automatically start mining when launched.": {
+      "ru": "Если отмечено, NiceHash Miner будет автоматически начинать майнинг при запуске."
+    },
+    "When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).": {
+      "ru": "Если не отмечено, NiceHash Miner разрешит работу только одного экземпляра (он закроет новый запущенный экземпляр, если один экземпляр уже работает)."
+    },
+    "When checked, NiceHash Miner will run on login.": {
+      "ru": "Если отмечено, NiceHash Miner будет запущен при входе в систему."
+    },
+    "When checked, NiceHash Miner will minimize to tray.": {
+      "ru": "Если отмечено, NiceHash Miner будет сворачиваться в трей."
+    },
+    "When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed.": {
+      "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера."
+    },
+    "When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
+      "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны."
+    },
+    "When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available.": {
+      "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение,\nкогда соединение с интернетом недоступно."
+    },
+    "When checked, NiceHash Miner will be set as Top Most and will be covered only by other Top Most Windows.": {
+      "ru": "Если отмечено, NiceHash Miner будет отображаться поверх других окон и будет покрыт только другими окнами с таким же свойством."
+    },
+    "When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {
+      "ru": "Если отмечено, NiceHash Miner не будет возвращать статус устройств AMD, NVIDIA и процессоров (температуру, нагрузку, скорость вращения вентиляторов и потребление мощности)."
+    },
+    "When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only).": {
+      "ru": "Если отмечено, NiceHash Miner не будет пытаться настроить режим энергопотребления (на данный момент только для NVIDIA)."
+    },
+    "When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
+      "ru": "Если отмечено, NiceHash Miner запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему."
+    },
+    "When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
+      "ru": "Если отмечено, NiceHash Miner изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора."
+    },
+    "When checked, NiceHash Miner will run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.": {
+      "ru": "Если отмечено, NiceHash Miner запустит Ethlargement для алгоритмов Dagger, если есть поддерживаемые видеокарты.\nТребуются права администратора и включение сторонних майнеров."
+    },
+    "Fixed part of minimal time (in seconds) before miner switches algorithm.": {
+      "ru": "Фиксированная часть минимального времени в секундах перед переключением алгоритма майнером."
+    },
+    "Fixed part of maximum time (in seconds) before miner switches algorithm.": {
+      "ru": "Фиксированная часть максимального времени в секундах перед переключением алгоритма майнером."
+    },
+    "When checked, mining windows will start hidden.": {
+      "ru": "Если отмечено, окна майнинга будут запускаться скрытыми."
+    },
+    "Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.": {
+      "ru": "Количество времени в миллисекундах, которое NiceHash Miner будет ждать перед перезапуском майнера."
+    },
+    "Number of gpu devices in your system.": {
+      "ru": "Количество видеокарт в вашей системе."
+    },
+    "Number of cpu devices in your system.": {
+      "ru": "Количество процессоров в вашей системе."
+    },
+    "Amount of BTC not yet paid to you.": {
+      "ru": "Количество BTC, которое еще не было выплачено вам."
+    },
+    "Estimated current profitability of your system.": {
+      "ru": "Приблизительная текущая прибыльность вашей системы."
+    },
+    "Number of devices that are currently mining.": {
+      "ru": "Количество устройств, которые на данный момент майнят."
+    },
+    "Include this alrogithm in benchmark sessions (on next benchmark or device start). This will ensure the best possible hash rate.": {
+      "ru": "Включает этот алгоритм в процесс бенчмарка при следующем запуске бенчмарка или майнинга. Это обеспечит наилучший хэшрейт."
+    },
+    "If enabled NiceHash Miner will stop mining without internet connectivity": {
+      "ru": "Если отмечено, NiceHash Miner будет останавливать майнинг при отсутствии доступа к интернету."
+    },
+    "NiceHash Miner will disable Visual Studio C++ Redistributable checking.": {
+      "ru": "NiceHash Miner отключит проверку Visual Studio C++ Redistributable."
+    },
+    "{0}.{1} (Online)": {
+      "ru": "{0}.{1} (Онлайн)"
+    },
+    "{0}.{1} (Latest)": {
+      "ru": "{0}.{1} (Последний)"
+    },
+    "{0}.{1} (Local)": {
+      "ru": "{0}.{1} (Локальный)"
+    },
+    "Not Supported": {
+      "ru": "Не поддерживается"
+    },
+    "INSTALL": {
+      "ru": "УСТАНОВИТЬ"
+    },
+    "INSTALLED": {
+      "ru": "УСТАНОВЛЕНО"
+    },
+    "UPDATE": {
+      "ru": "ОБНОВИТЬ"
+    },
+    "UPDATING": {
+      "ru": "ОБНОВЛЕНИЕ"
+    },
+    "INSTALLING": {
+      "ru": "УСТАНОВКА"
+    },
+    "Pending Install": {
+      "ru": "Ожидает установки"
+    },
+    "Downloading Miner: {0}%": {
+      "ru": "Загрузка майнера: {0}%"
+    },
+    "Downloading Plugin: {0}%": {
+      "ru": "Загрузка плагина: {0}%"
+    },
+    "Extracting Miner: {0}%": {
+      "ru": "Извлечение майнера: {0}%"
+    },
+    "Extracting Plugin: {0}%": {
+      "ru": "Извлечение плагина: {0}%"
+    },
+    "Details": {
+      "ru": "Подробности"
+    },
+    "Show Internals": {
+      "ru": "Показать содержимое"
+    },
+    "Autoupdate Plugin": {
+      "ru": "Автообновление плагина"
+    },
+    "Uninstall": {
+      "ru": "Удалить"
+    },
+    "NOT COMPATIBLE. Update NiceHash Miner": {
+      "ru": "НЕ СОВМЕСТИМО. Обновите NiceHash Miner"
+    },
+    "Supported Devices": {
+      "ru": "Поддерживаемые устройства"
+    },
+    "Supported Devices Algorithms": {
+      "ru": "Поддерживаемые алгоритмы устройств"
+    },
+    "Description": {
+      "ru": "Описание"
+    },
+    "DEVICES MINING": {
+      "ru": "УСТРОЙСТВА МАЙНЯТ"
+    },
+    "CURRENT PROFITABILITY": {
+      "ru": "ТЕКУЩАЯ ПРИБЫЛЬНОСТЬ"
+    },
+    "ENABLE ALL": {
+      "ru": "ВКЛЮЧИТЬ ВСЕ"
+    },
+    "START ALL": {
+      "ru": "ЗАПУСТИТЬ ВСЕ"
+    },
+    "STOP ALL": {
+      "ru": "ОСТАНОВИТЬ ВСЕ"
+    },
+    "View Stats Online": {
+      "ru": "Просмотр статистики онлайн"
+    },
+    "Start Mining": {
+      "ru": "Запустить майнинг"
+    },
+    "Mining / Benchmarking": {
+      "ru": "Майнинг / Бенчмарк"
+    },
+    "Complete your mining setup": {
+      "ru": "Завершите вашу настройку майнинга"
+    },
+    "+ Add Wallet Address": {
+      "ru": "+ Добавить адрес кошелька"
+    },
+    "GPU’S": {
+      "ru": "GPU’S"
+    }
   }
 }

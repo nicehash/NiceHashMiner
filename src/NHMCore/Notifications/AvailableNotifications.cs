@@ -24,7 +24,7 @@ namespace NHMCore.Notifications
 
         public static void CreateEthlargementElevateInfo()
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.EthlargementElevate, Tr("Ethlargement-Pill Settings Insufficient Permissions"), Tr("Run Ethlargement settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.EthlargementElevate, Tr("Ethlargement-Pill Settings Insufficient Permissions"), Tr("Can't run Ethlargement due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
             notification.Actions.Add(new NotificationAction
             {
                 Info = Tr("Run As Administrator"),
@@ -150,7 +150,7 @@ namespace NHMCore.Notifications
             var sentence = "was installed";
             if (!success) sentence = "was not installed";
 
-            var content = Tr("New version of {0} {1}.\n", pluginName, sentence);
+            var content = Tr("New version of {0} {1}.\n", pluginName, Tr(sentence));
 
             try
             {
@@ -160,7 +160,7 @@ namespace NHMCore.Notifications
                     if (pluginNotification.NotificationNew == true)
                     {
                         //check if the same sentence was already written to notification
-                        var newSentence = Tr("New version of {0} {1}.\n", pluginName, sentence);
+                        var newSentence = Tr("New version of {0} {1}.\n", pluginName, Tr(sentence));
                         if (pluginNotification.NotificationContent.Contains(newSentence))
                         {
                             return;
