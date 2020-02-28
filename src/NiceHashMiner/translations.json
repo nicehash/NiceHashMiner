@@ -3230,8 +3230,8 @@
     "Ethlargement-Pill Settings Insufficient Permissions": {
       "ru": "Недостаточно разрешений для настройки таблетки Ethlargement"
     },
-    "Can't Run Ethlargement settings due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {
-      "ru": "Невозможно запустить настройку Ethlargement из-за отсутствия разрешений. Если вы хотите использовать эту функцию, вам необходимо запустить программу от имени Администратора."
+    "Can't run Ethlargement-Pill due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {
+      "ru": "Невозможно запустить Ethlargement-Pill из-за отсутствия разрешений. Если вы хотите использовать эту функцию, вам необходимо запустить программу от имени Администратора."
     },
     "Run As Administrator": {
       "ru": "Запуск от имени Администратора"

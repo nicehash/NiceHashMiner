@@ -24,7 +24,7 @@ namespace NHMCore.Notifications
 
         public static void CreateEthlargementElevateInfo()
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.EthlargementElevate, Tr("Ethlargement-Pill Settings Insufficient Permissions"), Tr("Can't run Ethlargement due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.EthlargementElevate, Tr("Ethlargement-Pill Settings Insufficient Permissions"), Tr("Can't run Ethlargement-Pill due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
             notification.Actions.Add(new NotificationAction
             {
                 Info = Tr("Run As Administrator"),
