@@ -331,5 +331,11 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.OpenClFallback, Tr("Fallback of OpenCL"), Tr("Please check if AMD drivers are installed properly. If they are please remove Intel video driver."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+    
+        public static void CreateNoAvailableAlgorithmsInfo()
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NoAvailableAlgorithms, Tr("No available algorithms"), Tr("There are no available algorithms to mine. Please check you rig stability and stability of installed plugins."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

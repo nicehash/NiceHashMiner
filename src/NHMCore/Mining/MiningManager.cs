@@ -55,6 +55,10 @@ namespace NHMCore.Mining
 
             // TODO profitability changed
             MiningProfitSettingsChanged,
+
+            // This will be handled like MiningProfitSettingsChanged to skip the profit threshold that can prevent switching
+            MinerRestartLoopNotify,
+
             RunEthlargementChanged
         }
         private class Command
@@ -131,7 +135,13 @@ namespace NHMCore.Mining
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
-        
+
+        public static Task MinerRestartLoopNotify()
+        {
+            var command = new Command(CommandType.MinerRestartLoopNotify, null);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
 
         private static async Task HandleCommand(Command command)
         {
@@ -204,6 +214,10 @@ namespace NHMCore.Mining
                         break;
 
                     case CommandType.MiningProfitSettingsChanged:
+                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
+                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        break;
+                    case CommandType.MinerRestartLoopNotify:
                         commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
                         Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
                         break;
@@ -491,7 +505,7 @@ namespace NHMCore.Mining
                 return;
             }
 
-            await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, CommandType.MiningProfitSettingsChanged == commandType);
+            await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, CommandType.MiningProfitSettingsChanged == commandType || CommandType.MinerRestartLoopNotify == commandType);
         }
 
         private static async Task RestartMiners()
@@ -612,8 +626,10 @@ namespace NHMCore.Mining
                     stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
                     foreach (var algo in device.Algorithms)
                     {
+                        if (algo.IgnoreUntil > DateTime.UtcNow) stringBuilderDevice.Append("\t\t* ");
+                        else stringBuilderDevice.Append("\t\t");
                         stringBuilderDevice.AppendLine(
-                            $"\t\tPROFIT = {algo.CurrentNormalizedProfit.ToString(DoubleFormat)}" +
+                            $"PROFIT = {algo.CurrentNormalizedProfit.ToString(DoubleFormat)}" +
                             $"\t(SPEED = {algo.AveragedSpeeds[0]:e5}" +
                             $"\t\t| NHSMA = {algo.NormalizedSMAData[0]:e5})" +
                             $"\t[{algo.AlgorithmStringID}]"

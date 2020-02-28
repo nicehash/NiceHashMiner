@@ -20,11 +20,11 @@ namespace CryptoDredge
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 // BinVersion github and bitcointalk missmatch
-                BinVersion = "0.22.0",
-                ExePath = new List<string> { "CryptoDredge_0.22.0", "CryptoDredge.exe" },
+                BinVersion = "0.23.0",
+                ExePath = new List<string> { "CryptoDredge_0.23.0", "CryptoDredge.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/technobyl/CryptoDredge/releases/download/v0.22.0/CryptoDredge_0.22.0_cuda_10.1_windows.zip", // original source
+                    "https://github.com/technobyl/CryptoDredge/releases/download/v0.23.0/CryptoDredge_0.23.0_cuda_10.1_windows.zip", // original source
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -34,7 +34,7 @@ namespace CryptoDredge
             };
         }
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(8, 1);
         public override string Name => "CryptoDredge";
 
         public override string Author => "info@nicehash.com";

@@ -21,11 +21,11 @@ namespace XMRig
             // https://github.com/xmrig/xmrig
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v5.5.3",
-                ExePath = new List<string> { "xmrig-5.5.3", "xmrig.exe" },
+                BinVersion = "v5.6.0",
+                ExePath = new List<string> { "xmrig-5.6.0", "xmrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/xmrig/xmrig/releases/download/v5.5.3/xmrig-5.5.3-msvc-win64.zip" // original
+                    "https://github.com/xmrig/xmrig/releases/download/v5.6.0/xmrig-5.6.0-msvc-win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,7 +37,7 @@ namespace XMRig
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(8, 1);
 
         public override string Name => "XMRig";
 
@@ -68,9 +68,9 @@ namespace XMRig
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 4 && benchmarkedPluginVersion.Minor < 3)
+                if (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor < 1 && device.DeviceType == DeviceType.AMD && device.Name.ToLower().Contains("navi"))
                 {
-                    if (ids.FirstOrDefault() == AlgorithmType.RandomXmonero) return true;
+                   return true;
                 }
             }
             catch (Exception e)
