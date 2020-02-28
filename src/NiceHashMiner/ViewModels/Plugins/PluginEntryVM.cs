@@ -43,7 +43,7 @@ namespace NiceHashMiner.ViewModels.Plugins
                 var onlineVer = Plugin?.OnlineInfo?.PluginVersion ?? null;
                 if (!Plugin.Installed && onlineVer != null)
                 {
-                    return string.Format(Tr("{0}.{1} (Online)"), onlineVer.Major, onlineVer.Minor);
+                    return Tr("{0}.{1} (Online)", onlineVer.Major, onlineVer.Minor);
                 }
                 if (Plugin.Installed && Plugin.HasNewerVersion && localVer != null && onlineVer != null)
                 {
@@ -51,11 +51,11 @@ namespace NiceHashMiner.ViewModels.Plugins
                 }
                 if (Plugin.Installed && !Plugin.HasNewerVersion && localVer != null)
                 {
-                    return string.Format(Tr("{0}.{1} (Latest)"), onlineVer.Major, onlineVer.Minor);
+                    return Tr("{0}.{1} (Latest)", onlineVer.Major, onlineVer.Minor);
                 }
                 if (localVer != null)
                 {
-                    return string.Format(Tr("{0}.{1} (Local)"), onlineVer.Major, onlineVer.Minor);
+                    return Tr("{0}.{1} (Local)", onlineVer.Major, onlineVer.Minor);
                 }
                 return Tr("N/A");
             }

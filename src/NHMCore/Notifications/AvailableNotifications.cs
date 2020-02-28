@@ -84,7 +84,7 @@ namespace NHMCore.Notifications
 
         public static void CreateMissingMinersInfo()
         {
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.MissingMiners, Tr("Missing miner files"), string.Format(Tr("There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}"), Links.AVHelp));
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.MissingMiners, Tr("Missing miner files"), Tr("There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", Links.AVHelp));
             notification.Actions.Add(new NotificationAction
             {
                 Info = Tr("Restart NiceHash Miner"),
@@ -150,7 +150,7 @@ namespace NHMCore.Notifications
             var sentence = "was installed";
             if (!success) sentence = "was not installed";
 
-            var content = string.Format(Tr($"New version of {0} {sentence}.\n"), pluginName);
+            var content = Tr("New version of {0} {1}.\n", pluginName, sentence);
 
             try
             {
@@ -160,7 +160,7 @@ namespace NHMCore.Notifications
                     if (pluginNotification.NotificationNew == true)
                     {
                         //check if the same sentence was already written to notification
-                        var newSentence = string.Format(Tr($"New version of {0} {sentence}.\n"), pluginName);
+                        var newSentence = Tr("New version of {0} {1}.\n", pluginName, sentence);
                         if (pluginNotification.NotificationContent.Contains(newSentence))
                         {
                             return;
@@ -184,7 +184,7 @@ namespace NHMCore.Notifications
 
         public static void CreateMissingMinerBinsInfo(string pluginName)
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.MissingMinerBins, Tr("Missing miner binaries"), string.Format(Tr("Some of the {0} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application."), pluginName));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.MissingMinerBins, Tr("Missing miner binaries"), Tr("Some of the {0} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application.", pluginName));
             notification.Actions.Add(new NotificationAction
             {
                 Info = Tr("Help"),
@@ -274,7 +274,7 @@ namespace NHMCore.Notifications
 
         public static void CreateFailedBenchmarksInfo(ComputeDevice device)
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), string.Format(Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info."), device.Name));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info.", device.Name));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 

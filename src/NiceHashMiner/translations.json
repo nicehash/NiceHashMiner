@@ -3243,8 +3243,7 @@
     "NiceHash Miner was Updated": {},
     "NiceHash Miner was updated to the latest version.": {},
     "NiceHash Miner was not updated to the latest version.": {},
-    "New version of {0} was installed.\n": {},
-    "New version of {0} was not installed.\n": {},
+    "New version of {0} {1}.\n": {},
     "Miner Plugin Update": {},
     "Missing miner binaries": {},
     "Some of the {0} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application.": {},
@@ -3375,7 +3374,6 @@
     "Mining / Benchmarking": {},
     "Complete your mining setup": {},
     "+ Add Wallet Address": {},
-    "GPU’S": {},
-    ""
+    "GPU’S": {}
   }
 }
