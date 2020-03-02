@@ -140,9 +140,12 @@ namespace NHMCore.Configs
 
         public static void GeneralConfigFileCommit()
         {
-            CommitBenchmarks();
-            InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
-            ShowRestartRequired?.Invoke(null, IsRestartNeeded());
+            ApplicationStateManager.App.Dispatcher.Invoke(() =>
+            {
+                CommitBenchmarks();
+                InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
+                ShowRestartRequired?.Invoke(null, IsRestartNeeded());
+            });
         }
 
         private static string GetDeviceSettingsPath(string uuid)

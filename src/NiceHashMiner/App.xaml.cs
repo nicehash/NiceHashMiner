@@ -48,6 +48,7 @@ namespace NiceHashMiner
             return;
 #endif
 
+            ApplicationStateManager.App = this;
             ApplicationStateManager.ApplicationExit = () =>
             {
                 this.Dispatcher.Invoke(() =>

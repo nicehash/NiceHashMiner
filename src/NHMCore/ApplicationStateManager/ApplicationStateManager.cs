@@ -1,6 +1,5 @@
 using NHM.Common.Enums;
 using NHM.UUID;
-using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Nhmws;
@@ -9,14 +8,14 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
         public static string RigID() => UUID.GetDeviceB64UUID();
-
+        public static DispatcherObject App { get; set; }
         // change this if TOS changes
         public static int CurrentTosVer => 4;
 

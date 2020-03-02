@@ -964,6 +964,12 @@ namespace NHMCore.Nhmws
             {
                 executedCall = new ExecutedCall(rpcId, rpcEx.Code, rpcEx.Message);
             }
+            catch (Exception e)
+            {
+                NHLog.Error("NHWebSocket", $"Non RpcException - error: {e.Message}");
+                // intenral nhm error
+                if (executedCall == null) executedCall = new ExecutedCall(rpcId, 1, "Internal NiceHash Miner Error");
+            }
             finally
             {
                 _isInRPC.Value = false;
