@@ -27,6 +27,16 @@ namespace NHMCore
             new TimeSpan(0, 0, 5)
             );
 
+        public static event EventHandler<bool> OnNhmwsConnectionChanged;
+        public static void SetNhmwsConnectionChanged(bool isConnected)
+        {
+            App.Dispatcher.Invoke(() =>
+            {
+                OnNhmwsConnectionChanged?.Invoke(null, isConnected);
+            });
+        }
+
+
         static void ResetNiceHashStatsCredentials()
         {
             if (CredentialsSettings.Instance.IsCredentialValid)

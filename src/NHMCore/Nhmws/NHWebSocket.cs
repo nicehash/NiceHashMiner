@@ -224,6 +224,7 @@ namespace NHMCore.Nhmws
             finally
             {
                 NHLog.Info("NHWebSocket", "ENDING nhmws SESSION");
+                ApplicationStateManager.SetNhmwsConnectionChanged(false);
             }
         }
 
@@ -276,6 +277,7 @@ namespace NHMCore.Nhmws
         static private void Login(object sender, EventArgs e)
         {
             NHLog.Info("NHWebSocket", "Connected");
+            ApplicationStateManager.SetNhmwsConnectionChanged(true);
             try
             {
                 // always send login
