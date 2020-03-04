@@ -27,19 +27,47 @@ namespace FakePlugin
         public override string Name => GetPluginName();
         public override Version Version => GetPluginVersion();
 
+        internal static testSettingsJson DEFAULT_SETTINGS = new testSettingsJson
+        {
+            name = "FakePlugin1",
+            exitTimeWaitSeconds = 5,
+            version = new Version(8, 0),
+            supportedAlgorithmsPerType = new List<SupportedAlgorithmsPerType>
+            {
+                new SupportedAlgorithmsPerType
+                {
+                    type = DeviceType.NVIDIA,
+                    algorithms = new List<AlgorithmType>
+                    {
+                        AlgorithmType.Cuckaroom
+                    }
+                }
+            }
+        };
+
+        private testSettingsJson GetTestSettings()
+        {
+            try
+            {
+                var path = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "testSettings.json");
+                string text = File.ReadAllText(path);
+                var settingsObject = JsonConvert.DeserializeObject<testSettingsJson>(text);
+                if (settingsObject != null) return settingsObject;
+            }
+            catch {}
+            return DEFAULT_SETTINGS;
+        }
+
+
         private string GetPluginName()
         {
-            var path = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "testSettings.json");
-            string text = File.ReadAllText(path);
-            var settingsObject = JsonConvert.DeserializeObject<testSettingsJson>(text);
+            var settingsObject = GetTestSettings();
             return settingsObject.name;
         }
 
         private Version GetPluginVersion()
         {
-            var path = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "testSettings.json");
-            string text = File.ReadAllText(path);
-            var settingsObject = JsonConvert.DeserializeObject<testSettingsJson>(text);
+            var settingsObject = GetTestSettings();
             return settingsObject.version;
         }
 
@@ -47,9 +75,7 @@ namespace FakePlugin
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            var path = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "testSettings.json");
-            string text = File.ReadAllText(path);
-            var settingsObject = JsonConvert.DeserializeObject<testSettingsJson>(text);
+            var settingsObject = GetTestSettings();
             var amdAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.AMD).FirstOrDefault();
             var cudaAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.NVIDIA).FirstOrDefault();
             var cpuAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.CPU).FirstOrDefault();
@@ -127,9 +153,7 @@ namespace FakePlugin
         }
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            var path = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "testSettings.json");
-            string text = File.ReadAllText(path);
-            var settingsObject = JsonConvert.DeserializeObject<testSettingsJson>(text);
+            var settingsObject = GetTestSettings();
             var rebenchAlgos = settingsObject.rebenchmarkAlgorithms;
 
             var isReBenchVersion = benchmarkedPluginVersion.Major == Version.Major && benchmarkedPluginVersion.Minor < Version.Minor;

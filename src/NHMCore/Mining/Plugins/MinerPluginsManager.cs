@@ -35,6 +35,9 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_ExamplePlugin_PLUGIN
                 new Example.ExamplePlugin(),
 #endif
+#if INTEGRATE_FakePlugin_PLUGIN
+                new FakePlugin.FakePlugin(),
+#endif
 
 // open source
 #if INTEGRATE_CCMinerTpruvot_PLUGIN

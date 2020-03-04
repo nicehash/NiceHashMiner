@@ -279,6 +279,10 @@
       <Project>{dfc88036-796a-4046-b3b6-de9fa56edf28}</Project>
       <Name>ExamplePlugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\FakePlugin\FakePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_FakePlugin_PLUGIN'))">
+      <Project>{4dbb2aa4-f105-4f90-841c-4b2bf5949405}</Project>
+      <Name>FakePlugin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\GMiner\GMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_GMiner_PLUGIN'))">
       <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
       <Name>GMiner</Name>
