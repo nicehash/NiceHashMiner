@@ -34,6 +34,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
             DataContextChanged += ComputeDeviceItem_DataContextChanged;
             AlgorithmsGrid.Visibility = Visibility.Collapsed;
+            WindowUtils.Translate(this);
         }
 
         private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

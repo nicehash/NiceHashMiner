@@ -3712,6 +3712,34 @@
     },
     "Worker name:": {
       "ru": "Имя воркера:"
-    }
+    },
+    "Remove": {},
+    "More Info": {},
+    "Less Info": {},
+    "New": {},
+    "Do not show again": {},
+    "Notifications": {},
+    "Running local version:": {},
+    "Latest online version:": {},
+    "Less Details": {},
+    "ENABLED": {},
+    "BENCHED": {},
+    "ALGORITHM": {},
+    "MINER": {},
+    "SPEED": {},
+    "BTC/24H": {},
+    "STATUS": {},
+    "SELECT ALL": {},
+    "Pending Benchmarks:": {},
+    "START BENCHMARK": {},
+    "Start Benchmark": {},
+    "Clear all speeds": {},
+    "Custom Algorithm Settings": {},
+    "Benchmark Speed (H/s)": {},
+    "Temp": {},
+    "Load": {},
+    "Profitability / 24h": {},
+    "How to create a Wallet Address": {},
+    "SAVE": {}
   }
 }
