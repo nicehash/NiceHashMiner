@@ -23,11 +23,11 @@ namespace MiniZ
             // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.5t",
+                BinVersion = "v1.5t2",
                 ExePath = new List<string> { "miniZ.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/3.0.0.2/miniZ_v1.5t_cuda10_win-x64.zip",
+                    "https://github.com/nicehash/MinerDownloads/releases/download/3.0.0.2/miniZ_v1.5t2_cuda10_win-x64.zip",
                     "https://miniz.ch/?smd_process_download=1&download_id=3369", // original
                 }
             };
@@ -39,7 +39,7 @@ namespace MiniZ
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(8, 1);
 
         public override string Name => "MiniZ";
 
@@ -103,10 +103,9 @@ namespace MiniZ
             try
             {
                 if (ids.Count() == 0) return false;
-                if(benchmarkedPluginVersion.Major <= 5)
+                if(benchmarkedPluginVersion.Major == 8)
                 {
-                    if (benchmarkedPluginVersion.Major == 5 && benchmarkedPluginVersion.Minor == 1) return false;
-                    return true;
+                    if (benchmarkedPluginVersion.Minor < 1 && ids[0] == AlgorithmType.BeamV2) return true;
                 }
             }
             catch (Exception e)
