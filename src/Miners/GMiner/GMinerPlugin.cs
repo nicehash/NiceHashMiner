@@ -41,7 +41,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(8, 3);
+        public override Version Version => new Version(8, 4);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -146,8 +146,8 @@ namespace GMinerPlugin
         {
             try
             {
-                if (benchmarkedPluginVersion.Major <= 8 && benchmarkedPluginVersion.Minor < 2) {
-                    return ids.FirstOrDefault() == AlgorithmType.Cuckaroom;
+                if (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor < 4) {
+                    return ids.Count() == 2;
                 }
             }
             catch (Exception e)

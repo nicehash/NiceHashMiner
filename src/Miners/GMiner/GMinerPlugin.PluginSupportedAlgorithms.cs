@@ -29,7 +29,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.BeamV2),
                         new SAS(AlgorithmType.Eaglesong),
                         // 3%fee on dagger 2% fee on eaglesong
-                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong){ ExtraLaunchParameters = "--dual_intensity 0"},
+                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong),
                         new SAS(AlgorithmType.Cuckaroom),
                         new SAS(AlgorithmType.GrinCuckatoo32),
                     }

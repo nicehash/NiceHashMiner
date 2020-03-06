@@ -66,6 +66,11 @@ namespace GMinerPlugin
                 cmd += " --pers auto";
             }
 
+            if (!_extraLaunchParameters.Contains("--dual_intensity") && _algorithmSecondType == AlgorithmType.Eaglesong)
+            {
+                _extraLaunchParameters += "--dual_intensity 0";
+            }
+
             return cmd;
         }
 
