@@ -938,13 +938,33 @@ namespace NHMCore.Mining.Plugins
             {
                 //keep only 3 versions
                 var numOfKeepVersions = 3;
-                var installedVersions = new DirectoryInfo(pluginBinsPath).GetDirectories("*", SearchOption.AllDirectories).OrderByDescending(d => d.LastWriteTimeUtc).ToList();
+                var installedVersions = new DirectoryInfo(pluginBinsPath).GetDirectories("*", SearchOption.AllDirectories).ToList();
                 if (installedVersions.Count() > numOfKeepVersions)
                 {
-                    var dirsToDelete = installedVersions.GetRange(numOfKeepVersions, installedVersions.Count - numOfKeepVersions);
-                    foreach (var version in dirsToDelete)
+
+                    //parse versions
+                    var versionDic = new Dictionary<Version, string>();
+                    foreach (var dir in installedVersions)
                     {
-                        var path = version.FullName;
+                        var dirName = dir.Name;
+                        var version = Version.Parse(dirName);
+                        versionDic.Add(version, dir.FullName);
+                    }
+
+                    //get old versions
+                    var dirsToDelete = new List<string>();
+                    int counter = 0;
+                    foreach (var nek in versionDic.OrderByDescending(key => key.Value))
+                    {
+                        counter++;
+                        if (counter > numOfKeepVersions)
+                        {
+                            dirsToDelete.Add(nek.Value);
+                        }
+                    }
+
+                    foreach (var path in dirsToDelete)
+                    {
                         Directory.Delete(path, true);
                     }
                 }
