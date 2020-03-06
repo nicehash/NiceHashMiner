@@ -84,7 +84,7 @@ namespace FakePlugin
 
         protected override void Init()
         {
-            _devices = string.Join(",", _miningPairs.Select(p => p.Device.ID));
+            _devices = string.Join(",", _miningPairs.Select(p => $"{p.Device.Name}({p.Device.ID})"));
         }
 
         protected override string MiningCreateCommandLine()

@@ -331,6 +331,8 @@ namespace NiceHashMiner.ViewModels
         public BenchmarkViewModel BenchmarkSettings { get; } = new BenchmarkViewModel();
         public DevicesViewModel DevicesViewModel { get; } = new DevicesViewModel();
 
+        public bool NHMWSConnected { get; private set; } = false;
+
         public MainVM()
             : base(ApplicationStateManager.Title)
         {
@@ -367,6 +369,13 @@ namespace NiceHashMiner.ViewModels
             //MinerPluginsManager.OnCrossReferenceInstalledWithOnlinePlugins += OnCrossReferenceInstalledWithOnlinePlugins;
             MinerPluginsManagerState.Instance.PropertyChanged += MinerPluginsManagerState_PropertyChanged;
             NotificationsManager.Instance.PropertyChanged += RefreshNotifications_PropertyChanged;
+
+            OnPropertyChanged(nameof(NHMWSConnected));
+            ApplicationStateManager.OnNhmwsConnectionChanged += (_, nhmwsConnected) =>
+            {
+                NHMWSConnected = nhmwsConnected;
+                OnPropertyChanged(nameof(NHMWSConnected));
+            };
         }
 
         // TODO I don't like this way, a global refresh and notify would be better

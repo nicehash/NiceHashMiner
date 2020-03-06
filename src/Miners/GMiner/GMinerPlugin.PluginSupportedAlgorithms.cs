@@ -31,6 +31,7 @@ namespace GMinerPlugin
                         // 3%fee on dagger 2% fee on eaglesong
                         new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong),
                         new SAS(AlgorithmType.Cuckaroom),
+                        new SAS(AlgorithmType.GrinCuckatoo32),
                     }
                 },
                 {
@@ -53,6 +54,7 @@ namespace GMinerPlugin
                 { AlgorithmType.Eaglesong, "eaglesong" },
                 { AlgorithmType.Cuckaroom, "cuckaroom29" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
+                { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
             }
         };
     }

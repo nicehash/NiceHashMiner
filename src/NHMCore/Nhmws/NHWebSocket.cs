@@ -224,6 +224,7 @@ namespace NHMCore.Nhmws
             finally
             {
                 NHLog.Info("NHWebSocket", "ENDING nhmws SESSION");
+                ApplicationStateManager.SetNhmwsConnectionChanged(false);
             }
         }
 
@@ -276,6 +277,7 @@ namespace NHMCore.Nhmws
         static private void Login(object sender, EventArgs e)
         {
             NHLog.Info("NHWebSocket", "Connected");
+            ApplicationStateManager.SetNhmwsConnectionChanged(true);
             try
             {
                 // always send login
@@ -963,6 +965,12 @@ namespace NHMCore.Nhmws
             catch (RpcException rpcEx)
             {
                 executedCall = new ExecutedCall(rpcId, rpcEx.Code, rpcEx.Message);
+            }
+            catch (Exception e)
+            {
+                NHLog.Error("NHWebSocket", $"Non RpcException - error: {e.Message}");
+                // intenral nhm error
+                if (executedCall == null) executedCall = new ExecutedCall(rpcId, 1, "Internal NiceHash Miner Error");
             }
             finally
             {

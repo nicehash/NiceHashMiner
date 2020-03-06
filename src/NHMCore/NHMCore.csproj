@@ -86,6 +86,7 @@
     <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
       <HintPath>..\..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
@@ -277,6 +278,10 @@
     <ProjectReference Include="..\Miners\ExamplePlugin\ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
       <Project>{dfc88036-796a-4046-b3b6-de9fa56edf28}</Project>
       <Name>ExamplePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\FakePlugin\FakePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_FakePlugin_PLUGIN'))">
+      <Project>{4dbb2aa4-f105-4f90-841c-4b2bf5949405}</Project>
+      <Name>FakePlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\GMiner\GMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_GMiner_PLUGIN'))">
       <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
