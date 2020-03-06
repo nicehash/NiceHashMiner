@@ -173,7 +173,7 @@
                                     <ContextMenu x:Name="DeviceActionsButtonContext">
                                         <ContextMenu.Template>
                                             <ControlTemplate>
-                                                <Grid DataContext="{Binding .}">
+                                                <Grid DataContext="{Binding .}" x:Name="deviceActionsGrid">
                                                     <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
                                                         <Border.Effect>
                                                             <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
@@ -218,8 +218,7 @@
                 <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="STATUS" Click="SortStatusButtonClick" Margin="-40,0,0,0"/>
                 <!--MAX WITH HERE DEFINES THE GRID-->
                 <WrapPanel Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="100" Visibility="{Binding Dev.State, Converter={StaticResource DeviceStatusVisibilityConverter}}">
-                    <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SELECT ALL" Click="SortEnabledButtonClick" Margin="0,0,4,0"
-                            />
+                    <Button Style="{DynamicResource AlgorithmHeaderTextBoxButton}" Content="SELECT ALL" Click="SortEnabledButtonClick" Margin="0,0,4,0" />
                     <CheckBox Style="{StaticResource NHMSwitch}"
                               IsChecked="{Binding AllAgorithmsEnabled, Mode=TwoWay}"
                               Margin="4,0,3,0" />

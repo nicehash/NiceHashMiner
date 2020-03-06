@@ -3713,33 +3713,89 @@
     "Worker name:": {
       "ru": "Имя воркера:"
     },
-    "Remove": {},
-    "More Info": {},
-    "Less Info": {},
-    "New": {},
-    "Do not show again": {},
-    "Notifications": {},
-    "Running local version:": {},
-    "Latest online version:": {},
-    "Less Details": {},
-    "ENABLED": {},
-    "BENCHED": {},
-    "ALGORITHM": {},
-    "MINER": {},
-    "SPEED": {},
-    "BTC/24H": {},
-    "STATUS": {},
-    "SELECT ALL": {},
-    "Pending Benchmarks:": {},
-    "START BENCHMARK": {},
-    "Start Benchmark": {},
-    "Clear all speeds": {},
-    "Custom Algorithm Settings": {},
-    "Benchmark Speed (H/s)": {},
-    "Temp": {},
-    "Load": {},
-    "Profitability / 24h": {},
-    "How to create a Wallet Address": {},
-    "SAVE": {}
+    "Remove": {
+      "ru": "Удалить"
+    },
+    "More Info": {
+      "ru": "Развернуть"
+    },
+    "Less Info": {
+      "ru": "Свернуть"
+    },
+    "New": {
+      "ru": "Новое"
+    },
+    "Do not show again": {
+      "ru": "Не показывать снова"
+    },
+    "Notifications": {
+      "ru": "Уведомления"
+    },
+    "Running local version:": {
+      "ru": "Запущенная локальная версия:"
+    },
+    "Latest online version:": {
+      "ru": "Последняя версия онлайн:"
+    },
+    "Less Details": {
+      "ru": "Свернуть"
+    },
+    "ENABLED": {
+      "ru": "ВКЛЮЧЕНО"
+    },
+    "BENCHED": {
+      "ru": "ПРОТЕСТИРОВАНО"
+    },
+    "ALGORITHM": {
+      "ru": "АЛГОРИТМ"
+    },
+    "MINER": {
+      "ru": "МАЙНЕР"
+    },
+    "SPEED": {
+      "ru": "СКОРОСТЬ"
+    },
+    "BTC / 24H": {
+      "ru": "BTC / 24ч"
+    },
+    "STATUS": {
+      "ru": "СТАТУС"
+    },
+    "SELECT ALL": {
+      "ru": "ВЫБРАТЬ ВСЕ"
+    },
+    "Pending Benchmarks:": {
+      "ru": "Ждущие тестирования"
+    },
+    "START BENCHMARK": {
+      "ru": "НАЧАТЬ БЕНЧМАРК"
+    },
+    "Start Benchmark": {
+      "ru": "Начать бенчмарк"
+    },
+    "Clear all speeds": {
+      "ru": "Очистить все скорости"
+    },
+    "Custom Algorithm Settings": {
+      "ru": "Пользовательские настройки алгоритма"
+    },
+    "Benchmark Speed (H/s)": {
+      "ru": "Скорость бенчмарка (H/s)"
+    },
+    "Temp": {
+      "ru": "Температура"
+    },
+    "Load": {
+      "ru": "Нагрузка"
+    },
+    "Profitability / 24h": {
+      "ru": "Прибыльность / 24ч"
+    },
+    "How to create a Wallet Address": {
+      "ru": "Как создать адрес кошелька"
+    },
+    "SAVE": {
+      "ru": "СОХРАНИТЬ"
+    }
   }
 }
