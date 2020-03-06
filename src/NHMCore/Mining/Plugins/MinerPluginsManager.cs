@@ -703,6 +703,9 @@ namespace NHMCore.Mining.Plugins
                 {
                     Logger.Error("MinerPluginsManager", $"Miners bins of {pluginUUID} not installed");
                 }
+
+                //clear old bins
+                clearOldPluginBins(Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins"));
             }
             catch (Exception e)
             {
@@ -801,13 +804,16 @@ namespace NHMCore.Mining.Plugins
             var versionStr = $"{plugin.OnlineInfo.PluginVersion.Major}.{plugin.OnlineInfo.PluginVersion.Minor}";
             var pluginRootPath = Path.Combine(Paths.MinerPluginsPath(), plugin.PluginUUID);
             var installDllPath = Path.Combine(pluginRootPath, "dlls", versionStr);
-            var installBinsPath = Path.Combine(pluginRootPath, "bins", versionStr);
+            var installBinsPath = Path.Combine(pluginRootPath, "bins", versionStr);       
             try
             {
                 if (Directory.Exists(installDllPath)) Directory.Delete(installDllPath, true);
                 Directory.CreateDirectory(installDllPath);
                 if (Directory.Exists(installBinsPath)) Directory.Delete(installBinsPath, true);
                 Directory.CreateDirectory(installBinsPath);
+
+                //clear old bins
+                clearOldPluginBins(Path.Combine(pluginRootPath, "bins"));
 
                 // download plugin dll
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingDownloadingPlugin, 0));
@@ -915,7 +921,7 @@ namespace NHMCore.Mining.Plugins
             }
             catch (Exception e)
             {
-                Logger.Error("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: ${e.Message}");
+                Logger.Error("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: {e.Message}");
                 //downloadAndInstallUpdate();
                 finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedUnknown;
             }
@@ -924,6 +930,29 @@ namespace NHMCore.Mining.Plugins
                 progress?.Report(Tuple.Create(finalState, 0));
             }
             return finalState;
+        }
+
+        private static void clearOldPluginBins(string pluginBinsPath)
+        {
+            try
+            {
+                //keep only 3 versions
+                var numOfKeepVersions = 3;
+                var installedVersions = new DirectoryInfo(pluginBinsPath).GetDirectories("*", SearchOption.AllDirectories).OrderByDescending(d => d.LastWriteTimeUtc).ToList();
+                if (installedVersions.Count() > numOfKeepVersions)
+                {
+                    var dirsToDelete = installedVersions.GetRange(numOfKeepVersions, installedVersions.Count - numOfKeepVersions);
+                    foreach (var version in dirsToDelete)
+                    {
+                        var path = version.FullName;
+                        Directory.Delete(path, true);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Logger.Error("MinerPluginsManager", $"Clearing of old plugin bins failed: {ex.Message}");
+            }            
         }
 #endregion DownloadingInstalling
     }
