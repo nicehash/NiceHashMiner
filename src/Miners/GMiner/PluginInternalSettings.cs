@@ -123,6 +123,15 @@ namespace GMinerPlugin
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "gminer_oc1",
                     LongName = "--oc1"
+                },
+                /// <summary>
+                /// space-separated list of intensities for secondary algorithm in dual mining mode (0-10)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_dual_intensity",
+                    LongName = "--dual_intensity"
                 }
             },
             TemperatureOptions = new List<MinerOption>{

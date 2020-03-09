@@ -28,7 +28,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.Eaglesong),
                         // new SAS(AlgorithmType.DaggerHashimoto), // needs different protocol settings
-                        new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30  },
+                        new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
                     }
                 },
                 {
