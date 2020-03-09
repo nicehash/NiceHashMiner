@@ -151,7 +151,7 @@ namespace NBMiner
             var cmd = $"-a {AlgoName} -o {url} -u {username} -do nicehash+tcp://{url2} -du {username} --api 127.0.0.1:{_apiPort} {_devices} --no-watchdog {_extraLaunchParameters}";
             if (!_extraLaunchParameters.Contains("--secondary-intensity"))
             {
-                cmd += "--secondary-intensity 100";
+                cmd += " --secondary-intensity 100";
             }
             return cmd;
         }
