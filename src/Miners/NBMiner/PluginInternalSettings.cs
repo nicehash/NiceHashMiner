@@ -39,6 +39,16 @@ namespace NBMiner
                     DefaultValue = "0"
                 },
                 /// <summary>
+                /// The relative intensity when dual mining.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_sec_intensity",
+                    ShortName = "-di",
+                    LongName = "--secondary-intensity"
+                },
+                /// <summary>
                 /// Set this option to reduce the range of power consumed by rig when minining with algo cuckatoo.
                 /// This feature can reduce the chance of power supply shutdown caused by overpowered.
                 /// Warning: Setting this option may cause drop on minining performance.
