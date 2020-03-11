@@ -84,8 +84,8 @@
             <!--SERVICE LOCATION-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
                 <Label Content="Service Location" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Select Your Service Location" Style="{StaticResource FontsTypography.SmallRegular/Active}" ToolTip="{StaticResource miningLocation}"/>
+                <StackPanel Orientation="Horizontal" ToolTip="{StaticResource miningLocation}">
+                    <Label Content="Select Your Service Location" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
             <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding StratumService.MiningLocationNames}" SelectedIndex="{Binding StratumService.ServiceLocation, Mode=TwoWay}" Width="218" />

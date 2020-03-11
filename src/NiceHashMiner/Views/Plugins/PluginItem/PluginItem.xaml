@@ -232,10 +232,10 @@
                                   Visibility="{Binding ActionsButtonVisibility}"
                                   Click="Button_Click">
                             <ToggleButton.ContextMenu>
-                                <ContextMenu x:Name="PluginActionsButtonContext">
+                                <ContextMenu x:Name="PluginActionsButtonContext" Loaded="PluginActionsButtonContext_Loaded" Unloaded="PluginActionsButtonContext_Loaded">
                                     <ContextMenu.Template>
                                         <ControlTemplate>
-                                            <Grid >
+                                            <Grid x:Name="pluginActionsGrid">
                                                 <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
                                                     <Border.Effect>
                                                         <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>

@@ -170,7 +170,7 @@
                                           Click="Action_Button_Click"
                                           Margin="8,0,16,0" >
                                 <ToggleButton.ContextMenu>
-                                    <ContextMenu x:Name="DeviceActionsButtonContext">
+                                    <ContextMenu x:Name="DeviceActionsButtonContext" Loaded="DeviceActionsButtonContext_Loaded" Unloaded="DeviceActionsButtonContext_Loaded">
                                         <ContextMenu.Template>
                                             <ControlTemplate>
                                                 <Grid DataContext="{Binding .}" x:Name="deviceActionsGrid">

@@ -35,8 +35,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             DataContextChanged += ComputeDeviceItem_DataContextChanged;
             AlgorithmsGrid.Visibility = Visibility.Collapsed;
             WindowUtils.Translate(this);
-            //var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceActionsGrid", DeviceActionsButtonContext);
-            //WindowUtils.Translate(myControl);
         }
 
         private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -159,6 +157,12 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         {
             DeviceActionsButtonContext.IsOpen = false;
             _deviceData.EnablebenchmarkedOnly();
+        }
+
+        private void DeviceActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
+        {
+            var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceActionsGrid", DeviceActionsButtonContext);
+            WindowUtils.Translate(myControl);
         }
     }
 }

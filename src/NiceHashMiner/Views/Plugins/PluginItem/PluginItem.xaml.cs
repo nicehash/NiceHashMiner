@@ -1,4 +1,6 @@
-﻿using NiceHashMiner.ViewModels.Plugins;
+﻿using NHMCore;
+using NiceHashMiner.ViewModels.Plugins;
+using NiceHashMiner.Views.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
             Collapse();
 
             DataContextChanged += PluginEntry_DataContextChanged;
+            WindowUtils.Translate(this);
         }
 
         private void PluginEntry_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -58,13 +61,14 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
         private void ToggleDetailsButton_Click(object sender, RoutedEventArgs e)
         {
             if (DetailsToggleButton.IsChecked.Value)
-            {
+            {          
                 Expand();
             }
             else
             {
                 Collapse();
             }
+            DetailsToggleButtonText.Text = Translations.Tr(DetailsToggleButtonText.Text);
         }
 
         private readonly HashSet<ToggleButton> _toggleButtonsGuard = new HashSet<ToggleButton>();
@@ -116,6 +120,12 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
                 _vm.Plugin.IsAutoUpdateEnabled = true;
             }
             _vm.Plugin.OnPropertyChanged(nameof(_vm.Plugin.IsAutoUpdateEnabled));
+        }
+
+        private void PluginActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
+        {
+            var myControl = (Grid)PluginActionsButtonContext.Template.FindName("pluginActionsGrid", PluginActionsButtonContext);
+            WindowUtils.Translate(myControl);
         }
     }
 }

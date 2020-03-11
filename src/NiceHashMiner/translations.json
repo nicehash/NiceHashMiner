@@ -193,19 +193,19 @@
       "ru": "Стоп",
       "zh_cn": "停止"
     },
-    "_Start": {
-      "bg": "_Тест",
-      "es": "_Empezar",
-      "pt": "_Iniciar",
-      "ru": "_Старт",
-      "zh_cn": "开始 (_S)"
+    "Start ": {
+      "bg": "Тест ",
+      "es": "Empezar ",
+      "pt": "Iniciar ",
+      "ru": "Старт ",
+      "zh_cn": "开始 "
     },
-    "_Stop": {
-      "bg": "Сто_п",
-      "es": "_Detener",
-      "pt": "_Parar",
-      "ru": "С_топ",
-      "zh_cn": "停止 (_S)"
+    "Stop ": {
+      "bg": "Стоп ",
+      "es": "Detener ",
+      "pt": "Parar ",
+      "ru": "Стоп ",
+      "zh_cn": "停止 "
     },
     "_Start All": {
       "ru": "_Запустить все"
@@ -1168,16 +1168,6 @@
       "ru": "Объяснение",
       "zh_cn": "注释"
     },
-    "Extra Launch Parameters": {
-      "bg": "Допълнителни стартови параметри",
-      "es": "Parámetros de inicio",
-      "it": "Parametri di lancio extra",
-      "pl": "Dodatkowe parametry startu",
-      "pt": "Parametros extras para iniciar",
-      "ro": "Parametrii Lansare Extra",
-      "ru": "Дополнительные параметры запуска",
-      "zh_cn": "额外运行参数"
-    },
     "Failed - try Precise": {
       "bg": "Неуспешен опит - опитайте прецизен тест",
       "it": "Fallito - prova Preciso",
@@ -1997,9 +1987,6 @@
     "Power Cost ({0})": {
       "ru": "Расход на электроэнергию ({0})"
     },
-    "Power Usage (W):": {
-      "ru": "Потребление мощности (Вт):"
-    },
     "Precise:": {
       "bg": "прецизен:",
       "es": "Preciso:",
@@ -2626,8 +2613,8 @@
     "The last dcri value to use for tuning": {
       "ru": "Конечное значение dcri для тюнинга"
     },
-    "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
-      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину затрат на электроэнергию,\nесли стоимость электроэнергии и потребление мощности больше 0."
+    "The power used by this algorithm in Watts. Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
+      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину затрат на электроэнергию, если стоимость электроэнергии и потребление мощности больше 0."
     },
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. {0} might not work properly without missing files. Click Yes to reinitialize {0} to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. {0} няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно {0} и да опитате да поправите този проблем.",
@@ -3701,6 +3688,9 @@
     "Dashboard": {
       "ru": "Кабинет"
     },
+    "Devices": {
+      "ru": "устройства",
+    },
     "Benchmarks": {
       "ru": "Бенчмарк"
     },
@@ -3731,11 +3721,11 @@
     "Notifications": {
       "ru": "Уведомления"
     },
-    "Running local version:": {
-      "ru": "Запущенная локальная версия:"
+    "Running local version: ": {
+      "ru": "Запущенная локальная версия: "
     },
-    "Latest online version:": {
-      "ru": "Последняя версия онлайн:"
+    "Latest online version: ": {
+      "ru": "Последняя версия онлайн: "
     },
     "Less Details": {
       "ru": "Свернуть"
@@ -3764,14 +3754,17 @@
     "SELECT ALL": {
       "ru": "ВЫБРАТЬ ВСЕ"
     },
-    "Pending Benchmarks:": {
-      "ru": "Ждущие тестирования"
+    "Pending Benchmarks: {0}": {
+      "ru": "Ждущие тестирования: {0}"
     },
     "START BENCHMARK": {
       "ru": "НАЧАТЬ БЕНЧМАРК"
     },
     "Start Benchmark": {
       "ru": "Начать бенчмарк"
+    },
+    "Stop Benchmark": {
+      "ru": "Стоп бенчмарк"
     },
     "Clear all speeds": {
       "ru": "Очистить все скорости"
@@ -3796,6 +3789,42 @@
     },
     "SAVE": {
       "ru": "СОХРАНИТЬ"
-    }
+    },
+    "Power Usage (W)": {
+      "ru": "Потребление мощности (Вт)"
+    },
+    "Extra Launch Parameters": {
+      "bg": "Допълнителни стартови параметри",
+      "es": "Parámetros de inicio",
+      "it": "Parametri di lancio extra",
+      "pl": "Dodatkowe parametry startu",
+      "pt": "Parametros extras para iniciar",
+      "ro": "Parametrii Lansare Extra",
+      "ru": "Дополнительные параметры запуска",
+      "zh_cn": "额外运行参数"
+    },
+    "Enable only this Algorithm": {
+      "ru": "Включить только этот алгоритм"
+    },
+    "Secondary Benchmark Speed (H/s)": {
+      "ru": "Вторая скорость бенчмарка (H/s)"
+    },
+    "Speed for the secondary algorithm when using dual mining.": {
+      "ru": "Скорость для второго алгоритма при использовании двойного майнинга."
+    },
+    "Schedule for re-benchmarking": {
+      "ru": "Повторный бенчмарк"
+    },
+    "Are you sure you would like to clear all speeds for {0}?": {
+      "ru": "Вы уверены, что хотите сбросить все скорости для {0}?"
+    },
+    "Yes": {
+      "ru": "Да"
+    },
+    "No": {
+      "ru": "нет"
+    },
+    "Stop Benchmarking": {},
+    "Stop Mining": {}
   }
 }

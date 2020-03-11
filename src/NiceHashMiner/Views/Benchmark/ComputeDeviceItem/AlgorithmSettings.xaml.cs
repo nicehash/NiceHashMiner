@@ -1,4 +1,5 @@
 ﻿using NHMCore.Mining;
+using NiceHashMiner.Views.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 }
                 throw new Exception("unsupported datacontext type");
             };
+            WindowUtils.Translate(this);
         }
 
         private void _algorithmContainer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
