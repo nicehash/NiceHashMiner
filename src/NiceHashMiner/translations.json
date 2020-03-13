@@ -587,8 +587,6 @@
       "ru": "Бразилия - Сан-Паулу",
       "zh_cn": "巴西 - 圣保罗"
     },
-    "CDev#{0}": {},
-    "CPU#{0}": {},
     "CURRENTLY MINING NOT PROFITABLE.": {
       "bg": "В МОМЕНТА РАБОТАТА НЕ НОСИ ВЪЗВРЪЩАЕМОСТ.",
       "es": "EL MINADO NO ES RENTABLE ACTUALMENTE.",
@@ -878,7 +876,6 @@
       "ru": "Устройство",
       "zh_cn": "设备"
     },
-    "Device Monitoring:": {},
     "Devices/Algorithms": {
       "bg": "Устройства/Алгоритми",
       "es": "Dispositivos/Algoritmos",
@@ -939,8 +936,12 @@
       "ru": "Отключить устройство",
       "zh_cn": "禁用设备"
     },
-    "Disable Device Status Monitoring": {},
-    "Disable Device Power Mode Settings": {},
+    "Disable Device Status Monitoring": {
+      "ru": "Отключить мониторинг статуса устройства"
+    },
+    "Disable Device Power Mode Settings": {
+      "ru": "Отключить настройку режима энергопотребления устройства"
+    },
     "Disable Windows Error Reporting": {
       "bg": "Изкл. журнала за грешки на Windows",
       "es": "Desactivar reportes de errores de Windows",
@@ -984,7 +985,6 @@
       "ru": "Валюта:",
       "zh_cn": "显示货币:"
     },
-    "Double-click to restore...": {},
     "Downloading miners": {
       "bg": "Сваляне на изчислителни програми",
       "es": "Descargando mineros",
@@ -1236,8 +1236,6 @@
       "ru": "Использовать определённую технологию для CPU.",
       "zh_cn": "强制启用某些CPU指令集扩展。"
     },
-    "Form Windows Always On Top": {},
-    "GPU#{0}": {},
     "General": {
       "bg": "Общи",
       "it": "Generali",
@@ -1413,7 +1411,6 @@
       "ru": "Если включено, {0} будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
       "zh_cn": "IF This Than That，简称IFTTT。 开启此选项后，NiceHash{0}会在收益跌至设定阈值以下时通过您的API密钥来发送提醒。\n预知配置此功能的详细信息，请参见帮助文档。"
     },
-    "If 'MineRegardlessOfProfit' is unchecked, {0} will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {},
     "India - Chennai": {
       "ru": "Индия - Ченнаи",
       "zh_cn": "印度 - 金奈"
@@ -2822,7 +2819,6 @@
       "ru": "Биткоин-адрес пользователя для майнинга.",
       "zh_cn": "比特币提现地址。用于分发挖矿所得。"
     },
-    "V_ID_{0}": {},
     "Visit us @ www.nicehash.com": {
       "bg": "Посетете ни на www.nicehash.com",
       "es": "Visítanos @ www.nicehash.com",
@@ -2948,7 +2944,6 @@
       "ru": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг\nпотенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
       "zh_cn": "选中此复选框将禁用所有默认优化配置。这将使得挖矿更为稳定但速度更慢（尤其对于AMD设备）。"
     },
-    "When checked, {0} Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {},
     "When checked, {0} will automatically start mining when launched.": {
       "bg": "Когато тази опция е маркирана, {0} автоматично ще започне изчисления с пускането на програмата.",
       "es": "Si está marcada, {0} empezará a minar al abrirse.",
@@ -2978,8 +2973,6 @@
       "ru": "Если отмечено, {0} будет сворачиваться в трей.",
       "zh_cn": "选择此处使{0} Legacy最小化至托盘。"
     },
-    "When checked, {0} will not attempt to set device power mode settings (currently NVIDIA only).": {},
-    "When checked, {0} will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {},
     "When checked, {0} will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
       "bg": "Когато тази опция е активна, {0} ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
       "it": "Quando spuntato, {0} eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
@@ -3139,7 +3132,6 @@
       "ru": "Работа {0} завершится. Этот новое диалоговое окно ещё тестируется и {0} нужен перезапуск для результата.",
       "zh_cn": "{0} 现在将退出。此新版设置对话还处于测试阶段，{0} 需重启方可生效。"
     },
-    "{0} {1}": {},
     "{0}% : Benchmarking {1}.. Please wait..": {
       "bg": "{0}% : Тестване на {1}.. Моля изчакайте..",
       "es": "{0}% : Corriendo benchmark {1}.. Espera, por favor..",
@@ -3824,7 +3816,11 @@
     "No": {
       "ru": "нет"
     },
-    "Stop Benchmarking": {},
-    "Stop Mining": {}
+    "Stop Benchmarking": {
+      "ru": "Остановить бенчмарк"
+    },
+    "Stop Mining": {
+      "ru": "Остановить майнинг"
+    }
   }
 }
