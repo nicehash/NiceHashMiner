@@ -3866,6 +3866,9 @@
     },
     "Updating Miner Binaries...": {
       "ru": "Обновление исполнительных файлов майнера..."
+    },
+    "Cross referencing miner device IDs...": {
+      "ru": "Перекрёстные ссылки ID устройств майнера..."
     }
   }
 }
