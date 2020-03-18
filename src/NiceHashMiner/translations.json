@@ -3821,6 +3821,51 @@
     },
     "Stop Mining": {
       "ru": "Остановить майнинг"
+    },
+    "Cross Reference {0}": {
+      "ru": "Перекрёстная ссылка {0}"
+    },
+    "Devices Cross Reference": {
+      "ru": "Перекрёстная ссылка устройств"
+    },
+    "Pending": {
+      "ru": "Ожидание"
+    },
+    "Downloading {0} %": {
+      "ru": "Загрузка {0}%"
+    },
+    "Sit tight, NiceHash Miner will start soon...": {
+      "ru": "Будьте терпеливы, NiceHash Miner скоро запустится..."
+    },
+    "Checking CPU Info": {
+      "ru": "Проверка информации о процессоре"
+    },
+    "Checking Windows Video Controllers": {
+      "ru": "Проверка видеоконтроллера Windows"
+    },
+    "Checking System Specs": {
+      "ru": "Проверка системных спецификаций"
+    },
+    "Initializing device monitoring": {
+      "ru": "Инициализация мониторинга устройств"
+    },
+    "Loading miner plugins...": {
+      "ru": "Загрузка плагинов майнера..."
+    },
+    "Connecting to nhmws...": {
+      "ru": "Подключение к nhmws..."
+    },
+    "Downloading Miner Binaries": {
+      "ru": "Загрузка исполнительных файлов майнера"
+    },
+    "Downloading Miner Binaries...": {
+      "ru": "Загрузка исполнительных файлов майнера..."
+    },
+    "Updating Miner Binaries": {
+      "ru": "Обновление исполнительных файлов майнера"
+    },
+    "Updating Miner Binaries...": {
+      "ru": "Обновление исполнительных файлов майнера..."
     }
   }
 }
