@@ -3681,7 +3681,7 @@
       "ru": "Кабинет"
     },
     "Devices": {
-      "ru": "устройства",
+      "ru": "Устройства"
     },
     "Benchmarks": {
       "ru": "Бенчмарк"
@@ -3792,7 +3792,7 @@
       "pl": "Dodatkowe parametry startu",
       "pt": "Parametros extras para iniciar",
       "ro": "Parametrii Lansare Extra",
-      "ru": "Дополнительные параметры запуска",
+      "ru": "Доп. параметры запуска",
       "zh_cn": "额外运行参数"
     },
     "Enable only this Algorithm": {
@@ -3869,6 +3869,21 @@
     },
     "Cross referencing miner device IDs...": {
       "ru": "Перекрёстные ссылки ID устройств майнера..."
+    },
+    " / Hour": {
+      "ru": " / Час"
+    },
+    " / Day": {
+      "ru": " / День"
+    },
+    " / Week": {
+      "ru": " / Неделя"
+    },
+    " / Month": {
+      "ru": " / Месяц"
+    },
+    " / Year": {
+      "ru": " / Год"
     }
   }
 }
