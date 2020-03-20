@@ -1692,15 +1692,15 @@
       "ru": "Минимальный простой [с]:",
       "zh_cn": "最小空闲时间 [秒]:"
     },
-    "Minimum Profit ($/day):": {
-      "bg": "Минимална доходност ($/day):",
-      "es": "Benefícios mínimas ($/día):",
-      "it": "Profitto minimo ($/Giorno):",
-      "pl": "Minimalny zysk dzienny:",
-      "pt": "Lucro mínimo ($/day):",
-      "ro": "Profit Minim ($/zi):",
-      "ru": "Мин. прибыль ($/сут):",
-      "zh_cn": "最小收益（USD/天）:"
+    "Minimum Profit ($/day)": {
+      "bg": "Минимална доходност ($/day)",
+      "es": "Benefícios mínimas ($/día)",
+      "it": "Profitto minimo ($/Giorno)",
+      "pl": "Minimalny zysk dzienny",
+      "pt": "Lucro mínimo ($/day)",
+      "ro": "Profit Minim ($/zi)",
+      "ru": "Мин. прибыль ($/сут)",
+      "zh_cn": "最小收益（USD/天）"
     },
     "Mining Devices {0}:": {
       "bg": "Изчислителни устройства {0}:",
@@ -3884,6 +3884,18 @@
     },
     " / Year": {
       "ru": " / Год"
+    },
+    "Pack log files?": {
+      "ru": "Запаковать лог-файлы?"
+    },
+    "This will restart your program and create a zip file on Desktop.": {
+      "ru": "Это перезапустит вашу программу и создаст zip-файл на рабочем столе."
+    },
+    "Cancel": {
+      "ru": "Отмена"
+    },
+    "Ok": {
+      "ru":  "OK"
     }
   }
 }
