@@ -1699,7 +1699,7 @@
       "pl": "Minimalny zysk dzienny",
       "pt": "Lucro mínimo ($/day)",
       "ro": "Profit Minim ($/zi)",
-      "ru": "Мин. прибыль ($/сут)",
+      "ru": "Минимальная прибыль ($/день)",
       "zh_cn": "最小收益（USD/天）"
     },
     "Mining Devices {0}:": {
@@ -3382,9 +3382,6 @@
     },
     "Electricity Cost (/KWh)": {
       "ru": "Стоимость электроэнергии (/кВт.ч)"
-    },
-    "Minimum Profit ($/day)": {
-      "ru": "Минимальная прибыль ($/день)"
     },
     "Service Location": {
       "ru": "Локация сервиса"
