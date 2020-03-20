@@ -3896,6 +3896,12 @@
     },
     "Ok": {
       "ru":  "OK"
+    },
+    "Folder lacks permissions": {
+      "ru": "Недостаточно разрешений"
+    },
+    "NiceHash Miner folder doesn't have write access. This can prevent some features from working.": {
+      "ru": "Для папки NiceHash Miner отсутствуют права на запись. Это может помешать работе некоторых функций."
     }
   }
 }
