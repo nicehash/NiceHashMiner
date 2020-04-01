@@ -1,6 +1,7 @@
 ﻿using MinerPlugin;
 using NHM.Common;
 using NHMCore.Configs;
+using NHMCore.Configs.Data;
 using NHMCore.Mining.Plugins;
 using NHMCore.Utils;
 using System;
@@ -137,6 +138,17 @@ namespace NHMCore.Mining
                 {
                     IsUpdatingApi = false;
                     _apiSemaphore.Release();
+                    foreach (var apiDev in apiData.AlgorithmSpeedsPerDevice)
+                    {
+                        foreach (var kvp in apiDev.Value)
+                        {
+                            if (kvp.Speed < 0)
+                            {
+                                await StopTask();
+                                await StartMinerTask(new CancellationToken(), StratumService.Instance.SelectedServiceLocation, CredentialsSettings.Instance.BitcoinAddress);
+                            }
+                        }
+                    }
                 }
             }
 

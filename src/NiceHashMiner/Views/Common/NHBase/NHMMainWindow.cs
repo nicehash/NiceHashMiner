@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHMCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,6 +56,7 @@ namespace NiceHashMiner.Views.Common.NHBase
                 {
                     tabButtom.Visibility = Visibility.Hidden;
                 }
+                WindowUtils.Translate(tabButtom.Content);
                 Tabs[key] = tabButtom;
             }
             _gridLayoutRootOverlay = GetRequiredTemplateChild<Grid>("LayoutRootOverlay");

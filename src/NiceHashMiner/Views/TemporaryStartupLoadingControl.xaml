@@ -57,6 +57,6 @@
             <!--<TextBlock Text="{Binding SecondaryTitle}" HorizontalAlignment="Center" />-->
             <ProgressBar Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource progressStyleNHMInit}" Margin="0,8,0,0" Value="{Binding SecondaryProgress.Progress}" Height="30" />
         </Grid>
-        <TextBlock Margin="40,32,40,0" Grid.Column="0" Text="Sit tight, NiceHash Miner will start soon…" Style="{StaticResource MainInfoTextBlock}" />
+        <TextBlock Margin="40,32,40,0" Grid.Column="0" Text="Sit tight, NiceHash Miner will start soon..." Style="{StaticResource MainInfoTextBlock}" />
     </StackPanel>
 </UserControl>

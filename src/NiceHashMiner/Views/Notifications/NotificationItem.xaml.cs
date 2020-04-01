@@ -1,5 +1,7 @@
-﻿using NHMCore.Configs;
+﻿using NHMCore;
+using NHMCore.Configs;
 using NHMCore.Notifications;
+using NiceHashMiner.Views.Common;
 using System;
 using System.Linq;
 using System.Windows;
@@ -18,6 +20,7 @@ namespace NiceHashMiner.Views.Notifications
         {
             InitializeComponent();
             DataContextChanged += NotificationItemItem_DataContextChanged;
+            WindowUtils.Translate(this);
         }
 
         private void NotificationItemItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -63,6 +66,7 @@ namespace NiceHashMiner.Views.Notifications
             {
                 Collapse();
             }
+            InfoToggleButtonText.Text = Translations.Tr(InfoToggleButtonText.Text);
         }
 
         private void Collapse()

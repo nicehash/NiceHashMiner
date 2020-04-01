@@ -157,7 +157,7 @@ namespace NBMiner
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor < 4) return ids.Count() == 2;
+                if (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor < 5) return ids.Count() == 2;
             }
             catch (Exception e)
             {

@@ -5,6 +5,7 @@
 using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Mining;
+using NiceHashMiner.Views.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 #endif
 
             DataContextChanged += AlgorithmItem_DataContextChanged;
+            WindowUtils.Translate(this);
         }
 
         private void AlgorithmItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
