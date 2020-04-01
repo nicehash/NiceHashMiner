@@ -26,6 +26,7 @@ namespace NiceHashMiner.Views.Common
         public EnterWalletDialog()
         {
             InitializeComponent();
+            WindowUtils.Translate(this);
         }
 
         private void BtcTextValidation()
