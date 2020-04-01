@@ -12,13 +12,7 @@ namespace ClaymoreDual14
         {
             return new List<SAS>
                     {
-                        new SAS( AlgorithmType.DaggerHashimoto),
-                        // duals disabled by default
-#pragma warning disable 0618
-                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Decred) {Enabled = false },
-                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s) {Enabled = false },
-                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak) {Enabled = false },
-#pragma warning restore 0618
+                        new SAS( AlgorithmType.DaggerHashimoto)
                     };
         }
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
@@ -37,12 +31,7 @@ namespace ClaymoreDual14
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.DaggerHashimoto, "eth" },
-                #pragma warning disable 0618
-                { AlgorithmType.Decred, "dcr" },
-                { AlgorithmType.Blake2s, "b2s" },
-                { AlgorithmType.Keccak, "kc" },
-                #pragma warning restore 0618
+                { AlgorithmType.DaggerHashimoto, "eth" }
             }
         };
     }
