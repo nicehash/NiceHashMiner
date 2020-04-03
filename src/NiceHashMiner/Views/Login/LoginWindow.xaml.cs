@@ -46,7 +46,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Login_OnClick(object sender, RoutedEventArgs e)
         {
-            this.Hide();
+            Hide();
             var browser = new LoginBrowser();
             browser.ShowDialog();
         }
