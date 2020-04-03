@@ -148,7 +148,15 @@ namespace NiceHashMiner.ViewModels.Models
                 {
                     DeviceMiningStats = data;
                     // in BTC
-                    var profitabilityWithCost = data?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0;
+                    var profitabilityWithCost = 0.0;
+                    if (GUISettings.Instance.DisplayPureProfit)
+                    {
+                        profitabilityWithCost = data?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0;
+                    }else
+                    {
+                        profitabilityWithCost = data?.TotalPayingRate() ?? 0;
+                    }
+
                     if (GUISettings.Instance.AutoScaleBTCValues && profitabilityWithCost < 0.1)
                     {
                         var scaled = (profitabilityWithCost) * 1000;
