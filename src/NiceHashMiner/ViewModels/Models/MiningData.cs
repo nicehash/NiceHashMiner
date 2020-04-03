@@ -42,7 +42,8 @@ namespace NiceHashMiner.ViewModels.Models
 
         public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate) s);
 
-        public double Payrate => TimeFactor.ConvertFromDay((Stats?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0) * 1000 );
+        public double Payrate => TimeFactor.ConvertFromDay((Stats?.TotalPayingRate() ?? 0) * 1000 );
+        //public double Payrate => TimeFactor.ConvertFromDay((Stats?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0) * 1000 );
 
         public double FiatPayrate => BalanceAndExchangeRates.Instance.ConvertFromBtc(Payrate / 1000);
 
