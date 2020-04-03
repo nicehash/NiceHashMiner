@@ -29,6 +29,8 @@ namespace NBMiner
                         new SAS(AlgorithmType.Eaglesong),
                         // new SAS(AlgorithmType.DaggerHashimoto), // needs different protocol settings
                         new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
+                        new SAS(AlgorithmType.Handshake),
+                        new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
                     }
                 },
                 {
@@ -36,6 +38,8 @@ namespace NBMiner
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30  },
+                        new SAS(AlgorithmType.Handshake),
+                        new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
                     }
                 }
             },
@@ -46,6 +50,7 @@ namespace NBMiner
                 { AlgorithmType.GrinCuckarood29, "cuckarood" },
                 { AlgorithmType.Eaglesong, "eaglesong" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
+                { AlgorithmType.Handshake, "hns" },
             }
         };
     }
