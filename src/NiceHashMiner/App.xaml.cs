@@ -207,10 +207,8 @@ namespace NiceHashMiner
                 return;
             }
 
-            // TODO implement login API 
             // show login if no BTC
-            //if (!CredentialsSettings.Instance.IsBitcoinAddressValid && AppRuntimeSettings.ShowLoginWindow)
-            if (AppRuntimeSettings.ShowLoginWindow)
+            if (!CredentialsSettings.Instance.IsBitcoinAddressValid && AppRuntimeSettings.ShowLoginWindow)
             {
                 var login = new LoginWindow { };
                 var nek = login.ShowDialog();

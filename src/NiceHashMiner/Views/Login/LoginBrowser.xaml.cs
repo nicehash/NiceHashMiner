@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHMCore;
 using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
@@ -48,7 +47,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Browser_Loaded(object sender, RoutedEventArgs e)
         {
-            browser.Navigate("https://test-dev.nicehash.com/my/login?nhm=1");
+            browser.Navigate(Links.LoginNHM);
             _evalTimer = new Timer((s) => { Dispatcher.Invoke(EvalTimer_Elapsed); }, null, 100, 1000);
 
         }
@@ -92,9 +91,24 @@ namespace NiceHashMiner.Views.Login
                         }
 
                         CustomDialogManager.ShowModalDialog(btcLoginDialog);
-                        _evalTimer.Dispose();
-                        Close();
                     }
+                    else
+                    {
+                        var btcLoginDialog = new CustomDialog()
+                        {
+                            Title = Translations.Tr("Login"),
+                            OkText = Translations.Tr("Ok"),
+                            CancelVisible = Visibility.Collapsed,
+                            AnimationVisible = Visibility.Collapsed,
+                            Description = Translations.Tr("Unable to retreive BTC address. Please retreive it by yourself from web page.")
+                        };
+                        btcLoginDialog.OKClick += (s, e) => {
+                            Process.Start(Links.Login);
+                        };
+                        CustomDialogManager.ShowModalDialog(btcLoginDialog);
+                    }
+                    _evalTimer.Dispose();
+                    Close();
                 }
                 catch (Exception e)
                 {
@@ -103,10 +117,6 @@ namespace NiceHashMiner.Views.Login
             }
         }
 
-        private void BtcLoginDialog_OKClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         [Serializable]
         private class BtcResponse
