@@ -319,6 +319,10 @@
       <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
       <Name>Phoenix</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\SRBMiner\SRBMiner.csproj">
+      <Project>{eaf3b1d7-a8b1-4bb0-a325-50422fe39dd2}</Project>
+      <Name>SRBMiner</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TeamRedMiner_PLUGIN'))">
       <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>
       <Name>TeamRedMiner</Name>

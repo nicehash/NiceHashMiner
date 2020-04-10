@@ -11,24 +11,24 @@ namespace SRBMiner
         {
             var gpus = baseDevices.Where(dev => dev is AMDDevice).Cast<AMDDevice>();
 
-            Dictionary<string, int> mappedDevices = new Dictionary<string, int>();
+            var mappedDevices = new Dictionary<string, int>();
 
-            var gpuSections = output.Split(new[] { "DeviceID" }, StringSplitOptions.RemoveEmptyEntries);
+            var gpuSections = output.Split(new[] { "GPU" }, StringSplitOptions.RemoveEmptyEntries);
             if (gpuSections.Count() != 0)
             {
                 foreach(var section in gpuSections)
                 {
-                    if (!section.Contains("BUSID:")) continue;
+                    if (!section.Contains("BUS:")) continue;
                     var lines = section.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
                     if (lines.Count() != 0)
                     {
-                        var busIDString = lines[1];
-                        var busIDSub = busIDString.Substring(busIDString.IndexOf("BUSID:") + 7);
+                        var infoString = lines[0];
+                        var busIDSub = infoString.Substring(infoString.IndexOf("BUS:") + 4);
+                        busIDSub = busIDSub.Replace(']', ' ');
                         int.TryParse(busIDSub, out var busID);
 
-                        var indexString = lines[0];
-                        indexString = indexString.Replace('[', ' ').Replace(']', ' ');
-                        int.TryParse(indexString, out var indexID);
+                        var indexSub = infoString.Substring(0, 2).Trim();
+                        int.TryParse(indexSub, out var indexID);
 
                         foreach (var gpu in gpus)
                         {
