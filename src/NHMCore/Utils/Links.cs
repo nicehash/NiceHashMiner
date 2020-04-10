@@ -10,26 +10,29 @@ namespace NHMCore.Utils
         public const string CheckStats_TESTNET = "https://test.nicehash.com/mining/stats";
         public const string CheckStatsRig_TESTNET = "https://test.nicehash.com/my/mining/rigs/{RIG_ID}";
         public const string Register_TESTNET = "NO_URL";
-        //public const string Login_TESTNET = "NO_URL";
-        public const string NhmPayingFaq_TESTNET = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid"; // ADD TESTNET
-        public const string AMDComputeModeHelp_TESTNET = "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F"; // ADD TESTNET                                                                                                                         
+        public const string Login_TESTNET = "https://test.nicehash.com/my/login";
+        public const string NhmPayingFaq_TESTNET = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
+        public const string AMDComputeModeHelp_TESTNET = "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F";
+        public const string LoginNHM_TESTNET = "NO_URL";
         // TESTNETDEV
         public const string VisitUrl_TESTNETDEV = "https://test-dev.nicehash.com";
         public const string CheckStats_TESTNETDEV = "https://test-dev.nicehash.com/mining/stats";
         public const string CheckStatsRig_TESTNETDEV = "https://test-dev.nicehash.com/my/mining/rigs/{RIG_ID}";
         public const string Register_TESTNETDEV = "NO_URL";
-        //public const string Login_TESTNETDEV = "NO_URL";
-        public const string NhmPayingFaq_TESTNETDEV = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";  // ADD TESTNETDEV
-        public const string AMDComputeModeHelp_TESTNETDEV = "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F"; // ADD TESTNETDEV
+        public const string Login_TESTNETDEV = "https://test-dev.nicehash.com/my/login";
+        public const string NhmPayingFaq_TESTNETDEV = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
+        public const string AMDComputeModeHelp_TESTNETDEV = "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F";
+        public const string LoginNHM_TESTNETDEV = "https://test-dev.nicehash.com/my/login?nhm=1";
         // PRODUCTION
         public const string VisitUrl_PRODUCTION = "https://nicehash.com";
         public const string CheckStats_PRODUCTION = "https://nicehash.com/my/mining/stats";
         public const string CheckStatsRig_PRODUCTION = "https://www.nicehash.com/my/mining/rigs/{RIG_ID}";
         public const string Register_PRODUCTION = "https://nicehash.com/my/register";
-        //public const string Login_PRODUCTION = "NO_URL";
+        public const string Login_PRODUCTION = "https://www.nicehash.com/my/login";
         public const string NhmPayingFaq_PRODUCTION = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
         public const string AMDComputeModeHelp_PRODUCTION = "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F";
         public const string AddWDExclusionHelp_PRODUCTION = "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%3F";
+        public const string LoginNHM_PRODUCTION = "https://www.nicehash.com/my/login?nhm=1"; //TODO MUST GET LINK FOR PRODUCTION
 
         public static string VisitUrl
         {
@@ -73,7 +76,26 @@ namespace NHMCore.Utils
                 return Register_PRODUCTION;
             }
         }
-        //public const string Login = "NO_URL";
+        public static string Login
+        {
+            get
+            {
+                if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return Login_TESTNET;
+                if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return Login_TESTNETDEV;
+                //BuildTag.PRODUCTION
+                return Login_PRODUCTION;
+            }
+        }
+        public static string LoginNHM
+        {
+            get
+            {
+                if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return LoginNHM_TESTNET;
+                if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return LoginNHM_TESTNETDEV;
+                //BuildTag.PRODUCTION
+                return LoginNHM_PRODUCTION;
+            }
+        }
         public static string NhmPayingFaq
         {
             get

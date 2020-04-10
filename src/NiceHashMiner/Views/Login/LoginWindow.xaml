@@ -1,14 +1,14 @@
-﻿<nhb:BaseDialogWindow x:Class="NiceHashMiner.Views.LoginWindow"
+﻿<nhb:BaseDialogWindow x:Class="NiceHashMiner.Views.Login.LoginWindow"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:nhb="clr-namespace:NiceHashMiner.Views.Common.NHBase"
-      xmlns:local="clr-namespace:NiceHashMiner.Views"
+      xmlns:local="clr-namespace:NiceHashMiner.Views.Login"
       mc:Ignorable="d" 
       Height="419" Width="600"
       Title="LoginWindow"
-      Icon="../Resources/logo.ico" 
+      Icon="../../Resources/logo.ico" 
       Topmost="True"
       ResizeMode="NoResize"
       WindowStyle="None"
@@ -41,7 +41,7 @@
     <StackPanel Orientation="Vertical">
         <Rectangle Width="160" Height="160" Margin="0,10,0,0" Fill="{DynamicResource LoginCircle}" />
 
-        <Button Style="{StaticResource OKButton}" Margin="0,32,0,0" Content="LOGIN" />
+        <Button Style="{StaticResource OKButton}" Margin="0,32,0,0" Content="LOGIN" Click="Login_OnClick" />
 
 
         <Button Style="{StaticResource local.TextButton}" Margin="0,40,0,0" HorizontalAlignment="Center" Content="Register a New Account" Click="Register_OnClick" />
