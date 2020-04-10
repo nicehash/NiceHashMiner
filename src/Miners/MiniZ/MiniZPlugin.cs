@@ -39,7 +39,7 @@ namespace MiniZ
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(8, 1);
+        public override Version Version => new Version(8, 2);
 
         public override string Name => "MiniZ";
 
