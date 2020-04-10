@@ -18,6 +18,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
+using NiceHashMiner.Views.Login;
 
 namespace NiceHashMiner
 {
@@ -206,7 +207,6 @@ namespace NiceHashMiner
                 return;
             }
 
-            // TODO implement login API 
             // show login if no BTC
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid && AppRuntimeSettings.ShowLoginWindow)
             {

@@ -3759,7 +3759,7 @@
       "ru": "Очистить все скорости"
     },
     "Custom Algorithm Settings": {
-      "ru": "Пользовательские настройки алгоритма"
+      "ru": "Настройки алгоритма"
     },
     "Benchmark Speed (H/s)": {
       "ru": "Скорость бенчмарка (H/s)"
@@ -3892,13 +3892,19 @@
       "ru": "Отмена"
     },
     "Ok": {
-      "ru":  "OK"
+      "ru": "OK"
     },
     "Folder lacks permissions": {
       "ru": "Недостаточно разрешений"
     },
     "NiceHash Miner folder doesn't have write access. This can prevent some features from working.": {
       "ru": "Для папки NiceHash Miner отсутствуют права на запись. Это может помешать работе некоторых функций."
+    },
+    "Display Net Profit": {
+      "ru": "Отображать чистый доход"
+    },
+    "When checked, NiceHash Miner will show you net profit (gross profit minus electricity costs).": {
+      "ru": "Если отмечено, NiceHash Miner будет показывать вам чистый доход (валовой доход минус расходы на электроэнергию)."
     }
   }
 }

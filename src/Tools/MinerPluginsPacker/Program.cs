@@ -80,18 +80,12 @@ namespace MinerPluginsPacker
             }
         }
 
-        private static int[] _supportedMajorverLinks = new int[] { 3, 4, 5, 6, 7, 8, 9 };
-        private static bool IsMajorVersionLinkSupported(int major)
-        {
-            return _supportedMajorverLinks.Contains(major);
-        }
-
         private static void AddPluginToPluginPackageInfos(IMinerPlugin plugin)
         {
             var version = new MajorMinorVersion(plugin.Version.Major, plugin.Version.Minor);
 
             string pluginPackageURL = null;
-            if (IsMajorVersionLinkSupported(version.major))
+            if (Checkers.IsMajorVersionSupported(version.major))
             {
                 pluginPackageURL = $"https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v{version.major}.x/" + GetPluginPackageName(plugin);
             }

@@ -273,8 +273,12 @@ namespace NiceHashMiner
                     WindowStyle = ProcessWindowStyle.Normal
                 };
                 var run = true;
+                const int maxRestartCount = 3;
+                int restartCount = 0;
+                const int minRestartTimeInSeconds = 30;
                 while (run)
                 {
+                    var startTime = DateTime.UtcNow;
                     run = false;
                     try
                     {
@@ -284,66 +288,112 @@ namespace NiceHashMiner
                             niceHashMiner?.WaitForExit();
                             // TODO 
                             Console.WriteLine(niceHashMiner.ExitCode);
-                            // if exit code is 0 then check runasadmin or restart
-                            if (IsRunAsAdmin())
+                            //in case of crash try to restart the program
+                            if(niceHashMiner.ExitCode != 0)
                             {
-                                RunAsAdmin.SelfElevate();
-                            }
-                            else if (IsCreateLog())
-                            {
-                                try
-                                {
-                                    run = true;
-                                    ClearAllDoFiles();
+                                var endTime = DateTime.UtcNow;
 
-                                    var exePath = GetRootPath("CreateLogReport.exe");
-                                    var startLogInfo = new ProcessStartInfo
+                                string path = GetRootPath("logs", "watchdogLog.txt");
+                                if (!File.Exists(path))
+                                {
+                                    using (var sw = File.CreateText(path))
                                     {
-                                        FileName = exePath,
-                                        WindowStyle = ProcessWindowStyle.Minimized,
-                                        UseShellExecute = true,
-                                        Arguments = latestAppDir,
-                                        CreateNoWindow = true
-                                    };
-                                    using (var doCreateLog = Process.Start(startLogInfo))
-                                    {
-                                        doCreateLog.WaitForExit(10* 1000);
+                                        sw.WriteLine($"Exit code: {niceHashMiner.ExitCode} ---- {endTime}");
                                     }
-
-                                    var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
-                                    var desktopZipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "NiceHashMinerLogs.zip");
-                                    File.Copy(tmpZipPath, desktopZipPath, true);
                                 }
-                                catch (Exception ex)
+                                else
                                 {
-                                    Console.WriteLine(ex.Message);
+                                    using (var sw = File.AppendText(path))
+                                    {
+                                        sw.WriteLine($"Exit code: {niceHashMiner.ExitCode} ---- {endTime}");
+                                    }
                                 }
-                                ClearAllTmpFiles();
-                            }
-                            else if (IsRestart())
-                            {
-                                ClearAllDoFiles();
+                                //try to re-run the NHM
                                 run = true;
-                            }
-                            else if (IsUpdate())
-                            {
-                                run = true; // mark to false if updating doesn't fail
-                                ClearAllDoFiles();
-                                var exePath = Assembly.GetExecutingAssembly().Location;
-                                var randomPart = DateTime.UtcNow.Millisecond;
-                                var tmpLauncher = GetRootPath($"tmp.nhm_updater_{randomPart}.exe");
-                                File.Copy(exePath, tmpLauncher, true);
-                                var doUpdate = new Process
+
+                                //check if too many restarts
+                                var elapsedSeconds = (endTime - startTime).TotalSeconds;
+                                if (elapsedSeconds < minRestartTimeInSeconds)
                                 {
-                                    StartInfo = new ProcessStartInfo
+                                    restartCount++;
+                                }
+                                else
+                                {
+                                    restartCount = 0;
+                                }
+                                if (restartCount >= maxRestartCount)
+                                {
+                                    using (var sw = File.AppendText(path))
                                     {
-                                        FileName = tmpLauncher,
-                                        Arguments = "-update",
-                                        WindowStyle = ProcessWindowStyle.Normal
+                                        sw.WriteLine($"Too many restarts! Closing nhm");
                                     }
-                                };
-                                var updateStarted = doUpdate.Start();
-                                run = !updateStarted; // set if we are good
+                                    MessageBox.Show("NHM experienced too many crashes recently, therefore it will close itself", "Too many restarts");
+                                    run = false;
+                                }
+                            }
+                            else
+                            {
+                                // if exit code is 0 then check runasadmin or restart
+                                if (IsRunAsAdmin())
+                                {
+                                    RunAsAdmin.SelfElevate();
+                                }
+                                else if (IsCreateLog())
+                                {
+                                    try
+                                    {
+                                        run = true;
+                                        ClearAllDoFiles();
+
+                                        var exePath = GetRootPath("CreateLogReport.exe");
+                                        var startLogInfo = new ProcessStartInfo
+                                        {
+                                            FileName = exePath,
+                                            WindowStyle = ProcessWindowStyle.Minimized,
+                                            UseShellExecute = true,
+                                            Arguments = latestAppDir,
+                                            CreateNoWindow = true
+                                        };
+                                        using (var doCreateLog = Process.Start(startLogInfo))
+                                        {
+                                            doCreateLog.WaitForExit(10 * 1000);
+                                        }
+
+                                        var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
+                                        var desktopZipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "NiceHashMinerLogs.zip");
+                                        File.Copy(tmpZipPath, desktopZipPath, true);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.Message);
+                                    }
+                                    ClearAllTmpFiles();
+                                }
+                                else if (IsRestart())
+                                {
+                                    ClearAllDoFiles();
+                                    run = true;
+                                }
+                                else if (IsUpdate())
+                                {
+                                    run = true; // mark to false if updating doesn't fail
+                                    ClearAllDoFiles();
+                                    var exePath = Assembly.GetExecutingAssembly().Location;
+                                    var randomPart = DateTime.UtcNow.Millisecond;
+                                    var tmpLauncher = GetRootPath($"tmp.nhm_updater_{randomPart}.exe");
+                                    File.Copy(exePath, tmpLauncher, true);
+                                    var doUpdate = new Process
+                                    {
+                                        StartInfo = new ProcessStartInfo
+                                        {
+                                            FileName = tmpLauncher,
+                                            Arguments = "-update",
+                                            WindowStyle = ProcessWindowStyle.Normal
+                                        }
+                                    };
+                                    var updateStarted = doUpdate.Start();
+                                    run = !updateStarted; // set if we are good
+                                }
                             }
                         }
                     }

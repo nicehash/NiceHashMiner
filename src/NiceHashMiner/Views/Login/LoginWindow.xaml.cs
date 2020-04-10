@@ -8,7 +8,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace NiceHashMiner.Views
+namespace NiceHashMiner.Views.Login
 {
     /// <summary>
     /// Interaction logic for LoginWindow.xaml
@@ -42,6 +42,13 @@ namespace NiceHashMiner.Views
         private void ManuallyEnterBtc_OnClick(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void Login_OnClick(object sender, RoutedEventArgs e)
+        {
+            Hide();
+            var browser = new LoginBrowser();
+            browser.ShowDialog();
         }
     }
 }

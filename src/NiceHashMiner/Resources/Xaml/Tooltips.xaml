@@ -6,6 +6,7 @@
     <system:String x:Key="workerName">To identify the user's computer.</system:String>
     <system:String x:Key="timeUnit">Sets the time unit to report BTC rates.</system:String>
     <system:String x:Key="mineRegardless">When checked, NiceHash Miner will mine regardless of profit.</system:String>
+    <system:String x:Key="displayGrossProfit">When checked, NiceHash Miner will show you net profit (gross profit minus electricity costs).</system:String>
     <system:String x:Key="electricityCost">Set this to a positive value to factor in electricity costs when switching. Value is cost per kW-hour in your chosen display currency. Set to 0 to disable power switching functionality.</system:String>
     <system:String x:Key="minimumProfit">If 'MineRegardlessOfProfit' is unchecked, NiceHash Miner will stop mining if the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.</system:String>
     <system:String x:Key="miningLocation">Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency.</system:String>

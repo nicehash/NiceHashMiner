@@ -239,6 +239,11 @@ namespace NHMCore.Configs.Data
             get => GUISettings.Instance.MinimizeToTray;
             set => GUISettings.Instance.MinimizeToTray = value;
         }
+        public bool DisplayPureProfit
+        {
+            get => GUISettings.Instance.DisplayPureProfit;
+            set => GUISettings.Instance.DisplayPureProfit = value;
+        }
         public string DisplayTheme
         {
             get => GUISettings.Instance.DisplayTheme;
@@ -388,6 +393,7 @@ namespace NHMCore.Configs.Data
             Hwid = "";
             AgreedWithTOS = 0;
             KwhPrice = 0;
+            DisplayPureProfit = false;
             DisplayTheme = "Light";
             ShowGPUPCIeBusIDs = false;
             ShowNotifications = new Dictionary<string, bool>();
