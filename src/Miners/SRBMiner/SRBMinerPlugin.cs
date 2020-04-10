@@ -38,7 +38,7 @@ namespace SRBMiner
             };
         }
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(9, 0);
 
         public override string Name => "SRBMiner";
 
