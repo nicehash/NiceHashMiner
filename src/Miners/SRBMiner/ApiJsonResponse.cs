@@ -14,8 +14,8 @@ namespace SRBMiner
     [Serializable]
     internal class ApiJsonResponse
     {
-        public int hashrate_total_now { get; set; }
+        public double hashrate_total_now { get; set; }
         public List<Device> gpu_devices { get; set; }
-        public List<Dictionary<string, int>> gpu_hashrate {get;set;}
+        public List<Dictionary<string, double>> gpu_hashrate {get;set;}
     }
 }

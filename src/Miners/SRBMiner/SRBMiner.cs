@@ -1,5 +1,6 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Device;
@@ -70,46 +71,64 @@ namespace SRBMiner
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 200, 200, 200 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 40, 60 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
-
             var binCwd = binPathBinCwdPair.Item2;
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-            var id =  _mappedDeviceIds[_miningPairs.First().Device.UUID];
-
-            var benchHashes = 0d;
-            var benchIters = 0;
-            var benchHashResult = 0d;
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
-
-            bp.CheckData = (data) =>
-            {
-                var hashrateFoundPair = data.TryGetHashrateAfter($"GPU0 : ");
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
-
-                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
-
-                benchHashes += hashrate;
-                benchIters++;
-
-                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
-
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
-                    Success = benchIters >= targetBenchIters
-                };
-            };
+            // disable line readings and read speeds from API
+            bp.CheckData = null;
 
             var timeout = TimeSpan.FromSeconds(benchmarkTime + 5);
             var benchWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, timeout, benchWait, stop);
-            return await t;
+
+            double benchHashesSum = 0;
+            var benchIters = 0;
+            var ticks = benchmarkTime / 10; // on each 10 seconds tick
+            var result = new BenchmarkResult();
+            for (var tick = 0; tick < ticks; tick++)
+            {
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+                await Task.Delay(10 * 1000, stop); // 10 seconds delay
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+
+                var ad = await GetMinerStatsDataAsync();
+                if (ad.AlgorithmSpeedsPerDevice.Count == 1)
+                {
+                    // all single GPUs and single speeds
+                    try
+                    {
+                        var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                        benchHashesSum += gpuSpeed;
+                        benchIters++;
+                        double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
+                                                                                // save each result step
+                        result = new BenchmarkResult
+                        {
+                            AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                            Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
+                        };
+                    }
+                    catch (Exception e)
+                    {
+                        if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+                        Logger.Error(_logGroup, $"benchmarking error: {e.Message}");
+                    }
+                }
+            }
+            // await benchmark task
+            await t;
+            if (stop.IsCancellationRequested)
+            {
+                return t.Result;
+            }
+
+            // return API result
+            return result;
         }
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
@@ -136,7 +155,7 @@ namespace SRBMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var cmd = $"--algorithm {AlgoName} --wallet {_username} --gpu-id {_devices} --pool {urlWithPort} --disable-gpu-watchdog --api-enable --api-port {_apiPort} {_extraLaunchParameters}";
+            var cmd = $"--algorithm {AlgoName} --wallet {_username} --gpu-id {_devices} --pool {urlWithPort} --disable-cpu --disable-gpu-watchdog --api-enable --api-port {_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
     }
