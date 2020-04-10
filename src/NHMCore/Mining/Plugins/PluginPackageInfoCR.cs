@@ -97,7 +97,7 @@ namespace NHMCore.Mining.Plugins
                 // 5 brings new interfaces + Eaglesong, 6 new algo Cuckaroom, 7 new algo GrinCuckatoo32
                 // current supported major versions are 5-7 inclusive (older not supported)
                 if (isNHPlugin && ver != null) {
-                    return ver.Major == 5 || ver.Major == 6 || ver.Major == 7 || ver.Major == 8 || ver.Major == 9;
+                    return Checkers.IsMajorVersionSupported(ver.Major);
                 }
                 // here we assume it is compatible so allow install
                 return true;
