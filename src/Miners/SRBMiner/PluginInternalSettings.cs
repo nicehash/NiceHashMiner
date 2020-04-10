@@ -10,13 +10,23 @@ namespace SRBMiner
             GeneralOptions = new List<MinerOption>
             {
                 /// <summary>
-                /// gpu intensity, comma separated values
+                /// gpu intensity, 1-31, comma separated values
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_intensity",
-                    ShortName = "--cgpuintensity",
+                    ID = "srbminer_intensity",
+                    ShortName = "--gpu-intensity",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// gpu raw intensity, comma separated values
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "srbminer_raw_intensity",
+                    ShortName = "--gpu-raw-intensity",
                     Delimiter = ","
                 },
                 /// <summary>
@@ -25,8 +35,8 @@ namespace SRBMiner
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_threads",
-                    ShortName = "--cgputhreads",
+                    ID = "srbminer_threads",
+                    ShortName = "--gpu-threads",
                     Delimiter = ","
                 },
                 /// <summary>
@@ -35,69 +45,37 @@ namespace SRBMiner
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_work_size",
-                    ShortName = "--cgpuworksize",
+                    ID = "srbminer_worksize",
+                    ShortName = "--gpu-worksize",
                     Delimiter = ","
                 },
                 /// <summary>
-                /// can be 0,1,2,4,8,16,32,64,128, comma separated values
+                /// ADL to use (1 or 2), comma separated values
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_fragments",
-                    ShortName = "--cgpufragments",
+                    ID = "srbminer_adl_type",
+                    ShortName = "--gpu-adl-type",
                     Delimiter = ","
                 },
                 /// <summary>
-                /// mode for heavy algos (1, 2, 3), comma separated values
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_heavy_mode",
-                    ShortName = "--cgpuheavymode",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// delay to maintain between same gpu threads, 1 - 1000, comma separated values
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_thread_delay",
-                    ShortName = "--cgputhreaddelay",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// gpu adl to use (1 or 2), comma separated values
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_adl_type",
-                    ShortName = "--cgpuadltype",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// old kernel creation mode - true or false, comma separated values
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_old_mode",
-                    ShortName = "--cgpuoldmode",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// number from 0-10, where 0 means don't use tweaking
+                /// number from 0-10, 0 disables tweaking
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "srbminer_gpu_tweak_profile",
-                    ShortName = "--cgputweakprofile",
-                    Delimiter = ","
+                    ID = "srbminer_tweak_profile",
+                    ShortName = "--gpu-tweak-profile"
+                },
+                /// <summary>
+                /// use config file other than config.txt
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "srbminer_config",
+                    ShortName = "--config-file"
                 },
                 /// <summary>
                 /// disable gpu tweaking options, which are enabled by default
@@ -105,63 +83,62 @@ namespace SRBMiner
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionIsParameter,
-                    ID = "srbminer_disable_tweaking",
-                    ShortName = "--disabletweaking",
+                    ID = "srbminer_disable_gpu_tweaking",
+                    ShortName = "--disable-gpu-tweaking"
                 },
                 /// <summary>
-                /// enable gpu slow start
+                /// disable msr extra tweaks, which are enabled by default
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionIsParameter,
-                    ID = "srbminer_gpu_rampup",
-                    ShortName = "--enablegpurampup",
+                    ID = "srbminer_disable_msr_tweaks",
+                    ShortName = "--disable-msr-tweaks"
                 },
                 /// <summary>
-                /// --logfile filename (enable logging to file)
+                /// release ocl resources on miner exit/restart
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "srbminer_opencl_cleanup",
+                    ShortName = "--enable-opencl-cleanup"
+                },
+                /// <summary>
+                /// enable workers slow start
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "srbminer_enable_slow_start",
+                    ShortName = "--enable-workers-ramp-up"
+                },
+                /// <summary>
+                /// enable more informative logging
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "srbminer_log_extended",
+                    ShortName = "--extended-log"
+                },
+                /// <summary>
+                /// enable logging to file
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "srbminer_log",
-                    ShortName = "--logfile",
+                    ID = "srbminer_log_file",
+                    ShortName = "--log-file"
                 },
                 /// <summary>
-                /// don't save compiled binaries to disk
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "srbminer_no_cache",
-                    ShortName = "--nocache",
-                },
-                /// <summary>
-                /// how many blocks to precompile for CN/R, min. 3 max. 300. Def. is 15
+                /// defines the msr tweaks to use 0-4, | 0 - Intel, 0,1,2,3,4 - AMD
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "srbminer_precompile_blocks",
-                    ShortName = "--precompileblocks",
-                    DefaultValue = "15"
-                },
-                /// <summary>
-                /// do some precalculations that *may* increase hashing speed a little bit on weak gpu's
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "srbminer_prepare_data",
-                    ShortName = "--preparedata",
-                },
-                /// <summary>
-                /// reset fans back to default settings on miner exit
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "srbminer_reset_fans",
-                    ShortName = "--resetfans",
+                    ID = "srbminer_msr_tweaks",
+                    ShortName = "--msr-use-tweaks"
                 },
                 /// <summary>
                 /// sets AMD gpu's to compute mode & disables crossfire - run as admin
@@ -169,8 +146,17 @@ namespace SRBMiner
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionIsParameter,
-                    ID = "srbminer_compute_mode",
-                    ShortName = "--setcomputemode",
+                    ID = "srbminer_set_compute",
+                    ShortName = "--set-compute-mode"
+                },
+                /// <summary>
+                /// run custom script on miner start - set clocks, voltage, etc.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "srbminer_startup_script",
+                    ShortName = "--startup-script"
                 }
             },
             TemperatureOptions = new List<MinerOption>
@@ -181,18 +167,8 @@ namespace SRBMiner
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_target_temp",
-                    ShortName = "--cgputargettemperature",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// gpu fan speed in RPM, comma separated values
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_target_fan_speed",
-                    ShortName = "--cgputargetfanspeed",
+                    ID = "srbminer_target_temp",
+                    ShortName = "--gpu-target-temperature",
                     Delimiter = ","
                 },
                 /// <summary>
@@ -201,9 +177,28 @@ namespace SRBMiner
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_gpu_off_temp",
-                    ShortName = "--cgpuofftemperature",
+                    ID = "srbminer_off_temp",
+                    ShortName = "--gpu-off-temperature",
                     Delimiter = ","
+                },
+                /// <summary>
+                /// gpu fan speed in RPM, comma separated values
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "srbminer_target_fan",
+                    ShortName = "--gpu-target-fan-speed",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// if this temperature is reached, miner will shutdown system (ADL must be enabled)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "srbminer_shutdown_temp",
+                    ShortName = "--shutdown-temperature"
                 }
             }
         };

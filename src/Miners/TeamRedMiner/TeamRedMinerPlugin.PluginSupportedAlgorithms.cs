@@ -14,6 +14,7 @@ namespace TeamRedMiner
             AlgorithmFees = new Dictionary<AlgorithmType, double>
             {
                 { AlgorithmType.Lyra2Z, 3.0 },
+                { AlgorithmType.DaggerHashimoto, 1.0 }
 
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
@@ -29,7 +30,8 @@ namespace TeamRedMiner
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         //new SAS(AlgorithmType.MTP) { Enabled = false },
                         new SAS(AlgorithmType.GrinCuckarood29),
-                        new SAS(AlgorithmType.X16Rv2)
+                        new SAS(AlgorithmType.X16Rv2),
+                        new SAS(AlgorithmType.DaggerHashimoto)
                     }
                 }
             },
@@ -43,6 +45,7 @@ namespace TeamRedMiner
                 //{ AlgorithmType.MTP, "mtp" },
                 { AlgorithmType.GrinCuckarood29, "cuckarood29_grin" },
                 { AlgorithmType.X16Rv2, "x16rv2" },
+                { AlgorithmType.DaggerHashimoto, "ethash" }
             }
         };
     }

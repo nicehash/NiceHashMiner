@@ -157,7 +157,6 @@ namespace MinerPluginsPacker
                 "Ethminer",
                 "ExamplePlugin",
                 "FakePlugin",
-                "SRBMiner",
             };
 
             // get all managed plugin dll's 
