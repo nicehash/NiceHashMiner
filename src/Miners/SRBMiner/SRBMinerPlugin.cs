@@ -20,20 +20,19 @@ namespace SRBMiner
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://www.srbminer.com/download.html current v1.9.3
+            // https://github.com/doktor83/SRBMiner-Multi current v0.4.2
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.9.3",
-                ExePath = new List<string> { "SRBMiner-CN-V1-9-3", "SRBMiner-CN.exe" },
+                BinVersion = "v0.4.2",
+                ExePath = new List<string> { "SRBMiner-Multi-0-4-2", "SRBMiner-MULTI.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/SRBMiner-CN-V1-9-3.7z",                                                 
-                    "https://mega.nz/#F!qVIgxAwB!kKmgCDICmQwbdVvMb-tAag?WQggXSQa", // original
+                    "https://github.com/doktor83/SRBMiner-Multi/releases/download/0.4.2/SRBMiner-Multi-0-4-2-win64.zip",                                                 
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "SRBMiner AMD GPU Miner is a Windows software made for mining cryptocurrencies based on Cryptonight algorithm.",
+                PluginDescription = "SRBMiner-MULTI is an AMD GPU Miner made for mining cryptocurrencies.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
@@ -86,7 +85,7 @@ namespace SRBMiner
             if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
             var minerBinPath = GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--listdevices");
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list-devices");
             var mappedDevs = DevicesListParser.ParseSRBMinerOutput(output, devices.ToList());
 
             foreach (var kvp in mappedDevs)
@@ -100,7 +99,7 @@ namespace SRBMiner
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "SRBMiner-CN.exe", "WinIo64.sys" });
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "SRBMiner-MULTI.exe", "WinIo64.sys", "WinRing0x64.sys" });
         }
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)

@@ -12,19 +12,25 @@ namespace SRBMiner
         {
             // fee fixed 
             DefaultFee = 0.85,
+            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            {
+                { AlgorithmType.Handshake, 2.0 },
+            },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.CryptoNightR),
+                        new SAS(AlgorithmType.Eaglesong),
+                        new SAS(AlgorithmType.Handshake)
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.CryptoNightR, "cryptonight_r" },
+                { AlgorithmType.Eaglesong, "eaglesong" },
+                { AlgorithmType.Handshake, "bl2bsha3" }
             }
         };
     }

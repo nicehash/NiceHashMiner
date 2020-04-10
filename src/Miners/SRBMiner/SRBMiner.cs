@@ -47,10 +47,12 @@ namespace SRBMiner
                 var amdDevices = gpus.Cast<AMDDevice>();
                 foreach (var gpu in amdDevices)
                 {
-                    var currentDevStats = summary.devices.Where(dev => dev.bus_id == gpu.PCIeBusID).FirstOrDefault();
+                    var currentDevStats = summary.gpu_devices.Where(dev => dev.bus_id == gpu.PCIeBusID).FirstOrDefault();
                     if (currentDevStats == null) continue;
-                    totalSpeed += currentDevStats.hashrate;
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.hashrate * (1 - DevFee * 0.01)) });
+                    var device = currentDevStats.device;
+                    var data = summary.gpu_hashrate[0].TryGetValue(device, out var currentSpeed);
+                    totalSpeed += currentSpeed;
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
                 }
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = totalPowerUsage;
@@ -68,7 +70,7 @@ namespace SRBMiner
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 120, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+            var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 200, 200, 200 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
@@ -86,7 +88,7 @@ namespace SRBMiner
 
             bp.CheckData = (data) =>
             {
-                var hashrateFoundPair = data.TryGetHashrateAfter($"GPU{id} : ");
+                var hashrateFoundPair = data.TryGetHashrateAfter($"GPU0 : ");
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
@@ -134,10 +136,7 @@ namespace SRBMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var split = urlWithPort.Split(':');
-            var url = split[1].Substring(2, split[1].Length - 2);
-            var port = split[2];
-            var cmd = $"--ccryptonighttype {AlgoName} --cpool {url}:{port} --cwallet {username} --cgpuid {_devices} --cnicehash true --disablegpuwatchdog --apienable --apiport {_apiPort} {_extraLaunchParameters}";
+            var cmd = $"--algorithm {AlgoName} --wallet {_username} --gpu-id {_devices} --pool {urlWithPort} --disable-gpu-watchdog --api-enable --api-port {_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
     }
