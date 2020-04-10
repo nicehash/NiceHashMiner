@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
 using NHMCore.Nhmws;
@@ -42,8 +43,21 @@ namespace NiceHashMiner.ViewModels.Models
 
         public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate) s);
 
-        public double Payrate => TimeFactor.ConvertFromDay((Stats?.TotalPayingRate() ?? 0) * 1000 );
-        //public double Payrate => TimeFactor.ConvertFromDay((Stats?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0) * 1000 );
+        public double Payrate
+        {
+            get
+            {
+                if (GUISettings.Instance.DisplayPureProfit)
+                {
+                    return TimeFactor.ConvertFromDay((Stats?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0) * 1000);
+                }
+                else
+                {
+                    return TimeFactor.ConvertFromDay((Stats?.TotalPayingRate() ?? 0) * 1000);
+                }
+            }
+        }
+        
 
         public double FiatPayrate => BalanceAndExchangeRates.Instance.ConvertFromBtc(Payrate / 1000);
 

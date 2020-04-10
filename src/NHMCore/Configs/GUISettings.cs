@@ -108,5 +108,16 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(DisplayTheme));
             }
         }
+
+        private bool _displayPureProfit = false;
+        public bool DisplayPureProfit
+        {
+            get => _displayPureProfit;
+            set
+            {
+                _displayPureProfit = value;
+                OnPropertyChanged(nameof(DisplayPureProfit));
+            }
+        }
     }
 }
