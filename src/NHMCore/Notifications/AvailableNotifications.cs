@@ -121,16 +121,27 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateNhmUpdateInfo()
+        public static void CreateNhmUpdateInfo(bool isInstallerVersion)
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmUpdate, Tr("NiceHash Miner Update"), Tr("New version of NiceHash Miner is available."));
             if (!Configs.UpdateSettings.Instance.AutoUpdateNiceHashMiner)
             {
-                notification.Actions.Add(new NotificationAction
+                if (isInstallerVersion)
                 {
-                    Info = Tr("Visit release Page"),
-                    Action = () => {Process.Start(Links.VisitReleasesUrl); }
-                });
+                    notification.Actions.Add(new NotificationAction
+                    {
+                        Info = Tr("Start updater"),
+                        Action = async () => await UpdateHelpers.StartUpdateProcess(isInstallerVersion)
+                    });
+                }
+                else
+                {
+                    notification.Actions.Add(new NotificationAction
+                    {
+                        Info = Tr("Visit release Page"),
+                        Action = () => { Process.Start(Links.VisitReleasesUrl); }
+                    });
+                }             
             }
             
             NotificationsManager.Instance.AddNotificationToList(notification);
