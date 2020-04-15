@@ -131,7 +131,10 @@ namespace NHMCore.Notifications
                     notification.Actions.Add(new NotificationAction
                     {
                         Info = Tr("Start updater"),
-                        Action = async () => await UpdateHelpers.StartUpdateProcess(isInstallerVersion)
+                        Action = () =>
+                        {
+                            ApplicationStateManager.App.Dispatcher.Invoke(async () => await UpdateHelpers.StartUpdateProcess(isInstallerVersion));
+                        }
                     });
                 }
                 else
