@@ -49,7 +49,6 @@ namespace NiceHashMiner.Views.Login
         {
             browser.Navigate(Links.LoginNHM);
             _evalTimer = new Timer((s) => { Dispatcher.Invoke(EvalTimer_Elapsed); }, null, 100, 1000);
-
         }
 
         private async void EvalTimer_Elapsed()
