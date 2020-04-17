@@ -194,6 +194,47 @@ namespace NVIDIA.NVAPI
         public uint Unknown4;
     }
 
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvGPULevels
+    {
+        public uint Version;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_COOLER_PER_GPU)]
+        public nv_level_internal[] Levels;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct nv_level_internal
+    {
+        public int level;
+        public int policy;
+    };
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct nv_fan_internal
+    {
+        public int type;
+        public int controller;
+        public int default_min;
+        public int default_max;
+        public int current_min;
+        public int current_max;
+        public int current_level;
+        public int default_policy;
+        public int current_policy;
+        public int target;
+        public int control_type;
+        public int active;
+    };
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct nv_fandata
+    {
+        public uint version;
+        public uint count;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_COOLER_PER_GPU)]
+        public nv_fan_internal[] internals;
+};
+
     #endregion
 
     internal class NVAPI
@@ -218,6 +259,8 @@ namespace NVIDIA.NVAPI
         internal delegate NvStatus NvAPI_GPU_GetTachReadingDelegate(NvPhysicalGpuHandle gpuHandle, out int value);
         internal delegate NvStatus NvAPI_GPU_GetPStatesDelegate(NvPhysicalGpuHandle gpuHandle, ref NvPStates nvPStates);
         internal delegate NvStatus NvAPI_GPU_GetThermalSettingsDelegate(NvPhysicalGpuHandle gpuHandle, int sensorIndex, ref NvGPUThermalSettings nvGPUThermalSettings);
+        internal delegate NvStatus NvAPI_GPU_GetCoolerLevelsDelegate(NvPhysicalGpuHandle gpuHandle, int sensorIndex, ref nv_fandata fandata);
+        internal delegate NvStatus NvAPI_GPU_SetCoolerLevelsDelegate(NvPhysicalGpuHandle gpuHandle, int sensorIndex, ref NvGPULevels level);
 
         internal delegate NvStatus NvAPI_DLL_ClientPowerPoliciesGetInfoDelegate(NvPhysicalGpuHandle gpuHandle, ref NvGPUPowerInfo info);
         internal delegate NvStatus NvAPI_DLL_ClientPowerPoliciesGetStatusDelegate(NvPhysicalGpuHandle gpuHandle, ref NvGPUPowerStatus status);
@@ -233,6 +276,8 @@ namespace NVIDIA.NVAPI
         internal static readonly NvAPI_GPU_GetTachReadingDelegate NvAPI_GPU_GetTachReading;
         internal static readonly NvAPI_GPU_GetPStatesDelegate NvAPI_GPU_GetPStates;
         internal static readonly NvAPI_GPU_GetThermalSettingsDelegate NvAPI_GPU_GetThermalSettings;
+        internal static readonly NvAPI_GPU_GetCoolerLevelsDelegate NvAPI_GPU_GetCoolerLevels;
+        internal static readonly NvAPI_GPU_SetCoolerLevelsDelegate NvAPI_GPU_SetCoolerLevels;
 
         internal static readonly NvAPI_DLL_ClientPowerPoliciesGetInfoDelegate NvAPI_DLL_ClientPowerPoliciesGetInfo;
         internal static readonly NvAPI_DLL_ClientPowerPoliciesGetStatusDelegate NvAPI_DLL_ClientPowerPoliciesGetStatus;
@@ -273,6 +318,8 @@ namespace NVIDIA.NVAPI
                 GetDelegate(0x34206D86, out NvAPI_DLL_ClientPowerPoliciesGetInfo);
                 GetDelegate(0x70916171, out NvAPI_DLL_ClientPowerPoliciesGetStatus);
                 GetDelegate(0xAD95F5ED, out NvAPI_DLL_ClientPowerPoliciesSetStatus);
+                GetDelegate(0xDA141340, out NvAPI_GPU_GetCoolerLevels);
+                GetDelegate(0x891FA0AE, out NvAPI_GPU_SetCoolerLevels);
             }
 
             available = true;

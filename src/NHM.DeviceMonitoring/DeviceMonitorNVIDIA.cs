@@ -188,6 +188,40 @@ namespace NHM.DeviceMonitoring
             }
         }
 
+
+        public bool SetFanSpeedPercentage(int percentage)
+        {
+            var nvHandle = GetNvPhysicalGpuHandle();
+            if (!nvHandle.HasValue)
+            {
+                Logger.Error("NVAPI", $"SetFanSpeed nvHandle == null");
+                return false;
+            }
+
+            var cooler = new nv_fandata {
+                count = 1,
+                version = 132040
+            };
+
+            var ret = NVAPI.NvAPI_GPU_GetCoolerLevels(nvHandle.Value, 0, ref cooler);
+            if (ret != NvStatus.OK)
+            {
+                Logger.Error("NVAPI", $"GetCoolerLevel failed with status {ret}");
+                return false;
+            }
+
+            var levels = new NvGPULevels { Version= 65700 };
+            levels.Levels = new nv_level_internal[] { new nv_level_internal { level = percentage, policy = cooler.internals[0].current_policy } };
+            var result = NVAPI.NvAPI_GPU_SetCoolerLevels(nvHandle.Value, 0, ref levels);
+            if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
+            {
+                // GPUs without fans are not uncommon, so don't treat as error and just return -1
+                Logger.Error("NVAPI", $"FanSpeed set failed with status: {result}");
+                return false;
+            }
+            return true;
+        }
+
         // NVML is thread-safe according to the documentation
         private T ExecNvmlProcedure<T>(T failReturn, string tag, Func<T> nvmlExecFun)
         {
