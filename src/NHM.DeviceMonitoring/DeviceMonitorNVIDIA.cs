@@ -210,8 +210,10 @@ namespace NHM.DeviceMonitoring
                 return false;
             }
 
-            var levels = new NvGPULevels { Version= 65700 };
-            levels.Levels = new nv_level_internal[] { new nv_level_internal { level = percentage, policy = cooler.internals[0].current_policy } };
+            var levels = new NvGPULevels { Version = 65700 };
+            levels.Levels = new nv_level_internal [20];
+            levels.Levels[0] = new nv_level_internal { level = percentage, policy = cooler.internals[0].current_policy };
+
             var result = NVAPI.NvAPI_GPU_SetCoolerLevels(nvHandle.Value, 0, ref levels);
             if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
             {

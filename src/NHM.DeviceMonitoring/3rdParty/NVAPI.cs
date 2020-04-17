@@ -233,7 +233,7 @@ namespace NVIDIA.NVAPI
         public uint count;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_COOLER_PER_GPU)]
         public nv_fan_internal[] internals;
-};
+    };
 
     #endregion
 
