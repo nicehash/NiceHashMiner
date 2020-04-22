@@ -74,53 +74,18 @@ namespace FakePlugin
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-
             var settingsObject = GetTestSettings();
-            var amdAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.AMD).FirstOrDefault();
-            var cudaAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.NVIDIA).FirstOrDefault();
-            var cpuAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.CPU).FirstOrDefault();
-
             foreach (var device in devices)
             {
-
-                if (device is AMDDevice amd)
+                var typeSettings = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == device.DeviceType).FirstOrDefault();
+                if (typeSettings == null) continue;
+                var algoList = new List<Algorithm>();
+                foreach (var algo in typeSettings.algorithms)
                 {
-                    if(amdAlgos != null)
-                    {
-                        var amdList = new List<Algorithm>();
-                        foreach(var algo in amdAlgos.algorithms)
-                        {
-                            amdList.Add(new Algorithm(PluginUUID, algo));
-                        }
-                        supported.Add(device, amdList);
-                    }
+                    algoList.Add(new Algorithm(PluginUUID, algo));
                 }
-                if (device is CUDADevice cuda)
-                {
-                    if (cudaAlgos != null)
-                    {
-                        var cudaList = new List<Algorithm>();
-                        foreach (var algo in cudaAlgos.algorithms)
-                        {
-                            cudaList.Add(new Algorithm(PluginUUID, algo));
-                        }
-                        supported.Add(device, cudaList);
-                    }
-                }
-                if(device is CPUDevice cpu)
-                {
-                    if (cpuAlgos != null)
-                    {
-                        var cpuList = new List<Algorithm>();
-                        foreach (var algo in cpuAlgos.algorithms)
-                        {
-                            cpuList.Add(new Algorithm(PluginUUID, algo));
-                        }
-                        supported.Add(device, cpuList);
-                    }
-                }
+                supported.Add(device, algoList);
             }
-
             return supported;
         }
 
@@ -155,6 +120,7 @@ namespace FakePlugin
         {
             var settingsObject = GetTestSettings();
             var rebenchAlgos = settingsObject.rebenchmarkAlgorithms;
+            if (rebenchAlgos == null) return false;
 
             var isReBenchVersion = benchmarkedPluginVersion.Major == Version.Major && benchmarkedPluginVersion.Minor < Version.Minor;
             var first = ids.FirstOrDefault();
