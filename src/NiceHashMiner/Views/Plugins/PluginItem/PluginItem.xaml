@@ -232,10 +232,10 @@
                                   Visibility="{Binding ActionsButtonVisibility}"
                                   Click="Button_Click">
                             <ToggleButton.ContextMenu>
-                                <ContextMenu x:Name="PluginActionsButtonContext">
+                                <ContextMenu x:Name="PluginActionsButtonContext" Loaded="PluginActionsButtonContext_Loaded" Unloaded="PluginActionsButtonContext_Loaded">
                                     <ContextMenu.Template>
                                         <ControlTemplate>
-                                            <Grid >
+                                            <Grid x:Name="pluginActionsGrid">
                                                 <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
                                                     <Border.Effect>
                                                         <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
@@ -246,7 +246,7 @@
                                                     <Separator Background="{DynamicResource BorderColor}"/>
                                                     <ToggleButton Padding="16,7,16,7" x:Name="PluginAutoUpdateToggleButton" IsChecked="{Binding Plugin.IsAutoUpdateEnabled, Mode=TwoWay}" Style="{StaticResource local.PluginContextMenuButton}" Checked="PluginAutoUpdateToggleButton_Checked" Unchecked="PluginAutoUpdateToggleButton_Checked">
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="Autoupdate Plugin " />
+                                                            <TextBlock Text="Autoupdate Plugin" />
                                                             <CheckBox Style="{StaticResource NHMSwitch}" IsChecked="{Binding ElementName=PluginAutoUpdateToggleButton, Path=IsChecked, Mode=OneWay}" Margin="4,0,0,0"/>
                                                         </StackPanel>
                                                     </ToggleButton>

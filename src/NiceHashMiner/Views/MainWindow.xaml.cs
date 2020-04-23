@@ -13,6 +13,7 @@ using NHMCore.Utils;
 using System.Diagnostics;
 using NHMCore.Notifications;
 using NHMCore.ApplicationState;
+using System.IO;
 
 namespace NiceHashMiner.Views
 {
@@ -72,6 +73,23 @@ namespace NiceHashMiner.Views
             NotificationsManager.Instance.PropertyChanged += Instance_PropertyChanged;
             MiningState.Instance.PropertyChanged += MiningStateInstance_PropertyChanged;
             SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
+
+            if (!HasWriteAccessToFolder(Paths.Root))
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var nhmNoPermissions = new CustomDialog()
+                    {
+                        Title = Translations.Tr("Folder lacks permissions"),
+                        Description = Translations.Tr("NiceHash Miner folder doesn't have write access. This can prevent some features from working."),
+                        OkText = Translations.Tr("OK"),
+                        CancelVisible = Visibility.Collapsed,
+                        OkVisible = Visibility.Visible,
+                        AnimationVisible = Visibility.Collapsed
+                    };
+                    ShowContentAsModalDialog(nhmNoPermissions);
+                });
+            }
         }
 
         private void MiningStateInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -260,6 +278,22 @@ namespace NiceHashMiner.Views
         private void StopAllMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Task.Run(() => _vm.StopMining());
+        }
+
+
+        private bool HasWriteAccessToFolder(string folderPath)
+        {
+            try
+            {
+                // Attempt to get a list of security permissions from the folder. 
+                // This will raise an exception if the path is read only or do not have access to view the permissions. 
+                var ds = Directory.GetAccessControl(folderPath);
+                return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return false;
+            }
         }
     }
 }

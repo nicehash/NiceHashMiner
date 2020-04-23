@@ -223,6 +223,15 @@ namespace NHMCore.Mining
             return false;
         }
 
+        public bool SetFanSpeed(int percentage)
+        {
+            if (!GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is IFanSpeedRPM set)
+            {
+                return set.SetFanSpeedPercentage(percentage);
+            }
+            return false;
+        }
+
         #endregion
 
         #endregion DeviceMonitor

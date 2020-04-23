@@ -112,6 +112,7 @@ namespace NHM.Common.Enums
         //[Obsolete("UNUSED Algorithm")]
         Cuckaroom = 49,
         GrinCuckatoo32 = 50,
+        Handshake = 51,
         #endregion // NiceHashAPI
     }
 

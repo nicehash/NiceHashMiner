@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:NiceHashMiner"
              xmlns:views="clr-namespace:NiceHashMiner.Views"
+             xmlns:login="clr-namespace:NiceHashMiner.Views.Login"
              xmlns:converters="clr-namespace:NiceHashMiner.Converters"
              Startup="App_OnStartup"
              DispatcherUnhandledException="App_DispatcherUnhandledException">
@@ -32,7 +33,7 @@
             <Style TargetType="views:EulaWindowFirstLong" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:ChooseLanguageWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:EulaWindowSecondShort" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
-            <Style TargetType="views:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
+            <Style TargetType="login:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:NHMDialogWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:SingleInstanceNotice" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="{x:Type views:MainWindow}" BasedOn="{StaticResource NHMMainWindowStyle}"/>

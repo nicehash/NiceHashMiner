@@ -104,6 +104,10 @@ namespace NiceHashMiner.Views.Common
 
         public static void Translate(Panel p)
         {
+            if(p.ToolTip is string s)
+            {
+                p.ToolTip = Translations.Tr(s);
+            }
             foreach (UIElement child in p.Children)
             {
                 Translate(child);
@@ -122,7 +126,7 @@ namespace NiceHashMiner.Views.Common
         {
             foreach (var item in i.Items)
             {
-                Translate(item);
+                Translate(item);               
             }
 
             if (i is DataGrid dg)
@@ -140,6 +144,16 @@ namespace NiceHashMiner.Views.Common
                     if (col.Header is string s)
                         col.Header = Translations.Tr(s);
                 }
+            }else if(i is TabControl tc) //TODO doesn't work
+            {
+                foreach(var tab in tc.Items)
+                {
+                    if (tab is TabItem ti)
+                    {
+                        ti.Header = Translations.Tr(ti.Header);
+                    }
+                }
+                
             }
         }
 
@@ -199,19 +213,19 @@ namespace NiceHashMiner.Views.Common
                     break;
                 case Decorator d:
                     Translate(d.Child);
-                    break;
+                    break;  
                 //case SettingsContainer sc:
                 //    Translate(sc);
                 //    break;
                 case ContentControl c:
                     Translate(c);
-                    break;
+                    break;               
                 case ItemsControl i:
                     Translate(i);
                     break;
                 case TextBlock tb:
                     Translate(tb);
-                    break;
+                    break;          
             }
         }
 

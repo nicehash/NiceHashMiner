@@ -22,6 +22,10 @@ namespace ATI.ADL
 
     internal delegate int ADL_Overdrive5_FanSpeed_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue temperature);
 
+    internal delegate int ADL_Overdrive5_FanSpeed_Set(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue temperature);
+
+    internal delegate int ADL_Overdrive5_FanSpeedInfo_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedInfo speedInfo);
+
     internal delegate int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int iAdapterIndex, int iPowerType, ref int lpCurrentValue);
 
     internal delegate int ADL2_Overdrive_Caps(IntPtr context, int iAdapterIndex, ref int iSupported, ref int iEnabled, ref int iVersion);
@@ -71,6 +75,17 @@ namespace ATI.ADL
         public int SpeedType;
         public int FanSpeed;
         public int Flags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLFanSpeedInfo
+    {
+        public int Size;
+        public int Flags;
+        public int MinPercent;
+        public int MaxPercent;
+        public int MinRPM;
+        public int MaxRPM;
     }
 
     #region Overdrive
@@ -206,6 +221,12 @@ namespace ATI.ADL
             internal static extern int ADL_Overdrive5_FanSpeed_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue fanSpeedValue);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL_Overdrive5_FanSpeed_Set(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue fanSpeedValue);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL_Overdrive5_FanSpeedInfo_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedInfo fanSpeedInfo);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL2_Overdrive_Caps(IntPtr context, int iAdapterIndex, ref int iSupported, ref int iEnabled, ref int iVersion);
 
             // Overdrive6
@@ -246,6 +267,14 @@ namespace ATI.ADL
         internal static AMDDelegateContainer<ADL_Overdrive5_FanSpeed_Get> ADL_Overdrive5_FanSpeed_Get { get; } = new AMDDelegateContainer<ADL_Overdrive5_FanSpeed_Get>(
             "ADL_Overdrive5_FanSpeed_Get",
             ADLImport.ADL_Overdrive5_FanSpeed_Get);
+
+        internal static AMDDelegateContainer<ADL_Overdrive5_FanSpeed_Set> ADL_Overdrive5_FanSpeed_Set { get;} = new AMDDelegateContainer<ADL_Overdrive5_FanSpeed_Set>(
+            "ADL_Overdrive5_FanSpeed_Set",
+            ADLImport.ADL_Overdrive5_FanSpeed_Set);
+
+        internal static AMDDelegateContainer<ADL_Overdrive5_FanSpeedInfo_Get> ADL_Overdrive5_FanSpeedInfo_Get { get; } = new AMDDelegateContainer<ADL_Overdrive5_FanSpeedInfo_Get>(
+            "ADL_Overdrive5_FanSpeedInfo_Get",
+            ADLImport.ADL_Overdrive5_FanSpeedInfo_Get);
 
         internal static AMDDelegateContainer<ADL2_Overdrive6_CurrentPower_Get> ADL2_Overdrive6_CurrentPower_Get { get; } = new AMDDelegateContainer<ADL2_Overdrive6_CurrentPower_Get>(
             "ADL2_Overdrive6_CurrentPower_Get",

@@ -174,7 +174,7 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        private string PerTime => $" / {TimeUnit}";
+        private string PerTime => Translations.Tr($" / {TimeUnit}");
 
         // TODO get rif of duplicates
         public string Currency

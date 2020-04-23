@@ -93,9 +93,9 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_LolMiner_PLUGIN
                 new LolMiner.LolMinerPlugin(),
 #endif
-//#if INTEGRATE_SRBMiner_PLUGIN
-//                new SRBMiner.SRBMinerPlugin(),
-//#endif
+#if INTEGRATE_SRBMiner_PLUGIN
+                new SRBMiner.SRBMinerPlugin(),
+#endif
 #if INTEGRATE_XMRig_PLUGIN
                 new XMRig.XMRigPlugin(),
 #endif

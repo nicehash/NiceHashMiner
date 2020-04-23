@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.ViewModels.Models;
+using NiceHashMiner.Views.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,6 +29,7 @@ namespace NiceHashMiner.Views.Devices
             InitializeComponent();
             DataContextChanged += ComputeDeviceItem_DataContextChanged;
             //DataContext = this;
+            WindowUtils.Translate(this);
         }
 
         private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

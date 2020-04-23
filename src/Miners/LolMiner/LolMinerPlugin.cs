@@ -37,7 +37,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(8, 1);
+        public override Version Version => new Version(9, 0);
 
         public override string Name => "lolMiner";
 
@@ -118,14 +118,8 @@ namespace LolMiner
             if (ids.Count() == 0) return false;
             if (ids.FirstOrDefault() == AlgorithmType.Cuckaroom)
             {
-                return benchmarkedPluginVersion.Major <= 8 || (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor <= 1);
+                return (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor <= 1);
             }
-            if(benchmarkedPluginVersion.Major <=7 && ids.FirstOrDefault() == AlgorithmType.GrinCuckatoo32)
-            {
-                if (benchmarkedPluginVersion.Major == 7 && benchmarkedPluginVersion.Minor == 2) return false;
-                if (device.DeviceType == DeviceType.AMD && device.Name.ToLower().Contains("navi")) return true;
-            }
-
             return false;
         }
     }

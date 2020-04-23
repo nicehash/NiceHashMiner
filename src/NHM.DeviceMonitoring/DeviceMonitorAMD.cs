@@ -80,6 +80,33 @@ namespace NHM.DeviceMonitoring
             }
         }
 
+        public bool SetFanSpeedPercentage(int percentage)
+        {
+            var ADLFanInfo = new ADLFanSpeedInfo();
+            var ret = ADL.ADL_Overdrive5_FanSpeedInfo_Get.Delegate(_adapterIndex, 0, ref ADLFanInfo);
+            if (ret != ADL.ADL_SUCCESS)
+            {
+                Logger.Info(LogTag, $"ADLFanInfo ADL_Overdrive5_FanSpeedInfo_Get returned {ret}");
+                return false;
+            }
+            // We limit percentage to max and min
+            if (percentage > ADLFanInfo.MaxPercent) percentage = ADLFanInfo.MaxPercent;
+            if (percentage < ADLFanInfo.MinPercent) percentage = ADLFanInfo.MinPercent;
+
+            var adlf = new ADLFanSpeedValue
+            {
+                SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_PERCENT,
+                FanSpeed = percentage
+            };
+            var adlRet = ADL.ADL_Overdrive5_FanSpeed_Set.Delegate(_adapterIndex, 0, ref adlf);
+            if (adlRet != ADL.ADL_SUCCESS)
+            {
+                Logger.Error(LogTag, $"ADL_Overdrive5_FanSpeed_Set failed with code {adlRet} for GPU BusID={BusID}.");
+                return false;
+            }
+            return true;
+        }
+
         public float Temp
         {
             get

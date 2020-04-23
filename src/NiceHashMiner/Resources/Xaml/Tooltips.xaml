@@ -6,8 +6,9 @@
     <system:String x:Key="workerName">To identify the user's computer.</system:String>
     <system:String x:Key="timeUnit">Sets the time unit to report BTC rates.</system:String>
     <system:String x:Key="mineRegardless">When checked, NiceHash Miner will mine regardless of profit.</system:String>
-    <system:String x:Key="electricityCost">Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.</system:String>
-    <system:String x:Key="minimumProfit">If 'MineRegardlessOfProfit' is unchecked, NiceHash Miner will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.</system:String>
+    <system:String x:Key="displayGrossProfit">When checked, NiceHash Miner will show you net profit (gross profit minus electricity costs).</system:String>
+    <system:String x:Key="electricityCost">Set this to a positive value to factor in electricity costs when switching. Value is cost per kW-hour in your chosen display currency. Set to 0 to disable power switching functionality.</system:String>
+    <system:String x:Key="minimumProfit">If 'MineRegardlessOfProfit' is unchecked, NiceHash Miner will stop mining if the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.</system:String>
     <system:String x:Key="miningLocation">Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency.</system:String>
     <system:String x:Key="currency">Choose what Currency to Display mining profit.</system:String>
     <system:String x:Key="language">Changes the default language for NiceHash Miner.</system:String>
@@ -19,9 +20,9 @@
     <system:String x:Key="runOnStartup">When checked, NiceHash Miner will run on login.</system:String>
     <system:String x:Key="minimizeTray">When checked, NiceHash Miner will minimize to tray.</system:String>
     <system:String x:Key="scaleBTC">Check it, if you would like to see the BTC values autoscale to the appropriate scale.</system:String>
-    <system:String x:Key="driverWarning">When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed.</system:String>
-    <system:String x:Key="windowsError">When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.</system:String>
-    <system:String x:Key="internetWarning">When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available.</system:String>
+    <system:String x:Key="driverWarning">When checked, NiceHash Miner would issue a warning if a less optimal version of a driver is installed.</system:String>
+    <system:String x:Key="windowsError">When checked, in the event of a miner crash, NiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message. It is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.</system:String>
+    <system:String x:Key="internetWarning">When checked, NiceHash Miner would issue a warning if the internet connection is not available.</system:String>
     <system:String x:Key="alwaysTop">When checked, NiceHash Miner will be set as Top Most and will be covered only by other Top Most Windows.</system:String>
     <system:String x:Key="pcieBusIDs">When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.</system:String>
     <system:String x:Key="disableDeviceStatus">When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).</system:String>
@@ -29,9 +30,9 @@
     <system:String x:Key="logToFile">Check it, to log console output to file.</system:String>
     <system:String x:Key="debugConsole">When checked, it displays debug console.</system:String>
     <system:String x:Key="maxLogSize">Sets the maximum size for the log file.</system:String>
-    <system:String x:Key="runScriptCUDAlost">When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.</system:String>
-    <system:String x:Key="nvidiaP0State">When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.</system:String>
-    <system:String x:Key="useEthlargement">When checked, NiceHash Miner will run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.</system:String>
+    <system:String x:Key="runScriptCUDAlost">When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost, by default script should restart whole system.</system:String>
+    <system:String x:Key="nvidiaP0State">When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state. This will slightly increase performance on certain algorithms. This feature needs administrator privileges to be activated.</system:String>
+    <system:String x:Key="useEthlargement">When checked, NiceHash Miner will run Ethlargement for Dagger algorithms when supported GPUs are present. Requires running NHML as admin and enabling 3rd-party miners.</system:String>
     <system:String x:Key="switchMinimum">Fixed part of minimal time (in seconds) before miner switches algorithm.</system:String>
     <system:String x:Key="switchMaximum">Fixed part of maximum time (in seconds) before miner switches algorithm.</system:String>
     <system:String x:Key="switchThreshold">Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]</system:String>
@@ -52,9 +53,9 @@
 
     <system:String x:Key="Tooltip.IdleMining.IdleWhenNoInternetAccess">If enabled NiceHash Miner will stop mining without internet connectivity</system:String>
     <system:String x:Key="Tooltip.IdleMining.StartMiningWhenIdle">Automatically start mining when computer is idle and stop mining when computer is being used.</system:String>
-    <system:String x:Key="Tooltip.IdleMining.IdleCheckMethod">Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds."</system:String>
-    <system:String x:Key="Tooltip.IdleMining.MinIdleSeconds">When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts."</system:String>
-    <system:String x:Key="Tooltip.DisableVisualCRedistributableCheck">NiceHash Miner will disable Visual Studio C++ Redistributable checking."</system:String>
+    <system:String x:Key="Tooltip.IdleMining.IdleCheckMethod">Choose how to check if computer is idle when start mining on idle is enabled. Session Lock will start when the computer is locked (generally when the screen has turned off). Input Timeout will start when there has been no system input for the idle time seconds.</system:String>
+    <system:String x:Key="Tooltip.IdleMining.MinIdleSeconds">When StartMiningWhenIdle is checked, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.</system:String>
+    <system:String x:Key="Tooltip.DisableVisualCRedistributableCheck">NiceHash Miner will disable Visual Studio C++ Redistributable checking.</system:String>
     
     
 </ResourceDictionary>

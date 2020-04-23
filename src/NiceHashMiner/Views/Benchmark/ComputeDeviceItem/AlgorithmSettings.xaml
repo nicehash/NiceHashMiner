@@ -53,7 +53,7 @@
         <!--FIRST SPEED-->
         <WrapPanel Grid.Row="2" Margin="24,16,24,16">
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="Benchmark Speed (H/s)" />
-            <TextBlock Style="{StaticResource local.SettingDetail}" Margin="0,8,0,0" Text="Fine tune algorithm ratios by manually settings benchmark speeds for each algorithm." TextWrapping="Wrap"/>
+            <TextBlock Style="{StaticResource local.SettingDetail}" Margin="0,8,0,0" Text="Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm." TextWrapping="Wrap"/>
             <TextBox Style="{StaticResource inputBox}" Text="{Binding BenchmarkSpeed}" Margin="0,16,0,0" />
         </WrapPanel>
 
@@ -67,12 +67,12 @@
         <!--Power Usage-->
         <WrapPanel Grid.Row="4" Margin="24,16,24,16">
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="Power Usage (W)" />
-            <TextBlock Style="{StaticResource local.SettingDetail}" Text="The power used by this algorithm in Watts and Algorithm profits will deduct power costs when this and electricity cost are above 0." TextWrapping="Wrap"/>
+            <TextBlock Style="{StaticResource local.SettingDetail}" Text="The power used by this algorithm in Watts. Algorithm profits will deduct power costs when this and electricity cost are above 0." TextWrapping="Wrap"/>
             <TextBox Style="{StaticResource inputBox}" Text="{Binding PowerUsage}" Margin="0,16,0,0" />
         </WrapPanel>
 
         <WrapPanel Grid.Row="5" Margin="24,16,24,16">
-            <TextBlock Style="{StaticResource local.SettingTitle}" Text="Extra Launch Parameters:" />
+            <TextBlock Style="{StaticResource local.SettingTitle}" Text="Extra Launch Parameters" />
             <TextBlock Style="{StaticResource local.SettingDetail}" Text="Additional launch parameters when launching miner and this algorithm." TextWrapping="Wrap"/>
             <TextBox Style="{StaticResource inputBox}" Text="{Binding ExtraLaunchParameters}" TextWrapping="Wrap" Margin="0,16,0,0" KeyUp="TextBox_KeyUp" Name="textBox">
             </TextBox>
