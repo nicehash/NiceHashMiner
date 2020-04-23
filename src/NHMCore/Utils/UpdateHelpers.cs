@@ -3,7 +3,6 @@ using NHM.Common;
 using NHM.MinersDownloader;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
-using NHMCore.Notifications;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -63,16 +62,59 @@ namespace NHMCore.Utils
                     var isAutoUpdate = UpdateSettings.Instance.AutoUpdateNiceHashMiner;
                     var hasNewVersion = VersionState.Instance.IsNewVersionAvailable;
                     // prevent sleep check
-                    
-                    bool isUpdater = IsNHMInstalled() && IsRunningInstalledApp();
-                    if (hasNewVersion)
-                    {
-                        AvailableNotifications.CreateNhmUpdateInfo(isUpdater);
-                    }
-
                     if (isActive() && isAutoUpdate && hasNewVersion && !Launcher.IsUpdatedFailed)
                     {
-                        await StartUpdateProcess(isUpdater);
+                        try
+                        {
+                            // determine what how to update
+                            bool isUpdater = IsNHMInstalled() && IsRunningInstalledApp();
+                            // #1 download updater.exe or zip depending on bin type
+                            var url = isUpdater ? VersionState.Instance.GetNewVersionUpdaterUrl() : VersionState.Instance.GetNewVersionZipUrl();
+                            var downloadRootPath = Path.Combine(Paths.Root, "updaters");
+                            if (!Directory.Exists(downloadRootPath))
+                            {
+                                Directory.CreateDirectory(downloadRootPath);
+                            }
+                            var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_{VersionState.Instance.OnlineVersionStr}";
+                            var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, DownloadProgress, ApplicationStateManager.ExitApplication.Token);
+                            if (!success)
+                            {
+                                // TODO notify that we cannot download the miner updates file
+                                continue;
+                            }
+
+                            OnAutoUpdate?.Invoke();
+                            // #2 SAVE current state so we can resume it after the client updates
+                            ApplicationStateManager.SaveMiningState();
+                            await Task.Delay(5000); // wait 5 seconds
+                            await ApplicationStateManager.StopAllDevicesTask();
+                            await Task.Delay(5000); // wait 5 seconds
+                                                    // #3 restart accordingly if launcher or self containd app
+                            if (Launcher.IsLauncher)
+                            {
+                                try
+                                {
+                                    // TODO here save what version and maybe kind of update we have
+                                    File.Create(Paths.RootPath("do.update"));
+                                    ApplicationStateManager.ExecuteApplicationExit();
+                                }
+                                catch (Exception e)
+                                {
+                                    Logger.Error("NICEHASH", $"Autoupdate IsLauncher error: {e.Message}");
+                                    // IF we fail restore mining state and show autoupdater failure nofitication
+                                    await ApplicationStateManager.RestoreMiningState();
+                                    // TODO notify that the auto-update wasn't successful
+                                }
+                            }
+                            else
+                            {
+                                // TODO non launcher not priority right now
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(Tag, $"Check autoupdate Exception: {ex.Message}");
+                        }
                     }
                 }
             }
@@ -91,66 +133,7 @@ namespace NHMCore.Utils
             }
         }
 
-        internal static async Task StartUpdateProcess(bool isUpdater)
-        {
-            try
-            {
-                // Let user know that something is happening after update process started
-                if (Launcher.IsLauncher)
-                {
-                    var notifications = NotificationsManager.Instance.Notifications;
-                    var updateNotification = notifications.Find(notif => notif.Group == NotificationsGroup.NhmUpdate);
-                    updateNotification.NotificationContent = Translations.Tr("Update in progress...");
-                }
 
-                // determine what how to update
-                // #1 download updater.exe or zip depending on bin type
-                var url = isUpdater ? VersionState.Instance.GetNewVersionUpdaterUrl() : VersionState.Instance.GetNewVersionZipUrl();
-                var downloadRootPath = Path.Combine(Paths.Root, "updaters");
-                if (!Directory.Exists(downloadRootPath))
-                {
-                    Directory.CreateDirectory(downloadRootPath);
-                }
-                var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_{VersionState.Instance.OnlineVersionStr}";
-                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, DownloadProgress, ApplicationStateManager.ExitApplication.Token);
-                if (!success)
-                {
-                    // TODO notify that we cannot download the miner updates file
-                    return;
-                }
-
-                OnAutoUpdate?.Invoke();
-                // #2 SAVE current state so we can resume it after the client updates
-                ApplicationStateManager.SaveMiningState();
-                await Task.Delay(5000); // wait 5 seconds
-                await ApplicationStateManager.StopAllDevicesTask();
-                await Task.Delay(5000); // wait 5 seconds
-                                        // #3 restart accordingly if launcher or self containd app
-                if (Launcher.IsLauncher)
-                {
-                    try
-                    {
-                        // TODO here save what version and maybe kind of update we have
-                        File.Create(Paths.RootPath("do.update"));
-                        ApplicationStateManager.ExecuteApplicationExit();
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error("NICEHASH", $"Autoupdate IsLauncher error: {e.Message}");
-                        // IF we fail restore mining state and show autoupdater failure nofitication
-                        await ApplicationStateManager.RestoreMiningState();
-                        // TODO notify that the auto-update wasn't successful
-                    }
-                }
-                else
-                {
-                    // TODO non launcher not priority right now
-                }
-            } catch (Exception ex)
-            {
-                Logger.Error(Tag, $"Check autoupdate Exception: {ex.Message}");
-            }         
-        }
 
         public static async Task DownloadUpdaterAsync(Progress<int> downloadProgress)
         {

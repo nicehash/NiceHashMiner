@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
 using System.Windows.Forms;
@@ -49,6 +50,7 @@ namespace NHMCore.ApplicationState
                     // display new version
                     // notify all components
                     //DisplayVersion?.Invoke(null, displayNewVer); // TODO broken make VersionUpdatesState
+                    if (hasNewVersion) AvailableNotifications.CreateNhmUpdateInfo();
                     return hasNewVersion;
                 }
                 catch (Exception e)
