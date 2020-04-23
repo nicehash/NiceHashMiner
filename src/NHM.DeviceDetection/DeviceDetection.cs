@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿//#define __ENABLE_FAKE_DEVICES__
+using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceDetection.NVIDIA;
@@ -12,7 +13,11 @@ namespace NHM.DeviceDetection
 {
     public static class DeviceDetection
     {
+#if __ENABLE_FAKE_DEVICES__
+        private static readonly bool FakeDevices = true;
+#else
         private static readonly bool FakeDevices = false;
+#endif
         private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
         private static string Tag => "DeviceDetection";
         private static bool _initCalled = false;
