@@ -415,6 +415,7 @@ namespace NHMCore.Mining.Plugins
             {
                 SetAsBroken(this);
                 Logger.Error(LogTag, $"{functionName} error: {e.Message}");
+                Logger.Error(LogTag, $"{functionName} StackTrace: {e.StackTrace}");
                 IsBroken = true;
                 return defaultRet;
             }

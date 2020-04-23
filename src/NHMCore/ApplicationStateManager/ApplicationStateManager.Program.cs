@@ -3,6 +3,7 @@ using NHM.Common.Enums;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
+using NHMCore.Scripts;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,7 @@ namespace NHMCore
                 waitTasks.Add(NHWebSocket.MainLoop);
                 waitTasks.Add(MinerPluginsManager.RunninLoops);
                 waitTasks.Add(UpdateHelpers.RunninLoops);
+                waitTasks.Add(JSBridge.RunninLoops);
                 await Task.WhenAll(waitTasks.Where(t => t != null));
             }
             catch (Exception e)

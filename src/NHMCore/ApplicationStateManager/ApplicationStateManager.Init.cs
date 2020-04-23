@@ -9,6 +9,7 @@ using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
+using NHMCore.Scripts;
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
@@ -285,6 +286,7 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
+                JSBridge.StartLoops(ExitApplication.Token);
             }
             catch (Exception e)
             {
