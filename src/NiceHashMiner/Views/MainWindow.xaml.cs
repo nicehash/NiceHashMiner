@@ -163,6 +163,13 @@ namespace NiceHashMiner.Views
                     tdpWindow.DataContext = _vm;
                     tdpWindow.Show();
                 }
+                // show code window
+                if (true)
+                {
+                    var scriptWindow = new NhmScript();
+                    //scriptWindow.DataContext = _vm;
+                    scriptWindow.Show();
+                }
                 if (Launcher.IsUpdated)
                 {
                     var nhmUpdatedDialog = new CustomDialog()
