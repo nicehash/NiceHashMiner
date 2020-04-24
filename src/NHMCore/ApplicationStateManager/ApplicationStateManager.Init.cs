@@ -190,7 +190,7 @@ namespace NHMCore
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
                 NHWebSocket.SetCredentials(btc, worker, group);
                 NHWebSocket.StartLoop(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token);
-                
+
 
                 // STEP
                 // disable windows error reporting

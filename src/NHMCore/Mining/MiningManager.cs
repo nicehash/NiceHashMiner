@@ -43,6 +43,9 @@ namespace NHMCore.Mining
         private static Dictionary<string, Miner> _runningMiners = new Dictionary<string, Miner>();
         #endregion State for mining
 
+        private static bool _useScriptSwitcher = true;
+        private static Dictionary<string, Tuple<string, List<AlgorithmType>>> _scriptSwitchState = new Dictionary<string, Tuple<string, List<AlgorithmType>>> { };
+
         private enum CommandType
         {
 
@@ -59,7 +62,9 @@ namespace NHMCore.Mining
             // This will be handled like MiningProfitSettingsChanged to skip the profit threshold that can prevent switching
             MinerRestartLoopNotify,
 
-            RunEthlargementChanged
+            RunEthlargementChanged,
+
+            SwitchScriptMineState,
         }
         private class Command
         {
@@ -143,6 +148,14 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
+        public static Task SwitchScriptMineState(string deviceUUID, string minerId, List<AlgorithmType> ids)
+        {
+            var switchScriptState = new Dictionary<string, Tuple<string, List<AlgorithmType>>> { { deviceUUID, Tuple.Create(minerId, ids) } };
+            var command = new Command(CommandType.SwitchScriptMineState, switchScriptState);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
         private static async Task HandleCommand(Command command)
         {
             // check what kind of command is it and ALWAYS set Tsc.Result
@@ -222,6 +235,26 @@ namespace NHMCore.Mining
                         Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
                         break;
 
+                    case CommandType.SwitchScriptMineState:
+                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
+                        if (command.CommandParameters is Dictionary<string, Tuple<string, List<AlgorithmType>>> scriptSwitchState)
+                        {
+                            foreach (var updatePair in scriptSwitchState)
+                            {
+                                if (updatePair.Value == null && _scriptSwitchState.ContainsKey(updatePair.Key))
+                                {
+                                    _scriptSwitchState.Remove(updatePair.Key);
+                                }
+                                else
+                                {
+                                    _scriptSwitchState[updatePair.Key] = updatePair.Value;
+                                }
+                            }
+                            
+                        }
+                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
+                        break;
+
                     default:
                         Logger.Debug(Tag, $"command type not handled {command.CommandType}");
                         break;
@@ -231,7 +264,14 @@ namespace NHMCore.Mining
                 switch (commandResolutionType)
                 {
                     case CommandResolutionType.CheckGroupingAndUpdateMiners:
-                        await CheckGroupingAndUpdateMiners(command.CommandType);
+                        if (_useScriptSwitcher)
+                        {
+                            await CheckGroupingAndUpdateMinersScript(command.CommandType);
+                        }
+                        else
+                        {
+                            await CheckGroupingAndUpdateMiners(command.CommandType);
+                        }
                         break;
                     case CommandResolutionType.RestartCurrentActiveMiners:
                         await RestartMiners();
@@ -508,6 +548,54 @@ namespace NHMCore.Mining
             await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, CommandType.MiningProfitSettingsChanged == commandType || CommandType.MinerRestartLoopNotify == commandType);
         }
 
+
+        private static async Task CheckGroupingAndUpdateMinersScript(CommandType commandType)
+        {
+            // first update mining devices
+            if (commandType == CommandType.DevicesStartStop)
+            {
+                //// TODO should we check new and old miningDevices???
+                //var oldMiningDevices = _miningDevices;
+                _miningDevices = GroupSetupUtils.GetMiningDevices(_devices, true);
+                if (_miningDevices.Count > 0)
+                {
+                    GroupSetupUtils.AvarageSpeeds(_miningDevices);
+                }
+            }
+            if (commandType == CommandType.MiningLocationChanged)
+            {
+                _runningMiners.Clear();
+                // re-init mining devices
+                _miningDevices = GroupSetupUtils.GetMiningDevices(_devices, true);
+                if (_miningDevices.Count > 0)
+                {
+                    GroupSetupUtils.AvarageSpeeds(_miningDevices);
+                }
+            }
+            // We only care about script profits here
+            if (_scriptSwitchState == null)
+            {
+                Logger.Error(Tag, "ScriptSwitchState is null");
+                await PauseAllMiners();
+                return;
+            }
+            // TODO if empty stop all miners
+            if (_miningDevices.Count == 0)
+            {
+                Logger.Error(Tag, "_miningDevices.count == 0");
+                return;
+            }
+            if (_miningLocation == null)
+            {
+                Logger.Error(Tag, "_miningLocation is null");
+                await PauseAllMiners();
+                return;
+            }
+
+            await SwichMostProfitableGroupUpMethodTaskScript(_scriptSwitchState);
+        }
+
+
         private static async Task RestartMiners()
         {
             // STOP
@@ -570,6 +658,7 @@ namespace NHMCore.Mining
 
         private static void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
+            if (_useScriptSwitcher) return;
             _ = NormalizedProfitsUpdate(e.NormalizedProfits);
         }
 
@@ -728,6 +817,61 @@ namespace NHMCore.Mining
                 Logger.Info(Tag, $"No change : ({sameLog})");
             }
         }
+
+        private static async Task SwichMostProfitableGroupUpMethodTaskScript(Dictionary<string, Tuple<string, List<AlgorithmType>>> scriptProfitStates)
+        {
+            List<MiningPair> scriptProfitableMiningPairs = new List<MiningPair>();
+            foreach (var pair in scriptProfitStates)
+            {
+                var targetDev = _devices.Where(dev => pair.Key == dev.Uuid).FirstOrDefault();
+                if (targetDev == null) continue;
+                var minerId = pair.Value.Item1;
+                var ids = pair.Value.Item2;
+                var targetAlgo = targetDev.AlgorithmSettings.Where(algo => algo.PluginContainer.PluginUUID == minerId).Where(algo => Enumerable.SequenceEqual(ids, algo.IDs)).FirstOrDefault();
+                if (targetAlgo == null) continue;
+                scriptProfitableMiningPairs.Add(new MiningPair { Device = targetDev.BaseDevice, Algorithm = targetAlgo.Algorithm });
+            }
+            // grouping starting and stopping
+            // group new miners 
+            var newGroupedMiningPairs = GroupingUtils.GetGroupedMiningPairs(scriptProfitableMiningPairs);
+            // check newGroupedMiningPairs and running Groups to figure out what to start/stop and keep running
+            var currentRunningGroups = _runningMiners.Keys.ToArray();
+            // check which groupMiners should be stopped and which ones should be started and which to keep running
+            var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
+            var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
+            var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToArray();
+            // first stop currently running
+            foreach (var stopKey in toStopMinerGroupKeys)
+            {
+                var stopGroup = _runningMiners[stopKey];
+                _runningMiners.Remove(stopKey);
+                await stopGroup.StopTask();
+            }
+            // start new
+            var miningLocation = StratumService.Instance.SelectedServiceLocation;
+            foreach (var startKey in toStartMinerGroupKeys)
+            {
+                var miningPairs = newGroupedMiningPairs[startKey];
+                var toStart = Miner.CreateMinerForMining(miningPairs, startKey);
+                if (toStart == null)
+                {
+                    Logger.Error(Tag, $"CreateMinerForMining for key='{startKey}' returned <null>");
+                    continue;
+                }
+                _runningMiners[startKey] = toStart;
+                await toStart.StartMinerTask(stopMiningManager, miningLocation, _username);
+            }
+            // log scope
+            {
+                var stopLog = toStopMinerGroupKeys.Length > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
+                Logger.Info(Tag, $"Stop Old Mining: ({stopLog})");
+                var startLog = toStartMinerGroupKeys.Length > 0 ? string.Join(",", toStartMinerGroupKeys) : "EMTPY";
+                Logger.Info(Tag, $"Start New Mining : ({startLog})");
+                var sameLog = noChangeGroupMinersKeys.Length > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
+                Logger.Info(Tag, $"No change : ({sameLog})");
+            }
+        }
+
 
         // TODO check the stats calculation
         //public static async Task MinerStatsCheck()

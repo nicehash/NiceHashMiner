@@ -74,6 +74,11 @@ namespace NHMCore.Scripts
         private static extern Int64 nhms_reg_js_console_print(nhms_protobuf_in_out_cb cb);
         internal static void bridge_nhms_reg_js_console_print(nhms_protobuf_in_out_cb cb) => nhms_reg_js_console_print(CreateHandler(nameof(nhms_reg_js_console_print), cb));
 
+        // in:UpdateDeviceMiningState, out:DeviceSetResult
+        [DllImport("libnhms.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int64 nhms_reg_js_update_device_mining_state(nhms_protobuf_in_out_cb cb);
+        internal static void bridge_nhms_reg_js_update_device_mining_state(nhms_protobuf_in_out_cb cb) => nhms_reg_js_update_device_mining_state(CreateHandler(nameof(nhms_reg_js_update_device_mining_state), cb));
+
 
         // keep callbacks in memory
         private static readonly Dictionary<string, Delegate> _callbacks = new Dictionary<string, Delegate> { };
