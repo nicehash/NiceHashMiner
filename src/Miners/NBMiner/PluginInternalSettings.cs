@@ -104,6 +104,20 @@ namespace NBMiner
                     ID = "nbminer_fidelityTimeframe",
                     LongName = "--fidelity-timeframe",
                     DefaultValue = "24"
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "nbminer_memory-tweak",
+                    ShortName = "--mt",
+                    LongName = "--memory-tweak",
+                    DefaultValue = "5"
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "nbminer_--verbose",
+                    LongName = "--verbose",
                 }
             },
             TemperatureOptions = new List<MinerOption>
