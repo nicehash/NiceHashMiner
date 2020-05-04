@@ -362,6 +362,11 @@ namespace NHMCore.Scripts
             _jsCodeQueue.Enqueue(code);
         }
 
+        public static void UnloadJSScrip(long scriptID)
+        {
+            nhms_remove_js_script(scriptID);
+        }
+
         public static void AddScriptAndTick(string jsCode)
         {
             nhms_add_js_script(jsCode);
