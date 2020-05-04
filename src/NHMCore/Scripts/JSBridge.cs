@@ -20,8 +20,6 @@ namespace NHMCore.Scripts
 {
     public static class JSBridge
     {
-        static private readonly ConcurrentQueue<string> _jsCodeQueue = new ConcurrentQueue<string>();
-
         private static OutDeviceInfo ToOutDeviceInfo(ComputeDevice dev)
         {
             return new OutDeviceInfo
@@ -357,14 +355,28 @@ namespace NHMCore.Scripts
             }
         }
 
-        public static void EvaluateJS(string code)
+        public static long AddJSScript(string jsCode)
         {
-            _jsCodeQueue.Enqueue(code);
+            try
+            {
+                return nhms_add_js_script(jsCode);
+            }
+            catch (SEHException e)
+            {
+                Logger.Error("JSBridge", $"SEHException {e.Message}");
+                Logger.Error("JSBridge", $"SEHException {e.HResult}");
+                Logger.Error("JSBridge", $"SEHException {e.StackTrace}");
+            }
+            catch
+            {
+                Logger.Error("JSBridge", $"SEHException???");
+            }
+            return -1;
         }
 
-        public static void UnloadJSScrip(long scriptID)
+        public static long RemoveJSScrip(long scriptID)
         {
-            nhms_remove_js_script(scriptID);
+            return nhms_remove_js_script(scriptID);
         }
 
         public static void AddScriptAndTick(string jsCode)
@@ -382,23 +394,6 @@ namespace NHMCore.Scripts
                 Logger.Info("JSBridge", "Starting Loop");
                 while (!stop.IsCancellationRequested)
                 {
-                    if (_jsCodeQueue.TryDequeue(out var jsCode))
-                    {
-                        try
-                        {
-                            nhms_add_js_script(jsCode);
-                        }
-                        catch (SEHException e)
-                        {
-                            Logger.Error("JSBridge", $"SEHException {e.Message}");
-                            Logger.Error("JSBridge", $"SEHException {e.HResult}");
-                            Logger.Error("JSBridge", $"SEHException {e.StackTrace}");
-                        }
-                        catch
-                        {
-                            Logger.Error("JSBridge", $"SEHException???");
-                        }
-                    }
                     if (!stop.IsCancellationRequested) await TaskHelpers.TryDelay(jsTickTime, stop);
                     nhms_js_tick();
                 }

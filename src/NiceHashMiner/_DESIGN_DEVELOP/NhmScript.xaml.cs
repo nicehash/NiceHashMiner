@@ -1,7 +1,9 @@
-﻿using NHMCore;
+﻿using NHM.Common;
+using NHMCore;
 using NHMCore.Scripts;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,19 +23,21 @@ namespace NiceHashMiner
     /// </summary>
     public partial class NhmScript : Window
     {
-        int ScriptCounter = 1;
+        private ObservableCollection<ScriptDisplay> AddedScripts = new ObservableCollection<ScriptDisplay>();
+
         public NhmScript()
         {
             InitializeComponent();
+            this.DataContext = AddedScripts;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string code = codeBox.Text;
             codeBox.Text = "";
-            Dispatcher.Invoke(() => JSBridge.EvaluateJS(code));
-            lbx_sripts.Items.Add(new ScriptDisplay(ScriptCounter, code.Substring(0,10)));
-            ScriptCounter++;
+            var scriptId = JSBridge.AddJSScript(code);
+            var newScript = new ScriptDisplay($"Script {scriptId}", scriptId, code);
+            AddedScripts.Add(newScript);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -43,26 +47,24 @@ namespace NiceHashMiner
 
         private void Delete_click(object sender, RoutedEventArgs e)
         {
-            var selectedScript = lbx_sripts.SelectedItem as ScriptDisplay;
-            if (selectedScript == null) return;
-            Dispatcher.Invoke(() => JSBridge.UnloadJSScrip(selectedScript.Id));
-            lbx_sripts.Items.Remove(selectedScript);
+            if (sender is Button button && button.DataContext is ScriptDisplay sd)
+            {
+                Dispatcher.Invoke(() => JSBridge.RemoveJSScrip(sd.Id));
+                AddedScripts.Remove(sd);
+            }
         }
     }
 
-    public class ScriptDisplay
+    public class ScriptDisplay: NotifyChangedBase
     {
-        public ScriptDisplay(int id, string shortDescription)
+        public ScriptDisplay(string title, long id, string jsCode)
         {
+            Title = title;
             Id = id;
-            ShortDescription = shortDescription;
+            Code = jsCode;
         }
-        public int Id { get; set; }
-        public string ShortDescription { get; set; }
-
-        public override string ToString()
-        {
-            return Id.ToString() + " =>  " + ShortDescription;
-        }
+        public long Id { get; set; }
+        public string Code { get; set; }
+        public string Title { get; private set; }
     }
 }

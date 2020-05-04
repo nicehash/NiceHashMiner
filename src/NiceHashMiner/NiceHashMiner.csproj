@@ -82,7 +82,7 @@
     <Compile Include="Converters\TemperatureValueToText.cs" />
     <Compile Include="CustomDialogManager.cs" />
     <Compile Include="IThemeSetter.cs" />
-    <Compile Include="NhmScript.xaml.cs">
+    <Compile Include="_DESIGN_DEVELOP\NhmScript.xaml.cs">
       <DependentUpon>NhmScript.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
@@ -249,7 +249,7 @@
     <Compile Include="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml.cs">
       <DependentUpon>__DESIGN_DEVELOP.xaml</DependentUpon>
     </Compile>
-    <Page Include="NhmScript.xaml">
+    <Page Include="_DESIGN_DEVELOP\NhmScript.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
