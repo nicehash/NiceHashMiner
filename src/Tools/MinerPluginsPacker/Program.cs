@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using MinerPlugin;
+﻿using MinerPlugin;
 using MinerPluginLoader;
-using System.IO.Compression;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
+using Newtonsoft.Json;
 using NHM.Common.Enums;
-using MinerPluginToolkitV1.Configs;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
 
 namespace MinerPluginsPacker
 {
@@ -276,7 +275,7 @@ namespace MinerPluginsPacker
             }
 
             // dump our plugin packages
-            InternalConfigs.WriteFileSettings(Path.Combine(pluginPackagesFolder, "update.json"), PluginPackageInfos);
+            File.WriteAllText(Path.Combine(pluginPackagesFolder, "update.json"), JsonConvert.SerializeObject(PluginPackageInfos, Formatting.Indented));
 
             try
             {
