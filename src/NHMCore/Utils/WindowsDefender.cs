@@ -22,6 +22,7 @@ namespace NHMCore.Utils
                 var cwd = AppDir;
                 using (var userRegistryKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
                 {
+                    if (userRegistryKey == null) return false;
                     var registrySubKeys = userRegistryKey.GetValueNames().Where(value => value.Contains("WindowsDefenderExclusion")).ToList();
                     foreach (var regVal in registrySubKeys)
                     {
