@@ -21,42 +21,48 @@ namespace NiceHashMiner
     /// </summary>
     public partial class NhmScript : Window
     {
+        int ScriptCounter = 1;
         public NhmScript()
         {
             InitializeComponent();
         }
-        //// WORKING on GUI thread
-        //private static bool _initialized = false;
-        //private void Button_Click(object sender, RoutedEventArgs e)
-        //{
-        //    string code = codeBox.Text;
-        //    codeBox.Text = "";
-        //    if (!_initialized)
-        //    {
-        //        _initialized = true;
-        //        //JSBridge.StartLoops(ApplicationStateManager.ExitApplication.Token);
-        //        JSBridge.RegisterNHN_CSharp_JS_Bridge();
-        //        //JSBridge.AddScriptAndTick(code);
-        //        return;
-        //    }
 
-        //    //JSBridge.EvaluateJSExec(code);
-        //    Dispatcher.Invoke(() => JSBridge.EvaluateJS(code));
-        //    //Dispatcher.Invoke(() => JSBridge.EvaluateJS(code));
-        //    //Dispatcher.Invoke(() => JSBridge.ExecTestCall());
-        //}
-
-        // NOT WORKING
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string code = codeBox.Text;
             codeBox.Text = "";
             Dispatcher.Invoke(() => JSBridge.EvaluateJS(code));
+            lbx_sripts.Items.Add(new ScriptDisplay(ScriptCounter, code.Substring(0,10)));
+            ScriptCounter++;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //JSBridge.StartLoops(ApplicationStateManager.ExitApplication.Token);
+        }
+
+        private void Delete_click(object sender, RoutedEventArgs e)
+        {
+            var selectedScript = lbx_sripts.SelectedItem as ScriptDisplay;
+            if (selectedScript == null) return;
+            Dispatcher.Invoke(() => JSBridge.UnloadJSScrip(selectedScript.Id));
+            lbx_sripts.Items.Remove(selectedScript);
+        }
+    }
+
+    public class ScriptDisplay
+    {
+        public ScriptDisplay(int id, string shortDescription)
+        {
+            Id = id;
+            ShortDescription = shortDescription;
+        }
+        public int Id { get; set; }
+        public string ShortDescription { get; set; }
+
+        public override string ToString()
+        {
+            return Id.ToString() + " =>  " + ShortDescription;
         }
     }
 }

@@ -17,5 +17,13 @@
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto"/>
         <Button Height="30" Content="Execute JS" Click="Button_Click" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="9*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="lbx_sripts" Grid.Column="0" />
+            <Button Grid.Column="1" Content="Delete selected script" Click="Delete_click"/>
+        </Grid>
     </StackPanel>
 </Window>
