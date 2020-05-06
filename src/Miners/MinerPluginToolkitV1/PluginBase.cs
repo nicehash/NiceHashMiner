@@ -258,12 +258,14 @@ namespace MinerPluginToolkitV1
         {
             var deviceType = dev.DeviceType;
             var algorithms = GetSupportedAlgorithmsForDeviceType(deviceType);
-            if (UnsafeLimits() || dev is CPUDevice) return algorithms;
-            // GPU RAM filtering
-            var gpu = dev as IGpuDevice;
-            var ramLimits = GetCustomMinimumMemoryPerAlgorithm(deviceType);
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsListCustom(gpu.GpuRam, algorithms, ramLimits);
-            return filteredAlgorithms;
+            var unsafeLimitsDisabled = !UnsafeLimits();
+            if (unsafeLimitsDisabled && dev is IGpuDevice gpu) {
+                // GPU RAM filtering
+                var ramLimits = GetCustomMinimumMemoryPerAlgorithm(deviceType);
+                var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsListCustom(gpu.GpuRam, algorithms, ramLimits);
+                return filteredAlgorithms;
+            }
+            return algorithms;
         }
     }
 }
