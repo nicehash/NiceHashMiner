@@ -19,6 +19,7 @@ namespace FakePlugin
     {
         #region members for simulation purposes
         string _devices;
+        protected AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
 
         Random _rand { get; } = new Random();
 
@@ -33,6 +34,17 @@ namespace FakePlugin
         #endregion members for simulation purposes
 
         public FakeMiner(string uuid):base(uuid){}
+
+        protected virtual string AlgorithmName()
+        {
+            if (_algorithmSecondType != AlgorithmType.NONE)
+            {
+                var ret = $"{PluginSupportedAlgorithms.AlgorithmName(_algorithmType)}+{PluginSupportedAlgorithms.AlgorithmName(_algorithmSecondType)}";
+                return ret;
+            }
+            // default single algo
+            return PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
+        }
 
         public override async Task<ApiData> GetMinerStatsDataAsync()
         {
@@ -55,7 +67,14 @@ namespace FakePlugin
                 totalPowerUsage += power;
 
                 var deviceUUID = mp.Device.UUID;
-                perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speed) });
+                if (_algorithmSecondType != AlgorithmType.NONE)
+                {
+                    perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speed), new AlgorithmTypeSpeedPair(_algorithmSecondType, speed) });
+                }
+                else
+                {
+                    perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speed) });
+                }
                 perDevicePowerInfo.Add(deviceUUID, 108);
             }
 
@@ -74,22 +93,38 @@ namespace FakePlugin
             double speed = success ? 1000 : 0; // everything is same speed
 
             // and return our result
-            return new BenchmarkResult
+            if (_algorithmSecondType != AlgorithmType.NONE)
             {
-                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, speed) },
-                Success = success,
-                ErrorMessage = ""
-            };
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, speed), new AlgorithmTypeSpeedPair(_algorithmSecondType, speed) },
+                    Success = success,
+                    ErrorMessage = ""
+                };
+            }
+            else
+            {
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, speed) },
+                    Success = success,
+                    ErrorMessage = ""
+                };
+            }
         }
 
         protected override void Init()
         {
             _devices = string.Join(",", _miningPairs.Select(p => $"{p.Device.Name}({p.Device.ID})"));
+            var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
+            _algorithmSecondType = dualType.Item1;
+            var ok = dualType.Item2;
+            if (!ok) _algorithmSecondType = AlgorithmType.NONE;
         }
 
         protected override string MiningCreateCommandLine()
         {
-            return $"-devices={_devices} -algorithm={_algorithmType.ToString()} -miningLocaiton={_miningLocation} -username={_username} -UUID {_uuid}";
+            return $"-devices={_devices} -algorithm={AlgorithmName()} -miningLocaiton={_miningLocation} -username={_username} -UUID {_uuid}";
         }
     }
 }
