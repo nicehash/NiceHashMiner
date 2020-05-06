@@ -32,6 +32,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong),
                         new SAS(AlgorithmType.Cuckaroom),
                         new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.KawPow),
                     }
                 },
                 {
@@ -41,6 +42,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
                         new SAS(AlgorithmType.BeamV2),
                         new SAS(AlgorithmType.Eaglesong),
+                        new SAS(AlgorithmType.KawPow),
                     }
                 }
             },
@@ -55,6 +57,7 @@ namespace GMinerPlugin
                 { AlgorithmType.Cuckaroom, "cuckaroom29" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
+                { AlgorithmType.GrinCuckatoo32, "kawpow" },
             }
         };
     }

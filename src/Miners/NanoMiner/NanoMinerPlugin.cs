@@ -23,23 +23,23 @@ namespace NanoMiner
             // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.7.3",
-                ExePath = new List<string> { "nanominer-windows-1.7.3", "nanominer.exe" },
+                BinVersion = "v1.9.1",
+                ExePath = new List<string> { "nanominer-windows-1.9.1", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v1.7.3/nanominer-windows-1.7.3.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v1.9.1/nanominer-windows-1.9.1.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "Nanominer is a versatile tool for mining cryptocurrencies which are based on Ethash, Ubqhash, Cuckaroo29, CryptoNight (v6, v7, v8, R, ReverseWaltz) and RandomHash (PascalCoin) algorithms.",
+                PluginDescription = "Nanominer is a versatile tool for mining cryptocurrencies which are based on Ethash, Ubqhash, Cuckoo Cycle (Сortex coin),RandomX (Monero), KawPow (Ravencoin) and RandomHash (PascalCoin) algorithms.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(10, 0);
 
         public override string Name => "NanoMiner";
 
@@ -117,9 +117,6 @@ namespace NanoMiner
         {
             try
             {
-                var algo = ids.FirstOrDefault();
-                if (benchmarkedPluginVersion.Major < 3 && algo == AlgorithmType.GrinCuckarood29) return true;
-                if (benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 1 && algo == AlgorithmType.GrinCuckarood29) return true;
             }
             catch (Exception e)
             {

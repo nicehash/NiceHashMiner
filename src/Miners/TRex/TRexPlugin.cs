@@ -22,11 +22,11 @@ namespace TRex
             // https://github.com/trexminer/T-Rex/releases 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.14.6",
+                BinVersion = "0.15.4",
                 ExePath = new List<string> { "t-rex.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/trexminer/T-Rex/releases/download/0.14.6/t-rex-0.14.6-win-cuda10.0.zip", // original
+                    "https://github.com/trexminer/T-Rex/releases/download/0.15.4/t-rex-0.15.4-win-cuda10.0.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -38,7 +38,7 @@ namespace TRex
 
         public override string PluginUUID => "d47d9b00-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(10, 0);
 
         public override string Name => "TRex";
 
