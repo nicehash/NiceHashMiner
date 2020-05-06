@@ -79,6 +79,26 @@ namespace NHMCore.Scripts
         private static extern Int64 nhms_reg_js_update_device_mining_state(nhms_protobuf_in_out_cb cb);
         internal static void bridge_nhms_reg_js_update_device_mining_state(nhms_protobuf_in_out_cb cb) => nhms_reg_js_update_device_mining_state(CreateHandler(nameof(nhms_reg_js_update_device_mining_state), cb));
 
+        // in:SetDeviceEnabledState, out:DeviceSetResult
+        [DllImport("libnhms.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int64 nhms_reg_js_set_device_enabled_state(nhms_protobuf_in_out_cb cb);
+        internal static void bridge_nhms_reg_js_set_device_enabled_state(nhms_protobuf_in_out_cb cb) => nhms_reg_js_set_device_enabled_state(CreateHandler(nameof(nhms_reg_js_set_device_enabled_state), cb));
+
+
+        // in:StartDevice, out:DeviceSetResult
+        [DllImport("libnhms.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int64 nhms_reg_js_start_device(nhms_protobuf_in_out_cb cb);
+        internal static void bridge_nhms_reg_js_start_device(nhms_protobuf_in_out_cb cb) => nhms_reg_js_start_device(CreateHandler(nameof(nhms_reg_js_start_device), cb));
+
+        // in:StopDevice, out:DeviceSetResult
+        [DllImport("libnhms.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int64 nhms_reg_js_stop_device(nhms_protobuf_in_out_cb cb);
+        internal static void bridge_nhms_reg_js_stop_device(nhms_protobuf_in_out_cb cb) => nhms_reg_js_stop_device(CreateHandler(nameof(nhms_reg_js_stop_device), cb));
+
+        // in:SetDeviceMinerAlgorithmPairEnabledState, out:DeviceSetResult
+        [DllImport("libnhms.dll", CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int64 nhms_reg_js_set_device_miner_algorithm_pair_enabled_state(nhms_protobuf_in_out_cb cb);
+        internal static void bridge_nhms_reg_js_set_device_miner_algorithm_pair_enabled_state(nhms_protobuf_in_out_cb cb) => nhms_reg_js_set_device_miner_algorithm_pair_enabled_state(CreateHandler(nameof(nhms_reg_js_set_device_miner_algorithm_pair_enabled_state), cb));
 
         // keep callbacks in memory
         private static readonly Dictionary<string, Delegate> _callbacks = new Dictionary<string, Delegate> { };

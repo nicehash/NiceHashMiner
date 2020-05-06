@@ -744,24 +744,25 @@ namespace NHMCore.Nhmws
             return true;
         }
 
+        private static ErrorCode From_DeviceStartStopError_To_ErrorCode(ApplicationStateManager.DeviceStartStopError e)
+        {
+            switch (e)
+            {
+                case ApplicationStateManager.DeviceStartStopError.Redundant: return ErrorCode.RedundantRpc;
+                case ApplicationStateManager.DeviceStartStopError.OK: return ErrorCode.NoError;
+                case ApplicationStateManager.DeviceStartStopError.DisabledDevice: return ErrorCode.DisabledDevice;
+                case ApplicationStateManager.DeviceStartStopError.NonExistentDevice: return ErrorCode.NonExistentDevice;
+            }
+            return ErrorCode.UnableToHandleRpc;
+        }
+
         private static async Task<bool> startMiningOnDeviceWithUuid(string uuid)
         {
-            string errMsgForUuid = $"Cannot start device with uuid {uuid}";
-            // get device with uuid if it exists, devs can be single device uuid
-            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
-            if (deviceWithUUID == null)
-            {
-                throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCode.NonExistentDevice);
-            }
-            if (deviceWithUUID.IsDisabled)
-            {
-                throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCode.DisabledDevice);
-            }
-            var (success, msg) = await ApplicationStateManager.StartDeviceTask(deviceWithUUID);
+            var (success, msg, code) = await ApplicationStateManager.StartDeviceWithUUIDTask(uuid);
             if (!success)
             {
-                // TODO this can also be an error
-                throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCode.RedundantRpc);
+                var rpcCode = From_DeviceStartStopError_To_ErrorCode(code);
+                throw new RpcException(msg, rpcCode);
             }
             return true;
         }
@@ -798,24 +799,13 @@ namespace NHMCore.Nhmws
 
         private static async Task<bool> stopMiningOnDeviceWithUuid(string uuid)
         {
-            string errMsgForUuid = $"Cannot stop device with uuid {uuid}";
-            // get device with uuid if it exists, devs can be single device uuid
-            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
-            if (deviceWithUUID == null)
-            {
-                throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCode.NonExistentDevice);
-            }
-            if (deviceWithUUID.IsDisabled)
-            {
-                throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCode.DisabledDevice);
-            }
-            var (success, msg) = await ApplicationStateManager.StopDeviceTask(deviceWithUUID);
+            var (success, msg, code) = await ApplicationStateManager.StopDeviceWithUUIDTask(uuid);
             if (!success)
             {
-                // TODO this can also be an error
-                throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCode.RedundantRpc);
+                var rpcCode = From_DeviceStartStopError_To_ErrorCode(code);
+                throw new RpcException(msg, rpcCode);
             }
-            return success;
+            return true;
         }
 
         private static Task<bool> StopMining(string devs)

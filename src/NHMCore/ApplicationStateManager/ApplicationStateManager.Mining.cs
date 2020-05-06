@@ -123,6 +123,36 @@ namespace NHMCore
             return (started, failReason);
         }
 
+        public enum DeviceStartStopError
+        {
+            OK = 0,
+            NonExistentDevice,
+            DisabledDevice,
+            Redundant,
+        }
+
+        internal static async Task<(bool started, string failReason, DeviceStartStopError code)> StartDeviceWithUUIDTask(string uuid, bool skipBenchmark = false, bool executeStart = true)
+        {
+            string errMsgForUuid = $"Cannot start device with uuid {uuid}";
+            // get device with uuid if it exists, devs can be single device uuid
+            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
+            if (deviceWithUUID == null)
+            {
+                return (false, $"{errMsgForUuid}. Device not found.", DeviceStartStopError.NonExistentDevice);
+            }
+            if (deviceWithUUID.IsDisabled)
+            {
+                return (false, $"{errMsgForUuid}. Device is disabled.", DeviceStartStopError.DisabledDevice);
+            }
+            var (success, msg) = await StartDeviceTask(deviceWithUUID, skipBenchmark, executeStart);
+            if (!success)
+            {
+                // TODO this can also be an error
+                return (false, $"{errMsgForUuid}. {msg}.", DeviceStartStopError.Redundant);
+            }
+            return (true, "", DeviceStartStopError.OK);
+        }
+
         internal static async Task<(bool started, string failReason)> StartDeviceTask(ComputeDevice device, bool skipBenchmark = false, bool executeStart = true)
         {
             device.StartState = true;
@@ -223,6 +253,28 @@ namespace NHMCore
                 }
             }
             return (stopped, failReason);
+        }
+
+        internal static async Task<(bool started, string failReason, DeviceStartStopError code)> StopDeviceWithUUIDTask(string uuid, bool executeStop = true)
+        {
+            string errMsgForUuid = $"Cannot stop device with uuid {uuid}";
+            // get device with uuid if it exists, devs can be single device uuid
+            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
+            if (deviceWithUUID == null)
+            {
+                return (false, $"{errMsgForUuid}. Device not found.", DeviceStartStopError.NonExistentDevice);
+            }
+            if (deviceWithUUID.IsDisabled)
+            {
+                return (false, $"{errMsgForUuid}. Device is disabled.", DeviceStartStopError.DisabledDevice);
+            }
+            var (success, msg) = await StopDeviceTask(deviceWithUUID, executeStop);
+            if (!success)
+            {
+                // TODO this can also be an error
+                return (false, $"{errMsgForUuid}. {msg}.", DeviceStartStopError.Redundant);
+            }
+            return (true, "", DeviceStartStopError.OK);
         }
 
         internal static async Task<(bool stopped, string failReason)> StopDeviceTask(ComputeDevice device, bool executeStop = true)
