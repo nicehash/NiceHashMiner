@@ -24,12 +24,12 @@ namespace TTMiner
             // https://bitcointalk.org/index.php?topic=5025783.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "3.2.2",
+                BinVersion = "4.0.3",
                 ExePath = new List<string> { "TT-Miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.2.16plus/TT-Miner-3.2.2.7z",
-                    "https://tradeproject.de/download/Miner/TT-Miner-3.2.2.zip" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/3.0.0.2/TT-Miner-4.0.0.3.zip",
+                    "https://tradeproject.de/download/Miner/TT-Miner-4.0.3.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -41,7 +41,7 @@ namespace TTMiner
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(10, 0);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 
@@ -121,28 +121,14 @@ namespace TTMiner
                 "Algos/AlgoMTP-C101.dll",
                 "Algos/AlgoMTP-C92.dll",
                 "Algos/AlgoProgPoW.dll",
-                "Algos/AlgoProgPoW092.dll",
-                "Algos/AlgoProgPoW092-C100.dll",
-                "Algos/AlgoProgPoW092-C101.dll",
-                "Algos/AlgoProgPoW092-C92.dll",
                 "Algos/AlgoProgPoW-C100.dll",
                 "Algos/AlgoProgPoW-C101.dll",
-                "Algos/AlgoProgPoW-C92.dll",
-                "Algos/AlgoProgPoWZ.dll",
-                "Algos/AlgoProgPoWZ-C100.dll",
-                "Algos/AlgoProgPoWZ-C101.dll",
-                "Algos/AlgoProgPoWZ-C92.dll",
-                "Algos/AlgoUbqhash.dll",
-                "Algos/AlgoUbqhash-C100.dll",
-                "Algos/AlgoUbqhash-C101.dll",
-                "Algos/AlgoUbqhash-C92.dll",
+                "Algos/AlgoProgPoW-C92.dll"
             });
         }
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            if (ids.Count() == 0) return false;
-            if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 3) return true; //improvement on all supported algorithms
             return false;
         }
     }

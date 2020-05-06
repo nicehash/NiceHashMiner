@@ -22,11 +22,11 @@ namespace WildRig
             // https://bitcointalk.org/index.php?topic=5023676 | https://github.com/andru-kun/wildrig-multi/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = " 0.20.4",
+                BinVersion = " 0.20.6",
                 ExePath = new List<string> { "wildrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.20.4/wildrig-multi-windows-0.20.4.7z", // original
+                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.20.6/wildrig-multi-windows-0.20.6.7z", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -38,7 +38,7 @@ namespace WildRig
 
         public override string PluginUUID => "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";
 
-        public override Version Version => new Version(8, 1);
+        public override Version Version => new Version(10, 0);
 
         public override string Name => "WildRig";
 

@@ -19,6 +19,7 @@ namespace ZEnemy
                     {
                         new SAS(AlgorithmType.X16R),
                         new SAS(AlgorithmType.X16Rv2),
+                        new SAS(AlgorithmType.KAWPOW),
                     }
                 }
             },
@@ -26,6 +27,7 @@ namespace ZEnemy
             {
                 { AlgorithmType.X16R, "x16r" },
                 { AlgorithmType.X16Rv2, "x16rv2" },
+                { AlgorithmType.KAWPOW, "kawpow" },
             }
         };
     }
