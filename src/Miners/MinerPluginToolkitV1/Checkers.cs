@@ -96,7 +96,7 @@ namespace MinerPluginToolkitV1
             return false;
         }
 
-        private static int[] _supportedMajorVersions = new int[] { 5, 6, 7, 8, 9 };
+        private static int[] _supportedMajorVersions = new int[] { 5, 6, 7, 8, 9, 10 };
         public static bool IsMajorVersionSupported(int major)
         {
             return _supportedMajorVersions.Contains(major);
