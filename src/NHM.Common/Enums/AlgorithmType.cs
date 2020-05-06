@@ -116,7 +116,7 @@ namespace NHM.Common.Enums
         //[Obsolete("UNUSED Algorithm")]
         Handshake = 51,
         //[Obsolete("UNUSED Algorithm")]
-        KawPow = 52,
+        KAWPOW = 52,
         #endregion // NiceHashAPI
     }
 

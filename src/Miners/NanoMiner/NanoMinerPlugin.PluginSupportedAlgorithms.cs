@@ -25,14 +25,14 @@ namespace NanoMiner
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.RandomXmonero){ Enabled=false},
-                        new SAS(AlgorithmType.KawPow)
+                        new SAS(AlgorithmType.KAWPOW)
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.RandomXmonero, "RandomX" },
-                { AlgorithmType.KawPow, "Kawpow" },
+                { AlgorithmType.KAWPOW, "Kawpow" },
             }
         };
     }

@@ -20,7 +20,7 @@ namespace TRex
                         new SAS(AlgorithmType.Lyra2Z),
                         new SAS(AlgorithmType.X16R),
                         new SAS(AlgorithmType.X16Rv2),
-                        new SAS(AlgorithmType.KawPow)
+                        new SAS(AlgorithmType.KAWPOW)
                     }
                 }
             },
@@ -29,7 +29,7 @@ namespace TRex
                 { AlgorithmType.Lyra2Z, "lyra2z" },
                 { AlgorithmType.X16R, "x16r" },
                 { AlgorithmType.X16Rv2, "x16rv2" },
-                { AlgorithmType.KawPow, "kawpow" }
+                { AlgorithmType.KAWPOW, "kawpow" }
             }
         };
     }
