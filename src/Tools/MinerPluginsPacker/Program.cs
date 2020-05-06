@@ -179,18 +179,20 @@ namespace MinerPluginsPacker
             {
                 "2257f160-7236-11e9-b20c-f9f12eb6d835", // CCMinerTpruvotPlugin
                 "70984aa0-7236-11e9-b20c-f9f12eb6d835", // ClaymoreDual14Plugin
-                //"92fceb00-7236-11e9-b20c-f9f12eb6d835", // CPUMinerPlugin
+                ////"92fceb00-7236-11e9-b20c-f9f12eb6d835", // CPUMinerPlugin
                 "1b7019d0-7237-11e9-b20c-f9f12eb6d835", // GMinerPlugin
-                "435f0820-7237-11e9-b20c-f9f12eb6d835", // LolMinerPlugin
-                "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4", // MiniZPlugin
+                //"435f0820-7237-11e9-b20c-f9f12eb6d835", // LolMinerPlugin
+                //"59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4", // MiniZPlugin
                 "6c07f7a0-7237-11e9-b20c-f9f12eb6d835", // NBMinerPlugin
-                "f5d4a470-e360-11e9-a914-497feefbdfc8", // PhoenixPlugin
-                "abc3e2a0-7237-11e9-b20c-f9f12eb6d835", // TeamRedMinerPlugin
+                //"f5d4a470-e360-11e9-a914-497feefbdfc8", // PhoenixPlugin
+                //"abc3e2a0-7237-11e9-b20c-f9f12eb6d835", // TeamRedMinerPlugin
                 "d47d9b00-7237-11e9-b20c-f9f12eb6d835", // TRexPlugin
                 //"3d4e56b0-7238-11e9-b20c-f9f12eb6d835", // XmrStakPlugin
                 "5532d300-7238-11e9-b20c-f9f12eb6d835", // ZEnemyPlugin
                 //"4aec5ec0-10f8-11ea-bad3-8dea21141bbb", // XmrStakRxPlugin
-                "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4", // XMRig
+                //"1046ea50-c261-11e9-8e4e-bb1e2c6e76b4", // XMRig
+                "f1945a30-7237-11e9-b20c-f9f12eb6d835",
+                "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4",
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
 
