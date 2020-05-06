@@ -57,7 +57,7 @@ namespace GMinerPlugin
                 { AlgorithmType.Cuckaroom, "cuckaroom29" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
-                { AlgorithmType.GrinCuckatoo32, "kawpow" },
+                { AlgorithmType.KAWPOW, "kawpow" },
             }
         };
     }
