@@ -21,6 +21,7 @@ namespace NiceHashMiner
     /// </summary>
     public partial class NhmScript : Window
     {
+        int ScriptCounter = 0;
         public NhmScript()
         {
             InitializeComponent();
@@ -52,11 +53,37 @@ namespace NiceHashMiner
             string code = codeBox.Text;
             codeBox.Text = "";
             Dispatcher.Invoke(() => JSBridge.EvaluateJS(code));
+            lbx_sripts.Items.Add(new ScriptDisplay(ScriptCounter, code.Substring(0,10)));
+            ScriptCounter++;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //JSBridge.StartLoops(ApplicationStateManager.ExitApplication.Token);
+        }
+
+        private void Delete_click(object sender, RoutedEventArgs e)
+        {
+            var selectedScript = lbx_sripts.SelectedItem as ScriptDisplay;
+            if (selectedScript == null) return;
+            Dispatcher.Invoke(() => JSBridge.RemoveScript(selectedScript.Id));
+            lbx_sripts.Items.Remove(selectedScript);
+        }
+    }
+
+    public class ScriptDisplay
+    {
+        public ScriptDisplay(int id, string shortDescription)
+        {
+            Id = id;
+            ShortDescription = shortDescription;
+        }
+        public int Id { get; set; }
+        public string ShortDescription { get; set; }
+
+        public override string ToString()
+        {
+            return Id.ToString() + " =>  " + ShortDescription;
         }
     }
 }
