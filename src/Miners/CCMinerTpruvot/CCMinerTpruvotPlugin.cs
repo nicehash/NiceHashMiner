@@ -36,7 +36,7 @@ namespace CCMinerTpruvot
 
         public override string PluginUUID => "2257f160-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(10, 0);
         public override string Name => "CCMinerTpruvot";
 
         public override string Author => "info@nicehash.com";

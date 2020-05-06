@@ -42,7 +42,7 @@ namespace Phoenix
 
         public override string PluginUUID => "f5d4a470-e360-11e9-a914-497feefbdfc8";
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(10, 0);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
