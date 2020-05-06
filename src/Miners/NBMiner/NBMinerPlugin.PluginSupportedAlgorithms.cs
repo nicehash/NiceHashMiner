@@ -12,11 +12,11 @@ namespace NBMiner
         {
             // TODO fees are not just 2%
             DefaultFee = 2.0,
-            //AlgorithmFees = new Dictionary<AlgorithmType, double>
-            //{
-            //    { AlgorithmType.DaggerHashimoto, 0.65 },
-            //    { AlgorithmType.DaggerHashimoto + AlgorithmType.Eaglesong, 3.0 },
-            //},
+            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            {
+                { AlgorithmType.DaggerHashimoto, 1.0 },
+                //{ AlgorithmType.DaggerHashimoto + AlgorithmType.Eaglesong, 3.0 },
+            },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
@@ -27,7 +27,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.Eaglesong),
-                        // new SAS(AlgorithmType.DaggerHashimoto), // needs different protocol settings
+                        new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.Handshake),
                         new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
