@@ -14,17 +14,9 @@ namespace NanoMiner
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
-                    DeviceType.NVIDIA,
-                    new List<SAS>
-                    {
-                        new SAS(AlgorithmType.RandomXmonero){ Enabled=false}
-                    }
-                },
-                {
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.RandomXmonero){ Enabled=false},
                         new SAS(AlgorithmType.KAWPOW)
                     }
                 }
