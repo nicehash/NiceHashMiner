@@ -84,33 +84,37 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             resultStack.Children.Clear();
 
             // Add the result   
-            foreach (var generalOption in minerOptionsPackage.GeneralOptions)
+            if (minerOptionsPackage != null && minerOptionsPackage.GeneralOptions != null)
             {
-                // skip if already present 
-                var skipOption = false;
-                foreach (var elpParam in elpParams ?? Enumerable.Empty<string>())
+                foreach (var generalOption in minerOptionsPackage.GeneralOptions)
                 {
-                    bool longNameContains = generalOption.LongName != null && elpParam.Contains(generalOption.LongName);
-                    bool shortNameContains = generalOption.ShortName != null && elpParam.Contains(generalOption.ShortName);
-                    if (longNameContains || shortNameContains)
+                    // skip if already present 
+                    var skipOption = false;
+                    foreach (var elpParam in elpParams ?? Enumerable.Empty<string>())
                     {
-                        skipOption = true;
-                        break;
+                        bool longNameContains = generalOption.LongName != null && elpParam.Contains(generalOption.LongName);
+                        bool shortNameContains = generalOption.ShortName != null && elpParam.Contains(generalOption.ShortName);
+                        if (longNameContains || shortNameContains)
+                        {
+                            skipOption = true;
+                            break;
+                        }
+                    }
+                    if (skipOption) continue;
+
+                    // add to auto-complete
+                    if (generalOption.LongName != null && generalOption.LongName.ToLower().StartsWith(query.ToLower()))
+                    {
+                        addItem(generalOption.LongName);
+                        found = true;
+                    }
+                    if (generalOption.ShortName != null && generalOption.ShortName.ToLower().StartsWith(query.ToLower()))
+                    {
+                        addItem(generalOption.ShortName);
+                        found = true;
                     }
                 }
-                if (skipOption) continue;
 
-                // add to auto-complete
-                if (generalOption.LongName != null && generalOption.LongName.ToLower().StartsWith(query.ToLower()))
-                {
-                    addItem(generalOption.LongName);
-                    found = true;
-                }
-                if (generalOption.ShortName != null && generalOption.ShortName.ToLower().StartsWith(query.ToLower()))
-                {
-                    addItem(generalOption.ShortName);
-                    found = true;
-                }
             }
 
             if (!found)
