@@ -20,6 +20,7 @@ namespace TTMiner
                         //new SAS(AlgorithmType.MTP),
                         new SAS(AlgorithmType.Lyra2REv3),
                         new SAS(AlgorithmType.Eaglesong),
+                        new SAS(AlgorithmType.KAWPOW)
                     }
                 }
             },
@@ -28,6 +29,7 @@ namespace TTMiner
                 //{ AlgorithmType.MTP, "mtp" },
                 { AlgorithmType.Lyra2REv3, "LYRA2V3" },
                 { AlgorithmType.Eaglesong, "EAGLESONG" },
+                { AlgorithmType.KAWPOW, "KAWPOW" }
             }
         };
     }

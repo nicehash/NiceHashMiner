@@ -147,9 +147,14 @@ namespace NBMiner
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
 
-            if (_algorithmSecondType == AlgorithmType.NONE)
+            if (_algorithmSecondType == AlgorithmType.NONE && _algorithmType != AlgorithmType.DaggerHashimoto)
             {
                 return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} {_devices} --no-watchdog {_extraLaunchParameters}";
+            }
+            if (_algorithmSecondType == AlgorithmType.NONE && _algorithmType == AlgorithmType.DaggerHashimoto)
+            {
+                var url_dagger = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
+                return $"-a {AlgoName} -o nicehash+tcp://{url_dagger} -u {username} --api 127.0.0.1:{_apiPort} {_devices} --no-watchdog {_extraLaunchParameters}";
             }
             var url2 = StratumServiceHelpers.GetLocationUrl(_algorithmSecondType, _miningLocation, NhmConectionType.NONE);
             var cmd = $"-a {AlgoName} -o {url} -u {username} -do nicehash+tcp://{url2} -du {username} --api 127.0.0.1:{_apiPort} {_devices} --no-watchdog {_extraLaunchParameters}";
@@ -182,6 +187,8 @@ namespace NBMiner
                     var minerID = _mappedIDs[deviceUUID];
                     var apiDevice = apiDevices.Find(apiDev => apiDev.id == minerID);
                     if (apiDevice == null) continue;
+                    if (apiDevice.hashrate_raw == 0 && _algorithmType == AlgorithmType.DaggerHashimoto) continue;
+                    if (apiDevice.hashrate2_raw == 0 && _algorithmSecondType == AlgorithmType.DaggerHashimoto) continue;
 
                     totalSpeed += apiDevice.hashrate_raw;
                     totalSpeed2 += apiDevice.hashrate2_raw;
