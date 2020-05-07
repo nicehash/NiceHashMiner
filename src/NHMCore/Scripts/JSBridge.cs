@@ -517,6 +517,11 @@ namespace NHMCore.Scripts
             return nhms_remove_js_script(scriptID);
         }
 
+        public static void RemoveScript(int id)
+        {
+            nhms_remove_js_script(id);
+        }
+
         public static void AddScriptAndTick(string jsCode)
         {
             nhms_add_js_script(jsCode);
