@@ -29,6 +29,17 @@ namespace NiceHashMiner
         {
             InitializeComponent();
             this.DataContext = AddedScripts;
+            JSBridge.OnJSErrorCallback = (string error, string stack, Int64 script_id) => {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var unloadedScript = this.AddedScripts.Where(script => script.Id == script_id).FirstOrDefault();
+                    if (unloadedScript == null) return;
+                    unloadedScript.ErrorStack = stack;
+                    unloadedScript.Error = error;
+                    unloadedScript.OnPropertyChanged("Error");
+                    unloadedScript.OnPropertyChanged("ErrorStack");
+                });
+            };
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -66,5 +77,9 @@ namespace NiceHashMiner
         public long Id { get; set; }
         public string Code { get; set; }
         public string Title { get; private set; }
+
+        public string Error { get; set; }
+
+        public string ErrorStack { get; set; }
     }
 }

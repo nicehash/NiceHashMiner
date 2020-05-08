@@ -30,6 +30,8 @@
                         <StackPanel Height="500">
                             <Button Click="Delete_click" Content="Unload this script" />
                             <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Code}" />
+                            <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding Error}" />
+                            <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding ErrorStack}" />
                         </StackPanel>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
