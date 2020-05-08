@@ -158,6 +158,7 @@ namespace NBMiner
             try
             {
                 if (ids.Count() == 0) return false;
+                if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;   
                 if (benchmarkedPluginVersion.Major <= 9) return ids.Contains(AlgorithmType.DaggerHashimoto);
                 if (benchmarkedPluginVersion.Major <= 9 && benchmarkedPluginVersion.Minor < 2) return ids.Contains(AlgorithmType.DaggerHashimoto);
             }

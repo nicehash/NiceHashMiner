@@ -87,7 +87,7 @@ namespace TRex
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                if (!found || (hashrate == 0 && _algorithmType == AlgorithmType.KAWPOW)) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
                 benchHashes += hashrate;
                 counter++;

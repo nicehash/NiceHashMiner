@@ -150,6 +150,10 @@ namespace GMinerPlugin
                 if (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor < 5) {
                     return ids.First() == AlgorithmType.GrinCuckatoo32;
                 }
+                if (ids.Count() != 0)
+                {
+                    if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;   
+                }
             }
             catch (Exception e)
             {

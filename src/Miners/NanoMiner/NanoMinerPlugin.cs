@@ -118,6 +118,10 @@ namespace NanoMiner
         {
             try
             {
+                if (ids.Count() != 0)
+                {
+                    if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 3) return true;
+                }
             }
             catch (Exception e)
             {

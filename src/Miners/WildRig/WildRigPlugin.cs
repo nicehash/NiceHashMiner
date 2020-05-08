@@ -95,6 +95,10 @@ namespace WildRig
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            if (ids.Count() != 0)
+            {
+                if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 2) return true;
+            }
             // nothing new
             return false;
         }

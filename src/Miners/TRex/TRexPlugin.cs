@@ -73,6 +73,11 @@ namespace TRex
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            if (ids.Count() != 0)
+            {
+                if (ids[0] == AlgorithmType.KAWPOW && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 2) return true;
+            }
+
             //no performance upgrades
             return false;
         }
