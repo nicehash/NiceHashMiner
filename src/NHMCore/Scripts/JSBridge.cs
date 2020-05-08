@@ -20,6 +20,9 @@ namespace NHMCore.Scripts
 {
     public static class JSBridge
     {
+        public delegate void OnJSError(string error, string stack, Int64 script_id);
+        public static OnJSError OnJSErrorCallback = null;
+
         private static InOutDeviceStatusInfo.Types.Status ToProtobufDeviceStatus(DeviceState deviceState)
         {
             switch(deviceState)
@@ -117,11 +120,7 @@ namespace NHMCore.Scripts
 
             nhms_reg_unhandeled_js_error_cb((string error, string stack, Int64 script_id) => {
                 Logger.Error("JSBridge.Log", $"Unhandeled JavaScript error {error}.\nStack {stack}.\nScriptID {script_id}");
-                // TODO -1 should not be no script ID
-                // ID 0 is special evaluate case
-                if (script_id <= 0) { return; }
-                Logger.Info("JSBridge.Log", $"Unloading script script_id: {script_id}.");
-                nhms_remove_js_script(script_id);
+                OnJSErrorCallback?.Invoke(error, stack, script_id);
             });
 
             var ok = nhms_init_runtime_and_context();
