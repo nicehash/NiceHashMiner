@@ -20,6 +20,7 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=3378390.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -39,7 +40,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(10, 1);
 
         public override string Name => "ZEnemy";
 
@@ -79,11 +80,7 @@ namespace ZEnemy
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 1)
-                {
-                    // v2.3 Performance improvement: +2-3% x16rv2 algo https://github.com/z-enemy/z-enemy/releases/tag/ver-2.3
-                    if (ids.FirstOrDefault() == AlgorithmType.X16Rv2) return true;
-                }
+                if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;
             }
             catch (Exception e)
             {

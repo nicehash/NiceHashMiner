@@ -50,6 +50,11 @@ namespace NBMiner
             _mappedIDs = mappedIDs;
         }
 
+        private bool IsDaggerOrKawpow(AlgorithmType algorithmType)
+        {
+            return algorithmType == AlgorithmType.DaggerHashimoto || algorithmType == AlgorithmType.KAWPOW;
+        }
+
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
@@ -90,6 +95,7 @@ namespace NBMiner
                         if (_algorithmSecondType == AlgorithmType.NONE)
                         {
                             var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                            if (gpuSpeed == 0 && IsDaggerOrKawpow(_algorithmType)) continue;
                             benchHashesSum += gpuSpeed;
                             benchIters++;
                             double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
@@ -104,6 +110,8 @@ namespace NBMiner
                         {
                             var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
                             var gpuSpeed2 = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().LastOrDefault().Speed;
+                            if (gpuSpeed == 0 && IsDaggerOrKawpow(_algorithmType)) continue;
+                            if (gpuSpeed2 == 0 && IsDaggerOrKawpow(_algorithmSecondType)) continue;
                             benchHashesSum += gpuSpeed;
                             benchHashesSum2 += gpuSpeed2;
                             benchIters++;
@@ -187,8 +195,6 @@ namespace NBMiner
                     var minerID = _mappedIDs[deviceUUID];
                     var apiDevice = apiDevices.Find(apiDev => apiDev.id == minerID);
                     if (apiDevice == null) continue;
-                    if (apiDevice.hashrate_raw == 0 && _algorithmType == AlgorithmType.DaggerHashimoto) continue;
-                    if (apiDevice.hashrate2_raw == 0 && _algorithmSecondType == AlgorithmType.DaggerHashimoto) continue;
 
                     totalSpeed += apiDevice.hashrate_raw;
                     totalSpeed2 += apiDevice.hashrate2_raw;

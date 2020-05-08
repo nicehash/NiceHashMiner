@@ -1,5 +1,6 @@
 ﻿using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +13,15 @@ namespace NBMiner
         internal static MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {
             GeneralTimeout = DefaultTimeout,
+        };
+
+        internal static MinerBenchmarkTimeSettings BenchmarkTimeSettings = new MinerBenchmarkTimeSettings
+        {
+            PerAlgorithm = new Dictionary<BenchmarkPerformanceType, Dictionary<string, int>>(){
+                { BenchmarkPerformanceType.Quick, new Dictionary<string, int>(){ { "KAWPOW", 160 } } },
+                { BenchmarkPerformanceType.Standard, new Dictionary<string, int>(){ { "KAWPOW", 180 } } },
+                { BenchmarkPerformanceType.Precise, new Dictionary<string, int>(){ { "KAWPOW", 260 } } }
+            }
         };
 
         internal static MinerOptionsPackage MinerOptionsPackage = new MinerOptionsPackage

@@ -19,6 +19,7 @@ namespace TRex
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://github.com/trexminer/T-Rex/releases 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -38,7 +39,7 @@ namespace TRex
 
         public override string PluginUUID => "d47d9b00-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(10, 1);
+        public override Version Version => new Version(10, 2);
 
         public override string Name => "TRex";
 
@@ -72,6 +73,11 @@ namespace TRex
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            if (ids.Count() != 0)
+            {
+                if (ids[0] == AlgorithmType.KAWPOW && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 2) return true;
+            }
+
             //no performance upgrades
             return false;
         }
