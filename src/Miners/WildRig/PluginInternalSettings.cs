@@ -11,9 +11,9 @@ namespace WildRig
         {
             PerAlgorithm =
             {
-                { BenchmarkPerformanceType.Quick, new Dictionary<string, int>(){ { "KAWPOW", 180 } } },
+                { BenchmarkPerformanceType.Quick, new Dictionary<string, int>(){ { "KAWPOW", 160 } } },
                 { BenchmarkPerformanceType.Standard, new Dictionary<string, int>(){ { "KAWPOW", 180 } } },
-                { BenchmarkPerformanceType.Precise, new Dictionary<string, int>(){ { "KAWPOW", 180 } } }
+                { BenchmarkPerformanceType.Precise, new Dictionary<string, int>(){ { "KAWPOW", 260 } } }
             }
         };
 
