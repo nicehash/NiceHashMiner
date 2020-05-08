@@ -33,6 +33,7 @@
             <Style TargetType="views:EulaWindowFirstLong" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:ChooseLanguageWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:EulaWindowSecondShort" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
+            <!--comment out if no login-->
             <Style TargetType="login:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:NHMDialogWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:SingleInstanceNotice" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
