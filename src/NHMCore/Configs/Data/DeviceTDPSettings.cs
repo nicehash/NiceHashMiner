@@ -15,7 +15,5 @@ namespace NHMCore.Configs.Data
         public TDPSimpleType? Simple { get; set; }
 
         public double? Percentage { get; set; }
-
-        public double? Raw { get; set; }
     }
 }

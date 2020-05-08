@@ -22,7 +22,6 @@ namespace NiceHashMiner.ViewModels.Models
         public string LastTPDSettingsSuccess { get; set; } = "N/A";
         public string TPDSimpleValue { get; private set; } = "N/A";
         public string TPDPercentageValue { get; private set; } = "N/A";
-        public string TPDRawValue { get; private set; } = "N/A";
 
 
         public void SetSimple(TDPSimpleType type)
@@ -33,10 +32,6 @@ namespace NiceHashMiner.ViewModels.Models
         {
             var perc = value / 100.0;
             TDPSet(_tdpMon.SetTDPPercentage(perc));
-        }
-        public void SetRaw(double value)
-        {
-            TDPSet(_tdpMon.SetTDPRaw(value));
         }
 
         public DeviceDataTDP(ComputeDevice dev)
@@ -61,11 +56,9 @@ namespace NiceHashMiner.ViewModels.Models
         {
             TPDSimpleValue = _tdpMon.TDPSimple.ToString();
             TPDPercentageValue = $"{_tdpMon.TDPPercentage * 100}%";
-            TPDRawValue = _tdpMon.TDPRaw.ToString();
             SelectedTPDSettingType = _tdpMon.SettingType.ToString();
             OnPropertyChanged(nameof(TPDSimpleValue));
             OnPropertyChanged(nameof(TPDPercentageValue));
-            OnPropertyChanged(nameof(TPDRawValue));
             OnPropertyChanged(nameof(SelectedTPDSettingType));
         }
 

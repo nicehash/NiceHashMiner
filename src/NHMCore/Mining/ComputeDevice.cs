@@ -377,16 +377,6 @@ namespace NHMCore.Mining
                                 tdp.SetTDPSimple(tdpSimpleDefault); // fallback
                             }
                             break;
-                        case TDPSettingType.RAW:
-                            if (config.TDPSettings.Raw.HasValue)
-                            {
-                                tdp.SetTDPRaw(config.TDPSettings.Raw.Value);
-                            }
-                            else
-                            {
-                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                            }
-                            break;
                         // here we decide to not allow per GPU disable state, default fallback is SIMPLE setting
                         case TDPSettingType.UNSUPPORTED:
                         case TDPSettingType.DISABLED:
@@ -448,10 +438,6 @@ namespace NHMCore.Mining
                     if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
                     {
                         TDPSettings.Percentage = tdp.TDPPercentage * 100;
-                    }
-                    if (TDPSettings.SettingType == TDPSettingType.RAW)
-                    {
-                        TDPSettings.Raw = tdp.TDPRaw;
                     }
                 }
             }
