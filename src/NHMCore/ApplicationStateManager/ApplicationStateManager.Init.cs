@@ -55,7 +55,6 @@ namespace NHMCore
                 // Checking System Memory
                 loader.PrimaryProgress?.Report((Tr("Checking System Specs"), nextProgPerc()));
                 await Task.Run(() => SystemSpecs.QueryWin32_OperatingSystemDataAndLog());
-                await Task.Run(() => FilterOSSpecific.GetWindowsVersion());
                 await WindowsUptimeCheck.DelayUptime();
 
                 // TODO extract in function
