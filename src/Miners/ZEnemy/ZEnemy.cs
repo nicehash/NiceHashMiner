@@ -62,6 +62,8 @@ namespace ZEnemy
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
+                if (hashrate == 0 && _algorithmType == AlgorithmType.KAWPOW) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+
                 benchHashes += hashrate;
                 benchIters++;
 
