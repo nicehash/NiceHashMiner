@@ -21,6 +21,7 @@ namespace TTMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=5025783.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -41,7 +42,7 @@ namespace TTMiner
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(10, 1);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 

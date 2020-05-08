@@ -19,6 +19,7 @@ namespace WildRig
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=5023676 | https://github.com/andru-kun/wildrig-multi/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -38,7 +39,7 @@ namespace WildRig
 
         public override string PluginUUID => "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";
 
-        public override Version Version => new Version(10, 1);
+        public override Version Version => new Version(10, 2);
 
         public override string Name => "WildRig";
 

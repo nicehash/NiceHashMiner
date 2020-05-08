@@ -20,6 +20,7 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=3378390.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -39,7 +40,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(10, 1);
 
         public override string Name => "ZEnemy";
 
