@@ -20,15 +20,16 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=3378390.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                // NO MORE GITHUB TAG!!!
-                BinVersion = "2.4-win-cuda10.1", // fix version if wrong
+                // YEY GITHUB TAG! => 'kawpow'
+                BinVersion = "2.5-win-cuda10.1", // fix version if wrong
                 ExePath = new List<string> { "z-enemy.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.2.16plus/z-enemy-2.4-win-cuda10.1.zip",
+                    "https://github.com/zealot-rvn/z-enemy/releases/download/kawpow/z-enemy-2.5-win-cuda10.1.zip",
                     "https://mega.nz/#!UXRBCChJ!v7JqOCuvq4hl1XR76BGiC75Gq97vKSliuH2uKZvU1iQ" // original source
                 }
             };
@@ -39,7 +40,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(8, 0);
+        public override Version Version => new Version(10, 1);
 
         public override string Name => "ZEnemy";
 
@@ -79,11 +80,7 @@ namespace ZEnemy
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 1)
-                {
-                    // v2.3 Performance improvement: +2-3% x16rv2 algo https://github.com/z-enemy/z-enemy/releases/tag/ver-2.3
-                    if (ids.FirstOrDefault() == AlgorithmType.X16Rv2) return true;
-                }
+                if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;
             }
             catch (Exception e)
             {

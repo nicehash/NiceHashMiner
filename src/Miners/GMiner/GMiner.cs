@@ -136,6 +136,11 @@ namespace GMinerPlugin
             return ad;
         }
 
+        private bool IsDaggerOrKawpow(AlgorithmType algorithmType)
+        {
+            return algorithmType == AlgorithmType.DaggerHashimoto || algorithmType == AlgorithmType.KAWPOW;
+        }
+
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
@@ -176,6 +181,7 @@ namespace GMinerPlugin
                         if (_algorithmSecondType == AlgorithmType.NONE)
                         {
                             var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                            if (gpuSpeed == 0 && IsDaggerOrKawpow(_algorithmType)) continue;
                             benchHashesSum += gpuSpeed;
                             benchIters++;
                             double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
@@ -190,6 +196,8 @@ namespace GMinerPlugin
                         {
                             var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
                             var gpuSpeed2 = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().LastOrDefault().Speed;
+                            if (gpuSpeed == 0 && IsDaggerOrKawpow(_algorithmType)) continue;
+                            if (gpuSpeed2 == 0 && IsDaggerOrKawpow(_algorithmSecondType)) continue;
                             benchHashesSum += gpuSpeed;
                             benchHashesSum2 += gpuSpeed2;
                             benchIters++;

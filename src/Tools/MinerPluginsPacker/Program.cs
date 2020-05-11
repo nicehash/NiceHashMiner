@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using MinerPlugin;
+﻿using MinerPlugin;
 using MinerPluginLoader;
-using System.IO.Compression;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
+using Newtonsoft.Json;
 using NHM.Common.Enums;
-using MinerPluginToolkitV1.Configs;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
 
 namespace MinerPluginsPacker
 {
@@ -182,7 +181,7 @@ namespace MinerPluginsPacker
                 "70984aa0-7236-11e9-b20c-f9f12eb6d835", // ClaymoreDual14Plugin
                 //"92fceb00-7236-11e9-b20c-f9f12eb6d835", // CPUMinerPlugin
                 "1b7019d0-7237-11e9-b20c-f9f12eb6d835", // GMinerPlugin
-                "435f0820-7237-11e9-b20c-f9f12eb6d835", // LolMinerPlugin
+                //"435f0820-7237-11e9-b20c-f9f12eb6d835", // LolMinerPlugin
                 "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4", // MiniZPlugin
                 "6c07f7a0-7237-11e9-b20c-f9f12eb6d835", // NBMinerPlugin
                 "f5d4a470-e360-11e9-a914-497feefbdfc8", // PhoenixPlugin
@@ -192,6 +191,8 @@ namespace MinerPluginsPacker
                 "5532d300-7238-11e9-b20c-f9f12eb6d835", // ZEnemyPlugin
                 //"4aec5ec0-10f8-11ea-bad3-8dea21141bbb", // XmrStakRxPlugin
                 "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4", // XMRig
+                "f1945a30-7237-11e9-b20c-f9f12eb6d835",
+                "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4",
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
 
@@ -276,7 +277,7 @@ namespace MinerPluginsPacker
             }
 
             // dump our plugin packages
-            InternalConfigs.WriteFileSettings(Path.Combine(pluginPackagesFolder, "update.json"), PluginPackageInfos);
+            File.WriteAllText(Path.Combine(pluginPackagesFolder, "update.json"), JsonConvert.SerializeObject(PluginPackageInfos, Formatting.Indented));
 
             try
             {

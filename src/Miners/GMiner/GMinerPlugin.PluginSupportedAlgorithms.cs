@@ -32,6 +32,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong),
                         new SAS(AlgorithmType.Cuckaroom),
                         new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.KAWPOW),
                     }
                 },
                 {
@@ -55,6 +56,7 @@ namespace GMinerPlugin
                 { AlgorithmType.Cuckaroom, "cuckaroom29" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
+                { AlgorithmType.KAWPOW, "kawpow" },
             }
         };
     }

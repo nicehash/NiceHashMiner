@@ -22,14 +22,15 @@ namespace GMinerPlugin
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.99",
+                BinVersion = "2.09",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.99/gminer_1_99_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/2.09/gminer_2_09_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -41,7 +42,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(8, 4);
+        public override Version Version => new Version(10, 1);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -146,8 +147,12 @@ namespace GMinerPlugin
         {
             try
             {
-                if (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor < 4) {
-                    return ids.Count() == 2;
+                if (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor < 5) {
+                    return ids.First() == AlgorithmType.GrinCuckatoo32;
+                }
+                if (ids.Count() != 0)
+                {
+                    if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;   
                 }
             }
             catch (Exception e)
