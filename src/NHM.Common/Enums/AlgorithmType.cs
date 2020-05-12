@@ -75,9 +75,9 @@ namespace NHM.Common.Enums
         CryptoNightV7 = 30,
         [Obsolete("UNUSED Algorithm")]
         CryptoNightHeavy = 31,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         Lyra2Z = 32,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         X16R = 33,
         [Obsolete("UNUSED Algorithm")]
         CryptoNightV8 = 34,
@@ -95,7 +95,7 @@ namespace NHM.Common.Enums
         Lyra2REv3 = 40,
         [Obsolete("NOT SUPPORTED. UNUSED Algorithm")]
         MTP = 41,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         CryptoNightR = 42,
         //[Obsolete("UNUSED Algorithm")]
         CuckooCycle = 43,

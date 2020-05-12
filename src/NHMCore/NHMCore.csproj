@@ -259,10 +259,6 @@
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
       <Name>ClaymoreDual14</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\CPUMinerOpt\CPUMinerOpt.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CpuMinerOpt_PLUGIN'))">
-      <Project>{bce045f8-ceaa-48a6-b10b-8f539f68d7b6}</Project>
-      <Name>CPUMinerOpt</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\CryptoDredge\CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>CryptoDredge</Name>
@@ -270,10 +266,6 @@
     <ProjectReference Include="..\Miners\Ethlargement\Ethlargement.csproj">
       <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
       <Name>Ethlargement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\Ethminer\Ethminer.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Ethminer_PLUGIN'))">
-      <Project>{842790e0-4d0d-4dba-acb3-56a863974342}</Project>
-      <Name>Ethminer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\ExamplePlugin\ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
       <Project>{dfc88036-796a-4046-b3b6-de9fa56edf28}</Project>
@@ -330,10 +322,6 @@
     <ProjectReference Include="..\Miners\XMRig\XMRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XMRig_PLUGIN'))">
       <Project>{bc3548d5-5463-4731-accd-a5db35270807}</Project>
       <Name>XMRig</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStak_PLUGIN'))">
-      <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
-      <Name>XmrStak</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\XmrStakRx\XmrStakRx.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStakRx_PLUGIN'))">
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
