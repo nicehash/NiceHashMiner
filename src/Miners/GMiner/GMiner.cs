@@ -85,7 +85,7 @@ namespace GMinerPlugin
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);                
 
                 var gpus = _miningPairs.Select(pair => pair.Device);
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalSpeed2 = 0d;
@@ -98,14 +98,14 @@ namespace GMinerPlugin
                     totalSpeed2 += currentDevStats.speed2;
                     if (_algorithmSecondType == AlgorithmType.NONE)
                     {
-                        perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed * (1 - DevFee * 0.01)) });
+                        perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentDevStats.speed * (1 - DevFee * 0.01)) });
                     }
                     else
                     {
                         // only one dual algo here
-                        perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() {
-                            new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed * (1 - 3.0 * 0.01)),
-                            new AlgorithmTypeSpeedPair(_algorithmSecondType, currentDevStats.speed2 * (1 - DevFee * 0.01))
+                        perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)>() {
+                            (_algorithmType, currentDevStats.speed * (1 - 3.0 * 0.01)),
+                            (_algorithmSecondType, currentDevStats.speed2 * (1 - DevFee * 0.01))
                         });
                     }
                     var kPower = currentDevStats.power_usage * 1000;
@@ -114,13 +114,13 @@ namespace GMinerPlugin
                 }
                 if (_algorithmSecondType == AlgorithmType.NONE)
                 {
-                    ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                    ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 }
                 else
                 {
-                    ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> {
-                        new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - 3.0 * 0.01)),
-                        new AlgorithmTypeSpeedPair(_algorithmSecondType, totalSpeed2 * (1 - DevFee * 0.01)),
+                    ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> {
+                        (_algorithmType, totalSpeed * (1 - 3.0 * 0.01)),
+                        (_algorithmSecondType, totalSpeed2 * (1 - DevFee * 0.01)),
                     };
                 }
                 ad.PowerUsageTotal = totalPowerUsage;
@@ -180,7 +180,7 @@ namespace GMinerPlugin
                     {
                         if (_algorithmSecondType == AlgorithmType.NONE)
                         {
-                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().speed;
                             if (gpuSpeed == 0 && IsDaggerOrKawpow(_algorithmType)) continue;
                             benchHashesSum += gpuSpeed;
                             benchIters++;
@@ -188,14 +188,14 @@ namespace GMinerPlugin
                                                                                     // save each result step
                             result = new BenchmarkResult
                             {
-                                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                                AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                                 Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
                             };
                         }
                         else
                         {
-                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
-                            var gpuSpeed2 = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().LastOrDefault().Speed;
+                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().speed;
+                            var gpuSpeed2 = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().LastOrDefault().speed;
                             if (gpuSpeed == 0 && IsDaggerOrKawpow(_algorithmType)) continue;
                             if (gpuSpeed2 == 0 && IsDaggerOrKawpow(_algorithmSecondType)) continue;
                             benchHashesSum += gpuSpeed;
@@ -207,7 +207,7 @@ namespace GMinerPlugin
                                                                                       // save each result step
                             result = new BenchmarkResult
                             {
-                                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult), new AlgorithmTypeSpeedPair(_algorithmSecondType, benchHashResult2) },
+                                AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult), (_algorithmSecondType, benchHashResult2) },
                                 Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
                             };
                         }

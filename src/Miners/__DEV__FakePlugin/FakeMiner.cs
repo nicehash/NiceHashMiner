@@ -40,7 +40,7 @@ namespace FakePlugin
             await Task.Delay(150);
 
             var api = new ApiData();
-            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
             var totalSpeed = 0d;
             var totalPowerUsage = 0;
@@ -55,12 +55,12 @@ namespace FakePlugin
                 totalPowerUsage += power;
 
                 var deviceUUID = mp.Device.UUID;
-                perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speed) });
+                perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, speed) });
                 perDevicePowerInfo.Add(deviceUUID, 108);
             }
 
             api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+            api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed) };
             api.PowerUsagePerDevice = perDevicePowerInfo;
             api.PowerUsageTotal = totalPowerUsage;
 
@@ -76,7 +76,7 @@ namespace FakePlugin
             // and return our result
             return new BenchmarkResult
             {
-                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, speed) },
+                AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, speed) },
                 Success = success,
                 ErrorMessage = ""
             };

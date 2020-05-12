@@ -47,7 +47,7 @@ namespace MiniZ
                 return api;
             }
 
-            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
             var totalSpeed = 0d;
             var totalPowerUsage = 0;
@@ -80,7 +80,7 @@ namespace MiniZ
                     var currentDevStats = results.Where(r => int.Parse(r.busid.Split(':')[1], System.Globalization.NumberStyles.HexNumber) == gpu.PCIeBusID).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed_sps;
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed_sps * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentDevStats.speed_sps * (1 - DevFee * 0.01)) });
                     totalPowerUsage += (int)currentDevStats.gpu_power_usage * 1000; //reported in W
                     perDevicePowerInfo.Add(gpu.UUID, (int)currentDevStats.gpu_power_usage * 1000);
                 }
@@ -90,7 +90,7 @@ namespace MiniZ
                 Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
-            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+            api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
             api.PowerUsageTotal = totalPowerUsage;
             api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             api.PowerUsagePerDevice = perDevicePowerInfo;
@@ -154,7 +154,7 @@ namespace MiniZ
                 var success = benchHashResult > 0d;
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                     Success = success
                 };
             }

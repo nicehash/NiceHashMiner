@@ -55,7 +55,7 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
                 }
             }
             var threadsApiResult = await GetApiDataThreads(port, logGroup);
-            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
 
             if (!string.IsNullOrEmpty(threadsApiResult))
@@ -96,7 +96,7 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
 
                         var apiDevice = apiDevices.Find(apiDev => apiDev.id == deviceID);
                         if (apiDevice.Equals(default(IdPowerHash))) continue;                       
-                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(algorithmType, apiDevice.speed * (1 - devFee * 0.01)) });
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (algorithmType, apiDevice.speed * (1 - devFee * 0.01)) });
                         perDevicePowerInfo.Add(deviceUUID, apiDevice.power);
                         totalPower += apiDevice.power;                       
                     }
@@ -107,7 +107,7 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
                 }
             }
             var ad = new ApiData();
-            ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(algorithmType, totalSpeed * (1 - devFee * 0.01)) };
+            ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (algorithmType, totalSpeed * (1 - devFee * 0.01)) };
             ad.PowerUsageTotal = totalPower;
             ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             ad.PowerUsagePerDevice = perDevicePowerInfo;

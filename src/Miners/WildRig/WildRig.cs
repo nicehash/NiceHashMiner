@@ -39,7 +39,7 @@ namespace WildRig
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
                 var gpus = _miningPairs.Select(pair => pair.Device);
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
@@ -50,11 +50,11 @@ namespace WildRig
                     {
                         var deviceSpeed = hashrate.threads.ElementAtOrDefault(i).FirstOrDefault();
                         totalSpeed += deviceSpeed;
-                        perDeviceSpeedInfo.Add(gpus.ElementAt(i)?.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, deviceSpeed * (1 - DevFee * 0.01)) });
+                        perDeviceSpeedInfo.Add(gpus.ElementAt(i)?.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, deviceSpeed * (1 - DevFee * 0.01)) });
                     }
                 }
 
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
@@ -84,7 +84,7 @@ namespace WildRig
             {
                 if (!data.Contains("hashrate:"))
                 {
-                    return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, 0d) }, Success = false };
+                    return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, 0d) }, Success = false };
                 }
                 var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "60s:");
                 var hashrate = hashrateFoundPair.Item1;
@@ -94,13 +94,13 @@ namespace WildRig
                 hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
                 benchHashResult = hashrate * (1 - DevFee * 0.01);
 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                     Success = found
                 };
             };

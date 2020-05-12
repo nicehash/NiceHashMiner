@@ -159,7 +159,7 @@ namespace XmrStakRx
 
                 var totalSpeed = 0d;
                 var threadsSpeeds = summary.hashrate.threads;
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 // init per device sums
                 foreach (var pair in _miningPairs)
@@ -172,14 +172,14 @@ namespace XmrStakRx
                     
                     var currentSpeed = speedsPerThread.Sum();
                     totalSpeed += currentSpeed;
-                    perDeviceSpeedInfo.Add(UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
                     // no power usage info
                     perDevicePowerInfo.Add(UUID, -1);
                 }
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsageTotal = -1;
             }
             catch (Exception e)
@@ -249,7 +249,7 @@ namespace XmrStakRx
 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                     Success = found
                 };
             };

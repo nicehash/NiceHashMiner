@@ -86,10 +86,10 @@ namespace ClaymoreDual14
                 var benchHashResultFirst = benchItersFirst == 0 ? 0d : benchHashesFirstSum / benchItersFirst;
                 var benchHashResultSecond = benchItersSecond == 0 ? 0d : benchHashesSecondSum / benchItersSecond;
                 var success = benchHashResultFirst > 0d;
-                var speeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResultFirst * (1 - DevFee * 0.01)) };
+                var speeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResultFirst * (1 - DevFee * 0.01)) };
                 if (IsDual())
                 {
-                    speeds.Add(new AlgorithmTypeSpeedPair(_algorithmSecondType, benchHashResultSecond * (1 - DualDevFee * 0.01)));
+                    speeds.Add((_algorithmSecondType, benchHashResultSecond * (1 - DualDevFee * 0.01)));
                 }
                 // return
                 return new BenchmarkResult
@@ -123,19 +123,15 @@ namespace ClaymoreDual14
             var algorithmTypes = IsDual() ? new AlgorithmType[] { _algorithmType, _algorithmSecondType } : new AlgorithmType[] { _algorithmType };
             // multiply dagger API data 
             var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, DualDevFee, algorithmTypes);
-            var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
-            for (var i = 0; i < totalCount; i++)
+            if (ad.AlgorithmSpeedsTotal != null)
             {
-                ad.AlgorithmSpeedsTotal[i].Speed *= 1000; // speed is in khs
+                // speed is in khs
+                ad.AlgorithmSpeedsTotal = ad.AlgorithmSpeedsTotal.Select((ts) => (ts.type, ts.speed * 1000)).ToList();
             }
-            var keys = ad.AlgorithmSpeedsPerDevice.Keys.ToArray();
-            foreach (var key in keys)
+            if (ad.AlgorithmSpeedsPerDevice != null)
             {
-                var devSpeedtotalCount = (ad.AlgorithmSpeedsPerDevice[key])?.Count ?? 0;
-                for (var i = 0; i < devSpeedtotalCount; i++)
-                {
-                    ad.AlgorithmSpeedsPerDevice[key][i].Speed *= 1000; // speed is in khs
-                }
+                // speed is in khs
+                ad.AlgorithmSpeedsPerDevice = ad.AlgorithmSpeedsPerDevice.Select(pair => new KeyValuePair<string, IReadOnlyList<(AlgorithmType type, double speed)>>(pair.Key, pair.Value.Select((ts) => (ts.type, ts.speed * 1000)).ToList())).ToDictionary(x => x.Key, x => x.Value);
             }
             return ad;
         }

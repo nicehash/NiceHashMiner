@@ -32,7 +32,7 @@ namespace CryptoDredge
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var api = new ApiData();
-            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
             var totalSpeed = 0d;
             var totalPowerUsage = 0;
@@ -103,7 +103,7 @@ namespace CryptoDredge
 
                             var apiDevice = apiDevices.Find(apiDev => apiDev.id == deviceID);
                             if (apiDevice.Equals(default(IdPowerHash))) continue;
-                            perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, apiDevice.speed * (1 - DevFee * 0.01)) });
+                            perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, apiDevice.speed * (1 - DevFee * 0.01)) });
                             perDevicePowerInfo.Add(deviceUUID, apiDevice.power);
                             totalPowerUsage += apiDevice.power;
                         }
@@ -119,7 +119,7 @@ namespace CryptoDredge
                 Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
-            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+            api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
             api.PowerUsageTotal = totalPowerUsage;
             api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             api.PowerUsagePerDevice = perDevicePowerInfo;
@@ -146,12 +146,12 @@ namespace CryptoDredge
             int benchIters = 0;
             bp.CheckData = (string data) =>
             {
-                if (!data.Contains("Accepted")) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                if (!data.Contains("Accepted")) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
                 var hashrateFoundPair = BenchmarkHelpers.TryGetHashrate(data);
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
-                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
                 // sum and return
                 benchHashesSum += hashrate;
@@ -161,7 +161,7 @@ namespace CryptoDredge
 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                     Success = false //TODO not sure what to set here
                 };
             };

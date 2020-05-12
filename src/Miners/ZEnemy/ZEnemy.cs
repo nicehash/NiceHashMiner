@@ -56,13 +56,13 @@ namespace ZEnemy
             {
                 var hasHashRate = data.Contains(after) && data.Contains("-");
 
-                if (!hasHashRate) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                if (!hasHashRate) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
                 var hashrateFoundPair = data.TryGetHashrateAfter("-");
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (hashrate == 0 && _algorithmType == AlgorithmType.KAWPOW) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                if (hashrate == 0 && _algorithmType == AlgorithmType.KAWPOW) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
                 benchHashes += hashrate;
                 benchIters++;
@@ -71,7 +71,7 @@ namespace ZEnemy
 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                     Success = benchIters >= targetBenchIters
                 };
             };

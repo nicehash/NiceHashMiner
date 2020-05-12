@@ -40,7 +40,7 @@ namespace XMRig
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
                 var totalSpeed = 0d;
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 // init per device sums
                 foreach (var pair in _miningPairs)
@@ -48,14 +48,14 @@ namespace XMRig
                     var uuid = pair.Device.UUID;
                     var currentSpeed = summary.hashrate.total.FirstOrDefault() ?? 0d;
                     totalSpeed += currentSpeed;
-                    perDeviceSpeedInfo.Add(uuid, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(uuid, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
                     // no power usage info
                     perDevicePowerInfo.Add(uuid, -1);
                 }
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsageTotal = -1;
             }
             catch (Exception e)
@@ -89,7 +89,7 @@ namespace XMRig
                 var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "speed");
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
-                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
                 // sum and return
                 benchHashesSum += hashrate;
@@ -99,7 +99,7 @@ namespace XMRig
 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                     Success = benchIters >= targetBenchIters
                 };
             };

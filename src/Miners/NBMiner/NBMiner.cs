@@ -94,7 +94,7 @@ namespace NBMiner
                     {
                         if (_algorithmSecondType == AlgorithmType.NONE)
                         {
-                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().speed;
                             if (gpuSpeed == 0 && IsDaggerOrKawpow(_algorithmType)) continue;
                             benchHashesSum += gpuSpeed;
                             benchIters++;
@@ -102,14 +102,14 @@ namespace NBMiner
                                                                                     // save each result step
                             result = new BenchmarkResult
                             {
-                                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                                AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                                 Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
                             };
                         }
                         else
                         {
-                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
-                            var gpuSpeed2 = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().LastOrDefault().Speed;
+                            var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().speed;
+                            var gpuSpeed2 = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().LastOrDefault().speed;
                             if (gpuSpeed == 0 && IsDaggerOrKawpow(_algorithmType)) continue;
                             if (gpuSpeed2 == 0 && IsDaggerOrKawpow(_algorithmSecondType)) continue;
                             benchHashesSum += gpuSpeed;
@@ -121,7 +121,7 @@ namespace NBMiner
                                                                                     // save each result step
                             result = new BenchmarkResult
                             {
-                                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult), new AlgorithmTypeSpeedPair(_algorithmSecondType, benchHashResult2) },
+                                AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult), (_algorithmSecondType, benchHashResult2) },
                                 Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
                             };
                         }
@@ -181,7 +181,7 @@ namespace NBMiner
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api/v1/status");
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalSpeed2 = 0d;
@@ -202,25 +202,25 @@ namespace NBMiner
                     totalPowerUsage += kPower;
                     if (_algorithmSecondType == AlgorithmType.NONE)
                     {
-                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, apiDevice.hashrate_raw * (1 - DevFee * 0.01)) });
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)> { (_algorithmType, apiDevice.hashrate_raw * (1 - DevFee * 0.01)) });
                     }
                     else
                     {
-                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair> {
-                            new AlgorithmTypeSpeedPair(_algorithmType, apiDevice.hashrate_raw * (1 - DevFee * 0.01)),
-                            new AlgorithmTypeSpeedPair(_algorithmSecondType, apiDevice.hashrate2_raw * (1 - DevFee * 0.01)) });
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)> {
+                            (_algorithmType, apiDevice.hashrate_raw * (1 - DevFee * 0.01)),
+                            (_algorithmSecondType, apiDevice.hashrate2_raw * (1 - DevFee * 0.01)) });
                     }
                     perDevicePowerInfo.Add(deviceUUID, kPower);
                 }
                 if (_algorithmSecondType == AlgorithmType.NONE)
                 {
-                    api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                    api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 }
                 else
                 {
-                    api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> {
-                            new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)),
-                            new AlgorithmTypeSpeedPair(_algorithmSecondType, totalSpeed2 * (1 - DevFee * 0.01)) };
+                    api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> {
+                            (_algorithmType, totalSpeed * (1 - DevFee * 0.01)),
+                            (_algorithmSecondType, totalSpeed2 * (1 - DevFee * 0.01)) };
                 }
                 api.PowerUsageTotal = totalPowerUsage;
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;

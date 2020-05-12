@@ -41,7 +41,7 @@ namespace LolMiner
             {
                 var summaryApiResult = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var totalSpeed = summary.Session.Performance_Summary;
 
                 var totalPowerUsage = 0;
@@ -55,10 +55,10 @@ namespace LolMiner
                     var gpuID = _mappedIDs[gpuUUID];
                     var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault();
                     if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
                 }
 
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
@@ -103,7 +103,7 @@ namespace LolMiner
 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                     Success = benchIters >= targetBenchIters
                 };
             };

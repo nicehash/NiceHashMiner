@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NHM.Common.Enums;
 
 namespace NHMCore.Mining
 {
@@ -141,7 +142,7 @@ namespace NHMCore.Mining
                     {
                         foreach (var kvp in apiDev.Value)
                         {
-                            if (kvp.Speed < 0)
+                            if (kvp.speed < 0)
                             {
                                 await StopTask();
                                 await StartMinerTask(new CancellationToken(), StratumService.Instance.SelectedServiceLocation, CredentialsSettings.Instance.BitcoinAddress);
@@ -164,8 +165,8 @@ namespace NHMCore.Mining
             {
                 apiData = new ApiData();
                 var perDevicePowerDict = new Dictionary<string, int>();
-                var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
-                var perDeviceSpeeds = MiningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => new AlgorithmTypeSpeedPair(type, 0d))));
+                var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
+                var perDeviceSpeeds = MiningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => (type, 0d))));
                 foreach (var kvp in perDeviceSpeeds)
                 {
                     var uuid = kvp.Item1; // kvp.UUID compiler doesn't recognize ValueTypes lib???
@@ -395,8 +396,8 @@ namespace NHMCore.Mining
                 // TODO debug log cannot get speeds
                 return;
             }
-            var speedsTotalSum = apiData.AlgorithmSpeedsTotal?.Select(p => p.Speed).Sum() ?? 0d;
-            var perDevSpeedsTotalSum = apiData.AlgorithmSpeedsPerDevice?.Values.SelectMany(pl => pl).Select(p => p.Speed).Sum() ?? 0d;
+            var speedsTotalSum = apiData.AlgorithmSpeedsTotal?.Select(p => p.speed).Sum() ?? 0d;
+            var perDevSpeedsTotalSum = apiData.AlgorithmSpeedsPerDevice?.Values.SelectMany(pl => pl).Select(p => p.speed).Sum() ?? 0d;
             if (speedsTotalSum == 0d && perDevSpeedsTotalSum == 0d)
             {
                 // TODO debug log speeds are zero

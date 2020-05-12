@@ -126,15 +126,15 @@ namespace NHMCore.Mining
             stat.PowerUsageAPI = (double)apiData.PowerUsageTotal / 1000d;
             foreach (var speedInfo in apiData.AlgorithmSpeedsTotal)
             {
-                stat.Speeds.Add((speedInfo.AlgorithmType, speedInfo.Speed));
-                if (payingRates.TryGetValue(speedInfo.AlgorithmType, out var paying) == false) continue;
-                var payingRate = paying * speedInfo.Speed * 0.000000001;
-                stat.Rates.Add((speedInfo.AlgorithmType, payingRate));
+                stat.Speeds.Add(speedInfo);
+                if (payingRates.TryGetValue(speedInfo.type, out var paying) == false) continue;
+                var payingRate = paying * speedInfo.speed * 0.000000001;
+                stat.Rates.Add((speedInfo.type, payingRate));
             }
             var relevantDevices = AvailableDevices.Devices.Where(dev => deviceUUIDs.Contains(dev.Uuid)).ToArray();
             double powerUsageFromDevice = relevantDevices.Select(dev => dev.PowerUsage).Sum();
             double powerUsageFromAlgorithmSettings = relevantDevices
-                .Select(dev => dev.GetAlgorithm(minerUUID, apiData.AlgorithmSpeedsPerDevice[dev.Uuid].Select(info => info.AlgorithmType).ToArray()))
+                .Select(dev => dev.GetAlgorithm(minerUUID, apiData.AlgorithmSpeedsPerDevice[dev.Uuid].Select(info => info.type).ToArray()))
                 .Select(algo => algo == null ? 0d : algo.PowerUsage)
                 .Sum();
             stat.PowerUsageDeviceReading = powerUsageFromDevice;
@@ -165,10 +165,10 @@ namespace NHMCore.Mining
             {
                 foreach (var speedInfo in deviceSpeedsInfo)
                 {
-                    stat.Speeds.Add((speedInfo.AlgorithmType, speedInfo.Speed));
-                    if (payingRates.TryGetValue(speedInfo.AlgorithmType, out var paying) == false) continue;
-                    var payingRate = paying * speedInfo.Speed * 0.000000001;
-                    stat.Rates.Add((speedInfo.AlgorithmType, payingRate));
+                    stat.Speeds.Add((speedInfo.type, speedInfo.speed));
+                    if (payingRates.TryGetValue(speedInfo.type, out var paying) == false) continue;
+                    var payingRate = paying * speedInfo.speed * 0.000000001;
+                    stat.Rates.Add((speedInfo.type, payingRate));
                 }
             }
 
@@ -184,7 +184,7 @@ namespace NHMCore.Mining
             if (dev != null)
             {
                 stat.PowerUsageDeviceReading = dev.PowerUsage;
-                var algo = dev.GetAlgorithm(minerUUID, apiData.AlgorithmSpeedsPerDevice[dev.Uuid].Select(info => info.AlgorithmType).ToArray());
+                var algo = dev.GetAlgorithm(minerUUID, apiData.AlgorithmSpeedsPerDevice[dev.Uuid].Select(info => info.type).ToArray());
                 stat.PowerUsageAlgorithmSetting = algo == null ? 0d : algo.PowerUsage;
             }
 

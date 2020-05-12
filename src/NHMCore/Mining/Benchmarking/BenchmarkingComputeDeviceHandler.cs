@@ -255,8 +255,8 @@ namespace NHMCore.Mining.Benchmarking
                 var power = powerHelper.Stop();
                 if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)
                 {
-                    var ids = result.AlgorithmTypeSpeeds.Select(ats => ats.AlgorithmType).ToList();
-                    var speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.Speed).ToList();
+                    var ids = result.AlgorithmTypeSpeeds.Select(ats => ats.type).ToList();
+                    var speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.speed).ToList();
                     algo.Speeds = speeds;
                     algo.PowerUsage = power;
                     // set status to empty string it will return speed

@@ -42,19 +42,15 @@ namespace Phoenix
             var algorithmTypes = new AlgorithmType[] { _algorithmType };
             // multiply dagger API data 
             var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
-            var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
-            for (var i = 0; i < totalCount; i++)
+            if (ad.AlgorithmSpeedsTotal != null)
             {
-                ad.AlgorithmSpeedsTotal[i].Speed *= 1000; // speed is in khs
+                // speed is in khs
+                ad.AlgorithmSpeedsTotal = ad.AlgorithmSpeedsTotal.Select((ts) => (ts.type, ts.speed * 1000)).ToList();
             }
-            var keys = ad.AlgorithmSpeedsPerDevice.Keys.ToArray();
-            foreach (var key in keys)
+            if (ad.AlgorithmSpeedsPerDevice != null)
             {
-                var devSpeedtotalCount = (ad.AlgorithmSpeedsPerDevice[key])?.Count ?? 0;
-                for (var i = 0; i < devSpeedtotalCount; i++)
-                {
-                    ad.AlgorithmSpeedsPerDevice[key][i].Speed *= 1000; // speed is in khs
-                }
+                // speed is in khs
+                ad.AlgorithmSpeedsPerDevice = ad.AlgorithmSpeedsPerDevice.Select(pair => new KeyValuePair<string, IReadOnlyList<(AlgorithmType type, double speed)>>(pair.Key, pair.Value.Select((ts) => (ts.type, ts.speed * 1000)).ToList())).ToDictionary(x => x.Key, x => x.Value);
             }
             return ad;
         }
@@ -96,7 +92,7 @@ namespace Phoenix
                 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }
                 };
             };
 

@@ -1,7 +1,9 @@
+using NHM.Common.Enums;
 using System.Collections.Generic;
 
 namespace NHM.MinerPlugin
 {
+    // TODO add RAW API values
     /// <summary>
     /// This class is used to report Benchmark results
     /// </summary>
@@ -10,7 +12,7 @@ namespace NHM.MinerPlugin
         /// <summary>
         /// AlgorithmTypeSpeeds is list of AlgorithmTypeSpeedPair (one or two elements depending on if algorithm is single or dual); for more info about this class <see cref="AlgorithmTypeSpeedPair"/>
         /// </summary>
-        public IReadOnlyList<AlgorithmTypeSpeedPair> AlgorithmTypeSpeeds { get; set; } = null;
+        public IReadOnlyList<(AlgorithmType type, double speed)> AlgorithmTypeSpeeds { get; set; } = null;
       
         /// <summary>
         /// Success tells us if benchmark finished (we can still have some unsuccessfull benchmarks with speeds - this indicates that the benchmarks weren't executed as planned)
@@ -30,7 +32,7 @@ namespace NHM.MinerPlugin
             if (AlgorithmTypeSpeeds == null) return false;
             foreach (var speedPair in AlgorithmTypeSpeeds)
             {
-                if (speedPair.Speed > 0) return true;
+                if (speedPair.speed > 0) return true;
             }
             return false;
         }

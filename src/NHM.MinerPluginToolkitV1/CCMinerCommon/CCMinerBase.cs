@@ -81,7 +81,7 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
                 if (finalFound) {
                     return new BenchmarkResult
                     {
-                        AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                        AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                         Success = true
                     };
                 }
@@ -98,7 +98,7 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                     Success = benchIters >= targetBenchIters
                 };
             };

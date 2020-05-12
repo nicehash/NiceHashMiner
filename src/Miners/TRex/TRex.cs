@@ -38,7 +38,7 @@ namespace TRex
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(summaryApiResult);
             
                 var gpuDevices = _miningPairs.Select(pair => pair.Device);
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = summary.hashrate;
                 var totalPowerUsage = 0.0;
@@ -47,12 +47,12 @@ namespace TRex
                 {
                     var currentStats = summary.gpus.Where(devStats => devStats.gpu_id == gpuDevice.ID).FirstOrDefault();
                     if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add(gpuDevice.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentStats.hashrate * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(gpuDevice.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.hashrate * (1 - DevFee * 0.01)) });
                     var kPower = currentStats.power * 1000;
                     totalPowerUsage += kPower;
                     perDevicePowerInfo.Add(gpuDevice.UUID, kPower);
                 }
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = Convert.ToInt32(totalPowerUsage);
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
@@ -87,14 +87,14 @@ namespace TRex
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (!found || (hashrate == 0 && _algorithmType == AlgorithmType.KAWPOW)) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                if (!found || (hashrate == 0 && _algorithmType == AlgorithmType.KAWPOW)) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
                 benchHashes += hashrate;
                 counter++;
 
                 benchHashResult = (benchHashes / counter) * (1 - DevFee * 0.01);
 
-                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
             };
             
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);

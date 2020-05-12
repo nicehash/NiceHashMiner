@@ -52,7 +52,7 @@ namespace NanoMiner
                 var apiResponse = JsonConvert.DeserializeObject<JsonApiResponse>(result);
                 var parsedApiResponse = JsonApiHelpers.ParseJsonApiResponse(apiResponse, _mappedIDs);
 
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
@@ -67,18 +67,18 @@ namespace NanoMiner
                         totalPowerUsage += currentPower;
                         var hashrate = stat.Hashrate * (1 - DevFee * 0.01);
                         totalSpeed += hashrate;
-                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, hashrate) });
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, hashrate) });
                         perDevicePowerInfo.Add(deviceUUID, currentPower);
                     }
                     else
                     {
-                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, 0) });
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, 0) });
                         perDevicePowerInfo.Add(deviceUUID, 0);
                     }
                 }
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed) };
                 api.PowerUsagePerDevice = perDevicePowerInfo;
                 api.PowerUsageTotal = totalPowerUsage;
             }
@@ -122,7 +122,7 @@ namespace NanoMiner
                     // all single GPUs and single speeds
                     try
                     {
-                        var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                        var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().speed;
                         if (gpuSpeed == 0) continue; 
                         benchHashesSum += gpuSpeed;
                         benchIters++;
@@ -130,7 +130,7 @@ namespace NanoMiner
                         // save each result step
                         result = new BenchmarkResult
                         {
-                            AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                             Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
                         };
                     }

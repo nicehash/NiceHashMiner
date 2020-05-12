@@ -62,7 +62,7 @@ namespace NHM.MinerPluginToolkitV1.SgminerCommon
             try
             {
                 var deviveStats = apiDevsResult.DEVS;
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
@@ -81,12 +81,12 @@ namespace NHM.MinerPluginToolkitV1.SgminerCommon
 
                     var speedHS = deviceStats.KHS_5s * 1000;
                     totalSpeed += speedHS;
-                    var algoSpeedPair = new AlgorithmTypeSpeedPair(algorithmType, speedHS);
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { algoSpeedPair });
+                    var algoSpeedPair = (algorithmType, speedHS);
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)> { algoSpeedPair });
                     // check PowerUsage API
                 }
-                var totalAlgoSpeedPair = new AlgorithmTypeSpeedPair(algorithmType, totalSpeed);
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair>() { totalAlgoSpeedPair };
+                var totalAlgoSpeedPair = (algorithmType, totalSpeed);
+                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { totalAlgoSpeedPair };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
 
                 ad.PowerUsagePerDevice = perDevicePowerInfo;

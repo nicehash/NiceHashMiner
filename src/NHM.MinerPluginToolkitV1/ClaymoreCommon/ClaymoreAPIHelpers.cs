@@ -31,8 +31,8 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
             if (algorithmTypes.Count() > 0) firstAlgoType = algorithmTypes[0];
             if (algorithmTypes.Count() > 1) secondAlgoType = algorithmTypes[1];
 
-            var totalSpeed = new List<AlgorithmTypeSpeedPair>();
-            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var totalSpeed = new List<(AlgorithmType type, double speed)>();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
 
             JsonApiResponse resp = null;
@@ -69,20 +69,20 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                             primaryTotalSpeed += primaryCurrentSpeed;
                             secondaryTotalSpeed += secondaryCurrentSpeed;
 
-                            var perDeviceSpeeds = new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(firstAlgoType, primaryCurrentSpeed * (1 - DevFee * 0.01)) };
+                            var perDeviceSpeeds = new List<(AlgorithmType type, double speed)>() { (firstAlgoType, primaryCurrentSpeed * (1 - DevFee * 0.01)) };
                             if (isDual)
                             {
-                                perDeviceSpeeds.Add(new AlgorithmTypeSpeedPair(secondAlgoType, secondaryCurrentSpeed * (1 - DualDevFee * 0.01)));
+                                perDeviceSpeeds.Add((secondAlgoType, secondaryCurrentSpeed * (1 - DualDevFee * 0.01)));
                             }
                             perDeviceSpeedInfo.Add(uuid, perDeviceSpeeds );
                             // no power usage info
                             perDevicePowerInfo.Add(uuid, -1);
                         }
 
-                        totalSpeed.Add(new AlgorithmTypeSpeedPair(firstAlgoType, primaryTotalSpeed * (1 - DevFee * 0.01)));
+                        totalSpeed.Add((firstAlgoType, primaryTotalSpeed * (1 - DevFee * 0.01)));
                         if (isDual)
                         {
-                            totalSpeed.Add(new AlgorithmTypeSpeedPair(secondAlgoType, secondaryTotalSpeed * (1 - DualDevFee * 0.01)));
+                            totalSpeed.Add((secondAlgoType, secondaryTotalSpeed * (1 - DualDevFee * 0.01)));
                         } 
                     }
                 }

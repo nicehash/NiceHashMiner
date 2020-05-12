@@ -40,7 +40,7 @@ namespace SRBMiner
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(result);
 
                 var gpus = _miningPairs.Select(pair => pair.Device);
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
@@ -53,9 +53,9 @@ namespace SRBMiner
                     var device = currentDevStats.device;
                     var data = summary.gpu_hashrate[0].TryGetValue(device, out var currentSpeed);
                     totalSpeed += currentSpeed;
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
                 }
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
@@ -102,14 +102,14 @@ namespace SRBMiner
                     // all single GPUs and single speeds
                     try
                     {
-                        var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().Speed;
+                        var gpuSpeed = ad.AlgorithmSpeedsPerDevice.Values.FirstOrDefault().FirstOrDefault().speed;
                         benchHashesSum += gpuSpeed;
                         benchIters++;
                         double benchHashResult = (benchHashesSum / benchIters); // fee is subtracted from API readings
                                                                                 // save each result step
                         result = new BenchmarkResult
                         {
-                            AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
                             Success = benchIters >= (ticks - 1) // allow 1 tick to fail and still consider this benchmark as success
                         };
                     }
