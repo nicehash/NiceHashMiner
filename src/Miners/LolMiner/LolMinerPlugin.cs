@@ -65,10 +65,12 @@ namespace LolMiner
             var pcieId = 0;
             foreach (var gpu in gpus)
             {
+                // map supported NVIDIA devices so indexes match
                 _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
                 var algorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
-                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
+                // add only AMD
+                if (algorithms.Count > 0 && gpu is AMDDevice) supported.Add(gpu as BaseDevice, algorithms);
             }
 
             return supported;

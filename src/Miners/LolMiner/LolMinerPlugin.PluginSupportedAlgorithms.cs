@@ -40,10 +40,11 @@ namespace LolMiner
             DefaultFee = 1.0,
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
-                {
-                    DeviceType.NVIDIA,
-                    SupportedNVIDIAOpenCLAlgos(false) // dsable NVIDIA by default
-                },
+                // don't use NVIDIA OpenCL backend
+                //{
+                //    DeviceType.NVIDIA,
+                //    SupportedNVIDIAOpenCLAlgos(false) // dsable NVIDIA by default
+                //},
                 {
                     DeviceType.AMD,
                     SupportedAMDAlgos()
