@@ -1,7 +1,6 @@
 ﻿using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.SgminerCommon;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;
@@ -43,7 +42,7 @@ namespace TeamRedMiner
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
+            var apiDevsResult = await APIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
             var ad = new ApiData();
             if (apiDevsResult == null) return ad;
 

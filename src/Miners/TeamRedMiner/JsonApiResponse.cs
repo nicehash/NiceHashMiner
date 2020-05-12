@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace NHM.MinerPluginToolkitV1.SgminerCommon
+namespace TeamRedMiner
 {
+    // SGMiner API
     #region JSON Generated code
 #pragma warning disable IDE1006 // Naming Styles
     public class ApiSTATUS

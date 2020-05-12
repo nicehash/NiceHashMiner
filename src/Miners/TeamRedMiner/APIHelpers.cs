@@ -11,9 +11,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NHM.MinerPluginToolkitV1.SgminerCommon
+namespace TeamRedMiner
 {
-    public static class SgminerAPIHelpers
+    public static class APIHelpers
     {
         const string jsonDevsApiCall = "{\"command\": \"devs\"}";
 
@@ -77,7 +77,7 @@ namespace NHM.MinerPluginToolkitV1.SgminerCommon
                         Logger.Info(logGroup, $"Device stats from api data are empty. Device: {gpu.UUID}");
                         continue;
                     }
-                        
+
 
                     var speedHS = deviceStats.KHS_5s * 1000;
                     totalSpeed += speedHS;
@@ -101,4 +101,5 @@ namespace NHM.MinerPluginToolkitV1.SgminerCommon
             return ad;
         }
     }
+
 }
