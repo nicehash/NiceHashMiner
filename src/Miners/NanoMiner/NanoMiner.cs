@@ -49,6 +49,7 @@ namespace NanoMiner
             try
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/stats");
+                api.ApiResponse = result;
                 var apiResponse = JsonConvert.DeserializeObject<JsonApiResponse>(result);
                 var parsedApiResponse = JsonApiHelpers.ParseJsonApiResponse(apiResponse, _mappedIDs);
 

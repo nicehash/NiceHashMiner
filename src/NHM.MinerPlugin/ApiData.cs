@@ -19,5 +19,6 @@ namespace NHM.MinerPlugin
         // key is device UUID
         public IReadOnlyDictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>> AlgorithmSpeedsPerDevice;
         public IReadOnlyDictionary<string, int> PowerUsagePerDevice;
+        public string ApiResponse;
     }
 }

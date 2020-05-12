@@ -35,6 +35,7 @@ namespace TRex
             try
             {
                 var summaryApiResult = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
+                ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(summaryApiResult);
             
                 var gpuDevices = _miningPairs.Select(pair => pair.Device);

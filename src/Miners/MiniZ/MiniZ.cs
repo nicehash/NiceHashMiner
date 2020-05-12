@@ -63,6 +63,7 @@ namespace MiniZ
                     var bytesToRead = new byte[client.ReceiveBufferSize];
                     var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                     var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                    api.ApiResponse = respStr;
                     resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
                     client.Close();
                 }

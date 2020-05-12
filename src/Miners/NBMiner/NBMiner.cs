@@ -179,6 +179,7 @@ namespace NBMiner
             try
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api/v1/status");
+                api.ApiResponse = result;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();

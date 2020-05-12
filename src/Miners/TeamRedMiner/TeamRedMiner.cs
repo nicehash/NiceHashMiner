@@ -42,8 +42,9 @@ namespace TeamRedMiner
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var apiDevsResult = await APIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
+            var (apiDevsResult, response) = await APIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
             var ad = new ApiData();
+            ad.ApiResponse = response;
             if (apiDevsResult == null) return ad;
 
             try

@@ -155,6 +155,7 @@ namespace XmrStakRx
             try
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api.json");
+                api.ApiResponse = result;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
                 var totalSpeed = 0d;

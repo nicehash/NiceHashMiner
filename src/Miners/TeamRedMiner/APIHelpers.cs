@@ -30,7 +30,7 @@ namespace TeamRedMiner
             return resp;
         }
 
-        public static async Task<ApiDevsRoot> GetApiDevsRootAsync(int port, string logGroup)
+        public static async Task<(ApiDevsRoot root, string response)> GetApiDevsRootAsync(int port, string logGroup)
         {
             try
             {
@@ -44,61 +44,14 @@ namespace TeamRedMiner
                     var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                     client.Close();
                     var resp = JsonConvert.DeserializeObject<ApiDevsRoot>(respStr, _jsonSettings);
-                    return resp;
+                    return (resp, respStr);
                 }
             }
             catch (Exception e)
             {
                 Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
-                return null;
+                return (null, null);
             }
-        }
-
-        public static ApiData ParseApiDataFromApiDevsRoot(ApiDevsRoot apiDevsResult, AlgorithmType algorithmType, IEnumerable<BaseDevice> miningDevices, string logGroup)
-        {
-            var ad = new ApiData();
-            if (apiDevsResult == null) return ad;
-
-            try
-            {
-                var deviveStats = apiDevsResult.DEVS;
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var perDevicePowerInfo = new Dictionary<string, int>();
-                var totalSpeed = 0d;
-                var totalPowerUsage = 0;
-
-                foreach (var gpu in miningDevices)
-                {
-                    var deviceStats = deviveStats
-                        .Where(devStat => gpu.ID == devStat.GPU)
-                        .FirstOrDefault();
-                    if (deviceStats == null)
-                    {
-                        Logger.Info(logGroup, $"Device stats from api data are empty. Device: {gpu.UUID}");
-                        continue;
-                    }
-
-
-                    var speedHS = deviceStats.KHS_5s * 1000;
-                    totalSpeed += speedHS;
-                    var algoSpeedPair = (algorithmType, speedHS);
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)> { algoSpeedPair });
-                    // check PowerUsage API
-                }
-                var totalAlgoSpeedPair = (algorithmType, totalSpeed);
-                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { totalAlgoSpeedPair };
-                ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-
-                ad.PowerUsagePerDevice = perDevicePowerInfo;
-                ad.PowerUsageTotal = totalPowerUsage;
-
-            }
-            catch (Exception e)
-            {
-                Logger.Error(logGroup, $"Error occured while parsing API stats: {e.Message}");
-            }
-
-            return ad;
         }
     }
 

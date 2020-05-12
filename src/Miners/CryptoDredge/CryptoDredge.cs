@@ -40,6 +40,7 @@ namespace CryptoDredge
             try
             {
                 var result = await ApiDataHelpers.GetApiDataAsync(_apiPort, "summary", _logGroup);
+                api.ApiResponse = result;
                 if (result == "") return api;
 
                 //total speed

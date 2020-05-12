@@ -1,5 +1,5 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -40,6 +40,7 @@ namespace LolMiner
             try
             {
                 var summaryApiResult = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
+                ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var totalSpeed = summary.Session.Performance_Summary;

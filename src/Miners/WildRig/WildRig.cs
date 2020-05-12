@@ -36,6 +36,7 @@ namespace WildRig
             try
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}");
+                ad.ApiResponse = result;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
                 var gpus = _miningPairs.Select(pair => pair.Device);

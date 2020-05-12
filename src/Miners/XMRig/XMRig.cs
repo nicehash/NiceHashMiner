@@ -37,6 +37,7 @@ namespace XMRig
             try
             {
                 var result = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/1/summary");
+                api.ApiResponse = result;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
                 var totalSpeed = 0d;

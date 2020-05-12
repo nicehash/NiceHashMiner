@@ -111,6 +111,7 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
             ad.PowerUsageTotal = totalPower;
             ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             ad.PowerUsagePerDevice = perDevicePowerInfo;
+            ad.ApiResponse = summaryApiResult;
 
             return ad;
         }

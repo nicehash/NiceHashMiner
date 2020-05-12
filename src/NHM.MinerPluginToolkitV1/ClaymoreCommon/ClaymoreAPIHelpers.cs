@@ -46,6 +46,7 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                     var bytesToRead = new byte[client.ReceiveBufferSize];
                     var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                     var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                    ad.ApiResponse = respStr;
                     resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
                 }
                 if (resp != null && resp.error == null)
