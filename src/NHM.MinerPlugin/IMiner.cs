@@ -1,5 +1,4 @@
 ﻿using NHM.Common.Enums;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,16 +25,9 @@ namespace NHM.MinerPlugin
         void InitMiningLocationAndUsername(string miningLocation, string username, string password = "x");
 
 
-        /// <summary>
-        /// Obsolete use StartMiningTask (<see cref="IMinerAsyncExtensions"/>)
-        /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask", true)]
-        void StartMining();
-        /// <summary>
-        /// Obsolete use StopMiningTask (<see cref="IMinerAsyncExtensions"/>)
-        /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask", true)]
-        void StopMining();
+        Task MinerProcessTask { get; }
+        Task<object> StartMiningTask(CancellationToken stop);
+        Task StopMiningTask();
 
         /// <summary>
         /// Returns Benchmark result (<see cref="BenchmarkResult"/>)

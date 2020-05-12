@@ -17,7 +17,7 @@ namespace NHM.MinerPluginToolkitV1
     /// <summary>
     /// MinerBase class implements most common IMiner features and supports MinerOptionsPackage, MinerSystemEnvironmentVariables, MinerReservedApiPorts integration, process watchdog functionality.
     /// </summary>
-    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter, IMinerAsyncExtensions
+    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
         /// <summary>
         /// This is internal ID counter used for logging
@@ -380,19 +380,5 @@ namespace NHM.MinerPluginToolkitV1
         {
             if (isTokenCanceled) throw new StopMinerWatchdogException();
         }
-
-        #region DELETE after nhmproxy
-        /// <summary>
-        /// Obsolete use StartMiningTask (<see cref="IMinerAsyncExtensions"/>)
-        /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StartMiningTask", true)]
-        public virtual void StartMining() { }
-
-        /// <summary>
-        /// Obsolete use StopMiningTask (<see cref="IMinerAsyncExtensions"/>)
-        /// </summary>
-        [Obsolete("Obsolete use IMinerAsyncExtensions.StopMiningTask", true)]
-        public virtual void StopMining() {}
-        #endregion DELETE after nhmproxy
     }
 }

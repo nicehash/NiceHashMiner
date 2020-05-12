@@ -68,7 +68,7 @@ namespace NHMCore.Mining
         // Now every single miner is based from the Plugins
         private readonly PluginContainer _plugin;
         private readonly List<AlgorithmContainer> _algos;
-        private readonly IMinerAsyncExtensions _miner;
+        private readonly IMiner _miner;
 
         private readonly SemaphoreSlim _apiSemaphore = new SemaphoreSlim(1, 1);
 
@@ -76,8 +76,7 @@ namespace NHMCore.Mining
         protected Miner(PluginContainer plugin, List<MiningPair> miningPairs, string groupKey)
         {
             _plugin = plugin;
-            // TODO this is now a must be of type IMinerAsyncExtensions
-            _miner = _plugin.CreateMiner() as IMinerAsyncExtensions;
+            _miner = _plugin.CreateMiner() as IMiner;
 
             // just so we can set algorithms states
             _algos = new List<AlgorithmContainer>();
