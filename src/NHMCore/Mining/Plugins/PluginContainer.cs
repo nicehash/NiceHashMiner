@@ -174,7 +174,7 @@ namespace NHMCore.Mining.Plugins
                     }
                 }
                 // dependencies and services are considered compatible or if we have algorithms on any device
-                IsCompatible = (_plugin is IBackroundService) || (_plugin is IPluginDependency) || hasDeviceWithSupportedAlgos;
+                IsCompatible = (_plugin is IBackgroundService) || (_plugin is IPluginDependency) || hasDeviceWithSupportedAlgos;
                 if (!IsCompatible) return false;
 
                 // transform 

@@ -7,7 +7,7 @@ namespace NHM.MinerPluginToolkitV1.Interfaces
     /// IBackroundService interface is used by plugins that are being used as Background service.
     /// </summary>
     /// For example check EthlargementPlugin
-    public interface IBackroundService
+    public interface IBackgroundService
     {
         bool ServiceEnabled { get; set; }
         void Start(IEnumerable<MiningPair> miningPairs);

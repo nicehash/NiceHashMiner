@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Mining.Plugins
 {
-    public class EthlargementIntegratedPlugin : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
+    public class EthlargementIntegratedPlugin : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackgroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
         public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();
 
