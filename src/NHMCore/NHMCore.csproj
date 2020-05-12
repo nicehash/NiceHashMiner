@@ -259,10 +259,6 @@
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>CryptoDredge</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\Ethlargement\Ethlargement.csproj">
-      <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
-      <Name>Ethlargement</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\GMiner\GMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_GMiner_PLUGIN'))">
       <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
       <Name>GMiner</Name>
