@@ -247,10 +247,6 @@
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\BrokenMiner\BrokenMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BrokenMiner_PLUGIN'))">
-      <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
-      <Name>BrokenMiner</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\CCMinerTpruvot\CCMinerTpruvot.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CCMinerTpruvot_PLUGIN'))">
       <Project>{3651e4f1-76b9-4634-a8d2-2a05e60c16cb}</Project>
       <Name>CCMinerTpruvot</Name>
@@ -267,19 +263,11 @@
       <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
       <Name>Ethlargement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\ExamplePlugin\ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
-      <Project>{dfc88036-796a-4046-b3b6-de9fa56edf28}</Project>
-      <Name>ExamplePlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\FakePlugin\FakePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_FakePlugin_PLUGIN'))">
-      <Project>{4dbb2aa4-f105-4f90-841c-4b2bf5949405}</Project>
-      <Name>FakePlugin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\GMiner\GMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_GMiner_PLUGIN'))">
       <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
       <Name>GMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\LolMiner\LolMiner.csproj">
+    <ProjectReference Include="..\Miners\LolMiner\LolMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_LolMiner_PLUGIN'))">
       <Project>{fbb69b33-8a14-4087-909c-f33791384d35}</Project>
       <Name>LolMiner</Name>
     </ProjectReference>
@@ -299,7 +287,7 @@
       <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
       <Name>Phoenix</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\SRBMiner\SRBMiner.csproj">
+    <ProjectReference Include="..\Miners\SRBMiner\SRBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_SRBMiner_PLUGIN'))">
       <Project>{eaf3b1d7-a8b1-4bb0-a325-50422fe39dd2}</Project>
       <Name>SRBMiner</Name>
     </ProjectReference>
@@ -330,6 +318,18 @@
     <ProjectReference Include="..\Miners\ZEnemy\ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
       <Project>{059e2ca2-85c5-453e-a48c-ada45a3c5879}</Project>
       <Name>ZEnemy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\__DEV__BrokenMiner\__DEV__BrokenMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BrokenMiner_PLUGIN'))">
+      <Project>{e9a55ce7-37b9-462f-92e8-ae929c5adcca}</Project>
+      <Name>__DEV__BrokenMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\__DEV__ExamplePlugin\__DEV__ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
+      <Project>{0a50a58c-ff4d-48c4-91f0-1babe974f16a}</Project>
+      <Name>__DEV__ExamplePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\__DEV__FakePlugin\__DEV__FakePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_FakePlugin_PLUGIN'))">
+      <Project>{e7f9794d-e2d2-41ef-8166-8029b6b5c035}</Project>
+      <Name>__DEV__FakePlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
       <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>

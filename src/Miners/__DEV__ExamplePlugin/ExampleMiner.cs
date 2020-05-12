@@ -25,6 +25,8 @@ namespace Example
         Process _miningProcess;
         Random _rand { get; } = new Random();
 
+        Task IMiner.MinerProcessTask => throw new NotImplementedException();
+
         private enum MinerState
         {
             STOPPED,
@@ -154,6 +156,36 @@ namespace Example
             {
             }
             _state = MinerState.STOPPED;
+        }
+
+        void IMiner.InitMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IMiner.InitMiningLocationAndUsername(string miningLocation, string username, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<object> IMiner.StartMiningTask(CancellationToken stop)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IMiner.StopMiningTask()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<BenchmarkResult> IMiner.StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ApiData> IMiner.GetMinerStatsDataAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

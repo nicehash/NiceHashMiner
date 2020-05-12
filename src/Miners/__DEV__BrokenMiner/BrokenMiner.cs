@@ -8,6 +8,8 @@ namespace BrokenMiner
 {
     internal class BrokenMiner : IMiner
     {
+        Task IMiner.MinerProcessTask => throw new System.NotImplementedException();
+
         async Task<ApiData> IMiner.GetMinerStatsDataAsync()
         {
             await Task.Delay(100);
@@ -35,8 +37,17 @@ namespace BrokenMiner
             return GetValueOrErrorSettings.GetValueOrError("StartBenchmark", bp);
         }
 
-        void IMiner.StartMining() => GetValueOrErrorSettings.SetError("StartMining");
 
-        void IMiner.StopMining() => GetValueOrErrorSettings.SetError("StopMining");
+        Task<object> IMiner.StartMiningTask(CancellationToken stop)
+        {
+            GetValueOrErrorSettings.SetError("StartMiningTask");
+            return Task.FromResult(new object());
+        }
+
+        Task IMiner.StopMiningTask()
+        {
+            GetValueOrErrorSettings.SetError("StopMiningTask");
+            return Task.CompletedTask;
+        }
     }
 }

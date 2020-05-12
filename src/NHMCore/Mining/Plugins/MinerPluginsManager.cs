@@ -28,7 +28,7 @@ namespace NHMCore.Mining.Plugins
             // This is just a list of miners that are intergated in the nhm client. usefull when debuging
             _integratedPlugins = new List<IMinerPlugin>
             {
-                // testing 
+                // __DEV__* 
 #if INTEGRATE_BrokenMiner_PLUGIN
                 new BrokenMiner.BrokenMinerPlugin(),
 #endif
@@ -39,24 +39,14 @@ namespace NHMCore.Mining.Plugins
                 new FakePlugin.FakePlugin(),
 #endif
 
-// open source
+                // real miners
 #if INTEGRATE_CCMinerTpruvot_PLUGIN
                 new CCMinerTpruvot.CCMinerTpruvotPlugin(),
-#endif
-#if INTEGRATE_XmrStak_PLUGIN
-                new XmrStak.XmrStakPlugin(),
 #endif
 #if INTEGRATE_XmrStakRx_PLUGIN
                 new XmrStakRx.XmrStakRxPlugin(),
 #endif
-#if INTEGRATE_CpuMinerOpt_PLUGIN
-                new CpuMinerOpt.CPUMinerPlugin(),
-#endif
-//#if INTEGRATE_Ethminer_PLUGIN
-//                new Ethminer.EthminerPlugin(), // abstract UUID
-//#endif
 
-// 3rd party
 #if INTEGRATE_GMiner_PLUGIN
                 new GMinerPlugin.GMinerPlugin(),
 #endif
@@ -103,8 +93,7 @@ namespace NHMCore.Mining.Plugins
                 new MiniZ.MiniZPlugin(),
 #endif
 
-                // leave these 2 for now
-
+                
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
 

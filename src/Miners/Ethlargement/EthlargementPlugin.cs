@@ -15,10 +15,9 @@ using System.Threading.Tasks;
 
 namespace Ethlargement
 {
-    public class Ethlargement : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
+    public abstract class Ethlargement : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
-        public virtual string PluginUUID => "efd40691-618c-491a-b328-e7e020bda7a3";
-
+        
         public Version Version => new Version(1, 4);
         public string Name => "Ethlargement";
 
@@ -278,6 +277,7 @@ namespace Ethlargement
         protected MinersBinsUrlsSettings MinersBinsUrlsSettings { get; set; } = new MinersBinsUrlsSettings {
             Urls = new List<string> { "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/Ethlargement.7z" } // link not original
         };
+        public abstract string PluginUUID { get; }
         #endregion Internal settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
