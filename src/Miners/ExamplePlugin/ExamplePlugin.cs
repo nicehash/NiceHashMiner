@@ -36,8 +36,8 @@ namespace Example
         /// </summary>
         public bool CanGroup(MiningPair a, MiningPair b)
         {
-            // we can't combine Lyra2Z for some arbitrary reason on this miner
-            if (a.Algorithm.FirstAlgorithmType == AlgorithmType.Lyra2Z) return false;
+            // we can't combine Handshake for some arbitrary reason on this miner
+            if (a.Algorithm.FirstAlgorithmType == AlgorithmType.Handshake) return false;
             // other algorithms can be combined
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
@@ -61,8 +61,8 @@ namespace Example
             // we loop through devices and add supported algorithms for that device to dictionary
             foreach (var device in devices)
             {
-                // all support CryptoNightR and Lyra2Z
-                var algorithms = new List<Algorithm> { new Algorithm(PluginUUID, AlgorithmType.CryptoNightR), new Algorithm(PluginUUID, AlgorithmType.Lyra2Z) };
+                // all support KAWPOW and Handshake
+                var algorithms = new List<Algorithm> { new Algorithm(PluginUUID, AlgorithmType.KAWPOW), new Algorithm(PluginUUID, AlgorithmType.Handshake) };
 
                 // GPUs support DaggerHashimoto
                 if (device is IGpuDevice)

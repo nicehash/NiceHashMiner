@@ -94,12 +94,6 @@ namespace TRex
 
                 benchHashResult = (benchHashes / counter) * (1 - DevFee * 0.01);
 
-                if (_algorithmType == AlgorithmType.X16R)
-                {
-                    // Quick adjustment, x16r speeds are overestimated by around 3.5
-                    benchHashResult /= 3.5;
-                }
-
                 return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
             };
             

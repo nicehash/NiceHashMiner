@@ -17,8 +17,6 @@ namespace TRex
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.Lyra2Z),
-                        new SAS(AlgorithmType.X16R),
                         new SAS(AlgorithmType.X16Rv2),
                         new SAS(AlgorithmType.KAWPOW)
                     }
@@ -26,8 +24,6 @@ namespace TRex
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.Lyra2Z, "lyra2z" },
-                { AlgorithmType.X16R, "x16r" },
                 { AlgorithmType.X16Rv2, "x16rv2" },
                 { AlgorithmType.KAWPOW, "kawpow" }
             }

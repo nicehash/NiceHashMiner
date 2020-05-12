@@ -17,7 +17,6 @@ namespace ZEnemy
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.X16R),
                         new SAS(AlgorithmType.X16Rv2),
                         new SAS(AlgorithmType.KAWPOW),
                     }
@@ -25,7 +24,6 @@ namespace ZEnemy
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.X16R, "x16r" },
                 { AlgorithmType.X16Rv2, "x16rv2" },
                 { AlgorithmType.KAWPOW, "kawpow" },
             }

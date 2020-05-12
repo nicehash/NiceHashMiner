@@ -18,14 +18,12 @@ namespace XMRig
                     DeviceType.CPU,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.CryptoNightR),
                         new SAS(AlgorithmType.RandomXmonero),
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.CryptoNightR, "cn/r" },
                 { AlgorithmType.RandomXmonero, "rx/0" },
             }
         };

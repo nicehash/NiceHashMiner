@@ -17,14 +17,12 @@ namespace CCMinerTpruvot
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.X16R), // benchmark performance variations
                         new SAS(AlgorithmType.Lyra2REv3),
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.X16R, "x16r" },
                 { AlgorithmType.Lyra2REv3, "lyra2v3" },
             }
         };
