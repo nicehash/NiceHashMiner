@@ -1,4 +1,4 @@
-﻿using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common.Enums;
 using System.Collections.Generic;

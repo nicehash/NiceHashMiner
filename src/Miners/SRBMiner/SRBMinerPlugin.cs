@@ -1,7 +1,7 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;

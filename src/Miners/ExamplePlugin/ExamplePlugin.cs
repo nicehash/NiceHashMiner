@@ -1,4 +1,4 @@
-﻿using MinerPlugin;
+﻿using NHM.MinerPlugin;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;

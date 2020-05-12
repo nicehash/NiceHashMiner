@@ -1,5 +1,5 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;
@@ -65,7 +65,7 @@ namespace CpuMinerOpt
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
 
-            var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+            var benchmarkTime = NHM.MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var algo = PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
             var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";

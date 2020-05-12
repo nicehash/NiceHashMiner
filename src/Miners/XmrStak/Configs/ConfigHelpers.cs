@@ -1,4 +1,4 @@
-﻿using MinerPluginToolkitV1;
+﻿using NHM.MinerPluginToolkitV1;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHM.Common;

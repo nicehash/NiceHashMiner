@@ -1,5 +1,5 @@
-﻿using MinerPlugin;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHMCore.Mining.MiningStats;
 using NHMCore.Switching;
 using System.Collections.Generic;

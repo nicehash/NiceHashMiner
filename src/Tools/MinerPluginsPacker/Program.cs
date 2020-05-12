@@ -1,7 +1,7 @@
-﻿using MinerPlugin;
-using MinerPluginLoader;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginLoader;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common.Enums;
 using System;

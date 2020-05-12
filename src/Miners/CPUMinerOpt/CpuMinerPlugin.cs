@@ -1,5 +1,5 @@
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;

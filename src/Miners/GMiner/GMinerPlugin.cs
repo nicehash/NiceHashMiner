@@ -6,9 +6,9 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 
 namespace GMinerPlugin
 {

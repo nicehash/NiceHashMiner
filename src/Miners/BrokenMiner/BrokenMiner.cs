@@ -1,4 +1,4 @@
-﻿using MinerPlugin;
+﻿using NHM.MinerPlugin;
 using NHM.Common.Enums;
 using System.Collections.Generic;
 using System.Threading;

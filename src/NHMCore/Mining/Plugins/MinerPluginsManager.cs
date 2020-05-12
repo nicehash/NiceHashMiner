@@ -1,6 +1,6 @@
-﻿using MinerPlugin;
-using MinerPluginLoader;
-using MinerPluginToolkitV1;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginLoader;
+using NHM.MinerPluginToolkitV1;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.MinersDownloader;

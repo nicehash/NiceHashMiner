@@ -1,7 +1,7 @@
 ﻿//#define DISABLE_IDevicesCrossReference
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;

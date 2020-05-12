@@ -1,7 +1,7 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.CCMinerCommon;
-using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.CCMinerCommon;
+using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;

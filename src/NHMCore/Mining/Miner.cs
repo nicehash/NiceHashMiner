@@ -1,4 +1,4 @@
-﻿using MinerPlugin;
+﻿using NHM.MinerPlugin;
 using NHM.Common;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;

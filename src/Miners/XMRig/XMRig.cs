@@ -1,6 +1,6 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
@@ -70,7 +70,7 @@ namespace XMRig
         {
             // determine benchmark time 
             // settup times
-            var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+            var benchmarkTime = NHM.MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             // use demo user and disable the watchdog
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + "--print-time=10";

@@ -291,18 +291,6 @@
       <Project>{fbb69b33-8a14-4087-909c-f33791384d35}</Project>
       <Name>LolMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
-      <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>
-      <Name>MinerPluginLoader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
-      <Project>{847398e0-2e35-4a85-8c70-0b40aa172aba}</Project>
-      <Name>MinerPluginToolkitV1</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\MinerPlugin\MinerPlugin.csproj">
-      <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
-      <Name>MinerPlugin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\MiniZ\MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
       <Project>{780221d3-fe59-4957-b33f-42f7727c72dc}</Project>
       <Name>MiniZ</Name>
@@ -362,6 +350,18 @@
     <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
       <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
       <Name>NHM.DeviceMonitoring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinerPluginLoader\NHM.MinerPluginLoader.csproj">
+      <Project>{bd538ba6-6548-4eeb-b882-597c3f0eebfd}</Project>
+      <Name>NHM.MinerPluginLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj">
+      <Project>{ec0e538a-1966-4434-af96-0e25223bbc19}</Project>
+      <Name>NHM.MinerPluginToolkitV1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinerPlugin\NHM.MinerPlugin.csproj">
+      <Project>{77db0a8c-4cb6-45eb-bdbc-6ca5c37f5070}</Project>
+      <Name>NHM.MinerPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
       <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>

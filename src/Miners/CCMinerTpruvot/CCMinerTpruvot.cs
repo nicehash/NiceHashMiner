@@ -1,5 +1,5 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1.CCMinerCommon;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1.CCMinerCommon;
 using NHM.Common.Enums;
 using System;
 using System.Threading;
