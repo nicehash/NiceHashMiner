@@ -1,8 +1,8 @@
-﻿using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Enums;
 using System.Collections.Generic;
 
-using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
+using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
 namespace TTMiner
 {
@@ -17,7 +17,6 @@ namespace TTMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        //new SAS(AlgorithmType.MTP),
                         new SAS(AlgorithmType.Lyra2REv3),
                         new SAS(AlgorithmType.Eaglesong),
                         new SAS(AlgorithmType.KAWPOW)
@@ -26,7 +25,6 @@ namespace TTMiner
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                //{ AlgorithmType.MTP, "mtp" },
                 { AlgorithmType.Lyra2REv3, "LYRA2V3" },
                 { AlgorithmType.Eaglesong, "EAGLESONG" },
                 { AlgorithmType.KAWPOW, "KAWPOW" }

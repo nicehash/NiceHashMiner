@@ -1,5 +1,5 @@
-﻿using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
@@ -19,6 +19,7 @@ namespace NHMCore.Mining.Plugins
             [JsonProperty("filtered_algorithms")]
             public List<List<AlgorithmType>> FilteredAlgorithms = new List<List<AlgorithmType>>
             {
+                // TODO remove this and add ENABLE ONLY algorithms??
                 new List<AlgorithmType> { AlgorithmType.MTP },
             };
 #pragma warning restore 0618

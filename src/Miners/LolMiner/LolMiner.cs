@@ -1,6 +1,6 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
@@ -40,8 +40,9 @@ namespace LolMiner
             try
             {
                 var summaryApiResult = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
+                ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var totalSpeed = summary.Session.Performance_Summary;
 
                 var totalPowerUsage = 0;
@@ -55,10 +56,9 @@ namespace LolMiner
                     var gpuID = _mappedIDs[gpuUUID];
                     var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault();
                     if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
                 }
 
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
@@ -71,48 +71,48 @@ namespace LolMiner
             return ad;
         }
 
-        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {
-            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        //{
+        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var commandLine = $"--benchmark {AlgorithmName(_algorithmType)} --longstats {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
-            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+        //    var commandLine = $"--benchmark {AlgorithmName(_algorithmType)} --longstats {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
+        //    var binPathBinCwdPair = GetBinAndCwdPaths();
+        //    var binPath = binPathBinCwdPair.Item1;
+        //    var binCwd = binPathBinCwdPair.Item2;
+        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
-            var benchHashes = 0d;
-            var benchIters = 0;
-            var benchHashResult = 0d;  // Not too sure what this is..
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
+        //    var benchHashes = 0d;
+        //    var benchIters = 0;
+        //    var benchHashResult = 0d;  // Not too sure what this is..
+        //    var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
 
-            bp.CheckData = (string data) =>
-            {
-                // data => Average speed (60s): 0.40 g/s
-                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "s):");
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2 && data.Contains("Average speed");
+        //    bp.CheckData = (string data) =>
+        //    {
+        //        // data => Average speed (60s): 0.40 g/s
+        //        var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "s):");
+        //        var hashrate = hashrateFoundPair.Item1;
+        //        var found = hashrateFoundPair.Item2 && data.Contains("Average speed");
 
-                if (!found) return new BenchmarkResult { Success = false };
+        //        if (!found) return new BenchmarkResult { Success = false };
 
-                benchHashes += hashrate;
-                benchIters++;
+        //        benchHashes += hashrate;
+        //        benchIters++;
 
-                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+        //        benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
 
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
-                    Success = benchIters >= targetBenchIters
-                };
-            };
+        //        return new BenchmarkResult
+        //        {
+        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
+        //            Success = benchIters >= targetBenchIters
+        //        };
+        //    };
 
-            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
-            var benchmarkWait = TimeSpan.FromMilliseconds(500);
-            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
-        }
+        //    var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
+        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
+        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+        //    return await t;
+        //}
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
         {

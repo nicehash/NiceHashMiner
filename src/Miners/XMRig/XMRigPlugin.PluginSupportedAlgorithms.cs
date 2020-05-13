@@ -1,8 +1,8 @@
-﻿using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Enums;
 using System.Collections.Generic;
 
-using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
+using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
 namespace XMRig
 {
@@ -18,14 +18,12 @@ namespace XMRig
                     DeviceType.CPU,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.CryptoNightR),
                         new SAS(AlgorithmType.RandomXmonero),
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.CryptoNightR, "cn/r" },
                 { AlgorithmType.RandomXmonero, "rx/0" },
             }
         };

@@ -1,5 +1,5 @@
-﻿using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common;
 using System;

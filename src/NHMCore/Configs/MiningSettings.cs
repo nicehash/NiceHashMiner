@@ -52,7 +52,7 @@ namespace NHMCore.Configs
             set
             {
                 _hideMiningWindows = value;
-                MinerPluginToolkitV1.MinerToolkit.HideMiningWindows = value;
+                NHM.MinerPluginToolkitV1.MinerToolkit.HideMiningWindows = value;
                 OnPropertyChanged(nameof(HideMiningWindows));
                 OnPropertyChanged(nameof(HideMiningWindowsAlertVisible));
             }
@@ -65,7 +65,7 @@ namespace NHMCore.Configs
             set
             {
                 _minimizeMiningWindows = value;
-                MinerPluginToolkitV1.MinerToolkit.MinimizeMiningWindows = value;
+                NHM.MinerPluginToolkitV1.MinerToolkit.MinimizeMiningWindows = value;
                 OnPropertyChanged(nameof(MinimizeMiningWindows));
                 OnPropertyChanged(nameof(HideMiningWindowsAlertVisible));
             }
@@ -78,7 +78,7 @@ namespace NHMCore.Configs
             set
             {
                 _minerRestartDelayMS = value;
-                MinerPluginToolkitV1.MinerToolkit.MinerRestartDelayMS = value;
+                NHM.MinerPluginToolkitV1.MinerToolkit.MinerRestartDelayMS = value;
                 OnPropertyChanged(nameof(MinerRestartDelayMS));
             }
         }
@@ -90,7 +90,7 @@ namespace NHMCore.Configs
             set
             {
                 _apiBindPortPoolStart = value;
-                MinerPluginToolkitV1.FreePortsCheckerManager.ApiBindPortPoolStart = value;
+                NHM.MinerPluginToolkitV1.FreePortsCheckerManager.ApiBindPortPoolStart = value;
                 OnPropertyChanged(nameof(ApiBindPortPoolStart));
             }
         }

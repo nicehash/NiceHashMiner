@@ -1,8 +1,8 @@
-﻿using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Enums;
 using System.Collections.Generic;
 
-using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
+using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
 namespace WildRig
 {
@@ -10,7 +10,7 @@ namespace WildRig
     {
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
-            DefaultFee = 2.0,
+            DefaultFee = 1.0,
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
@@ -18,9 +18,9 @@ namespace WildRig
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.Lyra2REv3),
-                        new SAS(AlgorithmType.X16R),
+                        new SAS(AlgorithmType.X16R) { Enabled=false },
                         new SAS(AlgorithmType.X16Rv2),
-                        new SAS(AlgorithmType.KAWPOW)
+                        //new SAS(AlgorithmType.KAWPOW) // doesn't seem to be working
                     }
                 }
             },
