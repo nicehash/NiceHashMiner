@@ -1,4 +1,4 @@
-﻿using NHM.MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1.Configs; // <= TODO put this in the NHM.Common.Configs
 using NHM.Common;
 using NHMCore.Mining.Plugins;
 using System;

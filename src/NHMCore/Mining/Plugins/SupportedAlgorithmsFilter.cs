@@ -19,6 +19,7 @@ namespace NHMCore.Mining.Plugins
             [JsonProperty("filtered_algorithms")]
             public List<List<AlgorithmType>> FilteredAlgorithms = new List<List<AlgorithmType>>
             {
+                // TODO remove this and add ENABLE ONLY algorithms??
                 new List<AlgorithmType> { AlgorithmType.MTP },
             };
 #pragma warning restore 0618
