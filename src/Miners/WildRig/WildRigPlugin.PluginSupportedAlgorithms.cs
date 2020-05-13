@@ -20,7 +20,7 @@ namespace WildRig
                         new SAS(AlgorithmType.Lyra2REv3),
                         new SAS(AlgorithmType.X16R) { Enabled=false },
                         new SAS(AlgorithmType.X16Rv2),
-                        new SAS(AlgorithmType.KAWPOW)
+                        //new SAS(AlgorithmType.KAWPOW) // doesn't seem to be working
                     }
                 }
             },
