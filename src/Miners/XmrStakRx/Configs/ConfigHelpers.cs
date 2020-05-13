@@ -36,7 +36,7 @@ namespace XmrStakRx.Configs
             var genSettingsHandle = new BenchmarkProcess(binPath, cwdPath, commandLine, environmentVariables);
             var timeoutTime = TimeSpan.FromSeconds(30);
             var delayTime = TimeSpan.FromSeconds(5);
-            return MinerToolkit.WaitBenchmarkResult(genSettingsHandle, timeoutTime, delayTime, stop);
+            return MinerToolkit.WaitBenchmarkResult(genSettingsHandle, timeoutTime, delayTime, stop, CancellationToken.None);
         }
 
         public static async Task<bool> CreateConfigFiles(IEnumerable<string> configNames, string binPath, string cwdPath, string commandLine, Dictionary<string, string> environmentVariables, CancellationToken stop)

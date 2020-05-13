@@ -264,7 +264,7 @@ namespace NHM.MinerPluginToolkitV1
         /// <param name="timeoutTime">Is the time after which we get timeout</param>
         /// <param name="delayTime">Is the delay time after which <paramref name="timeoutTime"/> starts counting</param>
         /// <param name="stop">Is the <see cref="CancellationToken"/> for stopping <paramref name="benchmarkProcess"/></param>
-        public static async Task<BenchmarkResult> WaitBenchmarkResult(BenchmarkProcess benchmarkProcess, TimeSpan timeoutTime, TimeSpan delayTime, CancellationToken stop)
+        public static async Task<BenchmarkResult> WaitBenchmarkResult(BenchmarkProcess benchmarkProcess, TimeSpan timeoutTime, TimeSpan delayTime, CancellationToken stop, CancellationToken stopAfterTicks)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var timeoutTimerTime = timeoutTime + delayTime;
@@ -273,7 +273,7 @@ namespace NHM.MinerPluginToolkitV1
             {
                 BenchmarkResult ret = null;
                 var timeout = timeoutSource.Token;
-                using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeout, stop))
+                using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeout, stop, stopAfterTicks))
                 {
                     try
                     {
