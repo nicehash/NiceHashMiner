@@ -134,6 +134,7 @@ namespace NHM.Common.Enums
                     return "Sol/s";
                 case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:
+                case AlgorithmType.GrinCuckatoo32:
                 case AlgorithmType.CuckooCycle:
                 case AlgorithmType.GrinCuckarood29:
                 case AlgorithmType.Cuckaroom:
