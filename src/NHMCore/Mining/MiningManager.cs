@@ -1,6 +1,6 @@
-﻿using MinerPlugin;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Grouping;

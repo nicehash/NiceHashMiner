@@ -1,4 +1,4 @@
-﻿using MinerPluginToolkitV1;
+﻿using NHM.MinerPluginToolkitV1;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

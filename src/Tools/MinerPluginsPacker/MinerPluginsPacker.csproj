@@ -56,21 +56,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
-      <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>
-      <Name>MinerPluginLoader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
-      <Project>{847398e0-2e35-4a85-8c70-0b40aa172aba}</Project>
-      <Name>MinerPluginToolkitV1</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Miners\MinerPlugin\MinerPlugin.csproj">
-      <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
-      <Name>MinerPlugin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NHM.MinerPluginLoader\NHM.MinerPluginLoader.csproj">
+      <Project>{bd538ba6-6548-4eeb-b882-597c3f0eebfd}</Project>
+      <Name>NHM.MinerPluginLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj">
+      <Project>{ec0e538a-1966-4434-af96-0e25223bbc19}</Project>
+      <Name>NHM.MinerPluginToolkitV1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NHM.MinerPlugin\NHM.MinerPlugin.csproj">
+      <Project>{77db0a8c-4cb6-45eb-bdbc-6ca5c37f5070}</Project>
+      <Name>NHM.MinerPlugin</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

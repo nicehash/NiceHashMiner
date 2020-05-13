@@ -1,6 +1,6 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
@@ -37,10 +37,11 @@ namespace XMRig
             try
             {
                 var result = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/1/summary");
+                api.ApiResponse = result;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
                 var totalSpeed = 0d;
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 // init per device sums
                 foreach (var pair in _miningPairs)
@@ -48,14 +49,13 @@ namespace XMRig
                     var uuid = pair.Device.UUID;
                     var currentSpeed = summary.hashrate.total.FirstOrDefault() ?? 0d;
                     totalSpeed += currentSpeed;
-                    perDeviceSpeedInfo.Add(uuid, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(uuid, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
                     // no power usage info
                     perDevicePowerInfo.Add(uuid, -1);
                 }
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsageTotal = -1;
             }
             catch (Exception e)
@@ -66,49 +66,49 @@ namespace XMRig
             return api;
         }
 
-        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {
-            // determine benchmark time 
-            // settup times
-            var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        //{
+        //    // determine benchmark time 
+        //    // settup times
+        //    var benchmarkTime = NHM.MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            // use demo user and disable the watchdog
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + "--print-time=10";
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
-            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine} --print-time=10");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+        //    // use demo user and disable the watchdog
+        //    var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + "--print-time=10";
+        //    var binPathBinCwdPair = GetBinAndCwdPaths();
+        //    var binPath = binPathBinCwdPair.Item1;
+        //    var binCwd = binPathBinCwdPair.Item2;
+        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine} --print-time=10");
+        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
-            double benchHashesSum = 0;
-            double benchHashResult = 0;
-            int benchIters = 0;
-            int targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 10d));
-            // TODO implement fallback average, final benchmark 
-            bp.CheckData = (string data) => {
-                var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "speed");
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
-                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+        //    double benchHashesSum = 0;
+        //    double benchHashResult = 0;
+        //    int benchIters = 0;
+        //    int targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 10d));
+        //    // TODO implement fallback average, final benchmark 
+        //    bp.CheckData = (string data) => {
+        //        var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "speed");
+        //        var hashrate = hashrateFoundPair.Item1;
+        //        var found = hashrateFoundPair.Item2;
+        //        if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
-                // sum and return
-                benchHashesSum += hashrate;
-                benchIters++;
+        //        // sum and return
+        //        benchHashesSum += hashrate;
+        //        benchIters++;
 
-                benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee * 0.01);
+        //        benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee * 0.01);
 
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
-                    Success = benchIters >= targetBenchIters
-                };
-            };
+        //        return new BenchmarkResult
+        //        {
+        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
+        //            Success = benchIters >= targetBenchIters
+        //        };
+        //    };
 
-            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
-            var benchmarkWait = TimeSpan.FromMilliseconds(500);
-            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
-        }
+        //    var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
+        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
+        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+        //    return await t;
+        //}
 
         protected override void Init()
         {

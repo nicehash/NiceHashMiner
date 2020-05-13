@@ -15,7 +15,7 @@ Bare minimum example of plugin is written in [Example Plugin](https://github.com
 
 # <a name="toolkit"></a> What is MinerPluginToolkitV1 used for?
 
-It is recommended to use <b>MinerPluginToolkitV1</b> as this will enable full integration with NiceHash Miner. It will save time developing it and enable implementation of additional advanced features. If you are writing a plugin we highly recommend that you use MinerPluginToolkitV1. All miner plugins that are developed by NiceHash miner dev team are using MinerPluginToolkitV1. For example you can check [GMiner Plugin](https://github.com/nicehash/NiceHashMiner/tree/e0f9b58b11e7a66cafa9841c5838eba83df233b5/src/Miners/GMiner).<br>
+It is recommended to use <b>MinerPluginToolkitV1</b> as this will enable full integration with NiceHash Miner. It will save time developing it and enable implementation of additional advanced features. If you are writing a plugin we highly recommend that you use MinerPluginToolkitV1. All miner plugins that are developed by NiceHash miner dev team are using NHM.MinerPluginToolkitV1. For example you can check [GMiner Plugin](https://github.com/nicehash/NiceHashMiner/tree/e0f9b58b11e7a66cafa9841c5838eba83df233b5/src/Miners/GMiner).<br>
 MinerPluginToolkitV1 also enables creation of <b>Background Services</b>, check out [Ethlargement plugin](https://github.com/nicehash/NiceHashMiner/tree/e0f9b58b11e7a66cafa9841c5838eba83df233b5/src/Miners/Ethlargement) for example.
 
 <table style="width:100%">

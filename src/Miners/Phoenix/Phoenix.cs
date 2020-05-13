@@ -1,8 +1,8 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.ClaymoreCommon;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.ClaymoreCommon;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;
@@ -42,69 +42,60 @@ namespace Phoenix
             var algorithmTypes = new AlgorithmType[] { _algorithmType };
             // multiply dagger API data 
             var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
-            var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
-            for (var i = 0; i < totalCount; i++)
+            if (ad.AlgorithmSpeedsPerDevice != null)
             {
-                ad.AlgorithmSpeedsTotal[i].Speed *= 1000; // speed is in khs
-            }
-            var keys = ad.AlgorithmSpeedsPerDevice.Keys.ToArray();
-            foreach (var key in keys)
-            {
-                var devSpeedtotalCount = (ad.AlgorithmSpeedsPerDevice[key])?.Count ?? 0;
-                for (var i = 0; i < devSpeedtotalCount; i++)
-                {
-                    ad.AlgorithmSpeedsPerDevice[key][i].Speed *= 1000; // speed is in khs
-                }
+                // speed is in khs
+                ad.AlgorithmSpeedsPerDevice = ad.AlgorithmSpeedsPerDevice.Select(pair => new KeyValuePair<string, IReadOnlyList<(AlgorithmType type, double speed)>>(pair.Key, pair.Value.Select((ts) => (ts.type, ts.speed * 1000)).ToList())).ToDictionary(x => x.Key, x => x.Value);
             }
             return ad;
         }
 
-        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {
-            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        //{
+        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? "-amd" : "-nvidia";
+        //    var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? "-amd" : "-nvidia";
 
-            // local benchmark
-            // TODO hardcoded epoch
-            var commandLine = $"-gpus {_devices} -gbase 0 -bench 200 -wdog 0 {deviceType} {_extraLaunchParameters}";
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
-            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+        //    // local benchmark
+        //    // TODO hardcoded epoch
+        //    var commandLine = $"-gpus {_devices} -gbase 0 -bench 200 -wdog 0 {deviceType} {_extraLaunchParameters}";
+        //    var binPathBinCwdPair = GetBinAndCwdPaths();
+        //    var binPath = binPathBinCwdPair.Item1;
+        //    var binCwd = binPathBinCwdPair.Item2;
+        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
-            var benchHashes = 0d;
-            var benchIters = 0;
-            var benchHashResult = 0d;
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
+        //    var benchHashes = 0d;
+        //    var benchIters = 0;
+        //    var benchHashResult = 0d;
+        //    var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
 
-            bp.CheckData = (string data) =>
-            {
-                var hashrateFoundPairFirst = data.TryGetHashrateAfter("Eth speed:");
-                var hashrateFirst = hashrateFoundPairFirst.Item1;
-                var foundFirst = hashrateFoundPairFirst.Item2;
+        //    bp.CheckData = (string data) =>
+        //    {
+        //        var hashrateFoundPairFirst = data.TryGetHashrateAfter("Eth speed:");
+        //        var hashrateFirst = hashrateFoundPairFirst.Item1;
+        //        var foundFirst = hashrateFoundPairFirst.Item2;
 
-                if (foundFirst)
-                {
-                    benchHashes += hashrateFirst;
-                    benchIters++;
+        //        if (foundFirst)
+        //        {
+        //            benchHashes += hashrateFirst;
+        //            benchIters++;
 
-                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
-                }
+        //            benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+        //        }
 
                 
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }
-                };
-            };
+        //        return new BenchmarkResult
+        //        {
+        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }
+        //        };
+        //    };
 
-            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
-            var benchmarkWait = TimeSpan.FromMilliseconds(500);
-            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
-        }
+        //    var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
+        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
+        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+        //    return await t;
+        //}
 
         private static HashSet<string> _deleteConfigs = new HashSet<string> { "config.txt", "dpools.txt", "epools.txt" };
         private static bool IsDeleteConfigFile(string file)

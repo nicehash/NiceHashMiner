@@ -1,6 +1,6 @@
-﻿using MinerPlugin;
-using MinerPluginLoader;
-using MinerPluginToolkitV1;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginLoader;
+using NHM.MinerPluginToolkitV1;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.MinersDownloader;
@@ -28,7 +28,7 @@ namespace NHMCore.Mining.Plugins
             // This is just a list of miners that are intergated in the nhm client. usefull when debuging
             _integratedPlugins = new List<IMinerPlugin>
             {
-                // testing 
+                // __DEV__*          
 #if INTEGRATE_BrokenMiner_PLUGIN
                 new BrokenMiner.BrokenMinerPlugin(),
 #endif
@@ -39,24 +39,14 @@ namespace NHMCore.Mining.Plugins
                 new FakePlugin.FakePlugin(),
 #endif
 
-// open source
+// real miners
 #if INTEGRATE_CCMinerTpruvot_PLUGIN
                 new CCMinerTpruvot.CCMinerTpruvotPlugin(),
-#endif
-#if INTEGRATE_XmrStak_PLUGIN
-                new XmrStak.XmrStakPlugin(),
 #endif
 #if INTEGRATE_XmrStakRx_PLUGIN
                 new XmrStakRx.XmrStakRxPlugin(),
 #endif
-#if INTEGRATE_CpuMinerOpt_PLUGIN
-                new CpuMinerOpt.CPUMinerPlugin(),
-#endif
-//#if INTEGRATE_Ethminer_PLUGIN
-//                new Ethminer.EthminerPlugin(), // abstract UUID
-//#endif
 
-// 3rd party
 #if INTEGRATE_GMiner_PLUGIN
                 new GMinerPlugin.GMinerPlugin(),
 #endif
@@ -103,7 +93,25 @@ namespace NHMCore.Mining.Plugins
                 new MiniZ.MiniZPlugin(),
 #endif
 
-                // leave these 2 for now
+#if INTEGRATE_ALL_PLUGINS
+                new CCMinerTpruvot.CCMinerTpruvotPlugin(),
+                new XmrStakRx.XmrStakRxPlugin(),
+                new GMinerPlugin.GMinerPlugin(),
+                new NBMiner.NBMinerPlugin(),
+                new Phoenix.PhoenixPlugin(),
+                new TeamRedMiner.TeamRedMinerPlugin(),
+                new TRex.TRexPlugin(),
+                new TTMiner.TTMinerPlugin(),
+                new ClaymoreDual14.ClaymoreDual14Plugin(),
+                new NanoMiner.NanoMinerPlugin(),
+                new WildRig.WildRigPlugin(),
+                new CryptoDredge.CryptoDredgePlugin(),
+                new ZEnemy.ZEnemyPlugin(),
+                new LolMiner.LolMinerPlugin(),
+                new SRBMiner.SRBMinerPlugin(),
+                new MiniZ.MiniZPlugin(),
+#endif
+
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
@@ -197,34 +205,33 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public static void CheckAndDeleteNewVersion3Bins()
+        public static void CheckAndDeleteUnsupportedPlugins()
         {
             try
             {
-                if (ConfigManager.IsVersionChangedToMajor3)
+                foreach (var obsolete in Checkers.ObsoleteMinerPlugins)
                 {
-                    string minerPluginsPath = Paths.MinerPluginsPath();
-                    var installedExternalPackages = Directory.GetDirectories(minerPluginsPath);
-                    foreach (var installedPath in installedExternalPackages)
+                    try
                     {
-                        try
+                        var obsoletePath = Paths.MinerPluginsPath(obsolete);
+                        if (Directory.Exists(obsoletePath))
                         {
-                            Directory.Delete(Path.Combine(installedPath, "bins"), true);
+                            Directory.Delete(obsoletePath, true);
                         }
-                        catch (Exception e)
-                        {
-                            Logger.Error("CheckAndDeleteNewVersion3Bins", e.Message);
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error("CheckAndDeleteUnsupportedPlugins", e.Message);
                     }
                 }
             }
             catch (Exception e)
             {
-                Logger.Error("CheckAndDeleteNewVersion3Bins", e.Message);
+                Logger.Error("CheckAndDeleteUnsupportedPlugins", e.Message);
             }
         }
 
-        #endregion Update miner plugin dlls
+#endregion Update miner plugin dlls
 
         public static async Task LoadAndInitMinerPlugins()
         {

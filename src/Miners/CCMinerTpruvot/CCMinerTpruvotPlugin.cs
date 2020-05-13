@@ -1,5 +1,5 @@
-﻿using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -34,9 +34,9 @@ namespace CCMinerTpruvot
             };
         }
 
-        public override string PluginUUID => "2257f160-7236-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "95b390a0-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
         public override string Name => "CCMinerTpruvot";
 
         public override string Author => "info@nicehash.com";
@@ -75,15 +75,9 @@ namespace CCMinerTpruvot
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             try
-            {
-                // X16 R is overestimated in version v1.0
-                var isX16R = ids.Contains(AlgorithmType.X16R);
-                var isOverestimatedVersion = benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor == 0;
-                return isX16R && isOverestimatedVersion;
-            }
+            {}
             catch (Exception)
-            {
-            }
+            {}
             return false;
         }
     }

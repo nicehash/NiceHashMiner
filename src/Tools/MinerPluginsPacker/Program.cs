@@ -1,7 +1,7 @@
-﻿using MinerPlugin;
-using MinerPluginLoader;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginLoader;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NHM.Common.Enums;
 using System;
@@ -177,22 +177,23 @@ namespace MinerPluginsPacker
             // what plugins to bundle
             var bundlePlugins = new List<string>
             {
-                "2257f160-7236-11e9-b20c-f9f12eb6d835", // CCMinerTpruvotPlugin
-                "70984aa0-7236-11e9-b20c-f9f12eb6d835", // ClaymoreDual14Plugin
-                //"92fceb00-7236-11e9-b20c-f9f12eb6d835", // CPUMinerPlugin
-                "1b7019d0-7237-11e9-b20c-f9f12eb6d835", // GMinerPlugin
-                //"435f0820-7237-11e9-b20c-f9f12eb6d835", // LolMinerPlugin
-                "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4", // MiniZPlugin
-                "6c07f7a0-7237-11e9-b20c-f9f12eb6d835", // NBMinerPlugin
-                "f5d4a470-e360-11e9-a914-497feefbdfc8", // PhoenixPlugin
-                "abc3e2a0-7237-11e9-b20c-f9f12eb6d835", // TeamRedMinerPlugin
-                "d47d9b00-7237-11e9-b20c-f9f12eb6d835", // TRexPlugin
-                //"3d4e56b0-7238-11e9-b20c-f9f12eb6d835", // XmrStakPlugin
-                "5532d300-7238-11e9-b20c-f9f12eb6d835", // ZEnemyPlugin
-                //"4aec5ec0-10f8-11ea-bad3-8dea21141bbb", // XmrStakRxPlugin
-                "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4", // XMRig
-                "f1945a30-7237-11e9-b20c-f9f12eb6d835",
-                "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4",
+                //"95b390a0-94eb-11ea-a64d-17be303ea466", // CCMinerTpruvot
+                "c9abdb10-94eb-11ea-a64d-17be303ea466", // ClaymoreDual
+                //"e294f620-94eb-11ea-a64d-17be303ea466", // CryptoDredge
+                "e7a58030-94eb-11ea-a64d-17be303ea466", // GMinerPlugin
+                "eb75e920-94eb-11ea-a64d-17be303ea466", // LolMiner
+                //"eda6abd0-94eb-11ea-a64d-17be303ea466", // MiniZ - BROKEN
+                //"f25fee20-94eb-11ea-a64d-17be303ea466", // NanoMiner
+                "f683f550-94eb-11ea-a64d-17be303ea466", // NBMiner
+                "fa369d10-94eb-11ea-a64d-17be303ea466", // Phoenix
+                //"fd45fff0-94eb-11ea-a64d-17be303ea466", // SRBMiner
+                //"01177a50-94ec-11ea-a64d-17be303ea466", // TeamRedMiner
+                //"03f80500-94ec-11ea-a64d-17be303ea466", // TRex
+                //"074d4a80-94ec-11ea-a64d-17be303ea466", // TTMiner
+                //"0a07d6a0-94ec-11ea-a64d-17be303ea466", // WildRig
+                "0e0a7320-94ec-11ea-a64d-17be303ea466", // XMRig
+                //"116b0340-94ec-11ea-a64d-17be303ea466", // XmrStakRx - BROKEN
+                //"1484c660-94ec-11ea-a64d-17be303ea466", // ZEnemy
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
 

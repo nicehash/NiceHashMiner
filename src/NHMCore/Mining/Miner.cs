@@ -1,4 +1,4 @@
-﻿using MinerPlugin;
+﻿using NHM.MinerPlugin;
 using NHM.Common;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NHM.Common.Enums;
 
 namespace NHMCore.Mining
 {
@@ -68,7 +69,7 @@ namespace NHMCore.Mining
         // Now every single miner is based from the Plugins
         private readonly PluginContainer _plugin;
         private readonly List<AlgorithmContainer> _algos;
-        private readonly IMinerAsyncExtensions _miner;
+        private readonly IMiner _miner;
 
         private readonly SemaphoreSlim _apiSemaphore = new SemaphoreSlim(1, 1);
 
@@ -76,8 +77,7 @@ namespace NHMCore.Mining
         protected Miner(PluginContainer plugin, List<MiningPair> miningPairs, string groupKey)
         {
             _plugin = plugin;
-            // TODO this is now a must be of type IMinerAsyncExtensions
-            _miner = _plugin.CreateMiner() as IMinerAsyncExtensions;
+            _miner = _plugin.CreateMiner() as IMiner;
 
             // just so we can set algorithms states
             _algos = new List<AlgorithmContainer>();
@@ -142,7 +142,7 @@ namespace NHMCore.Mining
                     {
                         foreach (var kvp in apiDev.Value)
                         {
-                            if (kvp.Speed < 0)
+                            if (kvp.speed < 0)
                             {
                                 await StopTask();
                                 await StartMinerTask(new CancellationToken(), StratumService.Instance.SelectedServiceLocation, CredentialsSettings.Instance.BitcoinAddress);
@@ -165,8 +165,8 @@ namespace NHMCore.Mining
             {
                 apiData = new ApiData();
                 var perDevicePowerDict = new Dictionary<string, int>();
-                var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
-                var perDeviceSpeeds = MiningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => new AlgorithmTypeSpeedPair(type, 0d))));
+                var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
+                var perDeviceSpeeds = MiningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => (type, 0d))));
                 foreach (var kvp in perDeviceSpeeds)
                 {
                     var uuid = kvp.Item1; // kvp.UUID compiler doesn't recognize ValueTypes lib???
@@ -176,7 +176,6 @@ namespace NHMCore.Mining
                 apiData.AlgorithmSpeedsPerDevice = perDeviceSpeedsDict;
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
-                apiData.AlgorithmSpeedsTotal = perDeviceSpeedsDict.First().Value;
             }
             else if (apiData.AlgorithmSpeedsPerDevice != null && apiData.PowerUsagePerDevice.Count == 0)
             {
@@ -379,7 +378,6 @@ namespace NHMCore.Mining
 
 
         #region MinerApiWatchdog
-        private double _lastSpeedsTotalSum = 0d;
         private double _lastPerDevSpeedsTotalSum = 0d;
 
         // TODO this can be moved in MinerApiWatchdog
@@ -391,25 +389,18 @@ namespace NHMCore.Mining
                 // TODO debug log no api data
                 return;
             }
-            if (apiData.AlgorithmSpeedsTotal == null && apiData.AlgorithmSpeedsPerDevice == null)
-            {
-                // TODO debug log cannot get speeds
-                return;
-            }
-            var speedsTotalSum = apiData.AlgorithmSpeedsTotal?.Select(p => p.Speed).Sum() ?? 0d;
-            var perDevSpeedsTotalSum = apiData.AlgorithmSpeedsPerDevice?.Values.SelectMany(pl => pl).Select(p => p.Speed).Sum() ?? 0d;
-            if (speedsTotalSum == 0d && perDevSpeedsTotalSum == 0d)
+            var perDevSpeedsTotalSum = apiData.AlgorithmSpeedsPerDevice?.Values.SelectMany(pl => pl).Select(p => p.speed).Sum() ?? 0d;
+            if (perDevSpeedsTotalSum == 0d)
             {
                 // TODO debug log speeds are zero
                 return;
             }
-            if (speedsTotalSum == _lastSpeedsTotalSum && perDevSpeedsTotalSum == _lastPerDevSpeedsTotalSum)
+            if (perDevSpeedsTotalSum == _lastPerDevSpeedsTotalSum)
             {
                 // TODO debug log speeds seem to be stuck
                 return;
             }
             // update 
-            _lastSpeedsTotalSum = speedsTotalSum;
             _lastPerDevSpeedsTotalSum = perDevSpeedsTotalSum;
             MinerApiWatchdog.UpdateApiTimestamp(GroupKey, DateTime.UtcNow);
         }

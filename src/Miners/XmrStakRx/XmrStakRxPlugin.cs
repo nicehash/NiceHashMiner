@@ -1,6 +1,6 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Algorithm;
@@ -42,9 +42,9 @@ namespace XmrStakRx
             };
         }
 
-        public override string PluginUUID => "4aec5ec0-10f8-11ea-bad3-8dea21141bbb";
+        public override string PluginUUID => "116b0340-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
         public override string Name => "XmrStakRx";
 
         public override string Author => "info@nicehash.com";
