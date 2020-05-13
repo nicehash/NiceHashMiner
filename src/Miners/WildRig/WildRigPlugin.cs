@@ -23,11 +23,11 @@ namespace WildRig
             // https://bitcointalk.org/index.php?topic=5023676 | https://github.com/andru-kun/wildrig-multi/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = " 0.22.0",
+                BinVersion = " 0.23.2",
                 ExePath = new List<string> { "wildrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.22.0/wildrig-multi-windows-0.22.0.7z", // original
+                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.23.2/wildrig-multi-windows-0.23.2.7z", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,9 +37,9 @@ namespace WildRig
             };
         }
 
-        public override string PluginUUID => "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";
+        public override string PluginUUID => "0a07d6a0-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 2);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "WildRig";
 
@@ -95,10 +95,10 @@ namespace WildRig
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            if (ids.Count() != 0)
-            {
-                if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 2) return true;
-            }
+            try
+            { }
+            catch (Exception ex) 
+            { }
             // nothing new
             return false;
         }

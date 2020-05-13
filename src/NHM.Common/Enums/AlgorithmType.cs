@@ -77,7 +77,7 @@ namespace NHM.Common.Enums
         CryptoNightHeavy = 31,
         [Obsolete("UNUSED Algorithm")]
         Lyra2Z = 32,
-        [Obsolete("UNUSED Algorithm")]
+        //[Obsolete("UNUSED Algorithm")]
         X16R = 33,
         [Obsolete("UNUSED Algorithm")]
         CryptoNightV8 = 34,

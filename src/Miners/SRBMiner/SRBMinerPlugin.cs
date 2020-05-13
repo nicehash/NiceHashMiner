@@ -20,14 +20,14 @@ namespace SRBMiner
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/doktor83/SRBMiner-Multi current v0.4.2
+            // https://github.com/doktor83/SRBMiner-Multi current v0.4.4
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v0.4.2",
-                ExePath = new List<string> { "SRBMiner-Multi-0-4-2", "SRBMiner-MULTI.exe" },
+                BinVersion = "v0.4.4",
+                ExePath = new List<string> { "SRBMiner-Multi-0-4-4", "SRBMiner-MULTI.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/doktor83/SRBMiner-Multi/releases/download/0.4.2/SRBMiner-Multi-0-4-2-win64.zip",                                                 
+                    "https://github.com/doktor83/SRBMiner-Multi/releases/download/0.4.4/SRBMiner-Multi-0-4-4-win64.zip",                                                 
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,13 +37,13 @@ namespace SRBMiner
             };
         }
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "SRBMiner";
 
         public override string Author => "info@nicehash.com";
 
-        public override string PluginUUID => "85f507c0-b2ba-11e9-8e4e-bb1e2c6e76b4";
+        public override string PluginUUID => "fd45fff0-94eb-11ea-a64d-17be303ea466";
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 

@@ -37,9 +37,9 @@ namespace TRex
             };
         }
 
-        public override string PluginUUID => "d47d9b00-7237-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "03f80500-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 2);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "TRex";
 

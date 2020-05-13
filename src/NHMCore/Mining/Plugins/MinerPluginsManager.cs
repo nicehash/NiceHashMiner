@@ -28,7 +28,7 @@ namespace NHMCore.Mining.Plugins
             // This is just a list of miners that are intergated in the nhm client. usefull when debuging
             _integratedPlugins = new List<IMinerPlugin>
             {
-                // __DEV__* 
+                // __DEV__*          
 #if INTEGRATE_BrokenMiner_PLUGIN
                 new BrokenMiner.BrokenMinerPlugin(),
 #endif
@@ -39,7 +39,7 @@ namespace NHMCore.Mining.Plugins
                 new FakePlugin.FakePlugin(),
 #endif
 
-                // real miners
+// real miners
 #if INTEGRATE_CCMinerTpruvot_PLUGIN
                 new CCMinerTpruvot.CCMinerTpruvotPlugin(),
 #endif
@@ -93,7 +93,26 @@ namespace NHMCore.Mining.Plugins
                 new MiniZ.MiniZPlugin(),
 #endif
 
-                
+#if INTEGRATE_ALL_PLUGINS
+                new CCMinerTpruvot.CCMinerTpruvotPlugin(),
+                new XmrStakRx.XmrStakRxPlugin(),
+                new GMinerPlugin.GMinerPlugin(),
+                new NBMiner.NBMinerPlugin(),
+                new Phoenix.PhoenixPlugin(),
+                new TeamRedMiner.TeamRedMinerPlugin(),
+                new TRex.TRexPlugin(),
+                new TTMiner.TTMinerPlugin(),
+                new ClaymoreDual14.ClaymoreDual14Plugin(),
+                new NanoMiner.NanoMinerPlugin(),
+                new WildRig.WildRigPlugin(),
+                new CryptoDredge.CryptoDredgePlugin(),
+                new ZEnemy.ZEnemyPlugin(),
+                new LolMiner.LolMinerPlugin(),
+                new SRBMiner.SRBMinerPlugin(),
+                new MiniZ.MiniZPlugin(),
+#endif
+
+
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
 
@@ -213,7 +232,7 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        #endregion Update miner plugin dlls
+#endregion Update miner plugin dlls
 
         public static async Task LoadAndInitMinerPlugins()
         {

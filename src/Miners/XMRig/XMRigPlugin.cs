@@ -35,9 +35,9 @@ namespace XMRig
             };
         }
 
-        public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
+        public override string PluginUUID => "0e0a7320-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "XMRig";
 

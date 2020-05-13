@@ -34,12 +34,12 @@ namespace CryptoDredge
             };
         }
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
         public override string Name => "CryptoDredge";
 
         public override string Author => "info@nicehash.com";
 
-        public override string PluginUUID => "d9c2e620-7236-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "e294f620-94eb-11ea-a64d-17be303ea466";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

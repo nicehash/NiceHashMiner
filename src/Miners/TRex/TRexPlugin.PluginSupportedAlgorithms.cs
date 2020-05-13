@@ -17,6 +17,7 @@ namespace TRex
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
+                        new SAS(AlgorithmType.X16R) { Enabled=false },
                         new SAS(AlgorithmType.X16Rv2),
                         new SAS(AlgorithmType.KAWPOW)
                     }
@@ -24,6 +25,7 @@ namespace TRex
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
+                { AlgorithmType.X16R, "x16r" },
                 { AlgorithmType.X16Rv2, "x16rv2" },
                 { AlgorithmType.KAWPOW, "kawpow" }
             }

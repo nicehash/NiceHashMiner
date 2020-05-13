@@ -39,9 +39,9 @@ namespace ClaymoreDual14
             };
         }
 
-        public override string PluginUUID => "70984aa0-7236-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "c9abdb10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "ClaymoreDual";
 

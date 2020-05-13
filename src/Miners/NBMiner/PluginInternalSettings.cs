@@ -39,17 +39,17 @@ namespace NBMiner
                     Delimiter = ","
                 },
                 /// <summary>
-                /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 0.
+                /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 4.
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_intensity",
                     LongName = "--cuckoo-intensity",
-                    DefaultValue = "0"
+                    DefaultValue = "4"
                 },
                 /// <summary>
-                /// The relative intensity when dual mining.
+                /// Intensity of secondary algorithm.
                 /// </summary>
                 new MinerOption
                 {
@@ -115,13 +115,16 @@ namespace NBMiner
                     LongName = "--fidelity-timeframe",
                     DefaultValue = "24"
                 },
+                /// <summary>
+                /// Enable memory tweaking to boost performance. comma-seperated list, range [1,6].
+                /// </summary>             
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "nbminer_memory-tweak",
                     ShortName = "--mt",
                     LongName = "--memory-tweak",
-                    DefaultValue = "5"
+                    Delimiter = ","
                 },
                 new MinerOption
                 {
@@ -139,8 +142,7 @@ namespace NBMiner
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_tempLimit",
-                    LongName = "--temperature-limit",
-                    DefaultValue = "90",
+                    LongName = "--temperature-limit"
                 }
             }
         };
