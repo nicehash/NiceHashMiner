@@ -3,12 +3,14 @@ using System.Collections.Generic;
 
 namespace NHM.MinerPlugin
 {
-    // TODO add RAW API values
     /// <summary>
     /// This class is used to report Benchmark results
     /// </summary>
     public class BenchmarkResult
     {
+        public IReadOnlyList<ApiData> BenchmarkApiData { get; set; } = null;
+        public IReadOnlyList<string> BenchmarkReadCommandLines { get; set; } = null;
+
         /// <summary>
         /// AlgorithmTypeSpeeds is list of AlgorithmTypeSpeedPair (one or two elements depending on if algorithm is single or dual); for more info about this class <see cref="AlgorithmTypeSpeedPair"/>
         /// </summary>

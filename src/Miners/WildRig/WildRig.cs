@@ -68,50 +68,50 @@ namespace WildRig
             return ad;
         }
 
-        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {
-            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        //{
+        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var commandLine = $"-a {AlgoName} --benchmark -d {_devices} --benchmark-timeout {benchmarkTime} --multiple-instance {_extraLaunchParameters}";
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
-            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+        //    var commandLine = $"-a {AlgoName} --benchmark -d {_devices} --benchmark-timeout {benchmarkTime} --multiple-instance {_extraLaunchParameters}";
+        //    var binPathBinCwdPair = GetBinAndCwdPaths();
+        //    var binPath = binPathBinCwdPair.Item1;
+        //    var binCwd = binPathBinCwdPair.Item2;
+        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
-            var benchHashResult = 0d;
+        //    var benchHashResult = 0d;
 
-            bp.CheckData = (string data) =>
-            {
-                if (!data.Contains("hashrate:"))
-                {
-                    return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, 0d) }, Success = false };
-                }
-                var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "60s:");
-                var hashrate = hashrateFoundPair.Item1;
+        //    bp.CheckData = (string data) =>
+        //    {
+        //        if (!data.Contains("hashrate:"))
+        //        {
+        //            return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, 0d) }, Success = false };
+        //        }
+        //        var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "60s:");
+        //        var hashrate = hashrateFoundPair.Item1;
 
-                // TODO temporary fix for N/A speeds at 60s mark... will be fixed when developer fixes benchmarking
-                if (hashrate == 0) hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "10s:");
-                hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
+        //        // TODO temporary fix for N/A speeds at 60s mark... will be fixed when developer fixes benchmarking
+        //        if (hashrate == 0) hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "10s:");
+        //        hashrate = hashrateFoundPair.Item1;
+        //        var found = hashrateFoundPair.Item2;
 
-                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
+        //        if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
-                benchHashResult = hashrate * (1 - DevFee * 0.01);
+        //        benchHashResult = hashrate * (1 - DevFee * 0.01);
 
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
-                    Success = found
-                };
-            };
+        //        return new BenchmarkResult
+        //        {
+        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
+        //            Success = found
+        //        };
+        //    };
 
-            // always add 10second extra
-            var benchmarkTimeout = TimeSpan.FromSeconds(10 + benchmarkTime);
-            var benchmarkWait = TimeSpan.FromMilliseconds(500);
-            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
-        }
+        //    // always add 10second extra
+        //    var benchmarkTimeout = TimeSpan.FromSeconds(10 + benchmarkTime);
+        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
+        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+        //    return await t;
+        //}
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
         {

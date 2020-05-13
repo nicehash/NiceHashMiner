@@ -66,43 +66,43 @@ namespace TRex
             return ad;
         }
 
-        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {
-            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+        //public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        //{
+        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var algo = AlgorithmName(_algorithmType);               
-            var commandLine = $"--algo {algo} --devices {_devices} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";            
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
-            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+        //    var algo = AlgorithmName(_algorithmType);               
+        //    var commandLine = $"--algo {algo} --devices {_devices} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";            
+        //    var binPathBinCwdPair = GetBinAndCwdPaths();
+        //    var binPath = binPathBinCwdPair.Item1;
+        //    var binCwd = binPathBinCwdPair.Item2;
+        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
-            var benchHashes = 0d;
-            var counter = 0;
-            var benchHashResult = 0d;
+        //    var benchHashes = 0d;
+        //    var counter = 0;
+        //    var benchHashResult = 0d;
 
-            bp.CheckData = (string data) =>
-            {
-                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
+        //    bp.CheckData = (string data) =>
+        //    {
+        //        var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
+        //        var hashrate = hashrateFoundPair.Item1;
+        //        var found = hashrateFoundPair.Item2;
 
-                if (!found || (hashrate == 0 && _algorithmType == AlgorithmType.KAWPOW)) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
+        //        if (!found || (hashrate == 0 && _algorithmType == AlgorithmType.KAWPOW)) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
 
-                benchHashes += hashrate;
-                counter++;
+        //        benchHashes += hashrate;
+        //        counter++;
 
-                benchHashResult = (benchHashes / counter) * (1 - DevFee * 0.01);
+        //        benchHashResult = (benchHashes / counter) * (1 - DevFee * 0.01);
 
-                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
-            };
+        //        return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
+        //    };
             
-            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
-            var benchmarkWait = TimeSpan.FromMilliseconds(500);
-            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
-        }
+        //    var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
+        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
+        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+        //    return await t;
+        //}
 
         protected override void Init()
         {

@@ -9,6 +9,6 @@ namespace NHM.MinerPluginToolkitV1.Interfaces
     /// </summary>
     public interface IBinAndCwdPathsGettter
     {
-        Tuple<string, string> GetBinAndCwdPaths();
+        (string binPath, string cwdPath) GetBinAndCwdPaths();
     }
 }

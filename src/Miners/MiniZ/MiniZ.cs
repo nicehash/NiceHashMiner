@@ -98,73 +98,73 @@ namespace MiniZ
             return api;
         }
 
-        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {
-            // determine benchmark time 
-            // settup times
-            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        //{
+        //    // determine benchmark time 
+        //    // settup times
+        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var algoName = AlgorithmName(_algorithmType);
-            var logfileName = $"{_devices}_{algoName}_bench.txt";
+        //    var algoName = AlgorithmName(_algorithmType);
+        //    var logfileName = $"{_devices}_{algoName}_bench.txt";
 
-            var commandLine = CreateCommandLine(DemoUser.BTC) + $" --nocolor --logfile {logfileName}";
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
+        //    var commandLine = CreateCommandLine(DemoUser.BTC) + $" --nocolor --logfile {logfileName}";
+        //    var binPathBinCwdPair = GetBinAndCwdPaths();
+        //    var binPath = binPathBinCwdPair.Item1;
+        //    var binCwd = binPathBinCwdPair.Item2;
 
-            //first delete benchmark file if it exists
-            File.Delete(Path.Combine(binCwd, logfileName));
+        //    //first delete benchmark file if it exists
+        //    File.Delete(Path.Combine(binCwd, logfileName));
 
-            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-            bp.CheckData = (string data) =>
-            {
-                // we can't read from stdout or stderr, read from logs later
-                return new BenchmarkResult();
-            };
+        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+        //    bp.CheckData = (string data) =>
+        //    {
+        //        // we can't read from stdout or stderr, read from logs later
+        //        return new BenchmarkResult();
+        //    };
 
-            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
-            var benchmarkWait = TimeSpan.FromMilliseconds(1000);
-            var t = await MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+        //    var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
+        //    var benchmarkWait = TimeSpan.FromMilliseconds(1000);
+        //    var t = await MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
 
-            // look for log file and parse that
-            try
-            {
-                var benchHashes = 0d;
-                var benchIters = 0;
-                var benchHashResult = 0d;
-                var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 10d));
+        //    // look for log file and parse that
+        //    try
+        //    {
+        //        var benchHashes = 0d;
+        //        var benchIters = 0;
+        //        var benchHashResult = 0d;
+        //        var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 10d));
 
-                var logFullPath = Path.Combine(binCwd, logfileName);
-                var lines = File.ReadLines(logFullPath);
-                foreach(var line in lines)
-                {
-                    var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(line, "I/s");
-                    var hashrate = hashrateFoundPair.Item1;
-                    var found = hashrateFoundPair.Item2;
+        //        var logFullPath = Path.Combine(binCwd, logfileName);
+        //        var lines = File.ReadLines(logFullPath);
+        //        foreach(var line in lines)
+        //        {
+        //            var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(line, "I/s");
+        //            var hashrate = hashrateFoundPair.Item1;
+        //            var found = hashrateFoundPair.Item2;
 
-                    if (found)
-                    {
-                        benchHashes += hashrate;
-                        benchIters++;
+        //            if (found)
+        //            {
+        //                benchHashes += hashrate;
+        //                benchIters++;
 
-                        benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
-                    }
-                }
+        //                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+        //            }
+        //        }
 
-                var success = benchHashResult > 0d;
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
-                    Success = success
-                };
-            }
-            catch (Exception e)
-            {
-                Logger.Error(_logGroup, $"Benchmarking failed: {e.Message}");
-            }
-            return t;
-        }
+        //        var success = benchHashResult > 0d;
+        //        return new BenchmarkResult
+        //        {
+        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
+        //            Success = success
+        //        };
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Logger.Error(_logGroup, $"Benchmarking failed: {e.Message}");
+        //    }
+        //    return t;
+        //}
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
         {

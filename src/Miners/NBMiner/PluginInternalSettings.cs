@@ -115,6 +115,7 @@ namespace NBMiner
                     LongName = "--fidelity-timeframe",
                     DefaultValue = "24"
                 },
+                // TODO fix the default value
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
