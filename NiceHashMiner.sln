@@ -26,23 +26,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{BB931C9A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceDetectionPrinter", "src\Tools\DeviceDetectionPrinter\DeviceDetectionPrinter.csproj", "{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NBMiner", "src\Miners\NBMiner\NBMiner.csproj", "{A4B0CDCB-D1D7-4563-9888-D58E0B36D0F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.NBMiner", "src\Miners\NBMiner\MP.NBMiner.csproj", "{A4B0CDCB-D1D7-4563-9888-D58E0B36D0F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TTMiner", "src\Miners\TTMiner\TTMiner.csproj", "{06E84BAD-4317-41E0-AD59-31E70DB4C12C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.TTMiner", "src\Miners\TTMiner\MP.TTMiner.csproj", "{06E84BAD-4317-41E0-AD59-31E70DB4C12C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinerProcessCounter", "src\Tools\MinerProcessCounter\MinerProcessCounter.csproj", "{69B58028-8F30-4D3F-8E51-DEF85C08E4CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDredge", "src\Miners\CryptoDredge\CryptoDredge.csproj", "{27C2F4A0-AF83-40F7-B1C8-79344578F3EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.CryptoDredge", "src\Miners\CryptoDredge\MP.CryptoDredge.csproj", "{27C2F4A0-AF83-40F7-B1C8-79344578F3EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZEnemy", "src\Miners\ZEnemy\ZEnemy.csproj", "{059E2CA2-85C5-453E-A48C-ADA45A3C5879}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.ZEnemy", "src\Miners\ZEnemy\MP.ZEnemy.csproj", "{059E2CA2-85C5-453E-A48C-ADA45A3C5879}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamRedMiner", "src\Miners\TeamRedMiner\TeamRedMiner.csproj", "{6EC1BCE3-087E-4DC7-BF93-24445F853F69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.TeamRedMiner", "src\Miners\TeamRedMiner\MP.TeamRedMiner.csproj", "{6EC1BCE3-087E-4DC7-BF93-24445F853F69}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinerPluginsPacker", "src\Tools\MinerPluginsPacker\MinerPluginsPacker.csproj", "{9279833C-95C4-4692-8D5A-22D200B60043}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRex", "src\Miners\TRex\TRex.csproj", "{1B00711A-2CA2-49C0-A9FD-8BF9E478E3B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.TRex", "src\Miners\TRex\MP.TRex.csproj", "{1B00711A-2CA2-49C0-A9FD-8BF9E478E3B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GMiner", "src\Miners\GMiner\GMiner.csproj", "{A95EE45C-D188-46E8-91F6-2CF858420BB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.GMiner", "src\Miners\GMiner\MP.GMiner.csproj", "{A95EE45C-D188-46E8-91F6-2CF858420BB5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nvidiasetp0state", "src\Tools\nvidiasetp0state\nvidiasetp0state.csproj", "{9E106E41-0813-489D-A1B5-85ED434F2C3E}"
 EndProject
@@ -50,7 +50,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirewallRules", "src\Tools\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLogReport", "src\Tools\CreateLogReport\CreateLogReport.csproj", "{663285C0-8F68-4638-BEB2-4BB042868445}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClaymoreDual14", "src\Miners\ClaymoreDual14\ClaymoreDual14.csproj", "{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.ClaymoreDual", "src\Miners\ClaymoreDual14\MP.ClaymoreDual.csproj", "{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.MinersDownloader", "src\NHM.MinersDownloader\NHM.MinersDownloader.csproj", "{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}"
 EndProject
@@ -60,29 +60,29 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.DeviceDetection", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.DeviceMonitoring", "src\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj", "{9C50C5CF-4F75-4533-80AA-1EA23B05377E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NanoMiner", "src\Miners\NanoMiner\NanoMiner.csproj", "{1B657592-641E-42EC-BC44-ABCAE62EF1FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.NanoMiner", "src\Miners\NanoMiner\MP.NanoMiner.csproj", "{1B657592-641E-42EC-BC44-ABCAE62EF1FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phoenix", "src\Miners\Phoenix\Phoenix.csproj", "{CE5DC45C-1E1C-498B-BAB7-5540E346AC21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.Phoenix", "src\Miners\Phoenix\MP.Phoenix.csproj", "{CE5DC45C-1E1C-498B-BAB7-5540E346AC21}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WildRig", "src\Miners\WildRig\WildRig.csproj", "{FA68227D-27A2-4058-8D36-005FADAFECC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.WildRig", "src\Miners\WildRig\MP.WildRig.csproj", "{FA68227D-27A2-4058-8D36-005FADAFECC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "runnhmasadmin", "src\Tools\runnhmasadmin\runnhmasadmin.csproj", "{3712894A-0836-4CE3-A4A9-C21A32AACBEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RigIDPrinter", "src\Tools\RigIDPrinter\RigIDPrinter.csproj", "{138E97ED-8C5B-4C31-90F8-4260714A56E7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CCMinerTpruvot", "src\Miners\CCMinerTpruvot\CCMinerTpruvot.csproj", "{3651E4F1-76B9-4634-A8D2-2A05E60C16CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.CCMinerTpruvot", "src\Miners\CCMinerTpruvot\MP.CCMinerTpruvot.csproj", "{3651E4F1-76B9-4634-A8D2-2A05E60C16CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMiner", "src\NiceHashMiner\NiceHashMiner.csproj", "{56653651-3BF1-4A89-A20C-3178C06A29A3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SRBMiner", "src\Miners\SRBMiner\SRBMiner.csproj", "{EAF3B1D7-A8B1-4BB0-A325-50422FE39DD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.SRBMiner", "src\Miners\SRBMiner\MP.SRBMiner.csproj", "{EAF3B1D7-A8B1-4BB0-A325-50422FE39DD2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniZ", "src\Miners\MiniZ\MiniZ.csproj", "{EB73427B-90E0-4E5B-85D8-C33E810E970A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.MiniZ", "src\Miners\MiniZ\MP.MiniZ.csproj", "{EB73427B-90E0-4E5B-85D8-C33E810E970A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XMRig", "src\Miners\XMRig\XMRig.csproj", "{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.XMRig", "src\Miners\XMRig\MP.XMRig.csproj", "{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHMCore", "src\NHMCore\NHMCore.csproj", "{43DCAF38-D0C4-4335-983D-650F78461EB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XmrStakRx", "src\Miners\XmrStakRx\XmrStakRx.csproj", "{D54AEE68-4025-441F-855F-3612E1F4DEFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.XmrStakRx", "src\Miners\XmrStakRx\MP.XmrStakRx.csproj", "{D54AEE68-4025-441F-855F-3612E1F4DEFC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddWindowsDefenderExclusion", "src\Tools\AddWindowsDefenderExclusion\AddWindowsDefenderExclusion.csproj", "{536F9EC0-ED69-484C-A31E-8E4B597DED50}"
 EndProject
@@ -92,7 +92,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLauncher", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhmPackager", "src\Tools\NhmPackager\NhmPackager.csproj", "{ED4101C4-C44E-4C6C-8F93-73A950388823}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LolMiner", "src\Miners\LolMiner\LolMiner.csproj", "{FBB69B33-8A14-4087-909C-F33791384D35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.LolMiner", "src\Miners\LolMiner\MP.LolMiner.csproj", "{FBB69B33-8A14-4087-909C-F33791384D35}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.MinerPlugin", "src\NHM.MinerPlugin\NHM.MinerPlugin.csproj", "{77DB0A8C-4CB6-45EB-BDBC-6CA5C37F5070}"
 EndProject
@@ -100,11 +100,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.MinerPluginLoader", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.MinerPluginToolkitV1", "src\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj", "{EC0E538A-1966-4434-AF96-0E25223BBC19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "__DEV__BrokenMiner", "src\Miners\__DEV__BrokenMiner\__DEV__BrokenMiner.csproj", "{E9A55CE7-37B9-462F-92E8-AE929C5ADCCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.__DEV__BrokenMiner", "src\Miners\__DEV__BrokenMiner\MP.__DEV__BrokenMiner.csproj", "{E9A55CE7-37B9-462F-92E8-AE929C5ADCCA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "__DEV__ExamplePlugin", "src\Miners\__DEV__ExamplePlugin\__DEV__ExamplePlugin.csproj", "{0A50A58C-FF4D-48C4-91F0-1BABE974F16A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.__DEV__ExamplePlugin", "src\Miners\__DEV__ExamplePlugin\MP.__DEV__ExamplePlugin.csproj", "{0A50A58C-FF4D-48C4-91F0-1BABE974F16A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "__DEV__FakePlugin", "src\Miners\__DEV__FakePlugin\__DEV__FakePlugin.csproj", "{E7F9794D-E2D2-41EF-8166-8029B6B5C035}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.__DEV__FakePlugin", "src\Miners\__DEV__FakePlugin\MP.__DEV__FakePlugin.csproj", "{E7F9794D-E2D2-41EF-8166-8029B6B5C035}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
