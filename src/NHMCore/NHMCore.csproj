@@ -56,6 +56,9 @@
     <ApplicationIcon>
     </ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup Condition="$(DefineConstants.Contains('INTEGRATE_ALL_PLUGINS'))">
+    <DefineConstants>INTEGRATE_CCMinerTpruvot_PLUGIN;INTEGRATE_XmrStakRx_PLUGIN;INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_Phoenix_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_ClaymoreDual_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_WildRig_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_ZEnemy_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;INTEGRATE_MiniZ_PLUGIN;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
@@ -266,113 +269,85 @@
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\BrokenMiner\BrokenMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BrokenMiner_PLUGIN'))">
-      <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
-      <Name>BrokenMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\CCMinerTpruvot\CCMinerTpruvot.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CCMinerTpruvot_PLUGIN'))">
+    <ProjectReference Include="..\Miners\CCMinerTpruvot\MP.CCMinerTpruvot.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CCMinerTpruvot_PLUGIN'))">
       <Project>{3651e4f1-76b9-4634-a8d2-2a05e60c16cb}</Project>
-      <Name>CCMinerTpruvot</Name>
+      <Name>MP.CCMinerTpruvot</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\ClaymoreDual14\ClaymoreDual14.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ClaymoreDual_PLUGIN'))">
+    <ProjectReference Include="..\Miners\ClaymoreDual14\MP.ClaymoreDual.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ClaymoreDual_PLUGIN'))">
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
-      <Name>ClaymoreDual14</Name>
+      <Name>MP.ClaymoreDual</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\CPUMinerOpt\CPUMinerOpt.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CpuMinerOpt_PLUGIN'))">
-      <Project>{bce045f8-ceaa-48a6-b10b-8f539f68d7b6}</Project>
-      <Name>CPUMinerOpt</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\CryptoDredge\CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
+    <ProjectReference Include="..\Miners\CryptoDredge\MP.CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
-      <Name>CryptoDredge</Name>
+      <Name>MP.CryptoDredge</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\Ethlargement\Ethlargement.csproj">
-      <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
-      <Name>Ethlargement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\Ethminer\Ethminer.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Ethminer_PLUGIN'))">
-      <Project>{842790e0-4d0d-4dba-acb3-56a863974342}</Project>
-      <Name>Ethminer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\ExamplePlugin\ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
-      <Project>{dfc88036-796a-4046-b3b6-de9fa56edf28}</Project>
-      <Name>ExamplePlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\FakePlugin\FakePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_FakePlugin_PLUGIN'))">
-      <Project>{4dbb2aa4-f105-4f90-841c-4b2bf5949405}</Project>
-      <Name>FakePlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\GMiner\GMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_GMiner_PLUGIN'))">
+    <ProjectReference Include="..\Miners\GMiner\MP.GMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_GMiner_PLUGIN'))">
       <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
-      <Name>GMiner</Name>
+      <Name>MP.GMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\LolMiner\LolMiner.csproj">
+    <ProjectReference Include="..\Miners\LolMiner\MP.LolMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_LolMiner_PLUGIN'))">
       <Project>{fbb69b33-8a14-4087-909c-f33791384d35}</Project>
-      <Name>LolMiner</Name>
+      <Name>MP.LolMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
-      <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>
-      <Name>MinerPluginLoader</Name>
+    <ProjectReference Include="..\Miners\MiniZ\MP.MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
+      <Project>{EB73427B-90E0-4E5B-85D8-C33E810E970A}</Project>
+      <Name>MP.MiniZ</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
-      <Project>{847398e0-2e35-4a85-8c70-0b40aa172aba}</Project>
-      <Name>MinerPluginToolkitV1</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\MinerPlugin\MinerPlugin.csproj">
-      <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
-      <Name>MinerPlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\MiniZ\MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
-      <Project>{780221d3-fe59-4957-b33f-42f7727c72dc}</Project>
-      <Name>MiniZ</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\NanoMiner\NanoMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NanoMiner_PLUGIN'))">
+    <ProjectReference Include="..\Miners\NanoMiner\MP.NanoMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NanoMiner_PLUGIN'))">
       <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
-      <Name>NanoMiner</Name>
+      <Name>MP.NanoMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\NBMiner\NBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NBMiner_PLUGIN'))">
+    <ProjectReference Include="..\Miners\NBMiner\MP.NBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NBMiner_PLUGIN'))">
       <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>
-      <Name>NBMiner</Name>
+      <Name>MP.NBMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\Phoenix\Phoenix.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Phoenix_PLUGIN'))">
+    <ProjectReference Include="..\Miners\Phoenix\MP.Phoenix.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Phoenix_PLUGIN'))">
       <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
-      <Name>Phoenix</Name>
+      <Name>MP.Phoenix</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\SRBMiner\SRBMiner.csproj">
+    <ProjectReference Include="..\Miners\SRBMiner\MP.SRBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_SRBMiner_PLUGIN'))">
       <Project>{eaf3b1d7-a8b1-4bb0-a325-50422fe39dd2}</Project>
-      <Name>SRBMiner</Name>
+      <Name>MP.SRBMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TeamRedMiner_PLUGIN'))">
+    <ProjectReference Include="..\Miners\TeamRedMiner\MP.TeamRedMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TeamRedMiner_PLUGIN'))">
       <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>
-      <Name>TeamRedMiner</Name>
+      <Name>MP.TeamRedMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\TRex\TRex.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TRex_PLUGIN'))">
+    <ProjectReference Include="..\Miners\TRex\MP.TRex.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TRex_PLUGIN'))">
       <Project>{1b00711a-2ca2-49c0-a9fd-8bf9e478e3b0}</Project>
-      <Name>TRex</Name>
+      <Name>MP.TRex</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\TTMiner\TTMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TTMiner_PLUGIN'))">
+    <ProjectReference Include="..\Miners\TTMiner\MP.TTMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TTMiner_PLUGIN'))">
       <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
-      <Name>TTMiner</Name>
+      <Name>MP.TTMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\WildRig\WildRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_WildRig_PLUGIN'))">
+    <ProjectReference Include="..\Miners\WildRig\MP.WildRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_WildRig_PLUGIN'))">
       <Project>{fa68227d-27a2-4058-8d36-005fadafecc0}</Project>
-      <Name>WildRig</Name>
+      <Name>MP.WildRig</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\XMRig\XMRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XMRig_PLUGIN'))">
-      <Project>{bc3548d5-5463-4731-accd-a5db35270807}</Project>
-      <Name>XMRig</Name>
+    <ProjectReference Include="..\Miners\XMRig\MP.XMRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XMRig_PLUGIN'))">
+      <Project>{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}</Project>
+      <Name>MP.XMRig</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStak_PLUGIN'))">
-      <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
-      <Name>XmrStak</Name>
+    <ProjectReference Include="..\Miners\XmrStakRx\MP.XmrStakRx.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStakRx_PLUGIN'))">
+      <Project>{D54AEE68-4025-441F-855F-3612E1F4DEFC}</Project>
+      <Name>MP.XmrStakRx</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\XmrStakRx\XmrStakRx.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStakRx_PLUGIN'))">
-      <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
-      <Name>XmrStakRx</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\ZEnemy\ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
+    <ProjectReference Include="..\Miners\ZEnemy\MP.ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
       <Project>{059e2ca2-85c5-453e-a48c-ada45a3c5879}</Project>
-      <Name>ZEnemy</Name>
+      <Name>MP.ZEnemy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\__DEV__BrokenMiner\MP.__DEV__BrokenMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BrokenMiner_PLUGIN'))">
+      <Project>{e9a55ce7-37b9-462f-92e8-ae929c5adcca}</Project>
+      <Name>MP.__DEV__BrokenMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\__DEV__ExamplePlugin\MP.__DEV__ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
+      <Project>{0a50a58c-ff4d-48c4-91f0-1babe974f16a}</Project>
+      <Name>MP.__DEV__ExamplePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\__DEV__FakePlugin\MP.__DEV__FakePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_FakePlugin_PLUGIN'))">
+      <Project>{e7f9794d-e2d2-41ef-8166-8029b6b5c035}</Project>
+      <Name>MP.__DEV__FakePlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
       <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
@@ -381,6 +356,18 @@
     <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
       <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
       <Name>NHM.DeviceMonitoring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinerPluginLoader\NHM.MinerPluginLoader.csproj">
+      <Project>{bd538ba6-6548-4eeb-b882-597c3f0eebfd}</Project>
+      <Name>NHM.MinerPluginLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj">
+      <Project>{ec0e538a-1966-4434-af96-0e25223bbc19}</Project>
+      <Name>NHM.MinerPluginToolkitV1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinerPlugin\NHM.MinerPlugin.csproj">
+      <Project>{77db0a8c-4cb6-45eb-bdbc-6ca5c37f5070}</Project>
+      <Name>NHM.MinerPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
       <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>

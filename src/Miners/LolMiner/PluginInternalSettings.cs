@@ -1,5 +1,5 @@
-﻿using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
+﻿using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using System.Collections.Generic;
 
 namespace LolMiner

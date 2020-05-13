@@ -168,7 +168,7 @@ namespace NHMCore
 
                 // TODO ADD STEP AND MESSAGE
                 await MinerPluginsManager.CheckAndSwapInstalledExternalPlugins();
-                MinerPluginsManager.CheckAndDeleteNewVersion3Bins();
+                MinerPluginsManager.CheckAndDeleteUnsupportedPlugins();
 
                 // STEP
                 // load plugins

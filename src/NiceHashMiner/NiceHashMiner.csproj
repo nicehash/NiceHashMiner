@@ -608,10 +608,6 @@
     <Resource Include="Resources\logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
-      <Project>{847398E0-2E35-4A85-8C70-0B40AA172ABA}</Project>
-      <Name>MinerPluginToolkitV1</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
@@ -619,6 +615,10 @@
     <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
       <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
       <Name>NHM.DeviceMonitoring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj">
+      <Project>{ec0e538a-1966-4434-af96-0e25223bbc19}</Project>
+      <Name>NHM.MinerPluginToolkitV1</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHMCore\NHMCore.csproj">
       <Project>{43dcaf38-d0c4-4335-983d-650f78461eb2}</Project>

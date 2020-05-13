@@ -1,5 +1,5 @@
-﻿using MinerPluginToolkitV1.CCMinerCommon;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
+﻿using NHM.MinerPluginToolkitV1.CCMinerCommon;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace CCMinerTpruvot
 {

@@ -1,4 +1,4 @@
-﻿using MinerPlugin;
+﻿using NHM.MinerPlugin;
 using NHMCore.Mining.Plugins;
 using System.Collections.Generic;
 using System.Linq;

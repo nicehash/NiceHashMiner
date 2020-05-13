@@ -1,8 +1,8 @@
-﻿using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Enums;
 using System.Collections.Generic;
 
-using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
+using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
 namespace ZEnemy
 {
@@ -17,7 +17,7 @@ namespace ZEnemy
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.X16R),
+                        new SAS(AlgorithmType.X16R) { Enabled=false },
                         new SAS(AlgorithmType.X16Rv2),
                         new SAS(AlgorithmType.KAWPOW),
                     }

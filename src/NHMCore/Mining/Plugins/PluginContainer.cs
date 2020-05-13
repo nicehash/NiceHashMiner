@@ -1,6 +1,6 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -174,7 +174,7 @@ namespace NHMCore.Mining.Plugins
                     }
                 }
                 // dependencies and services are considered compatible or if we have algorithms on any device
-                IsCompatible = (_plugin is IBackroundService) || (_plugin is IPluginDependency) || hasDeviceWithSupportedAlgos;
+                IsCompatible = (_plugin is IBackgroundService) || (_plugin is IPluginDependency) || hasDeviceWithSupportedAlgos;
                 if (!IsCompatible) return false;
 
                 // transform 
@@ -383,7 +383,7 @@ namespace NHMCore.Mining.Plugins
             {
                 if (_plugin is IGetMinerOptionsPackage get) return get.GetMinerOptionsPackage();
 
-                Type typecontroller = typeof(MinerPluginToolkitV1.PluginBase);
+                Type typecontroller = typeof(NHM.MinerPluginToolkitV1.PluginBase);
                 var propInfo = typecontroller.GetProperty("MinerOptionsPackage", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty);
                 var propInfo2 = typecontroller.GetProperty("MinerOptionsPackage");
                 if (propInfo != null) {

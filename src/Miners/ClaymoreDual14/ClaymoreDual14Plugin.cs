@@ -1,7 +1,7 @@
-﻿using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.ClaymoreCommon;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.ClaymoreCommon;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -39,9 +39,9 @@ namespace ClaymoreDual14
             };
         }
 
-        public override string PluginUUID => "70984aa0-7236-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "c9abdb10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "ClaymoreDual";
 
@@ -121,7 +121,7 @@ namespace ClaymoreDual14
             var logFile = "noappend_cross_ref_devs.txt";
             var logFilePath = Path.Combine(minerCwd, logFile);
             var args = $"-mport 0 -benchmark 1 -wd 0 -colors 0 -dbg 1 -logfile {logFile}";
-            var output = await MinerPluginToolkitV1.ClaymoreCommon.DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Total cards", "Stratum - connecting to" });
+            var output = await NHM.MinerPluginToolkitV1.ClaymoreCommon.DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Total cards", "Stratum - connecting to" });
             var mappedDevs = DevicesListParser.ParseClaymoreDualOutput(output, devices.ToList());
 
             foreach (var kvp in mappedDevs)

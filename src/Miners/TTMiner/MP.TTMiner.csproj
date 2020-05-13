@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+</Project>

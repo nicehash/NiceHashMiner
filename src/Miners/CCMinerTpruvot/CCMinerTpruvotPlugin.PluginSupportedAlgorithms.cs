@@ -1,8 +1,8 @@
-﻿using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Enums;
 using System.Collections.Generic;
 
-using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
+using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
 namespace CCMinerTpruvot
 {
@@ -17,8 +17,8 @@ namespace CCMinerTpruvot
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.X16R), // benchmark performance variations
-                        new SAS(AlgorithmType.Lyra2REv3),
+                        new SAS(AlgorithmType.X16R) { Enabled=false },
+                        new SAS(AlgorithmType.Lyra2REv3)
                     }
                 }
             },
