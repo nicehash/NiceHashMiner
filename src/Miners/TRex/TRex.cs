@@ -53,7 +53,6 @@ namespace TRex
                     totalPowerUsage += kPower;
                     perDevicePowerInfo.Add(gpuDevice.UUID, kPower);
                 }
-                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = Convert.ToInt32(totalPowerUsage);
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;

@@ -59,7 +59,6 @@ namespace LolMiner
                     perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
                 }
 
-                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;

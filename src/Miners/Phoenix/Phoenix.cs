@@ -42,11 +42,6 @@ namespace Phoenix
             var algorithmTypes = new AlgorithmType[] { _algorithmType };
             // multiply dagger API data 
             var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
-            if (ad.AlgorithmSpeedsTotal != null)
-            {
-                // speed is in khs
-                ad.AlgorithmSpeedsTotal = ad.AlgorithmSpeedsTotal.Select((ts) => (ts.type, ts.speed * 1000)).ToList();
-            }
             if (ad.AlgorithmSpeedsPerDevice != null)
             {
                 // speed is in khs

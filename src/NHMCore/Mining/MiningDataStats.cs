@@ -69,7 +69,6 @@ namespace NHMCore.Mining
             if (apiData == null) return;
             if (apiData.AlgorithmSpeedsPerDevice == null || apiData.AlgorithmSpeedsPerDevice.Count == 0) return;
             if (apiData.PowerUsagePerDevice == null || apiData.PowerUsagePerDevice.Count == 0) return;
-            if (apiData.AlgorithmSpeedsTotal == null || apiData.AlgorithmSpeedsTotal.Count == 0) return;
 
             var sortedDeviceUUIDs = apiData.AlgorithmSpeedsPerDevice.Select(speedInfo => speedInfo.Key).OrderBy(uuid => uuid).ToList();
             var uuidsKeys = string.Join(",", sortedDeviceUUIDs);
@@ -124,7 +123,7 @@ namespace NHMCore.Mining
 
             // update stat
             stat.PowerUsageAPI = (double)apiData.PowerUsageTotal / 1000d;
-            foreach (var speedInfo in apiData.AlgorithmSpeedsTotal)
+            foreach (var speedInfo in apiData.AlgorithmSpeedsTotal())
             {
                 stat.Speeds.Add(speedInfo);
                 if (payingRates.TryGetValue(speedInfo.type, out var paying) == false) continue;

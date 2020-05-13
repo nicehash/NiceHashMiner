@@ -418,23 +418,24 @@ namespace NHM.MinerPluginToolkitV1
                 return t.Result;
             }
 
-            // AlgorithmSpeedsTotal
+            // calc speeds
+            // TODO add ticks check for faster benchmarks
+            // TODO calc std deviaton to reduce invalid benches
             try
             {
-                // TODO add AlgorithmSpeedsPerDevice check
-                var nonZeroSpeeds = benchmarkApiData.Where(ad => ad.AlgorithmSpeedsTotal.All(pair => pair.speed > 0))
-                                                    .Select(ad => (ad, ad.AlgorithmSpeedsTotal.Count)).ToList();
+                var nonZeroSpeeds = benchmarkApiData.Where(ad => ad.AlgorithmSpeedsTotal().All(pair => pair.speed > 0))
+                                                    .Select(ad => (ad, ad.AlgorithmSpeedsTotal().Count)).ToList();
                 var speedsFromTotals = new List<(AlgorithmType type, double speed)>();
                 if (nonZeroSpeeds.Count > 0) 
                 {
                     var maxAlgoPiarsCount = nonZeroSpeeds.Select(adCount => adCount.Count).Max();
                     var sameCountApiDatas = nonZeroSpeeds.Where(adCount => adCount.Count == maxAlgoPiarsCount).Select(adCount => adCount.ad).ToList();
                     var firstPair = sameCountApiDatas.FirstOrDefault();
-                    var speedSums = firstPair.AlgorithmSpeedsTotal.Select(pair => new KeyValuePair<AlgorithmType, double>(pair.type, 0.0 )).ToDictionary(x => x.Key, x => x.Value);
+                    var speedSums = firstPair.AlgorithmSpeedsTotal().Select(pair => new KeyValuePair<AlgorithmType, double>(pair.type, 0.0 )).ToDictionary(x => x.Key, x => x.Value);
                     // sum 
                     foreach (var ad in sameCountApiDatas)
                     {
-                        foreach (var pair in ad.AlgorithmSpeedsTotal)
+                        foreach (var pair in ad.AlgorithmSpeedsTotal())
                         {
                             speedSums[pair.type] += pair.speed;
                         }
@@ -446,7 +447,7 @@ namespace NHM.MinerPluginToolkitV1
                     }
                     result = new BenchmarkResult
                     {
-                        AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal.Select(pair => (pair.type, speedSums[pair.type])).ToList(),
+                        AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, speedSums[pair.type])).ToList(),
                         Success = true
                     };
                 }
@@ -454,10 +455,7 @@ namespace NHM.MinerPluginToolkitV1
             catch (Exception e)
             {
                 Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
-            }
-            // AlgorithmSpeedsPerDevice
-
-            
+            }            
 
             // return API result
             return result;

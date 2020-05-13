@@ -54,8 +54,6 @@ namespace WildRig
                         perDeviceSpeedInfo.Add(gpus.ElementAt(i)?.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, deviceSpeed * (1 - DevFee * 0.01)) });
                     }
                 }
-
-                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;

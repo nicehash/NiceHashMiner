@@ -94,7 +94,6 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
             }
             ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             ad.PowerUsagePerDevice = perDevicePowerInfo;
-            ad.AlgorithmSpeedsTotal = totalSpeed;
             ad.PowerUsageTotal = -1;
             return ad;
         }

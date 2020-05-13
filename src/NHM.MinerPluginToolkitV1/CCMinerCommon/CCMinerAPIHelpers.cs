@@ -107,7 +107,6 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
                 }
             }
             var ad = new ApiData();
-            ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (algorithmType, totalSpeed * (1 - devFee * 0.01)) };
             ad.PowerUsageTotal = totalPower;
             ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             ad.PowerUsagePerDevice = perDevicePowerInfo;

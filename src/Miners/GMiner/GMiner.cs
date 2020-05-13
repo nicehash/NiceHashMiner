@@ -113,17 +113,6 @@ namespace GMinerPlugin
                     totalPowerUsage += kPower;
                     perDevicePowerInfo.Add(gpu.UUID, kPower);
                 }
-                if (_algorithmSecondType == AlgorithmType.NONE)
-                {
-                    ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
-                }
-                else
-                {
-                    ad.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> {
-                        (_algorithmType, totalSpeed * (1 - 3.0 * 0.01)),
-                        (_algorithmSecondType, totalSpeed2 * (1 - DevFee * 0.01)),
-                    };
-                }
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;

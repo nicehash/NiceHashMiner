@@ -213,16 +213,6 @@ namespace NBMiner
                     }
                     perDevicePowerInfo.Add(deviceUUID, kPower);
                 }
-                if (_algorithmSecondType == AlgorithmType.NONE)
-                {
-                    api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
-                }
-                else
-                {
-                    api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> {
-                            (_algorithmType, totalSpeed * (1 - DevFee * 0.01)),
-                            (_algorithmSecondType, totalSpeed2 * (1 - DevFee * 0.01)) };
-                }
                 api.PowerUsageTotal = totalPowerUsage;
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;

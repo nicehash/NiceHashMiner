@@ -123,11 +123,6 @@ namespace ClaymoreDual14
             var algorithmTypes = IsDual() ? new AlgorithmType[] { _algorithmType, _algorithmSecondType } : new AlgorithmType[] { _algorithmType };
             // multiply dagger API data 
             var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, DualDevFee, algorithmTypes);
-            if (ad.AlgorithmSpeedsTotal != null)
-            {
-                // speed is in khs
-                ad.AlgorithmSpeedsTotal = ad.AlgorithmSpeedsTotal.Select((ts) => (ts.type, ts.speed * 1000)).ToList();
-            }
             if (ad.AlgorithmSpeedsPerDevice != null)
             {
                 // speed is in khs

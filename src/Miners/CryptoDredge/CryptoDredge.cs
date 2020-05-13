@@ -120,7 +120,6 @@ namespace CryptoDredge
                 Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
-            api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
             api.PowerUsageTotal = totalPowerUsage;
             api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             api.PowerUsagePerDevice = perDevicePowerInfo;

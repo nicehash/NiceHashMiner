@@ -1,6 +1,7 @@
 ﻿using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NHM.MinerPlugin
 {
@@ -12,8 +13,26 @@ namespace NHM.MinerPlugin
     [Serializable]
     public class ApiData
     {
-        // total
-        public IReadOnlyList<(AlgorithmType type, double speed)> AlgorithmSpeedsTotal;
+        public IReadOnlyList<(AlgorithmType type, double speed)> AlgorithmSpeedsTotal()
+        {
+            try
+            {
+                List<(AlgorithmType type, double speed)> totalPairsSum = AlgorithmSpeedsPerDevice.Values.FirstOrDefault().Select(pair => (pair.type, 0.0)).ToList();
+                foreach (var pairs in AlgorithmSpeedsPerDevice.Values)
+                {
+                    for (int i = 0; i < pairs.Count; i++)
+                    {
+                        totalPairsSum[i] = (totalPairsSum[i].type, totalPairsSum[i].speed + pairs[i].speed);
+                    }
+                }
+                return totalPairsSum;
+            }
+            catch
+            {
+            }
+            return new List<(AlgorithmType type, double speed)>();
+        }
+
         public int PowerUsageTotal;
         // per device
         // key is device UUID

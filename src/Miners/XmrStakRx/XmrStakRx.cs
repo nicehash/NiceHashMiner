@@ -180,7 +180,6 @@ namespace XmrStakRx
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;
-                api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsageTotal = -1;
             }
             catch (Exception e)

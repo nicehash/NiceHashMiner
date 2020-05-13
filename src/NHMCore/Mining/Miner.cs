@@ -176,7 +176,6 @@ namespace NHMCore.Mining
                 apiData.AlgorithmSpeedsPerDevice = perDeviceSpeedsDict;
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
-                apiData.AlgorithmSpeedsTotal = perDeviceSpeedsDict.First().Value;
             }
             else if (apiData.AlgorithmSpeedsPerDevice != null && apiData.PowerUsagePerDevice.Count == 0)
             {
@@ -379,7 +378,6 @@ namespace NHMCore.Mining
 
 
         #region MinerApiWatchdog
-        private double _lastSpeedsTotalSum = 0d;
         private double _lastPerDevSpeedsTotalSum = 0d;
 
         // TODO this can be moved in MinerApiWatchdog
@@ -391,25 +389,18 @@ namespace NHMCore.Mining
                 // TODO debug log no api data
                 return;
             }
-            if (apiData.AlgorithmSpeedsTotal == null && apiData.AlgorithmSpeedsPerDevice == null)
-            {
-                // TODO debug log cannot get speeds
-                return;
-            }
-            var speedsTotalSum = apiData.AlgorithmSpeedsTotal?.Select(p => p.speed).Sum() ?? 0d;
             var perDevSpeedsTotalSum = apiData.AlgorithmSpeedsPerDevice?.Values.SelectMany(pl => pl).Select(p => p.speed).Sum() ?? 0d;
-            if (speedsTotalSum == 0d && perDevSpeedsTotalSum == 0d)
+            if (perDevSpeedsTotalSum == 0d)
             {
                 // TODO debug log speeds are zero
                 return;
             }
-            if (speedsTotalSum == _lastSpeedsTotalSum && perDevSpeedsTotalSum == _lastPerDevSpeedsTotalSum)
+            if (perDevSpeedsTotalSum == _lastPerDevSpeedsTotalSum)
             {
                 // TODO debug log speeds seem to be stuck
                 return;
             }
             // update 
-            _lastSpeedsTotalSum = speedsTotalSum;
             _lastPerDevSpeedsTotalSum = perDevSpeedsTotalSum;
             MinerApiWatchdog.UpdateApiTimestamp(GroupKey, DateTime.UtcNow);
         }

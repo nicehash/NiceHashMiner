@@ -60,7 +60,6 @@ namespace FakePlugin
             }
 
             api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-            api.AlgorithmSpeedsTotal = new List<(AlgorithmType type, double speed)> { (_algorithmType, totalSpeed) };
             api.PowerUsagePerDevice = perDevicePowerInfo;
             api.PowerUsageTotal = totalPowerUsage;
 
