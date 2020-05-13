@@ -147,7 +147,7 @@ namespace NHM.MinerPluginToolkitV1
         #endregion IMinerBinsSource
 
         #region IBinAndCwdPathsGettter
-        public virtual Tuple<string, string> GetBinAndCwdPaths()
+        public virtual (string binPath, string cwdPath) GetBinAndCwdPaths()
         {
             if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.ExePath == null || MinersBinsUrlsSettings.ExePath.Count == 0)
             {
@@ -157,7 +157,7 @@ namespace NHM.MinerPluginToolkitV1
             paths.AddRange(MinersBinsUrlsSettings.ExePath);
             var binCwd = Path.Combine(paths.GetRange(0, paths.Count - 1).ToArray());
             var binPath = Path.Combine(paths.ToArray());
-            return Tuple.Create(binPath, binCwd);
+            return (binPath, binCwd);
         }
         #endregion IBinAndCwdPathsGettter
 

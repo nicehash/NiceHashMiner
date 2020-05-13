@@ -138,12 +138,10 @@ namespace NHM.MinerPluginToolkitV1
         // Parent plugin has this info
         public IBinAndCwdPathsGettter BinAndCwdPathsGettter { get; set; } = null;
 
-        public Tuple<string, string> GetBinAndCwdPaths()
+        public (string binPath, string cwdPath) GetBinAndCwdPaths()
         {
             return BinAndCwdPathsGettter.GetBinAndCwdPaths();
         }
-
-        abstract public Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
         abstract protected string MiningCreateCommandLine();
 
@@ -380,5 +378,91 @@ namespace NHM.MinerPluginToolkitV1
         {
             if (isTokenCanceled) throw new StopMinerWatchdogException();
         }
+
+
+        //abstract public Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
+        public virtual async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        {
+            // determine benchmark time 
+            // settup times
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 40, 60, 140 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+
+            //// use demo user and disable the watchdog
+            var commandLine = MiningCreateCommandLine();
+            var (binPath, binCwd) = GetBinAndCwdPaths();
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+            // disable line readings and read speeds from API
+            bp.CheckData = null;
+
+            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
+            var benchmarkWait = TimeSpan.FromMilliseconds(500);
+            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+
+            var ticks = benchmarkTime / 10; // on each 10 seconds tick
+            var result = new BenchmarkResult();
+            var benchmarkApiData = new List<ApiData>();
+            for (var tick = 0; tick < ticks; tick++)
+            {
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+                await Task.Delay(10 * 1000, stop); // 10 seconds delay
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+
+                var ad = await GetMinerStatsDataAsync();
+                benchmarkApiData.Add(ad);
+            }
+            // await benchmark task
+            await t;
+            if (stop.IsCancellationRequested)
+            {
+                return t.Result;
+            }
+
+            // AlgorithmSpeedsTotal
+            try
+            {
+                // TODO add AlgorithmSpeedsPerDevice check
+                var nonZeroSpeeds = benchmarkApiData.Where(ad => ad.AlgorithmSpeedsTotal.All(pair => pair.speed > 0))
+                                                    .Select(ad => (ad, ad.AlgorithmSpeedsTotal.Count)).ToList();
+                var speedsFromTotals = new List<(AlgorithmType type, double speed)>();
+                if (nonZeroSpeeds.Count > 0) 
+                {
+                    var maxAlgoPiarsCount = nonZeroSpeeds.Select(adCount => adCount.Count).Max();
+                    var sameCountApiDatas = nonZeroSpeeds.Where(adCount => adCount.Count == maxAlgoPiarsCount).Select(adCount => adCount.ad).ToList();
+                    var firstPair = sameCountApiDatas.FirstOrDefault();
+                    var speedSums = firstPair.AlgorithmSpeedsTotal.Select(pair => new KeyValuePair<AlgorithmType, double>(pair.type, 0.0 )).ToDictionary(x => x.Key, x => x.Value);
+                    // sum 
+                    foreach (var ad in sameCountApiDatas)
+                    {
+                        foreach (var pair in ad.AlgorithmSpeedsTotal)
+                        {
+                            speedSums[pair.type] += pair.speed;
+                        }
+                    }
+                    // average
+                    foreach (var algoId in speedSums.Keys.ToArray())
+                    {
+                        speedSums[algoId] /= sameCountApiDatas.Count;
+                    }
+                    result = new BenchmarkResult
+                    {
+                        AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal.Select(pair => (pair.type, speedSums[pair.type])).ToList(),
+                        Success = true
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
+            }
+            // AlgorithmSpeedsPerDevice
+
+            
+
+            // return API result
+            return result;
+        }
+
+
     }
 }

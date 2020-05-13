@@ -55,52 +55,52 @@ namespace Phoenix
             return ad;
         }
 
-        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {
-            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        //{
+        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? "-amd" : "-nvidia";
+        //    var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? "-amd" : "-nvidia";
 
-            // local benchmark
-            // TODO hardcoded epoch
-            var commandLine = $"-gpus {_devices} -gbase 0 -bench 200 -wdog 0 {deviceType} {_extraLaunchParameters}";
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
-            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+        //    // local benchmark
+        //    // TODO hardcoded epoch
+        //    var commandLine = $"-gpus {_devices} -gbase 0 -bench 200 -wdog 0 {deviceType} {_extraLaunchParameters}";
+        //    var binPathBinCwdPair = GetBinAndCwdPaths();
+        //    var binPath = binPathBinCwdPair.Item1;
+        //    var binCwd = binPathBinCwdPair.Item2;
+        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
-            var benchHashes = 0d;
-            var benchIters = 0;
-            var benchHashResult = 0d;
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
+        //    var benchHashes = 0d;
+        //    var benchIters = 0;
+        //    var benchHashResult = 0d;
+        //    var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
 
-            bp.CheckData = (string data) =>
-            {
-                var hashrateFoundPairFirst = data.TryGetHashrateAfter("Eth speed:");
-                var hashrateFirst = hashrateFoundPairFirst.Item1;
-                var foundFirst = hashrateFoundPairFirst.Item2;
+        //    bp.CheckData = (string data) =>
+        //    {
+        //        var hashrateFoundPairFirst = data.TryGetHashrateAfter("Eth speed:");
+        //        var hashrateFirst = hashrateFoundPairFirst.Item1;
+        //        var foundFirst = hashrateFoundPairFirst.Item2;
 
-                if (foundFirst)
-                {
-                    benchHashes += hashrateFirst;
-                    benchIters++;
+        //        if (foundFirst)
+        //        {
+        //            benchHashes += hashrateFirst;
+        //            benchIters++;
 
-                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
-                }
+        //            benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+        //        }
 
                 
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }
-                };
-            };
+        //        return new BenchmarkResult
+        //        {
+        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }
+        //        };
+        //    };
 
-            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
-            var benchmarkWait = TimeSpan.FromMilliseconds(500);
-            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
-        }
+        //    var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
+        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
+        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+        //    return await t;
+        //}
 
         private static HashSet<string> _deleteConfigs = new HashSet<string> { "config.txt", "dpools.txt", "epools.txt" };
         private static bool IsDeleteConfigFile(string file)

@@ -11,7 +11,7 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
 
     public abstract class ClaymoreBase : MinerBase
     {
-        public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
+        //public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
 
         protected int _apiPort;
