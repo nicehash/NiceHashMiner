@@ -73,7 +73,7 @@ namespace NHMCore.Mining.Plugins
 
                 // check if any mining pair is supported and set current active 
                 var supportedUUIDs = _registeredSupportedDevices.Select(kvp => kvp.Key);
-                var supportedPairs = miningPairs.Where(pair => supportedUUIDs.Contains(pair.Device.UUID));
+                var supportedPairs = miningPairs.Where(pair => supportedUUIDs.Contains(pair.Device.UUID) && "f683f550-94eb-11ea-a64d-17be303ea466" != pair.Algorithm.MinerID);
                 if (supportedPairs.Count() == 0) return;
 
                 foreach (var pair in supportedPairs)
