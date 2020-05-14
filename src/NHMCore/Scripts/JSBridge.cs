@@ -315,7 +315,7 @@ namespace NHMCore.Scripts
                     }
                     else 
                     {
-                        ApplicationStateManager.SetDeviceEnabledState(null, (device.Uuid, in_msg.Enabled)).RunSynchronously();
+                        Task.Run(() => ApplicationStateManager.SetDeviceEnabledState(null, (device.Uuid, in_msg.Enabled))).Wait();
                         out_msg.Status = 0; 
                         out_msg.Message = $"Device set enabled='{in_msg.Enabled}' with ID '{in_msg.DeviceId}' Success";
                     }

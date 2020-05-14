@@ -64,6 +64,20 @@ namespace NiceHashMiner
                 AddedScripts.Remove(sd);
             }
         }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl tab)
+            {
+                if (tab.SelectedIndex < 0)
+                {
+                    codeBoxReadOnly.Text = "";
+                }
+                else if (tab.Items[tab.SelectedIndex] is ScriptDisplay sd) {
+                    codeBoxReadOnly.Text = sd.Code;
+                } 
+            }
+        }
     }
 
     public class ScriptDisplay: NotifyChangedBase
@@ -75,11 +89,11 @@ namespace NiceHashMiner
             Code = jsCode;
         }
         public long Id { get; set; }
-        public string Code { get; set; }
-        public string Title { get; private set; }
+        public string Code { get; set; } = "";
+        public string Title { get; private set; } = "";
 
-        public string Error { get; set; }
+        public string Error { get; set; } = "";
 
-        public string ErrorStack { get; set; }
+        public string ErrorStack { get; set; } = "";
     }
 }

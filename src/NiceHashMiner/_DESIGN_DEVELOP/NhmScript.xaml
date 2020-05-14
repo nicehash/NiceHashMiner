@@ -3,23 +3,31 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NiceHashMiner"
+        xmlns:local="clr-namespace:NiceHashMiner" xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         Title="NhmScript" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <StackPanel>
-        <TextBox
-            x:Name="codeBox"
-            Height="200"
-            Width="500"
-            TextWrapping="Wrap"
-            AcceptsReturn="True"
-            HorizontalScrollBarVisibility="Disabled"
-            VerticalScrollBarVisibility="Auto"/>
-        <Button Height="30" Content="Add script" Click="Button_Click" />
-        <Grid>
-            <TabControl ItemsSource="{Binding .}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <avalon:TextEditor Grid.Row="0"
+                           Margin="5"
+                            x:Name="codeBox"
+                            Height="200"
+                            Width="Auto"
+                            ShowLineNumbers="True"
+                            HorizontalScrollBarVisibility="Disabled"
+                            VerticalScrollBarVisibility="Auto"
+                            SyntaxHighlighting="JavaScript"
+                            FontFamily="Courier New"/>
+        <Button Grid.Row="1" Height="30" Content="Add script" Click="Button_Click" />
+        <Grid Grid.Row="2">
+            <TabControl ItemsSource="{Binding .}" SelectionChanged="TabControl_SelectionChanged">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <Label Content="{Binding Title}" />
@@ -27,15 +35,38 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <StackPanel Height="500">
-                            <Button Click="Delete_click" Content="Unload this script" />
-                            <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Code}" />
-                            <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding Error}" />
-                            <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding ErrorStack}" />
-                        </StackPanel>
+                        <Grid Background="White" Height="Auto" Width="Auto">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0">
+                                <Button Click="Delete_click" Content="Unload this script" />
+                                <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding Error}" />
+                                <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding ErrorStack}" />
+                            </StackPanel>
+                        </Grid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
             </TabControl>
         </Grid>
-    </StackPanel>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Separator Grid.Row="0"/>
+            <TextBlock Grid.Row="1" FontWeight="Bold" Foreground="Black" TextWrapping="WrapWithOverflow" Text="Script Code:" />
+            <Separator Grid.Row="2"/>
+            <avalon:TextEditor Grid.Row="3"
+                               x:Name="codeBoxReadOnly"
+                               ShowLineNumbers="True"
+                               SyntaxHighlighting="JavaScript"
+                               IsManipulationEnabled="False"
+                               IsReadOnly="True"
+                               FontFamily="Courier New" />
+        </Grid>
+    </Grid>
 </Window>
