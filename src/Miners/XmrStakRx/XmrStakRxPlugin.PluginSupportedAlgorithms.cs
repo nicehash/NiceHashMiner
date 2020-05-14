@@ -25,14 +25,14 @@ namespace XmrStakRx
                     DeviceType.CPU,
                     SupportedAlgos()
                 },
-                {
-                    DeviceType.NVIDIA,
-                    SupportedAlgos()
-                },
-                {
-                    DeviceType.AMD,
-                    SupportedAlgos(false)
-                },
+                //{
+                //    DeviceType.NVIDIA,
+                //    SupportedAlgos()
+                //},
+                //{
+                //    DeviceType.AMD,
+                //    SupportedAlgos(false)
+                //},
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
