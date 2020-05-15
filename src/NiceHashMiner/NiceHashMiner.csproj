@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Debug\app\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ENABLE_LOGIN</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -30,7 +30,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\Release\app\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;ENABLE_LOGIN</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -47,7 +47,7 @@
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView, Version=6.0.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView, Version=6.0.0.0, Culture=neutral, PublicKeyToken=4aff67a105548ee2, processorArchitecture=MSIL" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
       <HintPath>..\..\packages\Microsoft.Toolkit.Wpf.UI.Controls.WebView.6.0.0\lib\net462\Microsoft.Toolkit.Wpf.UI.Controls.WebView.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -174,12 +174,13 @@
     <Compile Include="Views\Help\Help.xaml.cs">
       <DependentUpon>Help.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Login\LoginBrowser.xaml.cs">
+    <Compile Include="Views\Login\LoginBrowser.xaml.cs" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
       <DependentUpon>LoginBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Login\LoginWindow.xaml.cs">
+    <Compile Include="Views\Login\LoginWindow.xaml.cs" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Login\compiler_stub.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -466,11 +467,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Login\LoginBrowser.xaml">
+    <Page Include="Views\Login\LoginBrowser.xaml" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Login\LoginWindow.xaml">
+    <Page Include="Views\Login\LoginWindow.xaml" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -600,10 +601,6 @@
     <Resource Include="Resources\logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
-      <Project>{847398E0-2E35-4A85-8C70-0B40AA172ABA}</Project>
-      <Name>MinerPluginToolkitV1</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
@@ -611,6 +608,10 @@
     <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
       <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
       <Name>NHM.DeviceMonitoring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj">
+      <Project>{ec0e538a-1966-4434-af96-0e25223bbc19}</Project>
+      <Name>NHM.MinerPluginToolkitV1</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHMCore\NHMCore.csproj">
       <Project>{43dcaf38-d0c4-4335-983d-650f78461eb2}</Project>

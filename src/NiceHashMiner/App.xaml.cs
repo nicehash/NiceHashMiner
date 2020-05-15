@@ -18,7 +18,9 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
+#if ENABLE_LOGIN
 using NiceHashMiner.Views.Login;
+#endif
 
 namespace NiceHashMiner
 {
@@ -207,6 +209,7 @@ namespace NiceHashMiner
                 return;
             }
 
+#if ENABLE_LOGIN
             FilterOSSpecific.GetWindowsVersion();
             // show login if no BTC
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid && AppRuntimeSettings.ShowLoginWindow && SystemVersion.BuildNumber >= 17110)
@@ -214,6 +217,7 @@ namespace NiceHashMiner
                 var login = new LoginWindow { };
                 var nek = login.ShowDialog();
             }
+#endif
 
             var main = new MainWindow();
             main.Show();

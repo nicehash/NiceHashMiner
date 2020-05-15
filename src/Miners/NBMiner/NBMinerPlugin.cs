@@ -1,7 +1,7 @@
 ﻿//#define DISABLE_IDevicesCrossReference
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -23,6 +23,7 @@ namespace NBMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -40,9 +41,9 @@ namespace NBMiner
             };
         }
 
-        public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -157,6 +158,7 @@ namespace NBMiner
             try
             {
                 if (ids.Count() == 0) return false;
+                if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;   
                 if (benchmarkedPluginVersion.Major <= 9) return ids.Contains(AlgorithmType.DaggerHashimoto);
                 if (benchmarkedPluginVersion.Major <= 9 && benchmarkedPluginVersion.Minor < 2) return ids.Contains(AlgorithmType.DaggerHashimoto);
             }

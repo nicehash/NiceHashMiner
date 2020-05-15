@@ -1,6 +1,6 @@
-﻿using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -20,6 +20,7 @@ namespace NanoMiner
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -37,9 +38,9 @@ namespace NanoMiner
             };
         }
 
-        public override string PluginUUID => "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4";
+        public override string PluginUUID => "f25fee20-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 2);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "NanoMiner";
 
@@ -117,6 +118,10 @@ namespace NanoMiner
         {
             try
             {
+                if (ids.Count() != 0)
+                {
+                    if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 3) return true;
+                }
             }
             catch (Exception e)
             {

@@ -1,5 +1,6 @@
-﻿using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
+﻿using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -12,6 +13,15 @@ namespace NBMiner
         internal static MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {
             GeneralTimeout = DefaultTimeout,
+        };
+
+        internal static MinerBenchmarkTimeSettings BenchmarkTimeSettings = new MinerBenchmarkTimeSettings
+        {
+            PerAlgorithm = new Dictionary<BenchmarkPerformanceType, Dictionary<string, int>>(){
+                { BenchmarkPerformanceType.Quick, new Dictionary<string, int>(){ { "KAWPOW", 160 } } },
+                { BenchmarkPerformanceType.Standard, new Dictionary<string, int>(){ { "KAWPOW", 180 } } },
+                { BenchmarkPerformanceType.Precise, new Dictionary<string, int>(){ { "KAWPOW", 260 } } }
+            }
         };
 
         internal static MinerOptionsPackage MinerOptionsPackage = new MinerOptionsPackage
@@ -29,17 +39,17 @@ namespace NBMiner
                     Delimiter = ","
                 },
                 /// <summary>
-                /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 0.
+                /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 4.
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_intensity",
                     LongName = "--cuckoo-intensity",
-                    DefaultValue = "0"
+                    DefaultValue = "4"
                 },
                 /// <summary>
-                /// The relative intensity when dual mining.
+                /// Intensity of secondary algorithm.
                 /// </summary>
                 new MinerOption
                 {
@@ -105,13 +115,16 @@ namespace NBMiner
                     LongName = "--fidelity-timeframe",
                     DefaultValue = "24"
                 },
+                /// <summary>
+                /// Enable memory tweaking to boost performance. comma-seperated list, range [1,6].
+                /// </summary>             
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "nbminer_memory-tweak",
                     ShortName = "--mt",
                     LongName = "--memory-tweak",
-                    DefaultValue = "5"
+                    Delimiter = ","
                 },
                 new MinerOption
                 {
@@ -129,8 +142,7 @@ namespace NBMiner
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_tempLimit",
-                    LongName = "--temperature-limit",
-                    DefaultValue = "90",
+                    LongName = "--temperature-limit"
                 }
             }
         };

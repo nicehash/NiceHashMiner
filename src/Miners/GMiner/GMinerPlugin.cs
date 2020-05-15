@@ -6,9 +6,9 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 
 namespace GMinerPlugin
 {
@@ -22,6 +22,7 @@ namespace GMinerPlugin
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -39,9 +40,9 @@ namespace GMinerPlugin
             };
         }
 
-        public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "e7a58030-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -148,6 +149,10 @@ namespace GMinerPlugin
             {
                 if (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor < 5) {
                     return ids.First() == AlgorithmType.GrinCuckatoo32;
+                }
+                if (ids.Count() != 0)
+                {
+                    if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;   
                 }
             }
             catch (Exception e)

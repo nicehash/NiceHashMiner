@@ -1,4 +1,4 @@
-﻿using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common;
 using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
@@ -16,7 +16,6 @@ namespace NHMCore.Configs
         private const string Tag = "ConfigManager";
 
         public static bool IsVersionChanged { get; private set; } = false;
-        public static bool IsVersionChangedToMajor3 { get; private set; } = false;
 
         // TODO set to internal and refactor external usage
         private static GeneralConfig GeneralConfig { get; set; } = new GeneralConfig();
@@ -83,7 +82,6 @@ namespace NHMCore.Configs
                 if (fromFile.ConfigFileVersion != null && asmVersion.CompareTo(fromFile.ConfigFileVersion) != 0)
                 {
                     IsVersionChanged = true;
-                    IsVersionChangedToMajor3 = asmVersion.Major == 3 && asmVersion.Major > fromFile.ConfigFileVersion.Major;
                     Logger.Info(Tag, "Config file differs from version of NiceHashMiner... Creating backup archive");
                     CreateBackupArchive(fromFile.ConfigFileVersion);
                     if (RestoreBackupArchive(asmVersion))//check if we have backup version

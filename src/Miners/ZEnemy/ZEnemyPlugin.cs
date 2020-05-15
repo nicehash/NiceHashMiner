@@ -1,5 +1,5 @@
-﻿using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -20,6 +20,7 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=3378390.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -39,13 +40,13 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "ZEnemy";
 
         public override string Author => "info@nicehash.com";
 
-        public override string PluginUUID => "5532d300-7238-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "1484c660-94ec-11ea-a64d-17be303ea466";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -79,11 +80,7 @@ namespace ZEnemy
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 3 && benchmarkedPluginVersion.Minor < 1)
-                {
-                    // v2.3 Performance improvement: +2-3% x16rv2 algo https://github.com/z-enemy/z-enemy/releases/tag/ver-2.3
-                    if (ids.FirstOrDefault() == AlgorithmType.X16Rv2) return true;
-                }
+                if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;
             }
             catch (Exception e)
             {

@@ -1,6 +1,6 @@
-﻿using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -37,13 +37,13 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "lolMiner";
 
         public override string Author => "info@nicehash.com";
 
-        public override string PluginUUID => "435f0820-7237-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "eb75e920-94eb-11ea-a64d-17be303ea466";
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
@@ -65,10 +65,12 @@ namespace LolMiner
             var pcieId = 0;
             foreach (var gpu in gpus)
             {
+                // map supported NVIDIA devices so indexes match
                 _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
                 var algorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
-                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
+                // add only AMD
+                if (algorithms.Count > 0 && gpu is AMDDevice) supported.Add(gpu as BaseDevice, algorithms);
             }
 
             return supported;

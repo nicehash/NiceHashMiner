@@ -1,4 +1,4 @@
-﻿using MinerPluginToolkitV1.ExtraLaunchParameters;
+﻿using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using System.Collections.Generic;
 
 namespace ClaymoreDual14

@@ -1,8 +1,8 @@
-﻿using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Enums;
 using System.Collections.Generic;
 
-using SAS = MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
+using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
 namespace XmrStakRx
 {
@@ -25,14 +25,14 @@ namespace XmrStakRx
                     DeviceType.CPU,
                     SupportedAlgos()
                 },
-                {
-                    DeviceType.NVIDIA,
-                    SupportedAlgos()
-                },
-                {
-                    DeviceType.AMD,
-                    SupportedAlgos(false)
-                },
+                //{
+                //    DeviceType.NVIDIA,
+                //    SupportedAlgos()
+                //},
+                //{
+                //    DeviceType.AMD,
+                //    SupportedAlgos(false)
+                //},
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {

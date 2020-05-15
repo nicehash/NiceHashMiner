@@ -1,6 +1,6 @@
-﻿using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
+﻿using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -19,14 +19,15 @@ namespace WildRig
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://bitcointalk.org/index.php?topic=5023676 | https://github.com/andru-kun/wildrig-multi/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = " 0.20.6",
+                BinVersion = " 0.23.2",
                 ExePath = new List<string> { "wildrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.20.6/wildrig-multi-windows-0.20.6.7z", // original
+                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.23.2/wildrig-multi-windows-0.23.2.7z", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -36,9 +37,9 @@ namespace WildRig
             };
         }
 
-        public override string PluginUUID => "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";
+        public override string PluginUUID => "0a07d6a0-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 0);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "WildRig";
 
@@ -94,6 +95,10 @@ namespace WildRig
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            try
+            { }
+            catch (Exception ex) 
+            { }
             // nothing new
             return false;
         }

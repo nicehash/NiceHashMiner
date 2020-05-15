@@ -234,13 +234,13 @@ namespace NHMCore.Mining.Benchmarking
             {
                 var plugin = algo.PluginContainer;
                 var miner = plugin.CreateMiner();
-                var miningPair = new MinerPlugin.MiningPair
+                var miningPair = new NHM.MinerPlugin.MiningPair
                 {
                     Device = algo.ComputeDevice.BaseDevice,
                     Algorithm = algo.Algorithm
                 };
                 // check ethlargement
-                var miningPairs = new List<MinerPlugin.MiningPair> { miningPair };
+                var miningPairs = new List<NHM.MinerPlugin.MiningPair> { miningPair };
                 EthlargementIntegratedPlugin.Instance.Start(miningPairs);
                 miner.InitMiningPairs(miningPairs);
                 // fill service since the benchmark might be online. DemoUser.BTC must be used
@@ -255,8 +255,8 @@ namespace NHMCore.Mining.Benchmarking
                 var power = powerHelper.Stop();
                 if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)
                 {
-                    var ids = result.AlgorithmTypeSpeeds.Select(ats => ats.AlgorithmType).ToList();
-                    var speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.Speed).ToList();
+                    var ids = result.AlgorithmTypeSpeeds.Select(ats => ats.type).ToList();
+                    var speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.speed).ToList();
                     algo.Speeds = speeds;
                     algo.PowerUsage = power;
                     // set status to empty string it will return speed

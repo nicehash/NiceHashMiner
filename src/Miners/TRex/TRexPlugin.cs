@@ -1,5 +1,5 @@
-﻿using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
+﻿using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -19,14 +19,15 @@ namespace TRex
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
+            MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://github.com/trexminer/T-Rex/releases 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.15.5",
+                BinVersion = "0.15.6",
                 ExePath = new List<string> { "t-rex.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/trexminer/T-Rex/releases/download/0.15.5/t-rex-0.15.5-win-cuda10.0.zip", // original
+                    "https://github.com/trexminer/T-Rex/releases/download/0.15.6/t-rex-0.15.6-win-cuda10.0.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -36,9 +37,9 @@ namespace TRex
             };
         }
 
-        public override string PluginUUID => "d47d9b00-7237-11e9-b20c-f9f12eb6d835";
+        public override string PluginUUID => "03f80500-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(10, 1);
+        public override Version Version => new Version(11, 0);
 
         public override string Name => "TRex";
 
@@ -72,7 +73,10 @@ namespace TRex
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //no performance upgrades
+            try
+            {}
+            catch(Exception ex)
+            {}
             return false;
         }
     }
