@@ -264,6 +264,7 @@ namespace NHM.DeviceMonitoring
                 // We limit 100% to the default as max
                 var limit = RangeCalculator.CalculateValue(percentage, minLimit, defaultLimit);
                 var setLimit = (uint)limit;
+                if (setLimit > maxLimit) setLimit = maxLimit;
                 ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(nvmlDevice, setLimit);
                 if (ret != nvmlReturn.Success)
                     throw new NvmlException("nvmlDeviceSetPowerManagementLimit", ret);
@@ -301,9 +302,7 @@ namespace NHM.DeviceMonitoring
                     if (ret != nvmlReturn.Success)
                         throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
 
-                    // We limit 100% to the default as max
-                    var tdpPerc = RangeCalculator.CalculatePercentage(currentLimit, minLimit, defaultLimit);
-                    return tdpPerc; // 0.0d - 1.0d
+                    return (double)currentLimit / (double)defaultLimit;
                 });
                 return execRet;
             }
@@ -351,11 +350,6 @@ namespace NHM.DeviceMonitoring
             {
                 Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
                 percentage = 0.0d;
-            }
-            if (percentage > 1.0d)
-            {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 1.0d");
-                percentage = 1.0d;
             }
 
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
