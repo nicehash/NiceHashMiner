@@ -89,6 +89,7 @@ namespace NHMCore.Mining
         }
 
         private static ConcurrentQueue<Command> _commandQueue { get; set; } = new ConcurrentQueue<Command>();
+        private static ConcurrentQueue<(string deviceUUID, string minerID, List<AlgorithmType> algorithmsIDs)> _switchScriptStateQueue { get; set; } = new ConcurrentQueue<(string deviceUUID, string minerID, List<AlgorithmType> algorithmsIDs)>();
 
         public static Task RunninLoops { get; private set; } = null;
 
@@ -148,12 +149,9 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
-        public static Task SwitchScriptMineState(string deviceUUID, string minerId, List<AlgorithmType> ids)
+        public static void SetSwitchScriptMineState(string deviceUUID, string minerId, List<AlgorithmType> ids)
         {
-            var switchScriptState = new Dictionary<string, Tuple<string, List<AlgorithmType>>> { { deviceUUID, Tuple.Create(minerId, ids) } };
-            var command = new Command(CommandType.SwitchScriptMineState, switchScriptState);
-            _commandQueue.Enqueue(command);
-            return command.Tsc.Task;
+            _switchScriptStateQueue.Enqueue((deviceUUID, minerId, ids));
         }
 
         private static async Task HandleCommand(Command command)
@@ -367,6 +365,21 @@ namespace NHMCore.Mining
                 while (isActive())
                 {
                     if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
+                    // script switch scope
+                    {
+                        var switchScriptState = new Dictionary<string, Tuple<string, List<AlgorithmType>>> {};
+                        while (_switchScriptStateQueue.TryDequeue(out var triple))
+                        {
+                            var (deviceUUID, minerId, ids) = triple;
+                            switchScriptState[deviceUUID] = Tuple.Create(minerId, ids);
+
+                        }
+                        if (switchScriptState.Count > 0)
+                        {
+                            _commandQueue.Enqueue(new Command(CommandType.SwitchScriptMineState, switchScriptState));
+                        }
+                    }
+
                     // command handling
                     if (isActive() && _commandQueue.TryDequeue(out var command))
                     {

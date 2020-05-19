@@ -284,7 +284,7 @@ namespace NHMCore.Scripts
                     UpdateDeviceMiningState in_msg = UpdateDeviceMiningState.Parser.ParseFrom(in_buff);
                     DeviceSetResult out_msg = new DeviceSetResult();
                     // don't wait promise change
-                    MiningManager.SwitchScriptMineState(in_msg.DeviceId, in_msg.MinerId, in_msg.AlgorithmIds.Select(id => (AlgorithmType)id).ToList());
+                    MiningManager.SetSwitchScriptMineState(in_msg.DeviceId, in_msg.MinerId, in_msg.AlgorithmIds.Select(id => (AlgorithmType)id).ToList());
                     out_size = out_msg.CalculateSize();
                     Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
                     return 0;
