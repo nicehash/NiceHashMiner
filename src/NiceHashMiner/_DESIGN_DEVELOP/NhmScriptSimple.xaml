@@ -1,0 +1,40 @@
+﻿<Window x:Class="NiceHashMiner.NhmScriptSimple"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NiceHashMiner"
+        mc:Ignorable="d"
+        Title="NhmScriptSimple" Height="450" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <StackPanel>
+        <TextBox
+            x:Name="codeBox"
+            Height="200"
+            Width="500"
+            TextWrapping="Wrap"
+            AcceptsReturn="True"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto"/>
+        <Button Height="30" Content="Add script" Click="Button_Click" />
+        <Grid>
+            <TabControl ItemsSource="{Binding .}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Title}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Height="500">
+                            <Button Click="Delete_click" Content="Unload this script" />
+                            <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Code}" />
+                            <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding Error}" />
+                            <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding ErrorStack}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </Grid>
+    </StackPanel>
+</Window>

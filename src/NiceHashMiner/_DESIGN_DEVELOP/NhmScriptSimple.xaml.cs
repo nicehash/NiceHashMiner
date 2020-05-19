@@ -16,16 +16,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+
 namespace NiceHashMiner
 {
     /// <summary>
-    /// Interaction logic for NhmScript.xaml
+    /// Interaction logic for NhmScriptSimple.xaml
     /// </summary>
-    public partial class NhmScript : Window
+    public partial class NhmScriptSimple : Window
     {
         private ObservableCollection<ScriptDisplay> AddedScripts = new ObservableCollection<ScriptDisplay>();
 
-        public NhmScript()
+        public NhmScriptSimple()
         {
             InitializeComponent();
             this.DataContext = AddedScripts;
@@ -64,20 +65,6 @@ namespace NiceHashMiner
                 AddedScripts.Remove(sd);
             }
         }
-
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.Source is TabControl tab)
-            {
-                if (tab.SelectedIndex < 0)
-                {
-                    codeBoxReadOnly.Text = "";
-                }
-                else if (tab.Items[tab.SelectedIndex] is ScriptDisplay sd) {
-                    codeBoxReadOnly.Text = sd.Code;
-                } 
-            }
-        }
         public class ScriptDisplay : NotifyChangedBase
         {
             public ScriptDisplay(string title, long id, string jsCode)
@@ -87,12 +74,15 @@ namespace NiceHashMiner
                 Code = jsCode;
             }
             public long Id { get; set; }
-            public string Code { get; set; } = "";
-            public string Title { get; private set; } = "";
+            public string Code { get; set; }
+            public string Title { get; private set; }
 
-            public string Error { get; set; } = "";
+            public string Error { get; set; }
 
-            public string ErrorStack { get; set; } = "";
+            public string ErrorStack { get; set; }
         }
     }
+
+    
 }
+
