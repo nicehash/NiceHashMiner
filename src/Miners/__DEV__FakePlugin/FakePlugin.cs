@@ -97,7 +97,7 @@ namespace FakePlugin
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            return new List<string>() {};
+            return new List<string>() { "DemoMiner.exe" };
         }
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
