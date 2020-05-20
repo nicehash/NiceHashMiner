@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHMCore;
 using NHMCore.Scripts;
+using NiceHashMiner.Views.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -40,6 +41,12 @@ namespace NiceHashMiner
                     unloadedScript.OnPropertyChanged("ErrorStack");
                 });
             };
+            base.Loaded += new RoutedEventHandler(this.OnLoadedSetRender);
+        }
+
+        private void OnLoadedSetRender(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.SetForceSoftwareRendering(this);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -187,9 +187,6 @@ namespace NiceHashMiner.Views
                     var scriptWindow = new NhmScript();
                     //scriptWindow.DataContext = _vm;
                     scriptWindow.Show();
-                    var scriptWindow2 = new NhmScriptSimple();
-                    //scriptWindow.DataContext = _vm;
-                    scriptWindow2.Show();
                 }
                 if (Launcher.IsUpdated)
                 {
