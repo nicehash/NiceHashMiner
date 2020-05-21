@@ -353,11 +353,11 @@ namespace NHMCore.Mining
 
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
-            var switchingManager = new AlgorithmSwitchingManager();
+            //var switchingManager = new AlgorithmSwitchingManager();
             try
             {
-                switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
-                switchingManager.ForceUpdate();
+                //switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+                //switchingManager.ForceUpdate();
 
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Func<bool> isActive = () => !stop.IsCancellationRequested;
@@ -395,8 +395,8 @@ namespace NHMCore.Mining
             {
                 Logger.Info(Tag, "Exiting MiningManagerCommandQueueLoop run cleanup");
                 // cleanup
-                switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
-                switchingManager.Stop();
+                //switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
+                //switchingManager.Stop();
                 foreach (var groupMiner in _runningMiners.Values)
                 {
                     await groupMiner.StopTask();
