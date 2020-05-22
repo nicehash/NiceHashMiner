@@ -49,13 +49,23 @@ namespace NiceHashMiner
             WindowUtils.SetForceSoftwareRendering(this);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddScript(bool isSwitching)
         {
             string code = codeBox.Text;
             codeBox.Text = "";
-            var scriptId = JSBridge.AddJSScript(code);
-            var newScript = new ScriptDisplay($"Script {scriptId}", scriptId, code);
+            var scriptId = JSBridge.AddJSScript(code, isSwitching);
+            var newScript = new ScriptDisplay($"Script {scriptId}", scriptId, code, isSwitching);
             AddedScripts.Add(newScript);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            AddScript(false);
+        }
+
+        private void Button_Switching_Click(object sender, RoutedEventArgs e)
+        {
+            AddScript(true);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -87,15 +97,17 @@ namespace NiceHashMiner
         }
         public class ScriptDisplay : NotifyChangedBase
         {
-            public ScriptDisplay(string title, long id, string jsCode)
+            public ScriptDisplay(string title, long id, string jsCode, bool isSwitchScript)
             {
                 Title = title;
                 Id = id;
                 Code = jsCode;
+                IsSwitching = isSwitchScript ? "SWITCHING" : "";
             }
             public long Id { get; set; }
             public string Code { get; set; } = "";
             public string Title { get; private set; } = "";
+            public string IsSwitching { get; private set; } = "";
 
             public string Error { get; set; } = "";
 

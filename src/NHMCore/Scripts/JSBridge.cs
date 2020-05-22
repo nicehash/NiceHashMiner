@@ -23,43 +23,41 @@ namespace NHMCore.Scripts
         public delegate void OnJSError(string error, string stack, Int64 script_id);
         public static OnJSError OnJSErrorCallback = null;
 
-        private static InOutDeviceStatusInfo.Types.Status ToProtobufDeviceStatus(DeviceState deviceState)
+        private static DeviceInfo.Types.Status ToProtobufDeviceStatus(DeviceState deviceState)
         {
             switch(deviceState)
             {
-                case DeviceState.Stopped: return InOutDeviceStatusInfo.Types.Status.Stopped;
-                case DeviceState.Mining: return InOutDeviceStatusInfo.Types.Status.Mining;
-                case DeviceState.Benchmarking: return InOutDeviceStatusInfo.Types.Status.Benchmarking;
-                case DeviceState.Error: return InOutDeviceStatusInfo.Types.Status.Error;
-                case DeviceState.Pending: return InOutDeviceStatusInfo.Types.Status.Pending;
-                case DeviceState.Disabled: return InOutDeviceStatusInfo.Types.Status.Disabled;
+                case DeviceState.Stopped: return DeviceInfo.Types.Status.Stopped;
+                case DeviceState.Mining: return DeviceInfo.Types.Status.Mining;
+                case DeviceState.Benchmarking: return DeviceInfo.Types.Status.Benchmarking;
+                case DeviceState.Error: return DeviceInfo.Types.Status.Error;
+                case DeviceState.Pending: return DeviceInfo.Types.Status.Pending;
+                case DeviceState.Disabled: return DeviceInfo.Types.Status.Disabled;
             }
-            return InOutDeviceStatusInfo.Types.Status.NotSetInvalid;
+            return DeviceInfo.Types.Status.NotSetInvalid;
         }
-        private static OutDeviceInfo.Types.Vendor ToProtobufDeviceVendor(ComputeDevice dev)
+        private static DeviceInfo.Types.Vendor ToProtobufDeviceVendor(ComputeDevice dev)
         {
-            if (dev.DeviceType == DeviceType.NVIDIA) return OutDeviceInfo.Types.Vendor.Nvidia;
-            if (dev.DeviceType == DeviceType.AMD) return OutDeviceInfo.Types.Vendor.Amd;
-            if (dev.Name.ToLower().Contains("intel")) return OutDeviceInfo.Types.Vendor.Intel;
-            return OutDeviceInfo.Types.Vendor.Amd;
+            if (dev.DeviceType == DeviceType.NVIDIA) return DeviceInfo.Types.Vendor.Nvidia;
+            if (dev.DeviceType == DeviceType.AMD) return DeviceInfo.Types.Vendor.Amd;
+            if (dev.Name.ToLower().Contains("intel")) return DeviceInfo.Types.Vendor.Intel;
+            return DeviceInfo.Types.Vendor.Amd;
         }
-        private static OutDeviceInfo ToOutDeviceInfo(ComputeDevice dev)
+        private static DeviceInfo ToDeviceInfo(ComputeDevice dev)
         {
-            return new OutDeviceInfo
+            return new DeviceInfo
             {
                 DeviceId = dev.Uuid,
                 Name = dev.Name,
-                Type = dev.DeviceType == DeviceType.CPU ? OutDeviceInfo.Types.Type.Cpu : OutDeviceInfo.Types.Type.Gpu,
-                Vendor = ToProtobufDeviceVendor(dev),
-                FanSpeedInfo = new InOutDeviceFanSpeedRPM { DeviceId = dev.Uuid, FanSpeed = dev.FanSpeed, MaxFanSpeed = 100, MinFanSpeed = 0 },
-                StatusInfo = new InOutDeviceStatusInfo
-                {
-                    DeviceId = dev.Uuid,
-                    Enabled = dev.Enabled,
-                    Load = dev.Load,
-                    Status = ToProtobufDeviceStatus(dev.State),
-                    Temperature = dev.Temp,
-                }
+                Type = dev.DeviceType == DeviceType.CPU ? DeviceInfo.Types.Type.Cpu : DeviceInfo.Types.Type.Gpu,
+                Vendor = ToProtobufDeviceVendor(dev),                
+                Enabled = dev.Enabled,
+                Load = dev.Load,
+                Status = ToProtobufDeviceStatus(dev.State),
+                Temperature = dev.Temp,
+                FanSpeed = dev.FanSpeed,
+                MaxFanSpeed = 100,
+                MinFanSpeed = 0,
             };
         }
 
@@ -87,7 +85,7 @@ namespace NHMCore.Scripts
             {
                 DeviceId = dev.Uuid,
                 // assume NO algorithm is active
-                ActiveAlgorithm = new MinerAlgorithmPair
+                MiningAlgorithm = new MinerAlgorithmPair
                 {
                     AlgorithmName = "NONE",
                     MinerId = "NONE",
@@ -98,11 +96,11 @@ namespace NHMCore.Scripts
             var miningAlgo = dev.AlgorithmSettings.Where(algo => algo.Status == AlgorithmStatus.Mining).FirstOrDefault();
             if (miningAlgo != null && dev.State == DeviceState.Mining)
             {
-                ret.ActiveAlgorithm = ToMinerAlgorithmPair(miningAlgo);
+                ret.MiningAlgorithm = ToMinerAlgorithmPair(miningAlgo);
                 var speeds = MiningDataStats.GetSpeedForDevice(dev.Uuid);
                 if (speeds != null)
                 {
-                    ret.ActiveAlgorithm.ActiveMiningSpeeds.AddRange(speeds.Select(pair => pair.speed));
+                    ret.MiningAlgorithm.ActiveMiningSpeeds.AddRange(speeds.Select(pair => pair.speed));
                 }
             }
 
@@ -134,9 +132,9 @@ namespace NHMCore.Scripts
                 {
                     var in_buff = new byte[in_size];
                     Marshal.Copy(buffer, in_buff, 0, (int)in_size);
-                    InConsolePrint in_msg = InConsolePrint.Parser.ParseFrom(in_buff);
-                    Logger.Info("JSBridge.Log", $"JS_LOG:\n\t: {in_msg.What}.");
-                    OutDevicesInfo out_msg = new OutDevicesInfo { };
+                    ConsolePrint in_msg = ConsolePrint.Parser.ParseFrom(in_buff);
+                    Logger.Info("JSBridge.Log", $"JS_LOG:\n\t: {in_msg.Message}.");
+                    Void out_msg = new Void { };
                     out_size = out_msg.CalculateSize();
                     Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
                     return 0;
@@ -151,8 +149,8 @@ namespace NHMCore.Scripts
             bridge_nhms_reg_js_get_devices_info((IntPtr buffer, long in_size, ref long out_size) => {
                 try
                 {
-                    OutDevicesInfo out_msg = new OutDevicesInfo { };
-                    var add_devices = AvailableDevices.Devices.Select(dev => ToOutDeviceInfo(dev));
+                    DevicesInfos out_msg = new DevicesInfos { };
+                    var add_devices = AvailableDevices.Devices.Select(dev => ToDeviceInfo(dev));
                     out_msg.Devices.AddRange(add_devices);
                     out_size = out_msg.CalculateSize();
                     Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
@@ -169,23 +167,26 @@ namespace NHMCore.Scripts
                 {
                     var in_buff = new byte[in_size];
                     Marshal.Copy(buffer, in_buff, 0, (int)in_size);
-                    InGetDeviceInfo in_msg = InGetDeviceInfo.Parser.ParseFrom(in_buff);
-                    OutGetDeviceInfoResult out_msg = new OutGetDeviceInfoResult();
+                    DeviceID in_msg = DeviceID.Parser.ParseFrom(in_buff);
+                    IMessage out_msg;
+                    int ret = 0;
                     var targetDev = AvailableDevices.Devices.Where(dev => dev.Uuid == in_msg.DeviceId).FirstOrDefault();
                     if (targetDev == null)
                     {
-                        out_msg.Status = -1;
-                        out_msg.Message = "Device not found.";
+                        StatusMessage err = new StatusMessage();
+                        err.Status = -1;
+                        err.Message = "Device not found.";
+                        out_msg = err;
+                        ret = -1;
                     }
                     else
                     {
-                        out_msg.Status = 0;
-                        out_msg.Message = "";
-                        out_msg.Result = ToOutDeviceInfo(targetDev);
+                        DeviceInfo out_ok = ToDeviceInfo(targetDev);
+                        out_msg = out_ok;
                     }
                     out_size = out_msg.CalculateSize();
                     Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
+                    return ret;
                 }
                 catch (Exception e)
                 {
@@ -198,8 +199,8 @@ namespace NHMCore.Scripts
                 {
                     var in_buff = new byte[in_size];
                     Marshal.Copy(buffer, in_buff, 0, (int)in_size);
-                    InOutDeviceFanSpeedRPM in_msg = InOutDeviceFanSpeedRPM.Parser.ParseFrom(in_buff);
-                    DeviceSetResult out_msg = new DeviceSetResult();
+                    SetDeviceFanSpeed in_msg = SetDeviceFanSpeed.Parser.ParseFrom(in_buff);
+                    StatusMessage out_msg = new StatusMessage();
                     var targetDev = AvailableDevices.Devices.Where(dev => dev.Uuid == in_msg.DeviceId).FirstOrDefault();
                     if (targetDev == null)
                     {
@@ -241,11 +242,11 @@ namespace NHMCore.Scripts
             bridge_nhms_reg_js_get_sma_data((IntPtr buffer, long in_size, ref long out_size) => {
                 try
                 {
-                    SMAInfo out_msg = new SMAInfo();
+                    SMAEntries out_msg = new SMAEntries();
                     foreach (var pair in NHSmaData.CurrentPayingRatesSnapshot())
                     {
-                        out_msg.Entries.Add(new SmaEntry {
-                            Id = (int)pair.Key,
+                        out_msg.Entries.Add(new SMAEntry {
+                            AlgorithmId = (int)pair.Key,
                             Paying = pair.Value,
                             IsStable = NHSmaData.IsAlgorithmStable(pair.Key),
                         });
@@ -264,7 +265,7 @@ namespace NHMCore.Scripts
                 try
                 {
                     DevicesAlgorithms out_msg = new DevicesAlgorithms();
-                    out_msg.Devices.AddRange(AvailableDevices.Devices.Select(dev => ToDeviceAlgorithmsInfo(dev)));
+                    out_msg.EnabledDevices.AddRange(AvailableDevices.Devices.Select(dev => ToDeviceAlgorithmsInfo(dev)));
                     out_size = out_msg.CalculateSize();
                     Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
                     return 0;
@@ -282,7 +283,7 @@ namespace NHMCore.Scripts
                     var in_buff = new byte[in_size];
                     Marshal.Copy(buffer, in_buff, 0, (int)in_size);
                     UpdateDeviceMiningState in_msg = UpdateDeviceMiningState.Parser.ParseFrom(in_buff);
-                    DeviceSetResult out_msg = new DeviceSetResult();
+                    StatusMessage out_msg = new StatusMessage();
                     // don't wait promise change
                     MiningManager.SetSwitchScriptMineState(in_msg.DeviceId, in_msg.MinerId, in_msg.AlgorithmIds.Select(id => (AlgorithmType)id).ToList());
                     out_size = out_msg.CalculateSize();
@@ -301,7 +302,7 @@ namespace NHMCore.Scripts
                     var in_buff = new byte[in_size];
                     Marshal.Copy(buffer, in_buff, 0, (int)in_size);
                     SetDeviceEnabledState in_msg = SetDeviceEnabledState.Parser.ParseFrom(in_buff);
-                    DeviceSetResult out_msg = new DeviceSetResult();
+                    StatusMessage out_msg = new StatusMessage();
                     var device = AvailableDevices.GetDeviceWithUuidOrB64Uuid(in_msg.DeviceId);
                     if (device == null)
                     {
@@ -334,8 +335,8 @@ namespace NHMCore.Scripts
                 {
                     var in_buff = new byte[in_size];
                     Marshal.Copy(buffer, in_buff, 0, (int)in_size);
-                    StartDevice in_msg = StartDevice.Parser.ParseFrom(in_buff);
-                    DeviceSetResult out_msg = new DeviceSetResult();
+                    DeviceID in_msg = DeviceID.Parser.ParseFrom(in_buff);
+                    StatusMessage out_msg = new StatusMessage();
                     var (success, msg, code) = Task.Run(() => ApplicationStateManager.StartDeviceWithUUIDTask(in_msg.DeviceId)).Result;
                     if (!success)
                     {
@@ -363,8 +364,8 @@ namespace NHMCore.Scripts
                 {
                     var in_buff = new byte[in_size];
                     Marshal.Copy(buffer, in_buff, 0, (int)in_size);
-                    StopDevice in_msg = StopDevice.Parser.ParseFrom(in_buff);
-                    DeviceSetResult out_msg = new DeviceSetResult();
+                    DeviceID in_msg = DeviceID.Parser.ParseFrom(in_buff);
+                    StatusMessage out_msg = new StatusMessage();
                     var (success, msg, code) = Task.Run(() => ApplicationStateManager.StopDeviceWithUUIDTask(in_msg.DeviceId)).Result;
                     if (!success)
                     {
@@ -393,7 +394,7 @@ namespace NHMCore.Scripts
                     var in_buff = new byte[in_size];
                     Marshal.Copy(buffer, in_buff, 0, (int)in_size);
                     SetDeviceMinerAlgorithmPairEnabledState in_msg = SetDeviceMinerAlgorithmPairEnabledState.Parser.ParseFrom(in_buff);
-                    DeviceSetResult out_msg = new DeviceSetResult();
+                    StatusMessage out_msg = new StatusMessage();
 
                     var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(in_msg.DeviceId);
                     if (deviceWithUUID == null)
@@ -492,10 +493,11 @@ namespace NHMCore.Scripts
             }
         }
 
-        public static long AddJSScript(string jsCode)
+        public static long AddJSScript(string jsCode, bool isSwitching)
         {
             try
             {
+                if (isSwitching) return nhms_add_switching_js_script(jsCode); 
                 return nhms_add_js_script(jsCode);
             }
             catch (SEHException e)

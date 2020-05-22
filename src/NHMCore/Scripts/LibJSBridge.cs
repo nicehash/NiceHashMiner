@@ -23,6 +23,9 @@ namespace NHMCore.Scripts
         [DllImport("libnhms.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         internal static extern Int64 nhms_add_js_script(string js_script_code);
 
+        [DllImport("libnhms.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        internal static extern Int64 nhms_add_switching_js_script(string js_script_code);
+
         [DllImport("libnhms.dll", CallingConvention = CallingConvention.StdCall)]
         internal static extern Int64 nhms_remove_js_script(Int64 script_id);
 

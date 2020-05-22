@@ -13,6 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <avalon:TextEditor Grid.Row="0"
@@ -26,7 +27,8 @@
                             SyntaxHighlighting="JavaScript"
                             FontFamily="Courier New"/>
         <Button Grid.Row="1" Height="30" Content="Add script" Click="Button_Click" />
-        <Grid Grid.Row="2">
+        <Button Grid.Row="2" Height="30" Content="Add Switching script" Click="Button_Switching_Click" />
+        <Grid Grid.Row="3">
             <TabControl ItemsSource="{Binding .}" SelectionChanged="TabControl_SelectionChanged">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -42,6 +44,7 @@
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0">
                                 <Button Click="Delete_click" Content="Unload this script" />
+                                <TextBlock FontWeight="Bold" Foreground="Black" TextWrapping="WrapWithOverflow" Text="{Binding IsSwitching}" />
                                 <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding Error}" />
                                 <TextBlock FontWeight="Bold" Foreground="Red" TextWrapping="WrapWithOverflow" Text="{Binding ErrorStack}" />
                             </StackPanel>
@@ -50,7 +53,7 @@
                 </TabControl.ContentTemplate>
             </TabControl>
         </Grid>
-        <Grid Grid.Row="3">
+        <Grid Grid.Row="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
