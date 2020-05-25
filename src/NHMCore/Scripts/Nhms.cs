@@ -64,7 +64,15 @@ public static partial class NhmsReflection
               "YWJsZWRTdGF0ZRIRCglkZXZpY2VfaWQYASABKAkSDwoHZW5hYmxlZBgCIAEo",
               "CCJ2CidTZXREZXZpY2VNaW5lckFsZ29yaXRobVBhaXJFbmFibGVkU3RhdGUS",
               "EQoJZGV2aWNlX2lkGAEgASgJEhUKDWFsZ29yaXRobV9pZHMYAiADKAUSEAoI",
-              "bWluZXJfaWQYAyABKAkSDwoHZW5hYmxlZBgEIAEoCGIGcHJvdG8z"));
+              "bWluZXJfaWQYAyABKAkSDwoHZW5hYmxlZBgEIAEoCCKpAQoTU2V0RGV2aWNl",
+              "T0NTZXR0aW5ncxIRCglkZXZpY2VfaWQYASABKAkSKwoIc2V0X3R5cGUYAiAB",
+              "KA4yGS5TZXREZXZpY2VPQ1NldHRpbmdzLlR5cGUSEQoJc2V0X3ZhbHVlGAMg",
+              "ASgBIj8KBFR5cGUSGAoUVFlQRV9OT1RfU0VUX0lOVkFMSUQQABIHCgNURFAQ",
+              "ARIKCgZNRU1PUlkQAhIICgRDT1JFEAMipAEKGlNldERldmljZU9DRGVmYXVs",
+              "dFNldHRpbmdzEhEKCWRldmljZV9pZBgBIAEoCRIyCghzZXRfdHlwZRgCIAEo",
+              "DjIgLlNldERldmljZU9DRGVmYXVsdFNldHRpbmdzLlR5cGUiPwoEVHlwZRIY",
+              "ChRUWVBFX05PVF9TRVRfSU5WQUxJRBAAEgcKA1REUBABEgoKBk1FTU9SWRAC",
+              "EggKBENPUkUQA2IGcHJvdG8z"));
         descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
             new pbr::FileDescriptor[] { },
             new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -82,7 +90,9 @@ public static partial class NhmsReflection
           new pbr::GeneratedClrTypeInfo(typeof(global::DevicesAlgorithms), global::DevicesAlgorithms.Parser, new[]{ "EnabledDevices" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::UpdateDeviceMiningState), global::UpdateDeviceMiningState.Parser, new[]{ "DeviceId", "AlgorithmIds", "MinerId" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SetDeviceEnabledState), global::SetDeviceEnabledState.Parser, new[]{ "DeviceId", "Enabled" }, null, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::SetDeviceMinerAlgorithmPairEnabledState), global::SetDeviceMinerAlgorithmPairEnabledState.Parser, new[]{ "DeviceId", "AlgorithmIds", "MinerId", "Enabled" }, null, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::SetDeviceMinerAlgorithmPairEnabledState), global::SetDeviceMinerAlgorithmPairEnabledState.Parser, new[]{ "DeviceId", "AlgorithmIds", "MinerId", "Enabled" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::SetDeviceOCSettings), global::SetDeviceOCSettings.Parser, new[]{ "DeviceId", "SetType", "SetValue" }, null, new[]{ typeof(global::SetDeviceOCSettings.Types.Type) }, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::SetDeviceOCDefaultSettings), global::SetDeviceOCDefaultSettings.Parser, new[]{ "DeviceId", "SetType" }, null, new[]{ typeof(global::SetDeviceOCDefaultSettings.Types.Type) }, null, null)
             }));
     }
     #endregion
@@ -3449,6 +3459,454 @@ public sealed partial class SetDeviceMinerAlgorithmPairEnabledState : pb::IMessa
             }
         }
     }
+
+}
+
+public sealed partial class SetDeviceOCSettings : pb::IMessage<SetDeviceOCSettings>
+{
+    private static readonly pb::MessageParser<SetDeviceOCSettings> _parser = new pb::MessageParser<SetDeviceOCSettings>(() => new SetDeviceOCSettings());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<SetDeviceOCSettings> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor
+    {
+        get { return global::NhmsReflection.Descriptor.MessageTypes[15]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor
+    {
+        get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SetDeviceOCSettings()
+    {
+        OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SetDeviceOCSettings(SetDeviceOCSettings other) : this()
+    {
+        deviceId_ = other.deviceId_;
+        setType_ = other.setType_;
+        setValue_ = other.setValue_;
+        _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SetDeviceOCSettings Clone()
+    {
+        return new SetDeviceOCSettings(this);
+    }
+
+    /// <summary>Field number for the "device_id" field.</summary>
+    public const int DeviceIdFieldNumber = 1;
+    private string deviceId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DeviceId
+    {
+        get { return deviceId_; }
+        set
+        {
+            deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        }
+    }
+
+    /// <summary>Field number for the "set_type" field.</summary>
+    public const int SetTypeFieldNumber = 2;
+    private global::SetDeviceOCSettings.Types.Type setType_ = global::SetDeviceOCSettings.Types.Type.NotSetInvalid;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::SetDeviceOCSettings.Types.Type SetType
+    {
+        get { return setType_; }
+        set
+        {
+            setType_ = value;
+        }
+    }
+
+    /// <summary>Field number for the "set_value" field.</summary>
+    public const int SetValueFieldNumber = 3;
+    private double setValue_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double SetValue
+    {
+        get { return setValue_; }
+        set
+        {
+            setValue_ = value;
+        }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other)
+    {
+        return Equals(other as SetDeviceOCSettings);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(SetDeviceOCSettings other)
+    {
+        if (ReferenceEquals(other, null))
+        {
+            return false;
+        }
+        if (ReferenceEquals(other, this))
+        {
+            return true;
+        }
+        if (DeviceId != other.DeviceId) return false;
+        if (SetType != other.SetType) return false;
+        if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(SetValue, other.SetValue)) return false;
+        return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode()
+    {
+        int hash = 1;
+        if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
+        if (SetType != global::SetDeviceOCSettings.Types.Type.NotSetInvalid) hash ^= SetType.GetHashCode();
+        if (SetValue != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(SetValue);
+        if (_unknownFields != null)
+        {
+            hash ^= _unknownFields.GetHashCode();
+        }
+        return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString()
+    {
+        return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output)
+    {
+        if (DeviceId.Length != 0)
+        {
+            output.WriteRawTag(10);
+            output.WriteString(DeviceId);
+        }
+        if (SetType != global::SetDeviceOCSettings.Types.Type.NotSetInvalid)
+        {
+            output.WriteRawTag(16);
+            output.WriteEnum((int)SetType);
+        }
+        if (SetValue != 0D)
+        {
+            output.WriteRawTag(25);
+            output.WriteDouble(SetValue);
+        }
+        if (_unknownFields != null)
+        {
+            _unknownFields.WriteTo(output);
+        }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize()
+    {
+        int size = 0;
+        if (DeviceId.Length != 0)
+        {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
+        }
+        if (SetType != global::SetDeviceOCSettings.Types.Type.NotSetInvalid)
+        {
+            size += 1 + pb::CodedOutputStream.ComputeEnumSize((int)SetType);
+        }
+        if (SetValue != 0D)
+        {
+            size += 1 + 8;
+        }
+        if (_unknownFields != null)
+        {
+            size += _unknownFields.CalculateSize();
+        }
+        return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(SetDeviceOCSettings other)
+    {
+        if (other == null)
+        {
+            return;
+        }
+        if (other.DeviceId.Length != 0)
+        {
+            DeviceId = other.DeviceId;
+        }
+        if (other.SetType != global::SetDeviceOCSettings.Types.Type.NotSetInvalid)
+        {
+            SetType = other.SetType;
+        }
+        if (other.SetValue != 0D)
+        {
+            SetValue = other.SetValue;
+        }
+        _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input)
+    {
+        uint tag;
+        while ((tag = input.ReadTag()) != 0)
+        {
+            switch (tag)
+            {
+                default:
+                    _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                    break;
+                case 10:
+                    {
+                        DeviceId = input.ReadString();
+                        break;
+                    }
+                case 16:
+                    {
+                        SetType = (global::SetDeviceOCSettings.Types.Type)input.ReadEnum();
+                        break;
+                    }
+                case 25:
+                    {
+                        SetValue = input.ReadDouble();
+                        break;
+                    }
+            }
+        }
+    }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the SetDeviceOCSettings message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types
+    {
+        public enum Type
+        {
+            [pbr::OriginalName("TYPE_NOT_SET_INVALID")] NotSetInvalid = 0,
+            [pbr::OriginalName("TDP")] Tdp = 1,
+            [pbr::OriginalName("MEMORY")] Memory = 2,
+            [pbr::OriginalName("CORE")] Core = 3,
+        }
+
+    }
+    #endregion
+
+}
+
+public sealed partial class SetDeviceOCDefaultSettings : pb::IMessage<SetDeviceOCDefaultSettings>
+{
+    private static readonly pb::MessageParser<SetDeviceOCDefaultSettings> _parser = new pb::MessageParser<SetDeviceOCDefaultSettings>(() => new SetDeviceOCDefaultSettings());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<SetDeviceOCDefaultSettings> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor
+    {
+        get { return global::NhmsReflection.Descriptor.MessageTypes[16]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor
+    {
+        get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SetDeviceOCDefaultSettings()
+    {
+        OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SetDeviceOCDefaultSettings(SetDeviceOCDefaultSettings other) : this()
+    {
+        deviceId_ = other.deviceId_;
+        setType_ = other.setType_;
+        _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SetDeviceOCDefaultSettings Clone()
+    {
+        return new SetDeviceOCDefaultSettings(this);
+    }
+
+    /// <summary>Field number for the "device_id" field.</summary>
+    public const int DeviceIdFieldNumber = 1;
+    private string deviceId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string DeviceId
+    {
+        get { return deviceId_; }
+        set
+        {
+            deviceId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        }
+    }
+
+    /// <summary>Field number for the "set_type" field.</summary>
+    public const int SetTypeFieldNumber = 2;
+    private global::SetDeviceOCDefaultSettings.Types.Type setType_ = global::SetDeviceOCDefaultSettings.Types.Type.NotSetInvalid;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::SetDeviceOCDefaultSettings.Types.Type SetType
+    {
+        get { return setType_; }
+        set
+        {
+            setType_ = value;
+        }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other)
+    {
+        return Equals(other as SetDeviceOCDefaultSettings);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(SetDeviceOCDefaultSettings other)
+    {
+        if (ReferenceEquals(other, null))
+        {
+            return false;
+        }
+        if (ReferenceEquals(other, this))
+        {
+            return true;
+        }
+        if (DeviceId != other.DeviceId) return false;
+        if (SetType != other.SetType) return false;
+        return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode()
+    {
+        int hash = 1;
+        if (DeviceId.Length != 0) hash ^= DeviceId.GetHashCode();
+        if (SetType != global::SetDeviceOCDefaultSettings.Types.Type.NotSetInvalid) hash ^= SetType.GetHashCode();
+        if (_unknownFields != null)
+        {
+            hash ^= _unknownFields.GetHashCode();
+        }
+        return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString()
+    {
+        return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output)
+    {
+        if (DeviceId.Length != 0)
+        {
+            output.WriteRawTag(10);
+            output.WriteString(DeviceId);
+        }
+        if (SetType != global::SetDeviceOCDefaultSettings.Types.Type.NotSetInvalid)
+        {
+            output.WriteRawTag(16);
+            output.WriteEnum((int)SetType);
+        }
+        if (_unknownFields != null)
+        {
+            _unknownFields.WriteTo(output);
+        }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize()
+    {
+        int size = 0;
+        if (DeviceId.Length != 0)
+        {
+            size += 1 + pb::CodedOutputStream.ComputeStringSize(DeviceId);
+        }
+        if (SetType != global::SetDeviceOCDefaultSettings.Types.Type.NotSetInvalid)
+        {
+            size += 1 + pb::CodedOutputStream.ComputeEnumSize((int)SetType);
+        }
+        if (_unknownFields != null)
+        {
+            size += _unknownFields.CalculateSize();
+        }
+        return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(SetDeviceOCDefaultSettings other)
+    {
+        if (other == null)
+        {
+            return;
+        }
+        if (other.DeviceId.Length != 0)
+        {
+            DeviceId = other.DeviceId;
+        }
+        if (other.SetType != global::SetDeviceOCDefaultSettings.Types.Type.NotSetInvalid)
+        {
+            SetType = other.SetType;
+        }
+        _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input)
+    {
+        uint tag;
+        while ((tag = input.ReadTag()) != 0)
+        {
+            switch (tag)
+            {
+                default:
+                    _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+                    break;
+                case 10:
+                    {
+                        DeviceId = input.ReadString();
+                        break;
+                    }
+                case 16:
+                    {
+                        SetType = (global::SetDeviceOCDefaultSettings.Types.Type)input.ReadEnum();
+                        break;
+                    }
+            }
+        }
+    }
+
+    #region Nested types
+    /// <summary>Container for nested types declared in the SetDeviceOCDefaultSettings message type.</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static partial class Types
+    {
+        public enum Type
+        {
+            [pbr::OriginalName("TYPE_NOT_SET_INVALID")] NotSetInvalid = 0,
+            [pbr::OriginalName("TDP")] Tdp = 1,
+            [pbr::OriginalName("MEMORY")] Memory = 2,
+            [pbr::OriginalName("CORE")] Core = 3,
+        }
+
+    }
+    #endregion
 
 }
 

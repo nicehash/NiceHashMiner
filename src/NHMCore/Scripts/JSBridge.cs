@@ -266,6 +266,25 @@ namespace NHMCore.Scripts
             //    };
             //    return HandleProtoMessageHelper("bridge_nhms_reg_js_set_device_miner_algorithm_pair_enabled_state", logic, buffer, in_size, ref out_size);
             //});
+
+            bridge_nhms_reg_js_set_device_oc_settings((IntPtr buffer, long in_size, ref long out_size) => {
+                JSLogicDelegate logic = (byte[] in_buff) => {
+                    SetDeviceOCSettings in_msg = SetDeviceOCSettings.Parser.ParseFrom(in_buff);
+                    var msg = $"Setting {in_msg.DeviceId} OC '{in_msg.SetType}' is not supported";
+                    return new StatusMessage { Status = -1, Message = msg };
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_set_device_oc_settings", logic, buffer, in_size, ref out_size);
+            });
+
+            bridge_nhms_reg_js_set_device_oc_default_settings((IntPtr buffer, long in_size, ref long out_size) => {
+                JSLogicDelegate logic = (byte[] in_buff) => {
+                    SetDeviceOCSettings in_msg = SetDeviceOCSettings.Parser.ParseFrom(in_buff);
+                    var msg = $"Setting {in_msg.DeviceId} OC Defaults '{in_msg.SetType}' is not supported";
+                    return new StatusMessage { Status = -1, Message = msg };
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_set_device_oc_default_settings", logic, buffer, in_size, ref out_size);
+            });
+
             #endregion JS regs
             // commit to context after we hook our callbacks
             ok = nhms_commit_javascript_callbacks_to_context();
