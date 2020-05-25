@@ -18,7 +18,7 @@ using NHMCore.Switching;
 
 namespace NHMCore.Scripts
 {
-    public static class JSBridge
+    public static partial class JSBridge
     {
         public delegate void OnJSError(string error, string stack, Int64 script_id);
         public static OnJSError OnJSErrorCallback = null;
@@ -128,308 +128,144 @@ namespace NHMCore.Scripts
             }
             #region JS regs
             bridge_nhms_reg_js_console_print((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
-                    var in_buff = new byte[in_size];
-                    Marshal.Copy(buffer, in_buff, 0, (int)in_size);
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     ConsolePrint in_msg = ConsolePrint.Parser.ParseFrom(in_buff);
                     Logger.Info("JSBridge.Log", $"JS_LOG:\n\t: {in_msg.Message}.");
-                    Void out_msg = new Void { };
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_console_print_cb error {e}.");
-                    return -1;
-                }
+                    return new Void {};
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_console_print_cb", logic, buffer, in_size, ref out_size);
             });
 
             bridge_nhms_reg_js_get_devices_info((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     DevicesInfos out_msg = new DevicesInfos { };
                     var add_devices = AvailableDevices.Devices.Select(dev => ToDeviceInfo(dev));
                     out_msg.Devices.AddRange(add_devices);
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_get_devices_info_cb error {e}.");
-                    return -1;
-                }
+                    return out_msg;
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_get_devices_info_cb", logic, buffer, in_size, ref out_size);
             });
             bridge_nhms_reg_js_get_device_info((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
-                    var in_buff = new byte[in_size];
-                    Marshal.Copy(buffer, in_buff, 0, (int)in_size);
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     DeviceID in_msg = DeviceID.Parser.ParseFrom(in_buff);
-                    IMessage out_msg;
-                    int ret = 0;
                     var targetDev = AvailableDevices.Devices.Where(dev => dev.Uuid == in_msg.DeviceId).FirstOrDefault();
-                    if (targetDev == null)
-                    {
-                        StatusMessage err = new StatusMessage();
-                        err.Status = -1;
-                        err.Message = "Device not found.";
-                        out_msg = err;
-                        ret = -1;
-                    }
-                    else
-                    {
-                        DeviceInfo out_ok = ToDeviceInfo(targetDev);
-                        out_msg = out_ok;
-                    }
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return ret;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_get_device_info error {e}.");
-                    return -1;
-                }
+                    if (targetDev == null) throw new JSBridgeAppException { Status = -1, Message = "Device not found." };
+                    return ToDeviceInfo(targetDev);
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_get_device_info", logic, buffer, in_size, ref out_size);
             });
             bridge_nhms_reg_js_set_device_fan_speed((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
-                    var in_buff = new byte[in_size];
-                    Marshal.Copy(buffer, in_buff, 0, (int)in_size);
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     SetDeviceFanSpeed in_msg = SetDeviceFanSpeed.Parser.ParseFrom(in_buff);
-                    StatusMessage out_msg = new StatusMessage();
                     var targetDev = AvailableDevices.Devices.Where(dev => dev.Uuid == in_msg.DeviceId).FirstOrDefault();
-                    if (targetDev == null)
-                    {
-                        out_msg.Status = -1;
-                        out_msg.Message = "Device not found.";
-                    }
-                    else
-                    {
-                        if (targetDev.DeviceMonitor is IFanSpeedRPM setFanSpeed)
+                    if (targetDev == null) return  new StatusMessage { Status = -1, Message = "Device not found." };
+                    if (targetDev.DeviceMonitor is IFanSpeedRPM setFanSpeed) {
+                        try
                         {
-                            out_msg.Status = 0;
-                            out_msg.Message = $"";
-                            try
-                            {
-                                setFanSpeed.SetFanSpeedPercentage(in_msg.FanSpeed);
-                            }
-                            catch (Exception e)
-                            {
-                                out_msg.Status = 0;
-                                out_msg.Message = $"Device {targetDev.Uuid} failed while setting fan speed {e}";
-                            }
+                            setFanSpeed.SetFanSpeedPercentage(in_msg.FanSpeed);
+                            return new StatusMessage { Status = 0, Message = "" };
                         }
-                        else
+                        catch (Exception e)
                         {
-                            out_msg.Status = -1;
-                            out_msg.Message = $"Device {targetDev.Uuid} doesn't support set fan speed";
+                            return new StatusMessage { Status = -2, Message = $"Device {targetDev.Uuid} failed while setting fan speed {e}" };
                         }
                     }
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_set_device_fan_speed error {e}.");
-                    return -1;
-                }
+                    return new StatusMessage { Status = -1, Message = $"Device {targetDev.Uuid} doesn't support set fan speed" };
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_set_device_fan_speed", logic, buffer, in_size, ref out_size);
             });
             bridge_nhms_reg_js_get_sma_data((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     SMAEntries out_msg = new SMAEntries();
                     foreach (var pair in NHSmaData.CurrentPayingRatesSnapshot())
                     {
-                        out_msg.Entries.Add(new SMAEntry {
+                        out_msg.Entries.Add(new SMAEntry
+                        {
                             AlgorithmId = (int)pair.Key,
                             Paying = pair.Value,
                             IsStable = NHSmaData.IsAlgorithmStable(pair.Key),
                         });
                     }
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_get_sma_data error {e}.");
-                    return -1;
-                }
+                    return out_msg;
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_get_sma_data", logic, buffer, in_size, ref out_size);
             });
             bridge_nhms_reg_js_get_devices_algorithm_info((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     DevicesAlgorithms out_msg = new DevicesAlgorithms();
                     out_msg.EnabledDevices.AddRange(AvailableDevices.Devices.Select(dev => ToDeviceAlgorithmsInfo(dev)));
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_get_devices_algorithm_info error {e}.");
-                    return -1;
-                }
+                    return out_msg;
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_get_devices_algorithm_info", logic, buffer, in_size, ref out_size);
             });
             bridge_nhms_reg_js_update_device_mining_state((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
-                    
-                    var in_buff = new byte[in_size];
-                    Marshal.Copy(buffer, in_buff, 0, (int)in_size);
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     UpdateDeviceMiningState in_msg = UpdateDeviceMiningState.Parser.ParseFrom(in_buff);
-                    StatusMessage out_msg = new StatusMessage();
-                    // don't wait promise change
                     MiningManager.SetSwitchScriptMineState(in_msg.DeviceId, in_msg.MinerId, in_msg.AlgorithmIds.Select(id => (AlgorithmType)id).ToList());
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_update_device_mining_state error {e}.");
-                    return -1;
-                }
+                    // TODO return some message
+                    StatusMessage out_msg = new StatusMessage();
+                    return out_msg;
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_update_device_mining_state", logic, buffer, in_size, ref out_size);
             });
             bridge_nhms_reg_js_set_device_enabled_state((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
-                    var in_buff = new byte[in_size];
-                    Marshal.Copy(buffer, in_buff, 0, (int)in_size);
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     SetDeviceEnabledState in_msg = SetDeviceEnabledState.Parser.ParseFrom(in_buff);
-                    StatusMessage out_msg = new StatusMessage();
                     var device = AvailableDevices.GetDeviceWithUuidOrB64Uuid(in_msg.DeviceId);
-                    if (device == null)
-                    {
-                        out_msg.Status = -1;
-                        out_msg.Message = $"Error unable to find device with ID '{in_msg.DeviceId}'";
-                    }
-                    else if (device.Enabled == in_msg.Enabled)
-                    {
-                        out_msg.Status = -1; // is this error?
-                        out_msg.Message = $"Device with ID '{in_msg.DeviceId}' already set to desired state";
-                    }
-                    else 
-                    {
-                        Task.Run(() => ApplicationStateManager.SetDeviceEnabledState(null, (device.Uuid, in_msg.Enabled))).Wait();
-                        out_msg.Status = 0; 
-                        out_msg.Message = $"Device set enabled='{in_msg.Enabled}' with ID '{in_msg.DeviceId}' Success";
-                    }
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_set_device_enabled_state error {e}.");
-                    return -1;
-                }
+                    if (device == null) return new StatusMessage { Status = -1, Message = $"Error unable to find device with ID '{in_msg.DeviceId}'" };
+                    // is this error?
+                    if (device.Enabled == in_msg.Enabled) return new StatusMessage { Status = -1, Message = $"Device with ID '{in_msg.DeviceId}' already set to desired state" };
+
+                    Task.Run(() => ApplicationStateManager.SetDeviceEnabledState(null, (device.Uuid, in_msg.Enabled))).Wait();
+                    return new StatusMessage { Status = 0, Message = $"Device set enabled='{in_msg.Enabled}' with ID '{in_msg.DeviceId}' Success" };
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_set_device_enabled_state", logic, buffer, in_size, ref out_size);
             });
             bridge_nhms_reg_js_start_device((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
-                    var in_buff = new byte[in_size];
-                    Marshal.Copy(buffer, in_buff, 0, (int)in_size);
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     DeviceID in_msg = DeviceID.Parser.ParseFrom(in_buff);
-                    StatusMessage out_msg = new StatusMessage();
+                    StatusMessage out_msg = new StatusMessage { Status = 0, Message = "" };
                     var (success, msg, code) = Task.Run(() => ApplicationStateManager.StartDeviceWithUUIDTask(in_msg.DeviceId)).Result;
-                    if (!success)
-                    {
-                        out_msg.Message = msg;
-                        out_msg.Status = -(int)(code);
-                    }
-                    else
-                    {
-                        out_msg.Message = "";
-                        out_msg.Status = 0;
-                    }
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_start_device error {e}.");
-                    return -1;
-                }
+                    if (!success) out_msg = new StatusMessage { Status = -(int)(code), Message = msg };
+                    return out_msg;
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_start_device", logic, buffer, in_size, ref out_size);
             });
 
             bridge_nhms_reg_js_stop_device((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
-                    var in_buff = new byte[in_size];
-                    Marshal.Copy(buffer, in_buff, 0, (int)in_size);
+                JSLogicDelegate logic = (byte[] in_buff) => {
                     DeviceID in_msg = DeviceID.Parser.ParseFrom(in_buff);
-                    StatusMessage out_msg = new StatusMessage();
+                    StatusMessage out_msg = new StatusMessage { Status = 0, Message = "" };
                     var (success, msg, code) = Task.Run(() => ApplicationStateManager.StopDeviceWithUUIDTask(in_msg.DeviceId)).Result;
-                    if (!success)
-                    {
-                        out_msg.Message = msg;
-                        out_msg.Status = -(int)(code);
-                    }
-                    else
-                    {
-                        out_msg.Message = "";
-                        out_msg.Status = 0;
-                    }
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_stop_device error {e}.");
-                    return -1;
-                }
+                    if (!success) out_msg = new StatusMessage { Status = -(int)(code), Message = msg };
+                    return out_msg;
+                };
+                return HandleProtoMessageHelper("bridge_nhms_reg_js_stop_device", logic, buffer, in_size, ref out_size);
             });
 
-            bridge_nhms_reg_js_set_device_miner_algorithm_pair_enabled_state((IntPtr buffer, long in_size, ref long out_size) => {
-                try
-                {
-                    var in_buff = new byte[in_size];
-                    Marshal.Copy(buffer, in_buff, 0, (int)in_size);
-                    SetDeviceMinerAlgorithmPairEnabledState in_msg = SetDeviceMinerAlgorithmPairEnabledState.Parser.ParseFrom(in_buff);
-                    StatusMessage out_msg = new StatusMessage();
+            //bridge_nhms_reg_js_set_device_miner_algorithm_pair_enabled_state((IntPtr buffer, long in_size, ref long out_size) => {
+            //    JSLogicDelegate logic = (byte[] in_buff) => {
+            //        SetDeviceMinerAlgorithmPairEnabledState in_msg = SetDeviceMinerAlgorithmPairEnabledState.Parser.ParseFrom(in_buff);
 
-                    var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(in_msg.DeviceId);
-                    if (deviceWithUUID == null)
-                    {
-                        out_msg.Status = -1;
-                        out_msg.Message = $"Error unable to find device with ID '{in_msg.DeviceId}'";
-                    }
-                    else
-                    {
-                        var targetMinerAlgorithmPair = deviceWithUUID.AlgorithmSettings.Where(algo => algo.MinerUUID == in_msg.MinerId)
-                                                        .Where(algo => algo.IDs.Count() == in_msg.AlgorithmIds.Count)
-                                                        .Where(algo => algo.IDs.Zip(in_msg.AlgorithmIds, (a,b) => (int)a == b).All(equal => equal))
-                                                        .FirstOrDefault();
-                        if (targetMinerAlgorithmPair == null)
-                        {
-                            out_msg.Status = -2;
-                            var targetMinerAlgoPair = $"{in_msg.MinerId}-[{string.Join(",", in_msg.AlgorithmIds.Select(id => id.ToString()))}]";
-                            out_msg.Message = $"Error unable to find miner algorithm pair {targetMinerAlgoPair} for device with ID '{in_msg.DeviceId}'";
-                        }
-                        else
-                        {
-                            targetMinerAlgorithmPair.Enabled = in_msg.Enabled;
-                        }
-                    }
+            //        var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(in_msg.DeviceId);
+            //        if (deviceWithUUID == null) return new StatusMessage { Status = -1, Message = $"Error unable to find device with ID '{in_msg.DeviceId}'" };
 
-                    out_size = out_msg.CalculateSize();
-                    Marshal.Copy(out_msg.ToByteArray(), 0, buffer, out_msg.CalculateSize());
-                    return 0;
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("JSBridge.Log", $"bridge_nhms_reg_js_set_device_miner_algorithm_pair_enabled_state error {e}.");
-                    return -1;
-                }
-            });
+            //        StatusMessage out_msg = new StatusMessage();
+            //        var targetMinerAlgorithmPair = deviceWithUUID.AlgorithmSettings.Where(algo => algo.MinerUUID == in_msg.MinerId)
+            //                                            .Where(algo => algo.IDs.Count() == in_msg.AlgorithmIds.Count)
+            //                                            .Where(algo => algo.IDs.Zip(in_msg.AlgorithmIds, (a, b) => (int)a == b).All(equal => equal))
+            //                                            .FirstOrDefault();
+            //        if (targetMinerAlgorithmPair == null)
+            //        {
+            //            out_msg.Status = -2;
+            //            var targetMinerAlgoPair = $"{in_msg.MinerId}-[{string.Join(",", in_msg.AlgorithmIds.Select(id => id.ToString()))}]";
+            //            out_msg.Message = $"Error unable to find miner algorithm pair {targetMinerAlgoPair} for device with ID '{in_msg.DeviceId}'";
+            //        }
+            //        targetMinerAlgorithmPair.Enabled = in_msg.Enabled;
+            //        return new StatusMessage { Status = 0, Message = "" };
+            //    };
+            //    return HandleProtoMessageHelper("bridge_nhms_reg_js_set_device_miner_algorithm_pair_enabled_state", logic, buffer, in_size, ref out_size);
+            //});
             #endregion JS regs
             // commit to context after we hook our callbacks
             ok = nhms_commit_javascript_callbacks_to_context();

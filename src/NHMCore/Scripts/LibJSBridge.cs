@@ -103,6 +103,16 @@ namespace NHMCore.Scripts
         private static extern Int64 nhms_reg_js_set_device_miner_algorithm_pair_enabled_state(nhms_protobuf_in_out_cb cb);
         internal static void bridge_nhms_reg_js_set_device_miner_algorithm_pair_enabled_state(nhms_protobuf_in_out_cb cb) => nhms_reg_js_set_device_miner_algorithm_pair_enabled_state(CreateHandler(nameof(nhms_reg_js_set_device_miner_algorithm_pair_enabled_state), cb));
 
+        // <in, out>:<SetDeviceMinerAlgorithmPairEnabledState, StatusMessage>
+        [DllImport("libnhms.dll", CallingConvention = CallingConvention.StdCall)]
+        private static extern Int64 nhms_reg_js_set_device_oc_settings(nhms_protobuf_in_out_cb cb);
+        internal static void bridge_nhms_reg_js_set_device_oc_settings(nhms_protobuf_in_out_cb cb) => nhms_reg_js_set_device_oc_settings(CreateHandler(nameof(nhms_reg_js_set_device_oc_settings), cb));
+
+        // <in, out>:<SetDeviceMinerAlgorithmPairEnabledState, StatusMessage>
+        [DllImport("libnhms.dll", CallingConvention = CallingConvention.StdCall)]
+        private static extern Int64 nhms_reg_js_set_device_oc_default_settings(nhms_protobuf_in_out_cb cb);
+        internal static void bridge_nhms_reg_js_set_device_oc_default_settings(nhms_protobuf_in_out_cb cb) => nhms_reg_js_set_device_oc_default_settings(CreateHandler(nameof(nhms_reg_js_set_device_oc_default_settings), cb));
+
         // keep callbacks in memory
         private static readonly Dictionary<string, Delegate> _callbacks = new Dictionary<string, Delegate> { };
         public static T CreateHandler<T>(string key, T func) where T : Delegate

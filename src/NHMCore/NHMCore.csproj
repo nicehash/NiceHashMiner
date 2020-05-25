@@ -195,6 +195,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Scripts\JSBridge.cs" />
+    <Compile Include="Scripts\JSBridge.SerializeHelpers.cs" />
     <Compile Include="Scripts\LibJSBridge.cs" />
     <Compile Include="Scripts\Nhms.cs" />
     <Compile Include="StratumService.cs" />
