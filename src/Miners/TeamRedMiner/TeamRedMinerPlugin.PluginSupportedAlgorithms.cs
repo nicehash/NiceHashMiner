@@ -13,7 +13,8 @@ namespace TeamRedMiner
             DefaultFee = 2.5,
             AlgorithmFees = new Dictionary<AlgorithmType, double>
             {
-                { AlgorithmType.DaggerHashimoto, 1.0 }
+                { AlgorithmType.DaggerHashimoto, 1.0 },
+                { AlgorithmType.KAWPOW, 2.0 }
 
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
@@ -27,7 +28,8 @@ namespace TeamRedMiner
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.X16Rv2),
-                        new SAS(AlgorithmType.DaggerHashimoto)
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.KAWPOW)
                     }
                 }
             },
@@ -38,7 +40,8 @@ namespace TeamRedMiner
                 { AlgorithmType.GrinCuckatoo31, "cuckatoo31_grin" },
                 { AlgorithmType.GrinCuckarood29, "cuckarood29_grin" },
                 { AlgorithmType.X16Rv2, "x16rv2" },
-                { AlgorithmType.DaggerHashimoto, "ethash" }
+                { AlgorithmType.DaggerHashimoto, "ethash" },
+                { AlgorithmType.KAWPOW, "kawpow" }
             }
         };
     }
