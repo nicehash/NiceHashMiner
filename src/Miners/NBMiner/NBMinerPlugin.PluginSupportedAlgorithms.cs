@@ -33,7 +33,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.Handshake),
                         new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.KAWPOW),
-                        new SAS(AlgorithmType.Cuckaroo29BFC),
+                        //new SAS(AlgorithmType.Cuckaroo29BFC),
                     }
                 },
                 {
