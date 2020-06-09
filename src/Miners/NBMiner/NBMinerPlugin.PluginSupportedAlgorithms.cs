@@ -16,6 +16,7 @@ namespace NBMiner
             {
                 { AlgorithmType.DaggerHashimoto, 1.0 },
                 //{ AlgorithmType.DaggerHashimoto + AlgorithmType.Eaglesong, 3.0 },
+                { AlgorithmType.Cuckaroo29BFC, 3.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -32,6 +33,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.Handshake),
                         new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.KAWPOW),
+                        //new SAS(AlgorithmType.Cuckaroo29BFC),
                     }
                 },
                 {
@@ -53,7 +55,8 @@ namespace NBMiner
                 { AlgorithmType.Eaglesong, "eaglesong" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.Handshake, "hns" },
-                { AlgorithmType.KAWPOW, "kawpow" }
+                { AlgorithmType.KAWPOW, "kawpow" },
+                { AlgorithmType.Cuckaroo29BFC, "bfc" },
             }
         };
     }

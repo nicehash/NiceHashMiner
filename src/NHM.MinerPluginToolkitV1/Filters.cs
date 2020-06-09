@@ -26,6 +26,7 @@ namespace NHM.MinerPluginToolkitV1
         public const ulong MinGrinCuckaroomMemory = 6012951136; // 5.6GB // TODO check the RAM limits
         public const ulong MinGrin32Mem = 7UL << 30; // 7.0GB (because system acn reserve GPU memory) really this is 8GB
         public const ulong MinKAWPOWMemory = 3UL << 30; // 3GB
+        public const ulong MinCuckaroo29BFCMemory = 5UL << 30; // 5GB
 
 
 #pragma warning disable 0618
@@ -45,6 +46,7 @@ namespace NHM.MinerPluginToolkitV1
             { AlgorithmType.Cuckaroom, MinGrinCuckaroomMemory },
             { AlgorithmType.GrinCuckatoo32, MinGrin32Mem },
             { AlgorithmType.KAWPOW, MinKAWPOWMemory },
+            { AlgorithmType.Cuckaroo29BFC, MinCuckaroo29BFCMemory },
         };
 #pragma warning restore 0618
 
