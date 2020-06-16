@@ -1,5 +1,4 @@
-﻿using ATI.ADL;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.DeviceMonitoring.AMD;
 using NHM.DeviceMonitoring.TDP;
 using System;
@@ -9,42 +8,15 @@ namespace NHM.DeviceMonitoring
     internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, ILoad, IPowerUsage, ITemp, ITDP
     {
         public int BusID { get; private set; }
-        private readonly IntPtr _adlContext;
-        private bool _powerHasFailed;
-
-        private AmdBusIDInfo[] _adapderIndexInfos;
-        private int _adapterIndex {
-            get
-            {
-                foreach (var info in _adapderIndexInfos)
-                {
-                    return info.Adl1Index;
-                }
-                return -1;
-            }
-        } // For ADL
-        private int _adapterIndex2
-        {
-            get
-            {
-                foreach (var info in _adapderIndexInfos)
-                {
-                    return info.Adl1Index;
-                }
-                return -1;
-            }
-        }// For ADL2
 
         private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(0.5);
 
         private string LogTag => $"DeviceMonitorAMD-uuid({UUID})-busid({BusID})";
 
-        internal DeviceMonitorAMD(string uuid, int busID, params AmdBusIDInfo[] infos)
+        internal DeviceMonitorAMD(string uuid, int busID)
         {
             UUID = uuid;
             BusID = busID;
-            _adapderIndexInfos = infos;
-            ADL.ADL2_Main_Control_Create.Delegate?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
 
             try
             {
@@ -53,7 +25,7 @@ namespace NHM.DeviceMonitoring
                 var success = SetTDPSimple(defaultLevel);
                 if (!success)
                 {
-                    Logger.Info(LogTag, $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
+                    Logger.Info(LogTag, $"Cannot set power target ({defaultLevel}) for device with BusID={BusID}");
                 }
             }
             catch (Exception e)
@@ -66,59 +38,31 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var adlf = new ADLFanSpeedValue
-                {
-                    SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_RPM
-                };
-                var result = ADL.ADL_Overdrive5_FanSpeed_Get.Delegate(_adapterIndex, 0, ref adlf);
-                if (result != ADL.ADL_SUCCESS)
-                {
-                    Logger.InfoDelayed(LogTag, $"ADL fan getting failed with error code {result}", _delayedLogging);
-                    return -1;
-                }
-                return adlf.FanSpeed;
+                int rpm = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_fan_speed_rpm(BusID, ref rpm);
+                if (ok == 0) return rpm;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
+                return -1;
             }
         }
 
         public bool SetFanSpeedPercentage(int percentage)
         {
-            var ADLFanInfo = new ADLFanSpeedInfo();
-            var ret = ADL.ADL_Overdrive5_FanSpeedInfo_Get.Delegate(_adapterIndex, 0, ref ADLFanInfo);
-            if (ret != ADL.ADL_SUCCESS)
-            {
-                Logger.Info(LogTag, $"ADLFanInfo ADL_Overdrive5_FanSpeedInfo_Get returned {ret}");
-                return false;
-            }
-            // We limit percentage to max and min
-            if (percentage > ADLFanInfo.MaxPercent) percentage = ADLFanInfo.MaxPercent;
-            if (percentage < ADLFanInfo.MinPercent) percentage = ADLFanInfo.MinPercent;
-
-            var adlf = new ADLFanSpeedValue
-            {
-                SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_PERCENT,
-                FanSpeed = percentage
-            };
-            var adlRet = ADL.ADL_Overdrive5_FanSpeed_Set.Delegate(_adapterIndex, 0, ref adlf);
-            if (adlRet != ADL.ADL_SUCCESS)
-            {
-                Logger.Error(LogTag, $"ADL_Overdrive5_FanSpeed_Set failed with code {adlRet} for GPU BusID={BusID}.");
-                return false;
-            }
-            return true;
+            int ok = AMD_ODN.nhm_amd_device_set_fan_speed_percentage(BusID, percentage);
+            if (ok == 0) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_fan_speed_percentage failed with error code {ok}", _delayedLogging);
+            return false;
         }
 
         public float Temp
         {
             get
             {
-                var adlt = new ADLTemperature();
-                var result = ADL.ADL_Overdrive5_Temperature_Get.Delegate(_adapterIndex, 0, ref adlt);
-                if (result != ADL.ADL_SUCCESS)
-                {
-                    Logger.InfoDelayed(LogTag, $"ADL temp getting failed with error code {result}", _delayedLogging);
-                    return -1;
-                }
-                return adlt.Temperature * 0.001f;
+                int temperature = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_temperature(BusID, ref temperature);
+                if (ok == 0) return temperature;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_temperature failed with error code {ok}", _delayedLogging);
+                return -1;
             }
         }
 
@@ -126,14 +70,11 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var adlp = new ADLPMActivity();
-                var result = ADL.ADL_Overdrive5_CurrentActivity_Get.Delegate(_adapterIndex, ref adlp);
-                if (result != ADL.ADL_SUCCESS)
-                {
-                    Logger.InfoDelayed(LogTag, $"ADL load getting failed with error code {result}", _delayedLogging);
-                    return -1;
-                }
-                return adlp.ActivityPercent;
+                int load_perc = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_load_percentage(BusID, ref load_perc);
+                if (ok == 0) return load_perc;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_load_percentage failed with error code {ok}", _delayedLogging);
+                return -1;
             }
         }
 
@@ -141,77 +82,44 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var power = -1;
-                if (!_powerHasFailed && _adlContext != IntPtr.Zero && ADL.ADL2_Overdrive6_CurrentPower_Get.Delegate != null)
-                {
-                    var result = ADL.ADL2_Overdrive6_CurrentPower_Get.Delegate(_adlContext, _adapterIndex2, 1, ref power);
-                    if (result == ADL.ADL_SUCCESS)
-                    {
-                        return (double)power / (1 << 8);
-                    }
-
-                    // Only alert once
-                    Logger.InfoDelayed(LogTag, $"ADL power getting failed with code {result} for GPU BusID={BusID}. Turning off power for this GPU.", _delayedLogging);
-                    _powerHasFailed = true;
-                }
-
-                return power;
+                int power_usage = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_power_usage(BusID, ref power_usage);
+                if (ok == 0) return power_usage;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_power_usage failed with error code {ok}", _delayedLogging);
+                return -1;
             }
         }
 
         // AMD tdpLimit
         private bool SetTdpADL(bool usePercentage, double rawOrPercValue)
         {
-            try
+            int min = 0, max = 0, defaultValue = 0;
+            int ok = AMD_ODN.nhm_amd_device_get_tdp_ranges(BusID, ref min, ref max, ref defaultValue);
+            if (ok != 0)
             {
-                if (ADL.ADL2_OverdriveN_PowerLimit_Set.Delegate == null)
-                {
-                    Logger.ErrorDelayed(LogTag, $"SetTdpADL ADL2_OverdriveN_PowerLimit_Set not supported", TimeSpan.FromSeconds(30));
-                    return false;
-                }
-                if (ADL.ADL2_OverdriveN_CapabilitiesX2_Get.Delegate == null)
-                {
-                    Logger.ErrorDelayed(LogTag, $"SetTdpADL ADL2_OverdriveN_CapabilitiesX2_Get not supported", TimeSpan.FromSeconds(30));
-                    return false;
-                }
-                var ADLODNCapabilitiesX2 = new ADLODNCapabilitiesX2();
-                var ret = ADL.ADL2_OverdriveN_CapabilitiesX2_Get.Delegate(_adlContext, _adapterIndex, ref ADLODNCapabilitiesX2);
-                if (ret != ADL.ADL_SUCCESS)
-                {
-                    Logger.Info(LogTag, $"SetTdpADL ADL2_OverdriveN_CapabilitiesX2_Get returned {ret}");
-                    return false;
-                }
-                // We limit 100% to the default as max
-                int tdpLimit = 0;
-                if (usePercentage)
-                {
-                    var limit = RangeCalculator.CalculateValue(rawOrPercValue, ADLODNCapabilitiesX2.power.iMin, ADLODNCapabilitiesX2.power.iDefault);
-                    tdpLimit = (int)limit;
-                }
-                else
-                {
-                    var limit = Math.Max((int)rawOrPercValue, ADLODNCapabilitiesX2.power.iMin);
-                    tdpLimit = Math.Min(limit, ADLODNCapabilitiesX2.power.iDefault);
-                }
-
-                //set value here
-                var lpODPowerLimit = new ADLODNPowerLimitSetting();
-                lpODPowerLimit.iMode = (int)ADLODNControlType.ODNControlType_Manual;
-                lpODPowerLimit.iTDPLimit = tdpLimit;
-                var adlRet = ADL.ADL2_OverdriveN_PowerLimit_Set.Delegate(_adlContext, _adapterIndex, ref lpODPowerLimit);
-                if (adlRet != ADL.ADL_SUCCESS)
-                {
-                    Logger.Error(LogTag, $"ADL2_OverdriveN_PowerLimit_Set failed with code {adlRet} for GPU BusID={BusID}.");
-                    return false;
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Info(LogTag, $"SetTdpADL {e.Message}");
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_ranges failed with error code {ok}", _delayedLogging);
+                return false;
             }
 
-            return false;
+            // We limit 100% to the default as max
+            int tdpLimit = 0;
+            if (usePercentage)
+            {
+                var limit = RangeCalculator.CalculateValue(rawOrPercValue, min, defaultValue);
+                tdpLimit = (int)limit;
+            }
+            else
+            {
+                var limit = Math.Max((int)rawOrPercValue, min);
+                tdpLimit = Math.Min(limit, defaultValue);
+            }
+            int ok2 = AMD_ODN.nhm_amd_device_set_tdp(BusID, tdpLimit);
+            if (ok2 != 0)
+            {
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_tdp failed with error code {ok}", _delayedLogging);
+                return false;
+            }
+            return true;
         }
 
         #region ITDP
@@ -221,21 +129,10 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                if (ADL.ADL2_OverdriveN_PowerLimit_Get.Delegate != null)
-                {
-                    var odNPowerControl = new ADLODNPowerLimitSetting();
-                    var adlRet = ADL.ADL2_OverdriveN_PowerLimit_Get.Delegate(_adlContext, _adapterIndex, ref odNPowerControl);
-                    if (adlRet != ADL.ADL_SUCCESS)
-                    {
-                        Logger.Error(LogTag, $"TDPRaw ADL2_OverdriveN_PowerLimit_Get failed with code {adlRet} for GPU BusID={BusID}.");
-                        return -1;
-                    }
-                    return odNPowerControl.iTDPLimit;
-                }
-                else
-                {
-                    Logger.InfoDelayed(LogTag, $"TDPRaw ADL2_OverdriveN_PowerLimit_Get not supported", TimeSpan.FromSeconds(30));
-                }
+                int tdpRaw = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_tdp(BusID, ref tdpRaw);
+                if (ok == 0) return tdpRaw;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp failed with error code {ok}", _delayedLogging);
                 return -1;
             }
         }
@@ -244,36 +141,22 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                if (ADL.ADL2_OverdriveN_PowerLimit_Get.Delegate == null)
+                int tdpRaw = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_tdp(BusID, ref tdpRaw);
+                if (ok != 0)
                 {
-                    Logger.ErrorDelayed(LogTag, $"TDPPercentage ADL2_OverdriveN_PowerLimit_Get not supported", TimeSpan.FromSeconds(30));
+                    Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp failed with error code {ok}", _delayedLogging);
                     return -1;
                 }
-                if (ADL.ADL2_OverdriveN_CapabilitiesX2_Get.Delegate == null)
+                int min = 0, max = 0, defaultValue = 0;
+                int ok2 = AMD_ODN.nhm_amd_device_get_tdp_ranges(BusID, ref min, ref max, ref defaultValue);
+                if (ok2 != 0)
                 {
-                    Logger.ErrorDelayed(LogTag, $"TDPPercentage ADL2_OverdriveN_CapabilitiesX2_Get not supported", TimeSpan.FromSeconds(30));
+                    Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_ranges failed with error code {ok}", _delayedLogging);
                     return -1;
                 }
-
-                var odNPowerControl = new ADLODNPowerLimitSetting();
-                var adlRet = ADL.ADL2_OverdriveN_PowerLimit_Get.Delegate(_adlContext, _adapterIndex, ref odNPowerControl);
-                if (adlRet != ADL.ADL_SUCCESS)
-                {
-                    Logger.Error(LogTag, $"TDPPercentage ADL2_OverdriveN_PowerLimit_Get failed with code {adlRet} for GPU BusID={BusID}.");
-                    return -1;
-                }
-                var currentTDP = (double)odNPowerControl.iTDPLimit;
-
-                var ADLODNCapabilitiesX2 = new ADLODNCapabilitiesX2();
-                var ret = ADL.ADL2_OverdriveN_CapabilitiesX2_Get.Delegate(_adlContext, _adapterIndex, ref ADLODNCapabilitiesX2);
-                if (ret != ADL.ADL_SUCCESS)
-                {
-                    Logger.Info(LogTag, $"TDPPercentage ADL2_OverdriveN_CapabilitiesX2_Get returned {ret}");
-                    return -1;
-                }
-
                 // We limit 100% to the default as max
-                var tdpPerc = RangeCalculator.CalculatePercentage(currentTDP, ADLODNCapabilitiesX2.power.iMin, ADLODNCapabilitiesX2.power.iDefault);
+                var tdpPerc = RangeCalculator.CalculatePercentage(tdpRaw, min, defaultValue);
                 return tdpPerc; // 0.0d - 1.0d
             }
         }
