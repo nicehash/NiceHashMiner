@@ -117,6 +117,8 @@ namespace NHM.Common.Enums
         Handshake = 51,
         //[Obsolete("UNUSED Algorithm")]
         KAWPOW = 52,
+        //[Obsolete("UNUSED Algorithm")]
+        Cuckaroo29BFC = 53,
         #endregion // NiceHashAPI
     }
 

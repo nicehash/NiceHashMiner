@@ -36,7 +36,7 @@ namespace TeamRedMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
+            var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} --opencl_order -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
 

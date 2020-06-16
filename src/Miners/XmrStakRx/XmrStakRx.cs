@@ -190,76 +190,76 @@ namespace XmrStakRx
             return api;
         }
 
-        //// TODO account AMD kernel building
-        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        //{
-        //    // END prepare config block
+        // TODO account AMD kernel building
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        {
+            // END prepare config block
 
-        //    // determine benchmark time 
-        //    // settup times
-        //    var openCLCodeGenerationWait = _miningDeviceTypes.Contains(DeviceType.AMD) ? 20 : 0;
-        //    var benchWait = 5;
-        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+            // determine benchmark time 
+            // settup times
+            var openCLCodeGenerationWait = _miningDeviceTypes.Contains(DeviceType.AMD) ? 20 : 0;
+            var benchWait = 5;
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
 
-        //    var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-        //    var algo = AlgorithmName(_algorithmType);
+            var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var algo = AlgorithmName(_algorithmType);
 
-        //    // this one here might block
-        //    string deviceConfigParams = "";
-        //    try
-        //    {
-        //        deviceConfigParams = await PrepareDeviceConfigs(stop);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return new BenchmarkResult
-        //        {
-        //            ErrorMessage = e.Message
-        //        };
-        //    }
+            // this one here might block
+            string deviceConfigParams = "";
+            try
+            {
+                deviceConfigParams = await PrepareDeviceConfigs(stop);
+            }
+            catch (Exception e)
+            {
+                return new BenchmarkResult
+                {
+                    ErrorMessage = e.Message
+                };
+            }
 
-        //    var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
-        //    var binPathBinCwdPair = GetBinAndCwdPaths();
-        //    var binPath = binPathBinCwdPair.Item1;
-        //    var binCwd = binPathBinCwdPair.Item2;
-        //    // API port function might be blocking
-        //    var apiPort = GetAvaliablePort();
-        //    var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {algo} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork {benchmarkTime} --benchwait {benchWait} {deviceConfigParams} {disableDeviceTypes}";
-        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+            var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
+            // API port function might be blocking
+            var apiPort = GetAvaliablePort();
+            var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {algo} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork {benchmarkTime} --benchwait {benchWait} {deviceConfigParams} {disableDeviceTypes}";
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
-        //    var benchHashes = 0d;
-        //    var benchIters = 0;
-        //    var benchHashResult = 0d;  // Not too sure what this is..
+            var benchHashes = 0d;
+            var benchIters = 0;
+            var benchHashResult = 0d;  // Not too sure what this is..
 
-        //    bp.CheckData = (string data) =>
-        //    {
-        //        var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Benchmark Total:");
-        //        var hashrate = hashrateFoundPair.Item1;
-        //        var found = hashrateFoundPair.Item2;
+            bp.CheckData = (string data) =>
+            {
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Benchmark Total:");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
 
-        //        if (found)
-        //        {
-        //            benchHashes += hashrate;
-        //            benchIters++;
+                if (found)
+                {
+                    benchHashes += hashrate;
+                    benchIters++;
 
-        //            benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
-        //        }
+                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                }
 
-        //        return new BenchmarkResult
-        //        {
-        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
-        //            Success = found
-        //        };
-        //    };
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
+                    Success = found
+                };
+            };
 
-        //    // always add 10second extra
-        //    var benchmarkTimeout = TimeSpan.FromSeconds(10 + (2*benchmarkTime) + benchWait + openCLCodeGenerationWait);
-        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
-        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-        //    return await t;
-        //}
+            // always add 10second extra
+            var benchmarkTimeout = TimeSpan.FromSeconds(10 + (2 * benchmarkTime) + benchWait + openCLCodeGenerationWait);
+            var benchmarkWait = TimeSpan.FromMilliseconds(500);
+            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop, CancellationToken.None);
+            return await t;
+        }
 
         protected override void Init()
         {
