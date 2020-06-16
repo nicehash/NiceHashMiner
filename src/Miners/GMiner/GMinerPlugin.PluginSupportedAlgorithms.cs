@@ -15,6 +15,7 @@ namespace GMinerPlugin
             AlgorithmFees = new Dictionary<AlgorithmType, double>
             {
                 { AlgorithmType.Cuckaroom, 3.0 },
+                { AlgorithmType.Cuckaroo29BFC, 3.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -33,6 +34,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.Cuckaroom),
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.KAWPOW),
+                        new SAS(AlgorithmType.Cuckaroo29BFC),
                     }
                 },
                 {
@@ -42,6 +44,8 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
                         new SAS(AlgorithmType.BeamV2),
                         new SAS(AlgorithmType.Eaglesong),
+                        new SAS(AlgorithmType.Cuckaroo29BFC),
+
                     }
                 }
             },
@@ -57,6 +61,7 @@ namespace GMinerPlugin
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
                 { AlgorithmType.KAWPOW, "kawpow" },
+                { AlgorithmType.Cuckaroo29BFC, "bfc" },
             }
         };
     }

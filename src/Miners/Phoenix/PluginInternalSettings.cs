@@ -304,6 +304,26 @@ namespace Phoenix
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "phoenix_leaveOC",
                     ShortName = "-leaveoc"
+                },
+                /// <summary>
+                /// -rvram <n> Minimum free VRAM in MB (-1: don't check; default: 384 for Windows, and 128 for Linux)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_rvram",
+                    ShortName = "-rvram"
+                },
+                /// <summary>
+                /// Restart the miner when allocating buffer for a new DAG epoch.
+                /// The possible values are: 0 - never, 1 - always, 2 - auto (the miner decides depending on the driver version).
+                /// This is relevant for 4 GB AMD cards, which may have problems with new DAG epochs after epoch 350.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_dagrestart",
+                    ShortName = "-dagrestart"
                 }
             },
             TemperatureOptions = new List<MinerOption>
@@ -471,16 +491,7 @@ namespace Phoenix
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "phoenix_hstats",
                     ShortName = "-hstats"
-                },
-                /// <summary>
-                /// -rvram <n> Minimum free VRAM in MB (-1: don't check; default: 384 for Windows, and 128 for Linux)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "phoenix_rvram",
-                    ShortName = "-rvram"
-                },
+                }
             }
         };
 

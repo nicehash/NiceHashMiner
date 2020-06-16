@@ -7,6 +7,7 @@ using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NHM.Common;
 
 namespace TeamRedMiner
 {
@@ -22,11 +23,11 @@ namespace TeamRedMiner
             // https://github.com/todxx/teamredminer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.6.1",
-                ExePath = new List<string> { "teamredminer-v0.6.1-win", "teamredminer.exe" },
+                BinVersion = "0.7.5",
+                ExePath = new List<string> { "teamredminer-v0.7.5-win", "teamredminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/todxx/teamredminer/releases/download/0.6.1/teamredminer-v0.6.1-win.zip", // original
+                    "https://github.com/todxx/teamredminer/releases/download/0.7.5/teamredminer-v0.7.5-win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -38,7 +39,7 @@ namespace TeamRedMiner
 
         public override string PluginUUID => "01177a50-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 0);
+        public override Version Version => new Version(11, 2);
 
         public override string Name => "TeamRedMiner";
 
@@ -83,6 +84,17 @@ namespace TeamRedMiner
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            try
+            {
+                if (ids.Count() != 0)
+                {
+                    if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 11 && benchmarkedPluginVersion.Minor < 2) return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             //no improvements for algorithm speeds in the new version - just stability improvements
             return false;
         }

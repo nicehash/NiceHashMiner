@@ -21,11 +21,11 @@ namespace XMRig
             // https://github.com/xmrig/xmrig
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v5.11.1",
-                ExePath = new List<string> { "xmrig-5.11.1", "xmrig.exe" },
+                BinVersion = "v5.11.2",
+                ExePath = new List<string> { "xmrig-5.11.2", "xmrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/xmrig/xmrig/releases/download/v5.11.1/xmrig-5.11.1-msvc-win64.zip" // original
+                    "https://github.com/xmrig/xmrig/releases/download/v5.11.2/xmrig-5.11.2-msvc-win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,7 +37,7 @@ namespace XMRig
 
         public override string PluginUUID => "0e0a7320-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 0);
+        public override Version Version => new Version(11, 1);
 
         public override string Name => "XMRig";
 
