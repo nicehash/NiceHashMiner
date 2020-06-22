@@ -157,14 +157,11 @@ namespace NHMCore.Mining
             }
         }
 
-#warning "This property requires change of protocol. Currently it is disabled on the backend."
         public TDPSimpleType TDPSimple
         {
             get
             {
-                //if (ConfigManager.GeneralConfig.DisableDevicePowerModeSettings) return TDPSimple.Disabled;
-                //if (DeviceMonitor != null && DeviceMonitor is ITDP get) return get.TDPSimple;
-                //return TDPSimple.Unsupported;
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITDP get) return get.TDPSimple;
                 return (TDPSimpleType)(-1);
             }
         }
