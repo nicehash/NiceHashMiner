@@ -23,7 +23,6 @@ namespace NanoMiner
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.RandomXmonero, "RandomX" },
                 { AlgorithmType.KAWPOW, "Kawpow" },
             }
         };

@@ -49,13 +49,13 @@ namespace NiceHashMiner.ViewModels.Plugins
                 {
                     return $"{localVer.Major}.{localVer.Minor} / {onlineVer.Major}.{onlineVer.Minor}";
                 }
-                if (Plugin.Installed && !Plugin.HasNewerVersion && localVer != null)
+                if (Plugin.Installed && !Plugin.HasNewerVersion && localVer != null && onlineVer != null)
                 {
                     return Tr("{0}.{1} (Latest)", onlineVer.Major, onlineVer.Minor);
                 }
                 if (localVer != null)
                 {
-                    return Tr("{0}.{1} (Local)", onlineVer.Major, onlineVer.Minor);
+                    return Tr("{0}.{1} (Local)", localVer.Major, localVer.Minor);
                 }
                 return Tr("N/A");
             }
