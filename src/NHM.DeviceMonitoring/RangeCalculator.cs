@@ -51,5 +51,12 @@
             var value = (percentage * (max - min)) + min;
             return value;
         }
+
+        // percentage should be in 1.0 to max range
+        public static double CalculateValueOver(double percentage, double def)
+        {
+            var value = def * percentage;
+            return value;
+        }
     }
 }
