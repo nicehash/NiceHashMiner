@@ -158,11 +158,11 @@ namespace NHM.DeviceMonitoring
                 var limit = 0.0d;
                 if(percValue > 1)
                 {
-                    limit = RangeCalculator.CalculateValue(percValue - 1, ADLODNCapabilitiesX2.power.iDefault, ADLODNCapabilitiesX2.power.iMax);
+                    limit = RangeCalculator.CalculateValueAMD(percValue - 1, ADLODNCapabilitiesX2.power.iDefault, ADLODNCapabilitiesX2.power.iMax);
                 }
                 else
                 {
-                    limit = RangeCalculator.CalculateValue(percValue, ADLODNCapabilitiesX2.power.iMin, ADLODNCapabilitiesX2.power.iDefault);
+                    limit = RangeCalculator.CalculateValueAMD(percValue, ADLODNCapabilitiesX2.power.iMin, ADLODNCapabilitiesX2.power.iDefault);
                 }
 
                 var setLimit = (int)limit;

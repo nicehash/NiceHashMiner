@@ -262,9 +262,10 @@ namespace NHM.DeviceMonitoring
                     throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
 
                 // We limit 100% to the default as max
-                var limit = RangeCalculator.CalculateValue(percentage, minLimit, defaultLimit);
+                var limit = RangeCalculator.CalculateValueNVIDIA(percentage, defaultLimit);
                 var setLimit = (uint)limit;
                 if (setLimit > maxLimit) setLimit = maxLimit;
+                if (setLimit < minLimit) setLimit = minLimit;
                 ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(nvmlDevice, setLimit);
                 if (ret != nvmlReturn.Success)
                     throw new NvmlException("nvmlDeviceSetPowerManagementLimit", ret);
