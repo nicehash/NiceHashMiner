@@ -154,16 +154,23 @@ namespace NHM.DeviceMonitoring
                     Logger.Info(LogTag, $"SetTdpADL ADL2_OverdriveN_CapabilitiesX2_Get returned {ret}");
                     return false;
                 }
-                // We limit 100% to the default as max
-                int tdpLimit = 0;
 
-                var limit = RangeCalculator.CalculateValue(percValue, ADLODNCapabilitiesX2.power.iMin, ADLODNCapabilitiesX2.power.iDefault);
-                tdpLimit = (int)limit;
+                var limit = 0.0d;
+                if(percValue > 1)
+                {
+                    limit = RangeCalculator.CalculateValue(percValue - 1, ADLODNCapabilitiesX2.power.iDefault, ADLODNCapabilitiesX2.power.iMax);
+                }
+                else
+                {
+                    limit = RangeCalculator.CalculateValue(percValue, ADLODNCapabilitiesX2.power.iMin, ADLODNCapabilitiesX2.power.iDefault);
+                }
 
+                var setLimit = (int)limit;
+                if (setLimit > ADLODNCapabilitiesX2.power.iMax) setLimit = ADLODNCapabilitiesX2.power.iMax;
                 //set value here
                 var lpODPowerLimit = new ADLODNPowerLimitSetting();
                 lpODPowerLimit.iMode = (int)ADLODNControlType.ODNControlType_Manual;
-                lpODPowerLimit.iTDPLimit = tdpLimit;
+                lpODPowerLimit.iTDPLimit = setLimit;
                 var adlRet = ADL.ADL2_OverdriveN_PowerLimit_Set.Delegate(_adlContext, _adapterIndex, ref lpODPowerLimit);
                 if (adlRet != ADL.ADL_SUCCESS)
                 {
@@ -235,11 +242,7 @@ namespace NHM.DeviceMonitoring
                 Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
                 percentage = 0.0d;
             }
-            if (percentage > 1.0d)
-            {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 1.0d");
-                percentage = 1.0d;
-            }
+            Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
             return SetTdpADL(percentage);
         }
         private static double? PowerLevelToTDPPercentage(TDPSimpleType level)
