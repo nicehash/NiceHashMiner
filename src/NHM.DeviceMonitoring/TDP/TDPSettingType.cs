@@ -6,7 +6,6 @@ namespace NHM.DeviceMonitoring.TDP
         UNSUPPORTED,
         DISABLED,
         SIMPLE,
-        PERCENTAGE,
-        RAW
+        PERCENTAGE
     }
 }

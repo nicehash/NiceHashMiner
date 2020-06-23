@@ -133,7 +133,7 @@ namespace NHM.DeviceMonitoring
         }
 
         // AMD tdpLimit
-        private bool SetTdpADL(bool usePercentage, double rawOrPercValue)
+        private bool SetTdpADL(double percValue)
         {
             try
             {
@@ -154,23 +154,23 @@ namespace NHM.DeviceMonitoring
                     Logger.Info(LogTag, $"SetTdpADL ADL2_OverdriveN_CapabilitiesX2_Get returned {ret}");
                     return false;
                 }
-                // We limit 100% to the default as max
-                int tdpLimit = 0;
-                if (usePercentage)
+
+                var limit = 0.0d;
+                if(percValue > 1)
                 {
-                    var limit = RangeCalculator.CalculateValue(rawOrPercValue, ADLODNCapabilitiesX2.power.iMin, ADLODNCapabilitiesX2.power.iDefault);
-                    tdpLimit = (int)limit;
+                    limit = RangeCalculator.CalculateValueAMD(percValue - 1, ADLODNCapabilitiesX2.power.iDefault, ADLODNCapabilitiesX2.power.iMax);
                 }
                 else
                 {
-                    var limit = Math.Max((int)rawOrPercValue, ADLODNCapabilitiesX2.power.iMin);
-                    tdpLimit = Math.Min(limit, ADLODNCapabilitiesX2.power.iDefault);
+                    limit = RangeCalculator.CalculateValueAMD(percValue, ADLODNCapabilitiesX2.power.iMin, ADLODNCapabilitiesX2.power.iDefault);
                 }
 
+                var setLimit = (int)limit;
+                if (setLimit > ADLODNCapabilitiesX2.power.iMax) setLimit = ADLODNCapabilitiesX2.power.iMax;
                 //set value here
                 var lpODPowerLimit = new ADLODNPowerLimitSetting();
                 lpODPowerLimit.iMode = (int)ADLODNControlType.ODNControlType_Manual;
-                lpODPowerLimit.iTDPLimit = tdpLimit;
+                lpODPowerLimit.iTDPLimit = setLimit;
                 var adlRet = ADL.ADL2_OverdriveN_PowerLimit_Set.Delegate(_adlContext, _adapterIndex, ref lpODPowerLimit);
                 if (adlRet != ADL.ADL_SUCCESS)
                 {
@@ -189,29 +189,6 @@ namespace NHM.DeviceMonitoring
 
         #region ITDP
         public TDPSettingType SettingType { get; set; } = TDPSettingType.SIMPLE;
-
-        public double TDPRaw
-        {
-            get
-            {
-                if (ADL.ADL2_OverdriveN_PowerLimit_Get.Delegate != null)
-                {
-                    var odNPowerControl = new ADLODNPowerLimitSetting();
-                    var adlRet = ADL.ADL2_OverdriveN_PowerLimit_Get.Delegate(_adlContext, _adapterIndex, ref odNPowerControl);
-                    if (adlRet != ADL.ADL_SUCCESS)
-                    {
-                        Logger.Error(LogTag, $"TDPRaw ADL2_OverdriveN_PowerLimit_Get failed with code {adlRet} for GPU BusID={BusID}.");
-                        return -1;
-                    }
-                    return odNPowerControl.iTDPLimit;
-                }
-                else
-                {
-                    Logger.InfoDelayed(LogTag, $"TDPRaw ADL2_OverdriveN_PowerLimit_Get not supported", TimeSpan.FromSeconds(30));
-                }
-                return -1;
-            }
-        }
 
         public double TDPPercentage
         {
@@ -253,16 +230,6 @@ namespace NHM.DeviceMonitoring
 
         public TDPSimpleType TDPSimple { get; private set; } = TDPSimpleType.HIGH;
 
-        public bool SetTDPRaw(double raw)
-        {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
-            {
-                Logger.InfoDelayed(LogTag, $"SetTDPRaw Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
-            return SetTdpADL(false, raw);
-        }
-
         public bool SetTDPPercentage(double percentage)
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings)
@@ -275,18 +242,14 @@ namespace NHM.DeviceMonitoring
                 Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
                 percentage = 0.0d;
             }
-            if (percentage > 1.0d)
-            {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 1.0d");
-                percentage = 1.0d;
-            }
-            return SetTdpADL(true, percentage);
+            Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
+            return SetTdpADL(percentage);
         }
         private static double? PowerLevelToTDPPercentage(TDPSimpleType level)
         {
             switch (level)
             {
-                case TDPSimpleType.LOW: return 0.5d; // 50%
+                case TDPSimpleType.LOW: return 0.6d; // 60%
                 case TDPSimpleType.MEDIUM: return 0.8d; // 80%
                 case TDPSimpleType.HIGH: return 1.0d; // 100%
             }
@@ -307,7 +270,7 @@ namespace NHM.DeviceMonitoring
                 percentage = PowerLevelToTDPPercentage(level);
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
-            var execRet = SetTdpADL(true, percentage.Value);
+            var execRet = SetTdpADL(percentage.Value);
             if (execRet) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet;

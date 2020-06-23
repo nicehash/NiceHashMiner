@@ -45,10 +45,15 @@
             return perc;
         }
 
-        // percentage should be in 0.0 to 1.0 range
-        public static double CalculateValue(double percentage, double min, double max)
+        public static double CalculateValueAMD(double percentage, double min, double max)
         {
             var value = (percentage * (max - min)) + min;
+            return value;
+        }
+
+        public static double CalculateValueNVIDIA(double percentage, double point)
+        {
+            var value = percentage * point;
             return value;
         }
     }

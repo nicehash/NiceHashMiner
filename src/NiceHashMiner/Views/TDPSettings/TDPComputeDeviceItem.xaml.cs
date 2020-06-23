@@ -65,17 +65,5 @@ namespace NiceHashMiner.Views.TDPSettings
                 // TODO
             }
         }
-
-        private void SetRaw(object sender, RoutedEventArgs e)
-        {
-            if (double.TryParse(textBox_raw.Text, out var value))
-            {
-                _deviceDataTDP.SetRaw(value);
-            }
-            else
-            {
-                // TODO
-            }
-        }
     }
 }
