@@ -157,14 +157,11 @@ namespace NHMCore.Mining
             }
         }
 
-#warning "This property requires change of protocol. Currently it is disabled on the backend."
         public TDPSimpleType TDPSimple
         {
             get
             {
-                //if (ConfigManager.GeneralConfig.DisableDevicePowerModeSettings) return TDPSimple.Disabled;
-                //if (DeviceMonitor != null && DeviceMonitor is ITDP get) return get.TDPSimple;
-                //return TDPSimple.Unsupported;
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITDP get) return get.TDPSimple;
                 return (TDPSimpleType)(-1);
             }
         }
@@ -365,7 +362,7 @@ namespace NHMCore.Mining
             //Enabled = config.Enabled;
             Enabled = config.Enabled;
             MinimumProfit = config.MinimumProfit;
-
+           
             if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
                 var tdpSimpleDefault = TDPSimpleType.HIGH;
@@ -380,16 +377,6 @@ namespace NHMCore.Mining
                             {
                                 // config values are from 0.0% to 100.0%
                                 tdp.SetTDPPercentage(config.TDPSettings.Percentage.Value / 100);
-                            }
-                            else
-                            {
-                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                            }
-                            break;
-                        case TDPSettingType.RAW:
-                            if (config.TDPSettings.Raw.HasValue)
-                            {
-                                tdp.SetTDPRaw(config.TDPSettings.Raw.Value);
                             }
                             else
                             {
@@ -457,10 +444,6 @@ namespace NHMCore.Mining
                     if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
                     {
                         TDPSettings.Percentage = tdp.TDPPercentage * 100;
-                    }
-                    if (TDPSettings.SettingType == TDPSettingType.RAW)
-                    {
-                        TDPSettings.Raw = tdp.TDPRaw;
                     }
                 }
             }
