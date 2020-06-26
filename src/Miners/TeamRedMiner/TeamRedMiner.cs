@@ -1,12 +1,10 @@
-﻿using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using static NHM.Common.StratumServiceHelpers;
 
@@ -82,56 +80,6 @@ namespace TeamRedMiner
 
             return ad;
         }
-
-        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        //{
-        //    // determine benchmark time 
-        //    // settup times
-        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
-
-        //    // use demo user and disable colorts so we can read from stdout
-        //    var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + " --disable_colors";
-        //    var binPathBinCwdPair = GetBinAndCwdPaths();
-        //    var binPath = binPathBinCwdPair.Item1;
-        //    var binCwd = binPathBinCwdPair.Item2;
-        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-
-        //    double benchHashesSum = 0;
-        //    double benchHashResult = 0;
-        //    int benchIters = 0;
-        //    int targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 30d));
-
-        //    string afterAlgoSpeed = $"{AlgoName}:";
-            
-        //    bp.CheckData = (string data) =>
-        //    {
-        //        var containsHashRate = data.Contains(afterAlgoSpeed) && data.Contains("GPU");
-        //        if (containsHashRate == false) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
-        //        var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, afterAlgoSpeed);
-        //        var hashrate = hashrateFoundPair.Item1;
-        //        var found = hashrateFoundPair.Item2;
-
-        //        if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) }, Success = false };
-
-        //        // sum and return
-        //        benchHashesSum += hashrate;
-        //        benchIters++;
-
-        //        benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee * 0.01);
-
-        //        return new BenchmarkResult
-        //        {
-        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
-        //            Success = benchIters >= targetBenchIters
-        //        };
-        //    };
-
-        //    var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
-        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
-        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-        //    return await t;
-        //}
 
         protected override void Init()
         {
