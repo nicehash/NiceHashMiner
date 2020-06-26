@@ -24,11 +24,11 @@ namespace NanoMiner
             // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.9.2",
-                ExePath = new List<string> { "nanominer-windows-1.9.2", "nanominer.exe" },
+                BinVersion = "v1.9.5",
+                ExePath = new List<string> { "nanominer-windows-1.9.5", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v1.9.2/nanominer-windows-1.9.2.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v1.9.5/nanominer-windows-1.9.5.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,7 +40,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "f25fee20-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 0);
+        public override Version Version => new Version(11, 2);
 
         public override string Name => "NanoMiner";
 
@@ -118,9 +118,9 @@ namespace NanoMiner
         {
             try
             {
-                if (ids.Count() != 0)
+                if (ids?.Contains(AlgorithmType.KAWPOW) ?? false)
                 {
-                    if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 3) return true;
+                    return benchmarkedPluginVersion.Major == 11 && benchmarkedPluginVersion.Minor < 1;
                 }
             }
             catch (Exception e)

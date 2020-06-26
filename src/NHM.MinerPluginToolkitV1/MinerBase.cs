@@ -379,8 +379,6 @@ namespace NHM.MinerPluginToolkitV1
             if (isTokenCanceled) throw new StopMinerWatchdogException();
         }
 
-
-        //abstract public Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
         public virtual async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             using (var tickCancelSource = new CancellationTokenSource())
