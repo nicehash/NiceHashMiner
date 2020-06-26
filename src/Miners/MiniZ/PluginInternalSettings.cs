@@ -182,6 +182,17 @@ namespace MiniZ
                     Delimiter = ","
                 },
                 /// <summary>
+                /// miniZ will try to find the best kernel for your GPU.
+                /// It runs a few available miniZ kernels and chooses the one that performs best.1
+                /// It starts with the one set by default, the one we chose to be the best in stock settings.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "miniZ_ocX",
+                    ShortName = "--ocX"
+                },
+                /// <summary>
                 /// Force tuning feature 11 level [0-3].
                 /// Usually at low power --f11=0 produces better efficiency, but feel free to try different values with your overclock settings.
                 /// Ex. --f11=1

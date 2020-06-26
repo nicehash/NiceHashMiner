@@ -15,7 +15,6 @@ namespace NBMiner
             AlgorithmFees = new Dictionary<AlgorithmType, double>
             {
                 { AlgorithmType.DaggerHashimoto, 1.0 },
-                //{ AlgorithmType.DaggerHashimoto + AlgorithmType.Eaglesong, 3.0 },
                 { AlgorithmType.Cuckaroo29BFC, 3.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
@@ -33,7 +32,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.Handshake),
                         new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.KAWPOW),
-                        //new SAS(AlgorithmType.Cuckaroo29BFC),
+                        new SAS(AlgorithmType.GrinCuckatoo32),
                     }
                 },
                 {
@@ -57,6 +56,7 @@ namespace NBMiner
                 { AlgorithmType.Handshake, "hns" },
                 { AlgorithmType.KAWPOW, "kawpow" },
                 { AlgorithmType.Cuckaroo29BFC, "bfc" },
+                { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
             }
         };
     }
