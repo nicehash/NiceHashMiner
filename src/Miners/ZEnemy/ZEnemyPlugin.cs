@@ -24,12 +24,12 @@ namespace ZEnemy
             // https://bitcointalk.org/index.php?topic=3378390.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                // YEY GITHUB TAG! => 'kawpow'
-                BinVersion = "2.5-win-cuda10.1", // fix version if wrong
+                // YEY GITHUB TAG! => 'kawpow262'
+                BinVersion = "2.6.2-win-cuda10.1", // fix version if wrong
                 ExePath = new List<string> { "z-enemy.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/zealot-rvn/z-enemy/releases/download/kawpow/z-enemy-2.5-win-cuda10.1.zip",
+                    "https://github.com/zealot-rvn/z-enemy/releases/download/kawpow262/z-enemy-2.6.2-win-cuda10.1.zip",
                     "https://mega.nz/#!UXRBCChJ!v7JqOCuvq4hl1XR76BGiC75Gq97vKSliuH2uKZvU1iQ" // original source
                 }
             };
@@ -40,7 +40,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(11, 0);
+        public override Version Version => new Version(11, 1);
 
         public override string Name => "ZEnemy";
 

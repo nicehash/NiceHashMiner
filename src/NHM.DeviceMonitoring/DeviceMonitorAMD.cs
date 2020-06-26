@@ -91,7 +91,7 @@ namespace NHM.DeviceMonitoring
         }
 
         // AMD tdpLimit
-        private bool SetTdpADL(bool usePercentage, double rawOrPercValue)
+        private bool SetTdpADL(double percValue)
         {
             int min = 0, max = 0, defaultValue = 0;
             int ok = AMD_ODN.nhm_amd_device_get_tdp_ranges(BusID, ref min, ref max, ref defaultValue);
@@ -102,18 +102,17 @@ namespace NHM.DeviceMonitoring
             }
 
             // We limit 100% to the default as max
-            int tdpLimit = 0;
-            if (usePercentage)
+            var limit = 0.0d;
+            if (percValue > 1)
             {
-                var limit = RangeCalculator.CalculateValue(rawOrPercValue, min, defaultValue);
-                tdpLimit = (int)limit;
+                limit = RangeCalculator.CalculateValueAMD(percValue - 1, defaultValue, max);
             }
             else
             {
-                var limit = Math.Max((int)rawOrPercValue, min);
-                tdpLimit = Math.Min(limit, defaultValue);
+                limit = RangeCalculator.CalculateValueAMD(percValue, min, defaultValue);
             }
-            int ok2 = AMD_ODN.nhm_amd_device_set_tdp(BusID, tdpLimit);
+
+            int ok2 = AMD_ODN.nhm_amd_device_set_tdp(BusID, (int)limit);
             if (ok2 != 0)
             {
                 Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_tdp failed with error code {ok}", _delayedLogging);
@@ -124,18 +123,6 @@ namespace NHM.DeviceMonitoring
 
         #region ITDP
         public TDPSettingType SettingType { get; set; } = TDPSettingType.SIMPLE;
-
-        public double TDPRaw
-        {
-            get
-            {
-                int tdpRaw = 0;
-                int ok = AMD_ODN.nhm_amd_device_get_tdp(BusID, ref tdpRaw);
-                if (ok == 0) return tdpRaw;
-                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp failed with error code {ok}", _delayedLogging);
-                return -1;
-            }
-        }
 
         public double TDPPercentage
         {
@@ -163,16 +150,6 @@ namespace NHM.DeviceMonitoring
 
         public TDPSimpleType TDPSimple { get; private set; } = TDPSimpleType.HIGH;
 
-        public bool SetTDPRaw(double raw)
-        {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
-            {
-                Logger.InfoDelayed(LogTag, $"SetTDPRaw Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
-            return SetTdpADL(false, raw);
-        }
-
         public bool SetTDPPercentage(double percentage)
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings)
@@ -185,18 +162,14 @@ namespace NHM.DeviceMonitoring
                 Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
                 percentage = 0.0d;
             }
-            if (percentage > 1.0d)
-            {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 1.0d");
-                percentage = 1.0d;
-            }
-            return SetTdpADL(true, percentage);
+            Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
+            return SetTdpADL(percentage);
         }
         private static double? PowerLevelToTDPPercentage(TDPSimpleType level)
         {
             switch (level)
             {
-                case TDPSimpleType.LOW: return 0.5d; // 50%
+                case TDPSimpleType.LOW: return 0.6d; // 60%
                 case TDPSimpleType.MEDIUM: return 0.8d; // 80%
                 case TDPSimpleType.HIGH: return 1.0d; // 100%
             }
@@ -217,7 +190,7 @@ namespace NHM.DeviceMonitoring
                 percentage = PowerLevelToTDPPercentage(level);
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
-            var execRet = SetTdpADL(true, percentage.Value);
+            var execRet = SetTdpADL(percentage.Value);
             if (execRet) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet;

@@ -1,19 +1,14 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
 {
 
     public abstract class ClaymoreBase : MinerBase
     {
-        //public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
-
-
         protected int _apiPort;
         public AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
 

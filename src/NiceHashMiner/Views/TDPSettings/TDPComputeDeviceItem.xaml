@@ -30,30 +30,19 @@
                     <TextBlock Text="{Binding TPDSimpleValue}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Set"/>
+                    <Button Content="Set" Click="SetSimple"/>
                     <TextBox x:Name="textBox_simple" Width="50" />
                 </StackPanel>
             </StackPanel>
             <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="{Binding HasTPDSettings}">
                 <TextBlock Foreground="{StaticResource Gray1ColorBrush}" Text="PERCENTAGE"/>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Get" Click="SetSimple"/>
+                    <Button Content="Get" />
                     <TextBlock Text="{Binding TPDPercentageValue}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Content="Set" Click="SetPercentage"/>
                     <TextBox x:Name="textBox_percentage" Width="50" />
-                </StackPanel>
-            </StackPanel>
-            <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="{Binding HasTPDSettings}">
-                <TextBlock Foreground="{StaticResource Gray1ColorBrush}" Text="RAW"/>
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Get"/>
-                    <TextBlock Text="{Binding TPDRawValue}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Set" Click="SetRaw"/>
-                    <TextBox x:Name="textBox_raw" Width="50" />
                 </StackPanel>
             </StackPanel>
         </UniformGrid>

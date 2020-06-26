@@ -1,14 +1,12 @@
-﻿using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace LolMiner
@@ -70,49 +68,6 @@ namespace LolMiner
 
             return ad;
         }
-
-        //public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        //{
-        //    var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
-
-        //    var commandLine = $"--benchmark {AlgorithmName(_algorithmType)} --longstats {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
-        //    var binPathBinCwdPair = GetBinAndCwdPaths();
-        //    var binPath = binPathBinCwdPair.Item1;
-        //    var binCwd = binPathBinCwdPair.Item2;
-        //    Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-        //    var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-
-        //    var benchHashes = 0d;
-        //    var benchIters = 0;
-        //    var benchHashResult = 0d;  // Not too sure what this is..
-        //    var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
-
-        //    bp.CheckData = (string data) =>
-        //    {
-        //        // data => Average speed (60s): 0.40 g/s
-        //        var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "s):");
-        //        var hashrate = hashrateFoundPair.Item1;
-        //        var found = hashrateFoundPair.Item2 && data.Contains("Average speed");
-
-        //        if (!found) return new BenchmarkResult { Success = false };
-
-        //        benchHashes += hashrate;
-        //        benchIters++;
-
-        //        benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
-
-        //        return new BenchmarkResult
-        //        {
-        //            AlgorithmTypeSpeeds = new List<(AlgorithmType type, double speed)> { (_algorithmType, benchHashResult) },
-        //            Success = benchIters >= targetBenchIters
-        //        };
-        //    };
-
-        //    var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
-        //    var benchmarkWait = TimeSpan.FromMilliseconds(500);
-        //    var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-        //    return await t;
-        //}
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
