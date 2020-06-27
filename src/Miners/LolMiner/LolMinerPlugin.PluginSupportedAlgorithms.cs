@@ -20,7 +20,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.Cuckaroom) { NonDefaultRAMLimit = AMD_6GBMemory },
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash),
-                        new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_6GBMemory }
+                        //new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_6GBMemory }
                     };
         }
 
