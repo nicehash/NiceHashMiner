@@ -38,7 +38,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Debug\app\</OutputPath>
-    <DefineConstants>DEBUG;DEBUG INTEGRATE_LolMiner_PLUGIN</DefineConstants>
+    <DefineConstants>DEBUG;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
