@@ -100,9 +100,6 @@ namespace LolMiner
             _apiPort = GetAvaliablePort();
             // instant non blocking
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-            var split = urlWithPort.Split(':');
-            var url = split[1].Substring(2, split[1].Length - 2);
-            var port = split[2];
 
             var algo = AlgorithmName(_algorithmType);
             //--disablewatchdog 1
