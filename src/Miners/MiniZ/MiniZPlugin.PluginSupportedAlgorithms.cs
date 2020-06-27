@@ -20,6 +20,7 @@ namespace MiniZ
                     {
                         new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.BeamV2),
+                        new SAS(AlgorithmType.BeamV3),
                     }
                 }
             },
@@ -27,6 +28,7 @@ namespace MiniZ
             {
                 { AlgorithmType.ZHash, "144,5" },
                 { AlgorithmType.BeamV2, "150,5,3" },
+                { AlgorithmType.BeamV3, "144,5s" },
             }
         };
     }

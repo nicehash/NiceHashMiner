@@ -99,14 +99,11 @@ namespace LolMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var split = urlWithPort.Split(':');
-            var url = split[1].Substring(2, split[1].Length - 2);
-            var port = split[2];
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
 
             var algo = AlgorithmName(_algorithmType);
             //--disablewatchdog 1
-            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} {_disableWatchdogParam} --devices {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --pool {urlWithPort} --user {_username} --tls 0 --apiport {_apiPort} {_disableWatchdogParam} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }
