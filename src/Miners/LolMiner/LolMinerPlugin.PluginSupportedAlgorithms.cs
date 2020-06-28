@@ -10,6 +10,7 @@ namespace LolMiner
     {
         const ulong AMD_8GBMemory = 7UL << 30; // 7GB but really 8GB
         const ulong AMD_6GBMemory = 5UL << 30; // 5GB but really 6GB
+        const ulong AMD_3GBMemory = 3UL << 30; // 3GB but really 4GB
         internal static List<SAS> SupportedAMDAlgos()
         {
             return new List<SAS>
@@ -20,7 +21,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.Cuckaroom) { NonDefaultRAMLimit = AMD_6GBMemory },
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash),
-                        //new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_6GBMemory }
+                        new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory }
                     };
         }
 
