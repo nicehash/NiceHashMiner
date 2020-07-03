@@ -15,6 +15,10 @@ using ZXing.Common;
 using System.IO;
 using System.Windows.Media.Imaging;
 using System.Drawing.Imaging;
+using System.Net.Http;
+using System.Collections.Generic;
+using NHMCore;
+using System;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -23,12 +27,13 @@ namespace NiceHashMiner.Views.Login
     /// </summary>
     public partial class LoginWindow : BaseDialogWindow
     {
+        private static readonly HttpClient client = new HttpClient();
         public LoginWindow()
         {
             InitializeComponent();
             HideIconAndTitle = true;
-            GetQRCode();
             WindowUtils.Translate(this);
+            ProcessQRCode();           
         }
 
         private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
@@ -60,7 +65,26 @@ namespace NiceHashMiner.Views.Login
             browser.ShowDialog();
         }
 
-        private void GetQRCode()
+        private void ProcessQRCode()
+        {
+            var uuid = Guid.NewGuid().ToString();
+            var rigID = ApplicationStateManager.RigID();
+            var values = new Dictionary<string, string>
+            {
+                { "qrId", uuid },
+                { "rigId", rigID }
+            };
+
+            var content = new FormUrlEncodedContent(values);
+
+            var response = client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content).Result;
+
+            var responseString = response.Content.ReadAsStringAsync();
+            // create qr code
+            CreateQRCode(uuid);
+        }
+
+        private void CreateQRCode(string uuid)
         {
             var encOptions = new EncodingOptions
             {
@@ -77,7 +101,7 @@ namespace NiceHashMiner.Views.Login
             bw.Format = BarcodeFormat.QR_CODE;
 
             //convert drawing group to bitmap
-            var drawingLogo = Application.Current.FindResource("NHMLogoDark") as Drawing;
+            var drawingLogo = Application.Current.FindResource("LoginQRCircleLight") as Drawing;
             var drawingLogoImage = new DrawingImage(drawingLogo);
             Bitmap overlay;
             using (var ms = new MemoryStream())
@@ -93,13 +117,12 @@ namespace NiceHashMiner.Views.Login
             }
             // end of converting
 
-            var bm = bw.Write("test");
+            var bm = bw.Write(uuid);
             int deltaHeigth = bm.Height - overlay.Height;
             int deltaWidth = bm.Width - overlay.Width;
 
             var g = Graphics.FromImage(overlay);
-            g.DrawImage(overlay, new System.Drawing.Point(20, 20));
-            //g.DrawImage(overlay, new System.Drawing.Point(deltaWidth / 2, deltaHeigth / 2));
+            g.DrawImage(overlay, new System.Drawing.Point(deltaWidth / 2, deltaHeigth / 2));
 
             //bmp to bmpimg
             BitmapImage bitmapImage;
