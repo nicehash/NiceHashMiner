@@ -61,7 +61,7 @@ Rebuild the program and test your plugin.
 
 <h2 id="release">How to release a program</h2>
 
-When you have working miner plugin, head to <a src="https://miner-plugins.nicehash.com">Miner Plugin Author</a> website where you will have to login. <br>
+When you have working miner plugin, head to <a href="https://miner-plugins.nicehash.com">Miner Plugin Author</a> website where you will have to login. <br>
 In the page you will have option to create new or update existing plugins.
 You can create new one by clicking on `ADD PLUGIN` button. This redirects you to the following form:<br>
 <img src="../../Resources/new_plugin.PNG" height="400"/> <br>
