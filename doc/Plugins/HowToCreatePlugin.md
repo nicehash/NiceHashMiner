@@ -9,7 +9,7 @@ To start with the new plugin project you have to first clone <a href="https://gi
 After that you can open the project in your favourite IDE (we suggest VisualStudio - instructions will be based on using this IDE).
 
 Plugins are located in `NiceHashMiner/src/Miners`. When you open solution file you will see directory straight away. <br>
-<img src="../../Resources/solution_directory.png" height="400"/> <br>
+<img src="../../Resources/solution_directory.PNG" height="400"/> <br>
 There you can see all available plugins which can serve as example.
 
 
@@ -64,7 +64,7 @@ Rebuild the program and test your plugin.
 When you have working miner plugin, head to <a src="https://miner-plugins.nicehash.com">Miner Plugin Author</a> website where you will have to login. <br>
 In the page you will have option to create new or update existing plugins.
 You can create new one by clicking on `ADD PLUGIN` button. This redirects you to the following form:<br>
-<img src="../../Resources/new_plugin.png" height="400"/> <br>
+<img src="../../Resources/new_plugin.PNG" height="400"/> <br>
 In the first step you can fill all fields except Plugin Package URL.<br>
 *NOTE: Miner Package URL is a link to the archive with the miner executable.<br>
 Also check which versions are supported by the latest clients. This can be checked in the <a href="../../src/NHM.MinerPluginToolkitV1/Checkers.cs">Checkers.cs</a> file, inside `_supportedMajorVersions` array.*<br>
