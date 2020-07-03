@@ -34,11 +34,25 @@ Saving that prompts you to reload the project. After that you are ready to start
 <h2 id="code">Implement miner plugin</h2>
 For working plugin you will need 2 classes: Miner and Plugin.
 <li>Plugin class is used for registering a plugin</li>
-<li>Miner class is used to implement required functionalities</li>
+<li>Miner class is used to implement required functionalities for miner instances</li>
 
 </p>Bare minimum example of plugin is written in <a href="../../src/Miners/__DEV__ExamplePlugin">Example Plugin</a> project. The <a href="../../src/Miners/__DEV__ExamplePlugin/ExamplePlugin.cs">Plugin</a> file contains implementation of IMinerPlugin interface for registration and creation of the plugin instance. The <a href="../../src/Miners/__DEV__ExamplePlugin/ExampleMiner.cs">Miner</a> file contains implementation of IMiner interface, providing required functionalities.</p>
 
-<p>It is <b>recommended</b> to use <b>MinerPluginToolkitV1</b> as this will enable full integration with NiceHash Miner. It will save time developing it and enable implementation of additional advanced features. If you are writing a plugin we highly recommend that you use MinerPluginToolkitV1. All miner plugins that are developed by NiceHash miner dev team are using MinerPluginToolkitV1. For example you can check <a href="../../src/Miners/GMiner">GMiner Plugin</a>.</p>
+
+<p>It is <b>recommended</b> to use <b>MinerPluginToolkitV1</b> as this will enable full integration with NiceHash Miner. It will save time developing it and enable implementation of additional advanced features (extra launch parameters, re-benchmark algorithms on device, etc.).<br>
+
+Example:
+
+```
+public override IEnumerable<string> CheckBinaryPackageMissingFiles()
+{
+    var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
+    return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe" });
+}
+```
+*This MinerPluginToolkitV1 function allows developer to easly check if all important files were downloaded successfully.*
+
+If you are writing a plugin we highly recommend that you use MinerPluginToolkitV1. All miner plugins that are developed by NiceHash miner dev team are using MinerPluginToolkitV1. For example you can check <a href="../../src/Miners/GMiner">GMiner Plugin</a>.</p>
 <p>MinerPluginToolkitV1 also enables creation of <b>Background Services</b>, check out <a href="../../src/NHMCore/Mining/Plugins/EthlargementIntegratedPlugin.cs">Ethlargement plugin</a> for example.</p>
 
 *NOTE: Major plugin versions are raised with the new algorithm, while minor versions on every update.*
