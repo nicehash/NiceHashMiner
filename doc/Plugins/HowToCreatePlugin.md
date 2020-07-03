@@ -29,7 +29,7 @@ Then you change `PropertyGroup` to the following:
 ```
 Saving that prompts you to reload the project. After that you are ready to start writing code.
 
-Note: If you prefer using command line please check following tutorials about <a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/walkthrough-creating-an-msbuild-project-file-from-scratch?view=vs-2019">creating</a> and <a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2019">building</a> a project.
+*Note: If you prefer using command line please check following tutorials about <a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/walkthrough-creating-an-msbuild-project-file-from-scratch?view=vs-2019">creating</a> and <a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2019">building</a> a project.*
 
 <h2 id="code">Implement miner plugin</h2>
 For working plugin you will need 2 classes: Miner and Plugin.
@@ -66,9 +66,12 @@ In the page you will have option to create new or update existing plugins.
 You can create new one by clicking on `ADD PLUGIN` button. This redirects you to the following form:<br>
 <img src="../../Resources/new_plugin.PNG" height="400"/> <br>
 In the first step you can fill all fields except Plugin Package URL.<br>
+
 *NOTE: Miner Package URL is a link to the archive with the miner executable.<br>
 Also check which versions are supported by the latest clients. This can be checked in the <a href="../../src/NHM.MinerPluginToolkitV1/Checkers.cs">Checkers.cs</a> file, inside `_supportedMajorVersions` array.*<br>
+
 **WARNING: Do not tick the `Enable` checkbox.**<br>
+
 When you click `SAVE` new plugin will be created and added to your list. If you select `EDIT` you will be able to copy newly created plugin ID. Copy it and replace the current `PluginUUID` in your MinerPlugin implementation (Plugin class) => this step is needed for successfull binding. <br><br>
 After that you can create a release library version of the plugin. When you create release build your library version will be saved to `PluginDirectory/obj/Release/net45` with name `PluginName.dll`. 
 Create zip or 7z archive of the dll file.<br>
