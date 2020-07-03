@@ -11,5 +11,6 @@
 
     <DrawingBrush x:Key="LoginCircleLogoLightBrush" Drawing="{StaticResource LoginCircleLogoLight}" />
     <DrawingBrush x:Key="LoginCircleLogoDarkBrush" Drawing="{StaticResource LoginCircleLogoDark}" />
+    <DrawingBrush x:Key="LoginQRCircleLightBrush" Drawing="{StaticResource LoginQRCircleLight}" />
 
 </ResourceDictionary>

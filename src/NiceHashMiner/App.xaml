@@ -28,6 +28,7 @@
 
 
             <DrawingBrush x:Key="LoginCircle" Drawing="{DynamicResource LoginCircleLogoLight}" />
+            <DrawingBrush x:Key="LoginQRCircle" Drawing="{DynamicResource LoginQRCircleLight}" />
             <!--#endregion Dynamic Theme Properties-->
 
             <Style TargetType="views:EulaWindowFirstLong" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
