@@ -4,8 +4,6 @@ using NHMCore.Configs;
 using NHMCore.Utils;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Media;
 using ZXing.Rendering;
 using ZXing;
@@ -19,6 +17,8 @@ using System.Net.Http;
 using System.Collections.Generic;
 using NHMCore;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -28,6 +28,9 @@ namespace NiceHashMiner.Views.Login
     public partial class LoginWindow : BaseDialogWindow
     {
         private static readonly HttpClient client = new HttpClient();
+        private Timer _evalTimer;
+        private object _lock = new object();
+
         public LoginWindow()
         {
             InitializeComponent();
@@ -77,11 +80,40 @@ namespace NiceHashMiner.Views.Login
 
             var content = new FormUrlEncodedContent(values);
 
-            var response = client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content).Result;
+            //var response = client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content).Result;
+            var response = client.PostAsync("https://api-test.nicehash.com/api/v2/organization/nhmqr", content).Result;
 
             var responseString = response.Content.ReadAsStringAsync();
+
             // create qr code
             CreateQRCode(uuid);
+
+            //if all ok start timer to poll
+            _evalTimer = new Timer((s) => { Dispatcher.Invoke(EvalTimer_Elapsed); }, null, 100, 1000);
+        }
+
+        private async void EvalTimer_Elapsed()
+        {
+            await EvalTimer_ElapsedTask();
+        }
+
+        private async Task EvalTimer_ElapsedTask()
+        {
+            using (var tryLock = new TryLock(_lock))
+            {
+                if (!tryLock.HasAcquiredLock) return;
+                try
+                {
+                    var response = await client.GetAsync("https://api-test.nicehash.com/api/v2/organization/nhmqr");
+
+                    _evalTimer.Dispose();
+                    Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
         }
 
         private void CreateQRCode(string uuid)
@@ -151,6 +183,29 @@ namespace NiceHashMiner.Views.Login
             RenderTargetBitmap bmp = new RenderTargetBitmap((int)source.Width, (int)source.Height, 96, 96, PixelFormats.Pbgra32);
             bmp.Render(drawingVisual);
             return bmp;
+        }
+
+        internal class TryLock : IDisposable
+        {
+            private object locked;
+            public bool HasAcquiredLock { get; private set; }
+            public TryLock(object obj)
+            {
+                if (Monitor.TryEnter(obj))
+                {
+                    HasAcquiredLock = true;
+                    locked = obj;
+                }
+            }
+            public void Dispose()
+            {
+                if (HasAcquiredLock)
+                {
+                    Monitor.Exit(locked);
+                    locked = null;
+                    HasAcquiredLock = false;
+                }
+            }
         }
     }
 }
