@@ -119,6 +119,8 @@ namespace NHM.Common.Enums
         KAWPOW = 52,
         //[Obsolete("UNUSED Algorithm")]
         Cuckaroo29BFC = 53,
+        //[Obsolete("UNUSED Algorithm")]
+        BeamV3 = 54,
         #endregion // NiceHashAPI
     }
 
@@ -133,6 +135,7 @@ namespace NHM.Common.Enums
                 case AlgorithmType.ZHash:
                 case AlgorithmType.Beam:
                 case AlgorithmType.BeamV2:
+                case AlgorithmType.BeamV3:
                     return "Sol/s";
                 case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:
