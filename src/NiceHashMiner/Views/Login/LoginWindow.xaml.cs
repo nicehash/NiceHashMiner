@@ -19,6 +19,8 @@ using NHMCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -72,16 +74,12 @@ namespace NiceHashMiner.Views.Login
         {
             var uuid = Guid.NewGuid().ToString();
             var rigID = ApplicationStateManager.RigID();
-            var values = new Dictionary<string, string>
-            {
-                { "qrId", uuid },
-                { "rigId", rigID }
-            };
 
-            var content = new FormUrlEncodedContent(values);
+            var requestBody = "{\"qrId\":\""+ uuid + "\", \"rigId\":\"" + rigID + "\"}";
+            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
             //var response = client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content).Result;
-            var response = client.PostAsync("https://api-test.nicehash.com/api/v2/organization/nhmqr", content).Result;
+            var response = client.PostAsync("https://api-test-dev.nicehash.com/api/v2/organization/nhmqr", content).Result;
 
             var responseString = response.Content.ReadAsStringAsync();
 
@@ -89,31 +87,39 @@ namespace NiceHashMiner.Views.Login
             CreateQRCode(uuid);
 
             //if all ok start timer to poll
-            _evalTimer = new Timer((s) => { Dispatcher.Invoke(EvalTimer_Elapsed); }, null, 100, 1000);
-        }
-
-        private async void EvalTimer_Elapsed()
-        {
-            await EvalTimer_ElapsedTask();
-        }
-
-        private async Task EvalTimer_ElapsedTask()
-        {
-            using (var tryLock = new TryLock(_lock))
+            _evalTimer = new Timer((s) => { Dispatcher.Invoke(() =>
             {
-                if (!tryLock.HasAcquiredLock) return;
-                try
+                using (var tryLock = new TryLock(_lock))
                 {
-                    var response = await client.GetAsync("https://api-test.nicehash.com/api/v2/organization/nhmqr");
+                    if (!tryLock.HasAcquiredLock) return;
+                    try
+                    {
+                        var resp = client.GetAsync($"https://api-test-dev.nicehash.com/api/v2/organization/nhmqr/{uuid}").Result;
+                        if (resp.IsSuccessStatusCode)
+                        {
+                            if (!string.IsNullOrEmpty(resp.Content.ToString()))
+                            {
+                                Console.WriteLine("CHECK THIS OUT: ", resp.Content);
+                                var btcResp = JsonConvert.DeserializeObject<BtcResponse>(resp.Content.ToString());
+                                if (btcResp.btc != null)
+                                {
+                                    var result = ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btc).Result;
+                                    if (result == ApplicationStateManager.SetResult.CHANGED)
+                                    {
+                                        _evalTimer.Dispose();
+                                        Close();
+                                    }
+                                }
 
-                    _evalTimer.Dispose();
-                    Close();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
+            }); }, null, 100, 1000);
         }
 
         private void CreateQRCode(string uuid)
@@ -206,6 +212,12 @@ namespace NiceHashMiner.Views.Login
                     HasAcquiredLock = false;
                 }
             }
+        }
+
+        [Serializable]
+        private class BtcResponse
+        {
+            public string btc { get; set; }
         }
     }
 }
