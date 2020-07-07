@@ -28,7 +28,7 @@ namespace NiceHashMiner.Views.Login
     public partial class LoginWindow : BaseDialogWindow
     {
         private static readonly HttpClient client = new HttpClient();
-
+        private readonly string _uuid = Guid.NewGuid().ToString();
         public LoginWindow()
         {
             InitializeComponent();
@@ -41,12 +41,14 @@ namespace NiceHashMiner.Views.Login
         {
             GUISettings.Instance.DisplayTheme = "Dark";
             ThemeSetterManager.SetTheme(false);
+            CreateQRCode(_uuid, false);
         }
 
         private void CheckBoxMode_Unchecked(object sender, RoutedEventArgs e)
         {
             GUISettings.Instance.DisplayTheme = "Light";
             ThemeSetterManager.SetTheme(true);
+            CreateQRCode(_uuid, true);
         }
 
         private void Register_OnClick(object sender, RoutedEventArgs e)
@@ -68,10 +70,9 @@ namespace NiceHashMiner.Views.Login
 
         private async Task ProcessQRCode()
         {
-            var uuid = Guid.NewGuid().ToString();
             var rigID = ApplicationStateManager.RigID();
 
-            var requestBody = "{\"qrId\":\""+ uuid + "\", \"rigId\":\"" + rigID + "\"}";
+            var requestBody = "{\"qrId\":\""+ _uuid + "\", \"rigId\":\"" + rigID + "\"}";
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
             //var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
@@ -80,7 +81,7 @@ namespace NiceHashMiner.Views.Login
             var responseString = response.Content.ReadAsStringAsync();
 
             // create qr code
-            CreateQRCode(uuid);
+            CreateQRCode(_uuid);
 
             //if all ok start timer to poll
             while (true)
@@ -89,7 +90,7 @@ namespace NiceHashMiner.Views.Login
                 try
                 {
                     //var resp = client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{uuid}").Result;
-                    var resp = client.GetAsync($"https://api-test-dev.nicehash.com/api/v2/organization/nhmqr/{uuid}").Result;
+                    var resp = client.GetAsync($"https://api-test-dev.nicehash.com/api/v2/organization/nhmqr/{_uuid}").Result;
                     if (resp.IsSuccessStatusCode)
                     {
                         var contentString = resp.Content.ReadAsStringAsync().Result;
@@ -114,7 +115,7 @@ namespace NiceHashMiner.Views.Login
             }    
         }
 
-        private void CreateQRCode(string uuid)
+        private void CreateQRCode(string uuid, bool LightTheme = true)
         {
             var encOptions = new EncodingOptions
             {
@@ -130,28 +131,22 @@ namespace NiceHashMiner.Views.Login
             bw.Options = encOptions;
             bw.Format = BarcodeFormat.QR_CODE;
 
-            /*
-            //convert drawing group to bitmap
-            var drawingLogo = Application.Current.FindResource("LoginQRCircleLight") as Drawing;
-            var drawingLogoImage = new DrawingImage(drawingLogo);
-            Bitmap overlay;
-            using (var ms = new MemoryStream())
-            {
-                var encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(ToBitmapSource(drawingLogoImage)));
-                encoder.Save(ms);
-
-                using (var bmp = new Bitmap(ms))
-                {
-                    overlay = new Bitmap(bmp);
-                }
-            }
-            // end of converting
-            */
-
             var bm = bw.Write(uuid);
             try
             {
+                if (!LightTheme)
+                {
+                    for (int j = 0; (j <= (bm.Height - 1)); j++)
+                    {
+                        for (int k = 0; (k <= (bm.Width - 1)); k++)
+                        {
+                            var inv = bm.GetPixel(k, j);
+                            inv = System.Drawing.Color.FromArgb(255, (255 - inv.R), (255 - inv.G), (255 - inv.B));
+                            bm.SetPixel(k, j, inv);
+                        }
+                    }
+                }               
+
                 var overlay = new Bitmap("../Resources/logo.png");
                 var g = Graphics.FromImage(bm);
                 var x = (bm.Width - overlay.Width) / 2;
@@ -171,7 +166,7 @@ namespace NiceHashMiner.Views.Login
                     bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                     bitmapImage.EndInit();
                 }
-                // end of bmp to bmpimg
+                // end of bmp to bmpimg       
 
                 var brush = new ImageBrush(bitmapImage);
                 rect_qrCode.Fill = brush;
@@ -180,18 +175,6 @@ namespace NiceHashMiner.Views.Login
             {
                 Console.WriteLine(ex.Message);
             }           
-        }
-
-        private BitmapSource ToBitmapSource(DrawingImage source)
-        {
-            DrawingVisual drawingVisual = new DrawingVisual();
-            DrawingContext drawingContext = drawingVisual.RenderOpen();
-            drawingContext.DrawImage(source, new Rect(new System.Windows.Point(0, 0), new System.Windows.Size(source.Width, source.Height)));
-            drawingContext.Close();
-
-            RenderTargetBitmap bmp = new RenderTargetBitmap((int)source.Width, (int)source.Height, 96, 96, PixelFormats.Pbgra32);
-            bmp.Render(drawingVisual);
-            return bmp;
         }
 
         [Serializable]
