@@ -121,9 +121,8 @@ namespace NHM.DeviceMonitoring
             get
             {
                 var fan_speed = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_rpm(BusID);
-                if (fan_speed >= 0) return fan_speed;
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed", _delayedLogging);
-                return -1;
+                if (fan_speed < 0) Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed", _delayedLogging);
+                return fan_speed;
             }
         }
 
@@ -131,10 +130,18 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                
-                /*var power_usage = NVIDIA_MON.nhm_nvidia_device_get_power_usage(BusID);
-                if (power_usage >= 0) return power_usage;
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_power_usage failed", _delayedLogging);*/
+                //var pciInfo = new nvmlPciInfo();
+                //var ret = NvmlNativeMethods.nvmlDeviceGetPciInfo(nvmlDevice, ref pciInfo);
+                //if (ret != nvmlReturn.Success) return -1;
+                //var nvmlPciBusId = "0000" + pciInfo.busId;
+                //var power_usage = NVIDIA_MON.nhm_nvidia_device_get_power_usage(nvmlPciBusId);
+                //if (power_usage >= 0) return power_usage;
+
+                var nvmlDevice = GetNvmlDevice();
+                uint power = 0;
+                NvmlNativeMethods.nvmlDeviceGetPowerUsage(nvmlDevice, ref power);
+                if (power >= 0) return (float)power * 0.001;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_power_usage failed", _delayedLogging);
                 return -1;
             }
         }

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using ManagedCuda.Nvml;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NHM.DeviceMonitoring.NVIDIA
 {
@@ -13,29 +9,28 @@ namespace NHM.DeviceMonitoring.NVIDIA
         public static extern void nhm_nvidia_init();
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern void nhm_nvidia_deinit();
-
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
-        public static extern int nhm_nvidia_device_get_memory_info(ref char bus_number, ulong free, ulong total, ulong used);
+        public static extern int nhm_nvidia_device_get_memory_info([MarshalAs(UnmanagedType.LPStr)]string bus_number, ulong free, ulong total, ulong used);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern int nhm_nvidia_device_get_load_perc(int bus_number);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
-        public static extern int nhm_nvidia_device_get_power_usage(ref char bus_number);
+        public static extern int nhm_nvidia_device_get_power_usage([MarshalAs(UnmanagedType.LPStr)]string bus_number);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern long nhm_nvidia_device_get_temperature(int bus_number);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern int nhm_nvidia_device_get_fan_speed_rpm(int bus_number);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
-        public static extern int nhm_nvidia_device_get_fan_speed_percentage(ref char bus_number);
+        public static extern int nhm_nvidia_device_get_fan_speed_percentage([MarshalAs(UnmanagedType.LPStr)]string bus_number);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern bool nhm_nvidia_device_set_fan_speed_percentage(int bus_number, int set_fan_speed_percentage);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern bool nhm_nvidia_device_restore_fan_speed(int bus_number);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
-        public static extern int nhm_nvidia_device_get_tdp_values(ref char bus_number, uint min, uint max, uint def);
+        public static extern int nhm_nvidia_device_get_tdp_values([MarshalAs(UnmanagedType.LPStr)]string bus_number, uint min, uint max, uint def);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern int nhm_nvidia_device_get_tdp(int bus_number);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
-        public static extern bool nhm_nvidia_device_set_tdp(ref char bus_number, uint set_tdp);
+        public static extern bool nhm_nvidia_device_set_tdp([MarshalAs(UnmanagedType.LPStr)]string bus_number, uint set_tdp);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern int nhm_nvidia_device_get_core_clocks(int bus_number);
         [DllImport("nvidia_monitoring.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
