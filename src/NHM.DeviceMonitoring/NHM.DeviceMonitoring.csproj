@@ -59,6 +59,7 @@
     <Compile Include="DeviceMonitorWatchdog.cs" />
     <Compile Include="IFanSpeedRPM.cs" />
     <Compile Include="ILoad.cs" />
+    <Compile Include="NVIDIA\NVIDIA_MON.cs" />
     <Compile Include="TDP\ITDP.cs" />
     <Compile Include="IPowerTarget.cs" />
     <Compile Include="IPowerUsage.cs" />

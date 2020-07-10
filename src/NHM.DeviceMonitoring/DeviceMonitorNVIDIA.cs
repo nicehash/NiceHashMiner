@@ -12,6 +12,8 @@ namespace NHM.DeviceMonitoring
     {
         private object _lock = new object();
 
+        private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(0.5);
+
         public int BusID { get; private set; }
 
         private readonly DeviceMonitorWatchdog _deviceMonitorWatchdog;
@@ -95,17 +97,10 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var execRet = ExecNvmlProcedure(-1f, nameof(Load), () => {
-                    var nvmlDevice = GetNvmlDevice();
-                    var rates = new nvmlUtilization();
-                    var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(nvmlDevice, ref rates);
-                    if (ret != nvmlReturn.Success)
-                        throw new NvmlException($"nvmlDeviceGetUtilizationRates", ret);
-
-                    var load = (int)rates.gpu;
-                    return load;
-                });
-                return execRet;
+                var load_perc = NVIDIA_MON.nhm_nvidia_device_get_load_perc(BusID);
+                if (load_perc >= 0) return load_perc;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_load_perc failed", _delayedLogging);
+                return -1;
             }
         }
 
@@ -113,17 +108,10 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var execRet = ExecNvmlProcedure(-1f, nameof(Temp), () => {
-                    var nvmlDevice = GetNvmlDevice();
-                    var utemp = 0u;
-                    var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(nvmlDevice, nvmlTemperatureSensors.Gpu,  ref utemp);
-                    if (ret != nvmlReturn.Success)
-                        throw new NvmlException($"nvmlDeviceGetTemperature", ret);
-
-                    var temp = (float)utemp;
-                    return temp;
-                });
-                return execRet;
+                var temp = NVIDIA_MON.nhm_nvidia_device_get_temperature(BusID);
+                if (temp < uint.MaxValue) return temp;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_temperature failed", _delayedLogging);
+                return -1;
             }
         }
 
@@ -132,42 +120,10 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                if (!NVAPI.IsAvailable)
-                {
-                    Logger.ErrorDelayed(LogTag, $"FanSpeed NVAPI.IsAvailable==FALSE", TimeSpan.FromMinutes(5));
-                    return -1;
-                }
-                if (NVAPI.NvAPI_GPU_GetTachReading == null)
-                {
-                    Logger.ErrorDelayed(LogTag, $"FanSpeed NVAPI.NvAPI_GPU_GetTachReading == null", TimeSpan.FromMinutes(5));
-                    return -1;
-                }
-                var fanSpeed = -1;
-                using (var tryLock = new TryLock(_lock))
-                {
-                    if (!tryLock.HasAcquiredLock)
-                    {
-                        Logger.Error(LogTag, "FanSpeed Already Locked");
-                        return -1;
-                    }
-                    // we got the lock
-                    var nvHandle = GetNvPhysicalGpuHandle();
-                    if (!nvHandle.HasValue)
-                    {
-                        Logger.ErrorDelayed(LogTag, $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
-                        return -1;
-                    }
-                    var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
-                    if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
-                    {
-                        // GPUs without fans are not uncommon, so don't treat as error and just return -1
-                        Logger.ErrorDelayed("NVAPI", $"Tach get failed with status: {result}", TimeSpan.FromSeconds(30));
-                        // if NVAPI fails... check if we could re-init this as well??
-                        return -1;
-                    }
-                }
-
-                return fanSpeed;
+                var fan_speed = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_rpm(BusID);
+                if (fan_speed >= 0) return fan_speed;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed", _delayedLogging);
+                return -1;
             }
         }
 
@@ -175,16 +131,11 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var execRet = ExecNvmlProcedure(-1d, nameof(PowerUsage), () => {
-                    var nvmlDevice = GetNvmlDevice();
-                    var power = 0u;
-                    var nvmlRet = NvmlNativeMethods.nvmlDeviceGetPowerUsage(nvmlDevice, ref power);
-                    if (nvmlRet != nvmlReturn.Success)
-                        throw new NvmlException($"nvmlDeviceGetPowerUsage", nvmlRet);
-
-                    return power * 0.001;
-                });
-                return execRet;
+                
+                /*var power_usage = NVIDIA_MON.nhm_nvidia_device_get_power_usage(BusID);
+                if (power_usage >= 0) return power_usage;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_power_usage failed", _delayedLogging);*/
+                return -1;
             }
         }
 
