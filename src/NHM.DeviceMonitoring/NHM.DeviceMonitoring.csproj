@@ -44,11 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3rdParty\AMD\ADL.cs" />
-    <Compile Include="3rdParty\AMD\ADL2.cs" />
-    <Compile Include="3rdParty\AMD\AMDDelegateContainer.cs" />
-    <Compile Include="AMD\AmdBusIDInfo.cs" />
-    <Compile Include="AMD\QueryAdl.cs" />
+    <Compile Include="AMD\AMD_ODN.cs" />
     <Compile Include="DeviceMonitorAMD.cs" />
     <Compile Include="DeviceMonitorCPU.cs" />
     <Compile Include="DeviceMonitorManager.cs" />
