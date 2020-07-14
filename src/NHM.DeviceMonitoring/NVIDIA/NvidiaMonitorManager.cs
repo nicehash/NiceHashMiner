@@ -61,45 +61,5 @@ namespace NHM.DeviceMonitoring.NVIDIA
                 return false;
             }
         }
-
-        internal static bool ShutdownNvidiaLib()
-        {
-            try
-            {
-                NVIDIA_MON.nhm_nvidia_deinit();
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(Tag, e.Message);
-                return false;
-            }
-        }
-
-        #region NVIDIA LIB RESTART 
-        private static object _restartLock = new object();
-        internal static bool IsNVIDIALibRestarting
-        {
-            get
-            {
-                using (var tryLock = new TryLock(_restartLock))
-                {
-                    return !tryLock.HasAcquiredLock;
-                }
-            }
-        }
-
-        internal static void AttemptRestartNVIDIALib()
-        {
-            using (var tryLock = new TryLock(_restartLock))
-            {
-                if (!tryLock.HasAcquiredLock) return;
-                Logger.Info(Tag, $"Attempting to restart NVML");
-                // restart
-                var shutdownRet = ShutdownNvidiaLib();
-                var initRet = InitNvidiaLib();
-            }
-        }
-        #endregion NVIDIA LIB RESTART
     }
 }

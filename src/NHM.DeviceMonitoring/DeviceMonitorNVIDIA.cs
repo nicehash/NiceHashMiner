@@ -54,8 +54,7 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                //var fan_speed = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_rpm(BusID);
-                var fan_speed = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_percentage(UUID);
+                var fan_speed = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_rpm(BusID);
                 if (fan_speed < 0) Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed", _delayedLogging);
                 return fan_speed;
             }
@@ -71,6 +70,13 @@ namespace NHM.DeviceMonitoring
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_power_usage failed", _delayedLogging);
                 return -1;
             }
+        }
+
+        public bool SetFanSpeedPercentage(int percentage)
+        {
+            var setSpeedRet = NVIDIA_MON.nhm_nvidia_device_set_fan_speed_percentage(BusID, percentage);
+            if (!setSpeedRet) Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_set_fan_speed_percentage failed", _delayedLogging);
+            return setSpeedRet;
         }
 
         private bool NvmlSetTDP(double percentage)
