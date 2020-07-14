@@ -1,6 +1,4 @@
-﻿using ManagedCuda.Nvml;
-using NHM.Common;
-using NVIDIA.NVAPI;
+﻿using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,52 +10,17 @@ namespace NHM.DeviceMonitoring.NVIDIA
         private const string Tag = "NvidiaMonitorManager";
         private static bool _tryAddNvmlToEnvPathCalled = false;
 
-        internal static bool InitalNVMLInitSuccess = false;
+        internal static bool InitalNVIDIALibInitSuccess = false;
 
         internal static Dictionary<string, int> _nvidiaUUIDAndBusIds;
-
 
         internal static void Init(Dictionary<string, int> nvidiaUUIDAndBusIds, bool useNvmlFallback)
         {
             TryAddNvmlToEnvPath(useNvmlFallback);
             _nvidiaUUIDAndBusIds = nvidiaUUIDAndBusIds;
-            InitalNVMLInitSuccess = InitNvml();
-            LogNvidiaMonitorManagerState();
+            InitalNVIDIALibInitSuccess = InitNvidiaLib();
         }
 
-        internal static void LogNvidiaMonitorManagerState()
-        {
-            // Enumerate NVAPI handles and map to busid
-            var idHandles = InitNvapi();
-            foreach (var pair in _nvidiaUUIDAndBusIds)
-            {
-                var uuid = pair.Key;
-                var busID = pair.Value;
-
-                
-                var nvmlResultStr = "InitalNVMLInitSuccess==FALSE";
-                if (InitalNVMLInitSuccess)
-                {
-                    var nvmlHandle = new nvmlDevice();
-                    var nvmlRet = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(uuid, ref nvmlHandle);
-                    if (nvmlRet != nvmlReturn.Success)
-                    {
-                        nvmlResultStr = $"Failed with code ret {nvmlRet}";
-                    }
-                    else
-                    {
-                        nvmlResultStr = nvmlHandle.Pointer.ToString();
-                    }
-                }
-                var nvapiResultStr = "NVAPI found no handle";
-                var nvHandle = new NvPhysicalGpuHandle();
-                if (idHandles.TryGetValue(busID, out nvHandle))
-                {
-                    nvapiResultStr = nvHandle.ptr.ToString();
-                }
-                Logger.Info($"{Tag}.Init", $"UUID({uuid})-BusID({busID}): NVML_HANDLE({nvmlResultStr}) NVAPI_HANDLE({nvapiResultStr})");
-            }
-        }
 
         private static void TryAddNvmlToEnvPath(bool useNvmlFallback)
         {
@@ -84,58 +47,12 @@ namespace NHM.DeviceMonitoring.NVIDIA
             }
         }
 
-        private static Dictionary<int, NvPhysicalGpuHandle> InitNvapi()
-        {
-            var idHandles = new Dictionary<int, NvPhysicalGpuHandle>();
-            if (!NVAPI.IsAvailable)
-            {
-                return idHandles;
-            }
 
-            var handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
-            if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
-            {
-                Logger.Debug("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable");
-            }
-            else
-            {
-                var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out _);
-                if (status != NvStatus.OK)
-                {
-                    Logger.Debug("NVAPI", $"Enum physical GPUs failed with status: {status}");
-                }
-                else
-                {
-                    foreach (var handle in handles)
-                    {
-                        var idStatus = NVAPI.NvAPI_GPU_GetBusID(handle, out var id);
-
-                        if (idStatus == NvStatus.EXPECTED_PHYSICAL_GPU_HANDLE) continue;
-
-                        if (idStatus != NvStatus.OK)
-                        {
-                            Logger.Debug("NVAPI",
-                                "Bus ID get failed with status: " + idStatus);
-                        }
-                        else
-                        {
-                            Logger.Debug("NVAPI", "Found handle for busid " + id);
-                            idHandles[id] = handle;
-                        }
-                    }
-                }
-            }
-
-            return idHandles;
-        }
-
-        internal static bool InitNvml()
+        internal static bool InitNvidiaLib()
         {
             try
             {
-                var ret = NvmlNativeMethods.nvmlInit();
-                if (ret != nvmlReturn.Success)
-                    throw new Exception($"NVML init failed with code {ret}");
+                NVIDIA_MON.nhm_nvidia_init();             
                 return true;
             }
             catch (Exception e)
@@ -145,13 +62,11 @@ namespace NHM.DeviceMonitoring.NVIDIA
             }
         }
 
-        internal static bool ShutdownNvml()
+        internal static bool ShutdownNvidiaLib()
         {
             try
             {
-                var ret = NvmlNativeMethods.nvmlShutdown();
-                if (ret != nvmlReturn.Success)
-                    throw new Exception($"NVML shutdown failed with code {ret}");
+                NVIDIA_MON.nhm_nvidia_deinit();
                 return true;
             }
             catch (Exception e)
@@ -161,9 +76,9 @@ namespace NHM.DeviceMonitoring.NVIDIA
             }
         }
 
-        #region NVML RESTART 
+        #region NVIDIA LIB RESTART 
         private static object _restartLock = new object();
-        internal static bool IsNVMLRestarting
+        internal static bool IsNVIDIALibRestarting
         {
             get
             {
@@ -174,18 +89,17 @@ namespace NHM.DeviceMonitoring.NVIDIA
             }
         }
 
-        internal static void AttemptRestartNVML()
+        internal static void AttemptRestartNVIDIALib()
         {
             using (var tryLock = new TryLock(_restartLock))
             {
                 if (!tryLock.HasAcquiredLock) return;
                 Logger.Info(Tag, $"Attempting to restart NVML");
                 // restart
-                var shutdownRet = ShutdownNvml();
-                var initRet = InitNvml();
-                LogNvidiaMonitorManagerState();
+                var shutdownRet = ShutdownNvidiaLib();
+                var initRet = InitNvidiaLib();
             }
         }
-        #endregion NVML RESTART
+        #endregion NVIDIA LIB RESTART
     }
 }
