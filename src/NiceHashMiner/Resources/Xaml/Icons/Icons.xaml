@@ -11,5 +11,8 @@
         <ResourceDictionary Source="MoonCircleDark.xaml"/>
         <ResourceDictionary Source="MiningAxeIcon.xaml"/>
         <ResourceDictionary Source="MiningAxeIconDark.xaml"/>
+        <ResourceDictionary Source="QrIconDefault.xaml"/>
+        <ResourceDictionary Source="QRIcon.xaml"/>
+        <ResourceDictionary Source="NHMLogoBigLight.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

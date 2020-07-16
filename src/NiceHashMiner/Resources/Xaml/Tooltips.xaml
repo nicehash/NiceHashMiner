@@ -41,6 +41,8 @@
     <system:String x:Key="minerRestartDelay">Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.</system:String>
     <system:String x:Key="apiBindStart">Set starting port number from which miner API Bind ports will be set for communication.</system:String>
     <system:String x:Key="apiQueryInterval">API query interval for ccminer, sgminer cpuminer and ethminer.</system:String>
+
+    <system:String x:Key="scanQrCode">Use NiceHash Mobile app and scan this QR code to add this rig to your Rig Manager automatically.</system:String>
     
     <system:String x:Key="gpuNumber">Number of gpu devices in your system.</system:String>
     <system:String x:Key="cpuNumber">Number of cpu devices in your system.</system:String>
@@ -56,6 +58,6 @@
     <system:String x:Key="Tooltip.IdleMining.IdleCheckMethod">Choose how to check if computer is idle when start mining on idle is enabled. Session Lock will start when the computer is locked (generally when the screen has turned off). Input Timeout will start when there has been no system input for the idle time seconds.</system:String>
     <system:String x:Key="Tooltip.IdleMining.MinIdleSeconds">When StartMiningWhenIdle is checked, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.</system:String>
     <system:String x:Key="Tooltip.DisableVisualCRedistributableCheck">NiceHash Miner will disable Visual Studio C++ Redistributable checking.</system:String>
-    
-    
+    <system:String x:Key="textAboutNH">By running the NiceHash Miner or NHM (in short) you are connecting your PC or a mining rig to NiceHash hash-power marketplace. NiceHash Miner enables you to rent out the computing power of your machine and in return, you earn bitcoins. To learn more about how NiceHash works,</system:String>
+
 </ResourceDictionary>

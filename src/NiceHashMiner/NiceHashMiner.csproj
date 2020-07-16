@@ -216,6 +216,9 @@
     <Compile Include="Views\Settings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Settings\SettingsAbout.xaml.cs">
+      <DependentUpon>SettingsAbout.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Settings\SettingsAdvanced.xaml.cs">
       <DependentUpon>SettingsAdvanced.xaml</DependentUpon>
     </Compile>
@@ -228,6 +231,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsQrLogin.xaml.cs">
+      <DependentUpon>SettingsQrLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SingleInstanceNotice.xaml.cs">
       <DependentUpon>SingleInstanceNotice.xaml</DependentUpon>
@@ -369,11 +375,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\Xaml\Icons\NHMLogoBigLight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Xaml\Icons\NHMLogoDark.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\Xaml\Icons\NHMLogoLight.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Icons\QRIcon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Xaml\Icons\QrIconDefault.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -517,6 +535,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Settings\SettingsAbout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Settings\SettingsAdvanced.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -526,6 +548,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Settings\SettingsGeneral.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsQrLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -603,6 +629,7 @@
     <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-BI.ttf" />
     <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-R.ttf" />
     <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-RI.ttf" />
+    <Resource Include="Resources\Fonts\FontAwesome\fa-brands-400.ttf" />
     <None Include="translations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
