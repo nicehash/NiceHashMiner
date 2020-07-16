@@ -23,6 +23,16 @@ namespace NiceHashMiner.Views.Settings
             InitializeComponent();
             LanguageSettings.Visibility = AppRuntimeSettings.ShowLanguage ? Visibility.Visible : Visibility.Collapsed;
             ThemeSettings.Visibility = AppRuntimeSettings.ThemeSettingsEnabled ? Visibility.Visible : Visibility.Collapsed;
+            CredentialsSettings.Instance.PropertyChanged += (s, e) =>
+            {
+                if(e.PropertyName == "BitcoinAddress")
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
+                    });
+                }
+            };
             if (CredentialsSettings.Instance.IsBitcoinAddressValid)
             {
                 textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
