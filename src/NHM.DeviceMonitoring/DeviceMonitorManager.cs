@@ -28,12 +28,12 @@ namespace NHM.DeviceMonitoring
                 }
                 if (amds.Count > 0)
                 {
-                    var amdBusIdAndUuids = amds.ToDictionary(amd => amd.PCIeBusID, amd => amd.UUID);
-                    var (_, amdInfos) = QueryAdl.TryQuery(amdBusIdAndUuids);
-                    foreach (var amd in amds)
-                    {
-                        var currentAmdInfos = amdInfos.Where(info => info.BusID == amd.PCIeBusID);
-                        ret.Add(new DeviceMonitorAMD(amd.UUID, amd.PCIeBusID, currentAmdInfos.ToArray()));
+                    if (0 == AMD_ODN.nhm_amd_init()) {
+                        foreach (var amd in amds) {
+                            if (0 == AMD_ODN.nhm_amd_has_adapter(amd.PCIeBusID)) {
+                                ret.Add(new DeviceMonitorAMD(amd.UUID, amd.PCIeBusID));
+                            }
+                        }
                     }
                 }
                 if (nvidias.Count > 0)
