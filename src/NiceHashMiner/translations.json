@@ -3911,6 +3911,12 @@
     },
     "Update in progress...": {
       "ru": "Выполняется обновление..."
+    },
+    "read this article.": {
+      "ru": "прочитайте эту статью."
+    },
+    "By running the NiceHash Miner or NHM (in short) you are connecting your PC or a mining rig to NiceHash hash-power marketplace. NiceHash Miner enables you to rent out the computing power of your machine and in return, you earn bitcoins. To learn more about how NiceHash works, ": {
+      "ru": "Запуская NiceHash Miner или сокращенно NHM, вы подключаете ваш ПК или риг для майнинга к рынку мощности NiceHash. NiceHash Miner позволяет вам сдавать в аренду вычислительную мощность вашего оборудования и взамен зарабатывать биткоины. Чтобы узнать больше о том, как работает NiceHash, "
     }
   }
 }
