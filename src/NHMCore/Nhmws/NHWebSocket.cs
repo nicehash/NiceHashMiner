@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Nhmws.Models;
 using NHMCore.Switching;
@@ -834,13 +835,15 @@ namespace NHMCore.Nhmws
 
         private static void SetPowerMode(string device, TDPSimpleType level)
         {
+            if(GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCode.UnableToHandleRpc);
+
             var devs = device == "*" ?
                 AvailableDevices.Devices :
                 AvailableDevices.Devices.Where(d => d.B64Uuid == device);
 
             var found = devs.Count() > 0;
             var hasEnabled = false;
-            var setSuccess = new List<bool>();
+            var setSuccess = new List<(bool success, DeviceType type)>();
             foreach (var dev in devs)
             {
                 if (!dev.Enabled) continue;
@@ -848,11 +851,15 @@ namespace NHMCore.Nhmws
                 hasEnabled = true;
                 // TODO check if set
                 var result = dev.SetPowerMode(level);
-                setSuccess.Add(result);
+                setSuccess.Add((result, dev.DeviceType));
             }
 
-            if (setSuccess.Any(t => t) && !setSuccess.All(t => t))
+            if (!setSuccess.All(t => t.success))
             {
+                if(setSuccess.Any(res => res.type == DeviceType.NVIDIA && !Helpers.IsElevated && !res.success))
+                {
+                    throw new RpcException("Not able to set power modes for devices: Must start NiceHashMiner as Admin", ErrorCode.UnableToHandleRpc);
+                }
                 throw new RpcException("Not able to set power modes for all devices", ErrorCode.UnableToHandleRpc);
             }
 
