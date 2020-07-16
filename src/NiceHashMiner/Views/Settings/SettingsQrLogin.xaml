@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
              xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="532" d:DesignWidth="720" Loaded="UserControl_Loaded">
+             d:DesignHeight="532" d:DesignWidth="720" >
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
@@ -23,10 +23,11 @@
         </Style>
     </UserControl.Resources>
     <StackPanel>
-        <Canvas x:Name="rectangle" Width="200" Height="200" Margin="0,64,0,0" >
+        <Canvas x:Name="rectangle" Width="200" Height="200" Margin="0,48,0,0" >
             <Rectangle x:Name="rect_qrCode" Width="200" Height="200" />
         </Canvas>
         <TextBlock Text="{StaticResource scanQrCode}" Style="{StaticResource local.DefaultTextBlock}" Margin="0,24,0,0"/>
-
+        <Label x:Name="lbl_qr_status" Margin="0,16,0,0" Style="{StaticResource FontsTypography.NormalRegular/Secondary}" HorizontalAlignment="Center" />
+        <Button x:Name="btn_gen_qr" Content="Generate new QR Code" Margin="0,16,0,0" Style="{StaticResource BigButtonPrimary}" Height="24" Width="150" Click="btn_gen_qr_Click" />
     </StackPanel>
 </UserControl>

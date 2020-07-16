@@ -41,14 +41,14 @@ namespace NiceHashMiner.Views.Login
         {
             GUISettings.Instance.DisplayTheme = "Dark";
             ThemeSetterManager.SetTheme(false);
-            CreateQRCode(_uuid, false);
+            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, false);
         }
 
         private void CheckBoxMode_Unchecked(object sender, RoutedEventArgs e)
         {
             GUISettings.Instance.DisplayTheme = "Light";
             ThemeSetterManager.SetTheme(true);
-            CreateQRCode(_uuid, true);
+            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
         }
 
         private void Register_OnClick(object sender, RoutedEventArgs e)
@@ -80,7 +80,7 @@ namespace NiceHashMiner.Views.Login
                 var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
             }
             // create qr code
-            CreateQRCode(_uuid);
+            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
 
             //if all ok start timer to poll
             while (true)
@@ -113,69 +113,6 @@ namespace NiceHashMiner.Views.Login
                 {
                     Console.WriteLine(e.Message);
                 }
-            }
-        }
-
-        private void CreateQRCode(string uuid, bool LightTheme = true)
-        {
-            var encOptions = new EncodingOptions
-            {
-                Width = 160,
-                Height = 160,
-                Margin = 0,
-                PureBarcode = false
-            };
-            encOptions.Hints.Add(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-
-            var bw = new BarcodeWriter();
-            bw.Renderer = new BitmapRenderer();
-            bw.Options = encOptions;
-            bw.Format = BarcodeFormat.QR_CODE;
-
-            var bm = bw.Write(uuid);
-            try
-            {
-                var overlay = new Bitmap("../Resources/logoLight32.png");
-                if (!LightTheme)
-                {
-                    for (int j = 0; (j <= (bm.Height - 1)); j++)
-                    {
-                        for (int k = 0; (k <= (bm.Width - 1)); k++)
-                        {
-                            var inv = bm.GetPixel(k, j);
-                            inv = System.Drawing.Color.FromArgb(255, (255 - inv.R), (255 - inv.G), (255 - inv.B));
-                            bm.SetPixel(k, j, inv);
-                        }
-                    }
-                    overlay = new Bitmap("../Resources/logoDark32.png");
-                }
-
-                var g = Graphics.FromImage(bm);
-                var x = (bm.Width - overlay.Width) / 2;
-                var y = (bm.Height - overlay.Height) / 2;
-                g.FillRectangle(new SolidBrush(System.Drawing.Color.White), x, y, overlay.Width, overlay.Height);
-                g.DrawImage(overlay, new System.Drawing.Point(x, y));
-
-                //bmp to bmpimg
-                BitmapImage bitmapImage;
-                using (var memory = new MemoryStream())
-                {
-                    bm.Save(memory, ImageFormat.Png);
-                    memory.Position = 0;
-                    bitmapImage = new BitmapImage();
-                    bitmapImage.BeginInit();
-                    bitmapImage.StreamSource = memory;
-                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapImage.EndInit();
-                }
-                // end of bmp to bmpimg       
-
-                var brush = new ImageBrush(bitmapImage);
-                rect_qrCode.Fill = brush;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
             }
         }
 
