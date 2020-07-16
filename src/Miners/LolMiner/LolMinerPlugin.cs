@@ -37,7 +37,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(13, 3);
+        public override Version Version => new Version(13, 4);
 
         public override string Name => "lolMiner";
 
@@ -98,7 +98,7 @@ namespace LolMiner
             if (_mappedDeviceIds.Count == 0) return;
             // will block
             var minerBinPath = GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--benchmark BEAM --longstats 60 --devices -1", new List<string> { "Start Benchmark..." });
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--benchmark BEAM-III --longstats 60 --devices -1", new List<string> { "Start Benchmark..." });
             var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices.ToList());
 
             foreach (var kvp in mappedDevs)
