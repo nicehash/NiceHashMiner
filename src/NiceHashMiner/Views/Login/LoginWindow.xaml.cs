@@ -19,6 +19,7 @@ using System;
 using System.Threading.Tasks;
 using System.Text;
 using Newtonsoft.Json;
+using NiceHashMiner.ViewModels;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -27,14 +28,13 @@ namespace NiceHashMiner.Views.Login
     /// </summary>
     public partial class LoginWindow : BaseDialogWindow
     {
-        private static readonly HttpClient client = new HttpClient();
-        private readonly string _uuid = Guid.NewGuid().ToString();
+        private string _uuid = Guid.NewGuid().ToString();
         public LoginWindow()
         {
             InitializeComponent();
             HideIconAndTitle = true;
             WindowUtils.Translate(this);
-            _ = ProcessQRCode();           
+            _ = ProcessQRCode();
         }
 
         private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
@@ -72,14 +72,13 @@ namespace NiceHashMiner.Views.Login
         {
             var rigID = ApplicationStateManager.RigID();
 
-            var requestBody = "{\"qrId\":\""+ _uuid + "\", \"rigId\":\"" + rigID + "\"}";
+            var requestBody = "{\"qrId\":\"" + _uuid + "\", \"rigId\":\"" + rigID + "\"}";
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
-            //var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
-            var response = await client.PostAsync("https://api-test-dev.nicehash.com/api/v2/organization/nhmqr", content);
-
-            var responseString = response.Content.ReadAsStringAsync();
-
+            using (var client = new HttpClient())
+            {
+                var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
+            }
             // create qr code
             CreateQRCode(_uuid);
 
@@ -89,21 +88,23 @@ namespace NiceHashMiner.Views.Login
                 await Task.Delay(2000);
                 try
                 {
-                    //var resp = client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{uuid}").Result;
-                    var resp = client.GetAsync($"https://api-test-dev.nicehash.com/api/v2/organization/nhmqr/{_uuid}").Result;
-                    if (resp.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        var contentString = resp.Content.ReadAsStringAsync().Result;
-                        if (!string.IsNullOrEmpty(contentString))
+                        var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
+                        if (resp.IsSuccessStatusCode)
                         {
-                            var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
-                            if (btcResp.btc != null)
+                            var contentString = await resp.Content.ReadAsStringAsync();
+                            if (!string.IsNullOrEmpty(contentString))
                             {
-                                if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
+                                var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
+                                if (btcResp.btc != null)
                                 {
-                                    CredentialsSettings.Instance.SetBitcoinAddress(btcResp.btc);
-                                    Close();
-                                }                             
+                                    if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
+                                    {
+                                        CredentialsSettings.Instance.SetBitcoinAddress(btcResp.btc);
+                                        Close();
+                                    }
+                                }
                             }
                         }
                     }
@@ -112,7 +113,7 @@ namespace NiceHashMiner.Views.Login
                 {
                     Console.WriteLine(e.Message);
                 }
-            }    
+            }
         }
 
         private void CreateQRCode(string uuid, bool LightTheme = true)
@@ -134,6 +135,7 @@ namespace NiceHashMiner.Views.Login
             var bm = bw.Write(uuid);
             try
             {
+                var overlay = new Bitmap("../Resources/logoLight32.png");
                 if (!LightTheme)
                 {
                     for (int j = 0; (j <= (bm.Height - 1)); j++)
@@ -145,9 +147,9 @@ namespace NiceHashMiner.Views.Login
                             bm.SetPixel(k, j, inv);
                         }
                     }
-                }               
+                    overlay = new Bitmap("../Resources/logoDark32.png");
+                }
 
-                var overlay = new Bitmap("../Resources/logo.png");
                 var g = Graphics.FromImage(bm);
                 var x = (bm.Width - overlay.Width) / 2;
                 var y = (bm.Height - overlay.Height) / 2;
@@ -174,7 +176,7 @@ namespace NiceHashMiner.Views.Login
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-            }           
+            }
         }
 
         [Serializable]
