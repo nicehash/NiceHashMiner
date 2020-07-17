@@ -89,10 +89,6 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateWarningNVIDIADCHInfo();
                 }
-                if (DeviceDetection.DetectionResult.IsDCHDriver && !DeviceDetection.DetectionResult.IsNvmlFallback)
-                {
-                    AvailableNotifications.CreateNVMLFallbackFailInfo();
-                }
                 if (MiscSettings.Instance.UseEthlargement && !Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateEthlargementElevateInfo();
