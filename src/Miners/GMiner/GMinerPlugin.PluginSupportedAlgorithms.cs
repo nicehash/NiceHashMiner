@@ -36,6 +36,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.KAWPOW),
                         new SAS(AlgorithmType.Cuckaroo29BFC),
                         new SAS(AlgorithmType.BeamV3),
+                        new SAS(AlgorithmType.CuckaRooz29),
                     }
                 },
                 {
@@ -63,6 +64,7 @@ namespace GMinerPlugin
                 { AlgorithmType.KAWPOW, "kawpow" },
                 { AlgorithmType.Cuckaroo29BFC, "bfc" },
                 { AlgorithmType.BeamV3, "beamhashIII" },
+                { AlgorithmType.CuckaRooz29, "cuckarooz29" },
             }
         };
     }
