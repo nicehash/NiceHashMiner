@@ -41,7 +41,6 @@ namespace NHMCore.Notifications
         ComputeModeAMD,
         LargePages,
         VirtualMemory,
-        NVMLFallbackFail,
         OpenClFallback,
         NoAvailableAlgorithms
     }

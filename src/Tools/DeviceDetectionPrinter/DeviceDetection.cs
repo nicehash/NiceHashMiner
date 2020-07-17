@@ -10,13 +10,13 @@ namespace DeviceDetectionPrinter
     internal static class DeviceDetection
     {
         [DllImport("cuda_device_detection.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr _GetCUDADevices(bool prettyString, bool useNvmlFallback);
+        private static extern IntPtr _GetCUDADevices(bool prettyString);
 
-        public static string GetCUDADevices(bool prettyString, bool useNvmlFallback)
+        public static string GetCUDADevices(bool prettyString)
         {
             try
             {
-                var a = _GetCUDADevices(prettyString, useNvmlFallback);
+                var a = _GetCUDADevices(prettyString);
                 var ret = Marshal.PtrToStringAnsi(a);
                 return ret;
             }
