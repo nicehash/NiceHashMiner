@@ -68,6 +68,12 @@ namespace NHM.DeviceMonitoring.NVIDIA
             var nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
                                "\\NVIDIA Corporation\\NVSMI";
             var nvmlRootPathTag = "DEFAULT";
+            if(!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")))
+            {
+                nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) +
+                               "\\System32";
+                nvmlRootPathTag = "DHC";
+            }
             if (useNvmlFallback)
             {
                 nvmlRootPath = Paths.AppRootPath("NVIDIA");
