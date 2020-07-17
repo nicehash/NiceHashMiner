@@ -13,7 +13,7 @@ namespace NHM.DeviceMonitoring
     {
         public static bool DisableDeviceStatusMonitoring { get; set; } = false;
         public static bool DisableDevicePowerModeSettings { get; set; } = true;
-        public static Task<List<DeviceMonitor>> GetDeviceMonitors(IEnumerable<BaseDevice> devices, bool isDCHDriver)
+        public static Task<List<DeviceMonitor>> GetDeviceMonitors(IEnumerable<BaseDevice> devices)
         {
             return Task.Run(() => {
                 var ret = new List<DeviceMonitor>();
@@ -41,7 +41,7 @@ namespace NHM.DeviceMonitoring
                     var initialNvmlRestartTimeWait = Math.Min(500 * nvidias.Count, 5000); // 500ms per GPU or initial MAX of 5seconds
                     var firstMaxTimeoutAfterNvmlRestart = TimeSpan.FromMilliseconds(initialNvmlRestartTimeWait);
                     var nvidiaUUIDAndBusIds = nvidias.ToDictionary(nvidia => nvidia.UUID, nvidia => nvidia.PCIeBusID);
-                    NvidiaMonitorManager.Init(nvidiaUUIDAndBusIds, isDCHDriver && UseNvmlFallback.Enabled);
+                    NvidiaMonitorManager.Init(nvidiaUUIDAndBusIds);
                     foreach(var nvidia in nvidias)
                     {
                         var deviceMonitorNVIDIA = new DeviceMonitorNVIDIA(nvidia.UUID, nvidia.PCIeBusID, firstMaxTimeoutAfterNvmlRestart);

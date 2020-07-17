@@ -139,7 +139,7 @@ namespace NHMCore
 
                 // STEP
                 loader.PrimaryProgress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
-                var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice), detectionResult.IsDCHDriver);
+                var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice));
                 foreach (var monitor in monitors)
                 {
                     var dev = AvailableDevices.GetDeviceWithUuid(monitor.UUID);
