@@ -18,19 +18,21 @@ namespace NiceHashMiner.Views.Settings
     public partial class SettingsQrLogin : System.Windows.Controls.UserControl
     {
         private string _uuid = Guid.NewGuid().ToString();
-        Stopwatch stopWatch = new Stopwatch();
+        Stopwatch stopWatch;
 
         public SettingsQrLogin()
         {
             InitializeComponent();
             _ = ProcessQRCode();
-            stopWatch.Start();
             lbl_qr_status.Visibility = Visibility.Collapsed;
             btn_gen_qr.Visibility = Visibility.Collapsed;
         }
 
         private async Task ProcessQRCode()
         {
+            stopWatch = new Stopwatch();
+            stopWatch.Start();
+
             var rigID = ApplicationStateManager.RigID();
 
             var requestBody = "{\"qrId\":\"" + _uuid + "\", \"rigId\":\"" + rigID + "\"}";
@@ -80,7 +82,7 @@ namespace NiceHashMiner.Views.Settings
                 {
                     Console.WriteLine(e.Message);
                 }
-                if(stopWatch.ElapsedMilliseconds >=  (1000 * 60 * 10))
+                if (stopWatch.ElapsedMilliseconds >= (1000 * 60 * 10))
                 {
                     lbl_qr_status.Visibility = Visibility.Visible;
                     btn_gen_qr.Visibility = Visibility.Visible;
