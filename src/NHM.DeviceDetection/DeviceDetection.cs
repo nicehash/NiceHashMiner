@@ -83,7 +83,7 @@ namespace NHM.DeviceDetection
 
         private static async Task DetectCUDADevices()
         {
-            var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync(UseNvmlFallback.Enabled);
+            var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
             Logger.Info(Tag, $"TryQueryCUDADevicesAsync RAW: '{cudaQueryResult.rawOutput}'");
             var result = cudaQueryResult.parsed;
             var unsuported = new List<CUDADevice>();
@@ -96,10 +96,9 @@ namespace NHM.DeviceDetection
                 DetectionResult.CUDADevices = cudaDevices.Where(cudaDev => cudaDev.SM_major >= 3).ToList();
                 unsuported = cudaDevices.Where(cudaDev => cudaDev.SM_major < 3).ToList();
                 // NVIDIA drivers
-                var nvmlLoaded = result?.NvmlLoaded ?? false;
-                DetectionResult.IsDCHDriver = nvmlLoaded == false;
-                DetectionResult.IsNvmlFallback = result?.NvmlLoadedFallback ?? false;
-                if (nvmlLoaded)
+                var nvmlLoaded = result?.NvmlLoaded ?? -1;
+                DetectionResult.IsDCHDriver = nvmlLoaded == 1;
+                if (nvmlLoaded == 1)
                 {
                     var driverVer = result.DriverVersion.Split('.').Select(s => int.Parse(s)).ToArray();
                     if (driverVer.Count() >= 2) DetectionResult.NvidiaDriver = new Version(driverVer[0], driverVer[1]);
@@ -211,7 +210,7 @@ namespace NHM.DeviceDetection
 
         public static async Task<int> CUDADevicesNumCheck()
         {
-            var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync(UseNvmlFallback.Enabled);
+            var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
             var result = cudaQueryResult.parsed;
             return result?.CudaDevices?.Count ?? 0;
         }
