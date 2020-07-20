@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Settings.SettingsAbout"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type Button}" x:Key="BrandingButtonBase">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesomeBrands}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style BasedOn="{StaticResource BrandingButtonBase}" TargetType="{x:Type Button}" x:Key="facebookBtn">
+            <Setter Property="Content" Value="&#xf39e;" />
+            <Setter Property="FontSize" Value="17" />
+        </Style>
+        <Style BasedOn="{StaticResource BrandingButtonBase}" TargetType="{x:Type Button}" x:Key="instagramBtn">
+            <Setter Property="Content" Value="&#xf16d;" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style BasedOn="{StaticResource BrandingButtonBase}" TargetType="{x:Type Button}" x:Key="twitterBtn">
+            <Setter Property="Content" Value="&#xf099;" />
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+        <Style BasedOn="{StaticResource BrandingButtonBase}" TargetType="{x:Type Button}" x:Key="youtubeBtn">
+            <Setter Property="Content" Value="&#xf167;" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style BasedOn="{StaticResource BrandingButtonBase}" TargetType="{x:Type Button}" x:Key="vkBtn">
+            <Setter Property="Content" Value="&#xf189;" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style BasedOn="{StaticResource BrandingButtonBase}" TargetType="{x:Type Button}" x:Key="githubBtn">
+            <Setter Property="Content" Value="&#xf09b;" />
+            <Setter Property="FontSize" Value="18" />
+        </Style>
+        <Style BasedOn="{StaticResource BrandingButtonBase}" TargetType="{x:Type Button}" x:Key="redditBtn">
+            <Setter Property="Content" Value="&#xf281;" />
+            <Setter Property="FontSize" Value="20" />
+        </Style>
+        <Style BasedOn="{StaticResource BrandingButtonBase}" TargetType="{x:Type Button}" x:Key="discordBtn">
+            <Setter Property="Content" Value="&#xf392;" />
+            <Setter Property="FontSize" Value="19" />
+        </Style>
+
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <viewModels:MainVM />
+    </UserControl.DataContext>
+    <StackPanel>
+        <Grid Width="154" Height="40" Grid.Row="1" HorizontalAlignment="Left" Margin="16,32,0,0" Background="{DynamicResource NHMBigLogo}" />
+        <TextBlock Text="{StaticResource textAboutNH}" Style="{StaticResource FontsTypography.Caption-Primary}" Margin="16,16,16,0" TextWrapping="Wrap" x:Name="tbl_aboutText" />
+        <StackPanel Margin="16,16,0,0" Orientation="Vertical">
+            <Label Content="Version Information" Style="{StaticResource FontsTypography.Heading3/Secondary}" Padding="0,5,0,5" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="NiceHash Miner Version: " Style="{StaticResource FontsTypography.Caption-Primary}"/>
+                <TextBlock x:Name="tbl_localVer" Text="{Binding LocalVersion}" Style="{StaticResource FontsTypography.Caption-Primary}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Online NiceHash Miner Version: " Style="{StaticResource FontsTypography.Caption-Primary}"/>
+                <TextBlock x:Name="tbl_onlineVer" Text="{Binding OnlineVersion}" Style="{StaticResource FontsTypography.Caption-Primary}"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Margin="16,10,0,8" Orientation="Vertical">
+            <Label Content="Resources" Style="{StaticResource FontsTypography.Heading3/Secondary}" Padding="0,5,0,5"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Company Website: " Style="{StaticResource FontsTypography.Caption-Primary}"/>
+                <TextBlock>
+                    <Hyperlink NavigateUri="https://www.nicehash.com" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="none">www.nicehash.com</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Blog: " Style="{StaticResource FontsTypography.Caption-Primary}"/>
+                <TextBlock>
+                    <Hyperlink NavigateUri="https://www.nicehash.com/blog" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="none">www.nicehash.com/blog</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Support: " Style="{StaticResource FontsTypography.Caption-Primary}"/>
+                <TextBlock>
+                    <Hyperlink NavigateUri="https://www.nicehash.com/support" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="none">www.nicehash.com/support</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Status: " Style="{StaticResource FontsTypography.Caption-Primary}"/>
+                <TextBlock>
+                    <Hyperlink NavigateUri="https://status.nicehash.com" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="none">status.nicehash.com</Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Margin="16,10,0,0" Orientation="Vertical">
+            <Label Content="Social" Style="{StaticResource FontsTypography.Heading3/Secondary}" Padding="0,5,0,5"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="btn_facebook" Click="btn_social_Click" Style="{StaticResource facebookBtn}" Margin="0,0,20,0"/>
+                <Button x:Name="btn_instagram" Click="btn_social_Click" Style="{StaticResource instagramBtn}" Margin="0,0,20,0"/>
+                <Button x:Name="btn_twitter" Click="btn_social_Click" Style="{StaticResource twitterBtn}" Margin="0,0,20,0"/>
+                <Button x:Name="btn_youtube" Click="btn_social_Click" Style="{StaticResource youtubeBtn}" Margin="0,0,20,0"/>
+                <Button x:Name="btn_vk" Click="btn_social_Click" Style="{StaticResource vkBtn}" Margin="0,0,20,0"/>
+                <Button x:Name="btn_github" Click="btn_social_Click" Style="{StaticResource githubBtn}" Margin="0,0,20,0"/>
+                <Button x:Name="btn_reddit" Click="btn_social_Click" Style="{StaticResource redditBtn}" Margin="0,0,20,0"/>
+                <Button x:Name="btn_discord" Click="btn_social_Click" Style="{StaticResource discordBtn}" Margin="0,0,20,0"/>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -10,6 +10,7 @@
     <FontFamily x:Key="Ubuntu-Medium">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Medium</FontFamily>
     <FontFamily x:Key="Ubuntu-Regular">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Regular</FontFamily>
     <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Free Solid</FontFamily>
+    <FontFamily x:Key="FontAwesomeBrands">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Brands Regular</FontFamily>
     <!--#endregion Fonts-->
 
 

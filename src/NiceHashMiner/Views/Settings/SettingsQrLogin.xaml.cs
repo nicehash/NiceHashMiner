@@ -1,75 +1,38 @@
-﻿using NiceHashMiner.Views.Common;
-using NiceHashMiner.Views.Common.NHBase;
+﻿using Newtonsoft.Json;
+using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Media;
-using ZXing.Rendering;
-using ZXing;
-using ZXing.QrCode.Internal;
-using System.Drawing;
-using ZXing.Common;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Drawing.Imaging;
-using System.Net.Http;
-using NHMCore;
 using System;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Net.Http;
 using System.Text;
-using Newtonsoft.Json;
-using NiceHashMiner.ViewModels;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
 
-namespace NiceHashMiner.Views.Login
+namespace NiceHashMiner.Views.Settings
 {
     /// <summary>
-    /// Interaction logic for LoginWindow.xaml
+    /// Interaction logic for SettingsQrLogin.xaml
     /// </summary>
-    public partial class LoginWindow : BaseDialogWindow
+    public partial class SettingsQrLogin : System.Windows.Controls.UserControl
     {
         private string _uuid = Guid.NewGuid().ToString();
-        public LoginWindow()
+        Stopwatch stopWatch;
+
+        public SettingsQrLogin()
         {
             InitializeComponent();
-            HideIconAndTitle = true;
-            WindowUtils.Translate(this);
             _ = ProcessQRCode();
-        }
-
-        private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
-        {
-            GUISettings.Instance.DisplayTheme = "Dark";
-            ThemeSetterManager.SetTheme(false);
-            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, false);
-        }
-
-        private void CheckBoxMode_Unchecked(object sender, RoutedEventArgs e)
-        {
-            GUISettings.Instance.DisplayTheme = "Light";
-            ThemeSetterManager.SetTheme(true);
-            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
-        }
-
-        private void Register_OnClick(object sender, RoutedEventArgs e)
-        {
-            Process.Start(Links.Register);
-        }
-
-        private void ManuallyEnterBtc_OnClick(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void Login_OnClick(object sender, RoutedEventArgs e)
-        {
-            Hide();
-            var browser = new LoginBrowser();
-            browser.ShowDialog();
+            lbl_qr_status.Visibility = Visibility.Collapsed;
+            btn_gen_qr.Visibility = Visibility.Collapsed;
         }
 
         private async Task ProcessQRCode()
         {
+            stopWatch = new Stopwatch();
+            stopWatch.Start();
+
             var rigID = ApplicationStateManager.RigID();
 
             var requestBody = "{\"qrId\":\"" + _uuid + "\", \"rigId\":\"" + rigID + "\"}";
@@ -80,7 +43,7 @@ namespace NiceHashMiner.Views.Login
                 var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
             }
             // create qr code
-            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
+            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, GUISettings.Instance.DisplayTheme == "Light");
 
             //if all ok start timer to poll
             while (true)
@@ -101,8 +64,14 @@ namespace NiceHashMiner.Views.Login
                                 {
                                     if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
                                     {
-                                        CredentialsSettings.Instance.SetBitcoinAddress(btcResp.btc);
-                                        Close();
+                                        var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btc);
+                                        if(ret == ApplicationStateManager.SetResult.CHANGED)
+                                        {
+                                            lbl_qr_status.Visibility = Visibility.Visible;
+                                            btn_gen_qr.Visibility = Visibility.Visible;
+                                            lbl_qr_status.Content = "BTC Address was changed - this code is already used.";
+                                        }
+                                        return;
                                     }
                                 }
                             }
@@ -113,6 +82,13 @@ namespace NiceHashMiner.Views.Login
                 {
                     Console.WriteLine(e.Message);
                 }
+                if (stopWatch.ElapsedMilliseconds >= (1000 * 60 * 10))
+                {
+                    lbl_qr_status.Visibility = Visibility.Visible;
+                    btn_gen_qr.Visibility = Visibility.Visible;
+                    lbl_qr_status.Content = "QR Code timeout. Please generate new one.";
+                    return;
+                }
             }
         }
 
@@ -120,6 +96,13 @@ namespace NiceHashMiner.Views.Login
         private class BtcResponse
         {
             public string btc { get; set; }
+        }
+
+        private async void btn_gen_qr_Click(object sender, RoutedEventArgs e)
+        {
+            lbl_qr_status.Visibility = Visibility.Collapsed;
+            btn_gen_qr.Visibility = Visibility.Collapsed;
+            await ProcessQRCode();
         }
     }
 }

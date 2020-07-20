@@ -1,0 +1,37 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Icons">
+    <DrawingGroup x:Key="QrIconDefault">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0,0,24,24" />
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup.Transform>
+            <TranslateTransform X="0" Y="0.0010000000474974513" />
+        </DrawingGroup.Transform>
+        <DrawingGroup Opacity="1">
+            <DrawingGroup Opacity="1">
+                <DrawingGroup Transform="1,0,0,1,2,2">
+                    <GeometryDrawing Brush="#FFCECDCD">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Figures="M10,7.999L8,7.999 8,3.999 12,3.999 12,5.999 10,5.999z M9,12.999L4,12.999 4,7.999 6,7.999 6,10.999 9,10.999z M10,8.999L12,8.999 12,12.999 10,12.999z M16,11.999L14,11.999 14,9.999 13,9.999 13,7.999 16,7.999z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="1,0,0,1,2,2">
+                    <GeometryDrawing Brush="#FFCECDCD">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Figures="M18,19.999L2,19.999C0.897,19.999,0,19.103,0,17.999L0,1.999C0,0.894999999999999,0.897,-0.00100000000000122,2,-0.00100000000000122L18,-0.00100000000000122C19.103,-0.00100000000000122,20,0.894999999999999,20,1.999L20,17.999C20,19.103,19.103,19.999,18,19.999z M2,1.999L2,17.999 18.001,17.999 18,1.999 2,1.999z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="1,0,0,1,2,2">
+                    <GeometryDrawing Brush="#FFCECDCD">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Figures="M4,3.999L7,3.999 7,6.999 4,6.999z M13,12.999L16,12.999 16,15.999 13,15.999z M13,3.999L16,3.999 16,6.999 13,6.999z M7,13.999L12,13.999 12,15.999 7,15.999z M4,13.999L6,13.999 6,15.999 4,15.999z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+</ResourceDictionary>

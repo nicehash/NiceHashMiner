@@ -19,6 +19,11 @@ namespace NHMCore.Configs
         private readonly NotifyPropertyChangedHelper<string> _stringProps;
         private readonly NotifyPropertyChangedHelper<bool> _boolProps;
 
+        public void SetBitcoinAddress(string btc)
+        {
+            BitcoinAddress = btc;
+        }
+
         public string BitcoinAddress
         {
             get => _stringProps.Get(nameof(BitcoinAddress));

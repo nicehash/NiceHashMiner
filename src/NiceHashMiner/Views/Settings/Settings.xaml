@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800">
     <UserControl.Resources>
         <Style TargetType="{x:Type TabControl}">
             <Setter Property="Template">
@@ -27,16 +27,22 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Margin="40,17,40,0" >
+            <Grid Grid.Row="0" Margin="40,17,40,0" >
                 <StackPanel Orientation="Horizontal" >
-                    <ToggleButton x:Name="GeneralButton" Style="{StaticResource TabButton}" Click="Btn_GeneralSettings_Click">
+                    <ToggleButton x:Name="GeneralButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
                         <TextBlock Text="General" />
                     </ToggleButton>
-                    <ToggleButton Margin="24,0,0,0" x:Name="AdvancedButton" Style="{StaticResource TabButton}" Click="Btn_AdvancedSettings_Click">
+                    <ToggleButton Margin="24,0,0,0" x:Name="AdvancedButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
                         <TextBlock Text="Advanced" />
                     </ToggleButton>
+                    <ToggleButton Margin="24,0,0,0" x:Name="AboutButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
+                        <TextBlock Text="About" />
+                    </ToggleButton>
                 </StackPanel>
-            </StackPanel>
+                <ToggleButton x:Name="QrButton" Width="24" HorizontalAlignment="Right" Style="{StaticResource QrTabButton}"
+                              Background="{StaticResource QrLightLogo}"
+                              Click="Btn_Settings_Click" MouseEnter="QrButton_MouseEnter" MouseLeave="QrButton_MouseLeave" />
+            </Grid>
             <Border Grid.Row="1" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" Margin="40,10,40,0">
                 <TabControl x:Name="MainTabs" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Panel.ZIndex="0">
                     <TabItem Header="General" Name="GeneralTab">
@@ -47,6 +53,16 @@
                     <TabItem Header="Advanced" Name="AdvancedTab">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
                             <local:SettingsAdvanced />
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="About" Name="AboutTab">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+                            <local:SettingsAbout />
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Name="QrTab">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+                            <local:SettingsQrLogin />
                         </ScrollViewer>
                     </TabItem>
                 </TabControl>

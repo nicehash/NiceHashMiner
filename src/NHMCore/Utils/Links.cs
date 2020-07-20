@@ -128,6 +128,9 @@ namespace NHMCore.Utils
         public const string NhmHelp = "https://github.com/nicehash/NiceHashMiner/";
         public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMiner/blob/master/doc/Troubleshooting.md#-no-supported-devices";
 
+        //about
+        public const string About = "https://www.nicehash.com/support/general-help/nicehash-service/what-is-nicehash-and-how-it-works";
+
         //nvidia help
         public const string NvidiaDriversHelp = "https://www.nvidia.com/download/find.aspx";
         public const string AVHelp = "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%253F";
