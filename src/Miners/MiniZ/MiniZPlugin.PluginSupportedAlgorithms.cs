@@ -19,7 +19,7 @@ namespace MiniZ
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.ZHash),
-                        new SAS(AlgorithmType.BeamV2),
+                        new SAS(AlgorithmType.BeamV2){Enabled = false },
                         new SAS(AlgorithmType.BeamV3),
                     }
                 }

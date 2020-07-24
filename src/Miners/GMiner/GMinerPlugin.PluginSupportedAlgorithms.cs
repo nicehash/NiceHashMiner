@@ -16,6 +16,7 @@ namespace GMinerPlugin
             {
                 { AlgorithmType.Cuckaroom, 3.0 },
                 { AlgorithmType.Cuckaroo29BFC, 3.0 },
+                { AlgorithmType.CuckaRooz29, 3.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {

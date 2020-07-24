@@ -23,11 +23,11 @@ namespace LolMiner
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.03",
-                ExePath = new List<string> { "1.03", "lolMiner.exe" },
+                BinVersion = "1.04",
+                ExePath = new List<string> { "1.04", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.03/lolMiner_v1.03_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.04/lolMiner_v1.04_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,7 +37,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(13, 4);
+        public override Version Version => new Version(13, 5);
 
         public override string Name => "lolMiner";
 
@@ -118,11 +118,7 @@ namespace LolMiner
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             if (ids.Count() == 0) return false;
-            if (ids.FirstOrDefault() == AlgorithmType.Cuckaroom)
-            {
-                return (benchmarkedPluginVersion.Major == 8 && benchmarkedPluginVersion.Minor <= 1);
-            }
-            if (ids.First() == AlgorithmType.BeamV3 && benchmarkedPluginVersion.Major == 13 && benchmarkedPluginVersion.Minor < 3) return true;
+            if (ids.First() == AlgorithmType.BeamV3 && benchmarkedPluginVersion.Major == 13 && benchmarkedPluginVersion.Minor < 5) return true;
             return false;
         }
     }
