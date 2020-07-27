@@ -41,46 +41,14 @@ namespace NiceHashMiner.Views.Settings
             using (var client = new HttpClient())
             {
                 var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
-            }
-            // create qr code
-            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, GUISettings.Instance.DisplayTheme == "Light");
 
-            //if all ok start timer to poll
-            using (var client = new HttpClient())
-            {
+                // create qr code
+                rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, GUISettings.Instance.DisplayTheme == "Light");
+
                 while (true)
                 {
                     await Task.Delay(5000);
-                    try
-                    {
-                        var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
-                        if (resp.IsSuccessStatusCode)
-                        {
-                            var contentString = await resp.Content.ReadAsStringAsync();
-                            if (!string.IsNullOrEmpty(contentString))
-                            {
-                                var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
-                                if (btcResp.btc != null)
-                                {
-                                    if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
-                                    {
-                                        var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btc);
-                                        if (ret == ApplicationStateManager.SetResult.CHANGED)
-                                        {
-                                            lbl_qr_status.Visibility = Visibility.Visible;
-                                            btn_gen_qr.Visibility = Visibility.Visible;
-                                            lbl_qr_status.Content = "BTC Address was changed - this code is already used.";
-                                        }
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
+
                     if (stopWatch.ElapsedMilliseconds >= (1000 * 60 * 10))
                     {
                         lbl_qr_status.Visibility = Visibility.Visible;
@@ -103,6 +71,41 @@ namespace NiceHashMiner.Views.Settings
             lbl_qr_status.Visibility = Visibility.Collapsed;
             btn_gen_qr.Visibility = Visibility.Collapsed;
             await ProcessQRCode();
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await BtnClickTask();
+        }
+
+        private async Task BtnClickTask()
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        var contentString = await resp.Content.ReadAsStringAsync();
+                        if (!string.IsNullOrEmpty(contentString))
+                        {
+                            var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
+                            if (btcResp.btc != null)
+                            {
+                                if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
+                                {
+                                    CredentialsSettings.Instance.SetBitcoinAddress(btcResp.btc);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

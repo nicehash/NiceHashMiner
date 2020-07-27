@@ -81,45 +81,48 @@ namespace NiceHashMiner.Views.Login
             }
             // create qr code
             rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
-
-            //if all ok start timer to poll
-            using (var client = new HttpClient())
-            {
-                while (true)
-                {
-                    await Task.Delay(5000);
-                    try
-                    {
-                        var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
-                        if (resp.IsSuccessStatusCode)
-                        {
-                            var contentString = await resp.Content.ReadAsStringAsync();
-                            if (!string.IsNullOrEmpty(contentString))
-                            {
-                                var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
-                                if (btcResp.btc != null)
-                                {
-                                    if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
-                                    {
-                                        CredentialsSettings.Instance.SetBitcoinAddress(btcResp.btc);
-                                        Close();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
-                }
-            }
         }
 
         [Serializable]
         private class BtcResponse
         {
             public string btc { get; set; }
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await BtnClickTask();
+        }
+
+        private async Task BtnClickTask()
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        var contentString = await resp.Content.ReadAsStringAsync();
+                        if (!string.IsNullOrEmpty(contentString))
+                        {
+                            var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
+                            if (btcResp.btc != null)
+                            {
+                                if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
+                                {
+                                    CredentialsSettings.Instance.SetBitcoinAddress(btcResp.btc);
+                                    Close();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
