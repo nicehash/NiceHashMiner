@@ -26,13 +26,13 @@ namespace NHMCore.Utils
         // PRODUCTION
         public const string VisitUrl_PRODUCTION = "https://nicehash.com";
         public const string CheckStats_PRODUCTION = "https://nicehash.com/my/mining/stats";
-        public const string CheckStatsRig_PRODUCTION = "https://www.nicehash.com/my/mining/rigs/{RIG_ID}";
+        public const string CheckStatsRig_PRODUCTION = "https://www.nicehash.com/my/mining/rigs/{RIG_ID}?utm_source=NHM&utm_medium=ViewStatsOnline";
         public const string Register_PRODUCTION = "https://nicehash.com/my/register";
         public const string Login_PRODUCTION = "https://www.nicehash.com/my/login";
-        public const string NhmPayingFaq_PRODUCTION = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
-        public const string AMDComputeModeHelp_PRODUCTION = "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F";
-        public const string AddWDExclusionHelp_PRODUCTION = "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%3F";
-        public const string LoginNHM_PRODUCTION = "https://www.nicehash.com/my/login?nhm=1"; //TODO MUST GET LINK FOR PRODUCTION
+        public const string NhmPayingFaq_PRODUCTION = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid?utm_source=NHM&utm_medium=Guide";
+        public const string AMDComputeModeHelp_PRODUCTION = "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate?utm_source=NHM&utm_medium=Guide";
+        public const string AddWDExclusionHelp_PRODUCTION = "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%3F?utm_source=NHM&utm_medium=Guide";
+        public const string LoginNHM_PRODUCTION = "https://www.nicehash.com/my/login?nhm=1";
 
         public static string VisitUrl
         {
