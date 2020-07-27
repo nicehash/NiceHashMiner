@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NHM.Common;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ZXing;
@@ -36,7 +33,7 @@ namespace NiceHashMiner
             var bm = bw.Write(uuid);
             try
             {
-                var overlay = new Bitmap("../Resources/logoLight32.png");
+                var overlay = new Bitmap(Properties.Resources.logoLight32);
                 if (!LightTheme)
                 {
                     for (int j = 0; (j <= (bm.Height - 1)); j++)
@@ -48,7 +45,7 @@ namespace NiceHashMiner
                             bm.SetPixel(k, j, inv);
                         }
                     }
-                    overlay = new Bitmap("../Resources/logoDark32.png");
+                    overlay = new Bitmap(Properties.Resources.logoDark32);
                 }
 
                 var g = Graphics.FromImage(bm);
@@ -76,7 +73,7 @@ namespace NiceHashMiner
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error("QRCode", ex.Message);
                 return new ImageBrush();
             }
         }
