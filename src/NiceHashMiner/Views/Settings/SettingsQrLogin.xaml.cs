@@ -46,12 +46,12 @@ namespace NiceHashMiner.Views.Settings
             rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, GUISettings.Instance.DisplayTheme == "Light");
 
             //if all ok start timer to poll
-            while (true)
+            using (var client = new HttpClient())
             {
-                await Task.Delay(2000);
-                try
+                while (true)
                 {
-                    using (var client = new HttpClient())
+                    await Task.Delay(5000);
+                    try
                     {
                         var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
                         if (resp.IsSuccessStatusCode)
@@ -65,7 +65,7 @@ namespace NiceHashMiner.Views.Settings
                                     if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
                                     {
                                         var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btc);
-                                        if(ret == ApplicationStateManager.SetResult.CHANGED)
+                                        if (ret == ApplicationStateManager.SetResult.CHANGED)
                                         {
                                             lbl_qr_status.Visibility = Visibility.Visible;
                                             btn_gen_qr.Visibility = Visibility.Visible;
@@ -77,17 +77,17 @@ namespace NiceHashMiner.Views.Settings
                             }
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-                if (stopWatch.ElapsedMilliseconds >= (1000 * 60 * 10))
-                {
-                    lbl_qr_status.Visibility = Visibility.Visible;
-                    btn_gen_qr.Visibility = Visibility.Visible;
-                    lbl_qr_status.Content = "QR Code timeout. Please generate new one.";
-                    return;
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+                    if (stopWatch.ElapsedMilliseconds >= (1000 * 60 * 10))
+                    {
+                        lbl_qr_status.Visibility = Visibility.Visible;
+                        btn_gen_qr.Visibility = Visibility.Visible;
+                        lbl_qr_status.Content = "QR Code timeout. Please generate new one.";
+                        return;
+                    }
                 }
             }
         }

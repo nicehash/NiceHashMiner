@@ -83,12 +83,12 @@ namespace NiceHashMiner.Views.Login
             rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
 
             //if all ok start timer to poll
-            while (true)
+            using (var client = new HttpClient())
             {
-                await Task.Delay(2000);
-                try
+                while (true)
                 {
-                    using (var client = new HttpClient())
+                    await Task.Delay(5000);
+                    try
                     {
                         var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
                         if (resp.IsSuccessStatusCode)
@@ -108,10 +108,10 @@ namespace NiceHashMiner.Views.Login
                             }
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
             }
         }
