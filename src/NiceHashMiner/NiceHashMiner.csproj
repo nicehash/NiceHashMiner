@@ -656,5 +656,9 @@
       <Name>NHMCore</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logoDark32.png" />
+    <Resource Include="Resources\logoLight32.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
