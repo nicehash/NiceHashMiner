@@ -27,6 +27,7 @@
             <Rectangle x:Name="rect_qrCode" Width="200" Height="200" />
         </Canvas>
         <TextBlock Text="{StaticResource scanQrCode}" Style="{StaticResource local.DefaultTextBlock}" Margin="0,24,0,0"/>
+        <Button Content="Confirm scan" HorizontalAlignment="Center" Style="{StaticResource BigButtonPrimaryNotifications}" Padding="8,4,8,4" Click="Button_Click" Margin="8"/>
         <Label x:Name="lbl_qr_status" Margin="0,16,0,0" Style="{StaticResource FontsTypography.NormalRegular/Secondary}" HorizontalAlignment="Center" />
         <Button x:Name="btn_gen_qr" Content="Generate new QR Code" Margin="0,16,0,0" Style="{StaticResource BigButtonPrimary}" Height="24" Width="150" Click="btn_gen_qr_Click" />
     </StackPanel>
