@@ -232,8 +232,8 @@
                     <ColumnDefinition Width="199*" />
                     <ColumnDefinition Width="1" />
                     <ColumnDefinition Width="199*" />
-                    <!--<ColumnDefinition Width="1" />
-                    <ColumnDefinition Width="199*" />
+                    <ColumnDefinition Width="1" />
+                    <!--<ColumnDefinition Width="199*" />
                     <ColumnDefinition Width="1" />-->
                 </Grid.ColumnDefinitions>
                 <GridSplitter Grid.Row="0" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
@@ -296,8 +296,8 @@
                     <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="24,8,0,4" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
                     <TextBlock Style="{StaticResource local.StatsBTCLabelText}" Margin="24,14,0,4" TextWrapping="Wrap" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
                 </StackPanel>
-                <GridSplitter Grid.Row="1" Grid.Column="10" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Collapsed"/>
-                <GridSplitter Grid.Row="2" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Collapsed"/>
+                <GridSplitter Grid.Row="1" Grid.Column="10" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Visible"/>
+                <GridSplitter Grid.Row="2" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Visible"/>
             </Grid>
         </Grid>
         <Grid Grid.Row="3" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
