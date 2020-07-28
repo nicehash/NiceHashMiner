@@ -3944,6 +3944,12 @@
     },
     "Social": {
       "ru": "Социальные сети"
+    },
+    "This will restart your program and upload log report to our server.": {
+      "ru": "Это перезапустит вашу программу и загрузит лог-отчет на наш сервер."
+    },
+    "Click the button to create a zip file and upload it to the server.": {
+      "ru": "Нажмите кнопку для создания zip-файла и загрузки его на сервер."
     }
   }
 }

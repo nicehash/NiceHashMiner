@@ -155,7 +155,7 @@ namespace NiceHashMiner.Views.Settings
             var nhmConfirmDialog = new CustomDialog()
             { 
                 Title = Translations.Tr("Pack log files?"),
-                Description = Translations.Tr("This will restart your program and create a zip file on Desktop."),
+                Description = Translations.Tr("This will restart your program and upload log report to our server."),
                 OkText = Translations.Tr("Ok"),
                 CancelText = Translations.Tr("Cancel"),
                 AnimationVisible = Visibility.Collapsed

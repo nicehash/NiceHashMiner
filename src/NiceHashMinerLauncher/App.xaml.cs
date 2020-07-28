@@ -5,7 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -83,6 +83,10 @@ namespace NiceHashMiner
         private static void ClearAllTmpFiles()
         {
             ClearAllXXFiles("tmp.*");
+        }
+        private static void ClearAllDumpFiles()
+        {
+            ClearAllXXFiles("nhm-dump-*");
         }
 
         private static Mutex _mutex = null;
@@ -359,15 +363,26 @@ namespace NiceHashMiner
                                             doCreateLog.WaitForExit(10 * 1000);
                                         }
 
+                                        var uuid = Guid.NewGuid().ToString();
+                                        File.WriteAllText("uuid.txt", uuid);
                                         var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
-                                        var desktopZipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "NiceHashMinerLogs.zip");
-                                        File.Copy(tmpZipPath, desktopZipPath, true);
+                                        var uuidZipPath = GetRootPath($"nhm-dump-{uuid}.zip");
+                                        File.Copy(tmpZipPath, uuidZipPath, true);
+
+                                        using (var httpClient = new HttpClient())
+                                        {
+                                            using (var stream = File.OpenRead(uuidZipPath))
+                                            {
+                                                var response = await httpClient.PutAsync($"https://nhos.nicehash.com/nhm-dump/nhm-dump-{uuid}.zip", new StreamContent(stream));
+                                                response.EnsureSuccessStatusCode();
+                                            }
+                                        }
                                     }
                                     catch (Exception ex)
                                     {
                                         Console.WriteLine(ex.Message);
                                     }
-                                    ClearAllTmpFiles();
+                                    ClearAllDumpFiles();
                                 }
                                 else if (IsRestart())
                                 {
