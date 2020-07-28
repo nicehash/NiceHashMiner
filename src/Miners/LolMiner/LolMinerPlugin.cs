@@ -32,12 +32,12 @@ namespace LolMiner
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "Miner for AMD and NVIDIA gpus.",
+                PluginDescription = "Miner for AMD gpus.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
-        public override Version Version => new Version(13, 5);
+        public override Version Version => new Version(13, 6);
 
         public override string Name => "lolMiner";
 
