@@ -3980,6 +3980,12 @@
     },
     "to start earning Bitcoins.": {
       "ru": "чтобы начать зарабатывать биткоины."
+    },
+    "QR Code timeout. Please generate new one.": {
+      "ru": "Срок действия QR-кода истек. Пожалуйста, сгенерируйте новый."
+    },
+    "BTC Address was changed - this code is already used.": {
+      "ru": "Биткоин-адрес был изменен — этот код уже используется."
     }
   }
 }
