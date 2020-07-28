@@ -380,6 +380,21 @@ namespace NiceHashMiner
                                     }
                                     catch (Exception ex)
                                     {
+                                        string path = GetRootPath("logs", "createReportLog.txt");
+                                        if (!File.Exists(path))
+                                        {
+                                            using (var sw = File.CreateText(path))
+                                            {
+                                                sw.WriteLine(ex.Message + " ---- " + DateTime.UtcNow);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            using (var sw = File.AppendText(path))
+                                            {
+                                                sw.WriteLine(ex.Message + " ---- " + DateTime.UtcNow);
+                                            }
+                                        }
                                         Console.WriteLine(ex.Message);
                                     }
                                     ClearAllDumpFiles();
