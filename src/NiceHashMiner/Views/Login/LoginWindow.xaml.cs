@@ -33,7 +33,7 @@ namespace NiceHashMiner.Views.Login
         {
             InitializeComponent();
             HideIconAndTitle = true;
-            WindowUtils.Translate(this);
+            Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             _ = ProcessQRCode();
         }
 

@@ -144,17 +144,18 @@ namespace NiceHashMiner.Views.Common
                     if (col.Header is string s)
                         col.Header = Translations.Tr(s);
                 }
-            }else if(i is TabControl tc) //TODO doesn't work
-            {
-                foreach(var tab in tc.Items)
-                {
-                    if (tab is TabItem ti)
-                    {
-                        ti.Header = Translations.Tr(ti.Header);
-                    }
-                }
-                
             }
+            //else if(i is TabControl tc) //TODO doesn't work
+            //{
+            //    foreach(var tab in tc.Items)
+            //    {
+            //        if (tab is TabItem ti)
+            //        {
+            //            ti.Header = Translations.Tr(ti.Header);
+            //        }
+            //    }
+                
+            //}
         }
 
         //public static void Translate(SettingsContainer sc)

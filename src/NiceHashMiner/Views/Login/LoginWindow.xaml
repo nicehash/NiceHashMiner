@@ -48,7 +48,7 @@
         </Canvas>
         <!--</Border>-->
 
-        <Label Content="Scan with official NiceHash mobile aplication" HorizontalAlignment="Center"  Style="{StaticResource FontsTypography.SmallRegular2}" Padding="0" Margin="0,4,0,2" />
+        <Label Content="Scan with official NiceHash mobile application" HorizontalAlignment="Center"  Style="{StaticResource FontsTypography.SmallRegular2}" Padding="0" Margin="0,4,0,2" />
         <Button Content="Confirm scan" HorizontalAlignment="Center" Style="{StaticResource BigButtonPrimaryNotifications}" Padding="8,4,8,4" Click="Button_Click"/>
 
         <Button Style="{StaticResource OKButton}" Margin="0,8,0,0" Content="LOGIN" Click="Login_OnClick" />

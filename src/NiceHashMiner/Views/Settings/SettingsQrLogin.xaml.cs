@@ -53,7 +53,7 @@ namespace NiceHashMiner.Views.Settings
                     {
                         lbl_qr_status.Visibility = Visibility.Visible;
                         btn_gen_qr.Visibility = Visibility.Visible;
-                        lbl_qr_status.Content = "QR Code timeout. Please generate new one.";
+                        lbl_qr_status.Content = Translations.Tr("QR Code timeout. Please generate new one.");
                         return;
                     }
                 }
@@ -93,10 +93,14 @@ namespace NiceHashMiner.Views.Settings
                             var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
                             if (btcResp.btc != null)
                             {
-                                if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
+                                var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btc);
+                                if (ret == ApplicationStateManager.SetResult.CHANGED)
                                 {
-                                    CredentialsSettings.Instance.SetBitcoinAddress(btcResp.btc);
+                                    lbl_qr_status.Visibility = Visibility.Visible;
+                                    btn_gen_qr.Visibility = Visibility.Visible;
+                                    lbl_qr_status.Content = Translations.Tr("BTC Address was changed - this code is already used.");
                                 }
+                                return;
                             }
                         }
                     }
