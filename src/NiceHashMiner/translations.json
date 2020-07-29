@@ -3950,6 +3950,15 @@
     },
     "Click the button to create a zip file and upload it to the server.": {
       "ru": "Нажмите кнопку для создания zip-файла и загрузки его на сервер."
+    },
+    "Bug report link": {
+      "ru": "Ссылка на отчет об ошибке"
+    },
+    "Use following link for bug reporting.\n{0}": {
+      "ru": "Используйте следующую ссылку для отправки отчета об ошибке.\n{0}"
+    },
+    "Copy to clipboard": {
+      "ru": "Копировать в буфер обмена"
     }
   }
 }
