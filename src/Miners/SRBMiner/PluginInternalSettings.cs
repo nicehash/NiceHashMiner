@@ -157,6 +157,24 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "srbminer_startup_script",
                     ShortName = "--startup-script"
+                },
+                /// <summary>
+                /// number 1-2, try 1 when you need a little bit more free memory for DAG. Default is 2
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "srbminer_ethash_mode",
+                    ShortName = "--gpu-ethash-mode"
+                },
+                /// <summary>
+                /// disable cpu auto affinity setter
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "srbminer_disable_cpu_affinity",
+                    ShortName = "--disable-cpu-auto-affinity"
                 }
             },
             TemperatureOptions = new List<MinerOption>

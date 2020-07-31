@@ -145,6 +145,28 @@ namespace NiceHashMiner.Views.Settings
             ConfigManager.GeneralConfigFileCommit();
         }
 
+        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var nhmConfirmDialog = new CustomDialog()
+            {
+                Title = Translations.Tr("Language change"),
+                Description = Translations.Tr("Your program will be restarted in order to completely change the language of NiceHash Miner."),
+                OkText = Translations.Tr("Ok"),
+                CancelVisible = Visibility.Collapsed,
+                AnimationVisible = Visibility.Collapsed
+            };
+            nhmConfirmDialog.OKClick += (s, e1) => CommitGeneralAndRestart();
+            nhmConfirmDialog.OnExit += (s, e1) => CommitGeneralAndRestart();
+            
+            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+        }
+
+        private void CommitGeneralAndRestart()
+        {
+            ConfigManager.GeneralConfigFileCommit();
+            Task.Run(() => ApplicationStateManager.RestartProgram());
+        }
+
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ConfigManager.GeneralConfigFileCommit();

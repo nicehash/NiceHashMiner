@@ -3959,6 +3959,48 @@
     },
     "Copy to clipboard": {
       "ru": "Копировать в буфер обмена"
+    },
+    "Your program will be restarted in order to completely change the language of NiceHash Miner.": {
+      "ru": "Ваша программа будет перезапущена для изменения языка NiceHash Miner."
+    },
+    "Scan with official NiceHash mobile application": {
+      "ru": "Сканируйте с помощью официального мобильного приложения NiceHash"
+    },
+    "Confirm scan": {
+      "ru": "Подтвердить сканирование"
+    },
+    "LOGIN": {
+      "ru": "ВХОД"
+    },
+    "Register a New Account": {
+      "ru": "Регистрация нового аккаунта"
+    },
+    "Enter Bitcoin Address Manually": {
+      "ru": "Ввод Биткоин-адреса вручную"
+    },
+    "Generate new QR Code": {
+      "ru": "Генерация нового QR-кода"
+    },
+    "Language change": {
+      "ru": "Изменение языка"
+    },
+    "Demo Mode": {
+      "ru": "Режим Демо"
+    },
+    "You are currently mining in Demo Mode. ": {
+      "ru": "На данный момент вы майните в режиме Демо. "
+    },
+    "Add your Wallet Address ": {
+      "ru": "Добавьте ваш адрес кошелька "
+    },
+    "to start earning Bitcoins.": {
+      "ru": "чтобы начать зарабатывать биткоины."
+    },
+    "QR Code timeout. Please generate new one.": {
+      "ru": "Срок действия QR-кода истек. Пожалуйста, сгенерируйте новый."
+    },
+    "BTC Address was changed - this code is already used.": {
+      "ru": "Биткоин-адрес был изменен — этот код уже используется."
     }
   }
 }

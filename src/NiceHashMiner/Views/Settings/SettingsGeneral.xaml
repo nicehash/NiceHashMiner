@@ -102,8 +102,8 @@
                             <Label Content="Language" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
                             <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                         </StackPanel>
-                        <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}"  SelectedIndex="{Binding TranslationsSettings.LanguageIndex, Mode=TwoWay}"
-                                  SelectionChanged="ComboBox_SelectionChanged"/>
+                    <ComboBox x:Name="LanguageComboBox" Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}"  SelectedIndex="{Binding TranslationsSettings.LanguageIndex, Mode=TwoWay}"
+                                  SelectionChanged="LanguageComboBox_SelectionChanged"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" ToolTip="{StaticResource currency}">
