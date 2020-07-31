@@ -90,6 +90,29 @@ namespace NiceHashMiner.Views
                     ShowContentAsModalDialog(nhmNoPermissions);
                 });
             }
+
+            if (File.Exists(Paths.RootPath("bug_report_uuid.txt")))
+            {
+                var supportUUID = File.ReadAllText(Paths.RootPath("bug_report_uuid.txt"));
+                var bugUUIDDialog = new CustomDialog()
+                {
+                    Title = Translations.Tr("Bug report uuid"),
+                    Description = Translations.Tr("Use following UUID for bug reporting.\n{0}", supportUUID),
+                    OkText = Translations.Tr("Copy to clipboard"),
+                    CancelVisible = Visibility.Collapsed,
+                    AnimationVisible = Visibility.Collapsed
+                };
+
+                bugUUIDDialog.OKClick += bugUUIDDialog_OKClick;
+                ShowContentAsModalDialog(bugUUIDDialog);
+            }
+        }
+
+        private void bugUUIDDialog_OKClick(object sender, RoutedEventArgs e)
+        {
+            var supportUUID = File.ReadAllText(Paths.RootPath("bug_report_uuid.txt"));
+            Clipboard.SetText(supportUUID);
+            File.Delete(Paths.RootPath("bug_report_uuid.txt"));
         }
 
         private void MiningStateInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

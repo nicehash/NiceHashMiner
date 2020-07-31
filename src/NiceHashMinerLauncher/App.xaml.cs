@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace NiceHashMiner
 {
@@ -83,10 +84,6 @@ namespace NiceHashMiner
         private static void ClearAllTmpFiles()
         {
             ClearAllXXFiles("tmp.*");
-        }
-        private static void ClearAllDumpFiles()
-        {
-            ClearAllXXFiles("nhm-dump-*");
         }
 
         private static Mutex _mutex = null;
@@ -348,6 +345,15 @@ namespace NiceHashMiner
                                     {
                                         run = true;
                                         ClearAllDoFiles();
+                                        if (File.Exists(GetRootPath("bug_report_uuid.txt")))
+                                            File.Delete(GetRootPath("bug_report_uuid.txt"));
+
+                                        var rigId = "";
+                                        if (File.Exists(GetRootPath("tmp.rigID.txt")))
+                                        {
+                                            rigId = File.ReadAllText(GetRootPath("tmp.rigID.txt"));
+                                            File.Delete(GetRootPath("tmp.rigID.txt"));
+                                        }
 
                                         var exePath = GetRootPath("CreateLogReport.exe");
                                         var startLogInfo = new ProcessStartInfo
@@ -362,18 +368,17 @@ namespace NiceHashMiner
                                         {
                                             doCreateLog.WaitForExit(10 * 1000);
                                         }
-
+           
                                         var uuid = Guid.NewGuid().ToString();
-                                        File.WriteAllText("uuid.txt", uuid);
                                         var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
-                                        var uuidZipPath = GetRootPath($"nhm-dump-{uuid}.zip");
-                                        File.Copy(tmpZipPath, uuidZipPath, true);
+                                        var url = $"https://nhos.nicehash.com/nhm-dump/{rigId}-{uuid}.zip";
+                                        File.WriteAllText(GetRootPath("bug_report_uuid.txt"), uuid);
 
                                         using (var httpClient = new HttpClient())
                                         {
-                                            using (var stream = File.OpenRead(uuidZipPath))
+                                            using (var stream = File.OpenRead(tmpZipPath))
                                             {
-                                                var response = await httpClient.PutAsync($"https://nhos.nicehash.com/nhm-dump/nhm-dump-{uuid}.zip", new StreamContent(stream));
+                                                var response = await httpClient.PutAsync(url, new StreamContent(stream));
                                                 response.EnsureSuccessStatusCode();
                                             }
                                         }
@@ -397,7 +402,7 @@ namespace NiceHashMiner
                                         }
                                         Console.WriteLine(ex.Message);
                                     }
-                                    ClearAllDumpFiles();
+                                    ClearAllTmpFiles();
                                 }
                                 else if (IsRestart())
                                 {

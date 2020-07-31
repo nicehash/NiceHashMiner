@@ -162,11 +162,12 @@ namespace NiceHashMiner.Views.Settings
             };
             nhmConfirmDialog.OKClick += (s, e1) => 
             {
+                var rigid = ApplicationStateManager.RigID();
+                File.WriteAllText(Paths.RootPath("tmp.rigID.txt"), rigid);
                 File.Create(Paths.RootPath("do.createLog"));
                 Task.Run(() => ApplicationStateManager.RestartProgram());
             };
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
-
         }
     }
 }
