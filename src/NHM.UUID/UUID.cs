@@ -27,11 +27,8 @@ namespace NHM.UUID
         public static string GetDeviceB64UUID(bool showInfoToHash = false)
         {
             if (_deviceB64UUID != null) return _deviceB64UUID;
-            var cpuSerial = GetCpuID();
-            var macUUID = WindowsMacUtils.GetMAC_UUID();
-            var guid = GetMachineGuidOrFallback();
-            var extraRigSeed = GetExtraRigSeed();
-            var infoToHash = $"NHM/[{cpuSerial}]-[{macUUID}]-[{guid}]-[{extraRigSeed}]";
+
+            var infoToHash = GetInfoToHash(GetMachineGuidOrFallback());
             if (showInfoToHash)
             {
                 Console.WriteLine("NHM/[{cpuSerial}]-[{macUUID}]-[{guid}]-[{extraRigSeed}]");
@@ -43,6 +40,14 @@ namespace NHM.UUID
             return _deviceB64UUID;
         }
 
+        private static string GetInfoToHash(string guid)
+        {
+            var cpuSerial = GetCpuID();
+            var macUUID = WindowsMacUtils.GetMAC_UUID();
+            var extraRigSeed = GetExtraRigSeed();
+            var infoToHash = $"NHM/[{cpuSerial}]-[{macUUID}]-[{guid}]-[{extraRigSeed}]";
+            return infoToHash;
+        }
         public static string GetMachineGuidOrFallback()
         {
             const string hklm = "HKEY_LOCAL_MACHINE";
@@ -71,7 +76,16 @@ namespace NHM.UUID
                     if (fallbackUUIDValue == null)
                     {
                         genUUID = System.Guid.NewGuid().ToString();
-                        rkFallback?.SetValue(valueFallback, genUUID);
+                        try
+                        {
+                            rkFallback?.SetValue(valueFallback, genUUID);
+                        }
+                        catch (Exception e)
+                        {
+                            //if registry fails do fallback to files
+                            Logger.Error("NHM.UUID", $"Fallback SetValue: {e.Message}");
+                            return GetUUIDFromFile(genUUID);
+                        }
                     }
                     else if (fallbackUUIDValue is string regUUID)
                     {
@@ -84,10 +98,30 @@ namespace NHM.UUID
             {
                 Logger.Error("NHM.UUID", $"Fallback: {e.Message}");
             }
-            // last resort fallback always different 
+
             // fallback
             Logger.Warn("NHM.UUID", $"GetMachineGuid FALLBACK");
-            return System.Guid.NewGuid().ToString();
+            return GetUUIDFromFile(System.Guid.NewGuid().ToString());
+        }
+
+        private static string GetUUIDFromFile(string generatedUUID)
+        {
+            var guidFallbackPath = Paths.RootPath("guidFallback.txt");
+            if (File.Exists(guidFallbackPath))
+            {
+                var fileReadUUID = File.ReadAllText(guidFallbackPath);
+                if (System.Guid.TryParse(fileReadUUID, out var fileUUID))
+                {
+                    return fileUUID.ToString();
+                }
+            }
+
+            File.WriteAllText(guidFallbackPath, generatedUUID);
+
+            //log fallback to logs
+            var logGuidFallbackPath = Paths.RootPath(Path.Combine("logs", "guidFallback.txt"));
+            File.AppendAllText(logGuidFallbackPath, GetInfoToHash(generatedUUID));
+            return generatedUUID;
         }
 
         public static string GetCpuID()
