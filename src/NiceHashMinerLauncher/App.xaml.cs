@@ -348,11 +348,18 @@ namespace NiceHashMiner
                                         if (File.Exists(GetRootPath("bug_report_uuid.txt")))
                                             File.Delete(GetRootPath("bug_report_uuid.txt"));
 
-                                        var rigId = "";
+                                        var rigId = "NONE";
                                         if (File.Exists(GetRootPath("tmp.rigID.txt")))
                                         {
                                             rigId = File.ReadAllText(GetRootPath("tmp.rigID.txt"));
                                             File.Delete(GetRootPath("tmp.rigID.txt"));
+                                        }
+
+                                        var uuid = Guid.NewGuid().ToString();
+                                        if (File.Exists(GetRootPath("rpc.uuid.txt")))
+                                        {
+                                            uuid = File.ReadAllText(GetRootPath("rpc.uuid.txt"));
+                                            File.Delete(GetRootPath("rpc.uuid.txt"));
                                         }
 
                                         var exePath = GetRootPath("CreateLogReport.exe");
@@ -368,8 +375,7 @@ namespace NiceHashMiner
                                         {
                                             doCreateLog.WaitForExit(10 * 1000);
                                         }
-           
-                                        var uuid = Guid.NewGuid().ToString();
+                                        
                                         var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
                                         var url = $"https://nhos.nicehash.com/nhm-dump/{rigId}-{uuid}.zip";
                                         File.WriteAllText(GetRootPath("bug_report_uuid.txt"), uuid);
