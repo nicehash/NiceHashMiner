@@ -79,7 +79,16 @@ namespace CreateLogReport
                         var entryPath = filePath.Replace(exePath, "");
                         entryPath = entryPath.Substring(1);
                         var zipFile = archive.CreateEntry(entryPath);
-                        var fileRawBytes = File.ReadAllBytes(filePath);
+                        byte[] fileRawBytes;
+                        if (filePath.Contains("logs"))
+                        {
+                            File.Copy(filePath, "tmpLog.txt");
+                            fileRawBytes = File.ReadAllBytes("tmpLog.txt");
+                            File.Delete("tmpLog.txt");
+                        }
+                        else {
+                            fileRawBytes = File.ReadAllBytes(filePath);
+                        }
                         using (var entryStream = zipFile.Open())
                         using (var b = new BinaryWriter(entryStream))
                         {
