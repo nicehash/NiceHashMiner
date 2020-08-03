@@ -177,7 +177,7 @@ namespace NiceHashMiner.Views.Settings
             var nhmConfirmDialog = new CustomDialog()
             { 
                 Title = Translations.Tr("Pack and upload log files?"),
-                Description = Translations.Tr("This upload log report to our server."),
+                Description = Translations.Tr("This will upload log report to our server."),
                 OkText = Translations.Tr("Ok"),
                 CancelText = Translations.Tr("Cancel"),
                 AnimationVisible = Visibility.Collapsed
