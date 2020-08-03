@@ -56,11 +56,6 @@ namespace NiceHashMiner
             return IsDoFile(@"do.update");
         }
 
-        private static bool IsCreateLog()
-        {
-            return IsDoFile(@"do.createLog");
-        }
-
         private static void ClearAllXXFiles(string pattern)
         {
             var path = GetRootPath();
@@ -338,77 +333,6 @@ namespace NiceHashMiner
                                 if (IsRunAsAdmin())
                                 {
                                     RunAsAdmin.SelfElevate();
-                                }
-                                else if (IsCreateLog())
-                                {
-                                    try
-                                    {
-                                        run = true;
-                                        ClearAllDoFiles();
-                                        if (File.Exists(GetRootPath("bug_report_uuid.txt")))
-                                            File.Delete(GetRootPath("bug_report_uuid.txt"));
-
-                                        var rigId = "NONE";
-                                        if (File.Exists(GetRootPath("tmp.rigID.txt")))
-                                        {
-                                            rigId = File.ReadAllText(GetRootPath("tmp.rigID.txt"));
-                                            File.Delete(GetRootPath("tmp.rigID.txt"));
-                                        }
-
-                                        var uuid = Guid.NewGuid().ToString();
-                                        if (File.Exists(GetRootPath("rpc.uuid.txt")))
-                                        {
-                                            uuid = File.ReadAllText(GetRootPath("rpc.uuid.txt"));
-                                            File.Delete(GetRootPath("rpc.uuid.txt"));
-                                        }
-
-                                        var exePath = GetRootPath("CreateLogReport.exe");
-                                        var startLogInfo = new ProcessStartInfo
-                                        {
-                                            FileName = exePath,
-                                            WindowStyle = ProcessWindowStyle.Minimized,
-                                            UseShellExecute = true,
-                                            Arguments = latestAppDir,
-                                            CreateNoWindow = true
-                                        };
-                                        using (var doCreateLog = Process.Start(startLogInfo))
-                                        {
-                                            doCreateLog.WaitForExit(10 * 1000);
-                                        }
-                                        
-                                        var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
-                                        var url = $"https://nhos.nicehash.com/nhm-dump/{rigId}-{uuid}.zip";
-                                        File.WriteAllText(GetRootPath("bug_report_uuid.txt"), uuid);
-
-                                        using (var httpClient = new HttpClient())
-                                        {
-                                            using (var stream = File.OpenRead(tmpZipPath))
-                                            {
-                                                var response = await httpClient.PutAsync(url, new StreamContent(stream));
-                                                response.EnsureSuccessStatusCode();
-                                            }
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        string path = GetRootPath("logs", "createReportLog.txt");
-                                        if (!File.Exists(path))
-                                        {
-                                            using (var sw = File.CreateText(path))
-                                            {
-                                                sw.WriteLine(ex.Message + " ---- " + DateTime.UtcNow);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            using (var sw = File.AppendText(path))
-                                            {
-                                                sw.WriteLine(ex.Message + " ---- " + DateTime.UtcNow);
-                                            }
-                                        }
-                                        Console.WriteLine(ex.Message);
-                                    }
-                                    ClearAllTmpFiles();
                                 }
                                 else if (IsRestart())
                                 {

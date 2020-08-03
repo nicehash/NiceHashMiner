@@ -902,12 +902,10 @@ namespace NHMCore.Nhmws
                 case "system dump":
                     var uuid = System.Guid.NewGuid().ToString();
                     var rigId = ApplicationStateManager.RigID();
-                    File.WriteAllText(Paths.RootPath("tmp.rigID.txt"), rigId);
-                    File.WriteAllText(Paths.RootPath("rpc.uuid.txt"), uuid);
-                    File.Create(Paths.RootPath("do.createLog"));
                     var url = $"https://nhos.nicehash.com/nhm-dump/{rigId}-{uuid}.zip";
-                    return url;
-                    //Task.Run(() => ApplicationStateManager.RestartProgram());
+                    var success = Task.Run(() => Helpers.CreateAndUploadLogReport(uuid)).Result;
+                    if (success) return url;
+                    return "";
                 //case "benchmarks":
                 //    // TODO
                 //    break;
@@ -928,7 +926,6 @@ namespace NHMCore.Nhmws
             bool loginNeeded = false;
             ExecutedCall executedCall = null;
             string rpcAnswer = "";
-            bool restartNeeded = false;
             try
             {
                 _isInRPC.Value = true;
@@ -979,7 +976,6 @@ namespace NHMCore.Nhmws
                 if (!string.IsNullOrEmpty(rpcAnswer))
                 {
                     executedCall = new ExecutedCall(rpcId, 0, rpcAnswer);
-                    restartNeeded = true;
                 }
                 else
                 {
@@ -1012,10 +1008,6 @@ namespace NHMCore.Nhmws
                     if (loginNeeded)
                     {
                         SetCredentials(btc, worker, group);
-                    }
-                    if (restartNeeded)
-                    {
-                        Task.Run(() =>  ApplicationStateManager.RestartProgram());
                     }
                 }
             }
