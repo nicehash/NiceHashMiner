@@ -25,7 +25,7 @@ namespace NHM.MinerPluginToolkitV1
         public const ulong MinGrinCuckarood29Memory = 6012951136; // 5.6GB
         public const ulong MinGrinCuckaroomMemory = 6012951136; // 5.6GB // TODO check the RAM limits
         public const ulong MinGrin32Mem = 7UL << 30; // 7.0GB (because system acn reserve GPU memory) really this is 8GB
-        public const ulong MinKAWPOWMemory = 3UL << 30; // 3GB
+        public const ulong MinKAWPOWMemory = 4UL << 30; // 4GB
         public const ulong MinCuckaroo29BFCMemory = 5UL << 30; // 5GB
 
 

@@ -29,7 +29,7 @@ namespace TeamRedMiner
                         new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.X16Rv2),
                         new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.KAWPOW)
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 }
                     }
                 }
             },

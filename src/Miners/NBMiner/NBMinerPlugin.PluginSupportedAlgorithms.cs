@@ -31,7 +31,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.Handshake),
                         new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.KAWPOW),
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.GrinCuckatoo32),
                     }
                 },
@@ -42,7 +42,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30  },
                         new SAS(AlgorithmType.Handshake),
                         new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.KAWPOW),
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                     }
                 }
             },
