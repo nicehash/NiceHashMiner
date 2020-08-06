@@ -39,7 +39,7 @@ namespace TRex
 
         public override string PluginUUID => "03f80500-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 2);
+        public override Version Version => new Version(11, 3);
 
         public override string Name => "TRex";
 

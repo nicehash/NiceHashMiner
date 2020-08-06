@@ -370,7 +370,7 @@ namespace NHMCore.Configs.Data
             NVIDIAP0State = false;
             MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;
-            SwitchProfitabilityThreshold = 0.05; // percent
+            SwitchProfitabilityThreshold = 0.02; // percent
             MinIdleSeconds = 60;
             DisplayCurrency = "USD";
             ApiBindPortPoolStart = 4000;

@@ -19,7 +19,7 @@ namespace TTMiner
                     {
                         new SAS(AlgorithmType.Lyra2REv3),
                         new SAS(AlgorithmType.Eaglesong),
-                        new SAS(AlgorithmType.KAWPOW)
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 }
                     }
                 }
             },

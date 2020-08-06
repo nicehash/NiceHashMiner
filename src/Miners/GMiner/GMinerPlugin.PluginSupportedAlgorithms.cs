@@ -34,7 +34,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong),
                         new SAS(AlgorithmType.Cuckaroom),
                         new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.KAWPOW),
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.Cuckaroo29BFC),
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.CuckaRooz29),
