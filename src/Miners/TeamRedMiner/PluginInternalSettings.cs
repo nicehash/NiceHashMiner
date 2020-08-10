@@ -160,6 +160,42 @@ namespace TeamRedMiner
                     ID = "teamRedMiner_largeAlloc",
                     ShortName = "--allow_large_alloc",
                 },
+                /// <summary>
+                /// Tests a specific ethash epoch.
+                /// NOTE: you still need to provide a pool as if you were mining, but no shares will be submitted.
+                /// Simulated mining only.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "teamRedMiner_ethEpoch",
+                    ShortName = "--eth_epoch",
+                },
+                /// <summary>
+                ///  Enables automatic use of the 'B' mode for all Polaris 8GB cards, unless they have a 
+                ///  different config provided by the --eth_config argument.  This is the same thing as 
+                ///  manually setting all Polaris 8GB gpus in the rig to 'B' mode using --eth_config. 
+                ///  For most gpus, this adds 0.1-0.2 MH/s of hashrate.NOTE: 20-25% of rigs becomes less 
+                ///  stable in this mode which is the reason it isn't the default mode.  If you experience 
+                ///  dead gpus, you should remove this argument and run the gpus in the 'A' mode.Moreover, 
+                ///  this option will stop working when the DAG approaches 4GB.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "teamRedMiner_ethAggrMode",
+                    ShortName = "--eth_aggr_mode",
+                },
+                /// <summary>
+                ///  Forces the watchdog to not execute. Can be used to disable the watchdog in mining OS
+                ///  that always run with the watchdog enabled.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "teamRedMiner_watchdogDisabled",
+                    ShortName = "--watchdog_disabled",
+                }
             },
             TemperatureOptions = new List<MinerOption>
             {
