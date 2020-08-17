@@ -79,8 +79,8 @@ namespace NHM.MinerPluginToolkitV1
             var filterAlgorithms = new List<AlgorithmType>();
             foreach (var algo in algos)
             {
-                if (_minMemoryPerAlgo.ContainsKey(algo) == false) continue;
-                var minRam = _minMemoryPerAlgo[algo];
+                if (check.ContainsKey(algo) == false) continue;
+                var minRam = check[algo];
                 if (Ram < minRam) filterAlgorithms.Add(algo);
             }
             return filterAlgorithms;
