@@ -12,6 +12,10 @@ namespace NiceHashMiner.Views.Settings
         public SettingsAdvanced()
         {
             InitializeComponent();
+            SwitchSettings.Instance.PropertyChanged += Instance_PropertyChanged;
+            MiningSettings.Instance.PropertyChanged += Instance_PropertyChanged;
+            LoggingDebugConsoleSettings.Instance.PropertyChanged += Instance_PropertyChanged;
+            IdleMiningSettings.Instance.PropertyChanged += Instance_PropertyChanged;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -33,6 +37,11 @@ namespace NiceHashMiner.Views.Settings
             {
                 wp_cuda.Visibility = System.Windows.Visibility.Collapsed;
             }
+        }
+
+        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            ConfigManager.GeneralConfigFileCommit();
         }
     }
 }

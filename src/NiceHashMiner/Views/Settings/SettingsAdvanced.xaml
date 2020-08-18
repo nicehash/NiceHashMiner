@@ -72,7 +72,7 @@
                     <Label Content="Log Max File Size (bytes)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding LoggingDebugConsoleSettings.LogMaxFileSize, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding LoggingDebugConsoleSettings.LogMaxFileSize, Mode=TwoWay}" Margin="0,0,24,0" />
             </StackPanel>
         </WrapPanel>
         <!--Idle Mining-->
@@ -99,7 +99,7 @@
                         <Label Content="Minimum Idle [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding IdleMiningSettings.MinIdleSeconds, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding IdleMiningSettings.MinIdleSeconds, Mode=TwoWay}" Margin="0,0,24,0" />
                 </StackPanel>
             </WrapPanel>
         </WrapPanel>
@@ -118,7 +118,7 @@
                         <Label Content="Switch Maximum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSeconds.Upper, Mode=TwoWay}" Margin="0,0,24,0" />
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSeconds.Upper, Mode=TwoWay}" Margin="0,0,24,0"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,16,0,0">
@@ -160,14 +160,14 @@
                         <Label Content="Miner Restart Delay [ms]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.MinerRestartDelayMS, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.MinerRestartDelayMS, Mode=TwoWay}" Margin="0,0,24,0" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource apiBindStart}">
                         <Label Content="API Bind port pool start:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.ApiBindPortPoolStart, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.ApiBindPortPoolStart, Mode=TwoWay}" Margin="0,0,24,0" />
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,16,0,16">
@@ -175,7 +175,7 @@
                     <Label Content="Miner API Query Interval [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.MinerAPIQueryInterval, Mode=TwoWay}" HorizontalAlignment="Left" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
+                <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.MinerAPIQueryInterval, Mode=TwoWay}" HorizontalAlignment="Left" Margin="0,0,24,0" />
             </StackPanel>
             <WrapPanel Orientation="Horizontal">
                 <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.HideMiningWindows}"
