@@ -31,7 +31,7 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.BeamV2),
                         new SAS(AlgorithmType.Eaglesong),
                         // 3%fee on dagger 2% fee on eaglesong
-                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong),
+                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong) {NonDefaultRAMLimit = 5UL << 30},
                         new SAS(AlgorithmType.Cuckaroom),
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
