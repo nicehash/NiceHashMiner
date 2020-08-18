@@ -3882,8 +3882,8 @@
     " / Year": {
       "ru": " / Год"
     },
-    "Pack log files?": {
-      "ru": "Запаковать лог-файлы?"
+    "Pack and upload log files?": {
+      "ru": "Запаковать и загрузить лог-файлы?"
     },
     "This will restart your program and create a zip file on Desktop.": {
       "ru": "Это перезапустит вашу программу и создаст zip-файл на рабочем столе."
@@ -3944,6 +3944,21 @@
     },
     "Social": {
       "ru": "Социальные сети"
+    },
+    "This will upload log report to our server.": {
+      "ru": "Это загрузит лог-отчет на наш сервер."
+    },
+    "Click the button to create a zip file and upload it to the server.": {
+      "ru": "Нажмите кнопку для создания zip-файла и загрузки его на сервер."
+    },
+    "Bug report link": {
+      "ru": "Ссылка на отчет об ошибке"
+    },
+    "Use following link for bug reporting.\n{0}": {
+      "ru": "Используйте следующую ссылку для отправки отчета об ошибке.\n{0}"
+    },
+    "Copy to clipboard": {
+      "ru": "Копировать в буфер обмена"
     },
     "Your program will be restarted in order to completely change the language of NiceHash Miner.": {
       "ru": "Ваша программа будет перезапущена для изменения языка NiceHash Miner."

@@ -176,19 +176,36 @@ namespace NiceHashMiner.Views.Settings
         {
             var nhmConfirmDialog = new CustomDialog()
             { 
-                Title = Translations.Tr("Pack log files?"),
-                Description = Translations.Tr("This will restart your program and create a zip file on Desktop."),
+                Title = Translations.Tr("Pack and upload log files?"),
+                Description = Translations.Tr("This will upload log report to our server."),
                 OkText = Translations.Tr("Ok"),
                 CancelText = Translations.Tr("Cancel"),
                 AnimationVisible = Visibility.Collapsed
             };
-            nhmConfirmDialog.OKClick += (s, e1) => 
-            {
-                File.Create(Paths.RootPath("do.createLog"));
-                Task.Run(() => ApplicationStateManager.RestartProgram());
-            };
+            nhmConfirmDialog.OKClick += (s, e1) => ProcessLogReport();
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+        }
 
+        private async void ProcessLogReport()
+        {
+            var uuid = Guid.NewGuid().ToString();
+            var success = await Helpers.CreateAndUploadLogReport(uuid);
+            if (success) CreateBugUUIDDialog(uuid);
+        }
+
+        private void CreateBugUUIDDialog(string uuid)
+        {
+            var bugUUIDDialog = new CustomDialog()
+            {
+                Title = Translations.Tr("Bug report uuid"),
+                Description = Translations.Tr("Use following UUID for bug reporting.\n{0}", uuid),
+                OkText = Translations.Tr("Copy to clipboard"),
+                CancelVisible = Visibility.Collapsed,
+                AnimationVisible = Visibility.Collapsed
+            };
+
+            bugUUIDDialog.OKClick += (s,e) => Clipboard.SetText(uuid);
+            CustomDialogManager.ShowModalDialog(bugUUIDDialog);
         }
     }
 }

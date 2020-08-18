@@ -187,6 +187,34 @@ namespace TeamRedMiner
                     ShortName = "--eth_aggr_mode",
                 },
                 /// <summary>
+                ///  Configures the gpu watchdog to shut down the miner and run the specified platform
+                ///  and exits immediately. The default script is watchdog.bat/watchdog.sh in the
+                ///  current directory, but a different script can be provided as an optional argument,
+                ///  potentially with a absolute or relative path as well.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "teamRedMiner_watchdogScriptDefault",
+                    ShortName = "--watchdog_script",
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "teamRedMiner_watchdogScript",
+                    ShortName = "--watchdog_script=",
+                },
+                /// <summary>
+                ///  Tests the configured watchdog script by triggering the same action as a dead gpu
+                ///  after ~20 secs of mining.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "teamRedMiner_watchdogTest",
+                    ShortName = "--watchdog_test",
+                },
+                /// <summary>
                 ///  Forces the watchdog to not execute. Can be used to disable the watchdog in mining OS
                 ///  that always run with the watchdog enabled.
                 /// </summary>
