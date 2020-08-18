@@ -147,7 +147,7 @@
                         x:Name="CreateLogReportButton"
                         Style="{StaticResource BigButtonPrimary}"
                         Height="24"
-                        ToolTip="Click the button to create a zip file of your logs on your desktop."
+                        ToolTip="Click the button to create a zip file and upload it to the server."
                         Click="CreateLogReportButton_Click" />
         </WrapPanel>
     </StackPanel>

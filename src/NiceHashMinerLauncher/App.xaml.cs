@@ -5,7 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
@@ -53,11 +52,6 @@ namespace NiceHashMiner
         private static bool IsUpdate()
         {
             return IsDoFile(@"do.update");
-        }
-
-        private static bool IsCreateLog()
-        {
-            return IsDoFile(@"do.createLog");
         }
 
         private static void ClearAllXXFiles(string pattern)
@@ -337,37 +331,6 @@ namespace NiceHashMiner
                                 if (IsRunAsAdmin())
                                 {
                                     RunAsAdmin.SelfElevate();
-                                }
-                                else if (IsCreateLog())
-                                {
-                                    try
-                                    {
-                                        run = true;
-                                        ClearAllDoFiles();
-
-                                        var exePath = GetRootPath("CreateLogReport.exe");
-                                        var startLogInfo = new ProcessStartInfo
-                                        {
-                                            FileName = exePath,
-                                            WindowStyle = ProcessWindowStyle.Minimized,
-                                            UseShellExecute = true,
-                                            Arguments = latestAppDir,
-                                            CreateNoWindow = true
-                                        };
-                                        using (var doCreateLog = Process.Start(startLogInfo))
-                                        {
-                                            doCreateLog.WaitForExit(10 * 1000);
-                                        }
-
-                                        var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
-                                        var desktopZipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "NiceHashMinerLogs.zip");
-                                        File.Copy(tmpZipPath, desktopZipPath, true);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine(ex.Message);
-                                    }
-                                    ClearAllTmpFiles();
                                 }
                                 else if (IsRestart())
                                 {
