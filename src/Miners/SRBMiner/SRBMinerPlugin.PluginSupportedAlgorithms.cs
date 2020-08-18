@@ -18,7 +18,7 @@ namespace SRBMiner
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.Handshake),
-                        new SAS(AlgorithmType.DaggerHashimoto)
+                        new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30}
                     }
                 }
             },

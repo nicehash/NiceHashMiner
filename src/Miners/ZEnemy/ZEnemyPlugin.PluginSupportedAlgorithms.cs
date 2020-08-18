@@ -19,7 +19,7 @@ namespace ZEnemy
                     {
                         new SAS(AlgorithmType.X16R) { Enabled=false },
                         new SAS(AlgorithmType.X16Rv2),
-                        new SAS(AlgorithmType.KAWPOW),
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                     }
                 }
             },
