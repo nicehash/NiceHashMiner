@@ -244,7 +244,7 @@ namespace NHMCore.Utils
                     FileName = exePath,
                     WindowStyle = ProcessWindowStyle.Minimized,
                     UseShellExecute = true,
-                    Arguments = Paths.AppRoot,
+                    Arguments = Path.GetFileNameWithoutExtension(Paths.AppRoot),
                     CreateNoWindow = true
                 };
                 using (var doCreateLog = Process.Start(startLogInfo))
