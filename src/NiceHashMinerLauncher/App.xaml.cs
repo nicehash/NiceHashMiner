@@ -197,7 +197,9 @@ namespace NiceHashMiner
                 //await Task.Delay(5000);
                 if (isZip)
                 {
-                    Directory.Delete(GetRootPath("plugins_packages"), true);
+                    var pluginPackagesPath = GetRootPath("plugins_packages");
+                    if (Directory.Exists(pluginPackagesPath)) Directory.Delete(pluginPackagesPath, true);
+
                     var progWindow = new UpdateProgress();
                     progWindow.Show();
                     var isOk = await UnzipFileAsync(updaterFile, GetRootPath(), progWindow.Progress, CancellationToken.None);
