@@ -30,7 +30,7 @@ namespace NiceHashMiner
         {
             try
             {
-                return File.Exists(fileName);
+                return File.Exists(GetRootPath(fileName));
             }
             catch (Exception e)
             {
@@ -357,6 +357,7 @@ namespace NiceHashMiner
                                     var updateStarted = doUpdate.Start();
                                     run = !updateStarted; // set if we are good
                                 }
+                                else { /*ELSE*/ }
                             }
                         }
                     }
