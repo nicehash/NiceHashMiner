@@ -25,7 +25,7 @@ NiceHash Miner is an advanced auto-miner that supports the latest algorithms and
 
 # <a name="features"></a> Features
 
-- Easy one-click CPU mining for CPUs that support at least SSE2 (only works on Windows x64).
+- Easy one-click CPU mining for CPUs that support at least AES (only works on Windows x64).
 - Easy one-click GPU mining for NVIDIA GPUs using microarchitecture (compute capability) SM 3.0+.
 - Easy one-click GPU mining for AMD GPUs using any AMD GPU devices that supports OpenCL.
 - Integrated support for Simple Multi-Algorithm. Always mine most profitable algorithm.
@@ -39,7 +39,7 @@ NiceHash Miner is an advanced auto-miner that supports the latest algorithms and
 
 - **Windows** 7 or newer operating system **64-bit**
 - **[Note: Windows 10 is recommended and will provide you a much better user experience]**
-- For CPU mining a modern CPU with SSE2 support
+- For CPU mining a modern CPU with AES support
 - For AMD mining any AMD GPU with OpenCL support
 - For NVIDIA mining any NVIDIA GPU with Compute capability (SM) 3.0 or newer
 - **up-to-date patches** for OS
