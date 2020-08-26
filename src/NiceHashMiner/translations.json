@@ -3963,6 +3963,9 @@
     "Your program will be restarted in order to completely change the language of NiceHash Miner.": {
       "ru": "Ваша программа будет перезапущена для изменения языка NiceHash Miner."
     },
+    "Your program will be restarted in order to completely change the theme of NiceHash Miner.": {
+      "ru": "Ваша программа будет перезапущена для полного изменения темы NiceHash Miner."
+    },
     "Scan with official NiceHash mobile application": {
       "ru": "Сканируйте с помощью официального мобильного приложения NiceHash"
     },
@@ -3983,6 +3986,9 @@
     },
     "Language change": {
       "ru": "Изменение языка"
+    },
+    "Theme change": {
+      "ru": "Изменение темы"
     },
     "Demo Mode": {
       "ru": "Режим Демо"

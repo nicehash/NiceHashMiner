@@ -207,5 +207,21 @@ namespace NiceHashMiner.Views.Settings
             bugUUIDDialog.OKClick += (s,e) => Clipboard.SetText(uuid);
             CustomDialogManager.ShowModalDialog(bugUUIDDialog);
         }
+
+        private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var nhmConfirmDialog = new CustomDialog()
+            {
+                Title = Translations.Tr("Theme change"),
+                Description = Translations.Tr("Your program will be restarted in order to completely change the theme of NiceHash Miner."),
+                OkText = Translations.Tr("Ok"),
+                CancelVisible = Visibility.Collapsed,
+                AnimationVisible = Visibility.Collapsed
+            };
+            nhmConfirmDialog.OKClick += (s, e1) => CommitGeneralAndRestart();
+            nhmConfirmDialog.OnExit += (s, e1) => CommitGeneralAndRestart();
+
+            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+        }
     }
 }
