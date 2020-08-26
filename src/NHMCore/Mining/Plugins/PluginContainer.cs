@@ -182,7 +182,6 @@ namespace NHMCore.Mining.Plugins
                 {
                     var deviceUUID = deviceAlgosPair.Key.UUID;
                     var algos = deviceAlgosPair.Value
-                        .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
                         .Select(a => new AlgorithmContainer(a, this, AvailableDevices.GetDeviceWithUuid(deviceUUID)))
                         .ToList();
                     _cachedNiceHashMinerAlgorithms[deviceUUID] = algos;
