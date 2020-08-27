@@ -4007,6 +4007,12 @@
     },
     "BTC Address was changed - this code is already used.": {
       "ru": "Биткоин-адрес был изменен — этот код уже используется."
+    },
+    "NHMWS not connected": {
+      "ru": "NHMWS не подключен"
+    },
+    "Not connected to NHMWS. Please check your internet connection.": {
+      "ru": "Нет подключения к NHMWS. Пожалуйста, проверьте ваше подключение к интернету."
     }
   }
 }

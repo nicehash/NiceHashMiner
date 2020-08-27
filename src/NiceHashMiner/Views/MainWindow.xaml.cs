@@ -14,6 +14,7 @@ using System.Diagnostics;
 using NHMCore.Notifications;
 using NHMCore.ApplicationState;
 using System.IO;
+using System.Timers;
 
 namespace NiceHashMiner.Views
 {
@@ -24,6 +25,7 @@ namespace NiceHashMiner.Views
     {
         private readonly MainVM _vm;
         private bool _miningStoppedOnClose;
+        private Timer _timer = new Timer();
 
         public MainWindow()
         {
@@ -38,6 +40,9 @@ namespace NiceHashMiner.Views
             CustomDialogManager.MainWindow = this;
             SetBurnCalledAction();
             SetNoDeviceAction();
+            _timer.Interval = 1000 * 60 * 30; //30min
+            _timer.Elapsed += CheckConnection;
+            _timer.Start();
         }
 
         private void GUISettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -286,6 +291,54 @@ namespace NiceHashMiner.Views
             catch (UnauthorizedAccessException)
             {
                 return false;
+            }
+        }
+
+        private bool nhmwsDialogShown = false;
+        private void CheckConnection(object sender, ElapsedEventArgs e)
+        {
+            if (!MainVM.IsNHMWSConnected && !nhmwsDialogShown)
+            {
+                try
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        var dialog = new CustomDialog
+                        {
+                            Title = "NHMWS not connected",
+                            Description = "Not connected to NHMWS. Please check your internet connection.",
+                            CancelVisible = Visibility.Collapsed,
+                            OkVisible = Visibility.Collapsed,
+                            AnimationVisible = Visibility.Collapsed,
+                           
+                        };
+                        CustomDialogManager.ShowModalDialog(dialog);
+                    });
+                    nhmwsDialogShown = true;
+                    _timer.Stop();
+                    _timer.Interval = 1000;
+                    _timer.Start();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("MainVM.IsNHMWSConnected", ex.Message);
+                }
+            }
+            else if(MainVM.IsNHMWSConnected && nhmwsDialogShown)
+            {
+                try
+                {
+                    Dispatcher.Invoke(() => CustomDialogManager.HideCurrentModal());
+                    nhmwsDialogShown = false;
+                    _timer.Stop();
+                    _timer.Interval = 1000 * 60 * 30; //30min
+                    _timer.Start();
+                }
+                catch (Exception ex)
+                {
+                    _timer.Stop();
+                    Logger.Error("MainVM.IsNHMWSConnected", ex.Message);
+                }
             }
         }
     }
