@@ -40,9 +40,9 @@ namespace NHM.UUID
             }
             catch (Exception e)
             {
-                Logger.Error("MAC.UUID", $"WindowsMacUtils.GetMAC_UUID: {e.Message}");
+                Logger.Error("NHM.UUID", $"WindowsMacUtils.GetMAC_UUID: {e.Message}");
             }
-            Logger.Warn("MAC.UUID", $"WindowsMacUtils.GetMAC_UUID FALLBACK");
+            Logger.Warn("NHM.UUID", $"WindowsMacUtils.GetMAC_UUID FALLBACK");
             var newMacUUID = System.Guid.NewGuid().ToString();
             SaveMacUuidToFile(macUuidFallbackPath, newMacUUID);
             return newMacUUID;
@@ -58,7 +58,7 @@ namespace NHM.UUID
                 File.AppendAllText(logMacUuidFallbackPath, uuid + Environment.NewLine);
             }catch(Exception e)
             {
-                Logger.Error("MAC.UUID", e.Message);
+                Logger.Error("NHM.UUID", e.Message);
             }      
         }
     }

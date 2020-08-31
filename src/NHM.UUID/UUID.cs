@@ -106,22 +106,30 @@ namespace NHM.UUID
 
         private static string GetUUIDFromFile(string generatedUUID)
         {
-            var guidFallbackPath = Paths.RootPath("guidFallback.txt");
-            if (File.Exists(guidFallbackPath))
+            try
             {
-                var fileReadUUID = File.ReadAllText(guidFallbackPath);
-                if (System.Guid.TryParse(fileReadUUID, out var fileUUID))
+                var guidFallbackPath = Paths.RootPath("guidFallback.txt");
+                if (File.Exists(guidFallbackPath))
                 {
-                    return fileUUID.ToString();
+                    var fileReadUUID = File.ReadAllText(guidFallbackPath);
+                    if (System.Guid.TryParse(fileReadUUID, out var fileUUID))
+                    {
+                        return fileUUID.ToString();
+                    }
                 }
+
+                File.WriteAllText(guidFallbackPath, generatedUUID);
+
+                //log fallback to logs
+                var logGuidFallbackPath = Paths.RootPath(Path.Combine("logs", "guidFallback.txt"));
+                File.AppendAllText(logGuidFallbackPath, GetInfoToHash(generatedUUID));
+                return generatedUUID;
             }
-
-            File.WriteAllText(guidFallbackPath, generatedUUID);
-
-            //log fallback to logs
-            var logGuidFallbackPath = Paths.RootPath(Path.Combine("logs", "guidFallback.txt"));
-            File.AppendAllText(logGuidFallbackPath, GetInfoToHash(generatedUUID));
-            return generatedUUID;
+            catch(Exception ex)
+            {
+                Logger.Error("NHM.UUID", $"GetUUIDFromFile failed: {ex.Message}");
+            }
+            return System.Guid.NewGuid().ToString();
         }
 
         public static string GetCpuID()
