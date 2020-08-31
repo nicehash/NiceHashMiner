@@ -26,11 +26,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.GrinCuckarood29),
-                        new SAS(AlgorithmType.Eaglesong),
                         new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30},
-                        new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 5UL << 30 },
-                        new SAS(AlgorithmType.Handshake),
-                        new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 5UL << 30 },
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.GrinCuckatoo32),
                     }
@@ -39,9 +35,6 @@ namespace NBMiner
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 5UL << 30  },
-                        new SAS(AlgorithmType.Handshake),
-                        new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 5UL << 30 },
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                     }
                 }
