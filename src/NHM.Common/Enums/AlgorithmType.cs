@@ -11,89 +11,89 @@ namespace NHM.Common.Enums
         NONE = -1,
 
         #region NiceHashAPI
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Scrypt = 0,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         SHA256 = 1,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         ScryptNf = 2,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         X11 = 3,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         X13 = 4,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Keccak = 5,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         X15 = 6,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Nist5 = 7,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         NeoScrypt = 8,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Lyra2RE = 9,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         WhirlpoolX = 10,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Qubit = 11,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Quark = 12,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Axiom = 13,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Lyra2REv2 = 14,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         ScryptJaneNf16 = 15,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Blake256r8 = 16,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Blake256r14 = 17,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Blake256r8vnl = 18,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Hodl = 19,
         //[Obsolete("UNUSED Algorithm")]
         DaggerHashimoto = 20,
-        [Obsolete("UNUSED Algorithm. USED only as second algorithm.")]
+        [Obsolete("UNUSED Algorithm. USED only as second algorithm.", true)]
         Decred = 21,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         CryptoNight = 22,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Lbry = 23,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Equihash = 24,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Pascal = 25,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         X11Gost = 26,
         [Obsolete("UNUSED Algorithm")]
         Sia = 27,
-        [Obsolete("UNUSED Algorithm. USED only as second algorithm.")]
+        [Obsolete("UNUSED Algorithm. USED only as second algorithm.", true)]
         Blake2s = 28,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Skunk = 29,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         CryptoNightV7 = 30,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         CryptoNightHeavy = 31,
         [Obsolete("UNUSED Algorithm", true)]
         Lyra2Z = 32,
         //[Obsolete("UNUSED Algorithm")]
         X16R = 33,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         CryptoNightV8 = 34,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         SHA256AsicBoost = 35,
         //[Obsolete("UNUSED Algorithm")]
         ZHash = 36,
-        [Obsolete("UNUSED Algorithm. Replaced by BeamV2")]
+        [Obsolete("UNUSED Algorithm. Replaced by BeamV2", true)]
         Beam = 37,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         GrinCuckaroo29 = 38,
         //[Obsolete("UNUSED Algorithm")]
         GrinCuckatoo31 = 39,
         //[Obsolete("UNUSED Algorithm")]
         Lyra2REv3 = 40,
-        [Obsolete("NOT SUPPORTED. UNUSED Algorithm")]
+        [Obsolete("NOT SUPPORTED. UNUSED Algorithm", true)]
         MTP = 41,
         [Obsolete("UNUSED Algorithm", true)]
         CryptoNightR = 42,
@@ -101,7 +101,7 @@ namespace NHM.Common.Enums
         CuckooCycle = 43,
         //[Obsolete("UNUSED Algorithm")]
         GrinCuckarood29 = 44,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm. Replaced by BeamV3", true)]
         BeamV2 = 45,
         //[Obsolete("UNUSED Algorithm")]
         X16Rv2 = 46,
@@ -133,13 +133,9 @@ namespace NHM.Common.Enums
         {
             switch (algorithmType)
             {
-                case AlgorithmType.Equihash:
                 case AlgorithmType.ZHash:
-                case AlgorithmType.Beam:
-                case AlgorithmType.BeamV2:
                 case AlgorithmType.BeamV3:
                     return "Sol/s";
-                case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:
                 case AlgorithmType.GrinCuckatoo32:
                 case AlgorithmType.CuckooCycle:
