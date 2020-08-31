@@ -297,7 +297,7 @@ namespace NiceHashMiner.Views
         private bool nhmwsDialogShown = false;
         private void CheckConnection(object sender, ElapsedEventArgs e)
         {
-            if (!MainVM.IsNHMWSConnected && !nhmwsDialogShown)
+            if (!_vm.NHMWSConnected && !nhmwsDialogShown)
             {
                 try
                 {
@@ -324,7 +324,7 @@ namespace NiceHashMiner.Views
                     Logger.Error("MainVM.IsNHMWSConnected", ex.Message);
                 }
             }
-            else if(MainVM.IsNHMWSConnected && nhmwsDialogShown)
+            else if(_vm.NHMWSConnected && nhmwsDialogShown)
             {
                 try
                 {

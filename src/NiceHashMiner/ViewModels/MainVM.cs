@@ -332,7 +332,6 @@ namespace NiceHashMiner.ViewModels
         public DevicesViewModel DevicesViewModel { get; } = new DevicesViewModel();
 
         public bool NHMWSConnected { get; private set; } = false;
-        public static bool IsNHMWSConnected = false;
 
         public MainVM()
             : base(ApplicationStateManager.Title)
@@ -375,9 +374,7 @@ namespace NiceHashMiner.ViewModels
             ApplicationStateManager.OnNhmwsConnectionChanged += (_, nhmwsConnected) =>
             {
                 NHMWSConnected = nhmwsConnected;
-                IsNHMWSConnected = nhmwsConnected;
                 OnPropertyChanged(nameof(NHMWSConnected));
-                OnPropertyChanged(nameof(IsNHMWSConnected));
             };
         }
 
