@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace NiceHashMiner
 {
@@ -161,6 +163,7 @@ namespace NiceHashMiner
 
         private async void App_OnStartup(object sender, StartupEventArgs e)
         {
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             ClearAllDoFiles();
             // Set shutdown mode back to default
