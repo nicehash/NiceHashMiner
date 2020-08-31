@@ -21,6 +21,7 @@ namespace NHMCore.Configs
         private static GeneralConfig GeneralConfig { get; set; } = new GeneralConfig();
 
         private static string GeneralConfigPath => Paths.ConfigsPath("General.json");
+        private static string BlacklistedPluginsPath => Paths.ConfigsPath("BlacklistedPlugins.json");
 
         private static object _lock = new object();
 
@@ -105,6 +106,26 @@ namespace NHMCore.Configs
             {
                 GeneralConfigFileCommit();
             }
+
+            //Init Blacklist plugins
+            var blacklistFile = InternalConfigs.ReadFileSettings<BlacklistedPlugins>(BlacklistedPluginsPath);
+            if(blacklistFile != null)
+            {
+                if(blacklistFile?.BlacklistedPluginUUIDs != null)
+                {
+                    BlacklistedPlugins.Instance.BlacklistedPluginUUIDs = blacklistFile.BlacklistedPluginUUIDs;
+                }
+            }
+            else
+            {
+                BlacklistPluginsCommit();
+            }
+        }
+
+        public static void BlacklistPluginsCommit()
+        {
+            var configs = BlacklistedPlugins.Instance;
+            InternalConfigs.WriteFileSettings(BlacklistedPluginsPath, configs);
         }
 
         public static void CreateBackup()

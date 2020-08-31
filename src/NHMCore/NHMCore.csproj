@@ -107,6 +107,7 @@
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\DeviceTDPSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
+    <Compile Include="Configs\Data\BlacklistedPlugins.cs" />
     <Compile Include="Configs\GlobalDeviceSettings.cs" />
     <Compile Include="Configs\GUISettings.cs" />
     <Compile Include="Configs\IdleMiningSettings.cs" />
@@ -152,8 +153,6 @@
     <Compile Include="Mining\MiningDataStats.cs" />
     <Compile Include="NHMProductInfo.cs" />
     <Compile Include="Mining\Plugins\PluginContainer.cs" />
-    <Compile Include="Mining\Plugins\SupportedAlgorithmsFilter.cs" />
-    <Compile Include="Mining\Plugins\SupportedPluginsFilter.cs" />
     <Compile Include="Mining\Plugins\MinerPluginsManager.cs" />
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
     <Compile Include="Nhmws\ErrorCode.cs" />
