@@ -17,14 +17,12 @@ namespace SRBMiner
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.Handshake),
                         new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30}
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.Handshake, "bl2bsha3" },
                 { AlgorithmType.DaggerHashimoto, "ethash" }
             }
         };
