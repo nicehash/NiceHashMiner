@@ -48,7 +48,7 @@ namespace NHMCore.Mining.Plugins
         private static Dictionary<string, string> _registeredSupportedDevices = new Dictionary<string, string>();
 
 #pragma warning disable 0618
-        private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.MTP, AlgorithmType.Eaglesong };
+        private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.MTP };
 #pragma warning restore 0618
 
         private bool IsServiceDisabled => !ServiceEnabled && _registeredSupportedDevices.Count > 0;
