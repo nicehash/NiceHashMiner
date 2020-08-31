@@ -27,7 +27,7 @@ namespace NHMCore.Mining.Plugins
         public bool IsSystemElevated => Helpers.IsElevated;
         public bool SystemContainsSupportedDevicesNotSystemElevated => SystemContainsSupportedDevices && !Helpers.IsElevated;
 
-        public Version Version => new Version(11, 0);
+        public Version Version => new Version(11, 1);
         public string Name => "Ethlargement";
 
         public string Author => "info@nicehash.com";
@@ -48,7 +48,7 @@ namespace NHMCore.Mining.Plugins
         private static Dictionary<string, string> _registeredSupportedDevices = new Dictionary<string, string>();
 
 #pragma warning disable 0618
-        private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.MTP };
+        private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto };
 #pragma warning restore 0618
 
         private bool IsServiceDisabled => !ServiceEnabled && _registeredSupportedDevices.Count > 0;
