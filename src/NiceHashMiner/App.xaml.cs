@@ -20,6 +20,8 @@ using System.Threading;
 using System.Windows;
 #if ENABLE_LOGIN
 using NiceHashMiner.Views.Login;
+using System.Windows.Media;
+using System.Windows.Interop;
 #endif
 
 namespace NiceHashMiner
@@ -50,7 +52,7 @@ namespace NiceHashMiner
             designWindow.ShowDialog();
             return;
 #endif
-
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             ApplicationStateManager.App = this;
             ApplicationStateManager.ApplicationExit = () =>
             {
