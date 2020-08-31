@@ -17,6 +17,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using NHMCore.Configs.Data;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -119,7 +120,7 @@ namespace NHMCore.Mining.Plugins
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
-            var filteredIntegratedPlugins = _integratedPlugins.Where(p => SupportedPluginsFilter.IsSupported(p.PluginUUID)).ToList();
+            var filteredIntegratedPlugins = _integratedPlugins.Where(p => BlacklistedPlugins.Instance.IsSupported(p.PluginUUID)).ToList();
             foreach (var integratedPlugin in filteredIntegratedPlugins)
             {
                 PluginContainer.Create(integratedPlugin);
@@ -236,7 +237,7 @@ namespace NHMCore.Mining.Plugins
         public static async Task LoadAndInitMinerPlugins()
         {
             // load dll's and create plugin containers
-            var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath());
+            var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath()).Where(uuid => BlacklistedPlugins.Instance.IsSupported(uuid));
             foreach (var pluginUUID in loadedPlugins) PluginContainer.Create(MinerPluginHost.MinerPlugin[pluginUUID]);
             // init all containers
             foreach (var plugin in PluginContainer.PluginContainers)
@@ -551,6 +552,7 @@ namespace NHMCore.Mining.Plugins
             {
                 if (isOk)
                 {
+                    BlacklistedPlugins.Instance.AddPluginToBlacklist(pluginUUID);
                     _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.RemoveSuccess, PluginInstallRemoveState.Remove);
                 }
                 else
@@ -782,6 +784,7 @@ namespace NHMCore.Mining.Plugins
                 {
                     if (addSuccess)
                     {
+                        BlacklistedPlugins.Instance.RemovePluginFromBlacklist(pluginUUID);
                         MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
                     }
                     if (installResult == PluginInstallProgressState.Success)

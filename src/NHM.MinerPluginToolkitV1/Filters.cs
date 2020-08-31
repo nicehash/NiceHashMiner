@@ -12,7 +12,7 @@ namespace NHM.MinerPluginToolkitV1
     {
         // WARNING THESE FILTERS ARE NOT THE SAME AS RUN-TIME RAM REQUIREMENTS
         //https://investoon.com/tools/dag_size
-        public const ulong MinDaggerHashimotoMemory = 4UL << 30; // 4GB
+        public const ulong MinDaggerHashimotoMemory = 5UL << 30; // 5GB
         public const ulong MinZHashMemory = 1879047230; // 1.75GB
         public const ulong MinBeamMemory = 3113849695; // 2.9GB
         public const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6GB
@@ -79,8 +79,8 @@ namespace NHM.MinerPluginToolkitV1
             var filterAlgorithms = new List<AlgorithmType>();
             foreach (var algo in algos)
             {
-                if (_minMemoryPerAlgo.ContainsKey(algo) == false) continue;
-                var minRam = _minMemoryPerAlgo[algo];
+                if (check.ContainsKey(algo) == false) continue;
+                var minRam = check[algo];
                 if (Ram < minRam) filterAlgorithms.Add(algo);
             }
             return filterAlgorithms;

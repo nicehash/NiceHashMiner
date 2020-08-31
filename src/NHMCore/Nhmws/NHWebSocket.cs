@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
@@ -13,6 +14,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -874,13 +876,13 @@ namespace NHMCore.Nhmws
             }
         }
 
-        private static void MinerReset(string level)
+        private static string MinerReset(string level)
         {
             switch (level)
             {
                 case "app burn":
                     HandleBurn("MinerReset app burn called");
-                    break;
+                    return "";
                 case "rig restart":
                     _ = Task.Run(async () => {
                         await Task.Delay(3*1000);
@@ -896,10 +898,14 @@ namespace NHMCore.Nhmws
                             reboot.WaitForExit();
                         }
                     });
-                    break;
-                //case "system dump":
-                //    // TOOD
-                //    break;
+                    return "";
+                case "system dump":
+                    var uuid = System.Guid.NewGuid().ToString();
+                    var rigId = ApplicationStateManager.RigID();
+                    var url = $"https://nhos.nicehash.com/nhm-dump/{rigId}-{uuid}.zip";
+                    var success = Task.Run(() => Helpers.CreateAndUploadLogReport(uuid)).Result;
+                    if (success) return url;
+                    return "";
                 //case "benchmarks":
                 //    // TODO
                 //    break;
@@ -919,6 +925,7 @@ namespace NHMCore.Nhmws
             bool executed = false;
             bool loginNeeded = false;
             ExecutedCall executedCall = null;
+            string rpcAnswer = "";
             try
             {
                 _isInRPC.Value = true;
@@ -961,13 +968,19 @@ namespace NHMCore.Nhmws
                         SetPowerMode((string)message.device, (TDPSimpleType)message.power_mode);
                         break;
                     case "miner.reset":
-                        MinerReset((string)message.level);
+                        rpcAnswer = MinerReset((string)message.level);
                         break;
                     default:
                         throw new RpcException($"RpcMessage operation not supported for method '{method}'", ErrorCode.UnableToHandleRpc);
                 }
-
-                executedCall = new ExecutedCall(rpcId, 0, null);
+                if (!string.IsNullOrEmpty(rpcAnswer))
+                {
+                    executedCall = new ExecutedCall(rpcId, 0, rpcAnswer);
+                }
+                else
+                {
+                    executedCall = new ExecutedCall(rpcId, 0, null);
+                }
             }
             catch (RpcException rpcEx)
             {

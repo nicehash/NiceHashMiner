@@ -5,8 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace NHMCore.Utils
 {
@@ -228,6 +231,46 @@ namespace NHMCore.Utils
             catch (Exception ex)
             {
                 Logger.Error("NICEHASH", "VisitLink error: " + ex.Message);
+            }
+        }
+
+        public static async Task<bool> CreateAndUploadLogReport(string uuid)
+        {
+            try
+            {
+                var exePath = Paths.RootPath("CreateLogReport.exe");
+                var startLogInfo = new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    WindowStyle = ProcessWindowStyle.Minimized,
+                    UseShellExecute = true,
+                    Arguments = Path.GetFileNameWithoutExtension(Paths.AppRoot),
+                    CreateNoWindow = true
+                };
+                using (var doCreateLog = Process.Start(startLogInfo))
+                {
+                    doCreateLog.WaitForExit(10 * 1000);
+                }
+
+                var tmpZipPath = Paths.RootPath($"tmp._archive_logs.zip");
+                var rigID = ApplicationStateManager.RigID();
+                var url = $"https://nhos.nicehash.com/nhm-dump/{rigID}-{uuid}.zip";
+
+                using (var httpClient = new HttpClient())
+                {
+                    using (var stream = File.OpenRead(tmpZipPath))
+                    {
+                        var response = await httpClient.PutAsync(url, new StreamContent(stream));
+                        response.EnsureSuccessStatusCode();
+                    }
+                }
+
+                File.Delete(tmpZipPath);
+                return true;
+            }catch(Exception ex)
+            {
+                Logger.Error("Log-Report", ex.Message);
+                return false;
             }
         }
     }
