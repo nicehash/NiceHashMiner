@@ -75,7 +75,7 @@ namespace NHM.Common.Enums
         CryptoNightV7 = 30,
         [Obsolete("UNUSED Algorithm")]
         CryptoNightHeavy = 31,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Lyra2Z = 32,
         //[Obsolete("UNUSED Algorithm")]
         X16R = 33,
@@ -95,7 +95,7 @@ namespace NHM.Common.Enums
         Lyra2REv3 = 40,
         [Obsolete("NOT SUPPORTED. UNUSED Algorithm")]
         MTP = 41,
-        [Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         CryptoNightR = 42,
         //[Obsolete("UNUSED Algorithm")]
         CuckooCycle = 43,
@@ -107,13 +107,13 @@ namespace NHM.Common.Enums
         X16Rv2 = 46,
         //[Obsolete("UNUSED Algorithm")]
         RandomXmonero = 47,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Eaglesong = 48,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Cuckaroom = 49,
         //[Obsolete("UNUSED Algorithm")]
         GrinCuckatoo32 = 50,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         Handshake = 51,
         //[Obsolete("UNUSED Algorithm")]
         KAWPOW = 52,
@@ -144,7 +144,6 @@ namespace NHM.Common.Enums
                 case AlgorithmType.GrinCuckatoo32:
                 case AlgorithmType.CuckooCycle:
                 case AlgorithmType.GrinCuckarood29:
-                case AlgorithmType.Cuckaroom:
                     return "G/s";
                 default:
                     return "H/s";
