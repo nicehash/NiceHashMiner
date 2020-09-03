@@ -18,8 +18,6 @@ namespace NHM.MinerPluginToolkitV1
         public const ulong MinGrin31Mem = 11UL << 30; // 11GB
         public const ulong MinCuckooCycleMem = 6UL << 30; // 6GB
         public const ulong MinLyra2REv3Mem = 2UL << 30; // 2GB
-        public const ulong MinX16RMem = 2UL << 30; // 2GB
-        public const ulong MinX16Rv2Mem = 2UL << 30; // 2GB
         public const ulong MinGrinCuckarood29Memory = 6012951136; // 5.6GB
         public const ulong MinGrin32Mem = 7UL << 30; // 7.0GB (because system acn reserve GPU memory) really this is 8GB
         public const ulong MinKAWPOWMemory = 4UL << 30; // 4GB
@@ -35,8 +33,6 @@ namespace NHM.MinerPluginToolkitV1
             { AlgorithmType.GrinCuckatoo31, MinGrin31Mem },
             { AlgorithmType.CuckooCycle, MinCuckooCycleMem },
             { AlgorithmType.Lyra2REv3, MinLyra2REv3Mem },
-            { AlgorithmType.X16R, MinX16RMem },
-            { AlgorithmType.X16Rv2, MinX16Rv2Mem },
             { AlgorithmType.GrinCuckarood29, MinGrinCuckarood29Memory },
             { AlgorithmType.GrinCuckatoo32, MinGrin32Mem },
             { AlgorithmType.KAWPOW, MinKAWPOWMemory },
