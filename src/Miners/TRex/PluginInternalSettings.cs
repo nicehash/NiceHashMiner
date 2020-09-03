@@ -164,6 +164,17 @@ namespace TRex
                     ID = "trex_memoryTweak",
                     ShortName = "--mt",
                     Delimiter = ","
+                },
+                /// <summary>
+                ///  Low load mode (default: 0). 1 - enabled, 0 - disabled.
+                ///  Reduces the load on the GPUs if possible. Can be set to a comma separated string to enable
+                ///  the mode for a subset of the GPU list (eg: --low-load 0,0,1,0)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "trex_lowLoad",
+                    ShortName = "--low-load",
                 }
             },
             TemperatureOptions = new List<MinerOption>

@@ -77,7 +77,7 @@ namespace NHM.Common.Enums
         CryptoNightHeavy = 31,
         [Obsolete("UNUSED Algorithm", true)]
         Lyra2Z = 32,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         X16R = 33,
         [Obsolete("UNUSED Algorithm", true)]
         CryptoNightV8 = 34,
@@ -103,7 +103,7 @@ namespace NHM.Common.Enums
         GrinCuckarood29 = 44,
         [Obsolete("UNUSED Algorithm. Replaced by BeamV3", true)]
         BeamV2 = 45,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm", true)]
         X16Rv2 = 46,
         //[Obsolete("UNUSED Algorithm")]
         RandomXmonero = 47,

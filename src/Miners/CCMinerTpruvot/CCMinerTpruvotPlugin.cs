@@ -29,14 +29,14 @@ namespace CCMinerTpruvot
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "NVIDIA miner for Lyra2REv3 and X16R.",
+                PluginDescription = "NVIDIA miner for Lyra2REv3.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "95b390a0-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 0);
+        public override Version Version => new Version(11, 1);
         public override string Name => "CCMinerTpruvot";
 
         public override string Author => "info@nicehash.com";
@@ -74,10 +74,6 @@ namespace CCMinerTpruvot
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            try
-            {}
-            catch (Exception)
-            {}
             return false;
         }
     }

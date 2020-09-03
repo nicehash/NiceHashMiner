@@ -17,19 +17,13 @@ namespace WildRig
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.Lyra2REv3),
-                        new SAS(AlgorithmType.X16R) { Enabled=false },
-                        new SAS(AlgorithmType.X16Rv2),
-                        //new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 } // doesn't seem to be working
+                        new SAS(AlgorithmType.Lyra2REv3)
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.Lyra2REv3, "lyra2v3" },
-                { AlgorithmType.X16R, "x16r" },
-                { AlgorithmType.X16Rv2, "x16rv2" },
-                { AlgorithmType.KAWPOW, "kawpow" }
+                { AlgorithmType.Lyra2REv3, "lyra2v3" }
             }
         };
     }
