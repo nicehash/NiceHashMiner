@@ -24,10 +24,8 @@ namespace TeamRedMiner
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.Lyra2REv3),
-                        new SAS(AlgorithmType.X16R) { Enabled=false },
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.GrinCuckarood29),
-                        new SAS(AlgorithmType.X16Rv2),
                         new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30},
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 }
                     }
@@ -36,10 +34,8 @@ namespace TeamRedMiner
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.Lyra2REv3, "lyra2rev3" },
-                { AlgorithmType.X16R, "x16r" },
                 { AlgorithmType.GrinCuckatoo31, "cuckatoo31_grin" },
                 { AlgorithmType.GrinCuckarood29, "cuckarood29_grin" },
-                { AlgorithmType.X16Rv2, "x16rv2" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.KAWPOW, "kawpow" }
             }
