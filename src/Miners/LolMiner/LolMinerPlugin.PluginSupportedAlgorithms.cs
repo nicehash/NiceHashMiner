@@ -30,7 +30,6 @@ namespace LolMiner
                     {
                         new SAS(AlgorithmType.GrinCuckarood29) {Enabled = enabled },
                         new SAS(AlgorithmType.GrinCuckatoo31) {Enabled = enabled },
-                        new SAS(AlgorithmType.BeamV2) {Enabled = enabled },
                     };
         }
 

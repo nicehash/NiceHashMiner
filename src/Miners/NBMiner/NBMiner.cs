@@ -24,11 +24,6 @@ namespace NBMiner
         {
             get
             {
-                if (_algorithmSecondType != AlgorithmType.NONE)
-                {
-                    if(_algorithmType == AlgorithmType.Eaglesong) return "eaglesong_ethash";
-                    else if(_algorithmType == AlgorithmType.Handshake) return "hns_ethash";
-                }
                 return PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
             }
         }

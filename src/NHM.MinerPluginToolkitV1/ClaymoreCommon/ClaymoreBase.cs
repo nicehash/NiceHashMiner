@@ -43,12 +43,6 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
             {
                 switch (_algorithmSecondType)
                 {
-                    case AlgorithmType.Decred:
-                        return "dcr";
-                    case AlgorithmType.Blake2s:
-                        return "b2s";
-                    case AlgorithmType.Keccak:
-                        return "kc";
                     default:
                         return "";
                 }
