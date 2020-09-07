@@ -44,8 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3rdParty\NVAPI.cs" />
-    <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="AMD\AMD_ODN.cs" />
     <Compile Include="DeviceMonitorAMD.cs" />
     <Compile Include="DeviceMonitorCPU.cs" />
@@ -68,10 +66,6 @@
     <Compile Include="TryLock.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rdparty\managedCuda\Nvml\Nvml.csproj">
-      <Project>{92d51a33-7bf0-47fd-9ece-d758ffe1691d}</Project>
-      <Name>Nvml</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>

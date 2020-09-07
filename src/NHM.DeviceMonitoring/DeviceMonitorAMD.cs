@@ -60,7 +60,7 @@ namespace NHM.DeviceMonitoring
             {
                 int temperature = 0;
                 int ok = AMD_ODN.nhm_amd_device_get_temperature(BusID, ref temperature);
-                if (ok == 0) return (float)temperature / 1000; 
+                if (ok == 0) return (float)temperature / 1000;
                 Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_temperature failed with error code {ok}", _delayedLogging);
                 return -1;
             }

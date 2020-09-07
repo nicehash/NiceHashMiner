@@ -1,6 +1,4 @@
-﻿using ManagedCuda.Nvml;
-using NHM.Common;
-using NVIDIA.NVAPI;
+﻿using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +10,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
         private const string Tag = "NvidiaMonitorManager";
         private static bool _tryAddNvmlToEnvPathCalled = false;
 
-        internal static bool InitalNVMLInitSuccess = false;
+        internal static bool InitalNVIDIALibInitSuccess = false;
 
         internal static Dictionary<string, int> _nvidiaUUIDAndBusIds;
 
@@ -21,8 +19,9 @@ namespace NHM.DeviceMonitoring.NVIDIA
         {
             TryAddNvmlToEnvPath();
             _nvidiaUUIDAndBusIds = nvidiaUUIDAndBusIds;
-            InitalNVMLInitSuccess = InitNvidiaLib();
+            InitalNVIDIALibInitSuccess = InitNvidiaLib();
         }
+
 
         private static void TryAddNvmlToEnvPath()
         {
