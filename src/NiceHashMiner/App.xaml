@@ -25,9 +25,14 @@
 
             <!--#region Dynamic Theme Properties-->
             <DrawingBrush x:Key="NHMLogo" Drawing="{DynamicResource NHMLogoLight}" />
+            <DrawingBrush x:Key="NHMBigLogo" Drawing="{DynamicResource NHMLogoBigLight}" />
+            
+            <DrawingBrush x:Key="QrLightLogo" Drawing="{DynamicResource QrIconDefault}" />
+            <DrawingBrush x:Key="QrDarkLogo" Drawing="{DynamicResource QRIcon}" />
 
 
             <DrawingBrush x:Key="LoginCircle" Drawing="{DynamicResource LoginCircleLogoLight}" />
+            <DrawingBrush x:Key="LoginQRCircle" Drawing="{DynamicResource LoginQRCircleLight}" />
             <!--#endregion Dynamic Theme Properties-->
 
             <Style TargetType="views:EulaWindowFirstLong" BasedOn="{StaticResource BaseDialogWindowStyle}"/>

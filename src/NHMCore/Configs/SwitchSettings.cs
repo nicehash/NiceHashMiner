@@ -34,7 +34,7 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(KwhPrice));
             }
         }
-        private double _switchProfitabilityThreshold = 0.05; // percent
+        private double _switchProfitabilityThreshold = 0.02; // percent
         public double SwitchProfitabilityThreshold
         {
             get => _switchProfitabilityThreshold;

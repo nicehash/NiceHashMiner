@@ -20,14 +20,14 @@ namespace SRBMiner
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/doktor83/SRBMiner-Multi current v0.4.4
+            // https://github.com/doktor83/SRBMiner-Multi current v0.4.7
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v0.4.4",
-                ExePath = new List<string> { "SRBMiner-Multi-0-4-4", "SRBMiner-MULTI.exe" },
+                BinVersion = "v0.4.7",
+                ExePath = new List<string> { "SRBMiner-Multi-0-4-7", "SRBMiner-MULTI.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/doktor83/SRBMiner-Multi/releases/download/0.4.4/SRBMiner-Multi-0-4-4-win64.zip",                                                 
+                    "https://github.com/doktor83/SRBMiner-Multi/releases/download/0.4.7/SRBMiner-Multi-0-4-7-win64.zip",
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,7 +37,7 @@ namespace SRBMiner
             };
         }
 
-        public override Version Version => new Version(11, 0);
+        public override Version Version => new Version(11, 3);
 
         public override string Name => "SRBMiner";
 

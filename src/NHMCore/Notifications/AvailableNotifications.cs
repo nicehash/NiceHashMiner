@@ -334,12 +334,6 @@ namespace NHMCore.Notifications
             }
         }
 
-        public static void CreateNVMLFallbackFailInfo()
-        {
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NVMLFallbackFail, Tr("Failed NVML fallback"), Tr("NiceHash Miner has detected that DCH drivers are installed and NVML fallback method has failed. Please fix your non-DCH driver install."));
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         public static void CreateOpenClFallbackInfo()
         {
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.OpenClFallback, Tr("Fallback of OpenCL"), Tr("Please check if AMD drivers are installed properly. If they are please remove Intel video driver."));

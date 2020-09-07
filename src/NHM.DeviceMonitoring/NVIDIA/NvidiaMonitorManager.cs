@@ -14,15 +14,16 @@ namespace NHM.DeviceMonitoring.NVIDIA
 
         internal static Dictionary<string, int> _nvidiaUUIDAndBusIds;
 
-        internal static void Init(Dictionary<string, int> nvidiaUUIDAndBusIds, bool useNvmlFallback)
+
+        internal static void Init(Dictionary<string, int> nvidiaUUIDAndBusIds)
         {
-            TryAddNvmlToEnvPath(useNvmlFallback);
+            TryAddNvmlToEnvPath();
             _nvidiaUUIDAndBusIds = nvidiaUUIDAndBusIds;
             InitalNVIDIALibInitSuccess = InitNvidiaLib();
         }
 
 
-        private static void TryAddNvmlToEnvPath(bool useNvmlFallback)
+        private static void TryAddNvmlToEnvPath()
         {
             if (_tryAddNvmlToEnvPathCalled) return;
             _tryAddNvmlToEnvPathCalled = true; // call this ONLY ONCE AND NEVER AGAIN
@@ -31,10 +32,11 @@ namespace NHM.DeviceMonitoring.NVIDIA
             var nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
                                "\\NVIDIA Corporation\\NVSMI";
             var nvmlRootPathTag = "DEFAULT";
-            if (useNvmlFallback)
+            if(!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")))
             {
-                nvmlRootPath = Paths.AppRootPath("NVIDIA");
-                nvmlRootPathTag = "FALLBACK";
+                nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) +
+                               "\\System32";
+                nvmlRootPathTag = "DHC";
             }
 
             Logger.Info(Tag, $"Adding NVML to PATH. {nvmlRootPathTag} path='{nvmlRootPath}'");

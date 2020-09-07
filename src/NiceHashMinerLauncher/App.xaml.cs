@@ -5,12 +5,13 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace NiceHashMiner
 {
@@ -31,7 +32,7 @@ namespace NiceHashMiner
         {
             try
             {
-                return File.Exists(fileName);
+                return File.Exists(GetRootPath(fileName));
             }
             catch (Exception e)
             {
@@ -53,11 +54,6 @@ namespace NiceHashMiner
         private static bool IsUpdate()
         {
             return IsDoFile(@"do.update");
-        }
-
-        private static bool IsCreateLog()
-        {
-            return IsDoFile(@"do.createLog");
         }
 
         private static void ClearAllXXFiles(string pattern)
@@ -167,6 +163,7 @@ namespace NiceHashMiner
 
         private async void App_OnStartup(object sender, StartupEventArgs e)
         {
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             ClearAllDoFiles();
             // Set shutdown mode back to default
@@ -203,7 +200,9 @@ namespace NiceHashMiner
                 //await Task.Delay(5000);
                 if (isZip)
                 {
-                    Directory.Delete(GetRootPath("plugins_packages"), true);
+                    var pluginPackagesPath = GetRootPath("plugins_packages");
+                    if (Directory.Exists(pluginPackagesPath)) Directory.Delete(pluginPackagesPath, true);
+
                     var progWindow = new UpdateProgress();
                     progWindow.Show();
                     var isOk = await UnzipFileAsync(updaterFile, GetRootPath(), progWindow.Progress, CancellationToken.None);
@@ -338,37 +337,6 @@ namespace NiceHashMiner
                                 {
                                     RunAsAdmin.SelfElevate();
                                 }
-                                else if (IsCreateLog())
-                                {
-                                    try
-                                    {
-                                        run = true;
-                                        ClearAllDoFiles();
-
-                                        var exePath = GetRootPath("CreateLogReport.exe");
-                                        var startLogInfo = new ProcessStartInfo
-                                        {
-                                            FileName = exePath,
-                                            WindowStyle = ProcessWindowStyle.Minimized,
-                                            UseShellExecute = true,
-                                            Arguments = latestAppDir,
-                                            CreateNoWindow = true
-                                        };
-                                        using (var doCreateLog = Process.Start(startLogInfo))
-                                        {
-                                            doCreateLog.WaitForExit(10 * 1000);
-                                        }
-
-                                        var tmpZipPath = GetRootPath($"tmp._archive_logs.zip");
-                                        var desktopZipPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "NiceHashMinerLogs.zip");
-                                        File.Copy(tmpZipPath, desktopZipPath, true);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine(ex.Message);
-                                    }
-                                    ClearAllTmpFiles();
-                                }
                                 else if (IsRestart())
                                 {
                                     ClearAllDoFiles();
@@ -394,6 +362,7 @@ namespace NiceHashMiner
                                     var updateStarted = doUpdate.Start();
                                     run = !updateStarted; // set if we are good
                                 }
+                                else { /*ELSE*/ }
                             }
                         }
                     }

@@ -19,7 +19,6 @@ namespace MiniZ
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.ZHash),
-                        new SAS(AlgorithmType.BeamV2),
                         new SAS(AlgorithmType.BeamV3),
                     }
                 }
@@ -27,7 +26,6 @@ namespace MiniZ
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.ZHash, "144,5" },
-                { AlgorithmType.BeamV2, "150,5,3" },
                 { AlgorithmType.BeamV3, "144,5s" },
             }
         };

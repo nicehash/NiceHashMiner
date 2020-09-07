@@ -15,9 +15,9 @@ namespace NHM.DeviceDetection.NVIDIA
     {
         private const string Tag = "CUDADetector";
 
-        public static async Task<(string rawOutput, CudaDeviceDetectionResult parsed)> TryQueryCUDADevicesAsync(bool useNvmlFallback)
+        public static async Task<(string rawOutput, CudaDeviceDetectionResult parsed)> TryQueryCUDADevicesAsync()
         {
-            var execStr = useNvmlFallback ? "cuda -n -nvmlFallback" : "cuda -n";
+            var execStr = "cuda -n";
             Logger.Info(Tag, $"TryQueryCUDADevicesAsync START {execStr}");
             var result = await DeviceDetectionPrinter.GetDeviceDetectionResultAsync<CudaDeviceDetectionResult>(execStr, 30 * 1000);
             Logger.Info(Tag, $"TryQueryCUDADevicesAsync END {execStr}");

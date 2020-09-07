@@ -18,15 +18,13 @@ namespace TTMiner
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.Lyra2REv3),
-                        new SAS(AlgorithmType.Eaglesong),
-                        new SAS(AlgorithmType.KAWPOW)
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 }
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.Lyra2REv3, "LYRA2V3" },
-                { AlgorithmType.Eaglesong, "EAGLESONG" },
                 { AlgorithmType.KAWPOW, "KAWPOW" }
             }
         };

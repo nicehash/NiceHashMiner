@@ -166,6 +166,17 @@ namespace Phoenix
                     ShortName = "-eres",
                     DefaultValue = "2",
                     Delimiter = ","
+                },          
+                /// <summary>
+                /// Restart the miner when allocating buffer for a new DAG epoch.
+                /// The possible values are: 0 - never, 1 - always, 2 - auto (the miner decides depending on the driver version).
+                /// This is relevant for 4 GB AMD cards, which may have problems with new DAG epochs after epoch 350.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_dagrestart",
+                    ShortName = "-dagrestart"
                 },
                 /// <summary>
                 /// Slow down DAG generation to avoid crashes when switching DAG epochs (0-3, default: 0 - fastest, 3 - slowest). You may specify this option per-GPU.
@@ -192,16 +203,13 @@ namespace Phoenix
                     DefaultValue = "0",
                 },
                 /// <summary>
-                /// Lower the GPU usage to n% of maximum (default: 100). If you already use -mi 0 (or other low value) use -li instead.
-                /// You may specify this option per-GPU.
+                /// -rvram <n> Minimum free VRAM in MB (-1: don't check; default: 384 for Windows, and 128 for Linux)
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "phoenix_gpow",
-                    ShortName = "-gpow",
-                    DefaultValue = "100",
-                    Delimiter = ","
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_rvram",
+                    ShortName = "-rvram"
                 },
                 /// <summary>
                 /// Use alternative way to initialize AMD cards to prevent startup crashes
@@ -273,8 +281,19 @@ namespace Phoenix
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "phoenix_config",
                     ShortName = "-config",
+                },         
+                /// <summary>
+                /// Lower the GPU usage to n% of maximum (default: 100). If you already use -mi 0 (or other low value) use -li instead.
+                /// You may specify this option per-GPU.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "phoenix_gpow",
+                    ShortName = "-gpow",
+                    DefaultValue = "100",
+                    Delimiter = ","
                 },
-
                 /// <summary>
                 /// Another way to lower the GPU usage. Bigger n values mean less GPU utilization; the default is 0.
                 /// You may specify this option per-GPU.
@@ -306,28 +325,84 @@ namespace Phoenix
                     ShortName = "-leaveoc"
                 },
                 /// <summary>
-                /// -rvram <n> Minimum free VRAM in MB (-1: don't check; default: 384 for Windows, and 128 for Linux)
+                /// Memory strap level (Nvidia cards 10x0 series only). The possible
+                /// values are 0 to 6. 0 is the default value and uses the 
+                /// timings from the VBIOS. Each strap level corresponds to a 
+                /// predefined combination of memory timings ("-vmt1", "-vmt2", "-vmt3", "-vmr").
+                /// Strap level 3 is the fastest predefined level and may not work on most cards, 1 is the slowest (but still faster than 
+                /// the default timings). Strap levels 4 to 6 are the same as 1 to 3 
+                /// but with less aggressive refresh rates (i.e. lower "-vmr" values).
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "phoenix_rvram",
-                    ShortName = "-rvram"
+                    ID = "phoenix_straps",
+                    ShortName = "-straps"
                 },
                 /// <summary>
-                /// Restart the miner when allocating buffer for a new DAG epoch.
-                /// The possible values are: 0 - never, 1 - always, 2 - auto (the miner decides depending on the driver version).
-                /// This is relevant for 4 GB AMD cards, which may have problems with new DAG epochs after epoch 350.
+                /// Memory timing parameter 1 (0 to 100, default 0)
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "phoenix_dagrestart",
-                    ShortName = "-dagrestart"
-                }
+                    ID = "phoenix_vmt1",
+                    ShortName = "-vmt1"
+                },
+                /// <summary>
+                /// Memory timing parameter 2 (0 to 100, default 0)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_vmt2",
+                    ShortName = "-vmt2"
+                },
+                /// <summary>
+                /// Memory timing parameter 3 (0 to 100, default 0)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_vmt3",
+                    ShortName = "-vmt3"
+                },
+                /// <summary>
+                /// Memory refresh rate (0 to 100, default 0)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_vmr",
+                    ShortName = "-vmr"
+                },
+                /// <summary>
+                /// Force using straps on unsupported Nvidia GPUs (0 - do not force, 1 - GDDR5, 2 - GDDR5X).
+                /// Make sure that the parameter matches your GPU memory type.
+                /// You can try this if your card is Pascal-based but when you try to use -straps or any other memory timing option,
+                /// the card is shown as “unsupported”.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_nvmem",
+                    ShortName = "-nvmem"
+                },
             },
             TemperatureOptions = new List<MinerOption>
             {
+                /// <summary>
+                /// Lower GPU usage when GPU temperature is above n deg C. The default value is 0,
+                /// which means do not lower the usage regardless of the GPU temperature. This option is useful whenever -tmax is not
+                /// working. If you are using both "-tt" and "-ttli" options, the
+                /// temperature in "-tt" should be lower than the "-ttli" to avoid throttling the GPUs without using the fans
+                /// to properly cool them first.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_ttli",
+                    ShortName = "-ttli"
+                },
                 /// <summary>
                 /// Set fan control target temperature
                 /// (special values: 0 - no HW monitoring on ALL cards, 1-4 - only monitoring on all cards with 30-120 seconds interval, negative - fixed fan speed at n %)

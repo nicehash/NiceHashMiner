@@ -23,6 +23,16 @@ namespace NiceHashMiner.Views.Settings
             InitializeComponent();
             LanguageSettings.Visibility = AppRuntimeSettings.ShowLanguage ? Visibility.Visible : Visibility.Collapsed;
             ThemeSettings.Visibility = AppRuntimeSettings.ThemeSettingsEnabled ? Visibility.Visible : Visibility.Collapsed;
+            CredentialsSettings.Instance.PropertyChanged += (s, e) =>
+            {
+                if(e.PropertyName == "BitcoinAddress")
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
+                    });
+                }
+            };
             if (CredentialsSettings.Instance.IsBitcoinAddressValid)
             {
                 textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
@@ -135,6 +145,28 @@ namespace NiceHashMiner.Views.Settings
             ConfigManager.GeneralConfigFileCommit();
         }
 
+        private void LanguageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var nhmConfirmDialog = new CustomDialog()
+            {
+                Title = Translations.Tr("Language change"),
+                Description = Translations.Tr("Your program will be restarted in order to completely change the language of NiceHash Miner."),
+                OkText = Translations.Tr("Ok"),
+                CancelVisible = Visibility.Collapsed,
+                AnimationVisible = Visibility.Collapsed
+            };
+            nhmConfirmDialog.OKClick += (s, e1) => CommitGeneralAndRestart();
+            nhmConfirmDialog.OnExit += (s, e1) => CommitGeneralAndRestart();
+            
+            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+        }
+
+        private void CommitGeneralAndRestart()
+        {
+            ConfigManager.GeneralConfigFileCommit();
+            Task.Run(() => ApplicationStateManager.RestartProgram());
+        }
+
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ConfigManager.GeneralConfigFileCommit();
@@ -144,19 +176,52 @@ namespace NiceHashMiner.Views.Settings
         {
             var nhmConfirmDialog = new CustomDialog()
             { 
-                Title = Translations.Tr("Pack log files?"),
-                Description = Translations.Tr("This will restart your program and create a zip file on Desktop."),
+                Title = Translations.Tr("Pack and upload log files?"),
+                Description = Translations.Tr("This will upload log report to our server."),
                 OkText = Translations.Tr("Ok"),
                 CancelText = Translations.Tr("Cancel"),
                 AnimationVisible = Visibility.Collapsed
             };
-            nhmConfirmDialog.OKClick += (s, e1) => 
-            {
-                File.Create(Paths.RootPath("do.createLog"));
-                Task.Run(() => ApplicationStateManager.RestartProgram());
-            };
+            nhmConfirmDialog.OKClick += (s, e1) => ProcessLogReport();
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+        }
 
+        private async void ProcessLogReport()
+        {
+            var uuid = Guid.NewGuid().ToString();
+            var success = await Helpers.CreateAndUploadLogReport(uuid);
+            if (success) CreateBugUUIDDialog(uuid);
+        }
+
+        private void CreateBugUUIDDialog(string uuid)
+        {
+            var bugUUIDDialog = new CustomDialog()
+            {
+                Title = Translations.Tr("Bug report uuid"),
+                Description = Translations.Tr("Use following UUID for bug reporting.\n{0}", uuid),
+                OkText = Translations.Tr("Copy to clipboard"),
+                CancelVisible = Visibility.Collapsed,
+                AnimationVisible = Visibility.Collapsed
+            };
+
+            bugUUIDDialog.OKClick += (s,e) => Clipboard.SetText(uuid);
+            CustomDialogManager.ShowModalDialog(bugUUIDDialog);
+        }
+
+        private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var nhmConfirmDialog = new CustomDialog()
+            {
+                Title = Translations.Tr("Theme change"),
+                Description = Translations.Tr("Your program will be restarted in order to completely change the theme of NiceHash Miner."),
+                OkText = Translations.Tr("Ok"),
+                CancelVisible = Visibility.Collapsed,
+                AnimationVisible = Visibility.Collapsed
+            };
+            nhmConfirmDialog.OKClick += (s, e1) => CommitGeneralAndRestart();
+            nhmConfirmDialog.OnExit += (s, e1) => CommitGeneralAndRestart();
+
+            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
         }
     }
 }

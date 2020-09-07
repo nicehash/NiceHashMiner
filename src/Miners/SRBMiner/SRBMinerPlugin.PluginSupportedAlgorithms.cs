@@ -11,25 +11,19 @@ namespace SRBMiner
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             DefaultFee = 0.85,
-            AlgorithmFees = new Dictionary<AlgorithmType, double>
-            {
-                { AlgorithmType.Handshake, 2.0 },
-            },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        //new SAS(AlgorithmType.Eaglesong),
-                        new SAS(AlgorithmType.Handshake)
+                        new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30}
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                //{ AlgorithmType.Eaglesong, "eaglesong" },
-                { AlgorithmType.Handshake, "bl2bsha3" }
+                { AlgorithmType.DaggerHashimoto, "ethash" }
             }
         };
     }

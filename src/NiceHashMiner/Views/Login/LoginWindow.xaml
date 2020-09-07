@@ -38,14 +38,24 @@
         </Style>
 
     </nhb:BaseDialogWindow.Resources>
+    
     <StackPanel Orientation="Vertical">
-        <Rectangle Width="160" Height="160" Margin="0,10,0,0" Fill="{DynamicResource LoginCircle}" />
+        <!--<Border Width="200" Height="200" Margin="0,32,0,0" BorderThickness="1" BorderBrush="Black">-->
+        <Canvas x:Name="rectangle" Width="200" Height="200" Margin="0,0,0,0" >
+            <!--<Canvas x:Name="rectangle" Width="199" Height="199">-->
+            <Rectangle Width="200" Height="200" Fill="{DynamicResource LoginQRCircle}" />
+            <Rectangle x:Name="rect_qrCode" Width="160" Height="160" Margin="20" />
+        </Canvas>
+        <!--</Border>-->
 
-        <Button Style="{StaticResource OKButton}" Margin="0,32,0,0" Content="LOGIN" Click="Login_OnClick" />
+        <Label Content="Scan with official NiceHash mobile application" HorizontalAlignment="Center"  Style="{StaticResource FontsTypography.SmallRegular2}" Padding="0" Margin="0,4,0,2" />
+        <Button Content="Confirm scan" HorizontalAlignment="Center" Style="{StaticResource BigButtonPrimaryNotifications}" Padding="8,4,8,4" Click="Button_Click"/>
+
+        <Button Style="{StaticResource OKButton}" Margin="0,8,0,0" Content="LOGIN" Click="Login_OnClick" />
 
 
-        <Button Style="{StaticResource local.TextButton}" Margin="0,40,0,0" HorizontalAlignment="Center" Content="Register a New Account" Click="Register_OnClick" />
-        <Button Style="{StaticResource local.TextButton}" Margin="0,16,0,0" HorizontalAlignment="Center" Content="Enter Bitcoin Address Manually" Click="ManuallyEnterBtc_OnClick" />
+        <Button Style="{StaticResource local.TextButton}" Margin="0,12,0,0" HorizontalAlignment="Center" Content="Register a New Account" Click="Register_OnClick" />
+        <Button Style="{StaticResource local.TextButton}" Margin="0,12,0,0" HorizontalAlignment="Center" Content="Enter Bitcoin Address Manually" Click="ManuallyEnterBtc_OnClick" />
 
 
         <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{StaticResource NHMSwitchTheme}" Margin="0,0,24,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />

@@ -1,0 +1,30 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Icons">
+    <DrawingGroup x:Key="QRIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0,0,24,24" />
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup.Transform>
+            <TranslateTransform X="0" Y="0.0010000000474974513" />
+        </DrawingGroup.Transform>
+        <DrawingGroup Opacity="1">
+            <DrawingGroup Opacity="1">
+                <DrawingGroup Transform="1,0,0,1,2,2">
+                    <GeometryDrawing Brush="#FFFBA342">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Figures="M15,14.999L17,14.999 17,16.999 15,16.999z M15,2.999L17,2.999 17,4.999 15,4.999z M3,14.999L5,14.999 5,16.999 3,16.999z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+                <DrawingGroup Transform="1,0,0,1,2,2">
+                    <GeometryDrawing Brush="#FFFBA342">
+                        <GeometryDrawing.Geometry>
+                            <PathGeometry FillRule="Nonzero" Figures="M18,-0.001L2,-0.001C0.895,-0.001,0,0.895,0,1.999L0,17.999C0,19.103,0.895,19.999,2,19.999L18,19.999C19.104,19.999,20,19.103,20,17.999L20,1.999C20,0.894999999999999,19.104,-0.00100000000000122,18,-0.00100000000000122z M2,1.999L6,1.999 6,5.999 2,5.999 2,1.999z M6,17.999L2,17.999 2,13.999 6,13.999 6,17.999z M7,11.999L2,11.999 2,7.999 4,7.999 4,9.999 7,9.999 7,11.999z M12,17.999L8,17.999 8,15.999 12,15.999 12,17.999z M12,10.999L11,10.999 11,13.999 9,13.999 9,8.999 12,8.999 12,10.999z M12,3.999L10,3.999 10,6.999 8,6.999 8,1.999 12,1.999 12,3.999z M18,17.999L14,17.999 14,13.999 18,13.999 18,17.999z M18,11.999L16,11.999 16,9.999 14,9.999 14,7.999 18,7.999 18,11.999z M18,5.999L14,5.999 14,1.999 18,1.999 18,5.999z" />
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+</ResourceDictionary>

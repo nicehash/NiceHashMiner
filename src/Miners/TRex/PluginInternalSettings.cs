@@ -148,6 +148,34 @@ namespace TRex
                     ShortName = "-l",
                     LongName = "--log-path"
                 },
+                /// <summary>
+                /// Memory tweak mode (default: 0 - disabled). Range from 0 to 6. General recommendation
+                /// is to start with 1, and then increase only if the GPU is stable.
+                /// The effect is similar to that of ETHlargementPill.
+                /// Supported on graphics cards with GDDR5 or GDDR5X memory only.
+                /// Requires running the miner with administrative privileges.
+                /// Can be set to a comma separated list to apply different values to different cards.
+                /// Example: --mt 4 (applies tweak mode #4 to all cards that support this functionality)
+                /// --mt 3,3,3,0 (applies tweak mode #3 to all cards except the last one)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "trex_memoryTweak",
+                    ShortName = "--mt",
+                    Delimiter = ","
+                },
+                /// <summary>
+                ///  Low load mode (default: 0). 1 - enabled, 0 - disabled.
+                ///  Reduces the load on the GPUs if possible. Can be set to a comma separated string to enable
+                ///  the mode for a subset of the GPU list (eg: --low-load 0,0,1,0)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "trex_lowLoad",
+                    ShortName = "--low-load",
+                }
             },
             TemperatureOptions = new List<MinerOption>
             {

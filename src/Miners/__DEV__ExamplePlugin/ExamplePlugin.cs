@@ -36,8 +36,8 @@ namespace Example
         /// </summary>
         public bool CanGroup(MiningPair a, MiningPair b)
         {
-            // we can't combine Handshake for some arbitrary reason on this miner
-            if (a.Algorithm.FirstAlgorithmType == AlgorithmType.Handshake) return false;
+            // we can't combine KAWPOW for some arbitrary reason on this miner
+            if (a.Algorithm.FirstAlgorithmType == AlgorithmType.KAWPOW) return false;
             // other algorithms can be combined
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
@@ -61,8 +61,8 @@ namespace Example
             // we loop through devices and add supported algorithms for that device to dictionary
             foreach (var device in devices)
             {
-                // all support KAWPOW and Handshake
-                var algorithms = new List<Algorithm> { new Algorithm(PluginUUID, AlgorithmType.KAWPOW), new Algorithm(PluginUUID, AlgorithmType.Handshake) };
+                // all support KAWPOW and BeamV3
+                var algorithms = new List<Algorithm> { new Algorithm(PluginUUID, AlgorithmType.KAWPOW), new Algorithm(PluginUUID, AlgorithmType.BeamV3) };
 
                 // GPUs support DaggerHashimoto
                 if (device is IGpuDevice)
@@ -77,7 +77,7 @@ namespace Example
                 // only AMD supports 
                 if (device.DeviceType == DeviceType.AMD)
                 {
-                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.Eaglesong));
+                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29));
                 }
 
                 supported.Add(device, algorithms);

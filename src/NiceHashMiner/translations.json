@@ -3882,8 +3882,8 @@
     " / Year": {
       "ru": " / Год"
     },
-    "Pack log files?": {
-      "ru": "Запаковать лог-файлы?"
+    "Pack and upload log files?": {
+      "ru": "Запаковать и загрузить лог-файлы?"
     },
     "This will restart your program and create a zip file on Desktop.": {
       "ru": "Это перезапустит вашу программу и создаст zip-файл на рабочем столе."
@@ -3911,6 +3911,108 @@
     },
     "Update in progress...": {
       "ru": "Выполняется обновление..."
+    },
+    "read this article.": {
+      "ru": "прочитайте эту статью."
+    },
+    "By running the NiceHash Miner or NHM (in short) you are connecting your PC or a mining rig to NiceHash hash-power marketplace. NiceHash Miner enables you to rent out the computing power of your machine and in return, you earn bitcoins. To learn more about how NiceHash works, ": {
+      "ru": "Запуская NiceHash Miner или сокращенно NHM, вы подключаете ваш ПК или риг для майнинга к рынку мощности NiceHash. NiceHash Miner позволяет вам сдавать в аренду вычислительную мощность вашего оборудования и взамен зарабатывать биткоины. Чтобы узнать больше о том, как работает NiceHash, "
+    },
+    "About": {
+      "ru": "О нас"
+    },
+    "Use NiceHash Mobile app and scan this QR code to add this rig to your Rig Manager automatically.": {
+      "ru": "Используйте мобильное приложение NiceHash и сканируйте QR-код, чтобы добавить этот риг в менеджер ригов автоматически."
+    },
+    "Version Information": {
+      "ru": "Информация о версии"
+    },
+    "Resources": {
+      "ru": "Ресурсы"
+    },
+    "Company Website: ": {
+      "ru": "Веб-сайт компании: "
+    },
+    "Blog: ": {
+      "ru": "Блог: "
+    },
+    "Support: ": {
+      "ru": "Поддержка: "
+    },
+    "Status: ": {
+      "ru": "Статус: "
+    },
+    "Social": {
+      "ru": "Социальные сети"
+    },
+    "This will upload log report to our server.": {
+      "ru": "Это загрузит лог-отчет на наш сервер."
+    },
+    "Click the button to create a zip file and upload it to the server.": {
+      "ru": "Нажмите кнопку для создания zip-файла и загрузки его на сервер."
+    },
+    "Bug report link": {
+      "ru": "Ссылка на отчет об ошибке"
+    },
+    "Use following link for bug reporting.\n{0}": {
+      "ru": "Используйте следующую ссылку для отправки отчета об ошибке.\n{0}"
+    },
+    "Copy to clipboard": {
+      "ru": "Копировать в буфер обмена"
+    },
+    "Your program will be restarted in order to completely change the language of NiceHash Miner.": {
+      "ru": "Ваша программа будет перезапущена для изменения языка NiceHash Miner."
+    },
+    "Your program will be restarted in order to completely change the theme of NiceHash Miner.": {
+      "ru": "Ваша программа будет перезапущена для полного изменения темы NiceHash Miner."
+    },
+    "Scan with official NiceHash mobile application": {
+      "ru": "Сканируйте с помощью официального мобильного приложения NiceHash"
+    },
+    "Confirm scan": {
+      "ru": "Подтвердить сканирование"
+    },
+    "LOGIN": {
+      "ru": "ВХОД"
+    },
+    "Register a New Account": {
+      "ru": "Регистрация нового аккаунта"
+    },
+    "Enter Bitcoin Address Manually": {
+      "ru": "Ввод Биткоин-адреса вручную"
+    },
+    "Generate new QR Code": {
+      "ru": "Генерация нового QR-кода"
+    },
+    "Language change": {
+      "ru": "Изменение языка"
+    },
+    "Theme change": {
+      "ru": "Изменение темы"
+    },
+    "Demo Mode": {
+      "ru": "Режим Демо"
+    },
+    "You are currently mining in Demo Mode. ": {
+      "ru": "На данный момент вы майните в режиме Демо. "
+    },
+    "Add your Wallet Address ": {
+      "ru": "Добавьте ваш адрес кошелька "
+    },
+    "to start earning Bitcoins.": {
+      "ru": "чтобы начать зарабатывать биткоины."
+    },
+    "QR Code timeout. Please generate new one.": {
+      "ru": "Срок действия QR-кода истек. Пожалуйста, сгенерируйте новый."
+    },
+    "BTC Address was changed - this code is already used.": {
+      "ru": "Биткоин-адрес был изменен — этот код уже используется."
+    },
+    "NHMWS not connected": {
+      "ru": "NHMWS не подключен"
+    },
+    "Not connected to NHMWS. Please check your internet connection.": {
+      "ru": "Нет подключения к NHMWS. Пожалуйста, проверьте ваше подключение к интернету."
     }
   }
 }

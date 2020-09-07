@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Settings.SettingsQrLogin"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="532" d:DesignWidth="720" >
+    <UserControl.DataContext>
+        <viewModels:MainVM />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="local.DefaultTextBlock" >
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="FontWeight" Value="500" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextBlock.LineHeight" Value="18" />
+            <Setter Property="Width" Value="389" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
+    </UserControl.Resources>
+    <StackPanel>
+        <Canvas x:Name="rectangle" Width="200" Height="200" Margin="0,48,0,0" >
+            <Rectangle x:Name="rect_qrCode" Width="200" Height="200" />
+        </Canvas>
+        <TextBlock Text="{StaticResource scanQrCode}" Style="{StaticResource local.DefaultTextBlock}" Margin="0,16,0,0"/>
+        <Button Content="Confirm scan" HorizontalAlignment="Center" Style="{StaticResource BigButtonPrimaryNotifications}" Padding="8,4,8,4" Click="Button_Click" Margin="8"/>
+        <Label x:Name="lbl_qr_status" Margin="0,8,0,0" Style="{StaticResource FontsTypography.NormalRegular/Secondary}" HorizontalAlignment="Center" />
+        <Button x:Name="btn_gen_qr" Content="Generate new QR Code" Margin="0,4,0,0" Style="{StaticResource BigButtonPrimary}" Height="24" Width="150" Click="btn_gen_qr_Click" />
+    </StackPanel>
+</UserControl>

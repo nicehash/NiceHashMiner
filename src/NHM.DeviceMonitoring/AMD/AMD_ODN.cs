@@ -37,20 +37,20 @@ namespace NHM.DeviceMonitoring.AMD
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_set_fan_speed_percentage(int bus_number, int set_fan_speed_percentage);
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_amd_device_get_tdp_ranges(int bus_number, ref int min, ref int max, ref int defaultV);
+        public static extern int nhm_amd_device_get_tdp_min_max_default(int bus_number, ref int min, ref int max, ref int defaultV);
 
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_get_tdp(int bus_number, ref int get_tdp);
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_set_tdp(int bus_number, int set_tdp);
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_amd_device_get_core_clocks_min_max(int bus_number, ref int min, ref int max);
+        public static extern int nhm_amd_device_get_core_clocks_min_max_default(int bus_number, ref int min, ref int max, ref int defaultV);
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_get_core_clocks(int bus_number, ref int core_clocks);
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_set_core_clocks(int bus_number, int core_clocks);
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_amd_device_get_memory_clocks_min_max(int bus_number, ref int min, ref int max);
+        public static extern int nhm_amd_device_get_memory_clocks_min_max_default(int bus_number, ref int min, ref int max, ref int defaultV);
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_get_memory_clocks(int bus_number, ref int memory_clocks);
         [DllImport("amd_adl_odn.dll", CallingConvention = CallingConvention.StdCall)]

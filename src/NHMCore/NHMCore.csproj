@@ -107,6 +107,7 @@
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\DeviceTDPSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
+    <Compile Include="Configs\Data\BlacklistedPlugins.cs" />
     <Compile Include="Configs\GlobalDeviceSettings.cs" />
     <Compile Include="Configs\GUISettings.cs" />
     <Compile Include="Configs\IdleMiningSettings.cs" />
@@ -152,8 +153,6 @@
     <Compile Include="Mining\MiningDataStats.cs" />
     <Compile Include="NHMProductInfo.cs" />
     <Compile Include="Mining\Plugins\PluginContainer.cs" />
-    <Compile Include="Mining\Plugins\SupportedAlgorithmsFilter.cs" />
-    <Compile Include="Mining\Plugins\SupportedPluginsFilter.cs" />
     <Compile Include="Mining\Plugins\MinerPluginsManager.cs" />
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
     <Compile Include="Nhmws\ErrorCode.cs" />
@@ -388,12 +387,6 @@ If NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\" mkdir "$(SolutionDir)$
 if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll"
 if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\README.md" "$(SolutionDir)$(Configuration)\app\OpenCL\README.md"
 If NOT exist "$(SolutionDir)$(Configuration)\app\opencl_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\opencl_device_detection.dll" "$(SolutionDir)$(Configuration)\app\opencl_device_detection.dll"
-REM NVIDIA inside a separate folder
-If NOT exist "$(SolutionDir)$(Configuration)\app\NVIDIA\" mkdir "$(SolutionDir)$(Configuration)\app\NVIDIA\"
-if NOT exist "$(SolutionDir)$(Configuration)\app\NVIDIA\nvml.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\nvml.dll" "$(SolutionDir)$(Configuration)\app\NVIDIA\nvml.dll"
-if NOT exist "$(SolutionDir)$(Configuration)\app\NVIDIA\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\README.md" "$(SolutionDir)$(Configuration)\app\NVIDIA\README.md"
-if NOT exist "$(SolutionDir)$(Configuration)\app\NVIDIA\license.txt" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\license.txt" "$(SolutionDir)$(Configuration)\app\NVIDIA\license.txt"
-
 
 REM commons dll's for downloaded miners. Copy only if files don't exist. Remove this after plugin system fully replaces integrated miners
 REM create directory

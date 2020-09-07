@@ -26,12 +26,8 @@ namespace NBMiner
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.GrinCuckarood29),
-                        new SAS(AlgorithmType.Eaglesong),
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.Handshake),
-                        new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.KAWPOW),
+                        new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30},
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.GrinCuckatoo32),
                     }
                 },
@@ -39,10 +35,7 @@ namespace NBMiner
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.Eaglesong, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30  },
-                        new SAS(AlgorithmType.Handshake),
-                        new SAS(AlgorithmType.Handshake, AlgorithmType.DaggerHashimoto) { NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.KAWPOW),
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                     }
                 }
             },
@@ -51,9 +44,7 @@ namespace NBMiner
                 { AlgorithmType.GrinCuckatoo31, "cuckatoo" },
                 { AlgorithmType.CuckooCycle, "cuckoo_ae" },
                 { AlgorithmType.GrinCuckarood29, "cuckarood" },
-                { AlgorithmType.Eaglesong, "eaglesong" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
-                { AlgorithmType.Handshake, "hns" },
                 { AlgorithmType.KAWPOW, "kawpow" },
                 { AlgorithmType.Cuckaroo29BFC, "bfc" },
                 { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },

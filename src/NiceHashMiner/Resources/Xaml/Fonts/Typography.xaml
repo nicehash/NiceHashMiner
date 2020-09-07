@@ -10,6 +10,7 @@
     <FontFamily x:Key="Ubuntu-Medium">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Medium</FontFamily>
     <FontFamily x:Key="Ubuntu-Regular">pack://application:,,,/Resources/Fonts/Ubuntu/#Ubuntu-Regular</FontFamily>
     <FontFamily x:Key="FontAwesome">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Free Solid</FontFamily>
+    <FontFamily x:Key="FontAwesomeBrands">pack://application:,,,/Resources/Fonts/FontAwesome/#Font Awesome 5 Brands Regular</FontFamily>
     <!--#endregion Fonts-->
 
 
@@ -256,6 +257,10 @@
     </Style>
     <Style x:Key="FontsTypography.SmallRegular/Disabled" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
         <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallRegular2" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey2}" />
+        <Setter Property="TextBlock.LineHeight" Value="14" />
     </Style>
     <Style x:Key="FontsTypography.SmallRegular/Secondary" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
         <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />

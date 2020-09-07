@@ -94,7 +94,7 @@ namespace NHM.DeviceMonitoring
         private bool SetTdpADL(double percValue)
         {
             int min = 0, max = 0, defaultValue = 0;
-            int ok = AMD_ODN.nhm_amd_device_get_tdp_ranges(BusID, ref min, ref max, ref defaultValue);
+            int ok = AMD_ODN.nhm_amd_device_get_tdp_min_max_default(BusID, ref min, ref max, ref defaultValue);
             if (ok != 0)
             {
                 Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_ranges failed with error code {ok}", _delayedLogging);
@@ -136,7 +136,7 @@ namespace NHM.DeviceMonitoring
                     return -1;
                 }
                 int min = 0, max = 0, defaultValue = 0;
-                int ok2 = AMD_ODN.nhm_amd_device_get_tdp_ranges(BusID, ref min, ref max, ref defaultValue);
+                int ok2 = AMD_ODN.nhm_amd_device_get_tdp_min_max_default(BusID, ref min, ref max, ref defaultValue);
                 if (ok2 != 0)
                 {
                     Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_ranges failed with error code {ok}", _delayedLogging);

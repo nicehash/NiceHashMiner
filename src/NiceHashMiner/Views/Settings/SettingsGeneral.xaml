@@ -102,8 +102,8 @@
                             <Label Content="Language" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
                             <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                         </StackPanel>
-                        <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}"  SelectedIndex="{Binding TranslationsSettings.LanguageIndex, Mode=TwoWay}"
-                                  SelectionChanged="ComboBox_SelectionChanged"/>
+                    <ComboBox x:Name="LanguageComboBox" Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TranslationsSettings.LanguageOptions}"  SelectedIndex="{Binding TranslationsSettings.LanguageIndex, Mode=TwoWay}"
+                                  SelectionChanged="LanguageComboBox_SelectionChanged"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" ToolTip="{StaticResource currency}">
@@ -126,7 +126,7 @@
                         <Label Content="Theme" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding GUISettings.DisplayTheme, Mode=TwoWay}" SelectionChanged="ComboBox_SelectionChanged" />
+                <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding ThemeOptions}" SelectedItem="{Binding GUISettings.DisplayTheme, Mode=TwoWay}" SelectionChanged="ThemeComboBox_SelectionChanged" />
                 </StackPanel>
             </WrapPanel>
             <!--NHM and PLUGINS UPDATE-->
@@ -147,7 +147,7 @@
                         x:Name="CreateLogReportButton"
                         Style="{StaticResource BigButtonPrimary}"
                         Height="24"
-                        ToolTip="Click the button to create a zip file of your logs on your desktop."
+                        ToolTip="Click the button to create a zip file and upload it to the server."
                         Click="CreateLogReportButton_Click" />
         </WrapPanel>
     </StackPanel>

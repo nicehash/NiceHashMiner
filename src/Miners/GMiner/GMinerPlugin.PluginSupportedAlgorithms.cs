@@ -14,8 +14,8 @@ namespace GMinerPlugin
             DefaultFee = 2.0,
             AlgorithmFees = new Dictionary<AlgorithmType, double>
             {
-                { AlgorithmType.Cuckaroom, 3.0 },
                 { AlgorithmType.Cuckaroo29BFC, 3.0 },
+                { AlgorithmType.CuckaRooz29, 3.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -27,15 +27,11 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                         new SAS(AlgorithmType.GrinCuckarood29),
-                        new SAS(AlgorithmType.BeamV2),
-                        new SAS(AlgorithmType.Eaglesong),
-                        // 3%fee on dagger 2% fee on eaglesong
-                        new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.Eaglesong),
-                        new SAS(AlgorithmType.Cuckaroom),
                         new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.KAWPOW),
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.Cuckaroo29BFC),
                         new SAS(AlgorithmType.BeamV3),
+                        new SAS(AlgorithmType.CuckaRooz29),
                     }
                 },
                 {
@@ -43,8 +39,6 @@ namespace GMinerPlugin
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
-                        new SAS(AlgorithmType.BeamV2),
-                        new SAS(AlgorithmType.Eaglesong),
                         new SAS(AlgorithmType.Cuckaroo29BFC),
                     }
                 }
@@ -55,14 +49,11 @@ namespace GMinerPlugin
                 { AlgorithmType.GrinCuckatoo31, "grin31" },
                 { AlgorithmType.CuckooCycle, "cuckoo29" },
                 { AlgorithmType.GrinCuckarood29, "cuckarood29" },
-                { AlgorithmType.BeamV2, "beamhashII" },
-                { AlgorithmType.Eaglesong, "eaglesong" },
-                { AlgorithmType.Cuckaroom, "cuckaroom29" },
-                { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
                 { AlgorithmType.KAWPOW, "kawpow" },
                 { AlgorithmType.Cuckaroo29BFC, "bfc" },
                 { AlgorithmType.BeamV3, "beamhashIII" },
+                { AlgorithmType.CuckaRooz29, "cuckarooz29" },
             }
         };
     }

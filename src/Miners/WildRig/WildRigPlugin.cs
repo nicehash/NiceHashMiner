@@ -39,7 +39,7 @@ namespace WildRig
 
         public override string PluginUUID => "0a07d6a0-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 0);
+        public override Version Version => new Version(11, 1);
 
         public override string Name => "WildRig";
 
