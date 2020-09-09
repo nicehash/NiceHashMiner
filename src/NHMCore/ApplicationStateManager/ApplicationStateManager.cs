@@ -88,7 +88,7 @@ namespace NHMCore
             // change in memory and save changes to file
             CredentialsSettings.Instance.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
-            await MiningManager.ChangeUsername(GetUsername());
+            await MiningManager.ChangeUsername(CreateUsername(btc, RigID()));
         }
         #endregion
 
