@@ -402,8 +402,8 @@ If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcr110.dll" copy /Y "$
 If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\app\common\msvcr120.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\app\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\app\common\vcruntime140.dll"
 
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_monitoring_amd.dll" "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_monitoring_nvidia.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_monitoring_nvidia.dll" "$(SolutionDir)$(Configuration)\app\device_monitoring_nvidia.dll"</PostBuildEvent>
+If NOT exist "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_monitoring_x64\device_monitoring_amd.dll" "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\device_monitoring_nvidia.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_monitoring_x64\device_monitoring_nvidia.dll" "$(SolutionDir)$(Configuration)\app\device_monitoring_nvidia.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
