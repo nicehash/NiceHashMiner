@@ -4,6 +4,7 @@ using NHM.DeviceMonitoring.AMD;
 using NHM.DeviceMonitoring.NVIDIA;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,6 +14,32 @@ namespace NHM.DeviceMonitoring
     {
         public static bool DisableDeviceStatusMonitoring { get; set; } = false;
         public static bool DisableDevicePowerModeSettings { get; set; } = true;
+
+        static DeviceMonitorManager()
+        {
+            try
+            {
+                string customSettingsFile = Paths.InternalsPath("AMD_ODN_LOG.txt");
+                if (File.Exists(customSettingsFile))
+                {
+                    string read = File.ReadAllText(customSettingsFile);
+                    _amdDebugLogLevel = int.Parse(read);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("DeviceMonitorManager", $"Constructor {e.Message}");
+            }
+        }
+
+
+        private static int _amdDebugLogLevel = 0;
+        private static readonly AMD_ODN.log_cb _amdLog = new AMD_ODN.log_cb(LogAMD_ODN);
+        private static void LogAMD_ODN(string logStr)
+        {
+            Logger.Info("AMD_ODN", logStr);
+        }
+
         public static Task<List<DeviceMonitor>> GetDeviceMonitors(IEnumerable<BaseDevice> devices)
         {
             return Task.Run(() => {
@@ -28,12 +55,24 @@ namespace NHM.DeviceMonitoring
                 }
                 if (amds.Count > 0)
                 {
-                    if (0 == AMD_ODN.nhm_amd_init()) {
+                    AMD_ODN.nhm_amd_set_debug_log_level(_amdDebugLogLevel);
+                    AMD_ODN.nhm_amd_reg_log_cb(_amdLog);
+                    var amdInit = AMD_ODN.nhm_amd_init();
+                    if (0 == amdInit) {
                         foreach (var amd in amds) {
-                            if (0 == AMD_ODN.nhm_amd_has_adapter(amd.PCIeBusID)) {
+                            var hasRet = AMD_ODN.nhm_amd_has_adapter(amd.PCIeBusID);
+                            if (0 == hasRet) {
                                 ret.Add(new DeviceMonitorAMD(amd.UUID, amd.PCIeBusID));
                             }
+                            else
+                            {
+                                Logger.Info("DeviceMonitorManager", $"AMD nhm_amd_has_adapter {hasRet} for BusID {amd.PCIeBusID}");
+                            }
                         }
+                    } 
+                    else
+                    {
+                        Logger.Info("DeviceMonitorManager", $"AMD nhm_amd_init {amdInit}");
                     }
                 }
                 if (nvidias.Count > 0)

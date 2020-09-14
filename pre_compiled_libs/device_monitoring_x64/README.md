@@ -1,0 +1,2 @@
+device_monitoring_amd.dll
+commit e62e7ee886f83c6e90d64bd4860db86ff9a1bda7 
