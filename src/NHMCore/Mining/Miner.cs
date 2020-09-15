@@ -77,7 +77,7 @@ namespace NHMCore.Mining
         protected Miner(PluginContainer plugin, List<MiningPair> miningPairs, string groupKey)
         {
             _plugin = plugin;
-            _miner = _plugin.CreateMiner() as IMiner;
+            _miner = _plugin.CreateMiner();
 
             // just so we can set algorithms states
             _algos = new List<AlgorithmContainer>();
@@ -118,7 +118,6 @@ namespace NHMCore.Mining
             return _minerTag;
         }
 
-
         private async Task<ApiData> GetSummaryAsync()
         {
             var apiData = new ApiData();
@@ -138,17 +137,8 @@ namespace NHMCore.Mining
                 {
                     IsUpdatingApi = false;
                     _apiSemaphore.Release();
-                    foreach (var apiDev in apiData.AlgorithmSpeedsPerDevice)
-                    {
-                        foreach (var kvp in apiDev.Value)
-                        {
-                            if (kvp.speed < 0)
-                            {
-                                await StopTask();
-                                await StartMinerTask(new CancellationToken(), StratumService.Instance.SelectedServiceLocation, CredentialsSettings.Instance.BitcoinAddress);
-                            }
-                        }
-                    }
+                    var anyNegative = apiData.AlgorithmSpeedsPerDevice.Any(apiDev => apiDev.Value.Any(kvp => kvp.speed < 0));
+                    if (anyNegative) await StopAsync();
                 }
             }
 
