@@ -4002,6 +4002,12 @@
     "to start earning Bitcoins.": {
       "ru": "чтобы начать зарабатывать биткоины."
     },
+    "If you continue without adding your Wallet Address you will be mining in ": {
+      "ru": "РЕЖИМЕ ДЕМО и не заработаете за это биткоинов!"
+    },
+    "DEMO MINING": {
+      "ru": "ДЕМО МАЙНИНГ"
+    },
     "QR Code timeout. Please generate new one.": {
       "ru": "Срок действия QR-кода истек. Пожалуйста, сгенерируйте новый."
     },

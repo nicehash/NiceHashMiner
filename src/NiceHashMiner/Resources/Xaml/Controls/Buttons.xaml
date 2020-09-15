@@ -138,6 +138,23 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style TargetType="{x:Type Button}" x:Key="CancelDangerButton" BasedOn="{StaticResource BigButtonWhite}">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Width" Value="168"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="Background" Value="{DynamicResource RedDangerColorBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Effect" >
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.1"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
     <!--#endregion common-->
 
     <Style TargetType="{x:Type Button}" x:Key="ButtonPluginInstall" BasedOn="{StaticResource BigButtonPrimary}">
