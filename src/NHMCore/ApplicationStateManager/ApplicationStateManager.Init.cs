@@ -252,7 +252,8 @@ namespace NHMCore
                     AvailableNotifications.CreateMissingMinersInfo();
                 }
                 // fire up mining manager loop
-                MiningManager.StartLoops(ExitApplication.Token, GetUsername());
+                var username = CredentialValidators.ValidateBitcoinAddress(btc) ? CreateUsername(btc, RigID()) : DemoUser.BTC;
+                MiningManager.StartLoops(ExitApplication.Token, username);
 
                 // STEP
                 // VC_REDIST check

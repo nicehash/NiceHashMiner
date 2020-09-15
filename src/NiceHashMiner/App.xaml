@@ -40,7 +40,7 @@
             <Style TargetType="views:EulaWindowSecondShort" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <!--comment out if no login-->
             <Style TargetType="login:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
-            <Style TargetType="views:NHMDialogWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
+            <Style TargetType="views:DemoBTCNotice" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:SingleInstanceNotice" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="{x:Type views:MainWindow}" BasedOn="{StaticResource NHMMainWindowStyle}"/>
 
