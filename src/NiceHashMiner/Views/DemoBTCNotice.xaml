@@ -1,0 +1,145 @@
+﻿<nhb:BaseDialogWindow x:Class="NiceHashMiner.Views.DemoBTCNotice"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:nhb="clr-namespace:NiceHashMiner.Views.Common.NHBase"
+        xmlns:local="clr-namespace:NiceHashMiner.Views"
+        mc:Ignorable="d"
+        Title="DemoBTCNotice"
+        Height="280"
+        Width="392"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Icon="../Resources/logo.ico">
+    <Window.Resources>
+        <Style x:Key="local.ExitTextBlock" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
+            <Setter Property="Text" Value="&#xF00D;" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryColorBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="local.ExitTextButton" TargetType="Button" BasedOn="{StaticResource ButtonTextBlock}">
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource local.ExitTextBlock}" />
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="local.WalletHeader" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.24" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+        </Style>
+
+
+        <Style x:Key="local.WalletSubHeader" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+        </Style>
+    </Window.Resources>
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0"
+                Style="{StaticResource local.ExitTextButton}"
+                Content="&#xF00D;"
+                Margin="0,20,20,0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Visibility="Hidden"
+                Click="CloseDialog"/>
+        <TextBlock Grid.Row="1"
+                   Style="{StaticResource local.WalletHeader}"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Left"
+                   Margin="24,0,0,0"
+                   Text="Enter Bitcoin Address Manually"/>
+        <TextBlock Grid.Row="2"
+                   Style="{StaticResource local.WalletSubHeader}"
+                   TextWrapping="WrapWithOverflow"
+                   TextAlignment="Left"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Left"
+                   Margin="25,8,6,0">
+            <Run Text="Add your Wallet Address " FontWeight="Bold"/>
+            <Run Text="to start earning Bitcoins." />
+            <Run Text="If you continue without adding your Wallet Address you will be mining in "/>
+            <Run Text="DEMO MODE and will not earn Bitcoins!" FontWeight="Bold"/>
+        </TextBlock>
+        <TextBlock Grid.Row="3"
+                   Style="{StaticResource local.WalletSubHeader}"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Left"
+                   Margin="25,8,0,0"
+                   Text="Wallet Address"/>
+        <TextBox Grid.Row="4"
+                 Style="{StaticResource inputBox}"
+                 x:Name="textBoxBTCAddress"
+                 Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
+                 TextChanged="TextBoxBitcoinAddress_TextChanged"
+                 KeyUp="TextBoxBitcoinAddress_KeyUp"
+                 LostFocus="TextBoxBitcoinAddress_LostFocus"
+                 Margin="0,8,0,0" />
+        <TextBlock Grid.Row="5"
+                   Margin="25,8,0,0">
+            <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                How to create a Wallet Address?
+            </Hyperlink>
+        </TextBlock>
+
+        <WrapPanel Grid.Row="6" Margin="25,24,24,24" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button
+                    x:Name="CancelButton"
+                    Style="{DynamicResource CancelDangerButton}"
+                    Visibility="{Binding CancelVisible}"
+                    FontSize="10"
+                    Width="136"
+                    Height="24"
+                    Content="DEMO MINING"
+                    ToolTip="Demo mining "
+                    Click="DemoMiningButtonClicked" />
+            <Button
+                    x:Name="SaveButton"
+                    Style="{DynamicResource OKButton}"
+                    Visibility="{Binding OkVisible}"
+                    FontSize="10"
+                    Width="136"
+                    Height="24"
+                    Content="SAVE"
+                    Click="SaveButtonClicked"
+                    Margin="25,0,0,0"/>
+        </WrapPanel>
+
+    </Grid>
+</nhb:BaseDialogWindow>

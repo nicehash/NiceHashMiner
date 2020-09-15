@@ -220,6 +220,11 @@ namespace NiceHashMiner
                 var nek = login.ShowDialog();
             }
 #endif
+            if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
+            {
+                var btcNotice = new DemoBTCNotice { };
+                btcNotice.ShowDialog();
+            }
 
             var main = new MainWindow();
             main.Show();

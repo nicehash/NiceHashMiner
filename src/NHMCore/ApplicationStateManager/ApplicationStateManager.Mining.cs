@@ -16,14 +16,7 @@ namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
-        public static string GetUsername()
-        {
-            if (MiningState.Instance.IsDemoMining || !CredentialsSettings.Instance.IsBitcoinAddressValid) {
-                return DemoUser.BTC;
-            }
-            var btc = CredentialsSettings.Instance.BitcoinAddress.Trim();
-            return $"{btc}${RigID()}";
-        }
+        public static string CreateUsername(string btc, string rigID) => $"{btc}${rigID}";
 
         private static ConcurrentQueue<(ComputeDevice, DeviceState)> _scheduleUpdateDevicesToMineStates { get; set; } = new ConcurrentQueue<(ComputeDevice, DeviceState)>();
 
