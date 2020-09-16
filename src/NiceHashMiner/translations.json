@@ -2080,6 +2080,9 @@
     "RPM": {
       "ru": "об/мин"
     },
+    "Fan Speed": {
+      "ru": "Скорость вентилятора"
+    },
     "Rate:": {
       "bg": "Доход:",
       "es": "Ratio:",
@@ -4007,6 +4010,9 @@
     },
     "DEMO MINING": {
       "ru": "ДЕМО МАЙНИНГ"
+    },
+    "DEMO MODE and will not earn Bitcoins!": {
+      "ru": "РЕЖИМЕ ДЕМО и не заработаете за это биткоинов!"
     },
     "QR Code timeout. Please generate new one.": {
       "ru": "Срок действия QR-кода истек. Пожалуйста, сгенерируйте новый."

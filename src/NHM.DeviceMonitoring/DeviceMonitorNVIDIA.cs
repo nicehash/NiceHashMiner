@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, ILoad, IPowerUsage, ITemp, ITDP
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP
     {
         private object _lock = new object();
 
@@ -125,6 +125,20 @@ namespace NHM.DeviceMonitoring
                 });
                 return execRet;
             }
+        }
+
+        (int status, int percentage) IGetFanSpeedPercentage.GetFanSpeedPercentage()
+        {
+            int execRet = ExecNvmlProcedure(-1, nameof(IGetFanSpeedPercentage.GetFanSpeedPercentage), () => {
+                var nvmlDevice = GetNvmlDevice();
+                uint percentage = 0;
+                var ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(nvmlDevice, ref percentage);
+                if (ret != nvmlReturn.Success)
+                    throw new NvmlException($"nvmlDeviceGetFanSpeed", ret);
+                return (int)percentage;
+            });
+            if (execRet < 0) return (-1, execRet);
+            return (0, execRet);
         }
 
         // TODO NVAPI replace with NVML if possible

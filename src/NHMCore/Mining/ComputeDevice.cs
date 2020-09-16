@@ -186,6 +186,18 @@ namespace NHMCore.Mining
         {
             get
             {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IGetFanSpeedPercentage get)
+                {
+                    var (ok, percentage) = get.GetFanSpeedPercentage();
+                    if (ok == 0) return percentage;
+                }
+                return -1;
+            }
+        }
+        public int FanSpeedRPM
+        {
+            get
+            {
                 if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IFanSpeedRPM get) return get.FanSpeedRPM;
                 return -1;
             }
@@ -216,15 +228,6 @@ namespace NHMCore.Mining
             if (!GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP set)
             {
                 return set.SetTDPSimple(level);
-            }
-            return false;
-        }
-
-        public bool SetFanSpeed(int percentage)
-        {
-            if (!GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is IFanSpeedRPM set)
-            {
-                return set.SetFanSpeedPercentage(percentage);
             }
             return false;
         }
