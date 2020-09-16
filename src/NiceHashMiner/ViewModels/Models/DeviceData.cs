@@ -233,7 +233,7 @@ namespace NiceHashMiner.ViewModels.Models
             get
             {
                 if (_fanSpeed < 0) return MISSING_INFO;
-                return $"{_fanSpeed}";
+                return $"{_fanSpeed}%";
             }
         }
 

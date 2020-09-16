@@ -92,7 +92,7 @@
                                Text="{Binding Load, Converter={StaticResource LoadToText}}"/>
                 </StackPanel>
                 <StackPanel MinWidth="30">
-                    <TextBlock Style="{StaticResource StatusColumnTitle}">RPM</TextBlock>
+                    <TextBlock Style="{StaticResource StatusColumnTitle}">Fan Speed</TextBlock>
                     <TextBlock Style="{StaticResource StatusColumnValue}"
                                Margin="0,4,0,0"
                                Text="{Binding FanSpeed}" /> 

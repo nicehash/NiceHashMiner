@@ -5,7 +5,7 @@ using System;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, ILoad, IPowerUsage, ITemp, ITDP
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP
     {
         public int BusID { get; private set; }
 
@@ -34,6 +34,14 @@ namespace NHM.DeviceMonitoring
             }
         }
 
+        (int status, int percentage) IGetFanSpeedPercentage.GetFanSpeedPercentage()
+        {
+            int percentage = 0;
+            int ok = AMD_ODN.nhm_amd_device_get_fan_speed_percentage(BusID, ref percentage);
+            if (ok != 0) Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
+            return (ok, percentage);
+        }
+
         public int FanSpeedRPM
         {
             get
@@ -44,14 +52,6 @@ namespace NHM.DeviceMonitoring
                 Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
                 return -1;
             }
-        }
-
-        public bool SetFanSpeedPercentage(int percentage)
-        {
-            int ok = AMD_ODN.nhm_amd_device_set_fan_speed_percentage(BusID, percentage);
-            if (ok == 0) return true;
-            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_fan_speed_percentage failed with error code {ok}", _delayedLogging);
-            return false;
         }
 
         public float Temp

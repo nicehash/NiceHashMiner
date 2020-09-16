@@ -360,7 +360,7 @@ namespace NHMCore.Nhmws
 
                     // Hardware monitoring
                     array.Add((int)Math.Round(device.Temp));
-                    array.Add(device.FanSpeed);
+                    array.Add(device.FanSpeedRPM);
                     array.Add((int)Math.Round(device.PowerUsage));
 
                     // Power mode
@@ -368,6 +368,9 @@ namespace NHMCore.Nhmws
 
                     // Intensity mode
                     array.Add(0);
+
+                    // fan speed percentage
+                    array.Add(device.FanSpeed);
 
                     deviceList.Add(array);
                 }
