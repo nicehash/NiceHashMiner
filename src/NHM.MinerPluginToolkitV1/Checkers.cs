@@ -69,6 +69,9 @@ namespace NHM.MinerPluginToolkitV1
 
             // >= 418.96
             CUDA_10_1_105,
+
+            // >= 451.82
+            CUDA_11_0_3_Update1,
         }
 
         private static readonly IReadOnlyDictionary<CudaVersion, Version> _cudaVersions = new Dictionary<CudaVersion, Version>
@@ -83,6 +86,7 @@ namespace NHM.MinerPluginToolkitV1
             { CudaVersion.CUDA_9_2_148, new Version(398,26) },
             { CudaVersion.CUDA_10_0_130, new Version(411,31) },
             { CudaVersion.CUDA_10_1_105, new Version(418,96) },
+            { CudaVersion.CUDA_11_0_3_Update1, new Version(451,82) },
         };
 
         public static bool IsCudaCompatibleDriver(CudaVersion cudaVersion, Version version)
