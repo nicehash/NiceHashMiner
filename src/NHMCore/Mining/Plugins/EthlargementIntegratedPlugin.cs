@@ -32,12 +32,26 @@ namespace NHMCore.Mining.Plugins
 
         public string Author => "info@nicehash.com";
 
+        private bool _init = false;
+
+        public void InitAndCheckSupportedDevices(IEnumerable<BaseDevice> devices)
+        {
+            if (_init) return;
+            GetSupportedAlgorithms(devices);
+            InitInternals();
+            _init = true;
+        }
+
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            foreach (var dev in devices)
+            if (!_init)
             {
-                _registeredSupportedDevices[dev.UUID] = dev.Name;
+                foreach (var dev in devices)
+                {
+                    _registeredSupportedDevices[dev.UUID] = dev.Name;
+                }
             }
+
             // return empty
             return new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
         }
@@ -249,6 +263,7 @@ namespace NHMCore.Mining.Plugins
 
         public virtual void InitInternals()
         {
+            if (_init) return;
             // set ethlargement path
             _ethlargementBinPath = EthlargementBinPath();
             _ethlargementCwdPath = EthlargementCwdPath();
@@ -304,7 +319,11 @@ namespace NHMCore.Mining.Plugins
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles("", new List<string> { EthlargementBinPath() });
+            if (SystemContainsSupportedDevices)
+            {
+                return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles("", new List<string> { EthlargementBinPath() });
+            }
+            return Enumerable.Empty<string>();
         }
 
         #region IMinerBinsSource

@@ -162,6 +162,7 @@ namespace NHMCore
                 #endregion Device Detection
 
                 // TODO ADD STEP AND MESSAGE
+                EthlargementIntegratedPlugin.Instance.InitAndCheckSupportedDevices(AvailableDevices.Devices.Select(dev => dev.BaseDevice));
                 await MinerPluginsManager.CheckAndSwapInstalledExternalPlugins();
                 MinerPluginsManager.CheckAndDeleteUnsupportedPlugins();
 
