@@ -23,11 +23,11 @@ namespace TRex
             // https://github.com/trexminer/T-Rex/releases 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.16.2",
+                BinVersion = "0.17.2",
                 ExePath = new List<string> { "t-rex.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/trexminer/T-Rex/releases/download/0.16.2/t-rex-0.16.2-win-cuda10.0.zip", // original
+                    "https://github.com/trexminer/T-Rex/releases/download/0.17.2/t-rex-0.17.2-win-cuda11.0.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace TRex
 
         public override string PluginUUID => "03f80500-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 5);
+        public override Version Version => new Version(11, 6);
 
         public override string Name => "TRex";
 
@@ -47,7 +47,9 @@ namespace TRex
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            var isDriverSupported = Checkers.IsCudaCompatibleDriver(Checkers.CudaVersion.CUDA_10_0_130, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            //var isDriverSupported = Checkers.IsCudaCompatibleDriver(Checkers.CudaVersion.CUDA_11_0_3_Update1, CUDADevice.INSTALLED_NVIDIA_DRIVERS); // TODO restore after major version 15
+            var CUDA11 = new Version(451, 82);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= CUDA11;  // TODO <= CUDA 11 is not inside the toolkit before miner plugins major version 15
             var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 3 && isDriverSupported).Cast<CUDADevice>();
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
