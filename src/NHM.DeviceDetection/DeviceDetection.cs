@@ -93,7 +93,7 @@ namespace NHM.DeviceDetection
                 var cudaDevices = result.CudaDevices.Select(dev => CUDADetector.Transform(dev)).ToList();
                 // filter out no supported SM versions
                 // SM 3.0+ 
-                DetectionResult.CUDADevices = cudaDevices.Where(cudaDev => cudaDev.SM_major >= 3).ToList();
+                DetectionResult.CUDADevices = cudaDevices.Where(cudaDev => cudaDev.SM_major >= 3).OrderBy(cudaDev => cudaDev.PCIeBusID).ToList();
                 unsuported = cudaDevices.Where(cudaDev => cudaDev.SM_major < 3).ToList();
                 // NVIDIA drivers
                 var nvmlLoaded = result?.NvmlLoaded ?? -1;
@@ -130,7 +130,8 @@ namespace NHM.DeviceDetection
 
         private static async Task DetectAMDDevices()
         {
-            DetectionResult.AMDDevices = await AMD.AMDDetector.TryQueryAMDDevicesAsync(DetectionResult.AvailableVideoControllers.ToList());
+            var amdDevices = await AMD.AMDDetector.TryQueryAMDDevicesAsync(DetectionResult.AvailableVideoControllers.ToList());
+            DetectionResult.AMDDevices = amdDevices.OrderBy(amdDev => amdDev.PCIeBusID).ToList();
             if (DetectionResult.AMDDevices == null || DetectionResult.AMDDevices.Count == 0)
             {
                 Logger.Info(Tag, "DetectAMDDevices ZERO Found.");
