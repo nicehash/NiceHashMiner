@@ -492,10 +492,8 @@ namespace NHMCore.Mining
                 await PauseAllMiners();
                 return;
             }
-            // TODO if empty stop all miners
             if (_miningDevices.Count == 0)
             {
-                Logger.Error(Tag, "_miningDevices.count == 0");
                 return;
             }
             if (_miningLocation == null)
