@@ -42,7 +42,7 @@ namespace TTMiner
 
         public override string PluginUUID => "074d4a80-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 2);
+        public override Version Version => new Version(14, 0);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 
@@ -57,9 +57,11 @@ namespace TTMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            // Require 398.26
-            var minDrivers = new Version(398, 26);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+#warning TEMP disable NVIDIA driver check
+            //// Require 398.26
+            //var minDrivers = new Version(398, 26);
+            //if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+
 
             var cudaGpus = devices
                 .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 5)

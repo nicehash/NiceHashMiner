@@ -43,7 +43,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 4);
+        public override Version Version => new Version(14, 0);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -99,8 +99,10 @@ namespace NBMiner
 
         private static bool IsSupportedNvidiaDevice(BaseDevice dev)
         {
-            var minDrivers = new Version(377, 0);
-            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+#warning TEMP disable NVIDIA driver check
+            //var minDrivers = new Version(377, 0);
+            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+            var isDriverSupported = true;
             var device = dev as CUDADevice;
             var isSupported = isSupportedVersion(device.SM_major, device.SM_minor);
             return isDriverSupported && isSupported;

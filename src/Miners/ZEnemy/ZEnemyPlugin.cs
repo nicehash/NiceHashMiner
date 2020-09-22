@@ -40,7 +40,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(11, 3);
+        public override Version Version => new Version(14, 0);
 
         public override string Name => "ZEnemy";
 
@@ -52,8 +52,9 @@ namespace ZEnemy
         {
             var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 6).Cast<CUDADevice>();
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var minDrivers = new Version(411, 0);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+#warning TEMP disable NVIDIA driver check
+            //var minDrivers = new Version(411, 0);
+            //if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             foreach (var gpu in cudaGpus)
             {

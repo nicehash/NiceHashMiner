@@ -36,7 +36,7 @@ namespace CCMinerTpruvot
 
         public override string PluginUUID => "95b390a0-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 1);
+        public override Version Version => new Version(14, 0);
         public override string Name => "CCMinerTpruvot";
 
         public override string Author => "info@nicehash.com";
@@ -44,9 +44,10 @@ namespace CCMinerTpruvot
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var reqCudaVer = Checkers.CudaVersion.CUDA_10_0_130;
-            var isCompatible = Checkers.IsCudaCompatibleDriver(reqCudaVer, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
-            if (!isCompatible) return supported; // return emtpy
+#warning TEMP disable NVIDIA driver check
+            //var reqCudaVer = Checkers.CudaVersion.CUDA_10_0_130;
+            //var isCompatible = Checkers.IsCudaCompatibleDriver(reqCudaVer, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            //if (!isCompatible) return supported; // return emtpy
 
             var cudaGpus = devices
                 .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3)

@@ -39,7 +39,7 @@ namespace MiniZ
         }
         public override string PluginUUID => "eda6abd0-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(13, 3);
+        public override Version Version => new Version(14, 0);
 
         public override string Name => "MiniZ";
 
@@ -56,9 +56,10 @@ namespace MiniZ
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
+#warning TEMP disable NVIDIA driver check
             // Require 411.31 - CUDA 10.0
-            var minDrivers = new Version(411, 31);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+            //var minDrivers = new Version(411, 31);
+            //if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
                 .Where(dev => dev is CUDADevice)

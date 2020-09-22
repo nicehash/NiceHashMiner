@@ -41,7 +41,7 @@ namespace ClaymoreDual14
 
         public override string PluginUUID => "c9abdb10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 1);
+        public override Version Version => new Version(14, 0);
 
         public override string Name => "ClaymoreDual";
 
@@ -72,7 +72,9 @@ namespace ClaymoreDual14
             }
 
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(411, 31);
+#warning TEMP disable NVIDIA driver check
+            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(411, 31);
+            var isDriverSupported = true;
             var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
 
             foreach (var gpu in supportedGpus)

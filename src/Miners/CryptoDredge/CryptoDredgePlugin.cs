@@ -34,7 +34,7 @@ namespace CryptoDredge
             };
         }
 
-        public override Version Version => new Version(11, 1);
+        public override Version Version => new Version(14, 0);
         public override string Name => "CryptoDredge";
 
         public override string Author => "info@nicehash.com";
@@ -44,9 +44,9 @@ namespace CryptoDredge
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-
-            var isDriverCompatible = Checkers.IsCudaCompatibleDriver(Checkers.CudaVersion.CUDA_10_1_105, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
-            if (!isDriverCompatible) return supported;
+#warning TEMP disable NVIDIA driver check
+            //var isDriverCompatible = Checkers.IsCudaCompatibleDriver(Checkers.CudaVersion.CUDA_10_1_105, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            //if (!isDriverCompatible) return supported;
 
             var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
 

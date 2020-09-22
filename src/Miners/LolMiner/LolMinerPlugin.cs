@@ -51,10 +51,12 @@ namespace LolMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
+#warning TEMP disable NVIDIA driver check
             // NVIDIA backend is NOT CUDA but OpenCL!!!!
             //CUDA 9.0+: minimum drivers 384.xx
-            var minDrivers = new Version(384, 0);
-            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+            //var minDrivers = new Version(384, 0);
+            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+            var isDriverSupported = true;
 
             var gpus = devices
                 .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported))

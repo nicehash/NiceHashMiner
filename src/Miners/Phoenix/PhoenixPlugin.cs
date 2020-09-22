@@ -42,7 +42,7 @@ namespace Phoenix
 
         public override string PluginUUID => "fa369d10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 4);
+        public override Version Version => new Version(14, 0);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -70,7 +70,9 @@ namespace Phoenix
             }
 
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(377, 0);
+#warning TEMP disable NVIDIA driver check
+            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(377, 0);
+            var isDriverSupported = true;
             var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
 
             foreach (var gpu in supportedGpus)
