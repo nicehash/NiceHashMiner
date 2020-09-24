@@ -125,6 +125,7 @@
       <DependentUpon>ComputeDeviceItemHeader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceStatusVisibilityConverter.cs" />
+    <Compile Include="Views\Benchmark\CpuGpuGroupVisibilityConverter.cs" />
     <Compile Include="Views\Common\CustomDialog.xaml.cs">
       <DependentUpon>CustomDialog.xaml</DependentUpon>
     </Compile>
