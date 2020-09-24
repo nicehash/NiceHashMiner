@@ -61,7 +61,7 @@
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         </Style>
     </Window.Resources>
-    <Grid Background="White">
+    <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
