@@ -164,31 +164,22 @@
         <Setter Property="MinWidth" Value="480"/>
         <Setter Property="MinWidth" Value="480"/>
         <Setter Property="WindowStyle" Value="None"/>
-        <Setter Property="AllowsTransparency" Value="True"/>
-        <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+        <Setter Property="AllowsTransparency" Value="False"/>
+        <Setter Property="RenderOptions.BitmapScalingMode" Value="NearestNeighbor"/>
         <Setter Property="Title" Value="{Binding Title}"/>
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
                 <WindowChrome GlassFrameThickness="1" 
                               ResizeBorderThickness="4"
-                              CaptionHeight="0">
-                </WindowChrome>
+                              CaptionHeight="0"/>
             </Setter.Value>
         </Setter>
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:NHMMainWindow}">
-                    <Grid Background="Transparent" x:Name="WindowRoot">
-                        <!--round window-->
-                        <Border Background="{DynamicResource BackgroundColor}" CornerRadius="5" BorderThickness="0" BorderBrush="Transparent" />
-                        <Grid x:Name="LayoutRoot"
-                              Panel.ZIndex="0"
-                              Background="{TemplateBinding Background}" Margin="2">
-                            <!--SHADOWS HERE DEGRADE PERFORMANCE. IF WE ENABLE THEM BACK SET MARGIN ON GRID TO 2-->
-                            <!--<Grid.Effect>
-                                <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.1"/>
-                            </Grid.Effect>-->
+                    <Grid Background="{DynamicResource BackgroundColor}" x:Name="WindowRoot">
+                        <Grid x:Name="LayoutRoot" Panel.ZIndex="0" Background="{TemplateBinding Background}" > 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="60"/>
                                 <RowDefinition Height="*"/>
