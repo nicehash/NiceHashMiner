@@ -84,11 +84,6 @@
                         <Setter Property="Background" Value="{ DynamicResource BackgroundColor }" />
                         <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
                         <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
-                        <Setter Property="BitmapEffect" >
-                            <Setter.Value>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
-                            </Setter.Value>
-                        </Setter>
                     </MultiTrigger.Setters>
                 </MultiTrigger>
                 <!--Hover-->
@@ -101,68 +96,13 @@
                         <Setter Property="Background" Value="{ DynamicResource PrimaryColorBrush }" />
                         <Setter Property="BorderBrush" Value="{ DynamicResource PrimaryColorBrush }" />
                         <Setter Property="Foreground" Value="#FFFFFF" />
-                        <Setter Property="BitmapEffect" >
-                            <Setter.Value>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="1" Opacity="0.2" />
-                            </Setter.Value>
-                        </Setter>
                     </MultiTrigger.Setters>
                 </MultiTrigger>
-                <!--Selected-->
-                <!--
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsChecked" Value="True" />
-                        <Condition Property="IsMouseOver" Value="False" />
-                    </MultiTrigger.Conditions>
-                    <MultiTrigger.Setters>
-                        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
-                        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
-                        <Setter Property="BitmapEffect" >
-                            <Setter.Value>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
-                            </Setter.Value>
-                        </Setter>
-                    </MultiTrigger.Setters>
-                </MultiTrigger>
-                -->
-                <!--Selected hover-->
-                <!--
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsChecked" Value="True" />
-                        <Condition Property="IsMouseOver" Value="True" />
-                    </MultiTrigger.Conditions>
-                    <MultiTrigger.Setters>
-                        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
-                        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
-                        <Setter Property="BitmapEffect" >
-                            <Setter.Value>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
-                            </Setter.Value>
-                        </Setter>
-                    </MultiTrigger.Setters>
-                </MultiTrigger>-->
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <UserControl.Triggers>
-        <!--start animation on load-->
-        <EventTrigger RoutedEvent="UserControl.Loaded">
-            <BeginStoryboard>
-                <Storyboard>
-                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
-                    </ObjectAnimationUsingKeyFrames>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </UserControl.Triggers>
     <Grid MinHeight="50" MinWidth="220">
         <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
-            </Border.Effect>
             <Border.Style>
                 <Style TargetType="Border">
                     <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
@@ -208,15 +148,6 @@
                        Foreground="{Binding Status, Converter={StaticResource AlgorithmItemStatusStyleConverter}}"
                        Text="{Binding Status, Converter={StaticResource AlgorithmItemStatusTextConverter}}"
                        />
-                <Path Style="{StaticResource SpinCirclePath}"
-                      Visibility="{Binding Status, Converter={StaticResource AlgorithmItemStatusVisibilityConverter}}"
-                      Margin="4,0,0,0"
-                      x:Name="spinCirclePath"
-                      Width="20"
-                      Height="20"
-                      Stretch="Fill"
-                      HorizontalAlignment="Right"
-                      VerticalAlignment="Stretch"/>
             </WrapPanel>
             <WrapPanel Grid.Row="0" Grid.Column="5"
                        HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" x:Name="SettingsPanel"

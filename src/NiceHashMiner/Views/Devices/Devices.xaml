@@ -11,17 +11,6 @@
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="UserControl.Loaded">
-            <BeginStoryboard>
-                <Storyboard>
-                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
-                    </ObjectAnimationUsingKeyFrames>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </UserControl.Triggers>
     <UserControl.Resources>
         <Style TargetType="TextBlock" x:Key="local.InfoIcon">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
@@ -158,12 +147,6 @@
                     <!--connecting-->
                     <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal" Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverterFalse}}">
                         <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="Connecting" />
-                        <Path Style="{StaticResource SpinCirclePath}"
-                              x:Name="spinCirclePath"
-                              Width="20"
-                              Height="20"
-                              Stretch="Fill"
-                              />
                     </WrapPanel>
                     
                     <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>

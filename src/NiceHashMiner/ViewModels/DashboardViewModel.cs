@@ -65,14 +65,6 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        public bool StartStoryboard
-        {
-            get
-            {
-                return _isMining || _isBenchmarking;
-            }
-        }
-
         public Visibility CompleteBTCVisibility { get; private set; } = Visibility.Visible;
 
         private bool _isRunning = false;
@@ -91,7 +83,6 @@ namespace NiceHashMiner.ViewModels
             OnPropertyChanged(nameof(StatusText));
             OnPropertyChanged(nameof(StatusToolTip));
             OnPropertyChanged(nameof(ShowProgress));
-            OnPropertyChanged(nameof(StartStoryboard));
 
             //if (MiningState.Instance.IsNotBenchmarkingOrMining)
             //{
@@ -116,7 +107,6 @@ namespace NiceHashMiner.ViewModels
             OnPropertyChanged(nameof(StatusText));
             OnPropertyChanged(nameof(StatusToolTip));
             OnPropertyChanged(nameof(ShowProgress));
-            OnPropertyChanged(nameof(StartStoryboard));
         }
 
         private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

@@ -127,23 +127,9 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="UserControl.Loaded">
-            <BeginStoryboard>
-                <Storyboard>
-                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
-                    </ObjectAnimationUsingKeyFrames>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </UserControl.Triggers>
     <Grid Background="Transparent" Width="Auto" Height="Auto" >
 
         <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
-            </Border.Effect>
             <Border.Style>
                 <Style TargetType="Border">
                     <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
@@ -221,13 +207,6 @@
                               Visibility="{Binding Plugin.Installed, Converter={StaticResource PluginItemVisibilityConverter}}"
                               Margin="0,0,16,0" />-->
                     <StackPanel x:Name="swapStackPanel" Margin="0,0,16,0" Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverter}}">
-                        <Path Style="{StaticResource SpinCirclePath}"
-                              Visibility="{Binding SpinningCircleVisibility}"
-                              x:Name="spinCirclePath"
-                              Width="20"
-                              Height="20"
-                              Stretch="Fill"
-                              />
                         <ToggleButton Style="{StaticResource MenuDropdownButton}"
                                   Visibility="{Binding ActionsButtonVisibility}"
                                   Click="Button_Click">
@@ -236,11 +215,7 @@
                                     <ContextMenu.Template>
                                         <ControlTemplate>
                                             <Grid x:Name="pluginActionsGrid">
-                                                <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
-                                                    <Border.Effect>
-                                                        <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
-                                                    </Border.Effect>
-                                                </Border>
+                                                <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
                                                 <StackPanel>
                                                     <Button Padding="16,7,16,7" Style="{StaticResource local.PluginContextMenuButton}" Content="Show Internals" Click="Button_Click_ShowInternals" />
                                                     <Separator Background="{DynamicResource BorderColor}"/>

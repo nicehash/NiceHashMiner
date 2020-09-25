@@ -19,7 +19,7 @@
         MinHeight="500" MinWidth="540"
         ResizeMode="CanResize"
         WindowStyle="None"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         Background="Transparent"
         Loaded="MainWindow_OnLoaded"
         Closing="MainWindow_OnClosing"

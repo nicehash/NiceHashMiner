@@ -9,7 +9,7 @@
         Height="475" Width="600"
         ResizeMode="NoResize"
         WindowStyle="None"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
         Topmost="True" >

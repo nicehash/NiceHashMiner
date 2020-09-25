@@ -11,7 +11,7 @@
         Height="405" Width="500"
         ResizeMode="NoResize"
         WindowStyle="None"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         Background="Transparent"
         Icon="../Resources/logo.ico" 
         Topmost="True"

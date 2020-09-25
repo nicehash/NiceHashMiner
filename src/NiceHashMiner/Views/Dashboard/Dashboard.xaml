@@ -12,17 +12,6 @@
     <UserControl.DataContext>
         <viewModels:MainVM />
     </UserControl.DataContext>
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="UserControl.Loaded">
-            <BeginStoryboard>
-                <Storyboard>
-                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="spinCirclePath" Storyboard.TargetProperty="Tag">
-                        <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="True"/>
-                    </ObjectAnimationUsingKeyFrames>
-                </Storyboard>
-            </BeginStoryboard>
-        </EventTrigger>
-    </UserControl.Triggers>
     <UserControl.Resources>
 
         <Style TargetType="Button" x:Key="local.CompleteCredentialsButton" >
@@ -135,30 +124,7 @@
             <Setter Property= "Foreground" Value="{StaticResource Gray2ColorBrush}"/>
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
-
-        <Style x:Key="local.statusStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource BaseUbuntuTextBlockBold}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Dashboard.StartStoryboard}" Value="True" >
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard x:Name="miningStoryboard"> 
-                            <Storyboard>
-                                <ColorAnimation 
-                                    AutoReverse="True" 
-                                    Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
-                                    From="{StaticResource Gray1Color}"
-                                    To="{StaticResource PrimaryColor}"
-                                    RepeatBehavior="Forever"
-                                    Duration="0:0:5"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="miningStoryboard" />
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
+        
         <!--#endregion Dashboard styles -->
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}" Height="Auto" Width="Auto" Margin="40,0,40,0">
@@ -181,12 +147,9 @@
                               VerticalAlignment="Center" HorizontalAlignment="Center"
                               x:Name="StartStopToggleButton"
                               Click="ToggleButtonStartStop_Click">
-                    <ToggleButton.Effect>
-                        <DropShadowEffect BlurRadius="50" ShadowDepth="20" Direction="-75" Opacity="0.1"/>
-                    </ToggleButton.Effect>
                 </ToggleButton>
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,24,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Style="{StaticResource local.statusStyle}"
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                                FontSize="14"
                                Foreground="{StaticResource Gray1ColorBrush}"
                                TextAlignment="Center"
@@ -204,35 +167,29 @@
                     Text="Complete your mining setup"/>
                 <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
                     <Button Style="{StaticResource local.CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Wallet Address" Click="EnterBTCWallet_Button_Click" />
-
-                    <!--<Button>Name Your Worker</Button>
-                        <Button>dsfdf</Button>-->
                 </WrapPanel>
             </StackPanel>
         </Grid>
         
         <Grid Grid.Row="2">
             <!--content border-->
-            <Border Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="5" />
+            <Border Background="Transparent" BorderBrush="Transparent" BorderThickness="2" CornerRadius="5" />
             <Grid>
-                <Grid.Effect>
-                    <DropShadowEffect BlurRadius="50" ShadowDepth="5" Direction="-90" Opacity="0.1"/>
-                </Grid.Effect>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1" />
+                    <RowDefinition Height="2" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="1" />
+                    <RowDefinition Height="2" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="2" />
                     <ColumnDefinition Width="96*" />
-                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="2" />
                     <ColumnDefinition Width="96*" />
-                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="2" />
                     <ColumnDefinition Width="199*" />
-                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="2" />
                     <ColumnDefinition Width="199*" />
-                    <ColumnDefinition Width="1" />
+                    <ColumnDefinition Width="2" />
                     <!--<ColumnDefinition Width="199*" />
                     <ColumnDefinition Width="1" />-->
                 </Grid.ColumnDefinitions>
@@ -281,12 +238,6 @@
                                Margin="24,0,0,0"
                                Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverterFalse}}">
                         <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="0,0,4,0" Text="Connecting" />
-                        <Path Style="{StaticResource SpinCirclePath}"
-                              x:Name="spinCirclePath"
-                              Width="20"
-                              Height="20"
-                              Stretch="Fill"
-                              />
                     </WrapPanel>
                     <TextBlock Style="{StaticResource local.StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
                 </StackPanel>

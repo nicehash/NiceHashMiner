@@ -12,7 +12,7 @@
       Topmost="True"
       ResizeMode="NoResize"
       WindowStyle="None"
-      AllowsTransparency="True"
+      AllowsTransparency="False"
       Background="{DynamicResource BackgroundColor}">
     <nhb:BaseDialogWindow.Resources>
         <Style x:Key="local.TextBlockBase" TargetType="TextBlock">

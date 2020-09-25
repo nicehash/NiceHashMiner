@@ -11,6 +11,7 @@
              d:DataContext="{d:DesignInstance Type=viewModels:MainVM}">
     <UserControl.Resources>
         <local:BenchmarkTypeToStringConverter x:Key="BenchmarkTypeToStringConverter" />
+        <local:CpuGpuGroupVisibilityConverter x:Key="CpuGpuGroupVisibilityConverter" />
         
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}">
@@ -29,11 +30,7 @@
                                 <ControlTemplate>
                                     <StackPanel>
                                         <Grid >
-                                            <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
-                                                <Border.Effect>
-                                                    <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
-                                                </Border.Effect>
-                                            </Border>
+                                            <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
                                             <StackPanel>
                                                 <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding BenchmarkSettings.Standard, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetStandard"/>
                                                 <Separator Background="{DynamicResource BorderColor}"/>
@@ -73,16 +70,16 @@
         </Grid>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
             <StackPanel>
-                <localComputeDeviceItem:ComputeDeviceItemHeader Label="CPU" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
-                <ItemsControl ItemsSource="{Binding CPUs}">
+                <localComputeDeviceItem:ComputeDeviceItemHeader Label="CPU" HorizontalAlignment="Stretch" Margin="0,8,0,0" Visibility="{Binding DeviceCPUCount, Converter={StaticResource CpuGpuGroupVisibilityConverter}}" />
+                <ItemsControl ItemsSource="{Binding CPUs}" Visibility="{Binding DeviceCPUCount, Converter={StaticResource CpuGpuGroupVisibilityConverter}}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                <localComputeDeviceItem:ComputeDeviceItemHeader Label="GPU" HorizontalAlignment="Stretch" Margin="0,24,0,0" />
-                <ItemsControl ItemsSource="{Binding GPUs}">
+                <localComputeDeviceItem:ComputeDeviceItemHeader Label="GPU" HorizontalAlignment="Stretch" Margin="0,24,0,0" Visibility="{Binding DeviceGPUCount, Converter={StaticResource CpuGpuGroupVisibilityConverter}}"/>
+                <ItemsControl ItemsSource="{Binding GPUs}" Visibility="{Binding DeviceGPUCount, Converter={StaticResource CpuGpuGroupVisibilityConverter}}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <localComputeDeviceItem:ComputeDeviceItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />

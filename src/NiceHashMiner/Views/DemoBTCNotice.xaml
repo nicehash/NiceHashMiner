@@ -11,7 +11,7 @@
         Width="392"
         ResizeMode="NoResize"
         WindowStyle="None"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         Background="Transparent"
         Icon="../Resources/logo.ico">
     <Window.Resources>
@@ -61,7 +61,7 @@
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         </Style>
     </Window.Resources>
-    <Grid Background="White">
+    <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
