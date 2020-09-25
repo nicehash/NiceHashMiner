@@ -85,10 +85,10 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateOpenClFallbackInfo();
                 }
-                if (DeviceDetection.DetectionResult.IsDCHDriver) 
-                {
-                    AvailableNotifications.CreateWarningNVIDIADCHInfo();
-                }
+                //if (DeviceDetection.DetectionResult.IsDCHDriver) 
+                //{
+                //    AvailableNotifications.CreateWarningNVIDIADCHInfo();
+                //}
                 if (MiscSettings.Instance.UseEthlargement && !Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateEthlargementElevateInfo();

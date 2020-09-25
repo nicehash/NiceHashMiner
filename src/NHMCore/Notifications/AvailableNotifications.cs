@@ -207,17 +207,6 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateWarningNVIDIADCHInfo()
-        {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NvidiaDCH, Tr("Nvidia DCH drivers detected"), Tr("Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance."));
-            notification.Actions.Add(new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Process.Start(Links.NvidiaDriversHelp); }
-            });
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         public static void CreateAddWindowsDefenderExceptionInfo()
         {
             var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, NotificationsGroup.WindowsDefenderException, Tr("Add Windows Defender Exception Failed"), Tr("Adding exception to Windows Defender failed. Please check the help page."));
