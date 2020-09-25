@@ -380,8 +380,6 @@ copy /Y "$(ProjectDir)\OnGPUsLost.bat" "$(SolutionDir)$(Configuration)\OnGPUsLos
 REM copy device detection dll's. Copy only if files don't exist
 If NOT exist "$(SolutionDir)$(Configuration)\app\cpuid.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cpuid.dll" "$(SolutionDir)$(Configuration)\app\cpuid.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\app\cuda_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cuda_device_detection.dll" "$(SolutionDir)$(Configuration)\app\cuda_device_detection.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcp120.dll" "$(SolutionDir)$(Configuration)\app\msvcp120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcr120.dll" "$(SolutionDir)$(Configuration)\app\msvcr120.dll"
 REM OpenCL.dll inside a separate folder
 If NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\app\OpenCL\"
 if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll"
