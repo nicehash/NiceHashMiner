@@ -30,11 +30,7 @@
                                 <ControlTemplate>
                                     <StackPanel>
                                         <Grid >
-                                            <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" >
-                                                <Border.Effect>
-                                                    <DropShadowEffect ShadowDepth="0.01" Direction="320" Opacity="0.2"/>
-                                                </Border.Effect>
-                                            </Border>
+                                            <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
                                             <StackPanel>
                                                 <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding BenchmarkSettings.Standard, Converter={StaticResource BenchmarkTypeToStringConverter}}" Click="SetStandard"/>
                                                 <Separator Background="{DynamicResource BorderColor}"/>

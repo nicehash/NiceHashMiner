@@ -54,38 +54,37 @@
         </Style>
 
     </UserControl.Resources>
-    <Grid MaxHeight="220" MaxWidth="392" Height="Auto" Width="Auto" MinHeight="232" MinWidth="392" Background="{DynamicResource BackgroundColor}">
-        <Grid.Effect>
-            <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.4"/>
-        </Grid.Effect>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Button Grid.Row="0"
+    <Grid MaxHeight="220" MaxWidth="392" Height="Auto" Width="Auto" MinHeight="232" MinWidth="392" Background="{DynamicResource BackgroundColor}" >
+        <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0"
                 Style="{StaticResource local.ExitTextButton}"
                 Content="&#xF00D;"
                 Margin="0,20,20,0"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
                 Click="CloseDialog"/>
-        <TextBlock Grid.Row="1"
+                <TextBlock Grid.Row="1"
                    Style="{StaticResource local.WalletHeader}"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="24,0,0,0"
                    Text="Wallet"/>
-        <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="2"
                    Style="{StaticResource local.WalletSubHeader}"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="25,8,0,0"
                    Text="Wallet Address"/>
-        <TextBox Grid.Row="3"
+                <TextBox Grid.Row="3"
                  Style="{StaticResource inputBox}"
                  x:Name="textBoxBTCAddress"
                  Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
@@ -93,13 +92,13 @@
                  KeyUp="TextBoxBitcoinAddress_KeyUp"
                  LostFocus="TextBoxBitcoinAddress_LostFocus"
                  Margin="0,8,0,0" />
-        <TextBlock Grid.Row="4"
+                <TextBlock Grid.Row="4"
                    Margin="25,8,0,0">
             <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                 How to create a Wallet Address?
             </Hyperlink>
-        </TextBlock>
-        <Button Grid.Row="5"
+                </TextBlock>
+                <Button Grid.Row="5"
                 x:Name="SaveButton"
                 Style="{DynamicResource OKButton}"
                 FontSize="10"
@@ -111,5 +110,8 @@
                 IsEnabled="False"
                 Click="SaveButtonClicked"
                 Margin="25,24,24,0"/>
+            </Grid>
+        </Border>
+        
     </Grid>
 </UserControl>

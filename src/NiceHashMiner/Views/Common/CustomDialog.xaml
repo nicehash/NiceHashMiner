@@ -172,39 +172,37 @@
 
     </UserControl.Resources>
     <Grid MaxHeight="220" MaxWidth="392" Height="Auto" Width="Auto" MinHeight="200" MinWidth="392" Background="{DynamicResource BackgroundColor}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:CustomDialog}}}">
-        <Grid.Effect>
-            <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.4"/>
-        </Grid.Effect>
-        <Grid Margin="15">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Button Grid.Row="0"
+        <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" >
+            <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0"
                 Style="{StaticResource local.ExitTextButton}"
                 Content="&#xF00D;"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
                 Click="CloseDialog"/>
-            <TextBlock Grid.Row="1"
+                <TextBlock Grid.Row="1"
                        Margin="0,15,0,0"
                        Style="{StaticResource local.WalletHeader}"
                        VerticalAlignment="Stretch"
                        HorizontalAlignment="Center"
                        Text="{Binding Title}"/>
-            <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="2"
                        Margin="0,15,0,0"
                        Style="{StaticResource local.WalletSubHeader}"
                        VerticalAlignment="Stretch"
                        HorizontalAlignment="Center"
                        TextAlignment="Center"
                        Text="{Binding Description}"/>
-            <Control Grid.Row="3" Style="{StaticResource AnimationStyle}" Margin="0,20,0,-25" Visibility="{Binding AnimationVisible}" />
-            <WrapPanel Grid.Row="4" Margin="0,30,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-                <Button
+                <Control Grid.Row="3" Style="{StaticResource AnimationStyle}" Margin="0,20,0,-25" Visibility="{Binding AnimationVisible}" />
+                <WrapPanel Grid.Row="4" Margin="0,30,0,0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <Button
                     x:Name="CancelButton"
                     Style="{DynamicResource CancelButton}"
                     Visibility="{Binding CancelVisible}"
@@ -213,7 +211,7 @@
                     Height="24"
                     Content="{Binding CancelText}"
                     Click="CancelButtonClicked" />
-                <Button
+                    <Button
                     x:Name="ConfirmButton"
                     Style="{DynamicResource OKButton}"
                     Visibility="{Binding OkVisible}"
@@ -223,7 +221,8 @@
                     Content="{Binding OkText}"
                     Click="ConfirmButtonClicked"
                     Margin="25,0,0,0"/>
-            </WrapPanel>
-        </Grid>
+                </WrapPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

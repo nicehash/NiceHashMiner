@@ -15,7 +15,6 @@
                 <ResourceDictionary Source="Resources/Xaml/Brushes.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/Fonts/Fonts.xaml"/>
                 <ResourceDictionary Source="Resources/Xaml/NHMLogos.xaml"/>
-                <ResourceDictionary Source="Resources/Xaml/Shadows.xaml"/>
                 <!--windows styles-->
                 <ResourceDictionary Source="Views/Common/NHBase/NHBaseWindowStyles.xaml"/>
                 <ResourceDictionary Source="Views/Common/NHBase/NHMMainWindowStyle.xaml"/>
@@ -92,14 +91,6 @@
 
                 <Setter Property="Background" Value="#FFFFFF"/>
 
-
-                <Setter Property="BitmapEffect">
-                    <Setter.Value>
-                        <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="6" Opacity="0.2" />
-                    </Setter.Value>
-                </Setter>
-
-                <!--I don't understand this Template part-->
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -192,33 +183,6 @@
 
             <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
             <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
-            
-            <!--#region Main Menu Button styles --><!--
-            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="minimizeWindowStyle">
-                <Setter Property="Content" Value="&#xf2d1;" />
-                <Setter Property="FontSize" Value="16" />
-            </Style>
-
-            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="closeWindowStyle">
-                <Setter Property="Content" Value="&#xf00d;" />
-                <Setter Property="FontSize" Value="24" />
-            </Style>
-
-            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="settingsWindowStyle">
-                <Setter Property="Content" Value="&#xf013;" />
-                <Setter Property="FontSize" Value="22" />
-            </Style>
-
-            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="bellWindowStyle">
-                <Setter Property="Content" Value="&#xf0f3;" />
-                <Setter Property="FontSize" Value="22" />
-            </Style>
-
-            <Style BasedOn="{StaticResource WindowButtonStyle}" TargetType="{x:Type ButtonBase}" x:Key="infoWindowStyle">
-                <Setter Property="Content" Value="&#xf05a;" />
-                <Setter Property="FontSize" Value="22" />
-            </Style>
-            --><!--#endregion Main Menu Button styles -->
 
         </ResourceDictionary>
     </Application.Resources>

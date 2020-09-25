@@ -55,11 +55,6 @@
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
-                <Setter Property="Effect" >
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.4"/>
-                    </Setter.Value>
-                </Setter>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -72,22 +67,13 @@
         <Setter Property="FontStyle" Value="Normal" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="BorderThickness" Value="1" />
-        <!--<Setter Property="BitmapEffect" >
-            <Setter.Value>
-                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
-            </Setter.Value>
-        </Setter>-->
+        <Setter Property="BorderThickness" Value="2" />
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}" />
         <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Effect" >
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.4"/>
-                    </Setter.Value>
-                </Setter>
+                <Setter Property="BorderBrush"  Value="{DynamicResource TextColorBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -96,22 +82,12 @@
     <Style x:Key="BigButtonWhiteNotifications" TargetType="Button" BasedOn="{StaticResource BigButtonWhite}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Effect" >
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="-75" RenderingBias="Performance" Opacity="0.2"/>
-                    </Setter.Value>
-                </Setter>
             </Trigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="BigButtonPrimaryNotifications" TargetType="Button" BasedOn="{StaticResource BigButtonPrimary}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Effect" >
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="10" ShadowDepth="2" Direction="-75" RenderingBias="Performance" Opacity="0.2"/>
-                    </Setter.Value>
-                </Setter>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -130,11 +106,6 @@
         <Setter Property="Height" Value="40"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Effect" >
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.1"/>
-                    </Setter.Value>
-                </Setter>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -147,11 +118,6 @@
         <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Effect" >
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="50" ShadowDepth="10" Direction="-75" RenderingBias="Performance"  Opacity="0.1"/>
-                    </Setter.Value>
-                </Setter>
             </Trigger>
         </Style.Triggers>
     </Style>

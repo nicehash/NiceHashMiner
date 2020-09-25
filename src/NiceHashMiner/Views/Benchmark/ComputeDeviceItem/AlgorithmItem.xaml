@@ -84,11 +84,6 @@
                         <Setter Property="Background" Value="{ DynamicResource BackgroundColor }" />
                         <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
                         <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
-                        <Setter Property="BitmapEffect" >
-                            <Setter.Value>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
-                            </Setter.Value>
-                        </Setter>
                     </MultiTrigger.Setters>
                 </MultiTrigger>
                 <!--Hover-->
@@ -101,48 +96,8 @@
                         <Setter Property="Background" Value="{ DynamicResource PrimaryColorBrush }" />
                         <Setter Property="BorderBrush" Value="{ DynamicResource PrimaryColorBrush }" />
                         <Setter Property="Foreground" Value="#FFFFFF" />
-                        <Setter Property="BitmapEffect" >
-                            <Setter.Value>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="10" ShadowDepth="1" Opacity="0.2" />
-                            </Setter.Value>
-                        </Setter>
                     </MultiTrigger.Setters>
                 </MultiTrigger>
-                <!--Selected-->
-                <!--
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsChecked" Value="True" />
-                        <Condition Property="IsMouseOver" Value="False" />
-                    </MultiTrigger.Conditions>
-                    <MultiTrigger.Setters>
-                        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
-                        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
-                        <Setter Property="BitmapEffect" >
-                            <Setter.Value>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="1" Opacity="0.2" />
-                            </Setter.Value>
-                        </Setter>
-                    </MultiTrigger.Setters>
-                </MultiTrigger>
-                -->
-                <!--Selected hover-->
-                <!--
-                <MultiTrigger>
-                    <MultiTrigger.Conditions>
-                        <Condition Property="IsChecked" Value="True" />
-                        <Condition Property="IsMouseOver" Value="True" />
-                    </MultiTrigger.Conditions>
-                    <MultiTrigger.Setters>
-                        <Setter Property="Background" Value="{StaticResource PrimaryColorBrush}" />
-                        <Setter Property="Foreground" Value="{StaticResource Brushes.FontColor.White}" />
-                        <Setter Property="BitmapEffect" >
-                            <Setter.Value>
-                                <DropShadowBitmapEffect Color="#232323" Direction="320" Softness="1" ShadowDepth="10" Opacity="0.2" />
-                            </Setter.Value>
-                        </Setter>
-                    </MultiTrigger.Setters>
-                </MultiTrigger>-->
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
@@ -160,9 +115,6 @@
     </UserControl.Triggers>
     <Grid MinHeight="50" MinWidth="220">
         <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
-            </Border.Effect>
             <Border.Style>
                 <Style TargetType="Border">
                     <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>

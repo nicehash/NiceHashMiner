@@ -10,9 +10,6 @@
              d:DataContext="{d:DesignInstance Type=viewModels:DeviceDataTDP}">
     <Grid>
         <Border BorderBrush="#eeeeee" BorderThickness="1" CornerRadius="4" Background="White">
-            <Border.Effect>
-                <DropShadowEffect ShadowDepth="0.01" Direction="10" Opacity="0.1"/>
-            </Border.Effect>
         </Border>
         <UniformGrid Columns="5" Background="Transparent" HorizontalAlignment="Stretch" IsEnabled="{Binding HasTPDSettings}">
             <StackPanel  HorizontalAlignment="Left" VerticalAlignment="Center">
