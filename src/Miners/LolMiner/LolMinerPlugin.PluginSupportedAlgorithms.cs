@@ -19,7 +19,8 @@ namespace LolMiner
                         new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory, Enabled = false},
                         new SAS(AlgorithmType.GrinCuckatoo32){Enabled = false},
                         new SAS(AlgorithmType.ZHash){Enabled = false},
-                        new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory }
+                        new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
+                        new SAS(AlgorithmType.DaggerHashimoto)
                     };
         }
 
@@ -37,6 +38,10 @@ namespace LolMiner
         {
             // fixed fee
             DefaultFee = 1.0,
+            AlgorithmFees = new Dictionary<AlgorithmType, double> 
+            { 
+                { AlgorithmType.DaggerHashimoto, 0.7 } 
+            },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 // don't use NVIDIA OpenCL backend
@@ -55,7 +60,8 @@ namespace LolMiner
                 { AlgorithmType.GrinCuckatoo31, "C31" },
                 { AlgorithmType.GrinCuckatoo32, "C32" },
                 { AlgorithmType.ZHash, "EQUI144_5" },
-                { AlgorithmType.BeamV3, "BEAM-III" }
+                { AlgorithmType.BeamV3, "BEAM-III" },
+                { AlgorithmType.DaggerHashimoto, "ETHASH" }
             }
         };
     }

@@ -102,8 +102,11 @@ namespace LolMiner
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
 
             var algo = AlgorithmName(_algorithmType);
+            var commandLine = $"--pool {urlWithPort} --user {_username} --tls 0 --apiport {_apiPort} {_disableWatchdogParam} --devices {_devices} {_extraLaunchParameters}";
+
+            if (_algorithmType == AlgorithmType.ZHash) commandLine += " --coin AUTO144_5";
+            else commandLine += $" --algo {algo}";
             //--disablewatchdog 1
-            var commandLine = $"--algo {algo} --pool {urlWithPort} --user {_username} --tls 0 --apiport {_apiPort} {_disableWatchdogParam} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }
