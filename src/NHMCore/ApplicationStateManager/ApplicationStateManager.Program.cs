@@ -1,5 +1,6 @@
 using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
@@ -66,6 +67,7 @@ namespace NHMCore
             {
                 // should close websocket  
                 ExitApplication.Cancel();
+                ConfigManager.GeneralConfigFileCommit();
                 var waitTasks = new List<Task>();
                 waitTasks.Add(MiningManager.RunninLoops);
                 waitTasks.Add(NHWebSocket.MainLoop);
