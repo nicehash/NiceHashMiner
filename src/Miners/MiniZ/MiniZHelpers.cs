@@ -16,6 +16,8 @@ namespace MiniZ
         public int temperature { get; set; }
         public uint gpu_power_usage { get; set; }
         public uint speed_sps { get; set; }
+        public uint accepted_shares { get; set; }
+        public uint rejected_shares { get; set; }
     }
 
     [Serializable]

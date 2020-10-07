@@ -22,6 +22,11 @@ namespace MiniZ
         private string _devices;
         private DateTime _started;
 
+        private static Dictionary<string, int> _acceptedSharesPerDevice = new Dictionary<string, int>();
+        private static Dictionary<string, int> _rejectedSharesPerDevice = new Dictionary<string, int>();
+        private static Dictionary<string, DateTime> _lastAcceptedSharePerDevice = new Dictionary<string, DateTime>();
+        private static Dictionary<string, DateTime> _lastRejectedSharePerDevice = new Dictionary<string, DateTime>();
+
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         public MiniZ(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
@@ -48,6 +53,8 @@ namespace MiniZ
             var perDevicePowerInfo = new Dictionary<string, int>();
             var totalSpeed = 0d;
             var totalPowerUsage = 0;
+            var perDeviceAcceptedShareInfo = new Dictionary<string, (int, DateTime)>();
+            var perDeviceRejectedShareInfo = new Dictionary<string, (int, DateTime)>();
 
             try
             {
@@ -81,6 +88,8 @@ namespace MiniZ
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentDevStats.speed_sps * (1 - DevFee * 0.01)) });
                     totalPowerUsage += (int)currentDevStats.gpu_power_usage * 1000; //reported in W
                     perDevicePowerInfo.Add(gpu.UUID, (int)currentDevStats.gpu_power_usage * 1000);
+
+                    
                 }
             }
             catch (Exception e)
