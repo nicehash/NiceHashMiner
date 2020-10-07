@@ -5,25 +5,26 @@ namespace NHM.DeviceDetection.CPU
 {
     internal static class CpuID
     {
-        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        const string dll = "device_detection_cpu.dll"; 
+        [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr _GetCPUName();
 
-        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr _GetCPUVendor();
 
-        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         public static extern int SupportsSSE2();
 
-        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         public static extern int SupportsAVX();
 
-        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         public static extern int SupportsAVX2();
 
-        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         public static extern int SupportsAES();
 
-        [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetPhysicalProcessorCount();
 
         public static string GetCpuName()
