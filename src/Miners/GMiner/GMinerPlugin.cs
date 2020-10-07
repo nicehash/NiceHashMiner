@@ -26,11 +26,11 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "2.24",
+                BinVersion = "2.26",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/2.24/gminer_2_24_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/2.26/gminer_2_26_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,7 +42,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "e7a58030-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 9);
+        public override Version Version => new Version(14, 10);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -156,6 +156,7 @@ namespace GMinerPlugin
                     if (ids.First() == AlgorithmType.BeamV3 && benchmarkedPluginVersion.Major <= 14 && benchmarkedPluginVersion.Minor < 6) return true;
                     if (ids.First() == AlgorithmType.KAWPOW && benchmarkedPluginVersion.Major <= 14 && benchmarkedPluginVersion.Minor < 7) return true;
                     if (benchmarkedPluginVersion.Major <= 14 && benchmarkedPluginVersion.Minor < 8 && device.Name.Contains("RTX 3")) return true;
+                    if (benchmarkedPluginVersion.Major == 14 && benchmarkedPluginVersion.Minor < 10 && device.Name.Contains("RTX 3") && ids.First() == AlgorithmType.KAWPOW) return true;
                 }
             }
             catch (Exception e)
