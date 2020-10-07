@@ -15,6 +15,11 @@ namespace CryptoDredge
         private string _devices;
         private int _apiPort;
 
+        private static Dictionary<int, int> _acceptedSharesPerDevice = new Dictionary<int, int>();
+        private static Dictionary<int, int> _rejectedSharesPerDevice = new Dictionary<int, int>();
+        private static Dictionary<int, DateTime> _lastAcceptedSharePerDevice = new Dictionary<int, DateTime>();
+        private static Dictionary<int, DateTime> _lastRejectedSharePerDevice = new Dictionary<int, DateTime>();
+
         public CryptoDredge(string uuid) : base(uuid)
         {}
 
@@ -25,15 +30,22 @@ namespace CryptoDredge
             public int id;
             public int power;
             public double speed;
+            public int accepted;
+            public int rejected;
+            public DateTime lastAccepted;
+            public DateTime lastRejected;
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var api = new ApiData();
+            var api = new ApiDataShare(new ApiData());
             var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
             var totalSpeed = 0d;
             var totalPowerUsage = 0;
+
+            var perDeviceAcceptedShareInfo = new Dictionary<string, (int, DateTime)>();
+            var perDeviceRejectedShareInfo = new Dictionary<string, (int, DateTime)>();
 
             try
             {
@@ -91,6 +103,31 @@ namespace CryptoDredge
                                 {
                                     gpuData.speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                                 }
+                                if (optval[0] == "ACC")
+                                {
+                                    gpuData.accepted = int.Parse(optval[1], CultureInfo.InvariantCulture);
+                                    if (!_acceptedSharesPerDevice.ContainsKey(gpuData.id)) _acceptedSharesPerDevice.Add(gpuData.id, gpuData.accepted);
+                                    if (!_lastAcceptedSharePerDevice.ContainsKey(gpuData.id)) _lastAcceptedSharePerDevice.Add(gpuData.id, new DateTime());
+                                    if (_acceptedSharesPerDevice[gpuData.id] != gpuData.accepted)
+                                    {
+                                        _acceptedSharesPerDevice[gpuData.id] = gpuData.accepted;
+                                        _lastAcceptedSharePerDevice[gpuData.id] = DateTime.Now;
+                                    }
+                                    gpuData.lastAccepted = _lastAcceptedSharePerDevice[gpuData.id];
+                                }
+                                if (optval[0] == "REJ")
+                                {
+                                    gpuData.rejected = int.Parse(optval[1], CultureInfo.InvariantCulture);
+                                    if (!_rejectedSharesPerDevice.ContainsKey(gpuData.id)) _rejectedSharesPerDevice.Add(gpuData.id, gpuData.rejected);
+                                    if (!_lastRejectedSharePerDevice.ContainsKey(gpuData.id)) _lastRejectedSharePerDevice.Add(gpuData.id, new DateTime());
+                                    if (_rejectedSharesPerDevice[gpuData.id] != gpuData.rejected)
+                                    {
+                                        _rejectedSharesPerDevice[gpuData.id] = gpuData.rejected;
+                                        _lastRejectedSharePerDevice[gpuData.id] = DateTime.Now;
+                                    }
+                                    gpuData.lastRejected = _lastRejectedSharePerDevice[gpuData.id];
+                                }
+
                             }
                             apiDevices.Add(gpuData);
                         }
@@ -105,6 +142,9 @@ namespace CryptoDredge
                             perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, apiDevice.speed * (1 - DevFee * 0.01)) });
                             perDevicePowerInfo.Add(deviceUUID, apiDevice.power);
                             totalPowerUsage += apiDevice.power;
+
+                            perDeviceAcceptedShareInfo.Add(deviceUUID, (apiDevice.accepted, apiDevice.lastAccepted));
+                            perDeviceRejectedShareInfo.Add(deviceUUID, (apiDevice.rejected, apiDevice.lastRejected));
                         }
                     }
                     catch (Exception e)
@@ -121,6 +161,9 @@ namespace CryptoDredge
             api.PowerUsageTotal = totalPowerUsage;
             api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             api.PowerUsagePerDevice = perDevicePowerInfo;
+
+            api.AcceptedShareInfoPerDevice = perDeviceAcceptedShareInfo;
+            api.RejectedShareInfoPerDevice = perDeviceRejectedShareInfo;
 
             return api;
         }

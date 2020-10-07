@@ -40,4 +40,19 @@ namespace NHM.MinerPlugin
         public IReadOnlyDictionary<string, int> PowerUsagePerDevice;
         public string ApiResponse;
     }
+
+    [Serializable]
+    public class ApiDataShare : ApiData
+    {
+        public ApiDataShare(ApiData ad)
+        {
+            PowerUsageTotal = ad.PowerUsageTotal;
+            AlgorithmSpeedsPerDevice = ad.AlgorithmSpeedsPerDevice;
+            PowerUsagePerDevice = ad.PowerUsagePerDevice;
+            ApiResponse = ad.ApiResponse;
+        }
+        //per device
+        public IReadOnlyDictionary<string, (int numberOfShares, DateTime lastAcceptedShare)> AcceptedShareInfoPerDevice;
+        public IReadOnlyDictionary<string, (int numberOfShares, DateTime lastRejectedShare)> RejectedShareInfoPerDevice;
+    }
 }

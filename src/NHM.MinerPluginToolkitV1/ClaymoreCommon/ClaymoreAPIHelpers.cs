@@ -19,9 +19,14 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
 
         private static readonly List<double> _emptySpeeds = new List<double>();
 
+        private static int _acceptedShares;
+        private static int _rejectedShares;
+        private static DateTime _lastAcceptedShare;
+        private static DateTime _lastRejectedShare;
+
         public static async Task<ApiData> GetMinerStatsDataAsync(int apiPort, IReadOnlyList<BaseDevice> miningDevices, string logGroup, double DevFee, double DualDevFee, params AlgorithmType[] algorithmTypes)
         {
-            var ad = new ApiData();
+            var ads = new ApiDataShare(new ApiData());
 
             var firstAlgoType = AlgorithmType.NONE;
             var secondAlgoType = AlgorithmType.NONE;
@@ -35,6 +40,9 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
             var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
 
+            var perDeviceAcceptedShareInfo = new Dictionary<string, (int, DateTime)>();
+            var perDeviceRejectedShareInfo = new Dictionary<string, (int, DateTime)>();
+
             JsonApiResponse resp = null;
             try
             {
@@ -46,7 +54,7 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                     var bytesToRead = new byte[client.ReceiveBufferSize];
                     var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                     var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    ad.ApiResponse = respStr;
+                    ads.ApiResponse = respStr;
                     resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
                 }
                 if (resp != null && resp.error == null)
@@ -58,6 +66,18 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                         var secondarySpeeds = hasSecond ? TransformSpeedsList(resp.result[5]) : _emptySpeeds;
                         var primaryTotalSpeed = 0d;
                         var secondaryTotalSpeed = 0d;
+
+                        var shares = TransformSpeedsList(resp.result[2]);
+                        if (shares[1] != _acceptedShares)
+                        {
+                            _acceptedShares = Convert.ToInt32(shares[1]);
+                            _lastAcceptedShare = DateTime.Now;
+                        }
+                        if (shares[2] != _rejectedShares)
+                        {
+                            _rejectedShares = Convert.ToInt32(shares[2]);
+                            _lastRejectedShare = DateTime.Now;
+                        }
 
                         for (int i = 0; i < miningDevices.Count(); i++)
                         {
@@ -78,6 +98,9 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                             perDeviceSpeedInfo.Add(uuid, perDeviceSpeeds );
                             // no power usage info
                             perDevicePowerInfo.Add(uuid, -1);
+
+                            perDeviceAcceptedShareInfo.Add(uuid, (_acceptedShares, _lastAcceptedShare));
+                            perDeviceRejectedShareInfo.Add(uuid, (_rejectedShares, _lastRejectedShare));
                         }
 
                         totalSpeed.Add((firstAlgoType, primaryTotalSpeed * (1 - DevFee * 0.01)));
@@ -92,10 +115,13 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
             {
                 Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
             }
-            ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-            ad.PowerUsagePerDevice = perDevicePowerInfo;
-            ad.PowerUsageTotal = -1;
-            return ad;
+            ads.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+            ads.PowerUsagePerDevice = perDevicePowerInfo;
+            ads.PowerUsageTotal = -1;
+
+            ads.AcceptedShareInfoPerDevice = perDeviceAcceptedShareInfo;
+            ads.RejectedShareInfoPerDevice = perDeviceRejectedShareInfo;
+            return ads;
         }
 
         private static List<double> TransformSpeedsList(string speedsStr)
