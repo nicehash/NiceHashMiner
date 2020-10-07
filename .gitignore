@@ -279,8 +279,6 @@ _Pvt_Extensions
 # VS2015 db files
 *.VC.db
 
-!pre_compiled_libs/*
-
 # localbuilds
 _ONLINE
 _LOCAL_RELEASES
@@ -295,3 +293,7 @@ installer/*_release_files/
 installer/*.7z
 installer/*.zip
 installer/*.exe
+
+# pre_compiled_libs
+!pre_compiled_libs/device_detection_x64/device_detection.exe
+!pre_compiled_libs/*
