@@ -14,7 +14,8 @@ namespace NhmPackager
 
         public static Tuple<string, string, string> GenerateVariableTemplate(string path)
         {
-            var assembly = Assembly.LoadFrom(path);
+            byte[] assemblyBytes = File.ReadAllBytes(path);
+            var assembly = Assembly.Load(assemblyBytes);
             var assemblyData = assembly.CustomAttributes;
 
             string VERSION = assemblyData.Where(data => data.AttributeType == typeof(AssemblyFileVersionAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
