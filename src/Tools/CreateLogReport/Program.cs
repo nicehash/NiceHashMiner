@@ -24,12 +24,12 @@ namespace CreateLogReport
             return false;
         }
 
-        private static void Run_device_detection_test_Bat(string appRoot)
+        private static void Run_device_detection_Bat(string appRoot)
         {
             try
             {
                 var appRootFull = new Uri(Path.Combine(Environment.CurrentDirectory, appRoot)).LocalPath;
-                var appRootFullExe = Path.Combine(appRootFull, "device_detection_test.bat");
+                var appRootFullExe = Path.Combine(appRootFull, "device_detection.bat");
                 Console.WriteLine(appRootFull);
                 Console.WriteLine(appRootFullExe);
                 var startInfo = new ProcessStartInfo
@@ -48,17 +48,17 @@ namespace CreateLogReport
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Run_device_detection_test_Bat error: {e.Message}");
+                Console.WriteLine($"Run_device_detection_Bat error: {e.Message}");
             }
         }
 
         static void Main(string[] args)
         {
             // TODO
-            // RUN device_detection_test.bat
-            Console.WriteLine($"Running device_detection_test.bat...");
+            // RUN device_detection.bat
+            Console.WriteLine($"Running device_detection.bat...");
             var appRoot = args.Length > 0 ? args[0] : "";
-            Run_device_detection_test_Bat(appRoot);
+            Run_device_detection_Bat(appRoot);
 
             var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var filesToPack = Directory.GetFiles(exePath, "*.*", SearchOption.AllDirectories).Where(s => IsPackExtension(s)).ToList();
