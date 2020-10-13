@@ -178,7 +178,7 @@ namespace MinerPluginsPacker
             var bundlePlugins = new List<string>
             {
                 //"95b390a0-94eb-11ea-a64d-17be303ea466", // CCMinerTpruvot
-                "c9abdb10-94eb-11ea-a64d-17be303ea466", // ClaymoreDual
+                //"c9abdb10-94eb-11ea-a64d-17be303ea466", // ClaymoreDual
                 //"e294f620-94eb-11ea-a64d-17be303ea466", // CryptoDredge
                 "e7a58030-94eb-11ea-a64d-17be303ea466", // GMinerPlugin
                 "eb75e920-94eb-11ea-a64d-17be303ea466", // LolMiner
