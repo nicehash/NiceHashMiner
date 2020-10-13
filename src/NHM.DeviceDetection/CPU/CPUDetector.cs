@@ -14,16 +14,29 @@ namespace NHM.DeviceDetection.CPU
     internal static class CPUDetector
     {
         private const string Tag = "CPUDetector";
+
+        public static async Task<(string rawOutput, CpuID parsed)> TryQueryCPUDevicesAsync()
+        {
+            var execStr = "cpu -n";
+            Logger.Info(Tag, $"TryQueryCUDADevicesAsync START {execStr}");
+            var result = await DeviceDetectionPrinter.GetDeviceDetectionResultAsync<CpuID>(execStr, 30 * 1000);
+            Logger.Info(Tag, $"TryQueryCUDADevicesAsync END {execStr}");
+
+            return result;
+        }
+
         public static Task<CPUDevice> TryQueryCPUDeviceTask()
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                if (!CpuUtils.IsCpuMiningCapable()) return null;
+                var (cpuJSON, cpuID) = await TryQueryCPUDevicesAsync();
+                Logger.Info(Tag, cpuJSON);
+                if (!CpuUtils.IsCpuMiningCapable(cpuID)) return null;
 
                 var cpuDetectResult = QueryCPUDevice();
                 // get all CPUs
-                var cpuCount = CpuID.GetPhysicalProcessorCount();
-                var name = CpuID.GetCpuName().Trim();
+                var cpuCount = cpuID.PhysicalProcessorCount;
+                var name = cpuID.Name.Trim();
                 // get all cores (including virtual - HT can benefit mining)
                 var threadsPerCpu = cpuDetectResult.VirtualCoresCount / cpuCount;
                 // TODO important move this to settings
@@ -50,13 +63,14 @@ namespace NHM.DeviceDetection.CPU
                 foreach (var cpuInfo in cpuDetectResult.CpuInfos)
                 {
                     hashedInfo += $"{cpuInfo.Family}--{cpuInfo.ModelName}--{cpuInfo.NumberOfCores}--{cpuInfo.PhysicalID}--{cpuInfo.VendorID}";
+                    hashedInfo += cpuJSON;
                 }
                 var uuidHEX = UUID.GetHexUUID(hashedInfo);
                 var uuid = $"CPU-{uuidHEX}";
 
                 // plugin device
                 var bd = new BaseDevice(DeviceType.CPU, uuid, name, 0);
-                var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks, CpuUtils.SupportedExtensions());
+                var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks, CpuUtils.SupportedExtensions(cpuID), cpuID);
                 return cpu;
             });
         }

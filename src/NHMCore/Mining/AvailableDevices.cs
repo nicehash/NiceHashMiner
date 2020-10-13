@@ -104,10 +104,9 @@ namespace NHMCore.Mining
         internal static void UncheckCpuIfGpu()
         {
             if (!HasGpu) return;
-
             foreach (var dev in Devices.Where(d => d.DeviceType == DeviceType.CPU))
             {
-                dev.Enabled = false;
+                if (dev.BaseDevice is CPUDevice cpu && cpu.CpuID.IsZen == false) dev.Enabled = false;
             }
         }
     }
