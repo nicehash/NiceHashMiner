@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define DELETE_NON_CURRENT_APPS
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -292,7 +293,10 @@ namespace NiceHashMiner
 
                 // TODO pass parent process PID
                 var (latestAppDir, latestAppExe, version) = GetLatestApp();
+#if DELETE_NON_CURRENT_APPS
+#error "Comment this line if you really wish to execute apps cleanup"
                 DeleteAllExceptCurrentVersion(version); // cleanup on next release
+#endif
                 var nhmApp = GetRootPath(latestAppDir, latestAppExe);
                 var args = $"-lc -PID{Process.GetCurrentProcess().Id}";
                 if (isUpdated) args += " -updated";
