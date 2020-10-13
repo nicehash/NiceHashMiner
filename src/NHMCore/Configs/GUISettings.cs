@@ -11,7 +11,7 @@ namespace NHMCore.Configs
         public static GUISettings Instance { get; } = new GUISettings();
         private GUISettings() { }
 
-        public Point MainFormSize = new Point(1000, 400);
+        public Size MainFormSize { get; set; } = Size.Empty;
 
         private bool _minimizeToTray = false;
         public bool MinimizeToTray

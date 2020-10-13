@@ -1,20 +1,20 @@
 ﻿using NHM.Common;
+using NHMCore;
+using NHMCore.ApplicationState;
+using NHMCore.Configs;
+using NHMCore.Notifications;
+using NHMCore.Utils;
 using NiceHashMiner.ViewModels;
 using NiceHashMiner.Views.Common;
 using NiceHashMiner.Views.Common.NHBase;
 using NiceHashMiner.Views.TDPSettings;
-using NHMCore;
-using NHMCore.Configs;
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using NHMCore.Utils;
-using System.Diagnostics;
-using NHMCore.Notifications;
-using NHMCore.ApplicationState;
-using System.IO;
-using System.Timers;
 
 namespace NiceHashMiner.Views
 {
@@ -34,6 +34,8 @@ namespace NiceHashMiner.Views
             _vm = this.AssertViewModel<MainVM>();
             Title = ApplicationStateManager.Title;
 
+            base.SizeChanged += new SizeChangedEventHandler(this.OnSizeChangedSave);
+
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             LoadingBar.Visibility = Visibility.Visible;
             Topmost = GUISettings.Instance.GUIWindowsAlwaysOnTop;
@@ -43,6 +45,17 @@ namespace NiceHashMiner.Views
             _timer.Interval = 1000 * 60 * 30; //30min
             _timer.Elapsed += CheckConnection;
             _timer.Start();
+
+            if (GUISettings.Instance.MainFormSize != System.Drawing.Size.Empty)
+            {
+                this.Width = GUISettings.Instance.MainFormSize.Width;
+                this.Height = GUISettings.Instance.MainFormSize.Height;
+            }
+        }
+
+        private void OnSizeChangedSave(object sender, SizeChangedEventArgs e)
+        {
+            GUISettings.Instance.MainFormSize = new System.Drawing.Size((int)e.NewSize.Width, (int)e.NewSize.Height);
         }
 
         private void GUISettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

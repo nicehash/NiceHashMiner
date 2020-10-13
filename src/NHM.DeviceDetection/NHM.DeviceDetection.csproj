@@ -51,7 +51,6 @@
     <Compile Include="AMD\AMDDetector.cs" />
     <Compile Include="CPU\CPUDetectionResult.cs" />
     <Compile Include="CPU\CPUDetector.cs" />
-    <Compile Include="CPU\CpuID.cs" />
     <Compile Include="CPU\CpuInfo.cs" />
     <Compile Include="CPU\CpuUtils.cs" />
     <Compile Include="DeviceDetection.cs" />

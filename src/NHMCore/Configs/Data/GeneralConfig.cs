@@ -264,9 +264,10 @@ namespace NHMCore.Configs.Data
             get => GUISettings.Instance.GUIWindowsAlwaysOnTop;
             set => GUISettings.Instance.GUIWindowsAlwaysOnTop = value;
         }
-        public Point MainFormSize
+        public Size MainFormSize
         {
             get => GUISettings.Instance.MainFormSize;
+            set => GUISettings.Instance.MainFormSize = value;
         }
         #endregion GUI Settings
 
