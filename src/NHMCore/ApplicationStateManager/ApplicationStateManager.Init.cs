@@ -159,7 +159,7 @@ namespace NHMCore
 
                 // TODO ADD STEP AND MESSAGE
                 EthlargementIntegratedPlugin.Instance.InitAndCheckSupportedDevices(AvailableDevices.Devices.Select(dev => dev.BaseDevice));
-                await MinerPluginsManager.CheckAndSwapInstalledExternalPlugins();
+                await MinerPluginsManager.CleanupPlugins();
                 MinerPluginsManager.CheckAndDeleteUnsupportedPlugins();
 
                 // STEP

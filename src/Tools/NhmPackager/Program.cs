@@ -119,31 +119,6 @@ namespace NhmPackager
         // #6 create NSIS template '_files_to_pack\nsis'
         static void Main(string[] args)
         {
-            if (args.Length > 0)
-            {
-                string tmpWorkFolder2 = "N/A";
-                string version2 = "N/A";
-                Thread.Sleep(2000);
-                try
-                {
-                    tmpWorkFolder2 = args[0];
-                    version2 = args[1];
-                    // the final step cannot be done because the ZipFile.CreateFromDirectory locks the folder
-                    //RecreateFolderIfExists(GetRootPath($"nhm_windows_{version2}_release_files"));
-                    Directory.Delete(GetRootPath(tmpWorkFolder2, "_files_to_pack"), true);
-                    Directory.Delete(GetRootPath(tmpWorkFolder2, "Release"), true);
-                    Directory.Move(GetRootPath(tmpWorkFolder2), GetRootPath($"nhm_windows_{version2}_release_files"));
-                    //ExecXCopy(GetRootPath(tmpWorkFolder), $"nhm_windows_{version}_release_files");
-                    return;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"\t\t PROBLEM2: {e.Message}. {tmpWorkFolder2} {version2}");
-                    Console.ReadKey();
-                }
-                return;
-            }
-
             try
             {
                 var randomPart = DateTime.UtcNow.Millisecond;
@@ -168,16 +143,18 @@ namespace NhmPackager
 
                 // #3 
                 var launcherPath = GetRootPath(tmpWorkFolder, "Release", "NiceHashMiner.exe");
-                var appPath = GetRootPath(tmpWorkFolder, "Release", "app", "NiceHashMiner.exe");
+                var appPath = GetRootPath(tmpWorkFolder, "Release", "app", "app_nhm.exe");
                 var (generatedTemplateLauncher, versionLauncher, buildTagLauncher) = VersionInfoHelpers.GenerateVariableTemplate(launcherPath);
                 var (generatedTemplate, version, buildTag) = VersionInfoHelpers.GenerateVariableTemplate(appPath);
                 if (generatedTemplateLauncher != generatedTemplate || versionLauncher != version || buildTagLauncher != buildTag)
                 {
                     throw new Exception("Launcher and App TAG or Version missmatch!!!");
                 }
+                Console.WriteLine("ExecPluginsPacker resumming...");
                 // #4 
                 var appDirOld = GetRootPath(tmpWorkFolder, "Release", "app");
                 var appDirNew = GetRootPath(tmpWorkFolder, "Release", $"app_{version}");
+                Console.WriteLine($"moving '{appDirOld}' to '{appDirNew}'");
                 Directory.Move(appDirOld, appDirNew);
                 // #5
                 File.Copy(GetRootPath("nhm_windows_x.y.z.r-template", "EULA.html"), GetRootPath(tmpWorkFolder, "Release", "EULA.html"));
@@ -218,29 +195,20 @@ namespace NhmPackager
                     Console.WriteLine($"FINISHED {zipFileName}.zip package");
                 }
 
-
-                //// the final step cannot be done because the ZipFile.CreateFromDirectory locks the folder FIX RE-RUN PROGRAM
-                //Directory.Delete(GetRootPath(tmpWorkFolder, "_files_to_pack"), true);
-                //Directory.Delete(GetRootPath(tmpWorkFolder, "Release"), true);
-                //RecreateFolderIfExists(GetRootPath($"nhm_windows_{version}_release_files"));
-                //Directory.Move(GetRootPath(tmpWorkFolder), GetRootPath($"nhm_windows_{version}_release_files"));
-                ////ExecXCopy(GetRootPath(tmpWorkFolder), $"nhm_windows_{version}_release_files");
-                var finishProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = Assembly.GetExecutingAssembly().Location,
-                        WorkingDirectory = GetRootPath(),
-                        Arguments = $"{tmpWorkFolder} {version}",
-                        WindowStyle = ProcessWindowStyle.Normal
-                    }
-                };
-                finishProcess.Start();
+                Console.WriteLine("Clean up temp files...");
+                //Console.ReadKey();
+                Directory.Delete(GetRootPath(tmpWorkFolder, "_files_to_pack"), true);
+                Directory.Delete(GetRootPath(tmpWorkFolder, "Release"), true);
+                Console.WriteLine("Finishing...");
+                Directory.Move(GetRootPath(tmpWorkFolder), GetRootPath($"nhm_windows_{version}_release_files"));
+                Console.WriteLine("DONE!");
+                Console.ReadKey();
                 return;
             }
             catch (Exception e)
             {
-                Console.WriteLine($"\t\t PROBLEM: {e.Message}");
+                Console.WriteLine($"\t\t PROBLEM: {e.Message} {e.Message}");
+                Console.WriteLine($"\t\t PROBLEM: {e.StackTrace}");
                 Console.ReadKey();
             }
         }

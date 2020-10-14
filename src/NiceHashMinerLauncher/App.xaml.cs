@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define DELETE_NON_CURRENT_APPS
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -83,37 +84,67 @@ namespace NiceHashMiner
 
         private static Mutex _mutex = null;
 
-        private static string GetLatestApp()
+        static readonly string[] AppExeNames = new string[]{ "NiceHashMiner.exe", "app_nhm.exe" };
+        private static (string appDir, string appPath, Version version) GetLatestApp()
         {
             var path = GetRootPath();
             var appDirs = Directory.GetDirectories(path, "app*");
+            
             if (appDirs.Length > 0)
             {
                 Version latest = null;
-                string retAppdir = null;
+                string retAppDir = null;
+                string retAppExe = null;
                 foreach (var appDir in appDirs)
                 {
-                    try
+                    foreach (var appExe in AppExeNames)
                     {
-                        var lastIndex = appDir.LastIndexOf("app_");
-                        var verStr = appDir.Substring(lastIndex, appDir.Length - lastIndex).Replace("app_", "");
-                        var compareVer = new Version(verStr);
-                        var exeExists = File.Exists(Path.Combine(appDir, "NiceHashMiner.exe"));
-                        if ((latest == null || latest < compareVer) && exeExists)
+                        try
                         {
-                            latest = compareVer;
-                            retAppdir = appDir;
+                            var lastIndex = appDir.LastIndexOf("app_");
+                            var verStr = appDir.Substring(lastIndex, appDir.Length - lastIndex).Replace("app_", "");
+                            var compareVer = new Version(verStr);
+                            var exeExists = File.Exists(Path.Combine(appDir, appExe));
+                            if ((latest == null || latest < compareVer) && exeExists)
+                            {
+                                latest = compareVer;
+                                retAppDir = appDir;
+                                retAppExe = appExe;
+                            }
+                        }
+                        catch (Exception)
+                        {
                         }
                     }
-                    catch (Exception)
-                    {
-                    }
-                    
                 }
-                if (retAppdir != null) return retAppdir;
+                if (retAppDir != null) return (retAppDir, retAppExe, latest);
             }
             // return default app dir
-            return "app";
+            return ("app", "app_nhm.exe", null);
+        }
+
+        private static void DeleteAllExceptCurrentVersion(Version currentVersion)
+        {
+            if (currentVersion == null) return;
+            var path = GetRootPath();
+            var appDirs = Directory.GetDirectories(path, "app*");
+
+            foreach (var appDir in appDirs)
+            {
+                try
+                {
+                    var lastIndex = appDir.LastIndexOf("app_");
+                    var verStr = appDir.Substring(lastIndex, appDir.Length - lastIndex).Replace("app_", "");
+                    var compareVer = new Version(verStr);
+                    if (compareVer != currentVersion)
+                    {
+                        Directory.Delete(appDir, true);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
         private static string GetLatestUpdater()
@@ -261,8 +292,12 @@ namespace NiceHashMiner
                 ClearAllTmpFiles();
 
                 // TODO pass parent process PID
-                var latestAppDir = GetLatestApp();
-                var nhmApp = GetRootPath(latestAppDir, "NiceHashMiner.exe");
+                var (latestAppDir, latestAppExe, version) = GetLatestApp();
+#if DELETE_NON_CURRENT_APPS
+#error "Comment this line if you really wish to execute apps cleanup"
+                DeleteAllExceptCurrentVersion(version); // cleanup on next release
+#endif
+                var nhmApp = GetRootPath(latestAppDir, latestAppExe);
                 var args = $"-lc -PID{Process.GetCurrentProcess().Id}";
                 if (isUpdated) args += " -updated";
                 var startInfo = new ProcessStartInfo

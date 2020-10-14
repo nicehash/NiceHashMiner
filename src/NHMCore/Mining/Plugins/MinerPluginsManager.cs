@@ -151,15 +151,20 @@ namespace NHMCore.Mining.Plugins
         }
 
 #region Update miner plugin dlls
-        public static async Task CheckAndSwapInstalledExternalPlugins()
+        [Obsolete("WARNING!!! You are compiling this with old plugin cleanup")]
+        public static async Task CleanupPlugins()
         {
+            Action<string> deleteDir = (string path) => { try { Directory.Delete(path, true); } catch { } };
+            Action<string> deleteFile = (string path) => { try { File.Delete(path); } catch { } };
+            Logger.Info("MinerPluginsManager", "CleanupPlugins START");
             try
             {
                 if (ConfigManager.IsVersionChanged)
                 {
+                    Logger.Info("MinerPluginsManager", "CleanupPlugins EXECUTE");
                     string minerPluginsPath = Paths.MinerPluginsPath();
                     var zipPackages = Directory.GetFiles(Paths.RootPath("plugins_packages"), "*.zip", SearchOption.TopDirectoryOnly);
-                    var installedExternalPackages = Directory.GetDirectories(minerPluginsPath);
+                    var installedExternalPackages = Directory.GetDirectories(minerPluginsPath, "*", SearchOption.TopDirectoryOnly);
                     foreach (var installedPath in installedExternalPackages)
                     {
                         try
@@ -168,41 +173,23 @@ namespace NHMCore.Mining.Plugins
                             if (!System.Guid.TryParse(uuid, out var _)) continue;
                             var zipPackage = zipPackages.FirstOrDefault(package => package.Contains(uuid));
                             if (zipPackage == null) continue;
-                            // uzip to temp dir
-                            var tmpPluginDir = installedPath + "_tmp";
-                            Directory.CreateDirectory(tmpPluginDir);
-                            await ArchiveHelpers.ExtractFileAsync(zipPackage, tmpPluginDir, null, CancellationToken.None);
-                            // now copy move over files 
-                            var tmpPackageFiles = Directory.GetFiles(tmpPluginDir, "*", SearchOption.AllDirectories);
-                            var installedPackagePaths = Directory.GetFiles(installedPath, "*", SearchOption.AllDirectories);
-                            foreach (var path in installedPackagePaths)
-                            {
-                                // skip if not file and skip all bins
-                                if (!File.Exists(path) || path.Contains("bins")) continue;
-                                var fileName = Path.GetFileName(path);
-                                var moveFile = tmpPackageFiles.FirstOrDefault(file => Path.GetFileName(file) == fileName);
-                                if (moveFile == null) continue;
-                                try
-                                {
-                                    File.Copy(moveFile, path, true);
-                                }
-                                catch (Exception e)
-                                {
-                                    Logger.Error("CheckAndSwapInstalledExternalPlugins", e.Message);
-                                }
-                            }
-                            Directory.Delete(tmpPluginDir, true);
+                            // cleanup old bins and dll's
+                            deleteDir(Path.Combine(installedPath, "bins"));
+                            deleteDir(Path.Combine(installedPath, "dlls"));
+                            var installedPackageRootDlls = Directory.GetFiles(installedPath, "*.dll", SearchOption.TopDirectoryOnly);
+                            foreach (var dllFile in installedPackageRootDlls) deleteFile(dllFile);
+                            await ArchiveHelpers.ExtractFileAsync(zipPackage, installedPath, null, CancellationToken.None);
                         }
                         catch (Exception e)
                         {
-                            Logger.Error("CheckAndSwapInstalledExternalPlugins", e.Message);
+                            Logger.Error("MinerPluginsManager", $"CleanupPlugins {installedPath} Error: {e.Message}");
                         }
                     }
                 }
             }
             catch (Exception e)
             {
-                Logger.Error("CheckAndSwapInstalledExternalPlugins", e.Message);
+                Logger.Error("MinerPluginsManager", $"CleanupPlugins Error: {e.Message}");
             }
         }
 
@@ -912,7 +899,7 @@ namespace NHMCore.Mining.Plugins
                         var newDllPath = Directory.GetFiles(installDllPath).FirstOrDefault();
                         var name = Path.GetFileNameWithoutExtension(newDllPath);
                         var newVerStr = $"{newPlugin.Version.Major}.{newPlugin.Version.Minor}";
-                        var installedDllPath = Path.Combine(pluginRootPath, $"{name}-{newVerStr}.dll");
+                        var installedDllPath = Path.Combine(pluginRootPath, $"{name}.dll");
                         File.Copy(newDllPath, installedDllPath);
 
                         newPlugin.AddAlgorithmsToDevices();
