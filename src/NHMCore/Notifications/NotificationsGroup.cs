@@ -42,6 +42,7 @@ namespace NHMCore.Notifications
         LargePages,
         VirtualMemory,
         OpenClFallback,
-        NoAvailableAlgorithms
+        NoAvailableAlgorithms,
+        LogArchiveUpload
     }
 }

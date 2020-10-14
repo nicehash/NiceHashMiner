@@ -42,7 +42,7 @@ namespace NiceHashMiner.Views
             CustomDialogManager.MainWindow = this;
             SetBurnCalledAction();
             SetNoDeviceAction();
-            _timer.Interval = 1000 * 60 * 30; //30min
+            _timer.Interval = 1000 * 60 * 2; //2min
             _timer.Elapsed += CheckConnection;
             _timer.Start();
 
@@ -344,7 +344,7 @@ namespace NiceHashMiner.Views
                     Dispatcher.Invoke(() => CustomDialogManager.HideCurrentModal());
                     nhmwsDialogShown = false;
                     _timer.Stop();
-                    _timer.Interval = 1000 * 60 * 30; //30min
+                    _timer.Interval = 1000 * 60 * 2; //2min
                     _timer.Start();
                 }
                 catch (Exception ex)

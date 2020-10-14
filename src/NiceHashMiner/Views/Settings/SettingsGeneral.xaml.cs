@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Notifications;
 using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using System;
@@ -190,21 +191,33 @@ namespace NiceHashMiner.Views.Settings
         {
             var uuid = Guid.NewGuid().ToString();
             var success = await Helpers.CreateAndUploadLogReport(uuid);
-            if (success) CreateBugUUIDDialog(uuid);
+
+            CreateBugUUIDDialog(uuid, success);
+            AvailableNotifications.CreateLogUploadResultInfo(success, uuid);
         }
 
-        private void CreateBugUUIDDialog(string uuid)
+        private void CreateBugUUIDDialog(string uuid, bool success)
         {
-            var bugUUIDDialog = new CustomDialog()
+            var bugUUIDDialog = new CustomDialog();
+            if (success)
             {
-                Title = Translations.Tr("Bug report uuid"),
-                Description = Translations.Tr("Use following UUID for bug reporting.\n{0}", uuid),
-                OkText = Translations.Tr("Copy to clipboard"),
-                CancelVisible = Visibility.Collapsed,
-                AnimationVisible = Visibility.Collapsed
-            };
+                bugUUIDDialog.Title = "Bug report ID";
+                bugUUIDDialog.Description = Translations.Tr("Use following ID for bug reporting.\n{0}", uuid);
+                bugUUIDDialog.OkText = Translations.Tr("Copy to clipboard");
+                bugUUIDDialog.CancelVisible = Visibility.Collapsed;
+                bugUUIDDialog.CloseOnOk = false;
+                bugUUIDDialog.AnimationVisible = Visibility.Collapsed;
+                bugUUIDDialog.OKClick += (s, e) => Clipboard.SetText(uuid);
+            }
+            else
+            {
+                bugUUIDDialog.Title = "Bug report failed";
+                bugUUIDDialog.Description = Translations.Tr("Bug report has failed. Please contact our support agent for help.");
+                bugUUIDDialog.OkText = Translations.Tr("OK");
+                bugUUIDDialog.CancelVisible = Visibility.Collapsed;
+                bugUUIDDialog.AnimationVisible = Visibility.Collapsed;
+            }
 
-            bugUUIDDialog.OKClick += (s,e) => Clipboard.SetText(uuid);
             CustomDialogManager.ShowModalDialog(bugUUIDDialog);
         }
 
