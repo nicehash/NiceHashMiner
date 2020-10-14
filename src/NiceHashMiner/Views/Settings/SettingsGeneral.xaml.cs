@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Notifications;
 using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using System;
@@ -190,7 +191,15 @@ namespace NiceHashMiner.Views.Settings
         {
             var uuid = Guid.NewGuid().ToString();
             var success = await Helpers.CreateAndUploadLogReport(uuid);
-            if (success) CreateBugUUIDDialog(uuid);
+            if (success)
+            {
+                CreateBugUUIDDialog(uuid);
+                AvailableNotifications.CreateLogUploadResultInfo(true);
+            }
+            else
+            {
+                AvailableNotifications.CreateLogUploadResultInfo(false);
+            }
         }
 
         private void CreateBugUUIDDialog(string uuid)

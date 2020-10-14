@@ -334,5 +334,13 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.NoAvailableAlgorithms, Tr("No available algorithms"), Tr("There are no available algorithms to mine. Please check you rig stability and stability of installed plugins."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateLogUploadResultInfo(bool success, string uuid)
+        {
+            var sentence = Tr("was uploaded.");
+            if (success) sentence = Tr("was not uploaded. Please contact our support team for help.");
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.LogArchiveUpload, Tr("Log archive upload result"), Tr("The log archive with the following ID: {0}", uuid) +" "+ sentence);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }
