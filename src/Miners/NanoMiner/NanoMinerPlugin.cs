@@ -24,11 +24,11 @@ namespace NanoMiner
             // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.9.5",
-                ExePath = new List<string> { "nanominer-windows-1.9.5", "nanominer.exe" },
+                BinVersion = "v1.11.0",
+                ExePath = new List<string> { "nanominer-windows-1.11.0", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v1.9.5/nanominer-windows-1.9.5.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v1.11.0/nanominer-windows-1.11.0.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,7 +40,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "f25fee20-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 0);
+        public override Version Version => new Version(14, 1);
 
         public override string Name => "NanoMiner";
 
