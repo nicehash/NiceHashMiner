@@ -197,10 +197,11 @@ namespace NiceHashMiner.Views.Settings
         {
             var bugUUIDDialog = new CustomDialog()
             {
-                Title = Translations.Tr("Bug report uuid"),
-                Description = Translations.Tr("Use following UUID for bug reporting.\n{0}", uuid),
+                Title = Translations.Tr("Bug report ID"),
+                Description = Translations.Tr("Use following ID for bug reporting.\n{0}", uuid),
                 OkText = Translations.Tr("Copy to clipboard"),
                 CancelVisible = Visibility.Collapsed,
+                CloseOnOk = false,
                 AnimationVisible = Visibility.Collapsed
             };
 
