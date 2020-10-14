@@ -61,6 +61,7 @@ namespace NiceHashMiner
                     this.Shutdown();
                 });
             };
+            var isDevelop = Environment.GetCommandLineArgs().Contains("-dev");
             var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
             var launcherPID = ParseLauncherPID();
             Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
@@ -79,11 +80,17 @@ namespace NiceHashMiner
                     // TODO this might be problematic
                     Environment.CurrentDirectory = oneUpPath;
                 }
-                else
+                else if (isDevelop)
                 {
                     Paths.SetRoot(path);
                     Paths.SetAppRoot(path);
                     Environment.CurrentDirectory = path;
+                }
+                else
+                {
+                    MessageBox.Show("You must run the application via 'NiceHashMiner.exe' launcher", "Direct run disabled!", MessageBoxButton.YesNo);
+                    Application.Current.Shutdown();
+                    return;
                 }
                 pathSet = true;
             }
