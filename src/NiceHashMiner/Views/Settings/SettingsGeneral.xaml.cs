@@ -194,11 +194,11 @@ namespace NiceHashMiner.Views.Settings
             if (success)
             {
                 CreateBugUUIDDialog(uuid);
-                AvailableNotifications.CreateLogUploadResultInfo(true);
+                AvailableNotifications.CreateLogUploadResultInfo(true, uuid);
             }
             else
             {
-                AvailableNotifications.CreateLogUploadResultInfo(false);
+                AvailableNotifications.CreateLogUploadResultInfo(false, uuid);
             }
         }
 

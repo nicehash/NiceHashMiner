@@ -4,9 +4,11 @@ using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -238,6 +240,37 @@ namespace NHMCore.Utils
         {
             try
             {
+                // Create archive
+                if (!CreateLogArchive()) return false;
+                
+                // Upload archive
+                var tmpZipPath = Paths.RootPath($"tmp._archive_logs.zip");
+                var res2 = await UploadLogArchive(tmpZipPath, uuid);
+                if (!res2) return false;
+
+                // Delete archive
+                try
+                {
+                    File.Delete(tmpZipPath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Log-Report", $"Unable to delete log archive: {ex.Message}");
+                }
+
+                return true;
+            }catch(Exception ex)
+            {
+                Logger.Error("Log-Report", ex.Message);
+                return false;
+            }
+        }
+
+
+        private static bool CreateLogArchive()
+        {
+            try
+            {
                 var exePath = Paths.RootPath("CreateLogReport.exe");
                 var startLogInfo = new ProcessStartInfo
                 {
@@ -251,25 +284,35 @@ namespace NHMCore.Utils
                 {
                     doCreateLog.WaitForExit(10 * 1000);
                 }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Log-Report", $"Unable to create log archive: {ex.Message}");
+                return false;
+            }
+        }
 
-                var tmpZipPath = Paths.RootPath($"tmp._archive_logs.zip");
+        private static async Task<bool> UploadLogArchive(string tmpArchivePath, string uuid)
+        {
+            try
+            {
                 var rigID = ApplicationStateManager.RigID();
                 var url = $"https://nhos.nicehash.com/nhm-dump/{rigID}-{uuid}.zip";
 
                 using (var httpClient = new HttpClient())
                 {
-                    using (var stream = File.OpenRead(tmpZipPath))
+                    using (var stream = File.OpenRead(tmpArchivePath))
                     {
                         var response = await httpClient.PutAsync(url, new StreamContent(stream));
                         response.EnsureSuccessStatusCode();
                     }
                 }
-
-                File.Delete(tmpZipPath);
                 return true;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                Logger.Error("Log-Report", ex.Message);
+                Logger.Error("Log-Report", $"Unable to post log archive: {ex.Message}");
                 return false;
             }
         }
