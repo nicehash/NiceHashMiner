@@ -112,6 +112,16 @@ namespace LolMiner
                     ID = "lolMiner_kernelsLocation",
                     ShortName = "--kernelsdir",
                     DefaultValue = "./kernels"
+                },
+                /// <summary>
+                /// Windows: added experimental mem allocation pattern that should allow reaching epoch 375 or 376 at full speed ( * ).
+                /// It is default on in Windows, you can turn it off with "--win4galloc 0"
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_mem4GAlloc",
+                    ShortName = "--win4galloc",
                 }
             }
         };

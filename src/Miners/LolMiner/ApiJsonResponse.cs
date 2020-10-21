@@ -8,6 +8,7 @@ namespace LolMiner
     {
         public int Active_GPUs { get; set; }
         public double Performance_Summary { get; set; }
+        public string Performance_Unit { get; set; }
     }
 
     [Serializable]
