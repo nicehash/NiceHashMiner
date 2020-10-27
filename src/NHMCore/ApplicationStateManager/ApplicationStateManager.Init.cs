@@ -80,7 +80,6 @@ namespace NHMCore
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
-
                 if (DeviceDetection.DetectionResult.IsOpenClFallback)
                 {
                     AvailableNotifications.CreateOpenClFallbackInfo();
@@ -152,7 +151,10 @@ namespace NHMCore
                 // TODO add check and only show if not enabled
                 if (AvailableDevices.HasAmd)
                 {
-                    AvailableNotifications.CreateEnableComputeModeAMDInfo();
+                    if (detectionResult.AMDDevices.Any(amd => amd.InfSection.ToLower().Contains("polaris")))
+                    {
+                        AvailableNotifications.CreateEnableComputeModeAMDInfo();
+                    }
                 }
 
                 #endregion Device Detection
