@@ -39,7 +39,7 @@ namespace TRex
 
         public override string PluginUUID => "03f80500-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 1);
+        public override Version Version => new Version(14, 2);
 
         public override string Name => "TRex";
 
@@ -82,8 +82,7 @@ namespace TRex
                 if (ids.Count() == 0) return false;
                 if (benchmarkedPluginVersion.Major == 14 && benchmarkedPluginVersion.Minor == 0 && ids.FirstOrDefault() == AlgorithmType.KAWPOW) return true;
             }
-            catch(Exception ex)
-            {}
+            catch {}
             return false;
         }
     }

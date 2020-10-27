@@ -74,6 +74,10 @@ namespace TRex
             _apiPort = GetAvaliablePort();
             // instant non blocking
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            if (_algorithmType == AlgorithmType.DaggerHashimoto)
+            {
+                url = $"stratum2+tcp://{StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE)}";
+            }
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind-http 127.0.0.1:{_apiPort} --api-bind-telnet 0 --devices {_devices} {_extraLaunchParameters} --no-watchdog";
