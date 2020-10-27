@@ -23,11 +23,11 @@ namespace TRex
             // https://github.com/trexminer/T-Rex/releases 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.17.2",
+                BinVersion = "0.18.2",
                 ExePath = new List<string> { "t-rex.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/trexminer/T-Rex/releases/download/0.17.2/t-rex-0.17.2-win-cuda11.0.zip", // original
+                    "https://github.com/trexminer/T-Rex/releases/download/0.18.2/t-rex-0.18.2-win-cuda10.0.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace TRex
 
         public override string PluginUUID => "03f80500-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 0);
+        public override Version Version => new Version(14, 1);
 
         public override string Name => "TRex";
 
@@ -78,7 +78,10 @@ namespace TRex
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             try
-            {}
+            {
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 14 && benchmarkedPluginVersion.Minor == 0 && ids.FirstOrDefault() == AlgorithmType.KAWPOW) return true;
+            }
             catch(Exception ex)
             {}
             return false;
