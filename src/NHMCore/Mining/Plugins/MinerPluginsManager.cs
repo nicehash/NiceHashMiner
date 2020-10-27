@@ -252,10 +252,6 @@ namespace NHMCore.Mining.Plugins
                 {
                     plugin.AddAlgorithmsToDevices();
                 }
-                else if (!plugin.IsCompatible)
-                {
-                    RemovePlugin(plugin.PluginUUID, false);
-                }
                 else
                 {
                     plugin.RemoveAlgorithmsFromDevices();
