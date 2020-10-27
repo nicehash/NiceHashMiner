@@ -17,13 +17,15 @@ namespace TRex
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 }
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
+                        new SAS(AlgorithmType.DaggerHashimoto){NonDefaultRAMLimit = 5UL << 30 }
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.KAWPOW, "kawpow" }
+                { AlgorithmType.KAWPOW, "kawpow" },
+                { AlgorithmType.DaggerHashimoto, "ethash" }
             }
         };
     }

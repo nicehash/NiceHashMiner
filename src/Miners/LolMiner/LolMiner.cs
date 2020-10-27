@@ -41,20 +41,33 @@ namespace LolMiner
                 ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var totalSpeed = summary.Session.Performance_Summary;
+                var speedUnit = summary.Session.Performance_Unit;
+                var multiplier = 1;
+                switch (speedUnit)
+                {
+                    case "mh/s":
+                        multiplier = 1000000; //1M
+                        break;
+                    case "kh/s":
+                        multiplier = 1000; //1k
+                        break;
+                    default:
+                        break;
+                }
+                var totalSpeed = summary.Session.Performance_Summary * multiplier;
 
                 var totalPowerUsage = 0;
                 var perDevicePowerInfo = new Dictionary<string, int>();
 
                 var apiDevices = summary.GPUs;
 
-                foreach(var pair in _miningPairs)
+                foreach (var pair in _miningPairs)
                 {
                     var gpuUUID = pair.Device.UUID;
                     var gpuID = _mappedIDs[gpuUUID];
                     var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault();
                     if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.Performance * multiplier * (1 - DevFee * 0.01)) });
                 }
 
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;

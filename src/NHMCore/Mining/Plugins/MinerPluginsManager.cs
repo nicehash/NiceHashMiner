@@ -151,41 +151,55 @@ namespace NHMCore.Mining.Plugins
         }
 
 #region Update miner plugin dlls
-        [Obsolete("WARNING!!! You are compiling this with old plugin cleanup")]
         public static async Task CleanupPlugins()
         {
-            Action<string> deleteDir = (string path) => { try { Directory.Delete(path, true); } catch { } };
-            Action<string> deleteFile = (string path) => { try { File.Delete(path); } catch { } };
+            Action<string> deleteDirOrFile = (string path) => {
+                if (Directory.Exists(path)) try { Directory.Delete(path, true); } catch { }
+                if (File.Exists(path)) try { File.Delete(path); } catch { }
+            };
+            Func<string, List<string>> getObsoletePaths = (string dirPath) => {
+                var sorted = Directory.GetDirectories(dirPath, "*.*", SearchOption.TopDirectoryOnly).OrderBy(fullPathDir => {
+                    var verStr = fullPathDir.Replace(dirPath, "").Replace("\\", "").Trim();
+                    return Version.TryParse(verStr, out var ver) ? ver : new Version(1, 0);
+                }).ToList();
+                sorted.Remove(sorted.LastOrDefault());
+                return sorted;
+            };
             Logger.Info("MinerPluginsManager", "CleanupPlugins START");
             try
             {
-                if (ConfigManager.IsVersionChanged)
+                Logger.Info("MinerPluginsManager", "CleanupPlugins EXECUTE");
+                string minerPluginsPath = Paths.MinerPluginsPath();
+                var zipPackages = Directory.GetFiles(Paths.RootPath("plugins_packages"), "*.zip", SearchOption.TopDirectoryOnly);
+                var installedExternalPackages = Directory.GetDirectories(minerPluginsPath, "*", SearchOption.TopDirectoryOnly);
+                foreach (var installedPath in installedExternalPackages)
                 {
-                    Logger.Info("MinerPluginsManager", "CleanupPlugins EXECUTE");
-                    string minerPluginsPath = Paths.MinerPluginsPath();
-                    var zipPackages = Directory.GetFiles(Paths.RootPath("plugins_packages"), "*.zip", SearchOption.TopDirectoryOnly);
-                    var installedExternalPackages = Directory.GetDirectories(minerPluginsPath, "*", SearchOption.TopDirectoryOnly);
-                    foreach (var installedPath in installedExternalPackages)
+                    try
                     {
-                        try
+                        var uuid = installedPath.Replace(minerPluginsPath, "").Trim('\\');
+                        if (!System.Guid.TryParse(uuid, out var _)) continue;
+                        var zipPackage = zipPackages.FirstOrDefault(package => package.Contains(uuid));
+                        if (zipPackage == null) continue;
+                        // cleanup old bins and dll's
+                        var removePackageDirBins = getObsoletePaths(Path.Combine(installedPath, "bins"));
+                        foreach (var removeDir in removePackageDirBins) deleteDirOrFile(removeDir);
+
+                        var removePackageDirDlls = getObsoletePaths(Path.Combine(installedPath, "dlls"));
+                        foreach (var removeDir in removePackageDirDlls) deleteDirOrFile(removeDir);
+
+                        var installedPackageRootDlls = Directory.GetFiles(installedPath, "*.dll", SearchOption.TopDirectoryOnly);
+                        if (ConfigManager.IsVersionChanged || installedPackageRootDlls.Length > 1)
                         {
-                            var uuid = installedPath.Replace(minerPluginsPath, "").Trim('\\');
-                            if (!System.Guid.TryParse(uuid, out var _)) continue;
-                            var zipPackage = zipPackages.FirstOrDefault(package => package.Contains(uuid));
-                            if (zipPackage == null) continue;
-                            // cleanup old bins and dll's
-                            deleteDir(Path.Combine(installedPath, "bins"));
-                            deleteDir(Path.Combine(installedPath, "dlls"));
-                            var installedPackageRootDlls = Directory.GetFiles(installedPath, "*.dll", SearchOption.TopDirectoryOnly);
-                            foreach (var dllFile in installedPackageRootDlls) deleteFile(dllFile);
+                            foreach (var dllFile in installedPackageRootDlls) deleteDirOrFile(dllFile);
                             await ArchiveHelpers.ExtractFileAsync(zipPackage, installedPath, null, CancellationToken.None);
                         }
-                        catch (Exception e)
-                        {
-                            Logger.Error("MinerPluginsManager", $"CleanupPlugins {installedPath} Error: {e.Message}");
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error("MinerPluginsManager", $"CleanupPlugins {installedPath} Error: {e.Message}");
                     }
                 }
+                
             }
             catch (Exception e)
             {

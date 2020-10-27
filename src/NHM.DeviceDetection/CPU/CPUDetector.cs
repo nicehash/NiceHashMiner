@@ -31,8 +31,7 @@ namespace NHM.DeviceDetection.CPU
             {
                 var (cpuJSON, cpuID) = await TryQueryCPUDevicesAsync();
                 Logger.Info(Tag, cpuJSON);
-                if (!CpuUtils.IsCpuMiningCapable(cpuID)) return null;
-
+                if (cpuID == null || !CpuUtils.IsCpuMiningCapable(cpuID)) return null;
                 var cpuDetectResult = QueryCPUDevice();
                 // get all CPUs
                 var cpuCount = cpuID.PhysicalProcessorCount;
