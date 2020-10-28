@@ -27,11 +27,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v32.1",
+                BinVersion = "v33.0",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v32.1/NBMiner_32.1_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v33.0/NBMiner_33.0_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -43,7 +43,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 2);
+        public override Version Version => new Version(14, 3);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -161,6 +161,8 @@ namespace NBMiner
             {
                 if (ids.Count() == 0) return false;
                 if (benchmarkedPluginVersion.Major == 14 && benchmarkedPluginVersion.Minor < 1) return ids.Contains(AlgorithmType.DaggerHashimoto);
+                if (benchmarkedPluginVersion.Major == 14 && benchmarkedPluginVersion.Minor < 3 && device.DeviceType == DeviceType.AMD) return ids.Contains(AlgorithmType.DaggerHashimoto);
+                if (benchmarkedPluginVersion.Major == 14 && benchmarkedPluginVersion.Minor < 3 && device.DeviceType == DeviceType.NVIDIA) return ids.Contains(AlgorithmType.BeamV3);
             }
             catch (Exception e)
             {
