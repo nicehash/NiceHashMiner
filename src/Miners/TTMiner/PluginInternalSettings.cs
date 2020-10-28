@@ -148,16 +148,7 @@ namespace TTMiner
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "ttminer_logPool",
                     ShortName = "-logpool",
-                },
-                /// <summary>
-                /// Enable logging of screen output and additional information, the file is created in the folder 'Logs'.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "ttminer_log",
-                    ShortName = "-log",
-                },
+                }
             }
         };
     }

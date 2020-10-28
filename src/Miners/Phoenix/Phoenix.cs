@@ -29,7 +29,8 @@ namespace Phoenix
         {
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? " -amd" : " -nvidia";
-            var cmd = $"-pool {urlWithPort} -wal {username} -proto 4 {deviceType} -gpus {_devices} -wdog 0 -gbase 0 {_extraLaunchParameters}";
+            var minerLogPath = GetMinerLogPath();
+            var cmd = $"-pool {urlWithPort} -wal {username} -proto 4 {deviceType} -gpus {_devices} -wdog 0 -gbase 0 {_extraLaunchParameters} -logfile {minerLogPath}";
 
             return cmd;
         }

@@ -234,28 +234,6 @@ namespace Phoenix
                     DefaultValue = "1"
                 },
                 /// <summary>
-                /// Set the name of the logfile. If you place an asterisk (*) in the logfile name, it will be
-                /// replaced by the current date/time to create a unique name every time PhoenixMiner is started.
-                /// If there is no asterisk in the logfile name, the new log entries will be added to end of the same file.
-                /// If you want to use the same logfile but the contents to be overwritten every time when you start the miner,
-                /// put a dollar sign ($) character in the logfile name (e.g. -logfile my_log.txt$).
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "phoenix_logfile",
-                    ShortName = "-logfile",
-                },
-                /// <summary>
-                /// Set a path where the logfile(s) will be created
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "phoenix_logDir",
-                    ShortName = "-logdir",
-                },
-                /// <summary>
                 /// Maximum size of the logfiles in MB. The default is 200 MB (use 0 to turn off the limitation).
                 /// On startup, if the logfiles are larger than the specified limit, the oldest are deleted.
                 /// If you use a single logfile (by using -logfile), then it is truncated if it is bigger than the limit and a new one is created.

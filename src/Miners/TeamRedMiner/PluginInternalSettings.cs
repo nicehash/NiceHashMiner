@@ -55,15 +55,6 @@ namespace TeamRedMiner
                     LongName = "--log_interval="
                 },
                 /// <summary>
-                /// Enables logging of miner output into the file specified by FILENAME.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "teamRedMiner_logFile",
-                    ShortName = "--log_file="
-                },
-                /// <summary>
                 /// Manual cryptonight configuration for the miner.  CONFIG must be in the form
                 /// [P][I0][M][I1][:xyz], where [P] is an optional prefix and [:xyz] is an
                 /// optional suffix.  For [P], only the value of 'L' is supported for low-end

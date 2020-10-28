@@ -86,7 +86,8 @@ namespace WildRig
         {
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            return $"-a {AlgoName} -o {url} -u {username} --api-port={_apiPort} -d {_devices} --multiple-instance {_extraLaunchParameters}";
+            var minerLogPath = GetMinerLogPath();
+            return $"-a {AlgoName} -o {url} -u {username} --api-port={_apiPort} -d {_devices} --multiple-instance {_extraLaunchParameters} --log-file={minerLogPath}";
         }
     }
 }

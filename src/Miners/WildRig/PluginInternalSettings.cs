@@ -58,16 +58,6 @@ namespace WildRig
                     LongName = "--opencl-threads=",
                 },
                 /// <summary>
-                /// log all output to a file
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_log",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ShortName = "-l",
-                    LongName = "--log-file=",
-                },
-                /// <summary>
                 /// print hashrate report every N seconds
                 /// </summary>
                 new MinerOption

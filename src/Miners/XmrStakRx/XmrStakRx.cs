@@ -282,6 +282,7 @@ namespace XmrStakRx
             var deviceConfigParams = Task.Run(() => PrepareDeviceConfigs(CancellationToken.None)).Result;
             var generalConfigFilePath = Path.Combine(binCwd, folder, "config.txt");
             var generalConfig = new MainConfig{ httpd_port = _apiPort };
+            generalConfig.output_file = GetMinerLogPath();
             ConfigHelpers.WriteConfigFile(generalConfigFilePath, generalConfig);
             var poolsConfigFilePath = Path.Combine(binCwd, folder, "pools.txt");
             var poolsConfig = new PoolsConfig(urlWithPort, _username, algo);

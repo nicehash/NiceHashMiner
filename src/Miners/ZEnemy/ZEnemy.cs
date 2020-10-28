@@ -39,8 +39,8 @@ namespace ZEnemy
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
 
             var algo = AlgorithmName(_algorithmType);
-
-            var commandLine = $"--algo {algo} --url={urlWithPort} --user {_username} --api-bind={_apiPort} --devices {_devices} {_extraLaunchParameters}";
+            var minerLogPath = GetMinerLogPath();
+            var commandLine = $"--algo {algo} --url={urlWithPort} --user {_username} --api-bind={_apiPort} --devices {_devices} {_extraLaunchParameters} --log={minerLogPath}";
             return commandLine;
         }
     }
