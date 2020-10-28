@@ -5,6 +5,7 @@ using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -247,6 +248,14 @@ namespace NHMCore.Mining.Benchmarking
                 miner.InitMiningLocationAndUsername(StratumService.Instance.SelectedServiceLocation, DemoUser.BTC);
                 powerHelper.Start();
                 algo.ComputeDevice.State = DeviceState.Benchmarking;
+                try
+                {
+                    File.AppendAllText(Path.Combine(Paths.Root, "logs", $"device_{miningPair.Device.UUID}_log.txt"), $"[{DateTime.Now.ToLongTimeString()}] Benchmarking of {miningPair.Algorithm.AlgorithmStringID} started." + Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("DEV_LOG", $"BenchmarkAlgorithm: {ex.Message}");
+                }
                 var result = await miner.StartBenchmark(stop, PerformanceType);
                 if (stop.IsCancellationRequested) return;
 
@@ -262,6 +271,14 @@ namespace NHMCore.Mining.Benchmarking
                     // set status to empty string it will return speed
                     BenchmarkManager.SetCurrentStatus(algo.ComputeDevice, algo, "");
                     ConfigManager.CommitBenchmarksForDevice(algo.ComputeDevice);
+                    try
+                    {
+                        File.AppendAllText(Path.Combine(Paths.Root, "logs", $"device_{miningPair.Device.UUID}_log.txt"), $"[{DateTime.Now.ToLongTimeString()}] Benchmarking of {miningPair.Algorithm.AlgorithmStringID} was successfull." + Environment.NewLine);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("DEV_LOG", $"BenchmarkAlgorithm: {ex.Message}");
+                    }
                 }
                 else
                 {
@@ -271,6 +288,14 @@ namespace NHMCore.Mining.Benchmarking
                     _benchmarkFailedAlgo.Add(algo.AlgorithmName);
                     algo.SetBenchmarkError(result.ErrorMessage);
                     BenchmarkManager.SetCurrentStatus(algo.ComputeDevice, algo, result.ErrorMessage);
+                    try
+                    {
+                        File.AppendAllText(Path.Combine(Paths.Root, "logs", $"device_{miningPair.Device.UUID}_log.txt"), $"[{DateTime.Now.ToLongTimeString()}] Benchmarking of {miningPair.Algorithm.AlgorithmStringID} failed." + Environment.NewLine);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("DEV_LOG", $"BenchmarkAlgorithm: {ex.Message}");
+                    }
                 }
             }
         }

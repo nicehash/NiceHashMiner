@@ -1,5 +1,8 @@
+using NHM.Common;
 using NHMCore.Mining;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +19,13 @@ namespace NHMCore
             }
             dev.Enabled = enabled;
             Configs.ConfigManager.CommitBenchmarksForDevice(dev);
+            try
+            {
+                File.AppendAllText(Path.Combine(Paths.Root, "logs", $"device_{dev.Uuid}_log.txt"), $"[{DateTime.Now.ToLongTimeString()}] Changed enabled state to: {enabled}." + Environment.NewLine);
+            }catch(Exception ex)
+            {
+                Logger.Error("DEV_LOG", $"SetDeviceEnabledState: {ex.Message}");
+            }
         }
 
         public static async Task SetDeviceEnabledState(object sender, (string uuid, bool enabled) args)

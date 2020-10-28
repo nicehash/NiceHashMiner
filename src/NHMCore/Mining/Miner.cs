@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NHM.Common.Enums;
+using System.IO;
 
 namespace NHMCore.Mining
 {
@@ -194,6 +195,17 @@ namespace NHMCore.Mining
             var maxTimeout = _plugin.GetApiMaxTimeout(MiningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
             _algos.ForEach(a => a.IsCurrentlyMining = true);
+            foreach(var pair in MiningPairs)
+            {
+                try
+                {
+                    File.AppendAllText(Path.Combine(Paths.Root, "logs", $"device_{pair.Device.UUID}_log.txt"), $"[{DateTime.Now.ToLongTimeString()}] Mining of {pair.Algorithm.AlgorithmStringID} started." + Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("DEV_LOG", $"StartAsync: {ex.Message}");
+                }     
+            }
             return ret;
         }
 
@@ -205,6 +217,17 @@ namespace NHMCore.Mining
             MiningDataStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             await _miner.StopMiningTask();
             _algos.ForEach(a => a.IsCurrentlyMining = false);
+            foreach (var pair in MiningPairs)
+            {
+                try
+                {
+                    File.AppendAllText(Path.Combine(Paths.Root, "logs", $"device_{pair.Device.UUID}_log.txt"), $"[{DateTime.Now.ToLongTimeString()}] Mining of {pair.Algorithm.AlgorithmStringID} stopped." + Environment.NewLine);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("DEV_LOG", $"StopAsync: {ex.Message}");
+                }
+            }
             //if (_miner is IDisposable disposableMiner)
             //{
             //    disposableMiner.Dispose();
