@@ -137,8 +137,8 @@ namespace CryptoDredge
             // instant non blocking
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
-
-            var commandLine = $"--algo {algo} --url {url} --user {_username} -b 127.0.0.1:{_apiPort} --device {_devices} --no-watchdog {_extraLaunchParameters}";
+            var minerLogPath = GetMinerLogPath();
+            var commandLine = $"--algo {algo} --url {url} --user {_username} -b 127.0.0.1:{_apiPort} --device {_devices} --no-watchdog {_extraLaunchParameters} --log {minerLogPath}";
             return commandLine;
         }
     }

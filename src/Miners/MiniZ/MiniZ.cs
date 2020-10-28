@@ -124,8 +124,9 @@ namespace MiniZ
             var split = urlWithPort.Split(':');
             var url = split[0];
             var port = split[1];
+            var minerLogPath = GetMinerLogPath();
 
-            var cmd = $"--par={algo} --server={url} --port={port} --user={username} --cuda-devices={_devices} --telemetry={_apiPort} {_extraLaunchParameters}";
+            var cmd = $"--par={algo} --server={url} --port={port} --user={username} --cuda-devices={_devices} --telemetry={_apiPort} {_extraLaunchParameters} --logfile {minerLogPath}";
 
             if (_algorithmType == AlgorithmType.ZHash)
             {

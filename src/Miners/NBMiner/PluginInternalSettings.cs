@@ -70,24 +70,6 @@ namespace NBMiner
                     LongName = "--cuckatoo-power-optimize",
                 },
                 /// <summary>
-                /// Generate log file named `log_<timestamp>.txt`.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "nbminer_log",
-                    LongName = "--log"
-                },
-                /// <summary>
-                /// Generate custom log file. Note: This option will override `--log`.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "nbminer_logFile",
-                    LongName = "--log-file"
-                },
-                /// <summary>
                 /// Use 'yyyy-MM-dd HH:mm:ss,zzz' for log time format.
                 /// </summary>
                 new MinerOption

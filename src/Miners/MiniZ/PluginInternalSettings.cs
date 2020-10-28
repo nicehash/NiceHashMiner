@@ -103,24 +103,6 @@ namespace MiniZ
                     ShortName = "--extra"
                 },
                 /// <summary>
-                /// Copy program output to miniZ.log
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "miniZ_log",
-                    ShortName = "--log"
-                },
-                /// <summary>
-                /// Copy program output to filename
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "miniZ_log_file",
-                    ShortName = "--logfile"
-                },
-                /// <summary>
                 /// Define the time interval (in seconds) between periodic writes to the log/output file.
                 /// </summary>
                 new MinerOption

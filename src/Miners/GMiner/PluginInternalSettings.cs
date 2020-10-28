@@ -96,16 +96,6 @@ namespace GMinerPlugin
                     Delimiter = " "
                 },
                 /// <summary>
-                /// log filename
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_logfile",
-                    ShortName = "-l",
-                    LongName = "--logfile"
-                },
-                /// <summary>
                 /// enable/disable color output
                 /// </summary>
                 new MinerOption

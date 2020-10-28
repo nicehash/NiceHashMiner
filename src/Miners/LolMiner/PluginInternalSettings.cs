@@ -34,17 +34,6 @@ namespace LolMiner
                     DefaultValue = "0"
                 },
                 /// <summary>
-                /// Enables (1) or Disables (0) to make the miner write its text output to a log file.
-                /// The file will be located in the “logs” directory at the miner location and will be named by the date and time the miner started.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "lolMiner_enableLogs",
-                    ShortName = "--logs",
-                    DefaultValue = "0"
-                },
-                /// <summary>
                 /// This two parameters control the length between two statistics show. The longer interval statistics is shown with a blue color, the shorter only black and while.
                 /// Setting an interval length of 0 will disable the corresponding statistics output.
                 /// Note: disabling the short statistics output will also disable the shortaccept option (see below).

@@ -113,8 +113,9 @@ namespace NanoMiner
             }
 
             var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
+            var minerLogPath = GetMinerLogPath();
 
-            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\nrigName=\r\ndevices={devs}\r\npool1={url}";
+            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\nrigName=\r\ndevices={devs}\r\npool1={url}\r\nlogPath={minerLogPath}";
             try
             {
                 File.WriteAllText(Path.Combine(paths.Item2, $"config_nh_{devs}.ini"), configString);

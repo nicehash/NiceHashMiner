@@ -105,7 +105,7 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                 var urlSecond = StratumServiceHelpers.GetLocationUrl(_algorithmSecondType, _miningLocation, NhmConectionType.STRATUM_TCP);
                 cmd = $"-di {_devices} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x {_extraLaunchParameters} -wd 0";
             }
-            return cmd;
+            return cmd + " -logfile " + GetMinerLogPath();
         }
 
         protected override string MiningCreateCommandLine()
