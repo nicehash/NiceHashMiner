@@ -70,9 +70,7 @@ namespace Phoenix
             }
 
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-#warning TEMP disable NVIDIA driver check
-            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(377, 0);
-            var isDriverSupported = true;
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(377, 0);
             var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
 
             foreach (var gpu in supportedGpus)

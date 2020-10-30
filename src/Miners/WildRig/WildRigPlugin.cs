@@ -97,7 +97,7 @@ namespace WildRig
         {
             try
             { }
-            catch (Exception ex) 
+            catch
             { }
             // nothing new
             return false;

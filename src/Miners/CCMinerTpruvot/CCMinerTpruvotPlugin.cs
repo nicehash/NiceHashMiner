@@ -44,10 +44,9 @@ namespace CCMinerTpruvot
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-#warning TEMP disable NVIDIA driver check
-            //var reqCudaVer = Checkers.CudaVersion.CUDA_10_0_130;
-            //var isCompatible = Checkers.IsCudaCompatibleDriver(reqCudaVer, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
-            //if (!isCompatible) return supported; // return emtpy
+            var reqCudaVer = Checkers.CudaVersion.CUDA_10_0_130;
+            var isCompatible = Checkers.IsCudaCompatibleDriver(reqCudaVer, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            if (!isCompatible) return supported; // return emtpy
 
             var cudaGpus = devices
                 .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3)

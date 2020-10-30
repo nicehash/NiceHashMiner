@@ -52,9 +52,8 @@ namespace ZEnemy
         {
             var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 6).Cast<CUDADevice>();
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-#warning TEMP disable NVIDIA driver check
-            //var minDrivers = new Version(411, 0);
-            //if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+            var minDrivers = new Version(411, 0);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             foreach (var gpu in cudaGpus)
             {

@@ -57,10 +57,9 @@ namespace TTMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-#warning TEMP disable NVIDIA driver check
-            //// Require 398.26
-            //var minDrivers = new Version(398, 26);
-            //if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+            // Require 398.26
+            var minDrivers = new Version(398, 26);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
 
             var cudaGpus = devices

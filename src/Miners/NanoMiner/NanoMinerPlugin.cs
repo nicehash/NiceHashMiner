@@ -63,9 +63,7 @@ namespace NanoMiner
             }
 
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-#warning TEMP disable NVIDIA driver check
-            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(411, 31);
-            var isDriverSupported = true;
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(411, 31);
             var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
 
             foreach (var gpu in supportedGpus)

@@ -56,10 +56,9 @@ namespace MiniZ
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-#warning TEMP disable NVIDIA driver check
             // Require 411.31 - CUDA 10.0
-            //var minDrivers = new Version(411, 31);
-            //if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+            var minDrivers = new Version(411, 31);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
                 .Where(dev => dev is CUDADevice)

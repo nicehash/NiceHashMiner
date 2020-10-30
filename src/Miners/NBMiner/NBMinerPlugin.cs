@@ -1,5 +1,4 @@
-﻿//#define DISABLE_IDevicesCrossReference
-using NHM.MinerPluginToolkitV1;
+﻿using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
@@ -99,10 +98,8 @@ namespace NBMiner
 
         private static bool IsSupportedNvidiaDevice(BaseDevice dev)
         {
-#warning TEMP disable NVIDIA driver check
-            //var minDrivers = new Version(377, 0);
-            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
-            var isDriverSupported = true;
+            var minDrivers = new Version(377, 0);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
             var device = dev as CUDADevice;
             var isSupported = isSupportedVersion(device.SM_major, device.SM_minor);
             return isDriverSupported && isSupported;
@@ -122,11 +119,6 @@ namespace NBMiner
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-#if DISABLE_IDevicesCrossReference
-            await Task.CompletedTask;
-#else
-#warning Blocks exit. Check if this is fixed with newer versions
-            //return;
             try
             {
                 if (_mappedIDs.Count == 0) return;
@@ -141,12 +133,11 @@ namespace NBMiner
                     var indexID = kvp.Value;
                     _mappedIDs[uuid] = indexID;
                 }
-            } catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 Logger.Error("NBMiner", $"Error during DevicesCrossReference: {ex.Message}");
             }
-
-#endif
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

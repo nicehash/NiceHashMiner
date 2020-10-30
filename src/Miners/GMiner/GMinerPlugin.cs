@@ -115,11 +115,9 @@ namespace GMinerPlugin
 
         private static bool IsSupportedNVIDIADevice(BaseDevice dev)
         {
-#warning TEMP disable NVIDIA driver check
-            ////CUDA 9.0+: minimum drivers 384.xx
-            //var minDrivers = new Version(384, 0);
-            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
-            var isDriverSupported = true;
+            //CUDA 9.0+: minimum drivers 384.xx
+            var minDrivers = new Version(384, 0);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
             var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 5;
             return isSupported && isDriverSupported;
         }
