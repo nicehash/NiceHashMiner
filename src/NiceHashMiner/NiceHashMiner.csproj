@@ -121,7 +121,6 @@
     <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="ViewModels\DevicesViewModel.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
-    <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\DeviceData.cs" />
     <Compile Include="ViewModels\Models\DeviceDataTDP.cs" />
     <Compile Include="ViewModels\Models\IMiningData.cs" />
