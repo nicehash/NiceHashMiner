@@ -25,7 +25,7 @@ namespace TRex
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.KAWPOW, "kawpow" },
-                { AlgorithmType.DaggerHashimoto, "ethash" }
+                //{ AlgorithmType.DaggerHashimoto, "ethash" }
             }
         };
     }
