@@ -54,8 +54,15 @@ namespace NHM.MinersDownloader
 
         internal static string GetFileExtension(string urlOrName)
         {
+            try
+            {
+                urlOrName = urlOrName.Replace(new Uri(urlOrName).GetLeftPart(UriPartial.Path), "");
+            }
+            catch
+            {}
             var dotAt = urlOrName.LastIndexOf('.');
-            if (dotAt < 0) return null;
+            var invalidChars = Path.GetInvalidPathChars().Any(c => urlOrName.Contains(c));
+            if (dotAt < 0 || invalidChars) return "check";
             var extSize = urlOrName.Length - dotAt - 1;
             return urlOrName.Substring(urlOrName.Length - extSize);
         }
@@ -196,7 +203,7 @@ namespace NHM.MinersDownloader
 
         internal static bool IsMegaURLFolder(string url)
         {
-            return url.Contains("/#F!");
+            return url.Contains("/#F!") || url.Contains("/folder");
         }
         internal static Task<(bool success, string downloadedFilePath)> DownlaodWithMegaAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
@@ -243,13 +250,9 @@ namespace NHM.MinersDownloader
             try
             {
                 client.LoginAnonymous();
-                var splitted = url.Split('?');
-                var foldeUrl = splitted.FirstOrDefault();
-                var id = splitted.Skip(1).FirstOrDefault();
-                var folderLink = new Uri(foldeUrl);
-                //INodeInfo node = client.GetNodeFromLink(fileLink);
-                var nodes = await client.GetNodesFromLinkAsync(folderLink);
-                var node = nodes.FirstOrDefault(n => n.Id == id);
+                var folderUrl = new Uri(url.Split('?').FirstOrDefault());
+                var nodes = await client.GetNodesFromLinkAsync(folderUrl);
+                var node = nodes.FirstOrDefault(n => url.Contains(n.Id));
                 //Console.WriteLine($"Downloading {node.Name}");
                 var doubleProgress = new Progress<double>((p) => progress?.Report((int)p));
                 downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(node.Name));
