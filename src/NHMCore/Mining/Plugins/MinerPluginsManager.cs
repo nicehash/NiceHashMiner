@@ -191,7 +191,7 @@ namespace NHMCore.Mining.Plugins
                         if (ConfigManager.IsVersionChanged || installedPackageRootDlls.Length > 1)
                         {
                             foreach (var dllFile in installedPackageRootDlls) deleteDirOrFile(dllFile);
-                            await ArchiveHelpers.ExtractFileAsync(zipPackage, installedPath, null, CancellationToken.None);
+                            await ArchiveHelpers.ExtractFileAsync(null, zipPackage, installedPath, null, CancellationToken.None);
                         }
                     }
                     catch (Exception e)
@@ -696,7 +696,7 @@ namespace NHMCore.Mining.Plugins
                     if (!downloadMinerBinsOK || stop.IsCancellationRequested) return;
                     // unzip 
                     var binsUnzipPath = installingPluginBinsPath; // Path.Combine(installingPluginPath, "bins");
-                    var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, binsUnzipPath, unzipProgress, stop);
+                    var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(pluginContainer.GetBinsPackagePassword(), binsPackageDownloaded, binsUnzipPath, unzipProgress, stop);
                     if (stop.IsCancellationRequested) return;
                     if (unzipMinerBinsOK)
                     {
@@ -834,7 +834,7 @@ namespace NHMCore.Mining.Plugins
                 }
                 // unzip 
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingExtractingPlugin, 0));
-                var unzipPluginOK = await ArchiveHelpers.ExtractFileAsync(pluginPackageDownloaded, installDllPath, zipProgressPluginChangedEventHandler, stop);
+                var unzipPluginOK = await ArchiveHelpers.ExtractFileAsync(null, pluginPackageDownloaded, installDllPath, zipProgressPluginChangedEventHandler, stop);
                 if (!unzipPluginOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedExtractingPlugin;
@@ -854,7 +854,7 @@ namespace NHMCore.Mining.Plugins
                 }
                 // unzip 
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingExtractingMiner, 0));
-                var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, installBinsPath, zipProgressMinerChangedEventHandler, stop);
+                var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(plugin.BinsPackagePassword, binsPackageDownloaded, installBinsPath, zipProgressMinerChangedEventHandler, stop);
                 if (!unzipMinerBinsOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedExtractingMiner;

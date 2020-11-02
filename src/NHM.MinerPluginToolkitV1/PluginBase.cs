@@ -14,7 +14,7 @@ using System.Linq;
 namespace NHM.MinerPluginToolkitV1
 {
     // TODO add documentation
-    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo, IPluginSupportedAlgorithmsSettings, IGetMinerOptionsPackage
+    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo, IPluginSupportedAlgorithmsSettings, IGetMinerOptionsPackage, IGetBinsPackagePassword
     {
         public static bool IS_CALLED_FROM_PACKER { get; set; } = false;
         protected abstract MinerBase CreateMinerBase();
@@ -94,8 +94,8 @@ namespace NHM.MinerPluginToolkitV1
 
         // internal settings
         protected MinerOptionsPackage MinerOptionsPackage { get; set; } = new MinerOptionsPackage { };
-        protected MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; } = new MinerSystemEnvironmentVariables{};
-        protected MinerReservedPorts MinerReservedApiPorts { get; set; } = new MinerReservedPorts {};
+        protected MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; } = new MinerSystemEnvironmentVariables { };
+        protected MinerReservedPorts MinerReservedApiPorts { get; set; } = new MinerReservedPorts { };
         protected MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig { get; set; } = new MinerApiMaxTimeoutSetting { GeneralTimeout = new TimeSpan(0, 5, 0) };
         protected MinerBenchmarkTimeSettings MinerBenchmarkTimeSettings { get; set; } = new MinerBenchmarkTimeSettings { };
 
@@ -107,7 +107,7 @@ namespace NHM.MinerPluginToolkitV1
 
         // we must define this for every miner plugin
         protected abstract PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings { get; }
-        
+
         protected void InitInsideConstuctorPluginSupportedAlgorithmsSettings()
         {
             PluginSupportedAlgorithmsSettings = DefaultPluginSupportedAlgorithmsSettings;
@@ -128,6 +128,7 @@ namespace NHM.MinerPluginToolkitV1
 
 
         protected TimeSpan DefaultTimeout { get; set; } = new TimeSpan(0, 5, 0);
+
         public virtual TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
         {
             return MinerApiMaxTimeoutSetting.ParseMaxTimeout(DefaultTimeout, GetApiMaxTimeoutConfig, miningPairs);
@@ -153,7 +154,7 @@ namespace NHM.MinerPluginToolkitV1
             {
                 throw new Exception("Unable to return cwd and exe paths MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Path == null || MinersBinsUrlsSettings.Path.Count == 0");
             }
-            var paths = new List<string>{ Paths.MinerPluginsPath(), PluginUUID, "bins", $"{Version.Major}.{Version.Minor}" };
+            var paths = new List<string> { Paths.MinerPluginsPath(), PluginUUID, "bins", $"{Version.Major}.{Version.Minor}" };
             paths.AddRange(MinersBinsUrlsSettings.ExePath);
             var binCwd = Path.Combine(paths.GetRange(0, paths.Count - 1).ToArray());
             var binPath = Path.Combine(paths.ToArray());
@@ -264,6 +265,19 @@ namespace NHM.MinerPluginToolkitV1
             var ramLimits = GetCustomMinimumMemoryPerAlgorithm(deviceType);
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsListCustom(gpu.GpuRam, algorithms, ramLimits);
             return filteredAlgorithms;
+        }
+
+        public virtual string BinsPackagePassword
+        {
+            get
+            {
+                try
+                {
+                    return MinersBinsUrlsSettings?.BinsPackagePassword ?? null;
+                }
+                catch {}
+                return null;
+            }
         }
     }
 }

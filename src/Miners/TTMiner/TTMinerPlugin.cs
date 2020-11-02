@@ -29,7 +29,6 @@ namespace TTMiner
                 ExePath = new List<string> { "TT-Miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/3.0.0.2/TT-Miner-4.0.0.3.zip",
                     "https://tradeproject.de/download/Miner/TT-Miner-4.0.3.zip" // original
                 }
             };
@@ -42,7 +41,7 @@ namespace TTMiner
 
         public override string PluginUUID => "074d4a80-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 0);
+        public override Version Version => new Version(14, 1);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 

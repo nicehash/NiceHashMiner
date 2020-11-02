@@ -27,9 +27,9 @@ namespace MiniZ
                 ExePath = new List<string> { "miniZ.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/3.0.0.2/miniZ_v1.6v6_cuda10_win-x64.zip",
                     "https://miniz.ch/?smd_process_download=1&download_id=3839", // original (pwd protected)
-                }
+                },
+                BinsPackagePassword = "miniZ"
             };
             PluginMetaInfo = new PluginMetaInfo
             {
@@ -39,7 +39,7 @@ namespace MiniZ
         }
         public override string PluginUUID => "eda6abd0-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 0);
+        public override Version Version => new Version(15, 0);
 
         public override string Name => "MiniZ";
 

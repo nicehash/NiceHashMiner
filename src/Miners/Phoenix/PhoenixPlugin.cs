@@ -29,7 +29,6 @@ namespace Phoenix
                 ExePath = new List<string> { "PhoenixMiner_5.1c_Windows", "PhoenixMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/3.0.0.2/PhoenixMiner_5.1c_Windows.zip",
                     "https://mega.nz/folder/2VskDJrI#lsQsz1CdDe8x5cH3L8QaBw/file/7MsCwayD" // original
                 }
             };
@@ -42,7 +41,7 @@ namespace Phoenix
 
         public override string PluginUUID => "fa369d10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 0);
+        public override Version Version => new Version(14, 1);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";

@@ -110,7 +110,7 @@ namespace MinerPluginsPacker
                 pluginMetaInfo = pluginMetaInfoGetter.GetPluginMetaInfo();
             }
             if (pluginMetaInfo == null) return;
-
+            var packagePassword = plugin is IGetBinsPackagePassword p ? p.BinsPackagePassword : null;
             var packageInfo = new PluginPackageInfoForJson
             {
                 PluginUUID = plugin.PluginUUID,
@@ -121,7 +121,8 @@ namespace MinerPluginsPacker
                 MinerPackageURL = minerPackageURL,
                 SupportedDevicesAlgorithms = TransformToPluginPackageInfoSupportedDevicesAlgorithms(pluginMetaInfo.SupportedDevicesAlgorithms),
                 // TODO enhance this with the bins version
-                PluginDescription = $"Miner Binary Version '{binaryVersion}'.\n\n" + pluginMetaInfo.PluginDescription
+                PluginDescription = $"Miner Binary Version '{binaryVersion}'.\n\n" + pluginMetaInfo.PluginDescription,
+                PackagePassword = packagePassword
             };
             PluginPackageInfos.Add(packageInfo);
         }

@@ -18,5 +18,8 @@ namespace NHM.MinerPluginToolkitV1.Configs
 
         [JsonProperty("bins_urls")]
         public List<string> Urls { get; set; } = null;
+
+        [JsonProperty("bins_package_pwd")]
+        public string BinsPackagePassword { get; set; } = null;
     }
 }

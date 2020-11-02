@@ -211,5 +211,13 @@ namespace NHMCore.Mining.Plugins
                 OnPropertyChanged(nameof(IsAutoUpdateEnabled));
             }
         }
+
+        public string BinsPackagePassword
+        {
+            get
+            {
+                return OnlineInfo?.PackagePassword ?? null;
+            }
+        }
     }
 }

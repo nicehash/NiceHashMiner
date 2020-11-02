@@ -28,7 +28,6 @@ namespace ClaymoreDual14
                 ExePath = new List<string> { "Claymore's Dual Ethereum AMD+NVIDIA GPU Miner v15.0", "EthDcrMiner64.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/Claymore.s.Dual.Ethereum.AMD+NVIDIA.GPU.Miner.v15.0.zip",
                     "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?64RGzCIb" // original
                 }
             };
@@ -41,7 +40,7 @@ namespace ClaymoreDual14
 
         public override string PluginUUID => "c9abdb10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 0);
+        public override Version Version => new Version(14, 1);
 
         public override string Name => "ClaymoreDual";
 
