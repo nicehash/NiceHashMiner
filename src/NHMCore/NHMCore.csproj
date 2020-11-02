@@ -264,14 +264,6 @@
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\CCMinerTpruvot\MP.CCMinerTpruvot.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CCMinerTpruvot_PLUGIN'))">
-      <Project>{3651e4f1-76b9-4634-a8d2-2a05e60c16cb}</Project>
-      <Name>MP.CCMinerTpruvot</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\ClaymoreDual14\MP.ClaymoreDual.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ClaymoreDual_PLUGIN'))">
-      <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
-      <Name>MP.ClaymoreDual</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\CryptoDredge\MP.CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>MP.CryptoDredge</Name>
@@ -323,10 +315,6 @@
     <ProjectReference Include="..\Miners\XMRig\MP.XMRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XMRig_PLUGIN'))">
       <Project>{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}</Project>
       <Name>MP.XMRig</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\XmrStakRx\MP.XmrStakRx.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XmrStakRx_PLUGIN'))">
-      <Project>{D54AEE68-4025-441F-855F-3612E1F4DEFC}</Project>
-      <Name>MP.XmrStakRx</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\ZEnemy\MP.ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
       <Project>{059e2ca2-85c5-453e-a48c-ada45a3c5879}</Project>
