@@ -318,8 +318,8 @@ namespace NiceHashMiner.Views
                     {
                         var dialog = new CustomDialog
                         {
-                            Title = "NHMWS not connected",
-                            Description = "Not connected to NHMWS. Please check your internet connection.",
+                            Title = Translations.Tr("NHMWS not connected"),
+                            Description = Translations.Tr("Not connected to NHMWS. Please check your internet connection."),
                             CancelVisible = Visibility.Collapsed,
                             OkVisible = Visibility.Collapsed,
                             AnimationVisible = Visibility.Collapsed,
