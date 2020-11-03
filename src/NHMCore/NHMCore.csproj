@@ -122,7 +122,6 @@
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\DeviceTDPSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
-    <Compile Include="Configs\Data\BlacklistedPlugins.cs" />
     <Compile Include="Configs\GlobalDeviceSettings.cs" />
     <Compile Include="Configs\GUISettings.cs" />
     <Compile Include="Configs\IdleMiningSettings.cs" />
@@ -157,6 +156,7 @@
     <Compile Include="Mining\MiningStats\BaseStats.cs" />
     <Compile Include="Mining\MiningStats\DeviceMiningStats.cs" />
     <Compile Include="Mining\MiningStats\MinerMiningStats.cs" />
+    <Compile Include="Mining\Plugins\BlacklistedPlugins.cs" />
     <Compile Include="Mining\Plugins\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Mining\Plugins\MinerPluginInstallTask.cs" />
     <Compile Include="Mining\Plugins\MinerPluginsUpdaterSettings.cs" />
