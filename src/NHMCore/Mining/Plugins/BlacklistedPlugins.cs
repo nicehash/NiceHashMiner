@@ -36,22 +36,17 @@ namespace NHMCore.Mining.Plugins
 
         private static void CommitToFile() => InternalConfigs.WriteFileSettings(BlacklistedPluginsPath, BlacklistedPluginUUIDs);
 
-        public static bool IsSupported(string uuid)
-        {
-            if (BlacklistedPluginUUIDs.Count == 0) return true;
-            var isSupported = !BlacklistedPluginUUIDs.Contains(uuid);
-            return isSupported;
-        }
+        public static bool IsNotBlacklisted(string pluginUUID) => !BlacklistedPluginUUIDs.Contains(pluginUUID);
 
-        public static void AddPluginToBlacklist(string uuid)
+        public static void AddToBlacklist(string pluginUUID)
         {
-            if (BlacklistedPluginUUIDs.Contains(uuid)) return;
-            BlacklistedPluginUUIDs.Add(uuid);
+            if (BlacklistedPluginUUIDs.Contains(pluginUUID)) return;
+            BlacklistedPluginUUIDs.Add(pluginUUID);
             CommitToFile();
         }
-        public static void RemovePluginFromBlacklist(string uuid)
+        public static void RemoveFromBlacklist(string pluginUUID)
         {
-            BlacklistedPluginUUIDs.Remove(uuid);
+            BlacklistedPluginUUIDs.Remove(pluginUUID);
             CommitToFile();
         }
     }

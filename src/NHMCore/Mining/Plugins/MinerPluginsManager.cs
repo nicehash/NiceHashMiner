@@ -120,7 +120,7 @@ namespace NHMCore.Mining.Plugins
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
-            var filteredIntegratedPlugins = _integratedPlugins.Where(p => BlacklistedPlugins.IsSupported(p.PluginUUID)).ToList();
+            var filteredIntegratedPlugins = _integratedPlugins.Where(p => BlacklistedPlugins.IsNotBlacklisted(p.PluginUUID)).ToList();
             foreach (var integratedPlugin in filteredIntegratedPlugins)
             {
                 PluginContainer.Create(integratedPlugin);
@@ -238,7 +238,7 @@ namespace NHMCore.Mining.Plugins
         public static async Task LoadAndInitMinerPlugins()
         {
             // load dll's and create plugin containers
-            var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath()).Where(uuid => BlacklistedPlugins.IsSupported(uuid));
+            var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath()).Where(uuid => BlacklistedPlugins.IsNotBlacklisted(uuid));
             foreach (var pluginUUID in loadedPlugins) PluginContainer.Create(MinerPluginHost.MinerPlugin[pluginUUID]);
             // init all containers
             foreach (var plugin in PluginContainer.PluginContainers)
@@ -549,7 +549,7 @@ namespace NHMCore.Mining.Plugins
             {
                 if (isOk)
                 {
-                    BlacklistedPlugins.AddPluginToBlacklist(pluginUUID);
+                    BlacklistedPlugins.AddToBlacklist(pluginUUID);
                     _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.RemoveSuccess, PluginInstallRemoveState.Remove);
                 }
                 else
@@ -781,7 +781,7 @@ namespace NHMCore.Mining.Plugins
                 {
                     if (addSuccess)
                     {
-                        BlacklistedPlugins.RemovePluginFromBlacklist(pluginUUID);
+                        BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
                         MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
                     }
                     if (installResult == PluginInstallProgressState.Success)
