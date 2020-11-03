@@ -1,4 +1,5 @@
 ﻿using NHMCore;
+using NHMCore.Mining.Plugins;
 using NiceHashMiner.ViewModels.Plugins;
 using NiceHashMiner.Views.Common;
 using System;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static NHMCore.Translations;
 
 namespace NiceHashMiner.Views.Plugins.PluginItem
 {
@@ -90,11 +92,24 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
             
         }
 
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_Click_Install(object sender, RoutedEventArgs e)
         {
             if (_vm.Load.IsInstalling) return;
-
-            await _vm.InstallOrUpdatePlugin();
+            var dialog = new CustomDialog(400, 300)
+            {
+                // Translate this???
+                Title = "Disclaimer on usage of 3rd party software",
+                Description = "NiceHash Miner integrates 3rd party mining software via the miner plugin system. However, since this is 3rd party software that is fully closed-source, we have no chance to inspect it in any way. NiceHash can not vouch for using that software and is refusing to take any responsibility for any damage caused, security breaches, loss of data or funds, system or hardware error, and other issues. By agreeing to this disclaimer you take full responsibility for using these closed-source miners as they are.",
+                OkText = Tr("I ACCEPT"),
+                CancelText = Tr("CANCEL"),
+                AnimationVisible = Visibility.Collapsed
+            };
+            dialog.OKClick += async (s, e1) =>
+            {
+                AcceptedPlugins.Add(_vm.Plugin.PluginUUID);
+                await _vm.InstallOrUpdatePlugin();
+            };
+            CustomDialogManager.ShowModalDialog(dialog);
         }
 
         private void Button_Click_Uninstall(object sender, RoutedEventArgs e)

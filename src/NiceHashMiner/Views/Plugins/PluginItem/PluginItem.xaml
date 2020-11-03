@@ -245,7 +245,7 @@
                             Width="105" Height="24"
                             Margin="0,0,16,0"
                             Content="{Binding InstallString }"
-                            Click="Button_Click_1"
+                            Click="Button_Click_Install"
                             />
 
                     <TextBlock Style="{StaticResource local.TextBoxPluginName}"
