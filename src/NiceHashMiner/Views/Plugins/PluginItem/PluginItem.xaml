@@ -173,8 +173,11 @@
                     <TextBlock
                         IsEnabled="{Binding Plugin.Supported}"
                         Style="{StaticResource local.TextBoxPluginInfo}"
-                        Margin="4,0,0,0"
-                        Text="{ Binding Plugin.PluginAuthor }"/>
+                        Foreground="{DynamicResource Brushes.Light.Basic.NoticeColor}"
+                        Text="Source"
+                        ToolTip="{Binding Plugin.MinerPackageURL}"
+                        Cursor="Help"
+                        />
 
                     <TextBlock Grid.Column="2"
                            IsEnabled="{Binding Plugin.Supported}"
@@ -268,7 +271,11 @@
                     <ColumnDefinition MinWidth="100" Width="100*" />
                     <ColumnDefinition MinWidth="100" Width="150*" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Margin="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Column="0" Grid.Row="0" Margin="16">
                     <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                                Foreground="{DynamicResource TextColorBrush}"
                                FontSize="12"
@@ -288,7 +295,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Margin="16">
+                <StackPanel Grid.Column="1" Grid.Row="0" Margin="16">
                     <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                                Foreground="{DynamicResource TextColorBrush}"
                                FontSize="12"
@@ -324,7 +331,7 @@
                     </ItemsControl>
 
                 </StackPanel>
-                <WrapPanel Grid.Column="2" Orientation="Vertical" Margin="16">
+                <WrapPanel Grid.Column="2" Grid.Row="0" Orientation="Vertical" Margin="16">
                     <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
                                Foreground="{DynamicResource TextColorBrush}"
                                FontSize="12"
@@ -341,6 +348,22 @@
                                TextWrapping="Wrap"
                                Text="{Binding Plugin.PluginDescription}"/>
                 </WrapPanel>
+                <StackPanel Grid.ColumnSpan="3" Grid.Row="1" Margin="16" >
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
+                               Foreground="{DynamicResource TextColorBrush}"
+                               FontSize="12"
+                               LineHeight="1.5"
+                               Text="Miner source:"
+                               TextWrapping="Wrap"
+                               />
+                    <TextBlock Style="{StaticResource BaseUbuntuTextBlock}"
+                               Foreground="{StaticResource Brushes.Dark.Basic.NoticeColor}"
+                               FontSize="12"
+                               LineHeight="1.5"
+                               HorizontalAlignment="Left"
+                               TextWrapping="Wrap"
+                               Text="{Binding Plugin.MinerPackageURL}"/>
+                </StackPanel>
 
             </Grid>
         </Grid>
