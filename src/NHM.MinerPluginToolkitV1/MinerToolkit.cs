@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 // alias
 
@@ -175,18 +176,16 @@ namespace NHM.MinerPluginToolkitV1
         /// <summary>
         /// CreateMiningProcess creates a new process used in mining
         /// </summary>
-        public static Process CreateMiningProcess(string binPath, string workingDir, string commandLine, Dictionary<string, string> environmentVariables = null)
+        public static Process CreateMiningProcess(string binPath, string workingDir, string commandLine, Dictionary<string, string> environmentVariables = null, IEnumerable<MiningPair> mps = null)
         {
+            var deviceUUIDs = mps.Select(pair => pair.Device).Select(dev => dev.UUID);
             var miningHandle = new Process
             {
                 StartInfo =
                 {
-                    // set params
-                    FileName = binPath,
-                    WorkingDirectory = workingDir,
-                    Arguments = commandLine,
-                    // common settings
-                    UseShellExecute = IsUseShellExecute(environmentVariables),
+                    FileName = Paths.AppRootPath("MinerOutputRedirector.exe"),
+                    Arguments = $"\"{Paths.RootPath("logs")}\" \"{binPath}\" \"{workingDir}\" \"{commandLine}\" \"{string.Join("|", deviceUUIDs)}\"",
+                    UseShellExecute = false
                 },
                 EnableRaisingEvents = true,
             };
@@ -210,13 +209,11 @@ namespace NHM.MinerPluginToolkitV1
             {
                 miningHandle.StartInfo.CreateNoWindow = false;
                 miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                miningHandle.StartInfo.UseShellExecute = true && IsUseShellExecute(environmentVariables);
             }
             else if (hideMiningWindow)
             {
                 miningHandle.StartInfo.CreateNoWindow = true;
                 miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                miningHandle.StartInfo.UseShellExecute = true && IsUseShellExecute(environmentVariables);
             }
 
             return miningHandle;
