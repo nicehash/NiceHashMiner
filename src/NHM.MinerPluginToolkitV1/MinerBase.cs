@@ -285,7 +285,7 @@ namespace NHM.MinerPluginToolkitV1
             {
                 using (_stopMinerTaskSource = new CancellationTokenSource())
                 using (var stopMinerTask = CancellationTokenSource.CreateLinkedTokenSource(stop, _stopMinerTaskSource.Token))
-                using (var miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables))
+                using (var miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables, _miningPairs))
                 using (var quitMiningProcess = stopMinerTask.Token.Register(() => ExitMiningProcess(miningProcess)))
                 {
                     lock (_lock)
