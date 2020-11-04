@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using NHM.Common;
 using System;
 using System.IO;
@@ -28,54 +28,66 @@ namespace NHM.UUID
         {
             if (_deviceB64UUID != null) return _deviceB64UUID;
 
-            var infoToHash = GetInfoToHash(GetMachineGuidOrFallback());
-            if (showInfoToHash)
+            var (gotCachedRigUUID, hexUuidCached) = GetCachedHexUUID();
+            if (gotCachedRigUUID)
             {
-                Console.WriteLine("NHM/[{cpuSerial}]-[{macUUID}]-[{guid}]-[{extraRigSeed}]");
+                _deviceB64UUID = $"{0}-{GetB64UUID(hexUuidCached)}";
+                return _deviceB64UUID;
+            }
+
+            var (macHexOK, macHex) = WindowsMacUtils.GetAndCacheMACHex();
+            var (systemGuidOK, systemGuid) = GetMachineGuidOrFallback();
+            var ok = macHexOK && systemGuidOK;
+            if (!ok) Logger.Error("NHM.UUID", $"Unable to read MAC or GUID read macHexOK='{macHexOK}' systemGuidOK='{systemGuidOK}'");
+            var infoToHash = ok ? GetInfoToHash(macHex, systemGuid) : System.Guid.NewGuid().ToString();
+            if (showInfoToHash && ok)
+            {
+                Console.WriteLine("NHM/[{cpuSerial}]-[{macHex}]-[{guid}]-[{extraRigSeed}]");
+                Console.WriteLine(infoToHash);
+            }
+            else if (showInfoToHash)
+            {
+                Console.WriteLine("Fallback GUID");
                 Console.WriteLine(infoToHash);
             }
             Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
             var hexUuid = GetHexUUID(infoToHash);
+            CacheHexUUIDToFile(hexUuid);
             _deviceB64UUID = $"{0}-{GetB64UUID(hexUuid)}";
             return _deviceB64UUID;
         }
 
-        private static string GetInfoToHash(string guid)
+        private static string GetInfoToHash(string macHex, string guid)
         {
             var cpuSerial = GetCpuID();
-            var macUUID = WindowsMacUtils.GetMAC_UUID();
             var extraRigSeed = GetExtraRigSeed();
-            var infoToHash = $"NHM/[{cpuSerial}]-[{macUUID}]-[{guid}]-[{extraRigSeed}]";
+            var infoToHash = $"NHM/[{cpuSerial}]-[{macHex}]-[{guid}]-[{extraRigSeed}]";
             return infoToHash;
         }
-        public static string GetMachineGuidOrFallback()
-        {
-            const string hklm = "HKEY_LOCAL_MACHINE";
-            const string keyPath = hklm + @"\SOFTWARE\Microsoft\Cryptography";
-            const string value = "MachineGuid";
 
+        private static (bool ok, string systemGuid) GetMachineGuidOrFallback()
+        {
             // main deterministic
             try
             {
-                var readValue = Registry.GetValue(keyPath, value, new object());
-                return (string)readValue;
+                var readValue = Registry.GetValue("HKEY_LOCAL_MACHINE" + @"\SOFTWARE\Microsoft\Cryptography", "MachineGuid", new object());
+                return (true, (string)readValue);
             }
             catch (Exception e)
             {
                 Logger.Error("NHM.UUID", $"GetMachineGuid: {e.Message}");
             }
+
             // fallback deterministic
             try
             {
-                //const string userKeyPath = @"Software\" + "";
                 const string valueFallback = "MachineGuidNhmGen";
                 using (var rkFallback = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
                 {
-                    var fallbackUUIDValue = rkFallback.GetValue(valueFallback, null);
-                    string genUUID = "";
+                    var fallbackUUIDValue = rkFallback?.GetValue(valueFallback, null);
                     if (fallbackUUIDValue == null)
                     {
-                        genUUID = System.Guid.NewGuid().ToString();
+                        var genUUID = System.Guid.NewGuid().ToString();
                         try
                         {
                             rkFallback?.SetValue(valueFallback, genUUID);
@@ -84,55 +96,72 @@ namespace NHM.UUID
                         {
                             //if registry fails do fallback to files
                             Logger.Error("NHM.UUID", $"Fallback SetValue: {e.Message}");
-                            return GetUUIDFromFile(genUUID);
+                            return (false, "");
                         }
                     }
                     else if (fallbackUUIDValue is string regUUID)
                     {
-                        genUUID = regUUID;
+                        return (true, regUUID);
                     }
-                    return genUUID;
                 }
             }
             catch (Exception e)
             {
-                Logger.Error("NHM.UUID", $"Fallback: {e.Message}");
+                Logger.Error("NHM.UUID", $"MachineGuidNhmGen: {e.Message}");
             }
 
-            // fallback
-            Logger.Warn("NHM.UUID", $"GetMachineGuid FALLBACK");
-            return GetUUIDFromFile(System.Guid.NewGuid().ToString());
+            return (false, "");
         }
 
-        private static string GetUUIDFromFile(string generatedUUID)
+        private static string CachedRigUUIDPath = Paths.RootPath("rig_hex_uuid.txt");
+
+        private static (bool, string) GetCachedHexUUID()
         {
             try
             {
-                var guidFallbackPath = Paths.RootPath("guidFallback.txt");
-                if (File.Exists(guidFallbackPath))
+                var lastSavedGuid = File.ReadAllText(CachedRigUUIDPath);
+                if (System.Guid.TryParse(lastSavedGuid, out var _))
                 {
-                    var fileReadUUID = File.ReadAllText(guidFallbackPath);
-                    if (System.Guid.TryParse(fileReadUUID, out var fileUUID))
-                    {
-                        return fileUUID.ToString();
-                    }
+                    Logger.Info("NHM.UUID", $"Returning valid GUID from file '{lastSavedGuid}'");
+                    return (true, lastSavedGuid);
                 }
+                else
+                {
+                    Logger.Warn("NHM.UUID", $"Read invalid GUID from file '{lastSavedGuid}'");
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("NHM.UUID", $"Error while reading saved GUID: {e.Message}");
+            }
+            return (false, "");
+        }
 
-                File.WriteAllText(guidFallbackPath, generatedUUID);
-
-                //log fallback to logs
-                var logGuidFallbackPath = Paths.RootPath(Path.Combine("logs", "guidFallback.txt"));
-                File.AppendAllText(logGuidFallbackPath, GetInfoToHash(generatedUUID));
-                return generatedUUID;
+        private static bool CacheHexUUIDToFile(string hexUUID)
+        {
+            bool saved = true;
+            try
+            {
+                File.WriteAllText(CachedRigUUIDPath, hexUUID);
             }
             catch(Exception ex)
             {
-                Logger.Error("NHM.UUID", $"GetUUIDFromFile failed: {ex.Message}");
+                Logger.Error("NHM.UUID", $"Save GUID fallback failed: {ex.Message}");
+                saved = false;
             }
-            return System.Guid.NewGuid().ToString();
+            try
+            {
+                //log fallback to logs
+                File.AppendAllText(Paths.RootPath("logs", "guidFallback.txt"), hexUUID);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("NHM.UUID", $"Logging failed: {ex.Message}");
+            }
+            return saved;
         }
 
-        public static string GetCpuID()
+        private static string GetCpuID()
         {
             var serial = "N/A";
             try
@@ -146,22 +175,23 @@ namespace NHM.UUID
                     }
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                Logger.Error("NHM.UUID", $"Error GetCpuID(): {e.Message}");
+            }
             return serial;
         }
 
         private static string GetExtraRigSeed()
         {
-            string path = Paths.RootPath("extra_rig_seed.txt");
-            if (File.Exists(path))
+            try
             {
-                try
-                {
-                    return File.ReadAllText(path);
-                }
-                catch (Exception)
-                {
-                }
+                string path = Paths.RootPath("extra_rig_seed.txt");
+                if (File.Exists(path)) return File.ReadAllText(path);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("NHM.UUID", $"Error GetExtraRigSeed(): {e.Message}");
             }
             return "";
         }
