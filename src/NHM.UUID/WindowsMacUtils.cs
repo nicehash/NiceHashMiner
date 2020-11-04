@@ -20,23 +20,12 @@ namespace NHM.UUID
             var macUuidFallbackPath = Paths.RootPath("macUuidFallback.txt");
             try
             {
-                if (File.Exists(macUuidFallbackPath))
+                var fileReadUUID = File.ReadAllText(macUuidFallbackPath);
+                if (System.Guid.TryParse(fileReadUUID, out var fileUUID))
                 {
-                    var fileReadUUID = File.ReadAllText(macUuidFallbackPath);
-                    if (System.Guid.TryParse(fileReadUUID, out var fileUUID))
-                    {
-                        return fileUUID.ToString();
-                    }
+                    return fileUUID.ToString();
                 }
-                System.Guid guid;
-                UuidCreateSequential(out guid);
-                var splitted = guid.ToString().Split('-');
-                var last = splitted.LastOrDefault();
-                if (last != null)
-                {
-                    SaveMacUuidToFile(macUuidFallbackPath, last);
-                    return last;
-                }
+                Logger.Warn("NHM.UUID", $"Unable to parse fileReadUUID: {fileReadUUID}");
             }
             catch (Exception e)
             {
@@ -52,14 +41,16 @@ namespace NHM.UUID
         {
             try
             {
+                //write to macUuidFallbackPath
                 File.WriteAllText(path, uuid);
                 //log fallback to logs
-                var logMacUuidFallbackPath = Paths.RootPath(Path.Combine("logs", "macUuidFallback.txt"));
+                var logMacUuidFallbackPath = Paths.RootPath(Path.Combine("logs", "macUuidFallbackHistory.txt"));
                 File.AppendAllText(logMacUuidFallbackPath, uuid + Environment.NewLine);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Logger.Error("NHM.UUID", e.Message);
-            }      
+            }
         }
     }
 }
