@@ -63,9 +63,7 @@ namespace GMinerPlugin
             {
                 cmd += " --pers auto";
             }
-
-            var minerLogPath = GetMinerLogPath();
-            return cmd + $" --logfile {minerLogPath}";
+            return cmd;
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
