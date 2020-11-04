@@ -8,13 +8,6 @@ namespace NHM.UUID
 {
     public static class WindowsMacUtils
     {
-        [DllImport("rpcrt4.dll", SetLastError = true)]
-        private static extern int UuidCreateSequential(out System.Guid guid);
-
-        private const long RPC_S_OK = 0L;
-        private const long RPC_S_UUID_LOCAL_ONLY = 1824L;
-        private const long RPC_S_UUID_NO_ADDRESS = 1739L;
-
         public static string GetMAC_UUID()
         {
             var macUuidFallbackPath = Paths.RootPath("macUuidFallback.txt");
