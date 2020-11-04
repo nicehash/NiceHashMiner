@@ -28,8 +28,8 @@ namespace NHM.UUID
         {
             if (_deviceB64UUID != null) return _deviceB64UUID;
 
-            var (gotCachedRigUUID, hexUuidCached) = GetCachedHexUUID();
-            if (gotCachedRigUUID)
+            var (gotCachedHexUUID, hexUuidCached) = GetCachedHexUUID();
+            if (gotCachedHexUUID)
             {
                 _deviceB64UUID = $"{0}-{GetB64UUID(hexUuidCached)}";
                 return _deviceB64UUID;
@@ -156,7 +156,7 @@ namespace NHM.UUID
             }
             catch (Exception ex)
             {
-                Logger.Error("NHM.UUID", $"Logging failed: {ex.Message}");
+                Logger.Error("NHM.UUID", $"GUID fallback logging failed: {ex.Message}");
             }
             return saved;
         }
