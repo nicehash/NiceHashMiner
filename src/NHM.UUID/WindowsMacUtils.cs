@@ -11,55 +11,79 @@ namespace NHM.UUID
         [DllImport("rpcrt4.dll", SetLastError = true)]
         private static extern int UuidCreateSequential(out System.Guid guid);
 
-        private const long RPC_S_OK = 0L;
-        private const long RPC_S_UUID_LOCAL_ONLY = 1824L;
-        private const long RPC_S_UUID_NO_ADDRESS = 1739L;
+        private static string MACHexFallbackPath => Paths.RootPath("saved_mac.txt");
 
-        public static string GetMAC_UUID()
+        private static bool IsValidMACHex(string macHex) => !string.IsNullOrEmpty(macHex) && macHex.Length == 12;
+
+        public static (bool ok, string macHex) GetAndCacheMACHex()
         {
-            var macUuidFallbackPath = Paths.RootPath("macUuidFallback.txt");
+            // #1 read cached
             try
             {
-                if (File.Exists(macUuidFallbackPath))
+                var lastSavedMACHex = File.ReadAllText(MACHexFallbackPath);
+                if (IsValidMACHex(lastSavedMACHex))
                 {
-                    var fileReadUUID = File.ReadAllText(macUuidFallbackPath);
-                    if (System.Guid.TryParse(fileReadUUID, out var fileUUID))
-                    {
-                        return fileUUID.ToString();
-                    }
+                    Logger.Info("NHM.UUID", $"Returning valid MAC from file '{lastSavedMACHex}'");
+                    return (true, lastSavedMACHex);
                 }
-                System.Guid guid;
-                UuidCreateSequential(out guid);
-                var splitted = guid.ToString().Split('-');
-                var last = splitted.LastOrDefault();
-                if (last != null)
+                else
                 {
-                    SaveMacUuidToFile(macUuidFallbackPath, last);
-                    return last;
+                    Logger.Warn("NHM.UUID", $"Read invalid MAC from file '{lastSavedMACHex}'");
                 }
             }
             catch (Exception e)
             {
-                Logger.Error("NHM.UUID", $"WindowsMacUtils.GetMAC_UUID: {e.Message}");
+                Logger.Error("NHM.UUID", $"Error while reading saved MAC: {e.Message}");
             }
-            Logger.Warn("NHM.UUID", $"WindowsMacUtils.GetMAC_UUID FALLBACK");
-            var newMacUUID = System.Guid.NewGuid().ToString();
-            SaveMacUuidToFile(macUuidFallbackPath, newMacUUID);
-            return newMacUUID;
-        }
 
-        private static void SaveMacUuidToFile(string path, string uuid)
-        {
+            // #2 nothing in file or invalid check; get from HW
             try
             {
-                File.WriteAllText(path, uuid);
-                //log fallback to logs
-                var logMacUuidFallbackPath = Paths.RootPath(Path.Combine("logs", "macUuidFallback.txt"));
-                File.AppendAllText(logMacUuidFallbackPath, uuid + Environment.NewLine);
-            }catch(Exception e)
+                UuidCreateSequential(out var guid);
+                var macHex = guid.ToString().Split('-').LastOrDefault();
+                if (IsValidMACHex(macHex) && SaveMACHexToFile(macHex))
+                {
+                    Logger.Info("NHM.UUID", $"Got MAC and saved to file. Returning valid MAC '{macHex}'");
+                    return (true, macHex);
+                }
+                else if (!IsValidMACHex(macHex))
+                {
+                    Logger.Warn("NHM.UUID", $"Got invalid MAC '{macHex}'.");
+                }
+            }
+            catch (Exception e)
             {
-                Logger.Error("NHM.UUID", e.Message);
-            }      
+                Logger.Error("NHM.UUID", $"Error while getting and or saving MAC: {e.Message}");
+            }
+
+            // #3 failure 
+            return (false, "");
+        }
+
+        private static bool SaveMACHexToFile(string macHex)
+        {
+            bool saveSucess = true;
+            // save
+            try
+            {
+                File.WriteAllText(MACHexFallbackPath, macHex);
+            }
+            catch (Exception e)
+            {
+                saveSucess = false;
+                Logger.Error("NHM.UUID", $"Error while saving MAC {e.Message}");
+            }
+            // log fallback to logs
+            try
+            {
+                File.AppendAllText(Paths.RootPath("logs", "macHexSavedHistory.txt"), macHex + Environment.NewLine);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("NHM.UUID", $"Error logging new MAC {e.Message}");
+            }
+
+            return saveSucess;
         }
     }
 }
