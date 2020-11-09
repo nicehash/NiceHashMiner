@@ -37,7 +37,7 @@ NiceHash Miner is an advanced auto-miner that supports the latest algorithms and
 
 # <a name="requirements"></a> Requirements
 
-- **Windows** 7 or newer operating system **64-bit**
+- **Windows** 10 or newer operating system **64-bit**
 - **[Note: Windows 10 is recommended and will provide you a much better user experience]**
 - For CPU mining a modern CPU with AES support
 - For AMD mining any AMD GPU with OpenCL support
