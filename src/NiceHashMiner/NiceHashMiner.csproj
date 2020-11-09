@@ -228,8 +228,14 @@
     <Compile Include="Views\Plugins\PluginItem\PluginItem.xaml.cs">
       <DependentUpon>PluginItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Plugins\PluginItem\PluginItemConfirm.xaml.cs">
+      <DependentUpon>PluginItemConfirm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Plugins\Plugins.xaml.cs">
       <DependentUpon>Plugins.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Plugins\PluginsConfirmDialog.xaml.cs">
+      <DependentUpon>PluginsConfirmDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Settings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
@@ -541,7 +547,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Plugins\PluginItem\PluginItemConfirm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Plugins\Plugins.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Plugins\PluginsConfirmDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

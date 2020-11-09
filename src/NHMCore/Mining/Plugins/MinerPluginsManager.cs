@@ -17,7 +17,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using NHMCore.Configs.Data;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -199,7 +198,6 @@ namespace NHMCore.Mining.Plugins
                         Logger.Error("MinerPluginsManager", $"CleanupPlugins {installedPath} Error: {e.Message}");
                     }
                 }
-                
             }
             catch (Exception e)
             {
@@ -442,7 +440,16 @@ namespace NHMCore.Mining.Plugins
                 var missingFiles = plugin.CheckBinaryPackageMissingFiles();
                 var hasMissingFiles = missingFiles.Any();
                 var hasUrls = urls.Any();
-                if (hasMissingFiles && hasUrls && !plugin.IsBroken)
+                if (!AcceptedPlugins.IsAccepted(plugin.PluginUUID))
+                {
+                    Logger.Info("MinerPluginsManager", $"Plugin is not accepted {plugin.PluginUUID}-{plugin.Name}. Skipping...");
+                    var pcr = MinerPluginsManagerState.Instance.RankedPlugins.Where(p => p.PluginUUID == plugin.PluginUUID).FirstOrDefault();
+                    if (pcr != null)
+                    {
+                        pcr.IsUserActionRequired = true;
+                    }
+                }
+                else if (hasMissingFiles && hasUrls && !plugin.IsBroken)
                 {
                     Logger.Info("MinerPluginsManager", $"Downloading missing files for {plugin.PluginUUID}-{plugin.Name}");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
@@ -466,7 +473,7 @@ namespace NHMCore.Mining.Plugins
                 var urls = plugin.GetMinerBinsUrls();
                 var hasUrls = urls.Count() > 0;
                 var versionMismatch = plugin.IsVersionMismatch;
-                if (versionMismatch && hasUrls && !plugin.IsBroken)
+                if (versionMismatch && hasUrls && !plugin.IsBroken && AcceptedPlugins.IsAccepted(plugin.PluginUUID))
                 {
                     Logger.Info("MinerPluginsManager", $"Version mismatch for {plugin.PluginUUID}-{plugin.Name}. Downloading...");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));

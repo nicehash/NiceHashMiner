@@ -219,5 +219,18 @@ namespace NHMCore.Mining.Plugins
                 return OnlineInfo?.PackagePassword ?? null;
             }
         }
+
+        public bool _isUserActionRequired = false;
+
+        public bool IsUserActionRequired
+        {
+            get => _isUserActionRequired;
+            set
+            {
+                _isUserActionRequired = value;
+                OnPropertyChanged(nameof(IsUserActionRequired));
+                OnPropertyChanged(nameof(Installed));
+            }
+        }
     }
 }
