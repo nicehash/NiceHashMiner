@@ -86,8 +86,7 @@ namespace SRBMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var minerLogPath = GetMinerLogPath();
-            var cmd = $"--algorithm {AlgoName} --wallet {_username} --gpu-id {_devices} --pool {urlWithPort} --disable-cpu --disable-gpu-watchdog --api-enable --api-port {_apiPort} {_extraLaunchParameters} --log-file {minerLogPath}";
+            var cmd = $"--algorithm {AlgoName} --wallet {_username} --gpu-id {_devices} --pool {urlWithPort} --disable-cpu --disable-gpu-watchdog --api-enable --api-port {_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
     }

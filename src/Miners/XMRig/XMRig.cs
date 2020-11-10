@@ -105,8 +105,7 @@ namespace XMRig
             }
             else
             {
-                var minerLogPath = GetMinerLogPath();
-                cmd = $"-a {AlgoName} -o {urlWithPort} -u {username} --http-enabled --http-port={_apiPort} --nicehash {_extraLaunchParameters} --log-file={minerLogPath}";
+                cmd = $"-a {AlgoName} -o {urlWithPort} -u {username} --http-enabled --http-port={_apiPort} --nicehash {_extraLaunchParameters}";
             }
             Logger.Info("STARTED", $"command: {cmd}");
             return cmd;

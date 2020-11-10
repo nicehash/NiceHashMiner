@@ -40,7 +40,7 @@ namespace ZEnemy
 
             var algo = AlgorithmName(_algorithmType);
             var minerLogPath = GetMinerLogPath();
-            var commandLine = $"--algo {algo} --url={urlWithPort} --user {_username} --api-bind={_apiPort} --devices {_devices} {_extraLaunchParameters} --log={minerLogPath}";
+            var commandLine = $"--algo {algo} --url={urlWithPort} --user {_username} --api-bind={_apiPort} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }
