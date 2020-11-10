@@ -37,7 +37,7 @@ NiceHash Miner is an advanced auto-miner that supports the latest algorithms and
 
 # <a name="requirements"></a> Requirements
 
-- **Windows** 7 or newer operating system **64-bit**
+- **Windows** 10 or newer operating system **64-bit**
 - **[Note: Windows 10 is recommended and will provide you a much better user experience]**
 - For CPU mining a modern CPU with AES support
 - For AMD mining any AMD GPU with OpenCL support
@@ -54,7 +54,7 @@ All you have to do is download zip package or installer exe from the [releases p
 If you choose installer just run it and follow the instructions. In case of zip package extract it and run the miner.
 After that enter your Bitcoin wallet address where you want to get your coins sent at - and you are ready to start mining and maximizing your profit.
 
-<i>**Note**: .NET Framework 4.8 or higher and Microsoft Visual C++ Redistributable 2015 are required. No additional installations should be needed if you use Windows 7 or later. However, if you encounter any issues when starting application (application would fail to start or errors/warnings about missing DLL files are displayed) you should download and install <a href="https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net48-web-installer" target="_blank">Microsoft **.NET Framework 4.8**</a> and <a href="https://www.microsoft.com/en-us/download/details.aspx?id=48145" target="_blank">Microsoft **Visual C++ Redistributable 2015 (vcredist_x64.exe)**</a> (after installation a reboot might be required).</i>
+<i>**Note**: Windows 10 with .NET Framework 4.8 or higher and Microsoft Visual C++ Redistributable 2015 are required. However, if you encounter any issues when starting application (application would fail to start or errors/warnings about missing DLL files are displayed) you should download and install <a href="https://dotnet.microsoft.com/download/dotnet-framework/thank-you/net48-web-installer" target="_blank">Microsoft **.NET Framework 4.8**</a> and <a href="https://www.microsoft.com/en-us/download/details.aspx?id=48145" target="_blank">Microsoft **Visual C++ Redistributable 2015 (vcredist_x64.exe)**</a> (after installation a reboot might be required).</i>
 
 Detailed instructions:
 - Download binaries from here: https://github.com/nicehash/NiceHashMiner/releases
