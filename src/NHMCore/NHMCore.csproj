@@ -157,6 +157,8 @@
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
     <Compile Include="Nhmws\ErrorCode.cs" />
     <Compile Include="Nhmws\Models\ExchangeRateJson.cs" />
+    <Compile Include="Nhmws\Models\LogsContentMessage.cs" />
+    <Compile Include="Nhmws\Models\LogsListMessage.cs" />
     <Compile Include="Nhmws\Models\MarketsMessage.cs" />
     <Compile Include="Nhmws\Models\MinerStatusMessage.cs" />
     <Compile Include="Nhmws\Models\ExecutedCall.cs" />
