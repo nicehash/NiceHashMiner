@@ -29,7 +29,7 @@ namespace NHMCore.Nhmws
     static class NHWebSocket
     {
         #region locking
-        
+
         private static readonly object _lock = new object();
         private class LockingProperty<T>
         {
@@ -536,7 +536,7 @@ namespace NHMCore.Nhmws
         }
         #endregion BALANCE
 
-        #region BRUN
+        #region BURN
         private static Task HandleBurn(string data)
         {
             try
@@ -546,11 +546,11 @@ namespace NHMCore.Nhmws
             }
             catch (Exception e)
             {
-                NHLog.Error("NHWebSocket", $"SetBalance error: {e.Message}");
+                NHLog.Error("NHWebSocket", $"HandleBurn error: {e.Message}");
             }
             return Task.CompletedTask;
         }
-        #endregion BRUN
+        #endregion BURN
 
         #region VERSION
         private static Task SetVersion(string data)
@@ -592,6 +592,67 @@ namespace NHMCore.Nhmws
         }
         #endregion EXCHANGE_RATES
 
+        #region LOG
+        private static Task HandleLogList(string data) 
+        {
+            int id = -1;
+            try
+            {          
+                dynamic message = JsonConvert.DeserializeObject(data);
+                int? messageId = (int?)message.id;
+                id = messageId ?? -1;
+                var logFilePaths = Directory.GetFiles(Paths.RootPath("logs"), "*.txt").Select(path => Path.GetFileName(path)).ToList();               
+                if (logFilePaths.Count == 0) logFilePaths = null;
+                var logsMessage = new LogsListMessage(id, 0, "", logFilePaths).Serialize();
+                Send(logsMessage);
+            }
+            catch(Exception e)
+            {
+                NHLog.Error("NHWebSocket", $"HandleLogList error: {e.Message}");
+                var logsMessage = new LogsListMessage(id, 1, "Internal NH Error").Serialize();
+                Send(logsMessage);
+            }
+            return Task.CompletedTask;
+        }
+
+        private static Task HandleLogContent(string data)
+        {
+            int id = -1;
+            string file = "";
+            try
+            {
+                dynamic message = JsonConvert.DeserializeObject(data);
+                int? messageId = (int?)message.id;
+                id = messageId ?? -1;
+
+                string fileName = message.file;
+                file = fileName ?? "";
+
+                var logFilePath = Directory.GetFiles(Paths.RootPath("logs"), "*.txt").Where(path => Path.GetFileName(path) == file).FirstOrDefault();
+                if (!string.IsNullOrEmpty(logFilePath))
+                {
+                    File.Copy(logFilePath, "tmpLog.txt");
+                    var fileContent = File.ReadAllText("tmpLog.txt");
+                    File.Delete("tmpLog.txt");
+                    var logsMessage = new LogsContentMessage(id, 0, "", fileContent).Serialize();
+                    Send(logsMessage);
+                }
+                else
+                {
+                    var logsMessage = new LogsContentMessage(id, 1, "Can't get file content", "").Serialize();
+                    Send(logsMessage);
+                }                      
+            }
+            catch (Exception e)
+            {
+                NHLog.Error("NHWebSocket", $"HandleLogList error: {e.Message}");
+                var logsMessage = new LogsListMessage(id, 1, "Internal NH Error").Serialize();
+                Send(logsMessage);
+            }
+            return Task.CompletedTask;
+        }
+        #endregion LOG
+
         #endregion NonRpcMessages
 
         static private Task HandleNonRpcMessage(string method, string data)
@@ -610,6 +671,10 @@ namespace NHMCore.Nhmws
                     return HandleBurn(data);
                 case "exchange_rates":
                     return SetExchangeRates(data);
+                case "log.list":
+                    return HandleLogList(data);
+                case "log.content":
+                    return HandleLogContent(data);
             }
             throw new Exception($"NonRpcMessage operation not supported for method '{method}'");
         }
