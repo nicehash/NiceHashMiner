@@ -13,7 +13,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem.Converters
             if (value is PluginPackageInfoCR pluginCR)
             {
                 //if (!pluginCR.CompatibleNHPluginVersion) return Visibility.Hidden; // show wrappanel even if not NH compatible
-                if (!pluginCR.Supported) return Visibility.Hidden;
+                if (!pluginCR.Supported && !pluginCR.Installed) return Visibility.Hidden;
                 return Visibility.Visible;
             }
             return null;
