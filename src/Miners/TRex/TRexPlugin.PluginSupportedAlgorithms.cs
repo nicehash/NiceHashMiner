@@ -18,7 +18,7 @@ namespace TRex
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.DaggerHashimoto){NonDefaultRAMLimit = 5UL << 30 }
+                        new SAS(AlgorithmType.DaggerHashimoto){NonDefaultRAMLimit = 3UL << 30 }
                     }
                 }
             },
