@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Ink;
 using System.Windows.Input;
 
 namespace NiceHashMiner.Views.Common.NHBase
@@ -71,6 +72,7 @@ namespace NiceHashMiner.Views.Common.NHBase
             if (_contentPresenter != null)
             {
                 _contentPresenter.AddHandler(Grid.MouseLeftButtonDownEvent, new MouseButtonEventHandler(this.OnHeaderBarMouseLeftButtonDown));
+                _contentPresenter.Content = null;
             }
             base.OnApplyTemplate();
         }
@@ -119,24 +121,54 @@ namespace NiceHashMiner.Views.Common.NHBase
             }
         }
 
+
+#warning "YOU MUST MAKE SURE NOT TO DUPLICATE DIALOGS IN LOOPS"
+        Queue<(UserControl uc, bool isModal)> _dialogsToShow = new Queue<(UserControl uc, bool isModal)>();
         public void ShowContentAsDialog(UserControl userControl)
         {
-            _isModalDialog = false;
-            _contentPresenter.Content = userControl;
-            _gridLayoutRootOverlay.Visibility = Visibility.Visible;
+            if (_contentPresenter.Content == null)
+            {
+                _isModalDialog = false;
+                _contentPresenter.Content = userControl;
+                _gridLayoutRootOverlay.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _dialogsToShow.Enqueue((userControl, false));
+            }
         }
 
         public void ShowContentAsModalDialog(UserControl userControl)
         {
-            _isModalDialog = true;
-            _contentPresenter.Content = userControl;
-            _gridLayoutRootOverlay.Visibility = Visibility.Visible;
+            if (_contentPresenter.Content == null)
+            {
+                _isModalDialog = true;
+                _contentPresenter.Content = userControl;
+                _gridLayoutRootOverlay.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _dialogsToShow.Enqueue((userControl, true));
+            }
         }
 
         public void HideModal()
         {
             _gridLayoutRootOverlay.Visibility = Visibility.Hidden;
             _isModalDialog = false;
+            _contentPresenter.Content = null;
+            if (_dialogsToShow.Count > 0)
+            {
+                var (uc, isModal) = _dialogsToShow.Dequeue();
+                if (isModal)
+                {
+                    ShowContentAsModalDialog(uc);
+                }
+                else
+                {
+                    ShowContentAsDialog(uc);
+                }
+            }
         }
 
         public void SetNotificationCount(int count)

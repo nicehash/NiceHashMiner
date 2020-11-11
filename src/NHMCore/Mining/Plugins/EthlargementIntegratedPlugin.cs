@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Mining.Plugins
 {
+#warning "ADD EULA for accepting the plugin, and change original package source"
     public class EthlargementIntegratedPlugin : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackgroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
         public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();
