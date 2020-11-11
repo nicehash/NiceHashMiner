@@ -122,6 +122,26 @@ namespace LolMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "lolMiner_mem4GAlloc",
                     ShortName = "--win4galloc",
+                },
+                /// <summary>
+                /// Set the number of MBytes of GPU memory that should be left free by the miner.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_keepFree",
+                    ShortName = "--keepfree",
+                },
+                /// <summary>
+                /// Sets the memory size (in MByte) the
+                /// miner is allowed for Ethash on 4G
+                /// cards. Suggested values: Windows: 4024
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_4GAllocSize",
+                    ShortName = "--4g-alloc-size",
                 }
             }
         };

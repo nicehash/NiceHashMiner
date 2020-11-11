@@ -387,6 +387,15 @@ namespace Phoenix
                     ID = "phoenix_nvmem",
                     ShortName = "-nvmem"
                 },
+                /// <summary>
+                /// Allow a few more weeks of work for 4 GB AMD Polaris cards. DAG size limit (0 - off, 1 - auto, >1000 - DAG size limit in MB)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_daglimit",
+                    ShortName = "-daglim"
+                }
             },
             TemperatureOptions = new List<MinerOption>
             {
