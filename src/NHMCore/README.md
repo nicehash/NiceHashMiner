@@ -1,9 +1,6 @@
 ﻿## Integrate plugins build tags
   - INTEGRATE_BrokenMiner_PLUGIN // test plugin
   - INTEGRATE_ExamplePlugin_PLUGIN // test plugin
-  - INTEGRATE_CCMinerTpruvot_PLUGIN
-  - INTEGRATE_XmrStakRx_PLUGIN
-  - INTEGRATE_ClaymoreDual_PLUGIN
   - INTEGRATE_WildRig_PLUGIN
   - INTEGRATE_TTMiner_PLUGIN
   - INTEGRATE_TRex_PLUGIN

@@ -178,8 +178,6 @@ namespace MinerPluginsPacker
             // what plugins to bundle
             var bundlePlugins = new List<string>
             {
-                //"95b390a0-94eb-11ea-a64d-17be303ea466", // CCMinerTpruvot
-                //"c9abdb10-94eb-11ea-a64d-17be303ea466", // ClaymoreDual
                 //"e294f620-94eb-11ea-a64d-17be303ea466", // CryptoDredge
                 "e7a58030-94eb-11ea-a64d-17be303ea466", // GMinerPlugin
                 "eb75e920-94eb-11ea-a64d-17be303ea466", // LolMiner
@@ -193,7 +191,6 @@ namespace MinerPluginsPacker
                 //"074d4a80-94ec-11ea-a64d-17be303ea466", // TTMiner
                 //"0a07d6a0-94ec-11ea-a64d-17be303ea466", // WildRig
                 "0e0a7320-94ec-11ea-a64d-17be303ea466", // XMRig
-                //"116b0340-94ec-11ea-a64d-17be303ea466", // XmrStakRx - BROKEN
                 //"1484c660-94ec-11ea-a64d-17be303ea466", // ZEnemy
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
