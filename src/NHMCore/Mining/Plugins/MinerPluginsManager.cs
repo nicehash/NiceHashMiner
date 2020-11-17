@@ -308,7 +308,6 @@ namespace NHMCore.Mining.Plugins
                                 Logger.Debug("MinerPluginsManager", $"Checking for plugin updates SUCCESS");
                                 CrossReferenceInstalledWithOnline();
                                 // TODO check settings for plugins updates installs
-                                // TODO install online compatible plugins
                                 Logger.Debug("MinerPluginsManager", $"Checking plugins to Install/Update");
                                 foreach (var packageInfoCR in PluginsPackagesInfosCRs)
                                 {

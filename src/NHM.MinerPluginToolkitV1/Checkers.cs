@@ -100,7 +100,7 @@ namespace NHM.MinerPluginToolkitV1
             return false;
         }
 
-        // BUMP all to 15 and drop old plugins
+        // BUMP all to 15 and drop old plugins!!!
         private static int[] _supportedMajorVersions = new int[] { 11, 12, 13, 14, 15 };
         public static bool IsMajorVersionSupported(int major)
         {
