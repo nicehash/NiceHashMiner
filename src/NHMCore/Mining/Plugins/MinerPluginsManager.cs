@@ -41,13 +41,6 @@ namespace NHMCore.Mining.Plugins
 #endif
 
 // real miners
-#if INTEGRATE_CCMinerTpruvot_PLUGIN
-                new CCMinerTpruvot.CCMinerTpruvotPlugin(),
-#endif
-#if INTEGRATE_XmrStakRx_PLUGIN
-                new XmrStakRx.XmrStakRxPlugin(),
-#endif
-
 #if INTEGRATE_GMiner_PLUGIN
                 new GMinerPlugin.GMinerPlugin(),
 #endif
@@ -65,9 +58,6 @@ namespace NHMCore.Mining.Plugins
 #endif
 #if INTEGRATE_TTMiner_PLUGIN
                 new TTMiner.TTMinerPlugin(),
-#endif
-#if INTEGRATE_ClaymoreDual_PLUGIN
-                new ClaymoreDual14.ClaymoreDual14Plugin(),
 #endif
 #if INTEGRATE_NanoMiner_PLUGIN
                 new NanoMiner.NanoMinerPlugin(),
@@ -95,15 +85,12 @@ namespace NHMCore.Mining.Plugins
 #endif
 
 #if INTEGRATE_ALL_PLUGINS
-                new CCMinerTpruvot.CCMinerTpruvotPlugin(),
-                new XmrStakRx.XmrStakRxPlugin(),
                 new GMinerPlugin.GMinerPlugin(),
                 new NBMiner.NBMinerPlugin(),
                 new Phoenix.PhoenixPlugin(),
                 new TeamRedMiner.TeamRedMinerPlugin(),
                 new TRex.TRexPlugin(),
                 new TTMiner.TTMinerPlugin(),
-                new ClaymoreDual14.ClaymoreDual14Plugin(),
                 new NanoMiner.NanoMinerPlugin(),
                 new WildRig.WildRigPlugin(),
                 new CryptoDredge.CryptoDredgePlugin(),
