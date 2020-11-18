@@ -25,7 +25,7 @@
                 </ItemsControl>
             </ScrollViewer>
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding Plugins.Count, Converter={StaticResource NumberToVisibilityConverterZero}}">
-                <TextBlock Text="Unable to retrieve plugins info. Please check your internet connection and try to restart NiceHashMiner." Style="{StaticResource FontsTypography.Caption-Primary}"/>
+                <TextBlock Text="Unable to retrieve plugins info. Please check your internet connection and try to restart NiceHash Miner." Style="{StaticResource FontsTypography.Caption-Primary}"/>
             </StackPanel>
         </Grid>
         
