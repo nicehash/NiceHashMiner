@@ -183,6 +183,8 @@
 
             <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
             <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
+            <converters:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter" />
+            <converters:NumberToVisibilityConverterZero x:Key="NumberToVisibilityConverterZero" />
 
         </ResourceDictionary>
     </Application.Resources>
