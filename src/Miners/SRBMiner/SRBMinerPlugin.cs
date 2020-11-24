@@ -20,7 +20,7 @@ namespace SRBMiner
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/doktor83/SRBMiner-Multi current v0.4.7
+            // https://github.com/doktor83/SRBMiner-Multi 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "v0.4.7",

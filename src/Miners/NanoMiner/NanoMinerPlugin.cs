@@ -21,7 +21,7 @@ namespace NanoMiner
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
-            // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases
+            // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "v1.11.0",

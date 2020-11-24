@@ -126,11 +126,24 @@ namespace NBMiner
                     LongName = "--memory-tweak",
                     Delimiter = ","
                 },
+                /// <summary>
+                /// Print communication data between miner and pool in log file.
+                /// </summary>   
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionIsParameter,
-                    ID = "nbminer_--verbose",
+                    ID = "nbminer_verbose",
                     LongName = "--verbose",
+                },
+                /// <summary>
+                /// set this option will disable miner interrupting current GPU jobs when a new job coming from pool,
+                /// will cause less power supply issue, but might lead to a bit higher stale ratio and reject shares.
+                /// </summary>  
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "nbminer_noInterupt",
+                    LongName = "--no-interrupt",
                 }
             },
             TemperatureOptions = new List<MinerOption>
