@@ -22,7 +22,7 @@ namespace Phoenix
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://bitcointalk.org/index.php?topic=2647654.0
+            // https://bitcointalk.org/index.php?topic=2647654.0 || new one: https://bitcointalk.org/index.php?topic=2647654.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "5.2e",
@@ -30,8 +30,7 @@ namespace Phoenix
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/3.0.0.2/PhoenixMiner_5.2e_Windows.zip",
-                    "https://mega.nz/folder/3d11FaCb#l4PhGSvL8fiQ6oxzO57szg/file/mYt3FaAa", // original
-                    "https://bitcointalk.org/index.php?topic=2647654.0" //original thread
+                    "https://mega.nz/folder/3d11FaCb#l4PhGSvL8fiQ6oxzO57szg/file/mYt3FaAa" // original                  
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
