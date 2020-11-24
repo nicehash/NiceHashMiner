@@ -4025,6 +4025,9 @@
     },
     "Not connected to NHMWS. Please check your internet connection.": {
       "ru": "Нет подключения к NHMWS. Пожалуйста, проверьте ваше подключение к интернету."
+    },
+    "Unable to retrieve plugins info. Please check your internet connection and try to restart NiceHash Miner.": {
+      "ru": "Не удалось получить информацию о плагинах. Пожалуйста, проверьте ваше подключение к интернету и попробуйте перезапустить NiceHash Miner."
     }
   }
 }
