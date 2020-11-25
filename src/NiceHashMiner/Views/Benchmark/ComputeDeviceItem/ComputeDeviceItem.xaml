@@ -135,7 +135,7 @@
                     </Style>
                 </Border.Style>
             </Border>
-            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click" HorizontalContentAlignment="Stretch" Background="{StaticResource Brushes.FontColor.White}" >
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click" HorizontalContentAlignment="Stretch" Background="{StaticResource BoxBackgroundColor}" >
                 <Grid Background="Transparent" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -171,7 +171,7 @@
                                         <ContextMenu.Template>
                                             <ControlTemplate>
                                                 <Grid DataContext="{Binding .}" x:Name="deviceActionsGrid">
-                                                    <Border Background="{DynamicResource Brushes.FontColor.White}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
+                                                    <Border Background="{DynamicResource BoxBackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
                                                     <StackPanel>
                                                         <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StopBenchmarking" />
                                                         <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStart, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Start Benchmark" Click="Button_Click_StartBenchmarking" />
