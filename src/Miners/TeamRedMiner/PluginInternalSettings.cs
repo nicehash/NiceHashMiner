@@ -223,6 +223,52 @@ namespace TeamRedMiner
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "teamRedMiner_watchdogDisabled",
                     ShortName = "--watchdog_disabled",
+                },
+                /// <summary>
+                ///  On Windows, the allocation balance is very delicate for 4GB gpus being able to reach their
+                ///  maximum possible DAG epoch.  The miner uses a strategy that has worked fine for our test gpus,
+                ///  but other setups can benefit from tweaking this number.  The valid range is [-128,+128].  Zero means
+                ///  no adjustment.  You provide either a single value that is used for all 4GB gpus in the rig, or a
+                ///  comma-separated list with values for all gpus, including non-4GB Polaris gpus.
+                ///  Values for non-4GB gpus are ignored.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "teamRedMiner_4gAllocAdjust",
+                    ShortName = "--eth_4g_alloc_adjust=",
+                },
+                /// <summary>
+                ///  This argument allows mining on 4GB gpus after they no longer can store the full DAG in vram.
+                ///  You pass either the max epoch to allocate memory for, or the raw nr of MB to allocate.  You can
+                ///  provide a single value that applies to all 4GB gpus in the rig, or use a comma-separated list for
+                ///  specifying different values per gpu.  Values for non-4GB gpus are ignored.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "teamRedMiner_4gMaxAlloc",
+                    ShortName = "--eth_4g_max_alloc=",
+                },
+                /// <summary>
+                ///  Enables staggering of gpus when building a new DAG.  This is more lean on PSUs that don't like
+                ///  going from 0-100% load on all gpus at the same time.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "teamRedMiner_EthStagger",
+                    ShortName = "--eth_stagger",
+                },
+                /// <summary>
+                ///  Adds ramping up the intensity on all gpus after a DAG build, gpu disable/enable or network outage.
+                ///  Can help rigs with crashes right between the DAG build and starting mining.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "teamRedMiner_EthRampUp",
+                    ShortName = "--eth_ramp_up",
                 }
             },
             TemperatureOptions = new List<MinerOption>

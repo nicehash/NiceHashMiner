@@ -23,11 +23,11 @@ namespace TeamRedMiner
             // https://github.com/todxx/teamredminer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.7.17",
-                ExePath = new List<string> { "teamredminer-v0.7.17-win", "teamredminer.exe" },
+                BinVersion = "0.7.18",
+                ExePath = new List<string> { "teamredminer-v0.7.18-win", "teamredminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/todxx/teamredminer/releases/download/0.7.17/teamredminer-v0.7.17-win.zip", // original
+                    "https://github.com/todxx/teamredminer/releases/download/0.7.18/teamredminer-v0.7.18-win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace TeamRedMiner
 
         public override string PluginUUID => "01177a50-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(11, 11);
+        public override Version Version => new Version(11, 12);
 
         public override string Name => "TeamRedMiner";
 
