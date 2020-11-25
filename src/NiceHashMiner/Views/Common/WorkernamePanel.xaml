@@ -14,7 +14,7 @@
             <Button.Resources>
                 <Style TargetType="{x:Type TextBlock}" >
                     <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
-                    <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+                    <Setter Property="Foreground" Value="{StaticResource TextColorBrush}" />
                     <Setter Property="FontSize" Value="14" />
                     <Setter Property="FontWeight" Value="Bold" />
                     <Setter Property="FontStretch" Value="Normal" />

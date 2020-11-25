@@ -53,7 +53,7 @@ namespace NiceHashMiner
                 // LIGHT
                 Application.Current.Resources["NHMLogo"] = Application.Current.FindResource("NHMLogoLightBrush");
                 
-                Application.Current.Resources["BackgroundColor"] = Application.Current.FindResource("Brushes.Light.Grey.Grey4Background");
+                Application.Current.Resources["BackgroundColor"] = Application.Current.FindResource("Brushes.Light.Grey.Grey3");
                 Application.Current.Resources["BorderColor"] = Application.Current.FindResource("Brushes.Light.Border");
                 Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoLightBrush");
                 Application.Current.Resources["TextColorBrush"] = Application.Current.FindResource("Brushes.Light.TextColor");
