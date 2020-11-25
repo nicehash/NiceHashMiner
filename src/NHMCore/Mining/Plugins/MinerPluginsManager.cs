@@ -111,7 +111,11 @@ namespace NHMCore.Mining.Plugins
             {
                 PluginContainer.Create(integratedPlugin);
             }
+
+            (_initOnlinePlugins, OnlinePlugins) = ReadCachedOnlinePlugins();
         }
+
+        private static readonly bool _initOnlinePlugins;
 
         // API data
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
@@ -658,10 +662,31 @@ namespace NHMCore.Mining.Plugins
             {
                 Logger.Error("MinerPluginsManager", $"Error occured while getting online miner plugins: {e.Message}");
             }
-            return false;
+            return _initOnlinePlugins;
         }
 
-        public static PluginContainer GetPluginWithUuid(string pluginUuid)
+        private static (bool, List<PluginPackageInfo>) ReadCachedOnlinePlugins()
+        {
+            try
+            {
+                string s = File.ReadAllText(Paths.RootPath("plugins_packages", "update.json"));
+
+                var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    Culture = CultureInfo.InvariantCulture
+                });
+                return (true, onlinePlugins);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("MinerPluginsManager", $"Error occured while reading cached online miner plugins: {e.Message}");
+            }
+            return (false, null);
+        }
+
+    public static PluginContainer GetPluginWithUuid(string pluginUuid)
         {
             var ret = PluginContainer.PluginContainers.FirstOrDefault(p => p.PluginUUID == pluginUuid);
             return ret;
