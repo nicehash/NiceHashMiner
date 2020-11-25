@@ -75,7 +75,7 @@
                        VerticalAlignment="Stretch"
                        HorizontalAlignment="Center"
                        TextAlignment="Center"
-                       Text="NiceHash Miner integrates 3rd party mining software via the miner plugin system. However, since this is 3rd party software that is fully closed-source, we have no chance to inspect it in any way. NiceHash can not vouch for using that software and is refusing to take any responsibility for any damage caused, security breaches, loss of data or funds, system or hardware error, and other issues. By agreeing to this disclaimer you take full responsibility for using these closed-source miners as they are."/>
+                       Text="Third Party Miners and Plugins are a third party software which enables the best and most efficient mining operations. NiceHash Miner integrates third party mining software using a third party miner plugin system. Downloading and integrating any of the available Third Party Miners and Plugins is at users own risk. NiceHash will not be liable, to the maximum extent permitted by applicable law, for any damages of any kind, including, but not limited to, direct, consequential, incidental, special or indirect damages, arising out of using Third Party Miners and Plugins."/>
         <Grid Grid.Row="2" Margin="40,10,40,40">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemsSource="{Binding Plugins}" Margin="0,0,4,0">

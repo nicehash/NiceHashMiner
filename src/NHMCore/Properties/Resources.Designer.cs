@@ -61,9 +61,8 @@ namespace NHMCore.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {\rtf1\ansi\deff3\adeflang1025
-        ///{\fonttbl{\f0\froman\fprq2\fcharset0 Times New Roman;}{\f1\froman\fprq2\fcharset2 Symbol;}{\f2\fswiss\fprq2\fcharset0 Arial;}{\f3\froman\fprq2\fcharset0 Liberation Serif{\*\falt Times New Roman};}{\f4\froman\fprq2\fcharset0 Liberation Sans{\*\falt Arial};}{\f5\fnil\fprq2\fcharset0 OpenSymbol{\*\falt Arial Unicode MS};}{\f6\fnil\fprq2\fcharset0 Arial;}{\f7\fnil\fprq2\fcharset0 Liberation Serif{\*\falt Times New Roman};}}
-        ///{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\uc0\stshfdbch0\stshfloch0\stshfhich0\stshfbi0\deff0\adeff0{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f1\froman\fcharset2\fprq2{\*\panose 05050102010706020507}Symbol;}{\f2\fswiss\fcharset0\fprq2{\*\panose 020b0604020202020204}Arial;}}{\colortbl;\red0\green0\blue0;\red224\green102\blue102
+        ///;\red67\green67\blue67;\red102\green102\blue102;}{\stylesheet{\s0\snext0\sqformat\spriority0\fi0\sb0\sa0\aspalpha\aspnum\adjustright\widctlpar\ltrpar\li0\l [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Eula {
             get {
