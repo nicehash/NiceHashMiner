@@ -123,6 +123,8 @@ namespace NHM.Common.Enums
         BeamV3 = 54,
         //[Obsolete("UNUSED Algorithm")]
         CuckaRooz29 = 55,
+        //[Obsolete("UNUSED Algorithm")]
+        Octopus = 56,
         #endregion // NiceHashAPI
     }
 
