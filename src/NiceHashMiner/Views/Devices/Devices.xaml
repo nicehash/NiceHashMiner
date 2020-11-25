@@ -107,7 +107,7 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" Margin="16,0,0,0" ToolTip="{StaticResource currentProfitability}">
+            <Grid Grid.Column="1" Margin="16,0,0,0" ToolTip="{StaticResource currentProfitability}" Background="{StaticResource Brushes.FontColor.White}">
                 <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -127,7 +127,7 @@
                     <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}"  Margin="24,10,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="2" Margin="16,0,0,0" ToolTip="{StaticResource unpaidBalance}">
+            <Grid Grid.Column="2" Margin="16,0,0,0" ToolTip="{StaticResource unpaidBalance}" Background="{StaticResource Brushes.FontColor.White}">
                 <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>

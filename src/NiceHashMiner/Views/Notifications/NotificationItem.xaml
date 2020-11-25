@@ -65,7 +65,7 @@
             </Style.Resources>
         </Style>
     </UserControl.Resources>
-    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" Margin="0" Padding="0">
+    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" Margin="0" Padding="0" Background="{StaticResource Brushes.FontColor.White}">
         <Grid Margin="16,0,16,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
