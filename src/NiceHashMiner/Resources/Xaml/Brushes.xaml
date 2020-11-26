@@ -69,7 +69,7 @@
     <Color x:Key="WarningColor">#FBC241</Color>
     <Color x:Key="TextColor">#3A3939</Color>
     <Color x:Key="Gray1Color">#959595</Color>
-    <Color x:Key="Gray2Color">#959595</Color>
+    <Color x:Key="Gray2Color">#CECDCD</Color>
     <!--#endregion Colors-->
 
     <!--#region Brushes-->
@@ -80,7 +80,6 @@
     <SolidColorBrush x:Key="WarningColorBrush" Color="{StaticResource WarningColor}" />
     <SolidColorBrush x:Key="Gray1ColorBrush" Color="{StaticResource Gray1Color}" />
     <SolidColorBrush x:Key="Gray2ColorBrush" Color="{StaticResource Gray2Color}" />
-    <SolidColorBrush x:Key="TextColorBrush" Color="{StaticResource TextColor}" />
 
     <LinearGradientBrush x:Key="OKButtonGradientBrush" EndPoint="1,0.5" StartPoint="0,0.5">
         <GradientStop Color="#FFFBA342" Offset="0"/>

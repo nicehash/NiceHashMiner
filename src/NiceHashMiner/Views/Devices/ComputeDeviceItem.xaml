@@ -50,7 +50,7 @@
                 </Style>
             </Border.Style>
         </Border>
-        <Grid HorizontalAlignment="Stretch" Background="{StaticResource Brushes.FontColor.White}">
+        <Grid HorizontalAlignment="Stretch"  >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4*" />
                 <ColumnDefinition Width="7*" />

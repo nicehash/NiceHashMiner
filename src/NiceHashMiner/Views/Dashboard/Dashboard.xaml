@@ -43,7 +43,7 @@
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-            <Setter Property="Background" Value="{StaticResource Brushes.FontColor.White}" />
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="FontStretch" Value="Normal" />
             <Setter Property="FontStyle" Value="Normal" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -173,7 +173,7 @@
         
         <Grid Grid.Row="2">
             <!--content border-->
-            <Border Background="Transparent" BorderBrush="{StaticResource Gray2ColorBrush}" BorderThickness="2" CornerRadius="5" />
+            <Border Background="Transparent" BorderBrush="Transparent" BorderThickness="2" CornerRadius="5" />
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2" />
@@ -196,21 +196,21 @@
                 <GridSplitter Grid.Row="0" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
 
                 <GridSplitter Grid.Row="1" Grid.Column="0" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
-                <Grid Grid.Row="1" Grid.Column="1" Background="{StaticResource Brushes.FontColor.White}">
+                <Grid Grid.Row="1" Grid.Column="1" Background="{DynamicResource BackgroundColor}">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource gpuNumber}">
                         <TextBlock Style="{StaticResource local.DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
                         <TextBlock Style="{StaticResource local.DevicesTypeLabelText}">GPU’S</TextBlock>
                     </StackPanel>
                 </Grid>
-                <GridSplitter Grid.Row="1" Grid.Column="2" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource Gray2ColorBrush}"/>
-                <Grid Grid.Row="1" Grid.Column="3" Background="{StaticResource Brushes.FontColor.White}">
+                <GridSplitter Grid.Row="1" Grid.Column="2" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <Grid Grid.Row="1" Grid.Column="3" Background="{DynamicResource BackgroundColor}">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource cpuNumber}">
                         <TextBlock Style="{StaticResource local.DevicesTypeCountText}" Text="{Binding DeviceCPUCount}"/>
                         <TextBlock Style="{StaticResource local.DevicesTypeLabelText}">CPU</TextBlock>
                     </StackPanel>
                 </Grid>
-                <GridSplitter Grid.Row="1" Grid.Column="4" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource Gray2ColorBrush}"/>
-                <StackPanel Grid.Row="1" Grid.Column="5" Background="{StaticResource Brushes.FontColor.White}" ToolTip="{StaticResource currentProfitability}" >
+                <GridSplitter Grid.Row="1" Grid.Column="4" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <StackPanel Grid.Row="1" Grid.Column="5" Background="{DynamicResource BackgroundColor}" ToolTip="{StaticResource currentProfitability}" >
                     <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">CURRENT PROFITABILITY</TextBlock>
                     <!--TODO Bindings here are temp-->
                     <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="24,0,0,0">
@@ -219,8 +219,8 @@
                     </WrapPanel>
                     <TextBlock Style="{StaticResource local.StatsFiatEstimateText}" Margin="24,8,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
                 </StackPanel>
-                <GridSplitter Grid.Row="1" Grid.Column="6" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource Gray2ColorBrush}"/>
-                <StackPanel Grid.Row="1" Grid.Column="7" Background="{StaticResource Brushes.FontColor.White}" ToolTip="{StaticResource unpaidBalance}" >
+                <GridSplitter Grid.Row="1" Grid.Column="6" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
+                <StackPanel Grid.Row="1" Grid.Column="7" Background="{DynamicResource BackgroundColor}" ToolTip="{StaticResource unpaidBalance}" >
                     <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">UNPAID BALANCE</TextBlock>
                     <!--connected-->
                     <WrapPanel Orientation="Horizontal"
@@ -241,14 +241,14 @@
                     </WrapPanel>
                     <TextBlock Style="{StaticResource local.StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
                 </StackPanel>
-                <GridSplitter Grid.Row="1" Grid.Column="8" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource Gray2ColorBrush}" Visibility="Collapsed"/>
-                <StackPanel Grid.Row="1" Grid.Column="9" Background="{StaticResource Brushes.FontColor.White}" ToolTip="{Binding ExchangeTooltip}" Visibility="Collapsed">
+                <GridSplitter Grid.Row="1" Grid.Column="8" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Collapsed"/>
+                <StackPanel Grid.Row="1" Grid.Column="9" Background="{DynamicResource BackgroundColor}" ToolTip="{Binding ExchangeTooltip}" Visibility="Collapsed">
                     <TextBlock TextWrapping="Wrap" Style="{StaticResource local.StatsTitleText}" Margin="24,30,0,0">MY BTC WALLET</TextBlock>
                     <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="24,8,0,4" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
                     <TextBlock Style="{StaticResource local.StatsBTCLabelText}" Margin="24,14,0,4" TextWrapping="Wrap" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
                 </StackPanel>
-                <GridSplitter Grid.Row="1" Grid.Column="10" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource Gray2ColorBrush}" Visibility="Visible"/>
-                <GridSplitter Grid.Row="2" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource Gray2ColorBrush}" Visibility="Visible"/>
+                <GridSplitter Grid.Row="1" Grid.Column="10" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Visible"/>
+                <GridSplitter Grid.Row="2" Grid.ColumnSpan="11" Height="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Visible"/>
             </Grid>
         </Grid>
         <Grid Grid.Row="3" Height="Auto" VerticalAlignment="Bottom" Margin="0,0,0,32">
