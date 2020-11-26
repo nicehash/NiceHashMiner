@@ -102,10 +102,12 @@
                 </Setter>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="False">
+                        <Setter Property="Background" Value="{ DynamicResource BackgroundColor }" />
                         <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
                         <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
                     </Trigger>
                     <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{ DynamicResource PrimaryColorBrush }" />
                         <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
                         <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
                     </Trigger>
@@ -118,14 +120,6 @@
                         <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="BorderBrush" Value="Transparent" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="False">
-                                <Setter Property="BorderThickness" Value="1" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderThickness" Value="2" />
-                            </Trigger>
-                        </Style.Triggers>
                     </Style>
 
                 </Style.Resources>
@@ -142,6 +136,12 @@
                     <Trigger Property ="IsEnabled" Value="False">
                         <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
                     </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="White"/>
+                    </Trigger>
+                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"  Value="True">
+                        <Setter Property="Foreground" Value="White"/>
+                    </DataTrigger>
                 </Style.Triggers>
             </Style>
 

@@ -54,7 +54,7 @@
                     <Condition Property="IsMouseOver" Value="False" />
                 </MultiTrigger.Conditions>
                 <MultiTrigger.Setters>
-                    <Setter Property="Background" Value="{ DynamicResource BoxBackgroundColor }" />
+                    <Setter Property="Background" Value="{ DynamicResource BackgroundColor }" />
                     <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
                     <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
                 </MultiTrigger.Setters>
@@ -68,7 +68,7 @@
                 <MultiTrigger.Setters>
                     <Setter Property="Background" Value="{ DynamicResource PrimaryColorBrush }" />
                     <Setter Property="BorderBrush" Value="{ DynamicResource BorderColor }" />
-                    <Setter Property="Foreground" Value="{DynamicResource TextWhiteColorBrush }" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush }" />
                 </MultiTrigger.Setters>
             </MultiTrigger>
             <!--Selected-->

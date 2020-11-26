@@ -53,13 +53,11 @@ namespace NiceHashMiner
                 // LIGHT
                 Application.Current.Resources["NHMLogo"] = Application.Current.FindResource("NHMLogoLightBrush");
                 
-                Application.Current.Resources["BackgroundColor"] = Application.Current.FindResource("Brushes.Light.Grey.Grey3");
+                Application.Current.Resources["BackgroundColor"] = Application.Current.FindResource("Brushes.Light.Grey.Grey4Background");
                 Application.Current.Resources["BorderColor"] = Application.Current.FindResource("Brushes.Light.Border");
                 Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoLightBrush");
                 Application.Current.Resources["TextColorBrush"] = Application.Current.FindResource("Brushes.Light.TextColor");
-                Application.Current.Resources["TextWhiteColorBrush"] = Application.Current.FindResource("Brushes.FontColor.White");
-                
-                Application.Current.Resources["BoxBackgroundColor"] = Application.Current.FindResource("Brushes.FontColor.White");
+
                 Application.Current.Resources["TextBoxBackGroundColor"] = Application.Current.FindResource("TextBoxBackGroundColor.Light");
                 Application.Current.Resources["ComboBoxBackGroundColor"] = Application.Current.FindResource("ComboBoxBackGroundColor.Light");
                 Application.Current.Resources["MODAL_WINDOW_BLUR_Background"] = Application.Current.FindResource("MODAL_WINDOW_BLUR_Background.Light");
@@ -73,9 +71,7 @@ namespace NiceHashMiner
                 Application.Current.Resources["BorderColor"] = Application.Current.FindResource("Brushes.Dark.Border");
                 Application.Current.Resources["LoginCircle"] = Application.Current.FindResource("LoginCircleLogoDarkBrush");
                 Application.Current.Resources["TextColorBrush"] = Application.Current.FindResource("Brushes.Dark.TextColor");
-                Application.Current.Resources["TextWhiteColorBrush"] = Application.Current.FindResource("Brushes.Dark.TextColor");
 
-                Application.Current.Resources["BoxBackgroundColor"] = Application.Current.FindResource("Brushes.Dark.Grey.Grey1Background");
                 Application.Current.Resources["TextBoxBackGroundColor"] = Application.Current.FindResource("TextBoxBackGroundColor.Dark");
                 Application.Current.Resources["ComboBoxBackGroundColor"] = Application.Current.FindResource("ComboBoxBackGroundColor.Dark");
                 Application.Current.Resources["MODAL_WINDOW_BLUR_Background"] = Application.Current.FindResource("MODAL_WINDOW_BLUR_Background.Dark");
