@@ -179,14 +179,14 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:NHMMainWindow}">
                     <Grid Background="{DynamicResource BackgroundColor}" x:Name="WindowRoot">
-                        <Grid x:Name="LayoutRoot" Panel.ZIndex="0" Background="{DynamicResource BackgroundColor}" > 
+                        <Grid x:Name="LayoutRoot" Panel.ZIndex="0" Background="{TemplateBinding Background}" > 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="60"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
                             <!--TitleBar-->
-                            <Grid x:Name="PART_HeaderBar">
+                            <Grid x:Name="PART_HeaderBar" Background="{StaticResource BackgroundColor}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>

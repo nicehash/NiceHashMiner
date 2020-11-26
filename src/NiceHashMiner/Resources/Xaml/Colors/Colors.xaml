@@ -8,7 +8,6 @@
     
     <!--#region DynamicColors-->
     <SolidColorBrush x:Key="BackgroundColor" Color="{DynamicResource Colors.Light.Grey.Grey3}" />
-    <SolidColorBrush x:Key="BoxBackgroundColor" Color="{DynamicResource Colors.Dark.White}" />
     <SolidColorBrush x:Key="BorderColor" Color="{DynamicResource Colors.Light.Border}" />
     <SolidColorBrush x:Key="TextColorBrush" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
     <!--#endregion DynamicColors-->

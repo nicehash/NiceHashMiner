@@ -102,7 +102,7 @@
         </Style>
     </UserControl.Resources>
     <Grid MinHeight="50" MinWidth="220">
-        <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BoxBackgroundColor}">
+        <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource Brushes.FontColor.White}">
             <Border.Style>
                 <Style TargetType="Border">
                     <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>

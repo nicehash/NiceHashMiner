@@ -39,6 +39,7 @@
                          IsReadOnly="True"
                          IsDocumentEnabled="True"
                          FontFamily="{StaticResource Ubuntu-Regular}"
+                         Foreground="{DynamicResource TextColorBrush}"
                          FontSize="14"
                          FontStyle="Normal"
                          FontStretch="Normal"
