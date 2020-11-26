@@ -186,7 +186,7 @@
                             </Grid.RowDefinitions>
 
                             <!--TitleBar-->
-                            <Grid x:Name="PART_HeaderBar" Background="{StaticResource BackgroundColor}">
+                            <Grid x:Name="PART_HeaderBar">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
