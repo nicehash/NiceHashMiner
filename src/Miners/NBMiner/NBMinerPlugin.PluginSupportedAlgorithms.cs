@@ -16,6 +16,7 @@ namespace NBMiner
             {
                 { AlgorithmType.DaggerHashimoto, 1.0 },
                 { AlgorithmType.Cuckaroo29BFC, 3.0 },
+                { AlgorithmType.Octopus, 3.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -30,7 +31,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.BeamV3),
-                        new SAS(AlgorithmType.Octopus)
+                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                     }
                 },
                 {
@@ -39,7 +40,7 @@ namespace NBMiner
                     {
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30},
-                        new SAS(AlgorithmType.Octopus)
+                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                     }
                 }
             },

@@ -42,7 +42,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 7);
+        public override Version Version => new Version(15, 0);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -57,6 +57,8 @@ namespace NBMiner
                 new Version(6,1),
                 new Version(7,0),
                 new Version(7,5),
+                new Version(8,0),
+                new Version(8,6),
             };
             var cudaDevSMver = new Version(major, minor);
             foreach (var supportedVer in nbMinerSMSupportedVersions)
