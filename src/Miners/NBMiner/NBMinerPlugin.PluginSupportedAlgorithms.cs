@@ -29,7 +29,8 @@ namespace NBMiner
                         new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30},
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.BeamV3)
+                        new SAS(AlgorithmType.BeamV3),
+                        new SAS(AlgorithmType.Octopus)
                     }
                 },
                 {
@@ -37,7 +38,8 @@ namespace NBMiner
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30}
+                        new SAS(AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 5UL << 30},
+                        new SAS(AlgorithmType.Octopus)
                     }
                 }
             },
@@ -50,7 +52,8 @@ namespace NBMiner
                 { AlgorithmType.KAWPOW, "kawpow" },
                 { AlgorithmType.Cuckaroo29BFC, "bfc" },
                 { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
-                { AlgorithmType.BeamV3, "beamv3" }
+                { AlgorithmType.BeamV3, "beamv3" },
+                { AlgorithmType.Octopus, "octopus" }
             }
         };
     }
