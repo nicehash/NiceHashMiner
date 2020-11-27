@@ -39,7 +39,7 @@ namespace TRex
 
         public override string PluginUUID => "03f80500-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 8);
+        public override Version Version => new Version(15, 0);
 
         public override string Name => "TRex";
 
@@ -47,11 +47,8 @@ namespace TRex
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-#warning TEMP disable NVIDIA driver check
-            ////var isDriverSupported = Checkers.IsCudaCompatibleDriver(Checkers.CudaVersion.CUDA_11_0_3_Update1, CUDADevice.INSTALLED_NVIDIA_DRIVERS); // TODO restore after major version 15
-            //var CUDA11 = new Version(451, 82);
-            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= CUDA11;  // TODO <= CUDA 11 is not inside the toolkit before miner plugins major version 15
-            var isDriverSupported = true;  // always enable workaround
+            var CUDA11 = new Version(451, 82);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= CUDA11;  // TODO <= CUDA 11 is not inside the toolkit before miner plugins major version 15
             var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 3 && isDriverSupported).Cast<CUDADevice>();
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 

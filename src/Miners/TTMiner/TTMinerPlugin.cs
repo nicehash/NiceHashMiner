@@ -29,7 +29,6 @@ namespace TTMiner
                 ExePath = new List<string> { "TT-Miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/3.0.0.2/TT-Miner-4.0.0.3.zip",
                     "https://tradeproject.de/download/Miner/TT-Miner-4.0.3.zip" // original
                 }
             };
@@ -42,7 +41,7 @@ namespace TTMiner
 
         public override string PluginUUID => "074d4a80-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 0);
+        public override Version Version => new Version(15, 0);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 
@@ -57,10 +56,9 @@ namespace TTMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-#warning TEMP disable NVIDIA driver check
-            //// Require 398.26
-            //var minDrivers = new Version(398, 26);
-            //if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+            // Require 398.26
+            var minDrivers = new Version(398, 26);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
 
             var cudaGpus = devices

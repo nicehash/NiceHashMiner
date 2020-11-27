@@ -17,7 +17,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using NHMCore.Configs.Data;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -107,12 +106,16 @@ namespace NHMCore.Mining.Plugins
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
-            var filteredIntegratedPlugins = _integratedPlugins.Where(p => BlacklistedPlugins.Instance.IsSupported(p.PluginUUID)).ToList();
+            var filteredIntegratedPlugins = _integratedPlugins.Where(p => BlacklistedPlugins.IsNotBlacklisted(p.PluginUUID)).ToList();
             foreach (var integratedPlugin in filteredIntegratedPlugins)
             {
                 PluginContainer.Create(integratedPlugin);
             }
+
+            (_initOnlinePlugins, OnlinePlugins) = ReadCachedOnlinePlugins();
         }
+
+        private static readonly bool _initOnlinePlugins;
 
         // API data
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
@@ -165,6 +168,11 @@ namespace NHMCore.Mining.Plugins
                     {
                         var uuid = installedPath.Replace(minerPluginsPath, "").Trim('\\');
                         if (!System.Guid.TryParse(uuid, out var _)) continue;
+                        //if (!AcceptedPlugins.IsAccepted(uuid)) {
+                        //    Logger.Info("MinerPluginsManager", $"CleanupPlugins Skipping {uuid}");
+                        //    continue;
+                        //}
+                        Logger.Info("MinerPluginsManager", $"CleanupPlugins Replacing {uuid}");
                         var zipPackage = zipPackages.FirstOrDefault(package => package.Contains(uuid));
                         if (zipPackage == null) continue;
                         // cleanup old bins and dll's
@@ -178,7 +186,7 @@ namespace NHMCore.Mining.Plugins
                         if (ConfigManager.IsVersionChanged || installedPackageRootDlls.Length > 1)
                         {
                             foreach (var dllFile in installedPackageRootDlls) deleteDirOrFile(dllFile);
-                            await ArchiveHelpers.ExtractFileAsync(zipPackage, installedPath, null, CancellationToken.None);
+                            await ArchiveHelpers.ExtractFileAsync(null, zipPackage, installedPath, null, CancellationToken.None);
                         }
                     }
                     catch (Exception e)
@@ -186,7 +194,6 @@ namespace NHMCore.Mining.Plugins
                         Logger.Error("MinerPluginsManager", $"CleanupPlugins {installedPath} Error: {e.Message}");
                     }
                 }
-                
             }
             catch (Exception e)
             {
@@ -225,7 +232,7 @@ namespace NHMCore.Mining.Plugins
         public static async Task LoadAndInitMinerPlugins()
         {
             // load dll's and create plugin containers
-            var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath()).Where(uuid => BlacklistedPlugins.Instance.IsSupported(uuid));
+            var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath()).Where(uuid => BlacklistedPlugins.IsNotBlacklisted(uuid));
             foreach (var pluginUUID in loadedPlugins) PluginContainer.Create(MinerPluginHost.MinerPlugin[pluginUUID]);
             // init all containers
             foreach (var plugin in PluginContainer.PluginContainers)
@@ -297,7 +304,6 @@ namespace NHMCore.Mining.Plugins
                                 Logger.Debug("MinerPluginsManager", $"Checking for plugin updates SUCCESS");
                                 CrossReferenceInstalledWithOnline();
                                 // TODO check settings for plugins updates installs
-                                // TODO install online compatible plugins
                                 Logger.Debug("MinerPluginsManager", $"Checking plugins to Install/Update");
                                 foreach (var packageInfoCR in PluginsPackagesInfosCRs)
                                 {
@@ -429,7 +435,16 @@ namespace NHMCore.Mining.Plugins
                 var missingFiles = plugin.CheckBinaryPackageMissingFiles();
                 var hasMissingFiles = missingFiles.Any();
                 var hasUrls = urls.Any();
-                if (hasMissingFiles && hasUrls && !plugin.IsBroken)
+                if (/*!AcceptedPlugins.IsAccepted(plugin.PluginUUID)*/ false)
+                {
+                    Logger.Info("MinerPluginsManager", $"Plugin is not accepted {plugin.PluginUUID}-{plugin.Name}. Skipping...");
+                    var pcr = MinerPluginsManagerState.Instance.RankedPlugins.Where(p => p.PluginUUID == plugin.PluginUUID).FirstOrDefault();
+                    if (pcr != null)
+                    {
+                        pcr.IsUserActionRequired = true;
+                    }
+                }
+                else if (hasMissingFiles && hasUrls && !plugin.IsBroken)
                 {
                     Logger.Info("MinerPluginsManager", $"Downloading missing files for {plugin.PluginUUID}-{plugin.Name}");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
@@ -453,7 +468,7 @@ namespace NHMCore.Mining.Plugins
                 var urls = plugin.GetMinerBinsUrls();
                 var hasUrls = urls.Count() > 0;
                 var versionMismatch = plugin.IsVersionMismatch;
-                if (versionMismatch && hasUrls && !plugin.IsBroken)
+                if (versionMismatch && hasUrls && !plugin.IsBroken /*&& AcceptedPlugins.IsAccepted(plugin.PluginUUID)*/)
                 {
                     Logger.Info("MinerPluginsManager", $"Version mismatch for {plugin.PluginUUID}-{plugin.Name}. Downloading...");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
@@ -536,7 +551,7 @@ namespace NHMCore.Mining.Plugins
             {
                 if (isOk)
                 {
-                    BlacklistedPlugins.Instance.AddPluginToBlacklist(pluginUUID);
+                    BlacklistedPlugins.AddToBlacklist(pluginUUID);
                     _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.RemoveSuccess, PluginInstallRemoveState.Remove);
                 }
                 else
@@ -652,10 +667,31 @@ namespace NHMCore.Mining.Plugins
             {
                 Logger.Error("MinerPluginsManager", $"Error occured while getting online miner plugins: {e.Message}");
             }
-            return false;
+            return _initOnlinePlugins;
         }
 
-        public static PluginContainer GetPluginWithUuid(string pluginUuid)
+        private static (bool, List<PluginPackageInfo>) ReadCachedOnlinePlugins()
+        {
+            try
+            {
+                string s = File.ReadAllText(Paths.RootPath("plugins_packages", "update.json"));
+
+                var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    Culture = CultureInfo.InvariantCulture
+                });
+                return (true, onlinePlugins);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("MinerPluginsManager", $"Error occured while reading cached online miner plugins: {e.Message}");
+            }
+            return (false, null);
+        }
+
+    public static PluginContainer GetPluginWithUuid(string pluginUuid)
         {
             var ret = PluginContainer.PluginContainers.FirstOrDefault(p => p.PluginUUID == pluginUuid);
             return ret;
@@ -683,7 +719,7 @@ namespace NHMCore.Mining.Plugins
                     if (!downloadMinerBinsOK || stop.IsCancellationRequested) return;
                     // unzip 
                     var binsUnzipPath = installingPluginBinsPath; // Path.Combine(installingPluginPath, "bins");
-                    var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, binsUnzipPath, unzipProgress, stop);
+                    var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(pluginContainer.GetBinsPackagePassword(), binsPackageDownloaded, binsUnzipPath, unzipProgress, stop);
                     if (stop.IsCancellationRequested) return;
                     if (unzipMinerBinsOK)
                     {
@@ -768,7 +804,7 @@ namespace NHMCore.Mining.Plugins
                 {
                     if (addSuccess)
                     {
-                        BlacklistedPlugins.Instance.RemovePluginFromBlacklist(pluginUUID);
+                        BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
                         MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
                     }
                     if (installResult == PluginInstallProgressState.Success)
@@ -821,7 +857,7 @@ namespace NHMCore.Mining.Plugins
                 }
                 // unzip 
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingExtractingPlugin, 0));
-                var unzipPluginOK = await ArchiveHelpers.ExtractFileAsync(pluginPackageDownloaded, installDllPath, zipProgressPluginChangedEventHandler, stop);
+                var unzipPluginOK = await ArchiveHelpers.ExtractFileAsync(null, pluginPackageDownloaded, installDllPath, zipProgressPluginChangedEventHandler, stop);
                 if (!unzipPluginOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedExtractingPlugin;
@@ -841,7 +877,7 @@ namespace NHMCore.Mining.Plugins
                 }
                 // unzip 
                 progress?.Report(Tuple.Create(PluginInstallProgressState.PendingExtractingMiner, 0));
-                var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, installBinsPath, zipProgressMinerChangedEventHandler, stop);
+                var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(plugin.BinsPackagePassword, binsPackageDownloaded, installBinsPath, zipProgressMinerChangedEventHandler, stop);
                 if (!unzipMinerBinsOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedExtractingMiner;

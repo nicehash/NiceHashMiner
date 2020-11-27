@@ -54,5 +54,8 @@ namespace NHM.MinerPluginToolkitV1
         ///   - Is this a open source or closed source miner
         /// </summary>
         public string PluginDescription { get; set; }
+
+
+        public string PackagePassword { get; set; } = null;
     }
 }

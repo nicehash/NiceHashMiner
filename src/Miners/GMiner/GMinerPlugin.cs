@@ -26,11 +26,11 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "2.30",
+                BinVersion = "2.32",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/2.30/gminer_2_30_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/2.32/gminer_2_32_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,7 +42,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "e7a58030-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 13);
+        public override Version Version => new Version(15, 0);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -115,11 +115,9 @@ namespace GMinerPlugin
 
         private static bool IsSupportedNVIDIADevice(BaseDevice dev)
         {
-#warning TEMP disable NVIDIA driver check
-            ////CUDA 9.0+: minimum drivers 384.xx
-            //var minDrivers = new Version(384, 0);
-            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
-            var isDriverSupported = true;
+            //CUDA 9.0+: minimum drivers 384.xx
+            var minDrivers = new Version(384, 0);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
             var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 5;
             return isSupported && isDriverSupported;
         }

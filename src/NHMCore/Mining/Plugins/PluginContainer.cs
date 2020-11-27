@@ -376,6 +376,15 @@ namespace NHMCore.Mining.Plugins
             return Enumerable.Empty<string>();
         }
 
+        public string GetBinsPackagePassword()
+        {
+            if (_plugin is IGetBinsPackagePassword impl)
+            {
+                return CheckExec(nameof(impl.BinsPackagePassword), () => impl.BinsPackagePassword, null);
+            }
+            return null;
+        }
+
         public MinerOptionsPackage GetMinerOptionsPackage()
         {
             try

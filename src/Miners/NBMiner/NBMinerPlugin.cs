@@ -1,5 +1,4 @@
-﻿//#define DISABLE_IDevicesCrossReference
-using NHM.MinerPluginToolkitV1;
+﻿using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
@@ -27,11 +26,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v33.7",
+                BinVersion = "v33.8",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v33.7/NBMiner_33.7_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v33.8/NBMiner_33.8_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -43,7 +42,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(14, 6);
+        public override Version Version => new Version(15, 0);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -58,6 +57,8 @@ namespace NBMiner
                 new Version(6,1),
                 new Version(7,0),
                 new Version(7,5),
+                new Version(8,0),
+                new Version(8,6),
             };
             var cudaDevSMver = new Version(major, minor);
             foreach (var supportedVer in nbMinerSMSupportedVersions)
@@ -99,10 +100,8 @@ namespace NBMiner
 
         private static bool IsSupportedNvidiaDevice(BaseDevice dev)
         {
-#warning TEMP disable NVIDIA driver check
-            //var minDrivers = new Version(377, 0);
-            //var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
-            var isDriverSupported = true;
+            var minDrivers = new Version(377, 0);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
             var device = dev as CUDADevice;
             var isSupported = isSupportedVersion(device.SM_major, device.SM_minor);
             return isDriverSupported && isSupported;
@@ -122,11 +121,6 @@ namespace NBMiner
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-#if DISABLE_IDevicesCrossReference
-            await Task.CompletedTask;
-#else
-#warning Blocks exit. Check if this is fixed with newer versions
-            //return;
             try
             {
                 if (_mappedIDs.Count == 0) return;
@@ -141,12 +135,11 @@ namespace NBMiner
                     var indexID = kvp.Value;
                     _mappedIDs[uuid] = indexID;
                 }
-            } catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 Logger.Error("NBMiner", $"Error during DevicesCrossReference: {ex.Message}");
             }
-
-#endif
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

@@ -46,6 +46,13 @@ namespace NiceHashMiner.Views.Common
             InitializeComponent();
         }
 
+        public CustomDialog(double maxWidth, double maxHeight)
+        {
+            InitializeComponent();
+            mainGrid.MaxWidth = maxWidth;
+            mainGrid.MaxHeight = maxHeight;
+        }
+
         private void CloseDialog(object sender, RoutedEventArgs e)
         {
             CustomDialogManager.HideCurrentModal();

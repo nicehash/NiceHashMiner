@@ -1000,6 +1000,7 @@ namespace NHMCore.Nhmws
                 _isInRPC.Value = false;
                 if (executedCall != null)
                 {
+                    // SEND ONLY WHEN status changed
                     // send miner status and send executed
                     var minerStatusMsg = CreateMinerStatusMessage();
                     Send(minerStatusMsg);

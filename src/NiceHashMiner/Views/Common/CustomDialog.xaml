@@ -171,7 +171,7 @@
         </Style>
 
     </UserControl.Resources>
-    <Grid MaxHeight="220" MaxWidth="392" Height="Auto" Width="Auto" MinHeight="200" MinWidth="392" Background="{DynamicResource BackgroundColor}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:CustomDialog}}}">
+    <Grid x:Name="mainGrid" MaxHeight="220" MaxWidth="392" Height="Auto" Width="Auto" MinHeight="200" MinWidth="392" Background="{DynamicResource BackgroundColor}" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:CustomDialog}}}">
         <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" >
             <Grid Margin="15">
                 <Grid.RowDefinitions>

@@ -11,6 +11,7 @@ using NiceHashMiner.Views.TDPSettings;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -199,6 +200,14 @@ namespace NiceHashMiner.Views
                     tdpWindow.DataContext = _vm;
                     tdpWindow.Show();
                 }
+                
+                if (_vm.Plugins.Any(p => p.Plugin.IsUserActionRequired))
+                {
+                    var pluginsPopup = new Plugins.PluginsConfirmDialog();
+                    pluginsPopup.DataContext = _vm;
+                    ShowContentAsModalDialog(pluginsPopup);
+                }
+
                 if (Launcher.IsUpdated)
                 {
                     var nhmUpdatedDialog = new CustomDialog()

@@ -28,33 +28,37 @@ namespace NHM.UUID
         {
             if (_deviceB64UUID != null) return _deviceB64UUID;
 
+            var (macHexOK, macHex) = WindowsMacUtils.GetAndCacheMACHex();
+            var (systemGuidOK, systemGuid) = GetMachineGuidOrFallback();
             var (gotCachedHexUuid, cachedHexUuid) = GetCachedHexUUID();
-            if (gotCachedHexUuid)
+            if (macHexOK && systemGuidOK)
             {
+                var infoToHash = GetInfoToHash(macHex, systemGuid);
+                if (showInfoToHash)
+                {
+                    Console.WriteLine("NHM/[{cpuSerial}]-[{macHex}]-[{guid}]-[{extraRigSeed}]");
+                    Console.WriteLine(infoToHash);
+                }
+                Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
+                var hexUuid = GetHexUUID(infoToHash);
+                _deviceB64UUID = $"{0}-{GetB64UUID(hexUuid)}";
+                return _deviceB64UUID;
+            }
+            else if (gotCachedHexUuid)
+            {
+                Logger.Error("NHM.UUID", $"Unable to read MAC or GUID read macHexOK='{macHexOK}' systemGuidOK='{systemGuidOK}'");
+                Logger.Info("NHM.UUID", $"gotCachedHexUuid cachedHexUuid='{cachedHexUuid}'");
                 _deviceB64UUID = $"{0}-{GetB64UUID(cachedHexUuid)}";
                 return _deviceB64UUID;
             }
-
-            var (macHexOK, macHex) = WindowsMacUtils.GetAndCacheMACHex();
-            var (systemGuidOK, systemGuid) = GetMachineGuidOrFallback();
-            var ok = macHexOK && systemGuidOK;
-            if (!ok) Logger.Error("NHM.UUID", $"Unable to read MAC or GUID read macHexOK='{macHexOK}' systemGuidOK='{systemGuidOK}'");
-            var infoToHash = ok ? GetInfoToHash(macHex, systemGuid) : System.Guid.NewGuid().ToString();
-            if (showInfoToHash && ok)
+            else
             {
-                Console.WriteLine("NHM/[{cpuSerial}]-[{macHex}]-[{guid}]-[{extraRigSeed}]");
-                Console.WriteLine(infoToHash);
+                Logger.Error("NHM.UUID", $"Unable to read MAC or GUID read macHexOK='{macHexOK}' systemGuidOK='{systemGuidOK}'");
+                var hexUuidGenRandom = GetHexUUID(System.Guid.NewGuid().ToString());
+                Logger.Info("NHM.UUID", $"Generating hexUuidGenRandom='{hexUuidGenRandom}' ok='{CacheHexUUIDToFile(hexUuidGenRandom)}'");
+                _deviceB64UUID = $"{0}-{GetB64UUID(hexUuidGenRandom)}";
+                return _deviceB64UUID;
             }
-            else if (showInfoToHash)
-            {
-                Console.WriteLine("Fallback GUID");
-                Console.WriteLine(infoToHash);
-            }
-            Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
-            var hexUuid = GetHexUUID(infoToHash);
-            CacheHexUUIDToFile(hexUuid);
-            _deviceB64UUID = $"{0}-{GetB64UUID(hexUuid)}";
-            return _deviceB64UUID;
         }
 
         private static string GetInfoToHash(string macHex, string guid)
