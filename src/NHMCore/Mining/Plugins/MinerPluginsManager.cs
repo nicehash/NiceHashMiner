@@ -168,6 +168,11 @@ namespace NHMCore.Mining.Plugins
                     {
                         var uuid = installedPath.Replace(minerPluginsPath, "").Trim('\\');
                         if (!System.Guid.TryParse(uuid, out var _)) continue;
+                        //if (!AcceptedPlugins.IsAccepted(uuid)) {
+                        //    Logger.Info("MinerPluginsManager", $"CleanupPlugins Skipping {uuid}");
+                        //    continue;
+                        //}
+                        Logger.Info("MinerPluginsManager", $"CleanupPlugins Replacing {uuid}");
                         var zipPackage = zipPackages.FirstOrDefault(package => package.Contains(uuid));
                         if (zipPackage == null) continue;
                         // cleanup old bins and dll's
@@ -430,7 +435,7 @@ namespace NHMCore.Mining.Plugins
                 var missingFiles = plugin.CheckBinaryPackageMissingFiles();
                 var hasMissingFiles = missingFiles.Any();
                 var hasUrls = urls.Any();
-                if (!AcceptedPlugins.IsAccepted(plugin.PluginUUID))
+                if (/*!AcceptedPlugins.IsAccepted(plugin.PluginUUID)*/ false)
                 {
                     Logger.Info("MinerPluginsManager", $"Plugin is not accepted {plugin.PluginUUID}-{plugin.Name}. Skipping...");
                     var pcr = MinerPluginsManagerState.Instance.RankedPlugins.Where(p => p.PluginUUID == plugin.PluginUUID).FirstOrDefault();
@@ -463,7 +468,7 @@ namespace NHMCore.Mining.Plugins
                 var urls = plugin.GetMinerBinsUrls();
                 var hasUrls = urls.Count() > 0;
                 var versionMismatch = plugin.IsVersionMismatch;
-                if (versionMismatch && hasUrls && !plugin.IsBroken && AcceptedPlugins.IsAccepted(plugin.PluginUUID))
+                if (versionMismatch && hasUrls && !plugin.IsBroken /*&& AcceptedPlugins.IsAccepted(plugin.PluginUUID)*/)
                 {
                     Logger.Info("MinerPluginsManager", $"Version mismatch for {plugin.PluginUUID}-{plugin.Name}. Downloading...");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));

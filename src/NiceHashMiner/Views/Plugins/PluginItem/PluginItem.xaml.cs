@@ -106,7 +106,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
             };
             dialog.OKClick += async (s, e1) =>
             {
-                AcceptedPlugins.Add(_vm.Plugin.PluginUUID);
+                //AcceptedPlugins.Add(_vm.Plugin.PluginUUID);
                 await _vm.InstallOrUpdatePlugin();
             };
             CustomDialogManager.ShowModalDialog(dialog);

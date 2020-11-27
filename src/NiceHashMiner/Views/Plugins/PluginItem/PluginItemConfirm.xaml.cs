@@ -78,7 +78,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
         {
             if (_vm.Load.IsInstalling) return;
             _vm.Plugin.IsUserActionRequired = false;
-            AcceptedPlugins.Add(_vm.Plugin.PluginUUID);
+            //AcceptedPlugins.Add(_vm.Plugin.PluginUUID);
             OnAcceptOrDecline?.Invoke(sender, e);
             await _vm.ConfirmInstallOrUpdatePlugin();
         }
@@ -86,7 +86,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
         private void Button_Click_Remove(object sender, RoutedEventArgs e)
         {
             _vm.Plugin.IsUserActionRequired = false;
-            AcceptedPlugins.Remove(_vm.Plugin.PluginUUID);
+            //AcceptedPlugins.Remove(_vm.Plugin.PluginUUID);
             OnAcceptOrDecline?.Invoke(sender, e);
             _vm.UninstallPlugin();
         }
