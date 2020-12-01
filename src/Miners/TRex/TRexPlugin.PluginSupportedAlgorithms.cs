@@ -11,6 +11,9 @@ namespace TRex
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             DefaultFee = 1.0,
+            AlgorithmFees = new Dictionary<AlgorithmType, double> {
+                { AlgorithmType.Octopus, 2.0 }
+            },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
@@ -18,14 +21,16 @@ namespace TRex
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.DaggerHashimoto){NonDefaultRAMLimit = 3UL << 30 }
+                        new SAS(AlgorithmType.DaggerHashimoto){NonDefaultRAMLimit = 3UL << 30 },
+                        new SAS(AlgorithmType.Octopus)
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.KAWPOW, "kawpow" },
-                { AlgorithmType.DaggerHashimoto, "ethash" }
+                { AlgorithmType.DaggerHashimoto, "ethash" },
+                { AlgorithmType.Octopus, "octopus" }
             }
         };
     }
