@@ -32,7 +32,7 @@ namespace WildRig
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "WildRig is multi algo miner for AMD devices.",
+                PluginDescription = "WildRig is multi algo miner for AMD devices. WARNING: Not working correctly on mixed rigs (NVIDIA+AMD).",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
