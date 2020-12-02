@@ -92,16 +92,6 @@ namespace TRex
                     DefaultValue = "67,77"
                 },
                 /// <summary>
-                /// GPU stats report frequency. (default: 5. every 5th share)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "trex_reportInterval",
-                    ShortName = "--gpu-report-interval",
-                    DefaultValue = "5"
-                },
-                /// <summary>
                 /// Quiet mode. No GPU stats at all.
                 /// </summary>
                 new MinerOption
