@@ -395,6 +395,17 @@ namespace Phoenix
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "phoenix_daglimit",
                     ShortName = "-daglim"
+                },
+                /// <summary>
+                /// Memory refresh rate on AMD cards (0 - default values, 1 - predefined value that should work on most cards, 2 to 100 -
+                /// increasingly aggressive settings). If you want to fine tune the value, you may run the miner with "-rxboost 1", write down the
+                /// corresponding "-vmr" values that are showed in the log file, and then use "-vmr" instead with adjusted values.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_rxboost",
+                    ShortName = "-rxboost"
                 }
             },
             TemperatureOptions = new List<MinerOption>
