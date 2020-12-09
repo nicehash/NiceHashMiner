@@ -129,6 +129,7 @@
     <Compile Include="ViewModels\Models\LoadProgress.cs" />
     <Compile Include="ViewModels\Models\MiningData.cs" />
     <Compile Include="ViewModels\Models\TotalMiningData.cs" />
+    <Compile Include="ViewModels\Plugins\PluginAlgorithmEntry.cs" />
     <Compile Include="ViewModels\Plugins\PluginEntryVM.cs" />
     <Compile Include="ViewModels\StartupLoadingVM.cs" />
     <Compile Include="Validators\BtcWorkerValidator.cs" />
@@ -219,6 +220,9 @@
     </Compile>
     <Compile Include="Views\Notifications\NotificationItem.xaml.cs">
       <DependentUpon>NotificationItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Plugins\PluginItem\AlgorithmDevices.xaml.cs">
+      <DependentUpon>AlgorithmDevices.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Plugins\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\PluginItemButtonConverters.cs" />
@@ -543,6 +547,10 @@
     <Page Include="Views\Notifications\NotificationItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Plugins\PluginItem\AlgorithmDevices.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Plugins\PluginItem\ExtraLaunchParameters.xaml">
       <SubType>Designer</SubType>

@@ -17,7 +17,8 @@ namespace NiceHashMiner.ViewModels.Plugins
     public class PluginEntryVM : BaseVM
     {
         public PluginPackageInfoCR Plugin { get; }
-        public IEnumerable<DeviceData> DevicesData { get; }
+        public List<ComputeDevice> Devices { get; }
+        public List<PluginAlgorithmEntry> Algorithms { get; } = new List<PluginAlgorithmEntry>();
         private IProgress<Tuple<PluginInstallProgressState, int>> Progress;
 
         public string InstallString
@@ -92,8 +93,8 @@ namespace NiceHashMiner.ViewModels.Plugins
 
         protected readonly Dictionary<string, List<string>> FilteredSupportedAlgorithms;
 
-        public PluginEntryVM(PluginPackageInfoCR plugin, IEnumerable<DeviceData> devicesData)
-            : this(plugin, devicesData, new LoadProgress())
+        public PluginEntryVM(PluginPackageInfoCR plugin)
+            : this(plugin, new LoadProgress())
         {}
 
         protected override void Dispose(bool disposing)
@@ -101,11 +102,20 @@ namespace NiceHashMiner.ViewModels.Plugins
             MinerPluginsManager.InstallRemoveProgress(Plugin.PluginUUID, Progress);
         }
 
-        protected PluginEntryVM(PluginPackageInfoCR plugin, IEnumerable<DeviceData> devicesData, LoadProgress load)
+        protected PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
         {
             Plugin = plugin;
             Plugin.PropertyChanged += Plugin_PropertyChanged;
-            DevicesData = devicesData;
+            Devices = AvailableDevices.Devices.Where(dev => dev.AlgorithmSettings.Any(algo => algo.PluginContainer.PluginUUID == plugin.PluginUUID)).ToList();
+            var algorithmsUniqueIDs = new HashSet<string>(Devices.SelectMany(dev => dev.AlgorithmSettings.Select(algo => algo.AlgorithmStringID)));
+
+            foreach(var algoId in algorithmsUniqueIDs)
+            {
+                var devices = Devices.Select(dev => dev.AlgorithmSettings.FirstOrDefault(a => a.AlgorithmStringID == algoId)).Where(a => a != null).ToList(); 
+                Algorithms.Add(new PluginAlgorithmEntry(devices));
+            }
+                
+            //(dev => dev.AlgorithmSettingsCollection.Any(ac => ac.PluginContainer.PluginUUID == plugin.PluginUUID));
 
             // Filter the dict to remove empty entries
             FilteredSupportedAlgorithms = new Dictionary<string, List<string>>();
@@ -215,4 +225,6 @@ namespace NiceHashMiner.ViewModels.Plugins
         }
 
     }
+
+
 }
