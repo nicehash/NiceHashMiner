@@ -23,11 +23,11 @@ namespace MiniZ
             // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.6v6",
+                BinVersion = "v1.6x",
                 ExePath = new List<string> { "miniZ.exe" },
                 Urls = new List<string>
                 {
-                    "https://miniz.ch/?smd_process_download=1&download_id=3839", // original (pwd protected)
+                    "https://miniz.ch/?smd_process_download=1&download_id=4000", // original (pwd protected)
                 },
                 BinsPackagePassword = "miniZ"
             };
@@ -39,7 +39,7 @@ namespace MiniZ
         }
         public override string PluginUUID => "eda6abd0-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 0);
+        public override Version Version => new Version(15, 1);
 
         public override string Name => "MiniZ";
 
@@ -102,8 +102,7 @@ namespace MiniZ
         {
             try
             {
-                if (benchmarkedPluginVersion.Major < 13 && ids.First() == AlgorithmType.ZHash) return true;
-                if (ids.First() == AlgorithmType.BeamV3 && benchmarkedPluginVersion.Major == 13 && benchmarkedPluginVersion.Minor < 2) return true;
+                if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 1 && ids.First() == AlgorithmType.ZHash) return true;
             }
             catch (Exception e)
             {
