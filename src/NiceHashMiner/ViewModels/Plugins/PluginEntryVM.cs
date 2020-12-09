@@ -9,12 +9,15 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using static NHMCore.Translations;
+using NHMCore.Mining;
+using System.Linq;
 
 namespace NiceHashMiner.ViewModels.Plugins
 {
     public class PluginEntryVM : BaseVM
     {
         public PluginPackageInfoCR Plugin { get; }
+        public IEnumerable<DeviceData> DevicesData { get; }
         private IProgress<Tuple<PluginInstallProgressState, int>> Progress;
 
         public string InstallString
@@ -89,8 +92,8 @@ namespace NiceHashMiner.ViewModels.Plugins
 
         protected readonly Dictionary<string, List<string>> FilteredSupportedAlgorithms;
 
-        public PluginEntryVM(PluginPackageInfoCR plugin)
-            : this(plugin, new LoadProgress())
+        public PluginEntryVM(PluginPackageInfoCR plugin, IEnumerable<DeviceData> devicesData)
+            : this(plugin, devicesData, new LoadProgress())
         {}
 
         protected override void Dispose(bool disposing)
@@ -98,10 +101,11 @@ namespace NiceHashMiner.ViewModels.Plugins
             MinerPluginsManager.InstallRemoveProgress(Plugin.PluginUUID, Progress);
         }
 
-        protected PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
+        protected PluginEntryVM(PluginPackageInfoCR plugin, IEnumerable<DeviceData> devicesData, LoadProgress load)
         {
             Plugin = plugin;
             Plugin.PropertyChanged += Plugin_PropertyChanged;
+            DevicesData = devicesData;
 
             // Filter the dict to remove empty entries
             FilteredSupportedAlgorithms = new Dictionary<string, List<string>>();

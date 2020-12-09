@@ -305,7 +305,8 @@ namespace NiceHashMiner.ViewModels
                 {
                     var vm = Plugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
                     if (vm != null) continue;
-                    Plugins.Add(new PluginEntryVM(plugin));
+                    var devicesData = AvailableDevices.Devices.Select(d => (DeviceData)d).Where(dev => dev.AlgorithmSettingsCollection.Any(ac => ac.PluginContainer.PluginUUID == plugin.PluginUUID));
+                    Plugins.Add(new PluginEntryVM(plugin, devicesData));
                 }
                 // remove missing
                 var remove = Plugins.Where(plugin => rankedPlugins.FirstOrDefault(rankedPlugin => rankedPlugin.PluginUUID == plugin.Plugin.PluginUUID) == null).ToArray();
