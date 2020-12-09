@@ -39,7 +39,7 @@ namespace WildRig
 
         public override string PluginUUID => "0a07d6a0-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 0);
+        public override Version Version => new Version(15, 1);
 
         public override string Name => "WildRig";
 
@@ -55,6 +55,8 @@ namespace WildRig
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+
+            if (devices.Any(dev => dev is CUDADevice)) return supported;
 
             var amdGpus = devices
                 .Where(dev => dev is AMDDevice gpu && Checkers.IsGcn2(gpu))
