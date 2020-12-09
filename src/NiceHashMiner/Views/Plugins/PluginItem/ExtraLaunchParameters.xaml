@@ -49,12 +49,13 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource local.SettingTitle}" Text="Plugin Template" Grid.Row="0"/>
-                <TextBox x:Name="tbx_plugin_default" Tag="Plugin" Style="{StaticResource inputBox}" LostFocus="TextBox_LostFocus" TextWrapping="Wrap" Margin="0,8,0,0" Grid.Row="1"/>
+                <local:ExtraLaunchParametersInputControl DataType="plugin" PluginUUID="{Binding Plugin.PluginUUID}" />
             </Grid>
             
             <Separator Background="{DynamicResource BorderColor}" Grid.Row="2" Margin="24,0,24,0"/>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
+using NiceHashMiner.ViewModels.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,19 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
     /// </summary>
     public partial class AlgorithmDevices : UserControl
     {
+        public string PluginUUID { get; private set; }
         public AlgorithmDevices()
         {
             InitializeComponent();
+            DataContextChanged += (s, e) => {
+                if (e.NewValue is PluginAlgorithmEntry pluginEntry)
+                {
+                    DataContext = pluginEntry;
+                    PluginUUID = pluginEntry.Devices.FirstOrDefault().PluginContainer.PluginUUID;
+                    return;
+                }
+                throw new Exception("unsupported datacontext type");
+            };
         }
 
         private void ShowDevices_Click(object sender, RoutedEventArgs e)

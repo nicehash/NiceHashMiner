@@ -228,6 +228,9 @@
     <Compile Include="Views\Plugins\PluginItem\Converters\PluginItemButtonConverters.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
     <Compile Include="Views\Plugins\PluginItem\Converters\SupportedDevicesConverter.cs" />
+    <Compile Include="Views\Plugins\PluginItem\ExtraLaunchParametersInputControl.xaml.cs">
+      <DependentUpon>ExtraLaunchParametersInputControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Plugins\PluginItem\ExtraLaunchParameters.xaml.cs">
       <DependentUpon>ExtraLaunchParameters.xaml</DependentUpon>
     </Compile>
@@ -549,6 +552,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Plugins\PluginItem\AlgorithmDevices.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Plugins\PluginItem\ExtraLaunchParametersInputControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
