@@ -134,7 +134,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
         {
             try
             {
-                var ret = NvmlNativeMethods.nvmlInit();
+                var ret = NvmlNativeMethods.nvmlInitWithFlags(0);
                 if (ret != nvmlReturn.Success)
                     throw new Exception($"NVML init failed with code {ret}");
                 return true;

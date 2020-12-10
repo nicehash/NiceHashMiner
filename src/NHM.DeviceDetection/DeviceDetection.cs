@@ -98,10 +98,14 @@ namespace NHM.DeviceDetection
                 // NVIDIA drivers
                 var nvmlLoaded = result?.NvmlLoaded ?? -1;
                 DetectionResult.IsDCHDriver = nvmlLoaded == 1;
-                if (nvmlLoaded == 1)
+                if (nvmlLoaded == 1 && result.DriverVersion.Contains('.'))
                 {
                     var driverVer = result.DriverVersion.Split('.').Select(s => int.Parse(s)).ToArray();
                     if (driverVer.Count() >= 2) DetectionResult.NvidiaDriver = new Version(driverVer[0], driverVer[1]);
+                }
+                else
+                {
+                    // TODO PROBLEM IF NO NVML LOADED 
                 }
             }
 
