@@ -15,9 +15,9 @@ namespace Excavator
         internal static MinerBenchmarkTimeSettings BenchmarkTimeSettings = new MinerBenchmarkTimeSettings
         {
             General = new Dictionary<BenchmarkPerformanceType, int> {
-                { BenchmarkPerformanceType.Quick,    160  },
-                { BenchmarkPerformanceType.Standard, 180  },
-                { BenchmarkPerformanceType.Precise,  260  },
+                { BenchmarkPerformanceType.Quick,    30  },
+                { BenchmarkPerformanceType.Standard, 40},
+                { BenchmarkPerformanceType.Precise,  60  },
             },
         };
     }

@@ -58,13 +58,13 @@ namespace Excavator
 
         protected override void Init() {}
 
-        private static string CmdJSONString(string username, params string[] uuids)
+        private static string CmdJSONString(string miningLocation, string username, params string[] uuids)
         {
             const string DEVICE = @"		{""id"":3,""method"":""worker.add"",""params"":[""daggerhashimoto"",""_DEV_ID_""]}";
             const string TEMPLATE = @"
 [
 	{""time"":0,""commands"":[
-		{""id"":1,""method"":""subscribe"",""params"":[""nhmp.eu.nicehash.com:3200"",""_PUT_YOUR_BTC_HERE_""]}
+		{""id"":1,""method"":""subscribe"",""params"":[""nhmp._MINING_LOCATION_.nicehash.com:3200"",""_PUT_YOUR_BTC_HERE_""]}
 	]},
 	{""time"":1,""commands"":[
         {""id"":1,""method"":""algorithm.add"",""params"":[""daggerhashimoto""]}
@@ -82,6 +82,7 @@ _DEVICES_
 ]";
             var devices = string.Join(",\n", uuids.Select(uuid => DEVICE.Replace("_DEV_ID_", uuid)));
             return TEMPLATE
+                .Replace("_MINING_LOCATION_", miningLocation)
                 .Replace("_PUT_YOUR_BTC_HERE_", username)
                 .Replace("_DEVICES_", devices);
         }
@@ -90,20 +91,16 @@ _DEVICES_
         {
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
-            // instant non blocking
-            //var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-
             var uuids = _miningPairs.Select(p => p.Device).Cast<CUDADevice>().Select(gpu => gpu.UUID);
             var ids = _miningPairs.Select(p => p.Device).Cast<CUDADevice>().Select(gpu => gpu.PCIeBusID);
             //var algo = AlgorithmName(_algorithmType);
             // "--algo {algo} --url={urlWithPort} --user {_username} 
             var (_, cwd) = GetBinAndCwdPaths();
             var fileName = $"cmd_{string.Join("_", ids)}.json";
-            Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            var logName = $"log_{string.Join("_", ids)}_{unixTimestamp}.log";
-            File.WriteAllText(Path.Combine(cwd, fileName), CmdJSONString(_username, uuids.ToArray()));
-            var commandLine = $"-p {_apiPort} -c {fileName} -d 6";
+            //Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            //var logName = $"log_{string.Join("_", ids)}_{unixTimestamp}.log";
+            File.WriteAllText(Path.Combine(cwd, fileName), CmdJSONString(_miningLocation, _username, uuids.ToArray()));
+            var commandLine = $"-p {_apiPort} -c {fileName}";
             return commandLine;
         }
     }

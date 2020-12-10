@@ -29,12 +29,12 @@ namespace Excavator
                 ExePath = new List<string> { "excavator.exe" },
                 Urls = new List<string>
                 {
-                    // TODO
+                    "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v15.x/excavator_build59.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "NiceHash excavator NVIDIA GPU miner.",
+                PluginDescription = "Excavator NVIDIA GPU miner from NiceHash",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
@@ -45,7 +45,7 @@ namespace Excavator
 
         public override string Author => "info@nicehash.com";
 
-        public override string PluginUUID => "60ebcd15-e99f-4d6a-858e-78609d5cebf7";
+        public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

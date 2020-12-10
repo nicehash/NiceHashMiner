@@ -192,6 +192,7 @@ namespace MinerPluginsPacker
                 //"0a07d6a0-94ec-11ea-a64d-17be303ea466", // WildRig
                 "0e0a7320-94ec-11ea-a64d-17be303ea466", // XMRig
                 //"1484c660-94ec-11ea-a64d-17be303ea466", // ZEnemy
+                "27315fe0-3b03-11eb-b105-8d43d5bd63be", // Excavator
             };
             var bundlePluginsDlls = new Dictionary<string, string>(); 
 
