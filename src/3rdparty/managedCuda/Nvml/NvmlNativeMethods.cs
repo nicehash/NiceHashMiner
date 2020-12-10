@@ -33,50 +33,53 @@ namespace ManagedCuda.Nvml
 		internal const string NVML_API_DLL_NAME = "nvml";
 
 
-		/// <summary>
-		/// Initialize NVML, but don't initialize any GPUs yet.
-		/// \note In NVML 5.319 new nvmlInit_v2 has replaced nvmlInit"_v1" (default in NVML 4.304 and older) that
-		///       did initialize all GPU devices in the system.
-		///       
-		/// This allows NVML to communicate with a GPU
-		/// when other GPUs in the system are unstable or in a bad state.  When using this API, GPUs are
-		/// discovered and initialized in nvmlDeviceGetHandleBy* functions instead.
-		/// 
-		/// \note To contrast nvmlInit_v2 with nvmlInit"_v1", NVML 4.304 nvmlInit"_v1" will fail when any detected GPU is in
-		///       a bad or unstable state.
-		/// 
-		/// For all products.
-		/// This method, should be called once before invoking any other methods in the library.
-		/// A reference count of the number of initializations is maintained.  Shutdown only occurs
-		/// when the reference count reaches zero.
-		/// </summary>
-		/// <returns>
-		/// 
-		///         - \ref NVML_SUCCESS                   if NVML has been properly initialized
-		///         - \ref NVML_ERROR_DRIVER_NOT_LOADED   if NVIDIA driver is not running
-		///         - \ref NVML_ERROR_NO_PERMISSION       if NVML does not have permission to talk to the driver
-		///         - \ref NVML_ERROR_UNKNOWN             on any unexpected error
- 		/// </returns>
-		[DllImport(NVML_API_DLL_NAME, EntryPoint = "nvmlInit_v2")]
-		public static extern nvmlReturn nvmlInit();
+        /// <summary>
+        /// Initialize NVML, but don't initialize any GPUs yet.
+        /// \note In NVML 5.319 new nvmlInit_v2 has replaced nvmlInit"_v1" (default in NVML 4.304 and older) that
+        ///       did initialize all GPU devices in the system.
+        ///       
+        /// This allows NVML to communicate with a GPU
+        /// when other GPUs in the system are unstable or in a bad state.  When using this API, GPUs are
+        /// discovered and initialized in nvmlDeviceGetHandleBy* functions instead.
+        /// 
+        /// \note To contrast nvmlInit_v2 with nvmlInit"_v1", NVML 4.304 nvmlInit"_v1" will fail when any detected GPU is in
+        ///       a bad or unstable state.
+        /// 
+        /// For all products.
+        /// This method, should be called once before invoking any other methods in the library.
+        /// A reference count of the number of initializations is maintained.  Shutdown only occurs
+        /// when the reference count reaches zero.
+        /// </summary>
+        /// <returns>
+        /// 
+        ///         - \ref NVML_SUCCESS                   if NVML has been properly initialized
+        ///         - \ref NVML_ERROR_DRIVER_NOT_LOADED   if NVIDIA driver is not running
+        ///         - \ref NVML_ERROR_NO_PERMISSION       if NVML does not have permission to talk to the driver
+        ///         - \ref NVML_ERROR_UNKNOWN             on any unexpected error
+        /// </returns>
+        [DllImport(NVML_API_DLL_NAME, EntryPoint = "nvmlInit_v2")]
+        public static extern nvmlReturn nvmlInit();
+
+        [DllImport(NVML_API_DLL_NAME, EntryPoint = "nvmlInitWithFlags")]
+        public static extern nvmlReturn nvmlInitWithFlags(uint flags);
 
 
-		/// <summary>
-		/// Shut down NVML by releasing all GPU resources previously allocated with \ref nvmlInit().
-		/// 
-		/// For all products.
-		/// This method should be called after NVML work is done, once for each call to \ref nvmlInit()
-		/// A reference count of the number of initializations is maintained.  Shutdown only occurs
-		/// when the reference count reaches zero.  For backwards compatibility, no error is reported if
-		/// nvmlShutdown() is called more times than nvmlInit().
-		/// </summary>
-		/// <returns>
-		/// 
-		///         - \ref NVML_SUCCESS                 if NVML has been properly shut down
-		///         - \ref NVML_ERROR_UNINITIALIZED     if the library has not been successfully initialized
-		///         - \ref NVML_ERROR_UNKNOWN           on any unexpected error
- 		/// </returns>
-		[DllImport(NVML_API_DLL_NAME)]
+        /// <summary>
+        /// Shut down NVML by releasing all GPU resources previously allocated with \ref nvmlInit().
+        /// 
+        /// For all products.
+        /// This method should be called after NVML work is done, once for each call to \ref nvmlInit()
+        /// A reference count of the number of initializations is maintained.  Shutdown only occurs
+        /// when the reference count reaches zero.  For backwards compatibility, no error is reported if
+        /// nvmlShutdown() is called more times than nvmlInit().
+        /// </summary>
+        /// <returns>
+        /// 
+        ///         - \ref NVML_SUCCESS                 if NVML has been properly shut down
+        ///         - \ref NVML_ERROR_UNINITIALIZED     if the library has not been successfully initialized
+        ///         - \ref NVML_ERROR_UNKNOWN           on any unexpected error
+        /// </returns>
+        [DllImport(NVML_API_DLL_NAME)]
 		public static extern nvmlReturn nvmlShutdown();
 		
 
