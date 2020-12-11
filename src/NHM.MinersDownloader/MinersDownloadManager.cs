@@ -52,17 +52,27 @@ namespace NHM.MinersDownloader
             return url.Contains("mega.co.nz") || url.Contains("mega.nz");
         }
 
-        internal static string GetFileExtension(string urlOrName)
+        internal static string GetFileExtension(string urlOrNameIn)
         {
+            string urlOrName = "";
             try
             {
-                urlOrName = urlOrName.Replace(new Uri(urlOrName).GetLeftPart(UriPartial.Path), "");
+                urlOrName = urlOrName.Replace(new Uri(urlOrNameIn).GetLeftPart(UriPartial.Path), "");
             }
             catch
             {}
             var dotAt = urlOrName.LastIndexOf('.');
             var invalidChars = Path.GetInvalidPathChars().Any(c => urlOrName.Contains(c));
-            if (dotAt < 0 || invalidChars) return "check";
+            if (dotAt < 0 || invalidChars) {
+                try
+                {
+                    var ext = urlOrNameIn.Substring(urlOrNameIn.LastIndexOf('.') + 1);
+                    return ext;
+                }
+                catch (Exception)
+                {}
+                return "exe";
+            }
             var extSize = urlOrName.Length - dotAt - 1;
             return urlOrName.Substring(urlOrName.Length - extSize);
         }
