@@ -116,17 +116,6 @@ namespace NanoMiner
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            try
-            {
-                if (ids?.Contains(AlgorithmType.KAWPOW) ?? false)
-                {
-                    return benchmarkedPluginVersion.Major == 11 && benchmarkedPluginVersion.Minor < 1;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("NanoMinerPlugin.ShouldReBenchmarkAlgorithmOnDevice", e.Message);
-            }
             return false;
         }
     }
