@@ -198,7 +198,6 @@
     <Compile Include="Utils\DelayedSingleExecActionTask.cs" />
     <Compile Include="Utils\ElapsedTimeChecker.cs" />
     <Compile Include="Utils\FilterOSSpecific.cs" />
-    <Compile Include="Utils\FirewallRules.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
     <Compile Include="Utils\PInvokeHelpers.cs" />
     <Compile Include="Utils\RunAsAdmin.cs" />
