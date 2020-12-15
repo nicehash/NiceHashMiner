@@ -207,32 +207,6 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateAddWindowsDefenderExceptionInfo()
-        {
-            var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, NotificationsGroup.WindowsDefenderException, Tr("Add Windows Defender Exception Failed"), Tr("Adding exception to Windows Defender failed. Please check the help page."));
-            notificationIfUnsuccessfull.Actions.Add(new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Process.Start(Links.AddWDExclusionHelp_PRODUCTION); }
-            });
-
-            var notification = new Notification(NotificationsType.Info, Tr("Add Windows Defender Exception"), Tr("Would you like to add NiceHash Miner root folder to the Windows Defender exceptions?"));
-            notification.Actions.Add(new NotificationAction
-            {
-                Info = Tr("Add exception"),
-                Action = () => {
-                    var ok = WindowsDefender.AddException();
-                    NotificationsManager.Instance.RemoveNotificationFromList(notification);
-                    if (!ok)
-                    {
-                        NotificationsManager.Instance.AddNotificationToList(notificationIfUnsuccessfull);
-                    }
-                }
-            });
-            notification.NotificationUUID = "WindowsDefenderNotification";
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         public static void CreateEnableComputeModeAMDInfo()
         {
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.ComputeModeAMD, Tr("Switch compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode for optimized profit?"));

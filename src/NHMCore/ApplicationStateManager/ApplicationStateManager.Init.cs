@@ -239,11 +239,6 @@ namespace NHMCore
                 //    }
                 //}
 
-                if (!WindowsDefender.IsAlreadySet())
-                {
-                    AvailableNotifications.CreateAddWindowsDefenderExceptionInfo();
-                }
-
                 // re-check after download we should have all miner files
                 var missingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
                 if (missingMinerBins)
