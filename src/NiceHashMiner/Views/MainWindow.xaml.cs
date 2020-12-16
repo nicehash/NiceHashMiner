@@ -82,7 +82,8 @@ namespace NiceHashMiner.Views
                         OkText = Translations.Tr("OK"),
                         CancelVisible = Visibility.Collapsed,
                         OkVisible = Visibility.Collapsed,
-                        AnimationVisible = Visibility.Visible
+                        AnimationVisible = Visibility.Visible,
+                        ExitVisible = Visibility.Collapsed
                     };
                     ShowContentAsModalDialog(nhmUpdaterDialog);
                 });

@@ -184,6 +184,7 @@
                 <Button Grid.Row="0"
                 Style="{StaticResource local.ExitTextButton}"
                 Content="&#xF00D;"
+                Visibility="{Binding ExitVisible}"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
                 Click="CloseDialog"/>
