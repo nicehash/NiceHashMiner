@@ -16,8 +16,9 @@ namespace WildRig
             foreach (var line in lines)
             {
                 var pciArray = line.Split('#');
-                var wildIndex = Convert.ToInt32(pciArray[1].Substring(0,2));
-                var pciID = pciArray[2].Substring(0,2).Replace(']', ' ');
+                var wildIndex = Convert.ToInt32(pciArray[1].Substring(0,2).Replace(':', ' '));
+                var pciID = line.Substring(line.IndexOf("busID: ") + 7).Split(',').FirstOrDefault();
+                if (string.IsNullOrEmpty(pciID)) continue;
                 var comparePCIeBusID = Convert.ToInt32(pciID);
                 foreach (var gpu in gpus)
                 {
