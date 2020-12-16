@@ -14,7 +14,7 @@ namespace NHMCore.Configs
         public static UpdateSettings Instance { get; } = new UpdateSettings();
         private UpdateSettings() { }
 
-        public bool _autoUpdateNiceHashMiner = true;
+        public bool _autoUpdateNiceHashMiner = false;
         public bool AutoUpdateNiceHashMiner
         {
             get
