@@ -113,7 +113,7 @@
                         x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="16,0,0,0" />
                 </WrapPanel>
             </Grid>
-            <Grid Grid.Row="1" Width="Auto" x:Name="ActionProgress" Visibility="Collapsed" Margin="5,15,5,0" VerticalAlignment="Bottom">
+            <Grid Grid.Row="1" Width="Auto" x:Name="ActionProgress" Visibility="Collapsed" Margin="5" VerticalAlignment="Bottom">
                 <ProgressBar Width="Auto" Style="{StaticResource progressStyle}" Height="15" x:Name="ActionProgressBar" />
                 <TextBlock Width="Auto" HorizontalAlignment="Center" Text="" />
             </Grid>
