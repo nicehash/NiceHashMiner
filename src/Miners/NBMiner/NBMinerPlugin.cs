@@ -26,23 +26,23 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v34.5",
+                BinVersion = "v35.0",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v34.5/NBMiner_34.5_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v35.0/NBMiner_35.0_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "GPU Miner for GRIN and AE mining.",
+                PluginDescription = "GPU Miner for GRIN, AE and ETH mining.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 3);
+        public override Version Version => new Version(15, 4);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";

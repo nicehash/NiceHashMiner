@@ -165,6 +165,33 @@ namespace TRex
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "trex_lowLoad",
                     ShortName = "--low-load",
+                },
+                /// <summary>
+                ///  parameter to disable hashrate reporting to the mining pool
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "trex_noHashrateReport",
+                    ShortName = "--no-hashrate-report",
+                },
+                /// <summary>
+                ///  parameter to forbid applying config changes via API and web-monitoring page
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "trex_apiReadOnly",
+                    ShortName = "--api-read-only",
+                },
+                /// <summary>
+                ///  Continue mining even in case of connection loss.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "trex_keepGpuBusy",
+                    ShortName = "--keep-gpu-busy",
                 }
             },
             TemperatureOptions = new List<MinerOption>
