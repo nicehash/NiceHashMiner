@@ -137,8 +137,11 @@ namespace NHMCore.Mining
                 {
                     IsUpdatingApi = false;
                     _apiSemaphore.Release();
-                    var anyNegative = apiData.AlgorithmSpeedsPerDevice.Any(apiDev => apiDev.Value.Any(kvp => kvp.speed < 0));
-                    if (anyNegative) await StopAsync();
+                    if(apiData.AlgorithmSpeedsPerDevice != null)
+                    {
+                        var anyNegative = apiData.AlgorithmSpeedsPerDevice.Any(apiDev => apiDev.Value.Any(kvp => kvp.speed < 0));
+                        if (anyNegative) await StopAsync();
+                    }
                 }
             }
 

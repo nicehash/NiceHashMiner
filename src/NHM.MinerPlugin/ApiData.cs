@@ -1,4 +1,5 @@
-﻿using NHM.Common.Enums;
+﻿using NHM.Common;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +18,22 @@ namespace NHM.MinerPlugin
         {
             try
             {
-                List<(AlgorithmType type, double speed)> totalPairsSum = AlgorithmSpeedsPerDevice.Values.FirstOrDefault().Select(pair => (pair.type, 0.0)).ToList();
-                foreach (var pairs in AlgorithmSpeedsPerDevice.Values)
+                if(AlgorithmSpeedsPerDevice != null)
                 {
-                    for (int i = 0; i < pairs.Count; i++)
+                    List<(AlgorithmType type, double speed)> totalPairsSum = AlgorithmSpeedsPerDevice.Values.FirstOrDefault().Select(pair => (pair.type, 0.0)).ToList();
+                    foreach (var pairs in AlgorithmSpeedsPerDevice.Values)
                     {
-                        totalPairsSum[i] = (totalPairsSum[i].type, totalPairsSum[i].speed + pairs[i].speed);
+                        for (int i = 0; i < pairs.Count; i++)
+                        {
+                            totalPairsSum[i] = (totalPairsSum[i].type, totalPairsSum[i].speed + pairs[i].speed);
+                        }
                     }
-                }
-                return totalPairsSum;
+                    return totalPairsSum;
+                }               
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.Error("ApiData", $"Error getting AlgorithmSpeedsTotal: {ex.Message}");
             }
             return new List<(AlgorithmType type, double speed)>();
         }
