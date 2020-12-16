@@ -121,7 +121,7 @@ namespace NHMCore.Utils
                     Directory.CreateDirectory(downloadRootPath);
                 }
                 var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_{VersionState.Instance.OnlineVersionStr}";
-                var downloadProgress = updateNotification != null ? updateNotification.Action.Progress : null;
+                var downloadProgress = updateNotification?.Action?.Progress ?? null;
                 var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, downloadProgress, ApplicationStateManager.ExitApplication.Token);
                 if (!success)
                 {
