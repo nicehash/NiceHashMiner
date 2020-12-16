@@ -4028,6 +4028,12 @@
     },
     "Unable to retrieve plugins info. Please check your internet connection and try to restart NiceHash Miner.": {
       "ru": "Не удалось получить информацию о плагинах. Пожалуйста, проверьте ваше подключение к интернету и попробуйте перезапустить NiceHash Miner."
+    },
+    "NiceHash Miner Update Failed": {
+      "ru": "Обновление NiceHash Miner не удалось"
+    },
+    "Update procedure failed please install manually.": {
+      "ru": "Процедура обновления не удалась, пожалуйста, установите вручную."
     }
   }
 }
