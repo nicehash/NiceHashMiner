@@ -26,11 +26,11 @@ namespace GMinerPlugin
             // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "2.33",
+                BinVersion = "2.35",
                 ExePath = new List<string> { "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/2.33/gminer_2_33_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/2.35/gminer_2_35_windows64.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,7 +42,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "e7a58030-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 1);
+        public override Version Version => new Version(15, 2);
 
         public override string Name => "GMinerCuda9.0+";
 
