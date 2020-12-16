@@ -16,6 +16,7 @@ namespace NiceHashMiner.Views.Notifications
     {
 
         private Notification _notification;
+        private bool _isSingleShot = false;
         public NotificationItem()
         {
             InitializeComponent();
@@ -28,12 +29,18 @@ namespace NiceHashMiner.Views.Notifications
             if (e.NewValue is Notification notification)
             {
                 _notification  = notification;
-                var baseAction = _notification.Actions.FirstOrDefault();
-                if (baseAction is NotificationAction action)
+                var action = _notification.Action;
+                if (action != null)
                 {
                     ActionButton.Content = action.Info;
-                    ActionButton.Click += (s, be) => action.Action?.Invoke();
                     ActionButton.Visibility = Visibility.Visible;
+                    _isSingleShot = action.IsSingleShotAction;
+                    if (action.BindProgress)
+                    {
+                        action.Progress = new Progress<int>((int p) => {
+                            ActionProgressBar.Value = p;
+                        });
+                    }
                 }
                 return;
             }
@@ -53,7 +60,10 @@ namespace NiceHashMiner.Views.Notifications
 
         private void ExecuteNotificationAction(object sender, RoutedEventArgs e)
         {
-
+            if (_isSingleShot) ActionButton.IsEnabled = false;
+            var action = _notification.Action;
+            if (action != null && action.Action != null) action.Action?.Invoke();
+            if (action != null && action.BindProgress) ActionProgress.Visibility = Visibility.Visible;
         }
 
         private void InfoToggleButton_Click(object sender, RoutedEventArgs e)

@@ -77,13 +77,17 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <!--<RowDefinition Height="*" />-->
+                </Grid.RowDefinitions>
+                <WrapPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,0">
                     <TextBlock x:Name="itemErrorTitle" Text="{Binding Name}" Style="{StaticResource local.DefaultTextBlock}" FontSize="14" VerticalAlignment="Center"/>
                     <Border Width="41" Height="24" Margin="15,0,0,0" Background="{StaticResource Brushes.Light.Basic.NoticeColor}" Visibility="{Binding NotificationNew, Converter={StaticResource NewVisibilityConv}}" CornerRadius="2">
                         <TextBlock Text="NEW" Style="{StaticResource FontsTypography.Button-White-Small}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                 </WrapPanel>
-                <WrapPanel Grid.Column="1" Background="Transparent" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <WrapPanel Grid.Column="1" Grid.Row="0" Background="Transparent" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <ToggleButton x:Name="InfoToggleButton"
                               Style="{StaticResource local.TextBlockToggleButton}"
                               Margin="0,0,16,0"
@@ -111,6 +115,11 @@
                         HorizontalAlignment="Left"
                         x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="16,0,0,0" />
                 </WrapPanel>
+                <!--TODO the progress here is can be collapsed-->
+                <Grid Grid.ColumnSpan="2" Grid.Row="0" Width="Auto" x:Name="ActionProgress" Visibility="Collapsed" Margin="5,15,5,0" VerticalAlignment="Bottom">
+                    <ProgressBar Width="Auto" Style="{StaticResource progressStyle}" Height="15" x:Name="ActionProgressBar" />
+                    <TextBlock Width="Auto" HorizontalAlignment="Center" Text="" />
+                </Grid>
             </Grid>
             <Grid x:Name="notificationsDetailsGrid" Grid.Row="1" Visibility="Collapsed" Margin="0,0,0,16">
                 <WrapPanel Orientation="Vertical">

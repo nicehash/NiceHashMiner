@@ -183,7 +183,6 @@
     <Compile Include="Nhmws\TimeFactor.cs" />
     <Compile Include="Notifications\AvailableNotifications.cs" />
     <Compile Include="Notifications\NotificationAction.cs" />
-    <Compile Include="Notifications\INotificationBaseAction.cs" />
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Notifications\NotificationsGroup.cs" />
     <Compile Include="Notifications\NotificationsManager.cs" />
