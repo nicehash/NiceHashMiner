@@ -297,3 +297,6 @@ installer/*.exe
 # pre_compiled_libs
 !pre_compiled_libs/device_detection_x64/device_detection.exe
 !pre_compiled_libs/*
+
+prepare_installers.bat
+prepare_release.bat
