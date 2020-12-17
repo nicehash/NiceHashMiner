@@ -23,23 +23,23 @@ namespace WildRig
             // https://bitcointalk.org/index.php?topic=5023676 | https://github.com/andru-kun/wildrig-multi/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = " 0.28.1",
+                BinVersion = " 0.28.2",
                 ExePath = new List<string> { "wildrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.28.1/wildrig-multi-windows-0.28.1.7z", // original
+                    "https://github.com/andru-kun/wildrig-multi/releases/download/0.28.2/wildrig-multi-windows-0.28.2.7z", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "WildRig is multi algo miner for AMD devices. WARNING: Not working correctly on mixed rigs (NVIDIA+AMD).",
+                PluginDescription = "WildRig is multi algo miner for AMD devices.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "0a07d6a0-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 1);
+        public override Version Version => new Version(15, 2);
 
         public override string Name => "WildRig";
 
@@ -55,8 +55,6 @@ namespace WildRig
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-
-            if (devices.Any(dev => dev is CUDADevice)) return supported;
 
             var amdGpus = devices
                 .Where(dev => dev is AMDDevice gpu && Checkers.IsGcn2(gpu))
