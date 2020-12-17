@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using NHMCore.Configs;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -256,7 +257,14 @@ namespace NHMCore.Mining.Plugins
                         // set plugin algo
                         algo.Speeds = pluginConf.Speeds;
                         algo.Enabled = pluginConf.Enabled;
-                        algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
+                        if (ConfigManager.IsVersionChanged && PluginUUID == "0e0a7320-94ec-11ea-a64d-17be303ea466" && algo.AlgorithmName.Contains(AlgorithmType.RandomXmonero.ToString()) && (pluginConf.ExtraLaunchParameters == "" || pluginConf.ExtraLaunchParameters == "--cpu-priority=0"))
+                        {
+                            algo.ExtraLaunchParameters = "--cpu-priority 0";
+                        }
+                        else
+                        {
+                            algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
+                        }
                         algo.PowerUsage = pluginConf.PowerUsage;
                         algo.ConfigVersion = pluginConf.GetVersion();
                         // check if re-bench is needed
