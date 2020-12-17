@@ -38,7 +38,7 @@ namespace NHMCore.Utils
             {
                 try
                 {
-                    var fileName = Paths.AppRootPath("runnhmasadmin.exe");
+                    var fileName = Paths.RootPath("runnhmasadmin.exe");
                     var startInfo = new ProcessStartInfo
                     {
                         FileName = fileName,

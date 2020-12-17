@@ -7,7 +7,6 @@ namespace XMRig
     public class Hashrate
     {
         public List<double?> total { get; set; }
-        public double highest { get; set; }
     }
 
     [Serializable]

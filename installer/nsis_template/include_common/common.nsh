@@ -66,7 +66,7 @@ Name "${PRODUCT_NAME}"
   # comment this out since it breaks the installer state restore
   #Delete "$INSTDIR\*.*"
   # Because you f-ed up 
-  Delete "$INSTDIR\build_settings.json"
+  ; Delete "$INSTDIR\build_settings.json" Keep this file
   Delete "$INSTDIR\CreateLogReport.exe"
   Delete "$INSTDIR\EULA.html"
   Delete "$INSTDIR\EULA.rtf"
@@ -75,6 +75,7 @@ Name "${PRODUCT_NAME}"
   Delete "$INSTDIR\NiceHashMiner.pdb"
   Delete "$INSTDIR\OnGPUsLost.bat"
   Delete "$INSTDIR\runnhmasadmin.exe"
+  Delete "$INSTDIR\runnhmasadmin.exe.config"
   Delete "$INSTDIR\Uninstall NiceHashMiner.exe"
   # Because you f-ed up
 

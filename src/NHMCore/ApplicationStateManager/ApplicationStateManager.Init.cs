@@ -1,4 +1,3 @@
-using Microsoft.Win32;
 using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceDetection;
@@ -11,10 +10,8 @@ using NHMCore.Nhmws;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using static NHMCore.Translations;
 
 namespace NHMCore
@@ -42,7 +39,7 @@ namespace NHMCore
         {
             try
             {
-                var allSteps = 15;
+                var allSteps = 14;
                 var currentStep = 0;
                 var nextProgPerc = new Func<int>(() =>
                 {
@@ -239,11 +236,6 @@ namespace NHMCore
                 //    }
                 //}
 
-                if (!WindowsDefender.IsAlreadySet())
-                {
-                    AvailableNotifications.CreateAddWindowsDefenderExceptionInfo();
-                }
-
                 // re-check after download we should have all miner files
                 var missingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
                 if (missingMinerBins)
@@ -258,22 +250,6 @@ namespace NHMCore
                 // VC_REDIST check
                 loader.PrimaryProgress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
-
-                // STEP
-                if (FirewallRules.RunFirewallRulesOnStartup)
-                {
-                    loader.PrimaryProgress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
-                    if (FirewallRules.IsFirewallRulesOutdated())
-                    {
-                        // requires UAC
-                        // TODO show message box
-                        FirewallRules.UpdateFirewallRules();
-                    }
-                }
-                else
-                {
-                    loader.PrimaryProgress?.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
-                }
 
                 // STEP
                 // Cross reference plugin indexes

@@ -333,7 +333,7 @@ namespace NHMCore.Configs.Data
         #endregion Global Device settings
 
         #region UpdateSettings
-        public bool AutoUpdateNiceHashMiner
+        public bool AutoUpdateNiceHashMiner2
         {
             get => UpdateSettings.Instance.AutoUpdateNiceHashMiner;
             set => UpdateSettings.Instance.AutoUpdateNiceHashMiner = value;
@@ -404,6 +404,9 @@ namespace NHMCore.Configs.Data
             DisableDeviceStatusMonitoring = false;
             DisableDevicePowerModeSettings = true;
             MineRegardlessOfProfit = true;
+
+            AutoUpdateNiceHashMiner2 = false;
+            AutoUpdateMinerPlugins = true;
         }
 
         public void FixSettingBounds()

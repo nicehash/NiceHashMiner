@@ -203,9 +203,6 @@ namespace NiceHashMiner
             var isUpdated = Environment.GetCommandLineArgs().Contains("-updated");
             if (isUpdater)
             {
-                var updatersPath = GetRootPath("updaters");
-                // TODO check the latest files here
-                //var updaterFile = Path.Combine(updatersPath, "nhm_windows_3.0.0.1.zip");
                 var latestUpdaterFile = GetLatestUpdater();
                 if (latestUpdaterFile == null)
                 {
@@ -225,7 +222,6 @@ namespace NiceHashMiner
                     return;
                 }
                 var updaterFile = GetRootPath("updaters", latestUpdaterFile);
-                // TODO find latest
                 var isZip = updaterFile.EndsWith(".zip");
 
                 //await Task.Delay(5000);
@@ -254,7 +250,6 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    // TODO updater should start nhm
                     var startUpdater = new Process
                     {
                         StartInfo = new ProcessStartInfo

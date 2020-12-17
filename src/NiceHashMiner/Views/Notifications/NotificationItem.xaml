@@ -70,6 +70,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" MinHeight="64" Height="Auto">
@@ -112,7 +113,11 @@
                         x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="16,0,0,0" />
                 </WrapPanel>
             </Grid>
-            <Grid x:Name="notificationsDetailsGrid" Grid.Row="1" Visibility="Collapsed" Margin="0,0,0,16">
+            <Grid Grid.Row="1" Width="Auto" x:Name="ActionProgress" Visibility="Collapsed" Margin="5" VerticalAlignment="Bottom">
+                <ProgressBar Width="Auto" Style="{StaticResource progressStyle}" Height="15" x:Name="ActionProgressBar" />
+                <TextBlock Width="Auto" HorizontalAlignment="Center" Text="" />
+            </Grid>
+            <Grid x:Name="notificationsDetailsGrid" Grid.Row="2" Visibility="Collapsed" Margin="0,0,0,16">
                 <WrapPanel Orientation="Vertical">
                     <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource CheckBoxNormal}" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
                     <WrapPanel Margin="0,8,0,0">

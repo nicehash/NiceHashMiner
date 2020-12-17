@@ -29,7 +29,7 @@ namespace NHMCore.Notifications
             NotificationContent = content;
         }
 
-        public List<INotificationBaseAction> Actions { get; } = new List<INotificationBaseAction>();
+        public NotificationAction Action { get; internal set; } = null;
 
         private string _notificationName { get; set; }
         public string Name

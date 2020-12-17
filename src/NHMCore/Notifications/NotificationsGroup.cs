@@ -34,6 +34,7 @@ namespace NHMCore.Notifications
         [Obsolete]
         BitOS64,
         NhmUpdate,
+        NhmUpdateFailed,
         NhmWasUpdated,
         PluginUpdate,
         NvidiaDCH,

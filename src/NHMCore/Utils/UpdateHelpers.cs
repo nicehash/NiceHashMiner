@@ -15,8 +15,6 @@ namespace NHMCore.Utils
 {
     public static class UpdateHelpers
     {
-        // TODO null for now
-        private static Progress<int> DownloadProgress { get; set; } = null;
         private static readonly string Tag = "UpdateHelpers";
 
         public static Task RunninLoops { get; private set; } = null;
@@ -67,12 +65,13 @@ namespace NHMCore.Utils
                     bool isUpdater = IsNHMInstalled() && IsRunningInstalledApp();
                     if (hasNewVersion)
                     {
-                        AvailableNotifications.CreateNhmUpdateInfo(isUpdater);
+                        AvailableNotifications.CreateNhmUpdateInfoDownload(isUpdater);
                     }
 
                     if (isActive() && isAutoUpdate && hasNewVersion && !Launcher.IsUpdatedFailed)
                     {
-                        await StartUpdateProcess(isUpdater);
+                        var ok = await StartAutoUpdateProcess(isUpdater);
+                        if (!ok) AvailableNotifications.CreateNhmUpdateAttemptFail();
                     }
                 }
             }
@@ -91,17 +90,27 @@ namespace NHMCore.Utils
             }
         }
 
-        internal static async Task StartUpdateProcess(bool isUpdater)
+        private static async Task<bool> StartAutoUpdateProcess(bool isUpdater)
+        {
+            try
+            {
+                var downloadOk = await StartDownloadingUpdater(isUpdater);
+                if (!downloadOk) return false;
+                return await StartUpdateProcess();
+            } catch (Exception ex)
+            {
+                Logger.Error(Tag, $"Check autoupdate Exception: {ex.Message}");
+                return false;
+            }
+        }
+
+        internal static async Task<bool> StartDownloadingUpdater(bool isUpdater)
         {
             try
             {
                 // Let user know that something is happening after update process started
-                if (Launcher.IsLauncher)
-                {
-                    var notifications = NotificationsManager.Instance.Notifications;
-                    var updateNotification = notifications.Find(notif => notif.Group == NotificationsGroup.NhmUpdate);
-                    updateNotification.NotificationContent = Translations.Tr("Update in progress...");
-                }
+                var updateNotification = NotificationsManager.Instance.Notifications.Find(notif => notif.Group == NotificationsGroup.NhmUpdate);
+                if (updateNotification != null) updateNotification.NotificationContent = Translations.Tr("Download in progress...");
 
                 // determine what how to update
                 // #1 download updater.exe or zip depending on bin type
@@ -112,13 +121,30 @@ namespace NHMCore.Utils
                     Directory.CreateDirectory(downloadRootPath);
                 }
                 var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_{VersionState.Instance.OnlineVersionStr}";
-                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, DownloadProgress, ApplicationStateManager.ExitApplication.Token);
+                var downloadProgress = updateNotification?.Action?.Progress ?? null;
+                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, downloadProgress, ApplicationStateManager.ExitApplication.Token);
                 if (!success)
                 {
-                    // TODO notify that we cannot download the miner updates file
-                    return;
+                    if (updateNotification != null) updateNotification.NotificationContent = Translations.Tr("Download unsuccessfull");
+                    return false;
                 }
+                else
+                {
+                    if (updateNotification != null) updateNotification.NotificationContent = Translations.Tr("Download successfull");
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(Tag, $"StartDownloadingUpdater autoupdate Exception: {ex.Message}");
+                return false;
+            };
+        }
 
+        internal static async Task<bool> StartUpdateProcess()
+        {
+            try
+            {
                 OnAutoUpdate?.Invoke();
                 // #2 SAVE current state so we can resume it after the client updates
                 ApplicationStateManager.SaveMiningState();
@@ -144,40 +170,17 @@ namespace NHMCore.Utils
                 }
                 else
                 {
-                    // TODO non launcher not priority right now
+                    // no launcher
+                    return false;
                 }
-            } catch (Exception ex)
-            {
-                Logger.Error(Tag, $"Check autoupdate Exception: {ex.Message}");
-            }         
-        }
-
-        public static async Task DownloadUpdaterAsync(Progress<int> downloadProgress)
-        {
-            try
-            {
-                var url = VersionState.Instance.GetNewVersionUpdaterUrl();
-                var downloadRootPath = Path.Combine(Paths.Root, "updaters");
-                if (!Directory.Exists(downloadRootPath))
-                {
-                    Directory.CreateDirectory(downloadRootPath);
-                }
-                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}", downloadProgress, ApplicationStateManager.ExitApplication.Token);
-                if (!success || ApplicationStateManager.ExitApplication.Token.IsCancellationRequested) return;
-
-                // stop devices
-                await ApplicationStateManager.StopAllDevicesTask();
-
-                using (var updater = new Process())
-                {
-                    updater.StartInfo.UseShellExecute = false;
-                    updater.StartInfo.FileName = downloadedFilePath;
-                    updater.Start();
-                }
-            } catch (Exception ex)
-            {
-                Logger.Error("UpdateHelpers", $"Updating failed: {ex.Message}");
             }
+            catch (Exception ex)
+            {
+                Logger.Error(Tag, $"StartUpdateProcess autoupdate Exception: {ex.Message}");
+                return false;
+            }
+            // if success we close app anyways
+            return true;
         }
 
         public static bool IsNHMInstalled()

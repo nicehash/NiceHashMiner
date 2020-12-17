@@ -179,7 +179,7 @@ namespace MinerPluginsPacker
             var bundlePlugins = new List<string>
             {
                 //"e294f620-94eb-11ea-a64d-17be303ea466", // CryptoDredge
-                "e7a58030-94eb-11ea-a64d-17be303ea466", // GMinerPlugin
+                //"e7a58030-94eb-11ea-a64d-17be303ea466", // GMinerPlugin
                 "eb75e920-94eb-11ea-a64d-17be303ea466", // LolMiner
                 //"eda6abd0-94eb-11ea-a64d-17be303ea466", // MiniZ - BROKEN
                 //"f25fee20-94eb-11ea-a64d-17be303ea466", // NanoMiner

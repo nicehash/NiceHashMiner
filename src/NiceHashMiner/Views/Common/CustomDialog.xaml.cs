@@ -41,6 +41,9 @@ namespace NiceHashMiner.Views.Common
         public static readonly DependencyProperty AnimationVisibleProperty =
             DependencyProperty.Register(nameof(AnimationVisible), typeof(Visibility), typeof(CustomDialog));
 
+        public static readonly DependencyProperty ExitVisibleProperty =
+            DependencyProperty.Register(nameof(ExitVisible), typeof(Visibility), typeof(CustomDialog));
+
         public CustomDialog()
         {
             InitializeComponent();
@@ -106,6 +109,12 @@ namespace NiceHashMiner.Views.Common
         {
             get => (Visibility)GetValue(AnimationVisibleProperty);
             set => SetValue(AnimationVisibleProperty, value);
+        }
+
+        public Visibility ExitVisible
+        {
+            get => (Visibility)GetValue(ExitVisibleProperty);
+            set => SetValue(ExitVisibleProperty, value);
         }
 
         public bool CloseOnOk { get; set; } = true;
