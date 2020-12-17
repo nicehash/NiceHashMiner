@@ -20,6 +20,8 @@ namespace NHM.Common
 
         static BuildOptions()
         {
+            bool isSettingsLoaded = false;
+            string customSettingsFile = null;
             try
             {
                 var jsonSettings = new JsonSerializerSettings
@@ -28,8 +30,7 @@ namespace NHM.Common
                     MissingMemberHandling = MissingMemberHandling.Ignore,
                     Culture = CultureInfo.InvariantCulture
                 };
-                bool isSettingsLoaded = false;
-                string customSettingsFile = Paths.RootPath("build_settings.json");
+                customSettingsFile = Paths.RootPath("build_settings.json");
                 if (File.Exists(customSettingsFile))
                 {
                     var customSettings = JsonConvert.DeserializeObject<BuildOptionSettings>(File.ReadAllText(customSettingsFile), jsonSettings);
@@ -44,7 +45,14 @@ namespace NHM.Common
                         SHOW_TDP_SETTINGS = customSettings.SHOW_TDP_SETTINGS;
                     }
                 }
-                if (!isSettingsLoaded)
+            }
+            catch (System.Exception e)
+            {
+                Logger.Error("BuildOptions", $"Constructor {e.Message}");
+            }
+            try
+            {
+                if (!isSettingsLoaded && customSettingsFile != null)
                 {
                     // create defaults
                     var defaultCustomSettings = new BuildOptionSettings { };
@@ -53,7 +61,7 @@ namespace NHM.Common
             }
             catch (System.Exception e)
             {
-                Logger.Error("BuildOptions", $"Constructor {e.Message}");
+                Logger.Error("BuildOptions", $"Constructor2 {e.Message}");
             }
         }
 
