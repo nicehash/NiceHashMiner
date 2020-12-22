@@ -21,11 +21,11 @@ namespace XMRig
             // https://github.com/xmrig/xmrig
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v6.6.2",
-                ExePath = new List<string> { "xmrig-6.6.2", "xmrig.exe" },
+                BinVersion = "v6.7.0",
+                ExePath = new List<string> { "xmrig-6.7.0", "xmrig.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/xmrig/xmrig/releases/download/v6.6.2/xmrig-6.6.2-msvc-win64.zip" // original
+                    "https://github.com/xmrig/xmrig/releases/download/v6.7.0/xmrig-6.7.0-msvc-win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,7 +37,7 @@ namespace XMRig
 
         public override string PluginUUID => "0e0a7320-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 5);
+        public override Version Version => new Version(15, 6);
 
         public override string Name => "XMRig";
 
@@ -65,18 +65,14 @@ namespace XMRig
         }
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            try
-            {
-                if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 11 && benchmarkedPluginVersion.Minor < 4 && ids.First() == AlgorithmType.RandomXmonero)
-                {
-                   return true;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
-            }
+            //try
+            //{
+
+            //}
+            //catch (Exception e)
+            //{
+            //    Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            //}
             return false;
         }
     }
