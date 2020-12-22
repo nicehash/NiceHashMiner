@@ -29,7 +29,7 @@ namespace Excavator
                 ExePath = new List<string> { "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v15.x/excavator_build59.zip"
+                    "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v15.x/excavator_b83.7z"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(15, 0);
+        public override Version Version => new Version(15, 1);
 
         public override string Name => "Excavator";
 
