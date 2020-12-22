@@ -23,11 +23,11 @@ namespace LolMiner
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.15",
-                ExePath = new List<string> { "1.15", "lolMiner.exe" },
+                BinVersion = "1.17",
+                ExePath = new List<string> { "1.17", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.15/lolMiner_v1.15_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.17/lolMiner_v1.17_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -37,7 +37,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(15, 0);
+        public override Version Version => new Version(15, 1);
 
         public override string Name => "lolMiner";
 
@@ -115,9 +115,6 @@ namespace LolMiner
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            if (ids.Count() == 0) return false;
-            if (ids.First() == AlgorithmType.BeamV3 && benchmarkedPluginVersion.Major == 13 && benchmarkedPluginVersion.Minor < 7) return true;
-            if (ids.First() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion.Major == 13 && benchmarkedPluginVersion.Minor < 14) return true;
             return false;
         }
     }
