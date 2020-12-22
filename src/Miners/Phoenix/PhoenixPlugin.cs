@@ -25,11 +25,11 @@ namespace Phoenix
             // https://bitcointalk.org/index.php?topic=2647654.0 || new one: https://bitcointalk.org/index.php?topic=2647654.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "5.2e",
-                ExePath = new List<string> { "PhoenixMiner_5.2e_Windows", "PhoenixMiner.exe" },
+                BinVersion = "5.4c",
+                ExePath = new List<string> { "PhoenixMiner_5.4c_Windows", "PhoenixMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://mega.nz/folder/3d11FaCb#l4PhGSvL8fiQ6oxzO57szg/file/mYt3FaAa" // original
+                    "https://mega.nz/folder/2VskDJrI#lsQsz1CdDe8x5cH3L8QaBw/file/fd1iEQIJ" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -41,7 +41,7 @@ namespace Phoenix
 
         public override string PluginUUID => "fa369d10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 1);
+        public override Version Version => new Version(15, 2);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -146,15 +146,13 @@ namespace Phoenix
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            try
-            {
-                var reBench = benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 2;
-                return reBench;
-            }
-            catch (Exception e)
-            {
-                Logger.Error("PhoenixPlugin", $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
-            }
+            //try
+            //{
+            //}
+            //catch (Exception e)
+            //{
+            //    Logger.Error("PhoenixPlugin", $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            //}
             return false;
         }
     }
