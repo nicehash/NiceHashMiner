@@ -40,7 +40,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "f25fee20-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 1);
+        public override Version Version => new Version(15, 2);
 
         public override string Name => "NanoMiner";
 
@@ -63,7 +63,7 @@ namespace NanoMiner
             }
 
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(411, 31);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(455, 23);
             var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
 
             foreach (var gpu in supportedGpus)
