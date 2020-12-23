@@ -31,12 +31,7 @@ namespace Phoenix
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.DaggerHashimoto, "eth" },
-                //#pragma warning disable 0618
-                //{ AlgorithmType.Decred, "dcr" },
-                //{ AlgorithmType.Blake2s, "b2s" },
-                //{ AlgorithmType.Keccak, "kc" },
-                //#pragma warning restore 0618
+                { AlgorithmType.DaggerHashimoto, "eth" }
             }
         };
     }

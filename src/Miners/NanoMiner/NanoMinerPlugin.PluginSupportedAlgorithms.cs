@@ -19,11 +19,20 @@ namespace NanoMiner
                     {
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 }
                     }
+                },
+                {
+                    DeviceType.NVIDIA,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
+                        new SAS(AlgorithmType.Octopus),
+                    }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.KAWPOW, "Kawpow" },
+                { AlgorithmType.Octopus, "Octopus" },
             }
         };
     }
