@@ -39,24 +39,14 @@ namespace NBMiner
                     Delimiter = ","
                 },
                 /// <summary>
-                /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 4.
+                /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 0.
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_intensity",
                     LongName = "--cuckoo-intensity",
-                    DefaultValue = "4"
-                },
-                /// <summary>
-                /// Intensity of secondary algorithm.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "nbminer_sec_intensity",
-                    ShortName = "-di",
-                    LongName = "--secondary-intensity"
+                    DefaultValue = "0"
                 },
                 /// <summary>
                 /// Set this option to reduce the range of power consumed by rig when minining with algo cuckatoo.
@@ -125,6 +115,16 @@ namespace NBMiner
                     ShortName = "--mt",
                     LongName = "--memory-tweak",
                     Delimiter = ","
+                },
+                /// <summary>
+                ///  Windows only option, install / uninstall driver for memory tweak. Run with admin priviledge.
+                ///  install: nbminer.exe --driver install, uninstall: nbminer.exe --driver uninstall.
+                /// </summary>             
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_driver",
+                    LongName = "--driver"
                 },
                 /// <summary>
                 /// Print communication data between miner and pool in log file.
