@@ -17,7 +17,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "srbminer_intensity",
                     ShortName = "--gpu-intensity",
-                    Delimiter = ","
+                    Delimiter = "!"
                 },
                 /// <summary>
                 /// gpu raw intensity, comma separated values
@@ -27,7 +27,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "srbminer_raw_intensity",
                     ShortName = "--gpu-raw-intensity",
-                    Delimiter = ","
+                    Delimiter = "!"
                 },
                 /// <summary>
                 /// number of gpu threads, comma separated values
@@ -37,7 +37,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "srbminer_threads",
                     ShortName = "--gpu-threads",
-                    Delimiter = ","
+                    Delimiter = "!"
                 },
                 /// <summary>
                 /// gpu worksize, comma separated values
@@ -47,7 +47,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "srbminer_worksize",
                     ShortName = "--gpu-worksize",
-                    Delimiter = ","
+                    Delimiter = "!"
                 },
                 /// <summary>
                 /// ADL to use (1 or 2), comma separated values
@@ -57,7 +57,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "srbminer_adl_type",
                     ShortName = "--gpu-adl-type",
-                    Delimiter = ","
+                    Delimiter = "!"
                 },
                 /// <summary>
                 /// number from 0-10, 0 disables tweaking
@@ -187,7 +187,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "srbminer_target_temp",
                     ShortName = "--gpu-target-temperature",
-                    Delimiter = ","
+                    Delimiter = "!"
                 },
                 /// <summary>
                 /// gpu turn off temperature, comma separated values
@@ -197,7 +197,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "srbminer_off_temp",
                     ShortName = "--gpu-off-temperature",
-                    Delimiter = ","
+                    Delimiter = "!"
                 },
                 /// <summary>
                 /// gpu fan speed in RPM, comma separated values
@@ -207,7 +207,7 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "srbminer_target_fan",
                     ShortName = "--gpu-target-fan-speed",
-                    Delimiter = ","
+                    Delimiter = "!"
                 },
                 /// <summary>
                 /// if this temperature is reached, miner will shutdown system (ADL must be enabled)
