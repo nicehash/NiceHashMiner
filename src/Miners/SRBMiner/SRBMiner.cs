@@ -47,12 +47,13 @@ namespace SRBMiner
                 var amdDevices = gpus.Cast<AMDDevice>();
                 foreach (var gpu in amdDevices)
                 {
-                    var currentDevStats = summary.gpu_devices.Where(dev => dev.bus_id == gpu.PCIeBusID).FirstOrDefault();
-                    if (currentDevStats == null) continue;
-                    var device = currentDevStats.device;
-                    var data = summary.gpu_hashrate[0].TryGetValue(device, out var currentSpeed);
-                    totalSpeed += currentSpeed;
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
+                    var algorithmDevices = summary.algorithms.FirstOrDefault().hashrate.gpu;
+                    var deviceName = summary.gpu_devices.Where(dev => dev.bus_id == gpu.PCIeBusID).FirstOrDefault().device;
+                    var currentDevStats = algorithmDevices.Where(dev => dev.Key == deviceName).FirstOrDefault().Value;
+                    if (currentDevStats == 0) continue;
+
+                    totalSpeed += currentDevStats;
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentDevStats * (1 - DevFee * 0.01)) });
                 }
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
@@ -78,7 +79,7 @@ namespace SRBMiner
         protected override void Init()
         {
             var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
-            _devices = string.Join(",", mappedDevIDs);
+            _devices = string.Join("!", mappedDevIDs);
         }
 
         protected override string MiningCreateCommandLine()
@@ -86,7 +87,7 @@ namespace SRBMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var cmd = $"--algorithm {AlgoName} --wallet {_username} --gpu-id {_devices} --pool {urlWithPort} --disable-cpu --disable-gpu-watchdog --api-enable --api-port {_apiPort} {_extraLaunchParameters}";
+            var cmd = $"--algorithm {AlgoName} --pool {urlWithPort} --wallet {_username} --gpu-id {_devices} --disable-cpu --api-enable --api-port {_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
     }
