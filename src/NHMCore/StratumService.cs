@@ -25,7 +25,8 @@ namespace NHMCore
             get => _serviceLocation;
             set
             {
-                var newValue = (-1 < value && value < MiningLocations.Count) ? value : 0;
+                var defaultValue = value >= 1 ? 1 : 0;
+                var newValue = (-1 < value && value < MiningLocations.Count) ? value : defaultValue;
                 if (_serviceLocation != newValue)
                 {
                     _serviceLocation = newValue;
@@ -126,30 +127,22 @@ namespace NHMCore
         private static IReadOnlyDictionary<string, Location> _miningLocations { get; } = new Dictionary<string, Location> {
             { "eu",     new Location(0, "eu", "Europe - Amsterdam") },
             { "usa",    new Location(1, "usa", "USA - San Jose") },
-            { "hk",     new Location(2, "hk", "China - Hong Kong") },
-            { "jp",     new Location(3, "jp", "Japan - Tokyo") },
-            { "in",     new Location(4, "in", "India - Chennai") },
-            { "br",     new Location(5, "br", "Brazil - Sao Paulo") },
         };
 
         private static IReadOnlyList<string> _miningLocationsEU { get; } =
             new[] { "eu" };
 
         private static IReadOnlyList<string> _miningLocationsUSA { get; } =
-            new[] { "usa", "hk", "jp", "in", "br" };
+            new[] { "usa" };
 
         // Constants
         public static IReadOnlyList<string> MiningLocations { get; } =
-            new[] { "eu", "usa", "hk", "jp", "in", "br" };
+            new[] { "eu", "usa" };
 
         public static IReadOnlyList<string> MiningLocationNames { get; } = new List<string>
         {
             "Europe - Amsterdam",
             "USA - San Jose",
-            "China - Hong Kong",
-            "Japan - Tokyo",
-            "India - Chennai",
-            "Brazil - Sao Paulo"
         };
     }
 }

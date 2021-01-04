@@ -2292,14 +2292,14 @@
       "ru": "Устанавливает максимальный размер для лог-файла.",
       "zh_cn": "在此处设置日志文件的最大大小。"
     },
-    "Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency.": {
-      "bg": "Избира местоположението на изчислителния сървър. Изборът на по-отдалечена локация (напр. Хонг Конг, Токио...) увеличава латентността.",
-      "es": "Establece la ubicación de minado. Elegir Hong Kong o Japón añadirá latencia extra.",
-      "it": "Imposta il luogo di mining. Scegliendo Hong Kong o Tokyo aggiungerà latenza extra.",
-      "pl": "Ustawia lokalizację serwera. Wybierz najbliższy miejsca zamieszkania.",
-      "pt": "Define o local de mineração. Escolhendo Hong Kong ou Tóquio adicionará latência extra.",
-      "ro": "Setați locația de minare. Alegând Hong Kong sau Tokyo latența o să fie mai mare.",
-      "ru": "Устанавливает локацию майнинга. Выбор Гонконга или Токио увеличивает время задержки.",
+    "Sets the mining location.": {
+      "bg": "Избира местоположението на изчислителния сървър.",
+      "es": "Establece la ubicación de minado.",
+      "it": "Imposta il luogo di mining.",
+      "pl": "Ustawia lokalizację serwera.",
+      "pt": "Define o local de mineração.",
+      "ro": "Setați locația de minare.",
+      "ru": "Устанавливает локацию майнинга.",
       "zh_cn": "设置服务器所在区域。请根据矿机所在位置酌情选择。"
     },
     "Sets the time unit to report BTC rates.": {
