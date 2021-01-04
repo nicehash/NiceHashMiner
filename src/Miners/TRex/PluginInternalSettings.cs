@@ -40,24 +40,43 @@ namespace TRex
                     DefaultValue = "auto"
                 },
                 /// <summary>
-                /// Set process priority (default: 2) 0 idle, 2 normal to 5 highest.
+                ///  Low load mode (default: 0). 1 - enabled, 0 - disabled.
+                ///  Reduces the load on the GPUs if possible. Can be set to a comma separated string to enable
+                ///  the mode for a subset of the GPU list (eg: --low-load 0,0,1,0)
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "trex_priority",
-                    ShortName = "--cpu-priority",
-                    DefaultValue = "2"
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "trex_lowLoad",
+                    ShortName = "--low-load",
                 },
                 /// <summary>
-                /// Forces miner to immediately reconnect to pool on N successively failed shares (default: 10).
+                ///  Continue mining even in case of connection loss.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "trex_keepGpuBusy",
+                    ShortName = "--keep-gpu-busy",
+                },            
+                /// <summary>
+                /// Set temperature color for GPUs stat.
+                /// Example: 55,65 - it means that temperatures above 55 will have yellow color, above 65 - red color.
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "trex_reconectFailed",
-                    ShortName = "--reconnect-on-fail-shares",
-                    DefaultValue = "10"
+                    ID = "trex_tempColor",
+                    LongName = "--temperature-color"
+                },  
+                /// <summary>
+                ///  parameter to forbid applying config changes via API and web-monitoring page
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "trex_apiReadOnly",
+                    ShortName = "--api-read-only",
                 },
                 /// <summary>
                 /// Sliding window length in seconds used to compute average hashrate (default: 60).
@@ -81,15 +100,14 @@ namespace TRex
                     DefaultValue = "600"
                 },
                 /// <summary>
-                /// Set temperature color for GPUs stat. Example: 55,65 - it means that
-                /// temperatures above 55 will have yellow color, above 65 - red color. (default: 67,77)
+                /// GPU stats report frequency. Minimum is 5 sec. (default: 30 sec)
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "trex_tempColor",
-                    ShortName = "--temperature-color",
-                    DefaultValue = "67,77"
+                    ID = "trex_reportInterval",
+                    ShortName = "--gpu-report-interval",
+                    DefaultValue = "30"
                 },
                 /// <summary>
                 /// Quiet mode. No GPU stats at all.
@@ -129,6 +147,15 @@ namespace TRex
                     ShortName = "--no-nvml"
                 },
                 /// <summary>
+                ///  parameter to disable hashrate reporting to the mining pool
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "trex_noHashrateReport",
+                    ShortName = "--no-hashrate-report",
+                },
+                /// <summary>
                 /// Full path of the log file.
                 /// </summary>
                 new MinerOption
@@ -137,6 +164,26 @@ namespace TRex
                     ID = "trex_logPath",
                     ShortName = "-l",
                     LongName = "--log-path"
+                },
+                /// <summary>
+                /// Set process priority (default: 2) 0 idle, 2 normal to 5 highest.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_priority",
+                    ShortName = "--cpu-priority",
+                    DefaultValue = "2"
+                },
+                /// <summary>
+                /// Forces miner to immediately reconnect to pool on N successively failed shares (default: 10).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_reconectFailed",
+                    ShortName = "--reconnect-on-fail-shares",
+                    DefaultValue = "10"
                 },
                 /// <summary>
                 /// Memory tweak mode (default: 0 - disabled). Range from 0 to 6. General recommendation
@@ -154,48 +201,10 @@ namespace TRex
                     ID = "trex_memoryTweak",
                     ShortName = "--mt",
                     Delimiter = ","
-                },
-                /// <summary>
-                ///  Low load mode (default: 0). 1 - enabled, 0 - disabled.
-                ///  Reduces the load on the GPUs if possible. Can be set to a comma separated string to enable
-                ///  the mode for a subset of the GPU list (eg: --low-load 0,0,1,0)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "trex_lowLoad",
-                    ShortName = "--low-load",
-                },
-                /// <summary>
-                ///  parameter to disable hashrate reporting to the mining pool
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "trex_noHashrateReport",
-                    ShortName = "--no-hashrate-report",
-                },
-                /// <summary>
-                ///  parameter to forbid applying config changes via API and web-monitoring page
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "trex_apiReadOnly",
-                    ShortName = "--api-read-only",
-                },
-                /// <summary>
-                ///  Continue mining even in case of connection loss.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "trex_keepGpuBusy",
-                    ShortName = "--keep-gpu-busy",
                 }
             },
             TemperatureOptions = new List<MinerOption>
-            {
+            {               
                 /// <summary>
                 /// GPU shutdown temperature. (default: 0 - disabled)
                 /// </summary>

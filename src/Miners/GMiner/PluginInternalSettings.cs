@@ -29,62 +29,6 @@ namespace GMinerPlugin
             GeneralOptions = new List<MinerOption>
             {
                 /// <summary>
-                /// personalization string for equihash algorithm (for example: 'BgoldPoW', 'BitcoinZ', 'Safecoin')
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_pers",
-                    LongName = "--pers",
-                },
-                /// <summary>
-                /// enable/disable power efficiency calculator. Power efficiency calculator display of energy efficiency statistics of GPU in S/w, higher CPU load. Default value is '1' ('0' - off or '1' - on)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_pec",
-                    LongName = "--pec=",
-                    DefaultValue = "1"
-                },
-                /// <summary>
-                /// enable/disable NVML
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_nvml",
-                    LongName = "--nvml=",
-                    DefaultValue = "1"
-                },
-                /// <summary>
-                /// enable/disable CUDA platform
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_cuda",
-                    LongName = "--cuda=",
-                },
-                /// <summary>
-                /// enable/disable OpenCL platform
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_opencl",
-                    LongName = "--opencl=",
-                },
-                /// <summary>
-                /// pass cost of electricity in USD per kWh, miner will report $ spent to mining
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_electricity",
-                    LongName = "--electricity_cost="
-                },
-                /// <summary>
                 /// option to control GPU intensity (--intensity, 1-100)
                 /// </summary>
                 new MinerOption
@@ -113,7 +57,63 @@ namespace GMinerPlugin
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "gminer_color",
                     ShortName = "-c",
-                    LongName = "--color="
+                    LongName = "--color"
+                },
+                /// <summary>
+                /// personalization string for equihash algorithm (for example: 'BgoldPoW', 'BitcoinZ', 'Safecoin')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_pers",
+                    LongName = "--pers",
+                },
+                /// <summary>
+                /// enable/disable power efficiency calculator. Power efficiency calculator display of energy efficiency statistics of GPU in S/w, higher CPU load. Default value is '1' ('0' - off or '1' - on)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_pec",
+                    LongName = "--pec=",
+                    DefaultValue = "1"
+                },
+                /// <summary>
+                /// enable/disable NVML
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_nvml",
+                    LongName = "--nvml",
+                    DefaultValue = "1"
+                },
+                /// <summary>
+                /// enable/disable CUDA platform
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_cuda",
+                    LongName = "--cuda",
+                },
+                /// <summary>
+                /// enable/disable OpenCL platform
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_opencl",
+                    LongName = "--opencl",
+                },
+                /// <summary>
+                /// pass cost of electricity in USD per kWh, miner will report $ spent to mining
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_electricity",
+                    LongName = "--electricity_cost"
                 },
                 /// <summary>
                 /// space-separated list of OC modes for each device
@@ -133,15 +133,6 @@ namespace GMinerPlugin
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "gminer_oc1",
                     LongName = "--oc1"
-                },
-                /// <summary>
-                /// space-separated list of intensities for secondary algorithm in dual mining mode (0-10)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_dual_intensity",
-                    LongName = "--dual_intensity"
                 }
             },
             TemperatureOptions = new List<MinerOption>{

@@ -56,12 +56,23 @@ namespace TeamRedMiner
                 },
                 /// <summary>
                 /// Enables logging of miner output into the file specified by FILENAME.
+                /// If no filename is provided, the miner will log to trm_<algo>_<yyyymmdd_hhmmss>.log in the current working directory.
+                /// If the log file already exists, the miner will append.
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "teamRedMiner_logFile",
                     ShortName = "--log_file="
+                },
+                /// <summary>
+                /// (Windows only) Enables compute mode and disables crossfire on necessary gpus.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "teamRedMiner_enableCompute",
+                    ShortName = "--enable_compute"
                 },
                 /// <summary>
                 /// Manual cryptonight configuration for the miner.  CONFIG must be in the form

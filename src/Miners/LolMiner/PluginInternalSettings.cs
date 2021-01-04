@@ -23,45 +23,36 @@ namespace LolMiner
             GeneralOptions = new List<MinerOption>
             {
                 /// <summary>
-                /// When set to 1 this parameter turns on the usage of assembly tuned kernels.
-                /// At the moment lolMiner 0.7.1 only features assembly tuned kernels for mining Beam on RX470 / 480 / 570 / 580, Vega 56 and 64 and Radeon VII
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "lolMiner_activateBinaryKernels",
-                    ShortName = "--asm",
-                    DefaultValue = "0"
-                },
-                /// <summary>
-                /// Enables (1) or Disables (0) to make the miner write its text output to a log file.
-                /// The file will be located in the “logs” directory at the miner location and will be named by the date and time the miner started.
+                /// Enables printing a log file; --log [=arg(=on)
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "lolMiner_enableLogs",
-                    ShortName = "--logs",
-                    DefaultValue = "0"
+                    ShortName = "--log"
                 },
                 /// <summary>
-                /// This two parameters control the length between two statistics show. The longer interval statistics is shown with a blue color, the shorter only black and while.
-                /// Setting an interval length of 0 will disable the corresponding statistics output.
-                /// Note: disabling the short statistics output will also disable the shortaccept option (see below).
-                /// Also the intervals are used for updating the API output.
+                /// Path to a custom log file location
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_logFile",
+                    ShortName = "--logfile"
+                },
+
+                /// <summary>
+                /// Long statistics interval
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "lolMiner_longStats",
                     ShortName = "--longstats",
-                    DefaultValue = "300"
+                    DefaultValue = "150"
                 },
                 /// <summary>
-                /// This two parameters control the length between two statistics show. The longer interval statistics is shown with a blue color, the shorter only black and while.
-                /// Setting an interval length of 0 will disable the corresponding statistics output.
-                /// Note: disabling the short statistics output will also disable the shortaccept option (see below).
-                /// Also the intervals are used for updating the API output.
+                /// Short statistics interval
                 /// </summary>
                 new MinerOption
                 {
@@ -71,47 +62,33 @@ namespace LolMiner
                     DefaultValue = "30"
                 },
                 /// <summary>
-                /// When setting this parameter to 1, lolMiner will replace the “submitting share / share accepted” message pair by * symbols at the short statistics interval output.
-                /// Every star stands for an accepted share.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "lolMiner_compactNotification",
-                    ShortName = "--shortaccept",
-                    DefaultValue = "0"
-                },
-                /// <summary>
-                /// Setting this parameter to 1 will activate the current daytime to be printed in the command-line console at each statistics output.
-                /// This is true for command line as well as the log file when used.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "lolMiner_enableTimestamps",
-                    ShortName = "--timeprint",
-                    DefaultValue = "0"
-                },
-                /// <summary>
-                /// This parameter can be used to fix the sol/s output of a GPU to a fixed number of digits after the decimal delimiter.
-                /// For example “DIGITS” : 0 will chop of all digits after the decimal delimiter. 
+                /// Number of digits in hash speed after delimiter
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "lolMiner_decimalDigits",
-                    ShortName = "--digits",
-                    DefaultValue = "0"
+                    ShortName = "--digits"
                 },
                 /// <summary>
-                /// This parameter can be used to set a new location for the kernel directory. Absolute path are allowed, so you can freely place it when needed.
+                /// Enables time stamp on short statistics ("on" / "off"); --timeprint [=arg(=on)] (=off)
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "lolMiner_kernelsLocation",
-                    ShortName = "--kernelsdir",
-                    DefaultValue = "./kernels"
+                    ID = "lolMiner_enableTimestamps",
+                    ShortName = "--timeprint"
+                },
+                /// <summary>
+                /// Sets the memory size (in MByte) the
+                /// miner is allowed for Ethash on 4G
+                /// cards. Suggested values: Windows: 4024
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_4GAllocSize",
+                    ShortName = "--4g-alloc-size",
                 },
                 /// <summary>
                 /// Windows: added experimental mem allocation pattern that should allow reaching epoch 375 or 376 at full speed ( * ).
@@ -133,47 +110,6 @@ namespace LolMiner
                     ShortName = "--keepfree",
                 },
                 /// <summary>
-                /// Sets the memory size (in MByte) the
-                /// miner is allowed for Ethash on 4G
-                /// cards. Suggested values: Windows: 4024
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "lolMiner_4GAllocSize",
-                    ShortName = "--4g-alloc-size",
-                },
-                /// <summary>
-                /// trigger a rebuild of DAG if a GPU produced n defect shares on the current one.
-                /// Default is 3, use 0 to deactivate this feature.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "lolMiner_RebuildDefect",
-                    ShortName = "--rebuild-defect",
-                },
-                /// <summary>
-                /// Modify the amount of Ethash work a GPU does per batch.
-                /// Higher values will cause less CPU load but more stale shares, lower values will give less stale shares but higher CPU load.
-                /// Performance may vary for different values. Default is 128.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "lolMiner_Workmulti",
-                    ShortName = "--workmulti",
-                },
-                /// <summary>
-                /// Deactivate coloring completely
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "lolMiner_Nocolor",
-                    ShortName = "--nocolor",
-                },
-                /// <summary>
                 /// This will disable the 2nd mining thread and slightly reduce performance of the involved cards.
                 /// Use this option to reduce stumbles when a card does graphic output in parallel.
                 /// Use --singlethread to set the mode for one single card
@@ -183,16 +119,6 @@ namespace LolMiner
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "lolMiner_SingleThread",
                     ShortName = "--singlethread",
-                },
-                /// <summary>
-                /// Windows: use --computemode to automatically enable the compute mode on all detected AMD GPUs.
-                /// Requires higher privileges and a driver restart, see example files.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "lolMiner_ComputeMode",
-                    ShortName = "--computemode",
                 }
             }
         };
