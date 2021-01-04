@@ -293,6 +293,7 @@ installer/*_release_files/
 installer/*.7z
 installer/*.zip
 installer/*.exe
+!installer/EULA.zip
 
 # pre_compiled_libs
 !pre_compiled_libs/device_detection_x64/device_detection.exe

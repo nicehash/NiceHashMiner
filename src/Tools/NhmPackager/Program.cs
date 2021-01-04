@@ -157,8 +157,7 @@ namespace NhmPackager
                 Console.WriteLine($"moving '{appDirOld}' to '{appDirNew}'");
                 Directory.Move(appDirOld, appDirNew);
                 // #5
-                File.Copy(GetRootPath("nhm_windows_x.y.z.r-template", "EULA.html"), GetRootPath(tmpWorkFolder, "Release", "EULA.html"));
-                File.Copy(GetRootPath("nhm_windows_x.y.z.r-template", "EULA.rtf"), GetRootPath(tmpWorkFolder, "Release", "EULA.rtf"));
+                ZipFile.ExtractToDirectory(GetRootPath("EULA.zip"), GetRootPath(tmpWorkFolder, "Release"));
                 // #6 
                 var filesToPackPath = GetRootPath(tmpWorkFolder, "_files_to_pack");
                 RecreateFolderIfExists(filesToPackPath);
