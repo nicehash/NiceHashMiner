@@ -31,6 +31,15 @@ namespace WildRig
                     DefaultValue = "0"
                 },
                 /// <summary>
+                /// amount of threads per OpenCL device
+                /// </summary>
+                new MinerOption
+                {
+                    ID = "wildrig_threads",
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    LongName = "--opencl-threads=",
+                },
+                /// <summary>
                 /// list of launch config, intensity and worksize
                 /// </summary>
                 new MinerOption
@@ -47,15 +56,6 @@ namespace WildRig
                     ID = "wildrig_affinity",
                     Type = MinerOptionType.OptionWithSingleParameter,
                     LongName = "--opencl-affinity=",
-                },
-                /// <summary>
-                /// amount of threads per OpenCL device
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_threads",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    LongName = "--opencl-threads=",
                 },
                 /// <summary>
                 /// log all output to a file
@@ -102,6 +102,15 @@ namespace WildRig
                     ID = "wildrig_printDebug",
                     Type = MinerOptionType.OptionIsParameter,
                     LongName = "--print-debug",
+                },
+                /// <summary>
+                /// print power consumption per GPU chip
+                /// </summary>
+                new MinerOption
+                {
+                    ID = "wildrig_printPower",
+                    Type = MinerOptionType.OptionIsParameter,
+                    LongName = "--print-power",
                 },
                 /// <summary>
                 /// donate level, default 2% (2 minutes in 100 minutes)

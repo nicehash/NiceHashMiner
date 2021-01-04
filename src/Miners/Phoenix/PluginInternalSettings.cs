@@ -74,7 +74,7 @@ namespace Phoenix
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "phoenix_clgreen",
-                    ShortName = "-clgreen",
+                    ShortName = "-clGreen",
                     DefaultValue = "0",
                     Delimiter = ","
                 },
@@ -166,6 +166,15 @@ namespace Phoenix
                     ShortName = "-eres",
                     DefaultValue = "2",
                     Delimiter = ","
+                },
+                /// <summary>
+                /// Allow a few more weeks of work for 4 GB AMD Polaris cards. DAG size limit (0 - off, 1 - auto, >1000 - DAG size limit in MB)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_daglimit",
+                    ShortName = "-daglim"
                 },          
                 /// <summary>
                 /// Restart the miner when allocating buffer for a new DAG epoch.
@@ -386,15 +395,6 @@ namespace Phoenix
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "phoenix_nvmem",
                     ShortName = "-nvmem"
-                },
-                /// <summary>
-                /// Allow a few more weeks of work for 4 GB AMD Polaris cards. DAG size limit (0 - off, 1 - auto, >1000 - DAG size limit in MB)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "phoenix_daglimit",
-                    ShortName = "-daglim"
                 },
                 /// <summary>
                 /// Memory refresh rate on AMD cards (0 - default values, 1 - predefined value that should work on most cards, 2 to 100 -

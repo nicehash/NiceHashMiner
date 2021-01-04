@@ -10,7 +10,7 @@ namespace SRBMiner
             GeneralOptions = new List<MinerOption>
             {
                 /// <summary>
-                /// gpu intensity, 1-31, comma separated values
+                /// (gpu intensity, 1-31 or if > 31 it's treated as raw intensity, separate values with ; and !)
                 /// </summary>
                 new MinerOption
                 {
@@ -20,13 +20,13 @@ namespace SRBMiner
                     Delimiter = "!"
                 },
                 /// <summary>
-                /// gpu raw intensity, comma separated values
+                /// (0-disabled, 1-light, 2-normal, separate values with ; and !)
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "srbminer_raw_intensity",
-                    ShortName = "--gpu-raw-intensity",
+                    ID = "srbminer_auto_intensity",
+                    ShortName = "--gpu-auto-intensity",
                     Delimiter = "!"
                 },
                 /// <summary>
