@@ -142,6 +142,57 @@ namespace LolMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "lolMiner_4GAllocSize",
                     ShortName = "--4g-alloc-size",
+                },
+                /// <summary>
+                /// trigger a rebuild of DAG if a GPU produced n defect shares on the current one.
+                /// Default is 3, use 0 to deactivate this feature.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_RebuildDefect",
+                    ShortName = "--rebuild-defect",
+                },
+                /// <summary>
+                /// Modify the amount of Ethash work a GPU does per batch.
+                /// Higher values will cause less CPU load but more stale shares, lower values will give less stale shares but higher CPU load.
+                /// Performance may vary for different values. Default is 128.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_Workmulti",
+                    ShortName = "--workmulti",
+                },
+                /// <summary>
+                /// Deactivate coloring completely
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "lolMiner_Nocolor",
+                    ShortName = "--nocolor",
+                },
+                /// <summary>
+                /// This will disable the 2nd mining thread and slightly reduce performance of the involved cards.
+                /// Use this option to reduce stumbles when a card does graphic output in parallel.
+                /// Use --singlethread to set the mode for one single card
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "lolMiner_SingleThread",
+                    ShortName = "--singlethread",
+                },
+                /// <summary>
+                /// Windows: use --computemode to automatically enable the compute mode on all detected AMD GPUs.
+                /// Requires higher privileges and a driver restart, see example files.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "lolMiner_ComputeMode",
+                    ShortName = "--computemode",
                 }
             }
         };

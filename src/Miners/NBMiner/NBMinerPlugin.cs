@@ -26,11 +26,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v35.0",
+                BinVersion = "v35.2",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v35.0/NBMiner_35.0_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v35.2/NBMiner_35.2_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,7 +42,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 4);
+        public override Version Version => new Version(15, 5);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -153,8 +153,8 @@ namespace NBMiner
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 2 && device.DeviceType == DeviceType.NVIDIA && ids.Contains(AlgorithmType.Octopus)) return true;
-                if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 3 && device.DeviceType == DeviceType.NVIDIA) return ids.Contains(AlgorithmType.DaggerHashimoto);
+                if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 3 && device.DeviceType == DeviceType.NVIDIA && ids.Contains(AlgorithmType.DaggerHashimoto)) return true;
+                if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5 && device.DeviceType == DeviceType.NVIDIA && ids.Contains(AlgorithmType.Octopus)) return true;
             }
             catch (Exception e)
             {
