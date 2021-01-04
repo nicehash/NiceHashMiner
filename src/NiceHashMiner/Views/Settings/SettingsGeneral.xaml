@@ -118,9 +118,9 @@
                     </StackPanel>
                 </StackPanel>
             </WrapPanel>
-            <!--APPERANCE-->
+            <!--Appearance-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="ThemeSettings">
-                <Label Content="Apperance" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+                <Label Content="Appearance" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource theme}">
                         <Label Content="Theme" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
