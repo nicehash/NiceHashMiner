@@ -25,11 +25,11 @@ namespace Excavator
             // TODO link
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.6.0a", // fix version if wrong
+                BinVersion = "v1.6.1c",
                 ExePath = new List<string> { "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v15.x/excavator_b83.7z"
+                    "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v15.x/excavator_b420_sig.7z"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(15, 1);
+        public override Version Version => new Version(15, 4);
 
         public override string Name => "Excavator";
 
@@ -77,6 +77,14 @@ namespace Excavator
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            try
+            {
+                return benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 4;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("ExcavatorPlugin", $"ShouldReBenchmarkAlgorithmOnDevice {e}");
+            }
             return false;
         }
     }
