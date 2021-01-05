@@ -22,7 +22,7 @@ namespace NiceHashMiner.ViewModels
         public int RunningDevices { get; private set; } = 0;
 
 
-        public string RunnableDevicesDisplayString => $"/ {RunnableDevices}";
+        public string RunnableDevicesDisplayString => $"/ {NHMCore.Mining.AvailableDevices.Devices.Count}";
 
         private enum WhatCollor
         {
