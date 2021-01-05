@@ -12,7 +12,7 @@ namespace Phoenix
         {
             return new List<SAS>
                     {
-                        new SAS( AlgorithmType.DaggerHashimoto) {NonDefaultRAMLimit = 3UL << 30},
+                        new SAS( AlgorithmType.DaggerHashimoto)
                     };
         }
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
