@@ -378,7 +378,7 @@ namespace NHMCore.Configs.Data
             MinimumProfit = 0;
             IdleWhenNoInternetAccess = true;
             IdleCheckType = IdleCheckType.SessionLock;
-            AllowMultipleInstances = true;
+            AllowMultipleInstances = false;
             UseIFTTT = false;
             IFTTTKey = "";
             CoolDownCheckEnabled = true;
