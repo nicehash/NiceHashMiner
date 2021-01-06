@@ -29,6 +29,16 @@ namespace TRex
             GeneralOptions = new List<MinerOption>
             {
                 /// <summary>
+                /// Allocate extra DAG at GPU for specified epoch. Can be useful for dual mining
+                /// of coins like Zilliqa (ZIL). (eg: --extra-dag-epoch 0)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_extraDagEpoch",
+                    LongName = "--extra-dag-epoch"
+                },
+                /// <summary>
                 /// GPU intensity 8-25 (default: auto).
                 /// </summary>
                 new MinerOption
@@ -38,6 +48,20 @@ namespace TRex
                     ShortName = "-i",
                     LongName = "--intensity",
                     DefaultValue = "auto"
+                },
+                /// <summary>
+                /// [Ethash] Choose CUDA kernel (default: 0). Range from 0 to 5.
+                /// Set to 0 to enable auto-tuning: the miner will benchmark each kernel and select the fastest.
+                /// Can be set to a comma separated list to apply different values to different cards.
+                /// (eg: --kernel 2,1,1,3)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "trex_kernel",
+                    LongName = "--kernel",
+                    DefaultValue = "0",
+                    Delimiter = ","
                 },
                 /// <summary>
                 ///  Low load mode (default: 0). 1 - enabled, 0 - disabled.
