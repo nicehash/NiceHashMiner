@@ -277,9 +277,10 @@ namespace NHMCore.Utils
                     FileName = exePath,
                     WindowStyle = ProcessWindowStyle.Minimized,
                     UseShellExecute = true,
-                    Arguments = Path.GetFileNameWithoutExtension(Paths.AppRoot),
+                    Arguments = Path.GetFileName(Paths.AppRoot),
                     CreateNoWindow = true
                 };
+                Logger.Info("Log-Report", $"Created log report with: {startLogInfo.FileName} - arguments: {startLogInfo.Arguments}");
                 using (var doCreateLog = Process.Start(startLogInfo))
                 {
                     doCreateLog.WaitForExit(10 * 1000);
