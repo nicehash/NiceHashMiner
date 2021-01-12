@@ -86,7 +86,7 @@ namespace LolMiner
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithSingleParameter,
+                    Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "lolMiner_4GAllocSize",
                     ShortName = "--4g-alloc-size",
                 },
@@ -119,6 +119,19 @@ namespace LolMiner
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "lolMiner_SingleThread",
                     ShortName = "--singlethread",
+                },
+                /// <summary>
+                /// for Polaris GPUs. This will increase the performance of zombie mode (further up on the general improvement) by an other 5-15%, depending on parameter and epoch (later epochs profit more).
+                /// Default value is 0 (off), for most cards the value of 2 is optimal. If you see cards getting slower then before, set to 0 or 1.
+                /// Note: you either can give one value for the whole rig or provide a comma separated list for each card individually. Cards not running zombie mode ignore the parameter.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "lolMiner_zombieTune",
+                    ShortName = "--zombie-tune",
+                    Delimiter = ",",
+                    DefaultValue = "0"
                 }
             }
         };

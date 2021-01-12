@@ -17,13 +17,13 @@ namespace CryptoDredge
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.Lyra2REv3)
+                        new SAS(AlgorithmType.KAWPOW)
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.Lyra2REv3, "lyra2v3" }
+                { AlgorithmType.KAWPOW, "kawpow" }
             }
         };
     }
