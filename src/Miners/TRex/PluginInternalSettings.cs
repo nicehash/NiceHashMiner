@@ -225,6 +225,15 @@ namespace TRex
                     ID = "trex_memoryTweak",
                     ShortName = "--mt",
                     Delimiter = ","
+                },
+                /// <summary>
+                /// control hashrate summary report frequency based on the number of share submissions
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_reportInterval",
+                    ShortName = "--gpu-report-interval-s"
                 }
             },
             TemperatureOptions = new List<MinerOption>

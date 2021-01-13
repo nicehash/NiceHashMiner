@@ -27,7 +27,7 @@ namespace MiniZ
                 ExePath = new List<string> { "miniZ.exe" },
                 Urls = new List<string>
                 {
-                    "https://miniz.ch/?smd_process_download=1&download_id=4000", // original (pwd protected)
+                    "https://github.com/miniZ-miner/miniZ/releases/download/v1.6x/miniZ_v1.6x_win-x64.zip", // original (pwd protected)
                 },
                 BinsPackagePassword = "miniZ"
             };
@@ -39,7 +39,7 @@ namespace MiniZ
         }
         public override string PluginUUID => "eda6abd0-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 1);
+        public override Version Version => new Version(15, 2);
 
         public override string Name => "MiniZ";
 

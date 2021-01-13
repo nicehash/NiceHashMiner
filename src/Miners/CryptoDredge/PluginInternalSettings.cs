@@ -41,7 +41,7 @@ namespace CryptoDredge
                     ShortName = "--log"
                 },
                 /// <summary>
-                /// JSON configuration file to use (default: config.json)
+                /// JSON configuration file to use
                 /// </summary>
                 new MinerOption
                 {
@@ -50,6 +50,29 @@ namespace CryptoDredge
                     ShortName = "-c",
                     LongName = "--config"
                 }
+            },
+            TemperatureOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// GPU limit temperature, 0 disabled (default: 0)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID  = "cryptodredge_temp_limit",
+                    ShortName = "--temperature-limit",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// GPU resume temperature, 0 disabled (default: 0)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID  = "cryptodredge_temp_start",
+                    ShortName = "--temperature-start",
+                    DefaultValue = "0"
+                },
             }
         };
     }
