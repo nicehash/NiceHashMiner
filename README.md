@@ -17,7 +17,7 @@ NiceHash Miner is a continuation of NiceHash Miner Legacy. This version is inten
 
 <img src="Resources/NHM_screenshot.PNG" />
 
-Please follow us on Twitter <a href="https://twitter.com/NiceHashMining" target="_blank">@NiceHashMining</a> or on or <a href="https://www.nicehash.com/blog/" target="_blank">Blog</a> for updates on new versions and other important information.
+Please follow us on Twitter <a href="https://twitter.com/NiceHashMining" target="_blank">@NiceHashMining</a> or on our <a href="https://www.nicehash.com/blog/" target="_blank">Blog</a> for updates on new versions and other important information.
 
 # <a name="benefits"></a> What are the benefits?
 
