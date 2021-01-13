@@ -19,17 +19,18 @@ namespace Excavator
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // TODO link
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.6.1c",
+                BinVersion = "v1.6.1d",
                 ExePath = new List<string> { "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v15.x/excavator_b420_sig.7z"
+                    "https://github.com/nicehash/excavator/releases/download/v1.6.1d/excavator-1.6.1d_build491_Win64.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +40,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(15, 4);
+        public override Version Version => new Version(15, 5);
 
         public override string Name => "Excavator";
 
@@ -79,7 +80,7 @@ namespace Excavator
         {
             try
             {
-                return benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 4;
+                return benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5;
             }
             catch (Exception e)
             {

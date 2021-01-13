@@ -4,7 +4,6 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.CCMinerCommon;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.MinerPluginToolkitV1.Configs;
 using System;
@@ -28,6 +27,20 @@ namespace Excavator
         private object _lock2 = new object();
         private ApiData _lastApiData = null;
 
+        private async Task<string> ExecuteCommand(string command)
+        {
+            try
+            {
+                var response = await ApiDataHelpers.GetApiDataAsync(_apiPort, command + "\r\n", _logGroup);
+                return response;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logGroup, $"Error occured with command '{command}' error: {e.Message}");
+            }
+            return null;
+        }
+
         public override async Task<ApiData> GetMinerStatsDataAsync()
         {
             var ad = new ApiData();
@@ -50,8 +63,8 @@ namespace Excavator
             var ad = new ApiData();
             try
             {
-                const string speeds = @"{""id"":123456789,""method"":""worker.list"",""params"":[]}" + "\r\n";
-                var response = await ApiDataHelpers.GetApiDataAsync(_apiPort, speeds, _logGroup);
+                const string speeds = @"{""id"":123456789,""method"":""worker.list"",""params"":[]}";
+                var response = await ExecuteCommand(speeds);
                 ad.ApiResponse = response;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(response);
                 var gpus = _miningPairs.Select(pair => pair.Device.UUID);
@@ -125,7 +138,7 @@ _DEVICES_
             //var logName = $"log_{string.Join("_", ids)}_{unixTimestamp}.log";
             var miningLocation = _miningLocation != "eu" ? "usa" : "eu"; // until nhm with obsolete versions is released
             File.WriteAllText(Path.Combine(cwd, fileName), CmdJSONString(miningLocation, _username, uuids.ToArray()));
-            var commandLine = $"-p {_apiPort} -c {fileName} -m -qx";
+            var commandLine = $"-p {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
             return commandLine;
         }
 
@@ -149,6 +162,11 @@ _DEVICES_
             Logger.Info("EXCAVATOR-MinerSpeedsLoop", $"STARTING");
             try
             {
+                int restartCount = 0;
+                const int MAX_RESTART_COUNT = 5; // 5 * 30s = 2.5minutes
+                const double PER_GPU_ANOMALY = 200 * 1000 * 1000; // 200MH/s
+                const double SUM_GPU_ANOMALY = 2 * 1000 * 1000 * 1000; // 2GH/s
+
                 var workers = string.Join(",", _miningPairs.Select((_, i) => $@"""{i}"""));
                 var workersReset = @"{""id"":1,""method"":""workers.reset"",""params"":[__WORKERS__]}".Replace("__WORKERS__", workers);
                 Func<bool> isActive = () => !ct.Token.IsCancellationRequested;
@@ -156,16 +174,35 @@ _DEVICES_
                 {
                     try
                     {
-                        _ = await ApiDataHelpers.GetApiDataAsync(_apiPort, workersReset + "\r\n", _logGroup);
+                        _ = await ExecuteCommand(workersReset);
                         if (isActive()) await ExcavatorTaskHelpers.TryDelay(TimeSpan.FromSeconds(30), ct.Token);
                         // get speeds
                         var ad = await GetMinerStatsDataAsyncPrivate();
+                        if (ad != null && ad.AlgorithmSpeedsPerDevice != null)
+                        {
+                            var isPerGPUAnomaly = ad.AlgorithmSpeedsPerDevice?.Values.Any((speeds) => speeds.Any((pair) => pair.speed >= PER_GPU_ANOMALY)) ?? false;
+                            var isSumGPUAnomaly = ad.AlgorithmSpeedsPerDevice?.Values.SelectMany((speeds) => speeds.Select((pair) => pair.speed)).Sum() >= SUM_GPU_ANOMALY;
+                            if (isPerGPUAnomaly || isSumGPUAnomaly)
+                            {
+                                restartCount++;
+                            }
+                            else
+                            {
+                                restartCount = 0;
+                            }
+                            if (restartCount >= MAX_RESTART_COUNT)
+                            {
+                                Logger.Info("EXCAVATOR-MinerSpeedsLoop", $"Restaring excavator due to speed anomaly");
+                                await ExecuteCommand(@"{""id"":1,""method"":""quit"",""params"":[]}");
+                            }
+                        }
+
                         lock (_lock2)
                         {
                             _lastApiData = ad;
                         }
                         // speed print and reset
-                        _ = await ApiDataHelpers.GetApiDataAsync(_apiPort, @"{""id"":1,""method"":""worker.print.efficiencies"",""params"":[]}" + "\r\n", _logGroup);
+                        _ = await ExecuteCommand(@"{""id"":1,""method"":""worker.print.efficiencies"",""params"":[]}");
                     }
                     catch (TaskCanceledException e)
                     {
@@ -225,7 +262,7 @@ _DEVICES_
                 for (var tick = 0; tick < ticks; tick++)
                 {
                     if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
-                    _ = await ApiDataHelpers.GetApiDataAsync(_apiPort, workersReset + "\r\n", _logGroup);
+                    _ = await ExecuteCommand(workersReset);
                     await ExcavatorTaskHelpers.TryDelay(TimeSpan.FromSeconds(10), stop);
                     if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
 
