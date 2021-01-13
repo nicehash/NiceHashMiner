@@ -199,7 +199,7 @@
                 <Grid Grid.Row="1" Grid.Column="1" Background="{DynamicResource BackgroundColor}">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{StaticResource gpuNumber}">
                         <TextBlock Style="{StaticResource local.DevicesTypeCountText}" Text="{Binding DeviceGPUCount}" />
-                        <TextBlock Style="{StaticResource local.DevicesTypeLabelText}">GPU’S</TextBlock>
+                        <TextBlock Style="{StaticResource local.DevicesTypeLabelText}">GPUs</TextBlock>
                     </StackPanel>
                 </Grid>
                 <GridSplitter Grid.Row="1" Grid.Column="2" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}"/>
