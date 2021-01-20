@@ -1,14 +1,12 @@
-﻿using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using System.Threading.Tasks;
 
 namespace Excavator
 {
@@ -26,11 +24,11 @@ namespace Excavator
             // TODO link
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.6.1d",
+                BinVersion = "v1.6.2a",
                 ExePath = new List<string> { "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/excavator/releases/download/v1.6.1d/excavator-1.6.1d_build491_Win64.zip"
+                    "https://github.com/nicehash/excavator/releases/download/v1.6.2a/excavator_1.6.2a_build514_Win64.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,7 +38,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(15, 5);
+        public override Version Version => new Version(15, 6);
 
         public override string Name => "Excavator";
 
@@ -80,7 +78,7 @@ namespace Excavator
         {
             try
             {
-                return benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5;
+                return benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 6;
             }
             catch (Exception e)
             {
