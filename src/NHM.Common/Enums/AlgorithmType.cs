@@ -99,7 +99,7 @@ namespace NHM.Common.Enums
         CryptoNightR = 42,
         //[Obsolete("UNUSED Algorithm")]
         CuckooCycle = 43,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         GrinCuckarood29 = 44,
         [Obsolete("UNUSED Algorithm. Replaced by BeamV3", true)]
         BeamV2 = 45,

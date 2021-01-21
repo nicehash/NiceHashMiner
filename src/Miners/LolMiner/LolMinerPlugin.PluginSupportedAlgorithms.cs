@@ -15,7 +15,6 @@ namespace LolMiner
         {
             return new List<SAS>
                     {
-                        new SAS(AlgorithmType.GrinCuckarood29){Enabled = false},
                         new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory, Enabled = false},
                         new SAS(AlgorithmType.GrinCuckatoo32){Enabled = false},
                         new SAS(AlgorithmType.ZHash){Enabled = false},
@@ -29,7 +28,6 @@ namespace LolMiner
         {
             return new List<SAS>
                     {
-                        new SAS(AlgorithmType.GrinCuckarood29) {Enabled = enabled },
                         new SAS(AlgorithmType.GrinCuckatoo31) {Enabled = enabled },
                     };
         }
@@ -56,7 +54,7 @@ namespace LolMiner
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.GrinCuckarood29, "C29D" },
+                //{ AlgorithmType.GrinCuckarood29, "C29D" },
                 { AlgorithmType.GrinCuckatoo31, "C31" },
                 { AlgorithmType.GrinCuckatoo32, "C32" },
                 { AlgorithmType.ZHash, "EQUI144_5" },

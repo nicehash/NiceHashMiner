@@ -39,7 +39,7 @@ namespace FakePlugin
                     type = DeviceType.NVIDIA,
                     algorithms = new List<AlgorithmType>
                     {
-                        AlgorithmType.GrinCuckarood29
+                        AlgorithmType.GrinCuckatoo32
                     }
                 }
             }

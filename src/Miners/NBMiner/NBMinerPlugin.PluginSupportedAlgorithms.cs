@@ -26,7 +26,6 @@ namespace NBMiner
                     {
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.CuckooCycle),
-                        new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.GrinCuckatoo32),
@@ -48,7 +47,7 @@ namespace NBMiner
             {
                 { AlgorithmType.GrinCuckatoo31, "cuckatoo" },
                 { AlgorithmType.CuckooCycle, "cuckoo_ae" },
-                { AlgorithmType.GrinCuckarood29, "cuckarood" },
+                //{ AlgorithmType.GrinCuckarood29, "cuckarood" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.KAWPOW, "kawpow" },
                 { AlgorithmType.Cuckaroo29BFC, "bfc" },

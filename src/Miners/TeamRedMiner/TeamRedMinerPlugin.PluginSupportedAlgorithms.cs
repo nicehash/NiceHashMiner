@@ -25,7 +25,6 @@ namespace TeamRedMiner
                     {
                         new SAS(AlgorithmType.Lyra2REv3),
                         new SAS(AlgorithmType.GrinCuckatoo31),
-                        new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 }
                     }
@@ -35,7 +34,7 @@ namespace TeamRedMiner
             {
                 { AlgorithmType.Lyra2REv3, "lyra2rev3" },
                 { AlgorithmType.GrinCuckatoo31, "cuckatoo31_grin" },
-                { AlgorithmType.GrinCuckarood29, "cuckarood29_grin" },
+                //{ AlgorithmType.GrinCuckarood29, "cuckarood29_grin" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.KAWPOW, "kawpow" }
             }
