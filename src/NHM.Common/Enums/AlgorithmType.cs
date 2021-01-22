@@ -117,11 +117,11 @@ namespace NHM.Common.Enums
         Handshake = 51,
         //[Obsolete("UNUSED Algorithm")]
         KAWPOW = 52,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         Cuckaroo29BFC = 53,
         //[Obsolete("UNUSED Algorithm")]
         BeamV3 = 54,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         CuckaRooz29 = 55,
         //[Obsolete("UNUSED Algorithm")]
         Octopus = 56,
