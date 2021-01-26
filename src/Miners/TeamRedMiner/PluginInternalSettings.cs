@@ -198,6 +198,27 @@ namespace TeamRedMiner
                     ShortName = "--eth_aggr_mode",
                 },
                 /// <summary>
+                ///  anual ethash configuration for the miner.  CONFIG must be in the form [M][L].
+                ///  The [M] value selects the mode which can be 'A','B', or 'C'.
+                ///  The 'B' mode uses additional memory and will only work on 8+GB cards.
+                ///  The 'C' mode uses additional memory and will only work on 16+GB cards, such as the VII, with
+                ///  a correctly configured system.  See the ETHASH_TUNING_GUIDE.txt for more details.
+                ///  The [L] value selects the intensity and it's range will depend on the GPU architecture.
+                ///  Both values are optional, but if [L] is specified, [M] must also be specified.
+                ///  Example configs: --eth_config = A
+                ///  --eth_config = B750
+                ///  CONFIG can also be a comma separated list of config values where each is
+                ///  applied to each GPU.For example: --eth_config = A, B750,, A288
+                ///  Any gpu that does not have a specific config in the list will use the first
+                ///  config in the list.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "teamRedMiner_ethConfig",
+                    ShortName = "--eth_config=",
+                },
+                /// <summary>
                 ///  Configures the gpu watchdog to shut down the miner and run the specified platform
                 ///  and exits immediately. The default script is watchdog.bat/watchdog.sh in the
                 ///  current directory, but a different script can be provided as an optional argument,

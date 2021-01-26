@@ -34,7 +34,6 @@ namespace TeamRedMiner
             {
                 { AlgorithmType.Lyra2REv3, "lyra2rev3" },
                 { AlgorithmType.GrinCuckatoo31, "cuckatoo31_grin" },
-                //{ AlgorithmType.GrinCuckarood29, "cuckarood29_grin" },
                 { AlgorithmType.DaggerHashimoto, "ethash" },
                 { AlgorithmType.KAWPOW, "kawpow" }
             }

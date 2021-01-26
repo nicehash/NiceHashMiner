@@ -133,6 +133,36 @@ namespace GMinerPlugin
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "gminer_oc1",
                     LongName = "--oc1"
+                },
+                /// <summary>
+                /// control hashrate report interval
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_reportInterval",
+                    LongName = "--report_interval"
+                },
+                /// <summary>
+                /// space-separated list of Dag file modes (0 - auto, 1 - single, 2 - double), separated by spaces, can be empty, default is '0' (for example: '2 1 0')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_dagMode",
+                    LongName = "--dag_mode",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of Dag file size limits in megabytes, separated by spaces, can be empty (for example: '4096 4096 4096')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_dagLimit",
+                    LongName = "--dag_limit",
+                    Delimiter = " "
                 }
             },
             TemperatureOptions = new List<MinerOption>{

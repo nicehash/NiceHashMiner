@@ -14,8 +14,6 @@ namespace GMinerPlugin
             DefaultFee = 2.0,
             AlgorithmFees = new Dictionary<AlgorithmType, double>
             {
-                //{ AlgorithmType.Cuckaroo29BFC, 3.0 },
-                //{ AlgorithmType.CuckaRooz29, 3.0 },
                 { AlgorithmType.KAWPOW, 1.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
@@ -29,9 +27,8 @@ namespace GMinerPlugin
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
-                        //new SAS(AlgorithmType.Cuckaroo29BFC),
                         new SAS(AlgorithmType.BeamV3),
-                        //new SAS(AlgorithmType.CuckaRooz29),
+                        new SAS(AlgorithmType.DaggerHashimoto)
                     }
                 },
                 {
@@ -39,7 +36,7 @@ namespace GMinerPlugin
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
-                        //new SAS(AlgorithmType.Cuckaroo29BFC),
+                        new SAS(AlgorithmType.DaggerHashimoto)
                     }
                 }
             },
@@ -50,9 +47,8 @@ namespace GMinerPlugin
                 { AlgorithmType.CuckooCycle, "cuckoo29" },
                 { AlgorithmType.GrinCuckatoo32, "cuckatoo32" },
                 { AlgorithmType.KAWPOW, "kawpow" },
-                //{ AlgorithmType.Cuckaroo29BFC, "bfc" },
                 { AlgorithmType.BeamV3, "beamhashIII" },
-                //{ AlgorithmType.CuckaRooz29, "cuckarooz29" },
+                { AlgorithmType.DaggerHashimoto, "ethash" }
             }
         };
     }
