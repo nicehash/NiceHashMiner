@@ -234,6 +234,59 @@ namespace TRex
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "trex_reportInterval",
                     ShortName = "--gpu-report-interval-s"
+                },
+                /// <summary>
+                ///  [Ethash, ProgPOW, Octopus] Controls how DAG is built (default: 0).
+                ///  0 - auto (miner will choose the most appropriate mode based on the GPU model)
+                ///  1 - default (suitable for most graphics cards)
+                ///  2 - recommended for 30xx cards to prevent invalid shares
+                ///  Can be set to a comma separated list to apply different values to different cards.
+                ///  (eg: --dag-build-mode 1,1,2,1)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "trex_dagBuildMode",
+                    ShortName = "--dag-build-mode",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Executes user script right after miner start (eg: --script-start path_to_user_script)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_scriptStart",
+                    ShortName = "--script-start"
+                },
+                /// <summary>
+                /// Executes user script on epoch change.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_scriptEpochChange",
+                    ShortName = "--script-epoch-change"
+                },
+                /// <summary>
+                /// Executes user script in case of miner crash.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_scriptCrash",
+                    ShortName = "--script-crash"
+                },
+                /// <summary>
+                /// Executes user script in case of low hash. Hash threshold is set in MegaHashes/second.
+                /// Example: --script-low-hash script_to_activate:50
+                /// (activates "script_to_activate" script once total hashrate drops to 50MH/s)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_scriptLowHash",
+                    ShortName = "--script-low-hash"
                 }
             },
             TemperatureOptions = new List<MinerOption>
