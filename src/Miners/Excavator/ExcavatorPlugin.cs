@@ -38,7 +38,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(15, 6);
+        public override Version Version => new Version(15, 7);
 
         public override string Name => "Excavator";
 

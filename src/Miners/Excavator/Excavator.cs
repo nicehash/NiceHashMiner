@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Sockets;
+using System.Text;
 
 namespace Excavator
 {
@@ -24,14 +26,65 @@ namespace Excavator
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
-        private object _lock2 = new object();
+        private object _lockLastApiData = new object();
         private ApiData _lastApiData = null;
 
-        private async Task<string> ExecuteCommand(string command)
+        private ApiData LastApiData
+        {
+            get
+            {
+                lock (_lockLastApiData)
+                {
+                    var ad = new ApiData();
+                    if (_lastApiData != null)
+                    {
+                        ad.PowerUsageTotal = _lastApiData.PowerUsageTotal;
+                        ad.AlgorithmSpeedsPerDevice = _lastApiData.AlgorithmSpeedsPerDevice;
+                        ad.PowerUsagePerDevice = _lastApiData.PowerUsagePerDevice;
+                        ad.ApiResponse = _lastApiData.ApiResponse;
+                    }
+                    return ad;
+                }
+            }
+            set
+            {
+                lock (_lockLastApiData)
+                {
+                    _lastApiData = value;
+                }
+            }
+        }
+
+        public static async Task<string> GetApiDataAsync(int port, string dataToSend, string logGroup, CancellationToken stop)
         {
             try
             {
-                var response = await ApiDataHelpers.GetApiDataAsync(_apiPort, command + "\r\n", _logGroup);
+                using (var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+                using (var ct = CancellationTokenSource.CreateLinkedTokenSource(stop, timeout.Token))
+                using (var client = new TcpClient("127.0.0.1", port))
+                using (var nwStream = client.GetStream())
+                {
+                    var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
+                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length, ct.Token);
+                    var bytesToRead = new byte[client.ReceiveBufferSize];
+                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize, ct.Token);
+                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                    client.Close();
+                    return respStr;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(logGroup, $"Excavator GetApiDataAsync error: {e.Message}");
+                return "";
+            }
+        }
+
+        private async Task<string> ExecuteCommand(string command, CancellationToken stop)
+        {
+            try
+            {
+                var response = await GetApiDataAsync(_apiPort, command + "\r\n", _logGroup, stop);
                 return response;
             }
             catch (Exception e)
@@ -43,40 +96,25 @@ namespace Excavator
 
         public override async Task<ApiData> GetMinerStatsDataAsync()
         {
-            var ad = new ApiData();
-            lock (_lock2)
-            {
-                if (_lastApiData != null)
-                {
-                    ad.PowerUsageTotal = _lastApiData.PowerUsageTotal;
-                    ad.AlgorithmSpeedsPerDevice = _lastApiData.AlgorithmSpeedsPerDevice;
-                    ad.PowerUsagePerDevice = _lastApiData.PowerUsagePerDevice;
-                    ad.ApiResponse = _lastApiData.ApiResponse;
-                }
-            }
             await Task.CompletedTask; // stub just to have same interface 
-            return ad;
+            return LastApiData; // return last read speed
         }
 
-        private async Task<ApiData> GetMinerStatsDataAsyncPrivate()
+        private async Task<ApiData> GetMinerStatsDataAsyncPrivate(CancellationToken stop)
         {
             var ad = new ApiData();
             try
             {
                 const string speeds = @"{""id"":123456789,""method"":""worker.list"",""params"":[]}";
-                var response = await ExecuteCommand(speeds);
+                var response = await ExecuteCommand(speeds, stop);
                 ad.ApiResponse = response;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(response);
                 var gpus = _miningPairs.Select(pair => pair.Device.UUID);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
-                var totalSpeed = 0d;
-                //var totalSpeed2 = 0d;
-                //var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
                 {
                     var speed = summary.workers.Where(w => w.device_uuid == gpu).SelectMany(w => w.algorithms.Select(a => a.speed)).Sum();
-                    totalSpeed += speed;
                     perDeviceSpeedInfo.Add(gpu, new List<(AlgorithmType type, double speed)>() { (_algorithmType, speed) });
                 }
                 ad.PowerUsageTotal = 0;
@@ -157,52 +195,50 @@ _DEVICES_
             _ = MinerSpeedsLoop(ct);
         }
 
+        private static bool IsSpeedOk(ApiData ad)
+        {
+            const double PER_GPU_ANOMALY = 200 * 1000 * 1000; // 200MH/s
+            const double SUM_GPU_ANOMALY = 2 * 1000 * 1000 * 1000; // 2GH/s
+            if (ad == null) return false; // no speeds
+            if (ad.AlgorithmSpeedsPerDevice == null) return false; // no speeds
+            var speedsPerDevice = ad.AlgorithmSpeedsPerDevice.Values.Select(speeds => speeds.Select(pair => pair.speed).FirstOrDefault()).ToArray();
+            var isPerGPUAnomaly = speedsPerDevice.Any(deviceSpeed => deviceSpeed >= PER_GPU_ANOMALY);
+            var isPerGPUZeroSpeed = speedsPerDevice.Any(deviceSpeed => Math.Abs(deviceSpeed) < Double.Epsilon);
+            var isSumGPUAnomaly = speedsPerDevice.Sum() >= SUM_GPU_ANOMALY;
+            if (isPerGPUAnomaly || isPerGPUZeroSpeed || isSumGPUAnomaly) return false; // speeds anomally
+
+            return true;
+        } 
+
         private async Task MinerSpeedsLoop(CancellationTokenSource ct)
         {
             Logger.Info("EXCAVATOR-MinerSpeedsLoop", $"STARTING");
             try
             {
-                int restartCount = 0;
-                const int MAX_RESTART_COUNT = 5; // 5 * 30s = 2.5minutes
-                const double PER_GPU_ANOMALY = 200 * 1000 * 1000; // 200MH/s
-                const double SUM_GPU_ANOMALY = 2 * 1000 * 1000 * 1000; // 2GH/s
-
                 var workers = string.Join(",", _miningPairs.Select((_, i) => $@"""{i}"""));
                 var workersReset = @"{""id"":1,""method"":""workers.reset"",""params"":[__WORKERS__]}".Replace("__WORKERS__", workers);
                 Func<bool> isActive = () => !ct.Token.IsCancellationRequested;
+                var lastSuccessfulSpeeds = DateTime.UtcNow;
                 while (isActive())
                 {
+                    var elapsed = DateTime.UtcNow - lastSuccessfulSpeeds;
+                    if (elapsed >= TimeSpan.FromSeconds(50))
+                    {
+                        Logger.Info("EXCAVATOR-MinerSpeedsLoop", $"Restaring excavator due to speed anomaly");
+                        //_ = await ExecuteCommand(@"{""id"":1,""method"":""quit"",""params"":[]}");
+#warning if no nhm watchdog it will never restart 'nhms'
+                        await StopMiningTask();
+                    }
                     try
                     {
-                        _ = await ExecuteCommand(workersReset);
+                        _ = await ExecuteCommand(workersReset, ct.Token);
                         if (isActive()) await ExcavatorTaskHelpers.TryDelay(TimeSpan.FromSeconds(30), ct.Token);
                         // get speeds
-                        var ad = await GetMinerStatsDataAsyncPrivate();
-                        if (ad != null && ad.AlgorithmSpeedsPerDevice != null)
-                        {
-                            var isPerGPUAnomaly = ad.AlgorithmSpeedsPerDevice?.Values.Any((speeds) => speeds.Any((pair) => pair.speed >= PER_GPU_ANOMALY)) ?? false;
-                            var isSumGPUAnomaly = ad.AlgorithmSpeedsPerDevice?.Values.SelectMany((speeds) => speeds.Select((pair) => pair.speed)).Sum() >= SUM_GPU_ANOMALY;
-                            if (isPerGPUAnomaly || isSumGPUAnomaly)
-                            {
-                                restartCount++;
-                            }
-                            else
-                            {
-                                restartCount = 0;
-                            }
-                            if (restartCount >= MAX_RESTART_COUNT)
-                            {
-                                Logger.Info("EXCAVATOR-MinerSpeedsLoop", $"Restaring excavator due to speed anomaly");
-                                await ExecuteCommand(@"{""id"":1,""method"":""quit"",""params"":[]}");
-                            }
-                        }
-
-                        lock (_lock2)
-                        {
-                            _lastApiData = ad;
-                        }
+                        var ad = await GetMinerStatsDataAsyncPrivate(ct.Token);
+                        LastApiData = ad;
+                        if (IsSpeedOk(ad)) lastSuccessfulSpeeds = DateTime.UtcNow;
                         // speed print and reset
-                        _ = await ExecuteCommand(@"{""id"":1,""method"":""worker.print.efficiencies"",""params"":[]}");
+                        _ = await ExecuteCommand(@"{""id"":1,""method"":""worker.print.efficiencies"",""params"":[]}", ct.Token);
                     }
                     catch (TaskCanceledException e)
                     {
@@ -210,6 +246,7 @@ _DEVICES_
                     }
                     catch (Exception e)
                     {
+                        Logger.Error("EXCAVATOR-MinerSpeedsLoop", $"Error {e}");
                     }
                 }
                 Logger.Info("EXCAVATOR-MinerSpeedsLoop", $"EXIT WHILE");
@@ -262,12 +299,12 @@ _DEVICES_
                 for (var tick = 0; tick < ticks; tick++)
                 {
                     if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
-                    _ = await ExecuteCommand(workersReset);
+                    _ = await ExecuteCommand(workersReset, stop);
                     await ExcavatorTaskHelpers.TryDelay(TimeSpan.FromSeconds(10), stop);
                     if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
 
                     // get speeds
-                    var ad = await GetMinerStatsDataAsyncPrivate();
+                    var ad = await GetMinerStatsDataAsyncPrivate(stop);
                     var adTotal = ad.AlgorithmSpeedsTotal();
                     var isTickValid = adTotal.Count > 0 && adTotal.All(pair => pair.speed > 0);
                     benchmarkApiData.Add(ad);
