@@ -31,6 +31,15 @@ namespace Phoenix
             var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? " -amd" : " -nvidia";
             var cmd = $"-pool {urlWithPort} -wal {username} -proto 4 {deviceType} -gpus {_devices} -wdog 0 -gbase 0 {_extraLaunchParameters}";
 
+            if (!_extraLaunchParameters.Contains("-stales"))
+            {
+                cmd += " -stales 0";
+            }
+            if (!_extraLaunchParameters.Contains("-clKernel"))
+            {
+                cmd += " -clKernel 0";
+            }
+
             return cmd;
         }
 

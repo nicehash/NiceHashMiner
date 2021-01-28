@@ -25,11 +25,11 @@ namespace Phoenix
             // https://bitcointalk.org/index.php?topic=2647654.0 || new one: https://bitcointalk.org/index.php?topic=2647654.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "5.4c",
-                ExePath = new List<string> { "PhoenixMiner_5.4c_Windows", "PhoenixMiner.exe" },
+                BinVersion = "5.5c",
+                ExePath = new List<string> { "PhoenixMiner_5.5c_Windows", "PhoenixMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://mega.nz/folder/2VskDJrI#lsQsz1CdDe8x5cH3L8QaBw/file/fd1iEQIJ" // original
+                    "https://mega.nz/folder/2VskDJrI#lsQsz1CdDe8x5cH3L8QaBw/file/OBNSQJIR" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -41,7 +41,7 @@ namespace Phoenix
 
         public override string PluginUUID => "fa369d10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 4);
+        public override Version Version => new Version(15, 5);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -146,13 +146,17 @@ namespace Phoenix
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //try
-            //{
-            //}
-            //catch (Exception e)
-            //{
-            //    Logger.Error("PhoenixPlugin", $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
-            //}
+            try
+            {
+                if(ids.Count() != 0)
+                {
+                    if (device.DeviceType == DeviceType.AMD && benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5) return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("PhoenixPlugin", $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             return false;
         }
     }
