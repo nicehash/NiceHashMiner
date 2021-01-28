@@ -56,14 +56,14 @@ namespace Phoenix
                     Delimiter = ","
                 },
                 /// <summary>
-                /// Type of OpenCL kernel: 0 - generic, 1 - optimized, 2 - alternative, 3 - turbo (1 is the default). You may specify this option per-GPU.
+                /// Type of OpenCL kernel: 0 - generic, 1 - optimized, 2 - alternative, 3 - turbo (0 is the default). You may specify this option per-GPU.
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "phoenix_clKernel",
                     ShortName = "-clKernel",
-                    DefaultValue = "1",
+                    DefaultValue = "0",
                     Delimiter = ","
                 },
                 /// <summary>
@@ -275,7 +275,6 @@ namespace Phoenix
                     ID = "phoenix_logsmaxsize",
                     ShortName = "-logsmaxsize",
                 },
-
                 /// <summary>
                 /// Load a file with configuration options that will be added to the command-line options.
                 /// Note that the order is important. For example, if we have a config.txt file that contains -cclock 1000
@@ -406,6 +405,28 @@ namespace Phoenix
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "phoenix_rxboost",
                     ShortName = "-rxboost"
+                },
+                /// <summary>
+                /// Reset the memory overclock on Nvidia cards during DAG generation.
+                /// This may allow you to set higher memory overclock on your Nvidia cards without risking corrupt DAG buffer, which can lead to excessive number of incorrect shares.
+                /// Use -mcdag 1 (by default the value is 0, which means turned off) to use this new feature.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_mcdag",
+                    ShortName = "-mcdag",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// Submit stales to ethash pool: 1 - yes, 0 - no (default)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_stales",
+                    ShortName = "-stales",
+                    DefaultValue = "0"
                 }
             },
             TemperatureOptions = new List<MinerOption>
@@ -424,9 +445,19 @@ namespace Phoenix
                     ShortName = "-ttli"
                 },
                 /// <summary>
-                /// Set fan control target temperature
-                /// (special values: 0 - no HW monitoring on ALL cards, 1-4 - only monitoring on all cards with 30-120 seconds interval, negative - fixed fan speed at n %)
-                /// You may specify this option per-GPU. Only AMD cards.
+                /// Frequency of hardware monitoring (one setting for all cards, the
+                /// default is 1): 0 - no HW monitoring or control, 1 - normal
+                /// monitoring, 2 to 5 - less frequent monitoring.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_hwm",
+                    ShortName = "-hwm",
+                    DefaultValue = "1"
+                },
+                /// <summary>
+                /// Set fan control target temperature (special values: 0 - no fan control, negative - fixed fan speed at n %)
                 /// </summary>
                 new MinerOption
                 {
