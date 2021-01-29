@@ -35,10 +35,6 @@ namespace Phoenix
             {
                 cmd += " -stales 0";
             }
-            if (!_extraLaunchParameters.Contains("-clKernel"))
-            {
-                cmd += " -clKernel 0";
-            }
 
             return cmd;
         }

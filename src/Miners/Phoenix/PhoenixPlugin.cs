@@ -41,7 +41,7 @@ namespace Phoenix
 
         public override string PluginUUID => "fa369d10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 5);
+        public override Version Version => new Version(15, 6);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -148,10 +148,7 @@ namespace Phoenix
         {
             try
             {
-                if(ids.Count() != 0)
-                {
-                    if (device.DeviceType == DeviceType.AMD && benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5) return true;
-                }
+                return benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 6;
             }
             catch (Exception e)
             {

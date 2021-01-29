@@ -56,14 +56,14 @@ namespace Phoenix
                     Delimiter = ","
                 },
                 /// <summary>
-                /// Type of OpenCL kernel: 0 - generic, 1 - optimized, 2 - alternative, 3 - turbo (0 is the default). You may specify this option per-GPU.
+                /// Type of OpenCL kernel: 0 - generic, 1 - optimized, 2 - alternative, 3 - turbo (1 is the default). You may specify this option per-GPU.
                 /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "phoenix_clKernel",
                     ShortName = "-clKernel",
-                    DefaultValue = "0",
+                    DefaultValue = "1",
                     Delimiter = ","
                 },
                 /// <summary>
