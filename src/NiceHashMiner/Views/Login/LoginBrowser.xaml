@@ -9,6 +9,30 @@
         Title="LoginBrowser" Height="450" Width="800"
         Loaded="Browser_Loaded">
     <Grid>
-        <WPF:WebView x:Name="browser" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <Button HorizontalAlignment="Left" Margin="16,0,0,0" Click="GoBack_Click" >
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+                    </Style>
+                </Button.Resources>
+                <TextBlock Text="&#xf060;"/>
+            </Button>
+            <Button HorizontalAlignment="Left" Margin="8,0,0,0" Click="Refresh_Click" x:Name="btn_refresh" Visibility="Collapsed">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
+                        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.Grey1}" />
+                    </Style>
+                </Button.Resources>
+                <TextBlock Text="&#xf01e;"/>
+            </Button>
+        </StackPanel>
+        <WPF:WebView x:Name="browser" Grid.Row="1" />
     </Grid>
 </Window>

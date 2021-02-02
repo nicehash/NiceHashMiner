@@ -22,6 +22,7 @@ namespace NiceHashMiner.Views.Login
 
         private object _lock = new object();
         private Timer _evalTimer;
+        private DateTime _lastClickRefresh = DateTime.Now;
         internal class TryLock : IDisposable
         {
             private object locked;
@@ -47,14 +48,34 @@ namespace NiceHashMiner.Views.Login
 
         private void Browser_Loaded(object sender, RoutedEventArgs e)
         {
+            browser.NavigationCompleted += Browser_NavigationCompleted;
+            NavigateAndStartTimer();
+        }
+
+        private void NavigateAndStartTimer()
+        {
             browser.Navigate(Links.LoginNHM);
             _evalTimer = new Timer((s) => { Dispatcher.Invoke(EvalTimer_Elapsed); }, null, 100, 1000);
+        }
+
+        private void Browser_NavigationCompleted(object sender, Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT.WebViewControlNavigationCompletedEventArgs e)
+        {
+            if(e.IsSuccess == false)
+            {
+                btn_refresh.Visibility = Visibility.Visible;
+                Console.WriteLine($"Navigation to {e.Uri.ToString()} failed with error: {e.WebErrorStatus.ToString()}");
+            }
+            else
+            {
+                btn_refresh.Visibility = Visibility.Collapsed;
+            }
         }
 
         private async void EvalTimer_Elapsed()
         {
             await EvalTimer_ElapsedTask();
         }
+
         private async Task EvalTimer_ElapsedTask()
         {
             using (var tryLock = new TryLock(_lock))
@@ -116,11 +137,24 @@ namespace NiceHashMiner.Views.Login
             }
         }
 
-
         [Serializable]
         private class BtcResponse
         {
             public string btcAddress { get; set; }
+        }
+
+        private void GoBack_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            if(TimeSpan.FromSeconds((DateTime.Now - _lastClickRefresh).TotalSeconds) > TimeSpan.FromSeconds(10))
+            {
+                _lastClickRefresh = DateTime.Now;
+                NavigateAndStartTimer();
+            }
         }
     }
 }

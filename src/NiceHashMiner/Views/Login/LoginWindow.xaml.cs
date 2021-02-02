@@ -66,6 +66,10 @@ namespace NiceHashMiner.Views.Login
             Hide();
             var browser = new LoginBrowser();
             browser.ShowDialog();
+            if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
+            {
+                ShowDialog();
+            }
         }
 
         private async Task ProcessQRCode()
