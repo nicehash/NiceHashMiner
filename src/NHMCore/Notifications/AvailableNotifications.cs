@@ -32,6 +32,17 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
+        public static void CreateEthlargementNotEnabledInfo()
+        {
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.EthlargementNotEnabled, Tr("EthLargement-Pill not enabled"), Tr("EthLargement-Pill is not enabled. is not running. Enable it for 50% higher hashrates. Run NiceHash Miner as an Administrator and enable Run Ethlargement in advanced settings."));
+            notification.Action = new NotificationAction
+            {
+                Info = Tr("Run As Administrator"),
+                Action = () => { RunAsAdmin.SelfElevate(); }
+            };
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
         public static void CreateConnectionLostInfo()
         {
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.ConnectionLost, Tr("Check internet connection"), Tr("NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner."));

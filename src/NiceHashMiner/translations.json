@@ -4056,6 +4056,12 @@
     },
     "DEMO mode will not earn Bitcoins!": {
       "ru": "В режиме ДЕМО не зарабатываются биткоины!"
+    },
+    "EthLargement-Pill not enabled": {
+      "ru": "EthLargement-Pill не включен"
+    },
+    "EthLargement-Pill is not enabled. Enable it for 50% higher hashrates. Run NiceHash Miner as an Administrator and enable Run Ethlargement in advanced settings.": {
+      "ru": "EthLargement-Pill не включен. Включите для увеличения скорости майнинга на 50%. Запустите NiceHash от имени администратора и включите Запустить Ethlargement в расширенных настройках."
     }
   }
 }
