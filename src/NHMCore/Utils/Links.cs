@@ -127,6 +127,7 @@ namespace NHMCore.Utils
         // help and faq
         public const string NhmHelp = "https://github.com/nicehash/NiceHashMiner/";
         public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMiner/blob/master/doc/Troubleshooting.md#-no-supported-devices";
+        public const string FailedBenchmarkHelp = "https://www.nicehash.com/blog/post/benchmark-error-in-nicehash-miner";
 
         //about
         public const string About = "https://www.nicehash.com/support/general-help/nicehash-service/what-is-nicehash-and-how-it-works";

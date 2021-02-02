@@ -252,6 +252,11 @@ namespace NHMCore.Notifications
         public static void CreateFailedBenchmarksInfo(ComputeDevice device)
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info.", device.Name));
+            notification.Action = new NotificationAction
+            {
+                Info = Tr("Help"),
+                Action = () => { Process.Start(Links.FailedBenchmarkHelp); }
+            };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
