@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace runnhmasadmin
 {
@@ -31,8 +34,17 @@ namespace runnhmasadmin
 
         static void Main(string[] args)
         {
-            TryKillPid(args[0]);
-            RunProgram(args[1]);
+            if (args.Length != 2)
+            {
+                var rootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var programPath = Directory.GetFiles(rootPath).Where(file => file.Contains("NiceHashMiner.exe")).FirstOrDefault();
+                RunProgram(programPath);
+            }
+            else
+            {
+                TryKillPid(args[0]);
+                RunProgram(args[1]);
+            }           
         }
     }
 }
