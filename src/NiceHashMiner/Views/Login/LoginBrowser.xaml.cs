@@ -81,13 +81,10 @@ namespace NiceHashMiner.Views.Login
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            if (_lastClickRefresh.HasValue)
+            if (_lastClickRefresh.HasValue || DateTime.Now > _lastClickRefresh + TimeSpan.FromSeconds(5))
             {
-                if (DateTime.Now > _lastClickRefresh + TimeSpan.FromSeconds(5))
-                {
-                    _lastClickRefresh = DateTime.Now;
-                    NavigateAndStartTimer();
-                }
+                _lastClickRefresh = DateTime.Now;
+                NavigateAndStartTimer();                
             }           
         }
 
