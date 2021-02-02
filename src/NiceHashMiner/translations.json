@@ -4041,6 +4041,21 @@
     },
     "Update procedure failed please install manually.": {
       "ru": "Процедура обновления не удалась, пожалуйста, установите вручную."
+    },
+    "Add your ": {
+      "ru": "Добавьте свой "
+    },
+    "Bitcoin Wallet Address": {
+      "ru": "адрес Биткоин-кошелька"
+    },
+    "We strongly suggest using the wallet address provided on the NiceHash platform.": {
+      "ru": "Мы настоятельно рекомендуем использовать адрес кошелька, предоставленный платформой NiceHash."
+    },
+    "Using any other Bitcoin wallet address will result in a higher 5% fee and infrequent payouts.": {
+      "ru": "Использование адреса любого другого Биткоин-кошелька приведет к высшей комиссии в размере 5% и редким выплатам."
+    },
+    "DEMO mode will not earn Bitcoins!": {
+      "ru": "В режиме ДЕМО не зарабатываются биткоины!"
     }
   }
 }
