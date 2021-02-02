@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHMCore;
 using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -22,7 +24,7 @@ namespace NiceHashMiner.Views.Login
 
         private object _lock = new object();
         private Timer _evalTimer;
-        private DateTime _lastClickRefresh = DateTime.Now;
+        private DateTime? _lastClickRefresh;
         internal class TryLock : IDisposable
         {
             private object locked;
@@ -58,17 +60,35 @@ namespace NiceHashMiner.Views.Login
             _evalTimer = new Timer((s) => { Dispatcher.Invoke(EvalTimer_Elapsed); }, null, 100, 1000);
         }
 
-        private void Browser_NavigationCompleted(object sender, Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT.WebViewControlNavigationCompletedEventArgs e)
+        private void Browser_NavigationCompleted(object sender, WebViewControlNavigationCompletedEventArgs e)
         {
             if(e.IsSuccess == false)
             {
                 btn_refresh.Visibility = Visibility.Visible;
-                Console.WriteLine($"Navigation to {e.Uri.ToString()} failed with error: {e.WebErrorStatus.ToString()}");
+                _lastClickRefresh = DateTime.Now;
+                Logger.Error("Login", $"Navigation to {e.Uri.ToString()} failed with error: {e.WebErrorStatus.ToString()}");
             }
             else
             {
                 btn_refresh.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void GoBack_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            if (_lastClickRefresh.HasValue)
+            {
+                if (DateTime.Now > _lastClickRefresh + TimeSpan.FromSeconds(5))
+                {
+                    _lastClickRefresh = DateTime.Now;
+                    NavigateAndStartTimer();
+                }
+            }           
         }
 
         private async void EvalTimer_Elapsed()
@@ -111,6 +131,7 @@ namespace NiceHashMiner.Views.Login
                         }
 
                         CustomDialogManager.ShowModalDialog(btcLoginDialog);
+                        Logger.Info("Login", $"Navigation and processing successfull.");
                     }
                     else
                     {
@@ -126,13 +147,14 @@ namespace NiceHashMiner.Views.Login
                             Process.Start(Links.Login);
                         };
                         CustomDialogManager.ShowModalDialog(btcLoginDialog);
+                        Logger.Info("Login", $"Navigation and processing successfull. BTC wasn't retreived.");
                     }
                     _evalTimer.Dispose();
                     Close();
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Logger.Error("Login", e.Message);
                 }
             }
         }
@@ -141,20 +163,6 @@ namespace NiceHashMiner.Views.Login
         private class BtcResponse
         {
             public string btcAddress { get; set; }
-        }
-
-        private void GoBack_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void Refresh_Click(object sender, RoutedEventArgs e)
-        {
-            if(TimeSpan.FromSeconds((DateTime.Now - _lastClickRefresh).TotalSeconds) > TimeSpan.FromSeconds(10))
-            {
-                _lastClickRefresh = DateTime.Now;
-                NavigateAndStartTimer();
-            }
-        }
+        }      
     }
 }
