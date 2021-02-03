@@ -81,10 +81,6 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateOpenClFallbackInfo();
                 }
-                if (MiscSettings.Instance.UseEthlargement && !Helpers.IsElevated)
-                {
-                    AvailableNotifications.CreateEthlargementElevateInfo();
-                }
 
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
@@ -223,6 +219,20 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateMissingMinersInfo();
                 }
+
+                // show notification if EthPill could be running and it is not
+                if (EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevicesNotSystemElevated)
+                {
+                    if (MiscSettings.Instance.UseEthlargement)
+                    {
+                        AvailableNotifications.CreateEthlargementElevateInfo();
+                    }
+                    else
+                    {
+                        AvailableNotifications.CreateEthlargementNotEnabledInfo();
+                    }
+                }
+
                 // fire up mining manager loop
                 var username = CredentialValidators.ValidateBitcoinAddress(btc) ? CreateUsername(btc, RigID()) : DemoUser.BTC;
                 MiningManager.StartLoops(ExitApplication.Token, username);

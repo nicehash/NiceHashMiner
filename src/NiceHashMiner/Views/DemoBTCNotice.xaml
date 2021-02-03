@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:NiceHashMiner.Views"
         mc:Ignorable="d"
         Title="DemoBTCNotice"
-        Height="280"
+        Height="370"
         Width="392"
         ResizeMode="NoResize"
         WindowStyle="None"
@@ -92,10 +92,10 @@
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="25,8,6,0">
-            <Run Text="Add your Wallet Address " FontWeight="Bold"/>
+            <Run Text="Add your " />
+            <Run Text="Bitcoin Wallet Address" FontWeight="Bold"/>
             <Run Text="to start earning Bitcoins." />
-            <Run Text="If you continue without adding your Wallet Address you will be mining in "/>
-            <Run Text="DEMO MODE and will not earn Bitcoins!" FontWeight="Bold"/>
+            <Run Text="We strongly suggest using the wallet address provided on the NiceHash platform."/>
         </TextBlock>
         <TextBlock Grid.Row="3"
                    Style="{StaticResource local.WalletSubHeader}"
@@ -112,10 +112,19 @@
                  LostFocus="TextBoxBitcoinAddress_LostFocus"
                  Margin="0,8,0,0" />
         <TextBlock Grid.Row="5"
+                   TextWrapping="WrapWithOverflow"
+                   TextAlignment="Left"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Left"
                    Margin="25,8,0,0">
+            <Run  Text="Using any other Bitcoin wallet address will result in a higher 5% fee and infrequent payouts." />
+            <LineBreak />
             <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                 How to create a Wallet Address?
             </Hyperlink>
+            <LineBreak />
+            <LineBreak />
+            <Run Text="DEMO mode will not earn Bitcoins!" />
         </TextBlock>
 
         <WrapPanel Grid.Row="6" Margin="25,24,24,24" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">

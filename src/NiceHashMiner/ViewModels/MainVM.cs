@@ -243,7 +243,7 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.SelectedFiatCurrency}";
+        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.SelectedFiatCurrency}{PerTime}";
 
         private double _btcBalance;
         private double BtcBalance
