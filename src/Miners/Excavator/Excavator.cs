@@ -208,7 +208,7 @@ _DEVICES_
             if (isPerGPUAnomaly || isPerGPUZeroSpeed || isSumGPUAnomaly) return false; // speeds anomally
 
             return true;
-        } 
+        }
 
         private async Task MinerSpeedsLoop(CancellationTokenSource ct)
         {
