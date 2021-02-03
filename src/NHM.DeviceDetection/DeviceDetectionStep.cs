@@ -3,7 +3,7 @@
     public enum DeviceDetectionStep
     {
         CPU = 0,
-        WMIWMIVideoControllers,
+        WMIVideoControllers,
         NVIDIA_CUDA,
         AMD_OpenCL
     }

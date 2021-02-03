@@ -103,6 +103,16 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
+        public static void CreateMissingGPUsInfo()
+        {
+            var notification = new Notification(
+                NotificationsType.Warning,
+                NotificationsGroup.MissingGPUs,
+                Tr("Missing GPUs"),
+                Tr("There are missing GPUs from inital NiceHash Miner startup. This is usually caused by driver crashes and usually requires system restart to recover."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
         public static void CreateNhmUpdateInfoDownload(bool isInstallerVersion)
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmUpdate, Tr("NiceHash Miner Update"), Tr("New version of NiceHash Miner is available."));

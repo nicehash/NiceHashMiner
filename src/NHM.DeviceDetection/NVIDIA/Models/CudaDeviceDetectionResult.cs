@@ -10,5 +10,6 @@ namespace NHM.DeviceDetection.NVIDIA.Models
         public string DriverVersion { get; set; }
         public string ErrorString { get; set; }
         public int NvmlLoaded { get; set; }
+        public int NvmlInitialized { get; set; }
     }
 }

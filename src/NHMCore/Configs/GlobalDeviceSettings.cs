@@ -8,12 +8,25 @@ namespace NHMCore.Configs
         public static GlobalDeviceSettings Instance { get; } = new GlobalDeviceSettings();
         private GlobalDeviceSettings() { }
 
-        private bool _runScriptOnCUDA_GPU_Lost = false;
-        public bool RunScriptOnCUDA_GPU_Lost {
-            get => _runScriptOnCUDA_GPU_Lost;
-            set {
-                _runScriptOnCUDA_GPU_Lost = value;
-                OnPropertyChanged(nameof(RunScriptOnCUDA_GPU_Lost));
+        private bool _checkForMissingGPUs = false;
+        public bool CheckForMissingGPUs
+        {
+            get => _checkForMissingGPUs;
+            set
+            {
+                _checkForMissingGPUs = value;
+                OnPropertyChanged(nameof(CheckForMissingGPUs));
+            }
+        }
+
+        private bool _restartMachineOnLostGPU = false;
+        public bool RestartMachineOnLostGPU
+        {
+            get => _restartMachineOnLostGPU;
+            set
+            {
+                _restartMachineOnLostGPU = value;
+                OnPropertyChanged(nameof(RestartMachineOnLostGPU));
             }
         }
 

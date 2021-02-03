@@ -81,31 +81,34 @@ namespace NHM.DeviceDetection
             Logger.Info(Tag, stringBuilder.ToString());
         }
 
+        private static bool IsCUDADeviceSupported(CUDADevice cudaDev)
+        {
+            if (cudaDev == null) return false;
+            // SM 5.2+ 
+            return cudaDev.SM_major >= 6 || (cudaDev.SM_major == 5 && cudaDev.SM_minor > 0);
+        }
+
         private static async Task DetectCUDADevices()
         {
             var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
             Logger.Info(Tag, $"TryQueryCUDADevicesAsync RAW: '{cudaQueryResult.rawOutput}'");
             var result = cudaQueryResult.parsed;
-            var unsuported = new List<CUDADevice>();
             if (result?.CudaDevices?.Count > 0)
             {
                 // we got NVIDIA devices
                 var cudaDevices = result.CudaDevices.Select(dev => CUDADetector.Transform(dev)).ToList();
                 // filter out no supported SM versions
-                // SM 3.0+ 
-                DetectionResult.CUDADevices = cudaDevices.Where(cudaDev => cudaDev.SM_major >= 3).OrderBy(cudaDev => cudaDev.PCIeBusID).ToList();
-                unsuported = cudaDevices.Where(cudaDev => cudaDev.SM_major < 3).ToList();
+                DetectionResult.CUDADevices = cudaDevices.Where(IsCUDADeviceSupported).OrderBy(cudaDev => cudaDev.PCIeBusID).ToList();
+                DetectionResult.UnsupportedCUDADevices = cudaDevices.Where(cudaDev => IsCUDADeviceSupported(cudaDev) == false).ToList();
                 // NVIDIA drivers
                 var nvmlLoaded = result?.NvmlLoaded ?? -1;
                 DetectionResult.IsDCHDriver = nvmlLoaded == 1;
+                DetectionResult.IsNvidiaNVMLLoaded = nvmlLoaded == -1;
+                DetectionResult.IsNvidiaNVMLInitialized = result?.NvmlInitialized == 0;
                 if (nvmlLoaded == 1 && result.DriverVersion.Contains('.'))
                 {
                     var driverVer = result.DriverVersion.Split('.').Select(s => int.Parse(s)).ToArray();
                     if (driverVer.Count() >= 2) DetectionResult.NvidiaDriver = new Version(driverVer[0], driverVer[1]);
-                }
-                else
-                {
-                    // TODO PROBLEM IF NO NVML LOADED 
                 }
             }
 
@@ -127,7 +130,7 @@ namespace NHM.DeviceDetection
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("");
             stringBuilder.AppendLine("DetectCUDADevices:");
-            CUDADetector.LogDevices(stringBuilder, unsuported, false);
+            CUDADetector.LogDevices(stringBuilder, DetectionResult.UnsupportedCUDADevices, false);
             CUDADetector.LogDevices(stringBuilder, DetectionResult.CUDADevices, true);
             Logger.Info(Tag, stringBuilder.ToString());
         }
@@ -167,7 +170,7 @@ namespace NHM.DeviceDetection
             _initCalled = true;
             progress?.Report(DeviceDetectionStep.CPU);
             await DetectCPU();
-            progress?.Report(DeviceDetectionStep.WMIWMIVideoControllers);
+            progress?.Report(DeviceDetectionStep.WMIVideoControllers);
             await DetectWMIVideoControllers();
             progress?.Report(DeviceDetectionStep.NVIDIA_CUDA);
             await DetectCUDADevices();
@@ -212,12 +215,54 @@ namespace NHM.DeviceDetection
             //return Enumerable.Empty<BaseDevice>();
         }
 
-
-        public static async Task<int> CUDADevicesNumCheck()
+        // We check only missing from inital detection. Case like device poping back is not covered (ultra rare case)
+        public static async Task<bool> CheckIfMissingGPUs()
         {
-            var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
-            var result = cudaQueryResult.parsed;
-            return result?.CudaDevices?.Count ?? 0;
+            var cudaMissing = false;
+            if (DetectionResult.CUDADevices.Any())
+            {
+                try
+                {
+                    var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
+                    var supportedCudaDevices = cudaQueryResult.parsed.CudaDevices
+                        .Select(CUDADetector.Transform)
+                        .Where(IsCUDADeviceSupported)
+                        .Select(dev => dev.UUID)
+                        .ToArray();
+                    var missing = DetectionResult.CUDADevices.Where(detected => !supportedCudaDevices.Contains(detected.UUID));
+                    cudaMissing = missing.Any();
+                    if (cudaMissing)
+                    {
+                        Logger.Error(Tag, $"CUDA missing devices:\n{string.Join("\n", missing.Select(dev => $"\t{dev.UUID}"))}");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(Tag, $"CUDA CheckIfMissingDevices error: {e}");
+                }
+            }
+            var amdMissing = false;
+            if (DetectionResult.AMDDevices.Any())
+            {
+                try
+                {
+                    var amdDevices = await AMD.AMDDetector.TryQueryAMDDevicesAsync(DetectionResult.AvailableVideoControllers.ToList());
+                    var amdDevicesUUIDs = amdDevices
+                        .Select(dev => dev.UUID)
+                        .ToArray();
+                    var missing = DetectionResult.AMDDevices.Where(detected => !amdDevicesUUIDs.Contains(detected.UUID));
+                    amdMissing = missing.Any();
+                    if (amdMissing)
+                    {
+                        Logger.Error(Tag, $"AMD missing devices:\n{string.Join("\n", missing.Select(dev => $"\t{dev.UUID}"))}");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(Tag, $"AMD CheckIfMissingDevices error: {e}");
+                }
+            }
+            return cudaMissing || amdMissing;
         }
     }
 }

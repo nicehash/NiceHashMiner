@@ -25,6 +25,8 @@
     <system:String x:Key="internetWarning">When checked, NiceHash Miner would issue a warning if the internet connection is not available.</system:String>
     <system:String x:Key="alwaysTop">When checked, NiceHash Miner will be set as Top Most and will be covered only by other Top Most Windows.</system:String>
     <system:String x:Key="pcieBusIDs">When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.</system:String>
+    <system:String x:Key="checkForMissingGPUs">Check this setting if you would like NiceHash Miner to check for missing GPUs every 5 minutes.</system:String>
+    <system:String x:Key="runOnGPUsLost">Check this setting if you would like to run 'OnGPUsLost.bat' script when GPU is lost. By default the script restarts Windows. Users can modify the script for custom behaviour.</system:String>
     <system:String x:Key="disableDeviceStatus">When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).</system:String>
     <system:String x:Key="disableDevicePowerMode">When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only).</system:String>
     <system:String x:Key="logToFile">Check it, to log console output to file.</system:String>

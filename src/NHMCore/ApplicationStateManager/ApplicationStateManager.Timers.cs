@@ -2,6 +2,7 @@ using NHM.Common;
 using NHM.DeviceDetection;
 using NHMCore.Configs;
 using NHMCore.Mining;
+using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
@@ -67,15 +68,16 @@ namespace NHMCore
         {
             if (_cudaDeviceCheckerTimer?.IsActive ?? false) return;
             _cudaDeviceCheckerTimer = new AppTimer(async (object sender, ElapsedEventArgs e) => {
-                if (!GlobalDeviceSettings.Instance.RunScriptOnCUDA_GPU_Lost)
+                if (!GlobalDeviceSettings.Instance.CheckForMissingGPUs)
                     return;
                 // this function checks if count of CUDA devices is same as it was on application start, reason for that is
                 // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
                 // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
-                var nvidiaCount = await DeviceDetection.CUDADevicesNumCheck();
-                var isDevicesCountMistmatch = nvidiaCount != AvailableDevices.AvailNVGpus;
-                if (isDevicesCountMistmatch)
+                var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs();
+                if (!hasMissingGPUs) return;
+                if (GlobalDeviceSettings.Instance.RestartMachineOnLostGPU)
                 {
+                    Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs will execute 'OnGPUsLost.bat'");
                     try
                     {
                         var onGpusLost = new ProcessStartInfo
@@ -93,8 +95,13 @@ namespace NHMCore
                         Logger.Error("ApplicationStateManager.Timers", $"OnGPUsMismatch.bat error: {ex.Message}");
                     }
                 }
+                else
+                {
+                    Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs");
+                    AvailableNotifications.CreateMissingGPUsInfo();
+                }
             },
-            60 * 1000);
+            5 * 60 * 1000); // check every 5 minutes
             _cudaDeviceCheckerTimer.Start();
         }
 

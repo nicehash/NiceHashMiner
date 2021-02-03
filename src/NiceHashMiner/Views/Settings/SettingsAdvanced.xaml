@@ -47,6 +47,14 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.DisableVisualCRedistributableCheck}"
                                         Label="Disable Visual C++ Redistributable Check"
                                         Description="{StaticResource Tooltip.DisableVisualCRedistributableCheck}"/>
+            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.CheckForMissingGPUs}"
+                                        Label="Check every 5 minutes for missing GPUs"
+                                        Description="{StaticResource checkForMissingGPUs}"/>
+            <local:SettingsCheckBoxItem IsEnabled="{Binding GlobalDeviceSettings.CheckForMissingGPUs}"
+                                        Enabled="{Binding GlobalDeviceSettings.RestartMachineOnLostGPU}"
+                                        Label="Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)"
+                                        Description="{StaticResource runOnGPUsLost}"/>
+            
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
@@ -132,9 +140,6 @@
         <!-- NVIDIA/CUDA -->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="wp_cuda">
             <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.RunScriptOnCUDA_GPU_Lost}"
-                                        Label="Run script when CUDA GPU is lost"
-                                        Description="{StaticResource runScriptCUDAlost}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.NVIDIAP0State}"
                                         Label="NVIDIA P0 State"
                                         Description="{StaticResource nvidiaP0State}"/>

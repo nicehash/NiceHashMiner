@@ -310,10 +310,15 @@ namespace NHMCore.Configs.Data
         #endregion MiscSettings
 
         #region Global Device settings
-        public bool RunScriptOnCUDA_GPU_Lost
+        public bool CheckForMissingGPUs
         {
-            get => GlobalDeviceSettings.Instance.RunScriptOnCUDA_GPU_Lost;
-            set => GlobalDeviceSettings.Instance.RunScriptOnCUDA_GPU_Lost = value;
+            get => GlobalDeviceSettings.Instance.CheckForMissingGPUs;
+            set => GlobalDeviceSettings.Instance.CheckForMissingGPUs = value;
+        }
+        public bool RestartMachineOnLostGPU
+        {
+            get => GlobalDeviceSettings.Instance.RestartMachineOnLostGPU;
+            set => GlobalDeviceSettings.Instance.RestartMachineOnLostGPU = value;
         }
         public bool DisableDeviceStatusMonitoring
         {
@@ -382,7 +387,8 @@ namespace NHMCore.Configs.Data
             UseIFTTT = false;
             IFTTTKey = "";
             CoolDownCheckEnabled = true;
-            RunScriptOnCUDA_GPU_Lost = false;
+            CheckForMissingGPUs = false;
+            RestartMachineOnLostGPU = false;
             SwitchSmaTimeChangeSeconds = new Interval(34, 55);
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);

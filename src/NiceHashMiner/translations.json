@@ -4062,6 +4062,18 @@
     },
     "EthLargement-Pill is not enabled. Enable it for 50% higher hashrates. Run NiceHash Miner as an Administrator and enable Run Ethlargement in advanced settings.": {
       "ru": "EthLargement-Pill не включен. Включите для увеличения скорости майнинга на 50%. Запустите NiceHash от имени администратора и включите Запустить Ethlargement в расширенных настройках."
+    },
+    "Check this setting if you would like NiceHash Miner to check for missing GPUs every 5 minutes.": {
+      "ru": "Включите эту настройку, если вы хотели бы, чтобы NiceHash Miner каждые 5 минут проверял, работают ли видеокарты."
+    },
+    "Check this setting if you would like to run 'OnGPUsLost.bat' script when GPU is lost. By default the script restarts Windows. Users can modify the script for custom behaviour.": {
+      "ru": "Включите эту настройку, если вы хотели бы запускать скрипт 'OnGPUsLost.bat' при потере видеокарты. По умолчанию скрипт перезагружает Windows. Пользователи могут изменять поведение скрипта."
+    },
+    "Missing GPUs": {
+      "ru": "Видеокарты отсутствуют"
+    },
+    "There are missing GPUs from inital NiceHash Miner startup. This is usually caused by driver crashes and usually requires system restart to recover.": {
+      "ru": "Отсутствуют видеокарты, которые были при первом запуске NiceHash Miner. Причиной этому обычно бывает сбой драйвера, и для восстановления требуется перезагрузка системы."
     }
   }
 }
