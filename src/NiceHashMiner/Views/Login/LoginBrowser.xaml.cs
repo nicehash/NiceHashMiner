@@ -24,7 +24,7 @@ namespace NiceHashMiner.Views.Login
 
         private object _lock = new object();
         private Timer _evalTimer;
-        private DateTime? _lastClickRefresh;
+        private bool _canRefresh = false;
         internal class TryLock : IDisposable
         {
             private object locked;
@@ -65,7 +65,7 @@ namespace NiceHashMiner.Views.Login
             if(e.IsSuccess == false)
             {
                 btn_refresh.Visibility = Visibility.Visible;
-                _lastClickRefresh = DateTime.Now;
+                _canRefresh = true;
                 Logger.Error("Login", $"Navigation to {e.Uri.ToString()} failed with error: {e.WebErrorStatus.ToString()}");
             }
             else
@@ -81,9 +81,9 @@ namespace NiceHashMiner.Views.Login
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            if (_lastClickRefresh.HasValue || DateTime.Now > _lastClickRefresh + TimeSpan.FromSeconds(5))
+            if (_canRefresh)
             {
-                _lastClickRefresh = DateTime.Now;
+                _canRefresh = false;
                 NavigateAndStartTimer();                
             }           
         }
