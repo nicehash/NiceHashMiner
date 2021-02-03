@@ -1,19 +1,17 @@
-﻿using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore.Switching;
-using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using NHMCore.Configs;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -123,7 +121,6 @@ namespace NHMCore.Mining.Plugins
         public bool IsBroken { get; private set; } = false;
         public bool IsCompatible { get; private set; } = false;
         public bool IsInitialized { get; private set; } = false;
-        public bool IsVersionMismatch { get; private set; } = false;
         // algos from and for the plugin
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> _cachedAlgorithms { get; } = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
         // algos for NiceHashMiner Client
@@ -189,7 +186,13 @@ namespace NHMCore.Mining.Plugins
                 }
 
                 //check for version mismatch
-                CheckVersionMismatch();
+                DeleteVersionFile();
+
+                // Ethlargement extra check
+                if (_plugin == EthlargementIntegratedPlugin.Instance)
+                {
+                    IsCompatible = EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevices;
+                }
             }
             catch (Exception e)
             {
@@ -202,34 +205,19 @@ namespace NHMCore.Mining.Plugins
             return true;
         }
 
-        private void CheckVersionMismatch()
+        private void DeleteVersionFile()
         {
             try
             {
                 var versionFilePath = Paths.MinerPluginsPath(PluginUUID, "version.txt");
                 if (File.Exists(versionFilePath))
                 {
-                    var versionString = File.ReadAllText(versionFilePath);
-                    Version.TryParse(versionString, out var fileVersion);
-                    if (Version != fileVersion)
-                    {
-                        IsVersionMismatch = true;
-
-                        File.Delete(versionFilePath);
-                    }
-                }
-                else
-                {
-                    if (!Directory.Exists(Paths.MinerPluginsPath(PluginUUID)))
-                    {
-                        Directory.CreateDirectory(Paths.MinerPluginsPath(PluginUUID));
-                    }
-                    File.WriteAllText(versionFilePath, Version.ToString());
+                    File.Delete(versionFilePath);
                 }
             }
             catch (Exception e)
             {
-                Logger.Error(LogTag, $"Version mismatch check error: {e.Message}");
+                Logger.Error(LogTag, $"Version mismatch delete error: {e.Message}");
             }
         }
 
@@ -307,12 +295,17 @@ namespace NHMCore.Mining.Plugins
             return CheckExec(nameof(CreateMiner), () => _plugin.CreateMiner(), null);
         }
 
-        // GetSupportedAlgorithms is part of the Init
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
-        {
-            return CheckExec(nameof(GetSupportedAlgorithms), () => _plugin.GetSupportedAlgorithms(devices), null);
-        }
+        //// GetSupportedAlgorithms is part of the Init
+        //public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
+        //{
+        //    return CheckExec(nameof(GetSupportedAlgorithms), () => _plugin.GetSupportedAlgorithms(devices), null);
+        //}
         #endregion IMinerPlugin
+
+        public bool HasMisingBinaryPackageFiles()
+        {
+            return CheckBinaryPackageMissingFiles().Any();
+        }
 
         #region IBinaryPackageMissingFilesChecker
         public IEnumerable<string> CheckBinaryPackageMissingFiles()

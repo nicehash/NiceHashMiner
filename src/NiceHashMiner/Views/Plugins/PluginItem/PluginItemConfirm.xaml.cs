@@ -26,7 +26,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
     /// </summary>
     public partial class PluginItemConfirm : UserControl
     {
-        private PluginEntryVM _vm;
+        private PluginPackageInfoCR _vm;
         public PluginItemConfirm()
         {
             InitializeComponent();
@@ -40,11 +40,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
 
         private void PluginEntry_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            _vm = e.NewValue as PluginEntryVM; // ?? throw new InvalidOperationException("DataContext must be of type `PluginEntryVM`");
-            if (!_vm?.Plugin?.Supported ?? false)
-            {
-                mainPluginGrid.ToolTip = "Not compatible with your hardware.";
-            }
+            _vm = e.NewValue as PluginPackageInfoCR; // ?? throw new InvalidOperationException("DataContext must be of type `PluginEntryVM`");
         }
 
         private void Collapse()
@@ -74,21 +70,19 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
             DetailsToggleButtonText.Text = Translations.Tr(DetailsToggleButtonText.Text);
         }
 
-        private async void Button_Click_Install(object sender, RoutedEventArgs e)
+        private void Button_Click_Install(object sender, RoutedEventArgs e)
         {
-            if (_vm.Load.IsInstalling) return;
-            _vm.Plugin.IsUserActionRequired = false;
-            //AcceptedPlugins.Add(_vm.Plugin.PluginUUID);
+            _vm.IsUserActionRequired = false;
+            AcceptedPlugins.Add(_vm.PluginUUID);
             OnAcceptOrDecline?.Invoke(sender, e);
-            await _vm.ConfirmInstallOrUpdatePlugin();
         }
 
         private void Button_Click_Remove(object sender, RoutedEventArgs e)
         {
-            _vm.Plugin.IsUserActionRequired = false;
-            //AcceptedPlugins.Remove(_vm.Plugin.PluginUUID);
+            _vm.IsUserActionRequired = false;
+            AcceptedPlugins.Remove(_vm.PluginUUID);
+            MinerPluginsManager.RemovePlugin(_vm.PluginUUID);
             OnAcceptOrDecline?.Invoke(sender, e);
-            _vm.UninstallPlugin();
         }
     }
 }

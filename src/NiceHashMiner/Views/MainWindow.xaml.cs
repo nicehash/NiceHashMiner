@@ -2,6 +2,7 @@
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using NiceHashMiner.ViewModels;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Collections.ObjectModel;
 
 namespace NiceHashMiner.Views
 {
@@ -201,11 +203,14 @@ namespace NiceHashMiner.Views
                     tdpWindow.DataContext = _vm;
                     tdpWindow.Show();
                 }
-                
-                if (_vm.Plugins.Any(p => p.Plugin.IsUserActionRequired))
+
+                if (MinerPluginsManager.EulaConfirm.Count > 0)
                 {
                     var pluginsPopup = new Plugins.PluginsConfirmDialog();
-                    pluginsPopup.DataContext = _vm;
+                    pluginsPopup.DataContext = new Plugins.PluginsConfirmDialog.VM
+                    {
+                        Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.EulaConfirm)
+                    };
                     ShowContentAsModalDialog(pluginsPopup);
                 }
 

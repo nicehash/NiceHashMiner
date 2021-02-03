@@ -6,9 +6,10 @@
              xmlns:local="clr-namespace:NiceHashMiner.Views.Plugins.PluginItem"
              xmlns:localConv="clr-namespace:NiceHashMiner.Views.Plugins.PluginItem.Converters"
              xmlns:vmPlugins="clr-namespace:NiceHashMiner.ViewModels.Plugins"
+             xmlns:nhmPlugins="clr-namespace:NHMCore.Mining.Plugins;assembly=NHMCore"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance Type=vmPlugins:PluginEntryVM}">
+             d:DataContext="{d:DesignInstance Type=nhmPlugins:PluginPackageInfoCR}">
     <UserControl.Resources>
         <localConv:SupportedDevicesConverter x:Key="SupportedDevicesConv" />
         <localConv:SupportedDeviceAlgorithmsConverter x:Key="SupportedDevicesAlgorithmsConv" />
@@ -127,7 +128,7 @@
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid Background="Transparent" Width="Auto" Height="Auto" Visibility="{Binding Plugin.IsUserActionRequired, Converter={StaticResource PluginItemVisibilityConverter}}" >
+    <Grid Background="Transparent" Width="Auto" Height="Auto" Visibility="{Binding IsUserActionRequired, Converter={StaticResource PluginItemVisibilityConverter}}" >
 
         <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
             <Border.Style>
@@ -148,7 +149,6 @@
             <Grid.RowDefinitions>
                 <RowDefinition  Height="Auto"/>
                 <RowDefinition  Height="Auto"/>
-                <RowDefinition  Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" HorizontalAlignment="Stretch" Height="Auto" MinHeight="50" MaxHeight="100">
                 <Grid.ColumnDefinitions>
@@ -157,34 +157,25 @@
                 </Grid.ColumnDefinitions>
 
                 <local:PluginIcon Grid.Column="0"
-                                  IsEnabled="{Binding Plugin.Supported}"
                                   Style="{StaticResource local.PluginIconStyle}"
                                   Margin="16,9" />
 
-                <UniformGrid Grid.Column="1" Columns="6">
+                <UniformGrid Grid.Column="1" Columns="5">
                     <TextBlock
-                        IsEnabled="{Binding Plugin.Supported}"
                         Style="{StaticResource local.TextBoxPluginName}"
-                        Text="{ Binding Plugin.PluginName }"
+                        Text="{ Binding PluginName }"
                         HorizontalAlignment="Left"
                         />
 
                     <TextBlock
-                        IsEnabled="{Binding Plugin.Supported}"
                         Style="{StaticResource local.TextBoxPluginInfo}"
                         Foreground="{DynamicResource Brushes.Light.Basic.NoticeColor}"
                         Text="Source"
-                        ToolTip="{Binding Plugin.MinerPackageURL}"
+                        ToolTip="{Binding MinerPackageURL}"
                         Cursor="Help"
                         />
 
-                    <TextBlock Grid.Column="2"
-                           IsEnabled="{Binding Plugin.Supported}"
-                           Style="{StaticResource local.TextBoxPluginInfo}"
-                           Margin="4,0,0,0"
-                           Text="{Binding InstallVersionStatus}"/>
-
-                    <ToggleButton Grid.Column="3"
+                    <ToggleButton 
                               x:Name="DetailsToggleButton"
                               Style="{StaticResource local.TextBoxToggleButton}"
                               Margin="4,0,0,0"
@@ -197,14 +188,14 @@
                                    TextAlignment="Left"/>
                     </ToggleButton>
                     
-                    <Button Grid.Column="4"
+                    <Button 
                             Style="{DynamicResource ButtonPluginRemove}"
                             Width="105" Height="24"
                             Margin="0,0,16,0"
                             Content="DECLINE"
                             Click="Button_Click_Remove"
                             />
-                    <Button Grid.Column="5"
+                    <Button 
                             Style="{DynamicResource ButtonPluginInstall}"
                             Width="105" Height="24"
                             Margin="0,0,16,0"
@@ -213,13 +204,7 @@
                             />
                 </UniformGrid>
             </Grid>
-            <!--TODO the progress here is can be collapsed-->
-            <Grid Grid.Row="1" Width="Auto" Visibility="{Binding Load.Visibility}" Margin="5">
-                <ProgressBar Width="Auto" Style="{StaticResource progressStyle}" Height="15" Value="{Binding Load.Progress}" />
-                <TextBlock Width="Auto" HorizontalAlignment="Center" Text="{Binding Load.Status}" />
-            </Grid>
-            <!--our 'expander'-->
-            <Grid Grid.Row="2" x:Name="DetailsGrid" Visibility="Visible" Margin="0">
+            <Grid Grid.Row="1" x:Name="DetailsGrid" Visibility="Visible" Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="100" Width="50*" />
                     <ColumnDefinition MinWidth="100" Width="100*" />
@@ -237,7 +222,7 @@
                                Text="Supported Devices"
                                TextWrapping="Wrap"
                                />
-                    <ItemsControl x:Name="supportedDevices" ItemsSource="{Binding Plugin.SupportedDevicesAlgorithms, Converter={StaticResource SupportedDevicesConv}}">
+                    <ItemsControl x:Name="supportedDevices" ItemsSource="{Binding SupportedDevicesAlgorithms, Converter={StaticResource SupportedDevicesConv}}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Style="{StaticResource BaseUbuntuTextBlock}"
@@ -258,7 +243,7 @@
                                TextWrapping="Wrap"
                                />
 
-                    <ItemsControl x:Name="deviceAlgorithms" Margin="0,4,0,0" ItemsSource="{Binding Plugin.SupportedDevicesAlgorithms, Converter={StaticResource SupportedDevicesAlgorithmsConv}}">
+                    <ItemsControl x:Name="deviceAlgorithms" Margin="0,4,0,0" ItemsSource="{Binding SupportedDevicesAlgorithms, Converter={StaticResource SupportedDevicesAlgorithmsConv}}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Margin="0,0,0,8">
@@ -300,7 +285,7 @@
                                HorizontalAlignment="Left"
                                MaxWidth="300"
                                TextWrapping="Wrap"
-                               Text="{Binding Plugin.PluginDescription}"/>
+                               Text="{Binding PluginDescription}"/>
                 </WrapPanel>
                 <StackPanel Grid.ColumnSpan="3" Grid.Row="1" Margin="16" >
                     <TextBlock Style="{StaticResource BaseUbuntuTextBlockBold}"
@@ -316,7 +301,7 @@
                                LineHeight="1.5"
                                HorizontalAlignment="Left"
                                TextWrapping="Wrap"
-                               Text="{Binding Plugin.MinerPackageURL}"/>
+                               Text="{Binding MinerPackageURL}"/>
                 </StackPanel>
 
             </Grid>

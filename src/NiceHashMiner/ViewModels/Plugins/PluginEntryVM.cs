@@ -180,13 +180,6 @@ namespace NiceHashMiner.ViewModels.Plugins
             CommonInstallOnPropertyChanged();
         }
 
-        public async Task ConfirmInstallOrUpdatePlugin()
-        {
-            if (Load.IsInstalling) return;
-            await MinerPluginsManager.DownloadAndInstall(Plugin.PluginUUID, Progress);
-            CommonInstallOnPropertyChanged();
-        }
-
         public void UninstallPlugin()
         {
             if (Load.IsInstalling) return;

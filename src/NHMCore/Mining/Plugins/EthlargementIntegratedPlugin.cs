@@ -18,8 +18,7 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Mining.Plugins
 {
-#warning "ADD EULA for accepting the plugin, and change original package source!!!"
-    public class EthlargementIntegratedPlugin : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackgroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
+    public class EthlargementIntegratedPlugin : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackgroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource, IGetPluginMetaInfo
     {
         public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();
 
@@ -28,31 +27,13 @@ namespace NHMCore.Mining.Plugins
         public bool IsSystemElevated => Helpers.IsElevated;
         public bool SystemContainsSupportedDevicesNotSystemElevated => SystemContainsSupportedDevices && !Helpers.IsElevated;
 
-        public Version Version => new Version(11, 1);
+        public Version Version => new Version(15, 0);
         public string Name => "Ethlargement";
 
         public string Author => "info@nicehash.com";
 
-        private bool _init = false;
-
-        public void InitAndCheckSupportedDevices(IEnumerable<BaseDevice> devices)
-        {
-            if (_init) return;
-            GetSupportedAlgorithms(devices);
-            InitInternals();
-            _init = true;
-        }
-
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            if (!_init)
-            {
-                foreach (var dev in devices)
-                {
-                    _registeredSupportedDevices[dev.UUID] = dev.Name;
-                }
-            }
-
             // return empty
             return new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
         }
@@ -62,17 +43,43 @@ namespace NHMCore.Mining.Plugins
         // register in GetSupportedAlgorithms and filter in InitInternals
         private static Dictionary<string, string> _registeredSupportedDevices = new Dictionary<string, string>();
 
-#pragma warning disable 0618
-        private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto };
-#pragma warning restore 0618
-
         private bool IsServiceDisabled => !ServiceEnabled && _registeredSupportedDevices.Count > 0;
 
         private static Dictionary<string, AlgorithmType> _devicesUUIDActiveAlgorithm = new Dictionary<string, AlgorithmType>();
 
-        private static bool ShouldRun => _devicesUUIDActiveAlgorithm.Any(kvp => _supportedAlgorithms.Contains(kvp.Value));
+        private static bool ShouldRun => _devicesUUIDActiveAlgorithm.Values.Any(Instance.IsSupportedAlgorithm);
 
         public bool SystemContainsSupportedDevices => _registeredSupportedDevices.Count > 0;
+
+        public bool IsInstalled
+        {
+            get
+            {
+                try
+                {
+                    // TODO if we relly on installed package with just checking the executable existance we will most likely fail somewhere along the line
+                    return File.Exists(_ethlargementBinPath);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("ETHLARGEMENT", $"Ethlargement IsInstalled: {e.Message}");
+                    return false;
+                }
+            }
+        }
+
+        public void Remove()
+        {
+            Stop();
+            try
+            {
+                File.Delete(_ethlargementBinPath);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("ETHLARGEMENT", $"Ethlargement Remove: {e.Message}");
+            }
+        }
 
         private static object _startStopLock = new object();
 
@@ -88,7 +95,7 @@ namespace NHMCore.Mining.Plugins
 
                 // check if any mining pair is supported and set current active 
                 var supportedUUIDs = _registeredSupportedDevices.Select(kvp => kvp.Key);
-                var supportedPairs = miningPairs.Where(pair => supportedUUIDs.Contains(pair.Device.UUID) && "f683f550-94eb-11ea-a64d-17be303ea466" != pair.Algorithm.MinerID);
+                var supportedPairs = miningPairs.Where(pair => supportedUUIDs.Contains(pair.Device.UUID) && !ShouldIgnoreMinerPluginUUIDs(pair.Algorithm.MinerID));
                 if (supportedPairs.Count() == 0) return;
 
                 foreach (var pair in supportedPairs)
@@ -149,11 +156,22 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
+
+        private string EthlargementOldBinPath()
+        {
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", $"{11}.{1}");
+            var binPath = Path.Combine(pluginRootBins, "OhGodAnETHlargementPill-r2.exe");
+            return binPath;
+        }
+
+        public static string BinName = "ETHlargementPill-r2.exe";
+
         public virtual string EthlargementBinPath()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
             var pluginRootBins = Path.Combine(pluginRoot, "bins", $"{Version.Major}.{Version.Minor}");
-            var binPath = Path.Combine(pluginRootBins, "OhGodAnETHlargementPill-r2.exe");
+            var binPath = Path.Combine(pluginRootBins, BinName);
             return binPath;
         }
 
@@ -219,8 +237,7 @@ namespace NHMCore.Mining.Plugins
             }
             catch (Exception e)
             {
-                Logger.Info("ETHLARGEMENT", $"Ethlargement wasn't able to start: {e.Message}");
-                //Helpers.ConsolePrint("ETHLARGEMENT", ex.Message);
+                Logger.Error("ETHLARGEMENT", $"Ethlargement wasn't able to start: {e.Message}");
             }
         }
 
@@ -241,8 +258,7 @@ namespace NHMCore.Mining.Plugins
             }
             catch (Exception e)
             {
-                Logger.Info("ETHLARGEMENT", $"Ethlargement wasn't able to stop: {e.Message}");
-
+                Logger.Error("ETHLARGEMENT", $"Ethlargement wasn't able to stop: {e.Message}");
             }
         }
 
@@ -262,12 +278,27 @@ namespace NHMCore.Mining.Plugins
 
         #region Internal settings
 
-        public virtual void InitInternals()
+        public virtual void InitInternals(){} // STUB
+
+        public void InitAndCheckSupportedDevices(IEnumerable<BaseDevice> devices)
         {
-            if (_init) return;
             // set ethlargement path
             _ethlargementBinPath = EthlargementBinPath();
             _ethlargementCwdPath = EthlargementCwdPath();
+
+            // copy EthLargement binary 
+            try
+            {
+                var oldPath = EthlargementOldBinPath();
+                if (File.Exists(oldPath) && !File.Exists(_ethlargementBinPath))
+                {
+                    if (!Directory.Exists(_ethlargementCwdPath)) Directory.CreateDirectory(_ethlargementCwdPath);
+                    File.Copy(oldPath, _ethlargementBinPath);
+                }
+            }
+            catch
+            {}
+
 
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
 
@@ -278,18 +309,8 @@ namespace NHMCore.Mining.Plugins
             if (readFromFileEnvSysVars != null && readFromFileEnvSysVars.UseUserSettings) _ethlargementSettings = readFromFileEnvSysVars;
 
             // Filter out supported ones
-            var supportedDevicesNames = _ethlargementSettings.SupportedDeviceNames;
-            if (supportedDevicesNames != null)
-            {
-                Func<string, bool> isSupportedName = (string name) => supportedDevicesNames.Any(supportedPart => name.Contains(supportedPart));
-
-                var unsupportedDevicesUUIDs = _registeredSupportedDevices.Where(kvp => !isSupportedName(kvp.Value)).Select(kvp => kvp.Key).ToArray();
-                foreach (var removeKey in unsupportedDevicesUUIDs)
-                {
-                    _registeredSupportedDevices.Remove(removeKey);
-                }
-            }
-            if (_ethlargementSettings.SupportedAlgorithms != null) _supportedAlgorithms = _ethlargementSettings.SupportedAlgorithms;
+            _registeredSupportedDevices = new Dictionary<string, string>();
+            devices.Where(dev => IsSupportedDeviceName(dev.Name)).ToList().ForEach(dev => _registeredSupportedDevices[dev.UUID] = dev.Name);
             OnPropertyChanged(nameof(SystemContainsSupportedDevices));
             OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
         }
@@ -300,21 +321,59 @@ namespace NHMCore.Mining.Plugins
             public bool UseUserSettings { get; set; } = false;
 
             [JsonProperty("supported_device_names")]
-            public List<string> SupportedDeviceNames { get; set; } = null;
+            public List<string> SupportedDeviceNames { get; set; } = new List<string> { "1080", "1080 Ti", "Titan Xp", "TITAN Xp" };
 
             [JsonProperty("supported_algorithms")]
-            public List<AlgorithmType> SupportedAlgorithms { get; set; } = null;
+            public List<AlgorithmType> SupportedAlgorithms { get; set; } = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto };
+
+            [JsonProperty("ignore_miner_uuids")]
+            public List<string> IgnoreMinerPluginUUIDs { get; set; } = new List<string>{ };
+            // "f683f550-94eb-11ea-a64d-17be303ea466" NBMiner
         }
 
-        protected SupportedDevicesSettings _ethlargementSettings = new SupportedDevicesSettings
+        protected SupportedDevicesSettings _ethlargementSettings = new SupportedDevicesSettings{};
+
+        protected bool IsSupportedAlgorithm(AlgorithmType algorithmType)
         {
-            SupportedDeviceNames = new List<string> { "1080", "1080 Ti", "Titan Xp" },
-            SupportedAlgorithms = _supportedAlgorithms
-        };
+            try
+            {
+                return _ethlargementSettings?.SupportedAlgorithms?.Contains(algorithmType) ?? false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected bool IsSupportedDeviceName(string deviceName)
+        {
+            try
+            {
+                return _ethlargementSettings?.SupportedDeviceNames?.Any(supportedPart => deviceName.Contains(supportedPart)) ?? false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        protected bool ShouldIgnoreMinerPluginUUIDs(string pluginUUID)
+        {
+            try
+            {
+                return _ethlargementSettings?.IgnoreMinerPluginUUIDs?.Contains(pluginUUID) ?? false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        
 
         protected MinersBinsUrlsSettings MinersBinsUrlsSettings { get; set; } = new MinersBinsUrlsSettings
         {
-            Urls = new List<string> { "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/Ethlargement.7z" } // link not original
+            Urls = new List<string> { "https://github.com/Virosa/ETHlargementPill/raw/master/ETHlargementPill-r2.exe" } 
         };
         #endregion Internal settings
 
@@ -333,6 +392,16 @@ namespace NHMCore.Mining.Plugins
             if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Urls == null) return Enumerable.Empty<string>();
             return MinersBinsUrlsSettings.Urls;
         }
+
+        PluginMetaInfo IGetPluginMetaInfo.GetPluginMetaInfo()
+        {
+            return new PluginMetaInfo
+            {
+                PluginDescription = "ETHlargement increases DaggerHashimoto hashrate for NVIDIA 1080, 1080 Ti and Titan Xp GPUs.", 
+                SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>> { { DeviceType.NVIDIA, new List<AlgorithmType> { AlgorithmType.DaggerHashimoto } } }
+            };
+        }
+
         #endregion IMinerBinsSource
     }
 }

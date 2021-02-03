@@ -229,7 +229,6 @@ namespace NHMCore.Mining.Plugins
             {
                 _isUserActionRequired = value;
                 OnPropertyChanged(nameof(IsUserActionRequired));
-                OnPropertyChanged(nameof(Installed));
             }
         }
     }
