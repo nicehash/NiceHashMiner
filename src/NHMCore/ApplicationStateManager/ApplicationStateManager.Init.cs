@@ -81,6 +81,18 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateOpenClFallbackInfo();
                 }
+                if (DeviceDetection.DetectionResult.IsNvidiaNVMLInitialized)
+                {
+                    AvailableNotifications.CreateFailedNVMLInitInfo();
+                }
+                if (DeviceDetection.DetectionResult.IsNvidiaNVMLLoaded)
+                {
+                    AvailableNotifications.CreateFailedNVMLLoadInfo();
+                }
+                if (DeviceDetection.DetectionResult.IsDCHDriver)
+                {
+                    AvailableNotifications.CreateWarningNVIDIADCHInfo();
+                }
 
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
