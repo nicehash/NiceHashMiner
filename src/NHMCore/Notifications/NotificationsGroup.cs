@@ -13,6 +13,7 @@ namespace NHMCore.Notifications
         Profit,
         MonitoringNvidiaElevate,
         EthlargementElevate,
+        EthlargementNotEnabled,
         ConnectionLost,
         NoEnabledDevice,
         DemoMining,
