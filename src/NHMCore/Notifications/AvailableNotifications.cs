@@ -346,5 +346,23 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.LogArchiveUpload, Tr("Log archive upload result"), Tr("The log archive with the following ID: {0}", uuid) +" "+ sentence);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateFailedNVMLInitInfo()
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NVMLInitFail, Tr("Failed NVML Initialization"), Tr("NVML was not initialized. Try to reinstall drivers - recommended standard drivers over DCH. Also you could try to restart Windows."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateFailedNVMLLoadInfo()
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NVMLLoadFail, Tr("Failed NVML Load"), Tr("NVML was not loaded. Try to reinstall drivers - recommended standard drivers over DCH. Also you could try to restart Windows."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateWarningNVIDIADCHInfo()
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NvidiaDCH, Tr("Nvidia DCH drivers detected"), Tr("Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

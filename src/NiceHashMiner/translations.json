@@ -4074,6 +4074,18 @@
     },
     "There are missing GPUs from inital NiceHash Miner startup. This is usually caused by driver crashes and usually requires system restart to recover.": {
       "ru": "Отсутствуют видеокарты, которые были при первом запуске NiceHash Miner. Причиной этому обычно бывает сбой драйвера, и для восстановления требуется перезагрузка системы."
+    },
+    "Failed NVML Initialization": {
+      "ru": "Инициализация NVML не удалась"
+    },
+    "NVML was not initialized. Try to reinstall drivers - recommended standard drivers over DCH. Also you could try to restart Windows.": {
+      "ru": "NVML не был инициализирован. Попробуйте переустановить драйверы — рекомендуются стандартные драйверы, а не DCH. Также вы можете попробовать перезапустить Windows."
+    },
+    "Failed NVML Load": {
+      "ru": "Загрузка NVML не удалась"
+    },
+    "NVML was not loaded. Try to reinstall drivers - recommended standard drivers over DCH. Also you could try to restart Windows.": {
+      "ru": "NVML не был загружен. Попробуйте переустановить драйверы — рекомендуются стандартные драйверы, а не DCH. Также вы можете попробовать перезапустить Windows."
     }
   }
 }
