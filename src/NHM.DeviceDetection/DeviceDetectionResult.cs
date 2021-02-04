@@ -18,8 +18,8 @@ namespace NHM.DeviceDetection
         public IReadOnlyList<CUDADevice> CUDADevices { get; internal set; }
         public bool IsDCHDriver { get; internal set; }
         public Version NvidiaDriver { get; internal set; }
-        public bool IsNvidiaNVMLLoaded { get; internal set; }
-        public bool IsNvidiaNVMLInitialized { get; internal set; }
+        public bool IsNvidiaNVMLLoadedError { get; internal set; }
+        public bool IsNvidiaNVMLInitializedError { get; internal set; }
         public IReadOnlyList<CUDADevice> UnsupportedCUDADevices { get; internal set; }
 
         // AMD

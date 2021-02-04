@@ -103,8 +103,8 @@ namespace NHM.DeviceDetection
                 // NVIDIA drivers
                 var nvmlLoaded = result?.NvmlLoaded ?? -1;
                 DetectionResult.IsDCHDriver = nvmlLoaded == 1;
-                DetectionResult.IsNvidiaNVMLLoaded = nvmlLoaded == -1;
-                DetectionResult.IsNvidiaNVMLInitialized = result?.NvmlInitialized == 0;
+                DetectionResult.IsNvidiaNVMLLoadedError = nvmlLoaded == -1;
+                DetectionResult.IsNvidiaNVMLInitializedError = result?.NvmlInitialized != 0;
                 if (nvmlLoaded == 1 && result.DriverVersion.Contains('.'))
                 {
                     var driverVer = result.DriverVersion.Split('.').Select(s => int.Parse(s)).ToArray();

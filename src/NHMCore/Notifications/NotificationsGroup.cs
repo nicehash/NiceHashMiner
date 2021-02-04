@@ -46,6 +46,8 @@ namespace NHMCore.Notifications
         OpenClFallback,
         NoAvailableAlgorithms,
         LogArchiveUpload,
-        MissingGPUs
+        MissingGPUs,
+        NVMLInitFail,
+        NVMLLoadFail
     }
 }

@@ -81,6 +81,10 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateOpenClFallbackInfo();
                 }
+                if (DeviceDetection.DetectionResult.IsDCHDriver)
+                {
+                    AvailableNotifications.CreateWarningNVIDIADCHInfo();
+                }
 
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
@@ -113,6 +117,14 @@ namespace NHMCore
                 if (!ramCheckOK)
                 {
                     AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
+                }
+                if (AvailableDevices.HasNvidia && DeviceDetection.DetectionResult.IsNvidiaNVMLInitializedError)
+                {
+                    AvailableNotifications.CreateFailedNVMLInitInfo();
+                }
+                if (AvailableDevices.HasNvidia && DeviceDetection.DetectionResult.IsNvidiaNVMLLoadedError)
+                {
+                    AvailableNotifications.CreateFailedNVMLLoadInfo();
                 }
                 // no compatible devices? exit
                 if (AvailableDevices.Devices.Count == 0)
