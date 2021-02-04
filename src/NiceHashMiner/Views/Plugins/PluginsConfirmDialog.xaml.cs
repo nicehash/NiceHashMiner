@@ -54,8 +54,8 @@ namespace NiceHashMiner.Views.Plugins
                 CustomDialogManager.HideCurrentModal();
                 var nhmRestartDialog = new CustomDialog()
                 {
-                    Title = Tr("NiceHash Miner Restart"),
-                    Description = Tr("NiceHash Miner restart is requered."),
+                    Title = Tr("Restart NiceHash Miner"),
+                    Description = Tr("NiceHash Miner restart is required."),
                     OkText = Tr("Restart"),
                     AnimationVisible = Visibility.Collapsed,
                     CancelVisible = Visibility.Collapsed,

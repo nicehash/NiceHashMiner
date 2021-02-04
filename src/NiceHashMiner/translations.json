@@ -4074,6 +4074,9 @@
     },
     "There are missing GPUs from inital NiceHash Miner startup. This is usually caused by driver crashes and usually requires system restart to recover.": {
       "ru": "Отсутствуют видеокарты, которые были при первом запуске NiceHash Miner. Причиной этому обычно бывает сбой драйвера, и для восстановления требуется перезагрузка системы."
+    },
+    "NiceHash Miner restart is required.": {
+      "ru": "Требуется перезапуск NiceHash Miner."
     }
   }
 }
