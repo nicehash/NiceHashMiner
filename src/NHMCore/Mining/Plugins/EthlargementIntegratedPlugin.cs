@@ -43,7 +43,7 @@ namespace NHMCore.Mining.Plugins
         // register in GetSupportedAlgorithms and filter in InitInternals
         private static Dictionary<string, string> _registeredSupportedDevices = new Dictionary<string, string>();
 
-        private bool IsServiceDisabled => !ServiceEnabled && _registeredSupportedDevices.Count > 0;
+        private bool IsServiceDisabled => !IsInstalled && !ServiceEnabled && _registeredSupportedDevices.Count > 0;
 
         private static Dictionary<string, AlgorithmType> _devicesUUIDActiveAlgorithm = new Dictionary<string, AlgorithmType>();
 
@@ -71,6 +71,7 @@ namespace NHMCore.Mining.Plugins
         public void Remove()
         {
             Stop();
+            System.Threading.Thread.Sleep(500);
             try
             {
                 File.Delete(_ethlargementBinPath);
