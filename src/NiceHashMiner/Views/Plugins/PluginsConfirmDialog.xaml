@@ -70,10 +70,10 @@
                        HorizontalAlignment="Center"
                        Text="Disclaimer on usage of 3rd party software"/>
         <TextBlock Grid.Row="1"
-                       Margin="0,15,0,0"
+                       Margin="20,15,20,0"
                        Style="{StaticResource local.WalletSubHeader}"
                        VerticalAlignment="Stretch"
-                       HorizontalAlignment="Center"
+                       HorizontalAlignment="Left"
                        TextAlignment="Center"
                        Text="Third Party Miners and Plugins are a third party software which enables the best and most efficient mining operations. NiceHash Miner integrates third party mining software using a third party miner plugin system. Downloading and integrating any of the available Third Party Miners and Plugins is at users own risk. NiceHash will not be liable, to the maximum extent permitted by applicable law, for any damages of any kind, including, but not limited to, direct, consequential, incidental, special or indirect damages, arising out of using Third Party Miners and Plugins."/>
         <Grid Grid.Row="2" Margin="40,10,40,40">
