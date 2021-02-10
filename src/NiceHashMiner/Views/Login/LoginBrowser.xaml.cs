@@ -100,15 +100,7 @@ namespace NiceHashMiner.Views.Login
                 if (!tryLock.HasAcquiredLock) return;
                 try
                 {
-
-                    /*
-                     * .then(res => {
-			            this.nhmResponse = JSON.stringify({btcAddress: res.body.btcAddress});
-		            })
-		            .catch(err => {
-			            this.nhmResponse = JSON.stringify({error: _.get(err, 'body.error.message')})
-		            })
-                    */
+                    #warning handle case for logged in sessions with/without btc
                     string html = await browser.InvokeScriptAsync("eval", new string[] { "document.getElementById('nhmResponse').value;" });
                     var webResponse = JsonConvert.DeserializeObject<Response>(html);
                     if (webResponse == null) return;
