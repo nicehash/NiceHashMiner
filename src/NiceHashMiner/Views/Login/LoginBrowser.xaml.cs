@@ -100,52 +100,60 @@ namespace NiceHashMiner.Views.Login
                 if (!tryLock.HasAcquiredLock) return;
                 try
                 {
+
+                    /*
+                     * .then(res => {
+			            this.nhmResponse = JSON.stringify({btcAddress: res.body.btcAddress});
+		            })
+		            .catch(err => {
+			            this.nhmResponse = JSON.stringify({error: _.get(err, 'body.error.message')})
+		            })
+                    */
                     string html = await browser.InvokeScriptAsync("eval", new string[] { "document.getElementById('nhmResponse').value;" });
-                    if (!html.Contains("btcAddress")) return;
-                    var btcResp = JsonConvert.DeserializeObject<BtcResponse>(html);
-                    if(btcResp.btcAddress != null)
+                    var webResponse = JsonConvert.DeserializeObject<Response>(html);
+                    if (webResponse == null) return;
+
+                    // assume failure
+                    var description = Translations.Tr("Unable to retreive BTC address. Please retreive it by yourself from web page.");
+
+                    if (webResponse.btcAddress != null)
                     {
-                        var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btcAddress);
-
-                        var btcLoginDialog = new CustomDialog()
+                        var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(webResponse.btcAddress);
+                        if (result == ApplicationStateManager.SetResult.CHANGED)
                         {
-                            Title = Translations.Tr("Login"),
-                            OkText = Translations.Tr("Ok"),
-                            CancelVisible = Visibility.Collapsed,
-                            AnimationVisible = Visibility.Collapsed
-                        };
-
-                        if (result == ApplicationStateManager.SetResult.INVALID)
-                        {
-                            btcLoginDialog.Description = Translations.Tr("Unable to retreive BTC address. Please retreive it by yourself from web page.");
-                            btcLoginDialog.OKClick += (s, e) => {
-                                Process.Start(Links.Login);
-                            };
+                            description = Translations.Tr("Login performed successfully.");
+                            Logger.Info("Login", $"Navigation and processing successfull.");
                         }
-                        else if(result == ApplicationStateManager.SetResult.CHANGED)
+                        else 
                         {
-                            btcLoginDialog.Description = Translations.Tr("Login performed successfully. Feel free to start mining.");
+                            Logger.Error("Login", $"Btc address: {webResponse.btcAddress} was not saved. Result: {result}.");
                         }
 
-                        CustomDialogManager.ShowModalDialog(btcLoginDialog);
-                        Logger.Info("Login", $"Navigation and processing successfull.");
+                    }
+                    else if (webResponse.error != null)
+                    {
+                        var error = webResponse.error;
+                        Logger.Error("Login", "Received error: " + error);
                     }
                     else
                     {
-                        var btcLoginDialog = new CustomDialog()
-                        {
-                            Title = Translations.Tr("Login"),
-                            OkText = Translations.Tr("Ok"),
-                            CancelVisible = Visibility.Collapsed,
-                            AnimationVisible = Visibility.Collapsed,
-                            Description = Translations.Tr("Unable to retreive BTC address. Please retreive it by yourself from web page.")
-                        };
-                        btcLoginDialog.OKClick += (s, e) => {
-                            Process.Start(Links.Login);
-                        };
-                        CustomDialogManager.ShowModalDialog(btcLoginDialog);
                         Logger.Info("Login", $"Navigation and processing successfull. BTC wasn't retreived.");
                     }
+
+                    var btcLoginDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("Login"),
+                        OkText = Translations.Tr("Ok"),
+                        CancelVisible = Visibility.Collapsed,
+                        AnimationVisible = Visibility.Collapsed,
+                        Description = description
+                    };
+                    btcLoginDialog.OKClick += (s, e) => {
+                        Process.Start(Links.Login);
+                    };
+
+                    CustomDialogManager.ShowModalDialog(btcLoginDialog);
+
                     _evalTimer.Dispose();
                     Close();
                 }
@@ -157,9 +165,10 @@ namespace NiceHashMiner.Views.Login
         }
 
         [Serializable]
-        private class BtcResponse
+        private class Response
         {
             public string btcAddress { get; set; }
+            public string error { get; set; }
         }      
     }
 }
