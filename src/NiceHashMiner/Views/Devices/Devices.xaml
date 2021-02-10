@@ -149,7 +149,12 @@
                         <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="Connecting" />
                     </WrapPanel>
                     
-                    <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
+                    <TextBlock Grid.Row="3"
+                               Style="{DynamicResource local.InfoFiatValue}"
+                               Margin="24,10,0,0"
+                               Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"
+                               ToolTip="{Binding ExchangeTooltip}"
+                               Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverter}}"/>
                 </Grid>
             </Grid>
             <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding ExchangeTooltip}" Visibility="Collapsed">
