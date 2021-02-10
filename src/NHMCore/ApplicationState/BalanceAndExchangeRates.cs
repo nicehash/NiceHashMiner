@@ -12,8 +12,6 @@ namespace NHMCore.ApplicationState
 {
     public class BalanceAndExchangeRates : NotifyChangedBase
     {
-        public static event EventHandler OnExchangeUpdate;
-
         private readonly ConcurrentDictionary<string, double> ExchangesFiat = new ConcurrentDictionary<string, double>();
 
         public static BalanceAndExchangeRates Instance { get; } = new BalanceAndExchangeRates();
@@ -54,8 +52,6 @@ namespace NHMCore.ApplicationState
                 }
             }
             CalculateFiatBalance();
-            // trigger property changed for all fiat related stuff
-            OnExchangeUpdate?.Invoke(this, EventArgs.Empty);
         }
         private double _usdBtcRate = -1;
         private double UsdBtcRate
@@ -103,15 +99,16 @@ namespace NHMCore.ApplicationState
             var usdAmount = (BtcBalance * GetUsdExchangeRate()) ?? 0;
             FiatBalance = ConvertToActiveCurrency(usdAmount);
             // set display
-            DisplayFiatBalance = $"≈ {(FiatBalance ?? 0):F2} {_fiatCurrency}";
+            DisplayFiatBalance = $"≈ {(FiatBalance ?? 0):F2} {SelectedFiatCurrency}";
             OnPropertyChanged(nameof(DisplayFiatBalance));
+            OnPropertyChanged(nameof(ExchangeTooltip));
         }
 
         public bool HasFiatCurrencyOptions => _fiatCurrencyKeys.Count > 0;
         public IReadOnlyList<string> FiatCurrencyOptions => _fiatCurrencyKeys;
         private List<string> _fiatCurrencyKeys = new List<string>{};
 
-        public bool HasSelectedFiatCurrency => _fiatCurrencyKeys.Contains(_fiatCurrency);
+        public bool HasSelectedFiatCurrency => _fiatCurrencyKeys.Contains(SelectedFiatCurrency);
         private string _fiatCurrency { get; set; } = "USD";
         public string SelectedFiatCurrency
         {
@@ -147,33 +144,35 @@ namespace NHMCore.ApplicationState
         public string DisplayBTCSymbol { get; private set; }
         public string DisplayFiatBalance { get; private set; }
 
-        #region COPY/PASTE from NHMCore.Stats.ExchangeRateApi
+        // TODO maybe rename
+        public string ExchangeTooltip => $"1 BTC = {ConvertToActiveCurrency(UsdBtcRate):F2} {SelectedFiatCurrency}";
 
-        public double SelectedCurrBtcRate => ConvertToActiveCurrency(UsdBtcRate);
+
+        #region COPY/PASTE from NHMCore.Stats.ExchangeRateApi
 
         private bool ConverterActive => SelectedFiatCurrency != "USD";
         // TODO change return to (double convertedAmount, bool ok)
-        public double ConvertToActiveCurrency(double amount)
+        public double ConvertToActiveCurrency(double usdAmount)
         {
             if (!ConverterActive)
             {
-                return amount;
+                return usdAmount;
             }
 
             // if we are still null after an update something went wrong. just use USD hopefully itll update next tick
             if (ExchangesFiat.Count == 0 || SelectedFiatCurrency == "USD")
             {
-                return amount;
+                return usdAmount;
             }
 
             //Helpers.ConsolePrint("CurrencyConverter", "Current Currency: " + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
             if (ExchangesFiat.TryGetValue(SelectedFiatCurrency, out var usdExchangeRate))
-                return amount * usdExchangeRate;
+                return usdAmount * usdExchangeRate;
 
             // TODO Don't FALLBACK to USD exchange. if we can't get the converted values then this should break
             Logger.Info("ExchangeRateApi", $"Unknown Currency Tag: {SelectedFiatCurrency}, falling back to USD rates");
             SelectedFiatCurrency = "USD";
-            return amount;
+            return usdAmount;
         }
 
         public double ConvertFromBtc(double amount)
