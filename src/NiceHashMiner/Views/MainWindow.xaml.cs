@@ -81,7 +81,6 @@ namespace NiceHashMiner.Views
                     {
                         Title = Translations.Tr("NiceHash Miner Starting Update"),
                         Description = Translations.Tr("NiceHash Miner auto updater in progress."),
-                        OkText = Translations.Tr("OK"),
                         CancelVisible = Visibility.Collapsed,
                         OkVisible = Visibility.Collapsed,
                         AnimationVisible = Visibility.Visible,
