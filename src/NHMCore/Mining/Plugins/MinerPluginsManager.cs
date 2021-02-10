@@ -108,12 +108,7 @@ namespace NHMCore.Mining.Plugins
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
-            var filteredIntegratedPlugins = _integratedPlugins.Where(p => BlacklistedPlugins.IsNotBlacklisted(p.PluginUUID)).ToList();
-            foreach (var integratedPlugin in filteredIntegratedPlugins)
-            {
-                PluginContainer.Create(integratedPlugin);
-            }
-
+            
             (_initOnlinePlugins, OnlinePlugins) = ReadCachedOnlinePlugins();
         }
 
@@ -174,15 +169,26 @@ namespace NHMCore.Mining.Plugins
         {
             try
             {
+                var filteredIntegratedPlugins = _integratedPlugins
+                    .Where(p => BlacklistedPlugins.IsNotBlacklisted(p.PluginUUID))
+                    .Select(PluginContainer.Create);
+
                 // TODO ADD STEP AND MESSAGE
                 EthlargementIntegratedPlugin.Instance.InitAndCheckSupportedDevices(AvailableDevices.Devices.Select(dev => dev.BaseDevice));
                 CheckAndDeleteUnsupportedPlugins();
 
                 // load dll's and create plugin containers
-                var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath()).Where(uuid => BlacklistedPlugins.IsNotBlacklisted(uuid));
-                foreach (var pluginUUID in loadedPlugins) PluginContainer.Create(MinerPluginHost.MinerPlugin[pluginUUID]);
+                var externalLoadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath())
+                    .Where(BlacklistedPlugins.IsNotBlacklisted)
+                    .Where(MinerPluginHost.MinerPlugin.ContainsKey)
+                    .Select(pluginUUID => MinerPluginHost.MinerPlugin[pluginUUID])
+                    .Select(PluginContainer.Create);
+
+                var loadedPlugins = new List<PluginContainer>();
+                loadedPlugins.AddRange(filteredIntegratedPlugins);
+                loadedPlugins.AddRange(externalLoadedPlugins);
                 // init all containers
-                foreach (var plugin in PluginContainer.PluginContainers)
+                foreach (var plugin in loadedPlugins)
                 {
                     if (!plugin.IsInitialized)
                     {
@@ -201,7 +207,6 @@ namespace NHMCore.Mining.Plugins
                 // cross reference local and online list
                 var success = await GetOnlineMinerPlugins();
                 if (success) CrossReferenceInstalledWithOnline();
-                EthlargementIntegratedPlugin.Instance.ServiceEnabled = MiscSettings.Instance.UseEthlargement && Helpers.IsElevated;
                 CheckAccepted3rdPartyPlugins();
                 Logger.Info("MinerPluginsManager", "Finished initialization of miners.");
             }
@@ -531,11 +536,6 @@ namespace NHMCore.Mining.Plugins
                 foreach (var old in oldPlugins)
                 {
                     PluginContainer.RemovePluginContainer(old);
-                }
-                // TODO this remove is probably redundant CHECK
-                foreach (var dev in AvailableDevices.Devices)
-                {
-                    dev.RemovePluginAlgorithms(pluginUUID);
                 }
 
                 // remove from cross ref dict

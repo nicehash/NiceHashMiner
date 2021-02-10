@@ -350,7 +350,6 @@ namespace NHMCore.Mining
                 }
                 _runningMiners.Clear();
                 _miningDevices.Clear();
-                EthlargementIntegratedPlugin.Instance.Stop();
             }
         }
 
@@ -408,7 +407,6 @@ namespace NHMCore.Mining
 
         private static async Task StopAllMinersTask()
         {
-            EthlargementIntegratedPlugin.Instance.Stop();
             foreach (var groupMiner in _runningMiners.Values)
             {
                 await groupMiner.StopTask();
@@ -420,7 +418,6 @@ namespace NHMCore.Mining
         // PauseAllMiners doesn't clear _miningDevices
         private static async Task PauseAllMiners()
         {
-            EthlargementIntegratedPlugin.Instance.Stop();
             foreach (var groupMiner in _runningMiners.Values)
             {
                 await groupMiner.StopTask();

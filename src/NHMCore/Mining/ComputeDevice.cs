@@ -292,7 +292,6 @@ namespace NHMCore.Mining
                 PluginAlgorithmSettings.Add(pluginConf);
             }
 
-            // TODO save removed algorithm configs
             var toRemove = AlgorithmSettings.Where(algo => algo.Algorithm.MinerID == pluginUUID);
             if (toRemove.Count() == 0) return;
             foreach (var removeAlgo in toRemove)
