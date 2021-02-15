@@ -7,7 +7,7 @@ namespace NHMCore.Mining.Plugins
     internal sealed class MinerPluginInstallTask : IDisposable, IProgress<Tuple<PluginInstallProgressState, int>>
     {
         private readonly CancellationTokenSource _cancelInstall = new CancellationTokenSource();
-        private object _progressLock = new object();
+        private readonly object _progressLock = new object();
         private Tuple<PluginInstallProgressState, int> _lastProgressValue = null; 
         private List<IProgress<Tuple<PluginInstallProgressState, int>>> _progresses = new List<IProgress<Tuple<PluginInstallProgressState, int>>>();
 

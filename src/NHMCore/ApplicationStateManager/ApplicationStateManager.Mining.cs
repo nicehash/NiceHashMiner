@@ -237,7 +237,7 @@ namespace NHMCore
                     }
                     return (true, "");
                 default:
-                    return (false, $"Cannot handle state {device.State.ToString()} for device {device.Uuid}");
+                    return (false, $"Cannot handle state {device.State} for device {device.Uuid}");
             }
         }
 

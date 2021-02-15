@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using static NHMCore.Translations;
+using System.Threading;
 
 namespace NiceHashMiner.ViewModels.Plugins
 {
@@ -176,15 +177,15 @@ namespace NiceHashMiner.ViewModels.Plugins
             if (Plugin.Installed && !Plugin.HasNewerVersion) return;
             //if (Plugin.HasNewerVersion) return;
 
-            await MinerPluginsManager.DownloadAndInstall(Plugin.PluginUUID, Progress);
+            await MinerPluginsManager.DownloadAndInstall(Plugin.PluginUUID, Progress, CancellationToken.None);
             CommonInstallOnPropertyChanged();
         }
 
-        public void UninstallPlugin()
+        public async Task UninstallPlugin()
         {
             if (Load.IsInstalling) return;
             if (!Plugin.Installed) return;
-            MinerPluginsManager.RemovePlugin(Plugin.PluginUUID);
+            await MinerPluginsManager.RemovePlugin(Plugin.PluginUUID);
 
             CommonInstallOnPropertyChanged();
         }
