@@ -65,6 +65,17 @@ namespace NiceHashMiner.Views.Plugins
                     Task.Run(() => ApplicationStateManager.RestartProgram());
                 };
                 CustomDialogManager.ShowModalDialog(nhmRestartDialog);
+
+                var nhmRestartingDialog = new CustomDialog()
+                {
+                    Title = Tr("NiceHash Miner Restarting"),
+                    Description = Tr("NiceHash Miner restart in progress."),
+                    CancelVisible = Visibility.Collapsed,
+                    OkVisible = Visibility.Collapsed,
+                    AnimationVisible = Visibility.Visible,
+                    ExitVisible = Visibility.Collapsed
+                };
+                CustomDialogManager.ShowModalDialog(nhmRestartingDialog);
             }
         }
 

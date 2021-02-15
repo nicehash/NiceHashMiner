@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
@@ -72,6 +73,15 @@ namespace NHMCore.Mining
                 IsUserEditable = !miningOrBenchmarking;
                 OnPropertyChanged(nameof(IsUserEditable));
             }
+        }
+
+        public MiningPair ToMiningPair()
+        {
+            return new MiningPair
+            {
+                Device = ComputeDevice.BaseDevice,
+                Algorithm = Algorithm
+            };
         }
 
         public bool IsUserEditable { get; private set; } = true;

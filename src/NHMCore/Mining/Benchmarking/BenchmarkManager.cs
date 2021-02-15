@@ -68,14 +68,6 @@ namespace NHMCore.Mining.Benchmarking
                 _ = ApplicationStateManager.StartDeviceTask(device, true);
             }
         }
-
-        internal static void SetCurrentStatus(ComputeDevice dev, AlgorithmContainer algo, string status)
-        {
-            //var args = new AlgoStatusEventArgs(dev, algo, status);
-            // TODO append to NotificationInfo instance 
-            //OnAlgoStatusUpdate?.Invoke(null, args);
-        }
-
 #endregion
     }
 }

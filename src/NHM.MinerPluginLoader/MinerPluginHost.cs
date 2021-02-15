@@ -16,9 +16,9 @@ namespace NHM.MinerPluginLoader
 
         private static HashSet<string> _tempDirPrefixes = new HashSet<string> { "installing", "backup", "temp" };
 
-        private static bool HasTempPrefix(string dirPath)
+        private static bool IsValidPluginDirectory(string dirPath)
         {
-            return _tempDirPrefixes.Any(prefix => dirPath.Contains(prefix));
+            return _tempDirPrefixes.Any(prefix => dirPath.Contains(prefix)) == false;
         }
 
         // mutates MinerPlugin
@@ -32,8 +32,8 @@ namespace NHM.MinerPluginLoader
             try
             {
                 var loadedPlugins = Directory.GetDirectories(pluginsRootDirPath)
-                .Where(dir => HasTempPrefix(dir) == false)
-                .SelectMany(pluginDirectory => LoadPlugin(pluginDirectory))
+                .Where(IsValidPluginDirectory)
+                .SelectMany(LoadPlugin)
                 .ToList();
                 Logger.Info("MinerPluginHost", $"Plugins successfully loaded");
                 return loadedPlugins;
@@ -73,7 +73,9 @@ namespace NHM.MinerPluginLoader
                             Logger.Error("MinerPluginHost", $"Error occured while loading plugin: {e}");
                             return null;
                         }
-                    }).ToList();
+                    })
+                    .Where(id => !string.IsNullOrEmpty(id) && !string.IsNullOrWhiteSpace(id))
+                    .ToList();
                 return loadedPlugins;
             }
             catch (Exception e)

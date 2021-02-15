@@ -15,17 +15,20 @@ namespace NHMCore.Mining
 {
     public class Miner
     {
-        public static Miner CreateMinerForMining(List<MiningPair> miningPairs, string groupKey)
+        public static Miner CreateMinerForMining(List<AlgorithmContainer> algorithms, string groupKey)
         {
-            var pair = miningPairs.FirstOrDefault();
-            if (pair == null || pair.Algorithm == null) return null;
-            var algorithm = pair.Algorithm;
-            var plugin = MinerPluginsManager.GetPluginWithUuid(algorithm.MinerID);
-            if (plugin != null)
+            try
             {
-                return new Miner(plugin, miningPairs, groupKey);
+                // Assert that all the plugins are from the same plugin container
+                var plugin = algorithms.First().PluginContainer;
+                if (algorithms.Any(algo => plugin != algo.PluginContainer)) throw new Exception("Different Algorithms PluginContainers. Grouping logic broken.");
+                return new Miner(plugin, algorithms, groupKey);
             }
-            return null;
+            catch (Exception e)
+            {
+                Logger.Error("NHMCore.Mining", $"CreateMinerForMining error: {e}");
+                return null;
+            }
         }
 
         // used to identify miner instance
@@ -37,7 +40,7 @@ namespace NHMCore.Mining
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
 
-        public List<MiningPair> MiningPairs { get; private set; }
+        private List<MiningPair> _miningPairs { get; set; }
 
         public string GroupKey { get; protected set; } = "";
 
@@ -74,24 +77,15 @@ namespace NHMCore.Mining
         private readonly SemaphoreSlim _apiSemaphore = new SemaphoreSlim(1, 1);
 
         // you must use 
-        protected Miner(PluginContainer plugin, List<MiningPair> miningPairs, string groupKey)
+        protected Miner(PluginContainer plugin, List<AlgorithmContainer> algorithms, string groupKey)
         {
             _plugin = plugin;
             _miner = _plugin.CreateMiner();
 
             // just so we can set algorithms states
-            _algos = new List<AlgorithmContainer>();
-            foreach (var pair in miningPairs)
-            {
-                var cDev = AvailableDevices.GetDeviceWithUuid(pair.Device.UUID);
-                if (cDev == null) continue;
-                var algoContainer = cDev.AlgorithmSettings.FirstOrDefault(a => a.Algorithm == pair.Algorithm);
-                if (algoContainer == null) continue;
-                _algos.Add(algoContainer);
-            }
-
-            MiningPairs = miningPairs;
-            IsInit = MiningPairs != null && MiningPairs.Count > 0;
+            _algos = algorithms;
+            _miningPairs = algorithms.Select(algo => algo.ToMiningPair()).ToList();
+            IsInit = _miningPairs != null && _miningPairs.Any();
             GroupKey = groupKey;
 
             MinerDeviceName = plugin.PluginUUID;
@@ -111,7 +105,7 @@ namespace NHMCore.Mining
                 }
 
                 // contains ids
-                var ids = MiningPairs.Select(cdevs => cdevs.Device.ID.ToString()).ToList();
+                var ids = _miningPairs.Select(cdevs => cdevs.Device.ID.ToString()).ToList();
                 _minerTag = string.Format(mask, MinerDeviceName, MinerID, string.Join(",", ids));
             }
 
@@ -159,7 +153,7 @@ namespace NHMCore.Mining
                 apiData = new ApiData();
                 var perDevicePowerDict = new Dictionary<string, int>();
                 var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var perDeviceSpeeds = MiningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => (type, 0d))));
+                var perDeviceSpeeds = _miningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => (type, 0d))));
                 foreach (var kvp in perDeviceSpeeds)
                 {
                     var uuid = kvp.Item1; // kvp.UUID compiler doesn't recognize ValueTypes lib???
@@ -173,7 +167,7 @@ namespace NHMCore.Mining
             else if (apiData.AlgorithmSpeedsPerDevice != null && apiData.PowerUsagePerDevice.Count == 0)
             {
                 var perDevicePowerDict = new Dictionary<string, int>();
-                foreach (var kvp in MiningPairs)
+                foreach (var kvp in _miningPairs)
                 {
                     var uuid = kvp.Device.UUID;
                     perDevicePowerDict[uuid] = 0;
@@ -191,10 +185,10 @@ namespace NHMCore.Mining
         private async Task<object> StartAsync(CancellationToken stop, string miningLocation, string username)
         {
             _miner.InitMiningLocationAndUsername(miningLocation, username);
-            _miner.InitMiningPairs(MiningPairs);
-            EthlargementIntegratedPlugin.Instance.Start(MiningPairs);
+            _miner.InitMiningPairs(_miningPairs);
+            EthlargementIntegratedPlugin.Instance.Start(_miningPairs);
             var ret = await _miner.StartMiningTask(stop);
-            var maxTimeout = _plugin.GetApiMaxTimeout(MiningPairs);
+            var maxTimeout = _plugin.GetApiMaxTimeout(_miningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
             _algos.ForEach(a => a.IsCurrentlyMining = true);
             return ret;
@@ -203,9 +197,9 @@ namespace NHMCore.Mining
         private async Task StopAsync()
         {
             // TODO thing about this case, closing opening on switching
-            EthlargementIntegratedPlugin.Instance.Stop(MiningPairs);
+            EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
             MinerApiWatchdog.RemoveGroup(GroupKey);
-            MiningDataStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
+            MiningDataStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             await _miner.StopMiningTask();
             _algos.ForEach(a => a.IsCurrentlyMining = false);
             //if (_miner is IDisposable disposableMiner)

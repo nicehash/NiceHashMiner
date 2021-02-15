@@ -108,12 +108,7 @@ namespace NHMCore.Mining.Plugins
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
-            var filteredIntegratedPlugins = _integratedPlugins.Where(p => BlacklistedPlugins.IsNotBlacklisted(p.PluginUUID)).ToList();
-            foreach (var integratedPlugin in filteredIntegratedPlugins)
-            {
-                PluginContainer.Create(integratedPlugin);
-            }
-
+            
             (_initOnlinePlugins, OnlinePlugins) = ReadCachedOnlinePlugins();
         }
 
@@ -174,15 +169,26 @@ namespace NHMCore.Mining.Plugins
         {
             try
             {
+                var filteredIntegratedPlugins = _integratedPlugins
+                    .Where(p => BlacklistedPlugins.IsNotBlacklisted(p.PluginUUID))
+                    .Select(PluginContainer.Create);
+
                 // TODO ADD STEP AND MESSAGE
                 EthlargementIntegratedPlugin.Instance.InitAndCheckSupportedDevices(AvailableDevices.Devices.Select(dev => dev.BaseDevice));
                 CheckAndDeleteUnsupportedPlugins();
 
                 // load dll's and create plugin containers
-                var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath()).Where(uuid => BlacklistedPlugins.IsNotBlacklisted(uuid));
-                foreach (var pluginUUID in loadedPlugins) PluginContainer.Create(MinerPluginHost.MinerPlugin[pluginUUID]);
+                var externalLoadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath())
+                    .Where(BlacklistedPlugins.IsNotBlacklisted)
+                    .Where(MinerPluginHost.MinerPlugin.ContainsKey)
+                    .Select(pluginUUID => MinerPluginHost.MinerPlugin[pluginUUID])
+                    .Select(PluginContainer.Create);
+
+                var loadedPlugins = new List<PluginContainer>();
+                loadedPlugins.AddRange(filteredIntegratedPlugins);
+                loadedPlugins.AddRange(externalLoadedPlugins);
                 // init all containers
-                foreach (var plugin in PluginContainer.PluginContainers)
+                foreach (var plugin in loadedPlugins)
                 {
                     if (!plugin.IsInitialized)
                     {
@@ -201,7 +207,6 @@ namespace NHMCore.Mining.Plugins
                 // cross reference local and online list
                 var success = await GetOnlineMinerPlugins();
                 if (success) CrossReferenceInstalledWithOnline();
-                EthlargementIntegratedPlugin.Instance.ServiceEnabled = MiscSettings.Instance.UseEthlargement && Helpers.IsElevated;
                 CheckAccepted3rdPartyPlugins();
                 Logger.Info("MinerPluginsManager", "Finished initialization of miners.");
             }
@@ -216,12 +221,13 @@ namespace NHMCore.Mining.Plugins
         public static void StartLoops(CancellationToken stop)
         {
             RunninLoops = Task.Run(() => {
-                var loop1 = MainLoop(stop);
-                return Task.WhenAll(loop1);
+                var loop1 = PluginsUpdaterLoop(stop);
+                var loop2 = PluginInstaller.RestartDevicesStateLoop(stop);
+                return Task.WhenAll(loop1, loop2);
             });
         }
 
-        private static async Task MainLoop(CancellationToken stop)
+        private static async Task PluginsUpdaterLoop(CancellationToken stop)
         {
             try
             {
@@ -237,8 +243,6 @@ namespace NHMCore.Mining.Plugins
                 // TODO for now every minute check
                 // TODO debug only we should check plugin updates after we update the miner plugin API
                 //var pluginsUpdateElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromSeconds(30), false);
-
-                var restartActiveDevicesPluginsList = new List<string>();
 
                 Logger.Debug("MinerPluginsManager", $"STARTING MAIN LOOP");
                 while (isActive())
@@ -275,41 +279,7 @@ namespace NHMCore.Mining.Plugins
                             {
                                 Logger.Debug("MinerPluginsManager", $"Main loop Install/Update {pluginUUID}");
                                 _ = _minerPluginInstallTasksProgress.TryGetValue(pluginUUID, out var progress);
-                                _ = DownloadAndInstall(pluginUUID, progress);
-                            }
-                        }
-
-                        // TODO trigger active device re-evaluation after install/remove/updates are finished
-                        if (isActive() && (_minerPluginInstallRemoveStates.Count + restartActiveDevicesPluginsList.Count) > 0)
-                        {
-                            var finishedKeys = new List<string>();
-                            foreach (var kvp in _minerPluginInstallRemoveStates)
-                            {
-                                if (kvp.Value != PluginInstallRemoveState.Remove && kvp.Value != PluginInstallRemoveState.InstallOrUpdate)
-                                {
-                                    restartActiveDevicesPluginsList.Add(kvp.Key);
-                                    finishedKeys.Add(kvp.Key);
-                                }
-                                Logger.DebugDelayed("MinerPluginsManager", $"_minerPluginInstallRemoveStates {kvp.Key}-{kvp.Value.ToString()}", TimeSpan.FromSeconds(5));
-                            }
-                            var allRemoved = true;
-                            foreach (var key in finishedKeys)
-                            {
-                                allRemoved &= _minerPluginInstallRemoveStates.TryRemove(key, out var _);
-                            }
-                            if (!allRemoved)
-                            {
-                                Logger.DebugDelayed("MinerPluginsManager", $"_minerPluginInstallRemoveStates allRemoved false", TimeSpan.FromSeconds(5));
-                            }
-                            if (_minerPluginInstallRemoveStates.Count == 0)
-                            {
-                                restartActiveDevicesPluginsList.Clear();
-                                Logger.DebugDelayed("MinerPluginsManager", $"RESTART ACTIVE DEVICES", TimeSpan.FromSeconds(5));
-                                _ = ApplicationStateManager.RestartDevicesState();
-                            }
-                            else
-                            {
-                                Logger.DebugDelayed("MinerPluginsManager", $"SKIP!!!!!!!!!!!!!!! RESTART ACTIVE DEVICES", TimeSpan.FromSeconds(5));
+                                _ = DownloadAndInstall(pluginUUID, progress, stop);
                             }
                         }
                     }
@@ -328,10 +298,100 @@ namespace NHMCore.Mining.Plugins
             {
                 Logger.Debug("MinerPluginsManager", $"EXITING MAIN LOOP");
                 // cleanup
-                var pluginUUIDs = MinerPluginInstallTasks.Keys;
-                foreach (var pluginUUID in pluginUUIDs)
+                foreach (var installTask in MinerPluginInstallTasks.Values)
                 {
-                    TryCancelInstall(pluginUUID);
+                    installTask.TryCancelInstall();
+                }
+            }
+        }
+
+        private static class PluginInstaller
+        {
+            private interface IPluginInstallerCommand { string PluginUUID { get; set; } };
+            private static readonly ConcurrentQueue<IPluginInstallerCommand> _commandQueue = new ConcurrentQueue<IPluginInstallerCommand>();
+
+            private class RemoveCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } }
+            private class RemovedCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } public bool Success { get; set; } }
+            private class InstallCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } }
+            private class InstalledCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } public bool Success { get; set; } }
+
+            private static bool IsRemovalCommand(IPluginInstallerCommand c) => c is RemoveCommand || c is RemovedCommand;
+            private static bool IsInstallationCommand(IPluginInstallerCommand c) => c is InstallCommand || c is InstalledCommand;
+
+            public static void RemovePlugin(string pluginUUID)
+            {
+                _commandQueue.Enqueue(new RemoveCommand { PluginUUID = pluginUUID });
+            }
+
+            public static void RemovedPluginStatus(string pluginUUID, bool success)
+            {
+                _commandQueue.Enqueue(new RemovedCommand { PluginUUID = pluginUUID, Success = success });
+            }
+
+            public static void InstallPlugin(string pluginUUID)
+            {
+                _commandQueue.Enqueue(new InstallCommand { PluginUUID = pluginUUID });
+            }
+
+            public static void InstalledPluginStatus(string pluginUUID, bool success)
+            {
+                _commandQueue.Enqueue(new InstalledCommand { PluginUUID = pluginUUID, Success = success });
+            }
+
+            public static async Task RestartDevicesStateLoop(CancellationToken stop)
+            {
+                var lastCommandTime = DateTime.UtcNow;
+                Func<bool> checkCommandsForRestart = () => (DateTime.UtcNow - lastCommandTime).TotalSeconds >= 0.5;
+                var pairedCommands = new Dictionary<string, List<IPluginInstallerCommand>>();
+                try
+                {
+                    var checkWaitTime = TimeSpan.FromMilliseconds(50);
+                    Func<bool> isActive = () => !stop.IsCancellationRequested;
+                    Logger.Info("PluginInstaller", "Starting RestartDevicesStateLoop");
+                    while (isActive())
+                    {
+                        if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
+
+                        // TODO check last command time and after a delay execute device restart
+                        if (_commandQueue.IsEmpty && pairedCommands.Any() && checkCommandsForRestart())
+                        {
+                            var keys = pairedCommands.Keys.ToArray();
+                            foreach (var key in keys)
+                            {
+                                var commands = pairedCommands[key];
+                                var removal = commands.Where(IsRemovalCommand);
+                                var installation = commands.Where(IsInstallationCommand);
+                                if (removal.Any() && installation.Any())
+                                {
+                                    Logger.Error("PluginInstaller", $"Plugin {key} has installation and removal commands at same time!!!");
+                                    pairedCommands.Remove(key);
+                                }
+                                else if (removal.Count() > 1 || installation.Count() > 1)
+                                {
+                                    pairedCommands.Remove(key);
+                                }
+                            }
+                            // when we have no commands pending restart devices
+                            if (!pairedCommands.Any()) await ApplicationStateManager.RestartDevicesState();
+                        }
+
+                        // command handling
+                        IPluginInstallerCommand command = null;
+                        if (!_commandQueue.TryDequeue(out command) || command == null) continue;
+                        // handle commands
+                        if (!pairedCommands.ContainsKey(command.PluginUUID)) pairedCommands[command.PluginUUID] = new List<IPluginInstallerCommand>() { };
+                        pairedCommands[command.PluginUUID].Add(command);
+                        lastCommandTime = DateTime.UtcNow;
+                    }
+                }
+                catch (TaskCanceledException e)
+                {
+                    Logger.Debug("PluginInstaller", $"RestartDevicesStateLoop TaskCanceledException: {e.Message}");
+                }
+                finally
+                {
+                    Logger.Info("PluginInstaller", "Exiting RestartDevicesStateLoop run cleanup");
+                    // cleanup
                 }
             }
         }
@@ -421,34 +481,28 @@ namespace NHMCore.Mining.Plugins
                     string statusText = PluginInstallProgressStateToString(state, plugin.Name, progressPerc); 
                     progress?.Report((statusText, progressPerc));
                 });
-                await DownloadAndInstall(plugin.PluginUUID, wrappedProgress);
+                await DownloadAndInstall(plugin.PluginUUID, wrappedProgress, stop);
             }
         }
 
-        internal static bool CanGetPluginVersionAndUUID(IMinerPlugin plugin)
+        internal static bool CanFallbackAndMineWithPlugin(IMinerPlugin plugin)
         {
             try
             {
+                // call to check if it throws and exception
                 var uuid = plugin.PluginUUID;
                 var version = plugin.Version;
-                return true;
+                // finally we must guarantee that we don't have any missing miner files
+                return plugin is IBinaryPackageMissingFilesChecker impl && impl.CheckBinaryPackageMissingFiles().Count() == 0;
             }
             catch (Exception)
             {
+                // for what ever reason skip this plugin
                 return false;
             }
         }
 
-        internal static bool PluginHasMinerBins(IMinerPlugin plugin)
-        {
-            try
-            {
-                return plugin is IBinaryPackageMissingFilesChecker impl && impl.CheckBinaryPackageMissingFiles().Count() == 0;
-            }
-            catch (Exception)
-            {}
-            return false;
-        }
+        public static List<PluginPackageInfoCR> EulaConfirm { get; private set; } = new List<PluginPackageInfoCR>();
 
         private static void CheckAccepted3rdPartyPlugins()
         {
@@ -471,12 +525,11 @@ namespace NHMCore.Mining.Plugins
                 {
                     var oldPlugins = Directory.GetFiles(Paths.MinerPluginsPath(p.PluginUUID, "dlls"), "*.dll", SearchOption.AllDirectories)
                         .SelectMany(MinerPluginHost.LoadPluginsFromDllFile)
-                        .Where(CanGetPluginVersionAndUUID)
+                        .Where(CanFallbackAndMineWithPlugin)
                         .Where(plugin => plugin.PluginUUID == p.PluginUUID)
-                        .Where(PluginHasMinerBins)
                         .OrderByDescending(plugin => plugin.Version)
                         .ToList();
-                    if (oldPlugins.Count > 0) PluginContainer.RemovePluginContainer(p);
+                    if (oldPlugins.Any()) PluginContainer.RemovePluginContainer(p);
                     foreach (var fallbackPlugin in oldPlugins)
                     {
                         // init all containers
@@ -505,8 +558,6 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public static List<PluginPackageInfoCR> EulaConfirm { get; private set; } = new List<PluginPackageInfoCR>();
-
         public static bool HasMissingMiners()
         {
             var anyPluginWithMissingPackageFiles = PluginContainer.PluginContainers
@@ -516,33 +567,45 @@ namespace NHMCore.Mining.Plugins
             return anyPluginWithMissingPackageFiles;
         }
 
-        public static void RemovePlugin(string pluginUUID, bool crossReferenceInstalledWithOnline = true)
+        private static async Task DelayedPluginDelete(string pluginUUID)
         {
-            // assume ok
-            var isOk = true;
+            var deletePath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID);
+            var start = DateTime.UtcNow;
+            while(true)
+            {
+                var elapsedAfterStart = DateTime.UtcNow - start;
+                if (elapsedAfterStart.TotalSeconds > 15) return;
+                await Task.Delay(TimeSpan.FromSeconds(0.1));
+                try
+                {
+                    if (Directory.Exists(deletePath))
+                    {
+                        Directory.Delete(deletePath, true);
+                        return;
+                    }
+                }
+                catch {}
+            }
+        }
+
+        public static async Task RemovePlugin(string pluginUUID, bool crossReferenceInstalledWithOnline = true)
+        {
+            BlacklistedPlugins.AddToBlacklist(pluginUUID);
             try
             {
-                AcceptedPlugins.Remove(pluginUUID);
+                PluginInstaller.RemovePlugin(pluginUUID);
                 if (EthlargementIntegratedPlugin.Instance.PluginUUID == pluginUUID) EthlargementIntegratedPlugin.Instance.Remove();
-                _minerPluginInstallRemoveStates.TryAdd(pluginUUID, PluginInstallRemoveState.Remove);
-                var deletePath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID);
+
+                AcceptedPlugins.Remove(pluginUUID);
                 MinerPluginHost.MinerPlugin.Remove(pluginUUID);
                 var oldPlugins = PluginContainer.PluginContainers.Where(p => p.PluginUUID == pluginUUID).ToArray();
-                foreach (var old in oldPlugins)
-                {
-                    PluginContainer.RemovePluginContainer(old);
-                }
-                // TODO this remove is probably redundant CHECK
-                foreach (var dev in AvailableDevices.Devices)
-                {
-                    dev.RemovePluginAlgorithms(pluginUUID);
-                }
+                foreach (var old in oldPlugins) PluginContainer.RemovePluginContainer(old);
 
                 // remove from cross ref dict
                 if (PluginsPackagesInfosCRs.ContainsKey(pluginUUID))
                 {
                     PluginsPackagesInfosCRs[pluginUUID].LocalInfo = null;
-                    // TODO we might not have any online reference so remove it in this case
+                    // we might not have any online reference so remove it in this case
                     if (PluginsPackagesInfosCRs[pluginUUID].OnlineInfo == null)
                     {
                         PluginsPackagesInfosCRs.Remove(pluginUUID);
@@ -550,27 +613,16 @@ namespace NHMCore.Mining.Plugins
                 }
 
                 if (crossReferenceInstalledWithOnline) CrossReferenceInstalledWithOnline();
-                // TODO before deleting you will need to unload the dll
-                if (Directory.Exists(deletePath))
-                {
-                    Directory.Delete(deletePath, true);
-                }
-            } catch(Exception e)
+                _ = DelayedPluginDelete(pluginUUID);
+            }
+            catch (Exception e)
             {
-                isOk = false;
                 Logger.Error("MinerPluginsManager", $"Error occured while removing {pluginUUID} plugin: {e.Message}");
             }
             finally
             {
-                if (isOk)
-                {
-                    BlacklistedPlugins.AddToBlacklist(pluginUUID);
-                    _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.RemoveSuccess, PluginInstallRemoveState.Remove);
-                }
-                else
-                {
-                    _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.RemoveFailed, PluginInstallRemoveState.Remove);
-                }
+                PluginInstaller.RemovedPluginStatus(pluginUUID, true);
+                await Task.CompletedTask;
             }
         }
 
@@ -707,7 +759,8 @@ namespace NHMCore.Mining.Plugins
                 }
 
                 return true;
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Logger.Error("MinerPluginsManager", $"Error occured while getting online miner plugins: {e.Message}");
             }
@@ -829,8 +882,6 @@ namespace NHMCore.Mining.Plugins
         private static ConcurrentDictionary<string, MinerPluginInstallTask> MinerPluginInstallTasks = new ConcurrentDictionary<string, MinerPluginInstallTask>();
         // with WPF we have only one Progress 
         private static ConcurrentDictionary<string, IProgress<Tuple<PluginInstallProgressState, int>>> _minerPluginInstallTasksProgress = new ConcurrentDictionary<string, IProgress<Tuple<PluginInstallProgressState, int>>>();
-        
-        private static ConcurrentDictionary<string, PluginInstallRemoveState> _minerPluginInstallRemoveStates = new ConcurrentDictionary<string, PluginInstallRemoveState>();
 
         public static void InstallAddProgress(string pluginUUID, IProgress<Tuple<PluginInstallProgressState, int>> progress)
         {
@@ -857,24 +908,18 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public static void TryCancelInstall(string pluginUUID)
+        public static async Task DownloadAndInstall(string pluginUUID, IProgress<Tuple<PluginInstallProgressState, int>> progress, CancellationToken stop)
         {
-            if (MinerPluginInstallTasks.TryRemove(pluginUUID, out var installTask))
-            {
-                installTask.TryCancelInstall();
-            }
-        }
+            if (MinerPluginInstallTasks.ContainsKey(pluginUUID)) return;
 
-        public static async Task DownloadAndInstall(string pluginUUID, IProgress<Tuple<PluginInstallProgressState, int>> progress)
-        {
-            // TODO skip install if alredy in progress
             var addSuccess = false;
-            _minerPluginInstallRemoveStates.TryAdd(pluginUUID, PluginInstallRemoveState.InstallOrUpdate);
-            var installResult = PluginInstallProgressState.Canceled;
+            var installSuccess = false;
             using (var minerInstall = new MinerPluginInstallTask())
+            using (var tcs = CancellationTokenSource.CreateLinkedTokenSource(stop, minerInstall.CancelInstallToken))
             {
                 try
                 {
+                    PluginInstaller.InstallPlugin(pluginUUID);
                     var pluginPackageInfo = PluginsPackagesInfosCRs[pluginUUID];
                     addSuccess = MinerPluginInstallTasks.TryAdd(pluginUUID, minerInstall);
                     if (progress != null)
@@ -882,37 +927,28 @@ namespace NHMCore.Mining.Plugins
                         progress?.Report(Tuple.Create(PluginInstallProgressState.Pending, 0));
                         minerInstall.AddProgress(progress);
                     }
+                    var installResult = PluginInstallProgressState.Canceled;
                     if (pluginPackageInfo.PluginUUID == EthlargementIntegratedPlugin.Instance.PluginUUID)
                     {
-                        installResult = await DownloadAndInstallEthlargementIntegratedPlugin(pluginPackageInfo, minerInstall, minerInstall.CancelInstallToken);
+                        installResult = await DownloadAndInstallEthlargementIntegratedPlugin(pluginPackageInfo, minerInstall, tcs.Token);
                     }
                     else
                     {
-                        installResult = await DownloadAndInstall(pluginPackageInfo, minerInstall, minerInstall.CancelInstallToken);
+                        installResult = await DownloadAndInstall(pluginPackageInfo, minerInstall, tcs.Token);
                     }
+                    installSuccess = installResult == PluginInstallProgressState.Success;
                 }
                 finally
                 {
-                    if (addSuccess)
-                    {
-                        BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
-                        MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
-                    }
-                    if (installResult == PluginInstallProgressState.Success)
-                    {
-                        AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, true);
-                        _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.InstallOrUpdateSuccess, PluginInstallRemoveState.InstallOrUpdate);
-                    }
-                    else
-                    {
-                        AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, false);
-                        _minerPluginInstallRemoveStates.TryUpdate(pluginUUID, PluginInstallRemoveState.InstallOrUpdateFailed, PluginInstallRemoveState.InstallOrUpdate);
-                    }
+                    PluginInstaller.InstalledPluginStatus(pluginUUID, installSuccess);
+                    MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
+                    if (addSuccess) BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
+
+                    
+                    AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, installSuccess);
                 }
             }
-        }
-
-
+        }        
 
         internal static async Task<PluginInstallProgressState> DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<Tuple<PluginInstallProgressState, int>> progress, CancellationToken stop)
         {

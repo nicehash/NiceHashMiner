@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
+using System.Collections.Generic;
+using System.Net.Http;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -21,6 +23,7 @@ namespace NiceHashMiner.Views.Login
         {
             InitializeComponent();
         }
+
 
         private object _lock = new object();
         private Timer _evalTimer;
@@ -56,7 +59,8 @@ namespace NiceHashMiner.Views.Login
 
         private void NavigateAndStartTimer()
         {
-            browser.Navigate(Links.LoginNHM);
+            var headers = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("User-Agent", "NHM/" + System.Windows.Forms.Application.ProductVersion) };
+            browser.Navigate(new Uri(Links.LoginNHM), HttpMethod.Get, null, headers);
             _evalTimer = new Timer((s) => { Dispatcher.Invoke(EvalTimer_Elapsed); }, null, 100, 1000);
         }
 

@@ -69,7 +69,7 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public static PluginContainer Create(IMinerPlugin plugin)
+        internal static PluginContainer Create(IMinerPlugin plugin)
         {
             var newPlugin = new PluginContainer(plugin);
             AddPluginContainer(newPlugin);
@@ -122,9 +122,9 @@ namespace NHMCore.Mining.Plugins
         public bool IsCompatible { get; private set; } = false;
         public bool IsInitialized { get; private set; } = false;
         // algos from and for the plugin
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> _cachedAlgorithms { get; } = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+        private Dictionary<BaseDevice, IReadOnlyList<Algorithm>> _cachedAlgorithms { get; } = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
         // algos for NiceHashMiner Client
-        public Dictionary<string, List<AlgorithmContainer>> _cachedNiceHashMinerAlgorithms { get; } = new Dictionary<string, List<AlgorithmContainer>>();
+        private Dictionary<string, List<AlgorithmContainer>> _cachedNiceHashMinerAlgorithms { get; } = new Dictionary<string, List<AlgorithmContainer>>();
 
         public bool InitPluginContainer()
         {
@@ -185,9 +185,6 @@ namespace NHMCore.Mining.Plugins
                     _cachedNiceHashMinerAlgorithms[deviceUUID] = algos;
                 }
 
-                //check for version mismatch
-                DeleteVersionFile();
-
                 // Ethlargement extra check
                 if (_plugin == EthlargementIntegratedPlugin.Instance)
                 {
@@ -203,22 +200,6 @@ namespace NHMCore.Mining.Plugins
 
 
             return true;
-        }
-
-        private void DeleteVersionFile()
-        {
-            try
-            {
-                var versionFilePath = Paths.MinerPluginsPath(PluginUUID, "version.txt");
-                if (File.Exists(versionFilePath))
-                {
-                    File.Delete(versionFilePath);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(LogTag, $"Version mismatch delete error: {e.Message}");
-            }
         }
 
         private bool _initInternalsCalled = false;
@@ -285,6 +266,11 @@ namespace NHMCore.Mining.Plugins
 
         public string PluginUUID { get; private set; }
 
+        public bool CanGroupAlgorithmContainer(AlgorithmContainer a, AlgorithmContainer b)
+        {
+            return CanGroup(a.ToMiningPair(), b.ToMiningPair());
+        }
+
         public bool CanGroup(MiningPair a, MiningPair b)
         {
             return CheckExec(nameof(CanGroup), () => _plugin.CanGroup(a, b), false);
@@ -295,11 +281,7 @@ namespace NHMCore.Mining.Plugins
             return CheckExec(nameof(CreateMiner), () => _plugin.CreateMiner(), null);
         }
 
-        //// GetSupportedAlgorithms is part of the Init
-        //public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
-        //{
-        //    return CheckExec(nameof(GetSupportedAlgorithms), () => _plugin.GetSupportedAlgorithms(devices), null);
-        //}
+
         #endregion IMinerPlugin
 
         public bool HasMisingBinaryPackageFiles()
@@ -308,7 +290,7 @@ namespace NHMCore.Mining.Plugins
         }
 
         #region IBinaryPackageMissingFilesChecker
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        private IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var defaultRet = Enumerable.Empty<string>();
             if (_plugin is IBinaryPackageMissingFilesChecker impl)
@@ -320,6 +302,7 @@ namespace NHMCore.Mining.Plugins
         #endregion IBinaryPackageMissingFilesChecker
 
         #region IDevicesCrossReference
+#warning Check this with NVIDIA and AMD driver recovery 
         private bool _devicesCrossReference = false;
         public Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {

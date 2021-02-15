@@ -240,7 +240,7 @@ _DEVICES_
                         // speed print and reset
                         _ = await ExecuteCommand(@"{""id"":1,""method"":""worker.print.efficiencies"",""params"":[]}", ct.Token);
                     }
-                    catch (TaskCanceledException e)
+                    catch (TaskCanceledException)
                     {
                         break;
                     }
@@ -251,7 +251,7 @@ _DEVICES_
                 }
                 Logger.Info("EXCAVATOR-MinerSpeedsLoop", $"EXIT WHILE");
             }
-            catch (TaskCanceledException e)
+            catch (TaskCanceledException)
             {
             }
             catch (Exception ex)

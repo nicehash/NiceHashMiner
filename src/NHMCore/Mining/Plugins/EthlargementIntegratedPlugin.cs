@@ -20,36 +20,38 @@ namespace NHMCore.Mining.Plugins
 {
     public class EthlargementIntegratedPlugin : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackgroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource, IGetPluginMetaInfo
     {
-        public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();
-
-        public string PluginUUID => "Ethlargement";
-
-        public bool IsSystemElevated => Helpers.IsElevated;
-        public bool SystemContainsSupportedDevicesNotSystemElevated => SystemContainsSupportedDevices && !Helpers.IsElevated;
-
+        #region IMinerPlugin
         public Version Version => new Version(15, 0);
         public string Name => "Ethlargement";
 
         public string Author => "info@nicehash.com";
 
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
-        {
-            // return empty
-            return new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-        }
+        public string PluginUUID => "Ethlargement";
+
+        #region IMinerPlugin stubs
+        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices) => new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+        public IMiner CreateMiner() => null;
+        public bool CanGroup(MiningPair a, MiningPair b) => false;
+        #endregion IMinerPlugin stubs
+        #endregion IMinerPlugin
+
+        private EthlargementIntegratedPlugin() { }
+        public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();
+
+        private static readonly HashSet<string> _activeDeviceUUIDs = new HashSet<string>();
+
 
         public bool ServiceEnabled { get; set; } = false;
 
-        // register in GetSupportedAlgorithms and filter in InitInternals
-        private static Dictionary<string, string> _registeredSupportedDevices = new Dictionary<string, string>();
+        private static bool ShouldRun => _activeDeviceUUIDs.Any();
 
-        private bool IsServiceDisabled => !IsInstalled && !ServiceEnabled && _registeredSupportedDevices.Count > 0;
+        private bool _systemContainsSupportedDevices = false;
+        public bool SystemContainsSupportedDevices => _systemContainsSupportedDevices;
 
-        private static Dictionary<string, AlgorithmType> _devicesUUIDActiveAlgorithm = new Dictionary<string, AlgorithmType>();
-
-        private static bool ShouldRun => _devicesUUIDActiveAlgorithm.Values.Any(Instance.IsSupportedAlgorithm);
-
-        public bool SystemContainsSupportedDevices => _registeredSupportedDevices.Count > 0;
+        public bool SystemContainsSupportedDevicesNotSystemElevated => SystemContainsSupportedDevices && !Helpers.IsElevated;
+        
+        // used inside XAML settings form
+        public bool IsSystemElevated => Helpers.IsElevated;
 
         public bool IsInstalled
         {
@@ -82,36 +84,52 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        private static object _startStopLock = new object();
+        private bool CanStartMiningPair(MiningPair pair)
+        {
+            try
+            {
+                if (!IsSupportedDeviceName(pair.Device.Name)) return false;
+                if (!pair.Algorithm.IDs.Any(IsSupportedAlgorithm)) return false;
+                if (!IsSupportedMinerPluginUUID(pair.Algorithm.MinerID)) return false;
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("ETHLARGEMENT", $"CanStartMiningPair error: {e.Message}");
+                return false;
+            }
+        }
 
+        private bool HasStartRequirements()
+        {
+            // we can start only on elevated systems with supported GPUs if the plugin is installed
+            if (!Helpers.IsElevated) return false;
+            if (!_systemContainsSupportedDevices) return false;
+            if (!IsInstalled) return false;
+            if (!ServiceEnabled) return false;
+
+            return true;
+        }
+
+        private static object _startStopLock = new object();
+        
         public void Start(IEnumerable<MiningPair> miningPairs)
         {
             lock (_startStopLock)
             {
-                if (IsServiceDisabled)
+                if (HasStartRequirements())
                 {
-                    StopEthlargementProcess();
-                    return;
-                }
-
-                // check if any mining pair is supported and set current active 
-                var supportedUUIDs = _registeredSupportedDevices.Select(kvp => kvp.Key);
-                var supportedPairs = miningPairs.Where(pair => supportedUUIDs.Contains(pair.Device.UUID) && !ShouldIgnoreMinerPluginUUIDs(pair.Algorithm.MinerID));
-                if (supportedPairs.Count() == 0) return;
-
-                foreach (var pair in supportedPairs)
-                {
-                    var uuid = pair.Device.UUID;
-                    var algorithmType = pair.Algorithm.FirstAlgorithmType;
-                    _devicesUUIDActiveAlgorithm[uuid] = algorithmType;
-                }
-
-                if (ShouldRun)
-                {
-                    StartEthlargementProcess();
+                    // check if any mining pair is supported and set as active
+                    var startDeviceUUIDs = miningPairs
+                        .Where(CanStartMiningPair)
+                        .Select(pair => pair.Device.UUID)
+                        .ToArray();
+                    foreach (var deviceUUID in startDeviceUUIDs) _activeDeviceUUIDs.Add(deviceUUID);
+                    if (ShouldRun) StartEthlargementProcess();
                 }
                 else
                 {
+                    // Not sure about this but close stop in any other case
                     StopEthlargementProcess();
                 }
             }
@@ -121,38 +139,26 @@ namespace NHMCore.Mining.Plugins
         {
             lock (_startStopLock)
             {
-                if (IsServiceDisabled)
+                // update _activeDeviceUUIDs 
+                if (miningPairs == null)
                 {
-                    StopEthlargementProcess();
-                    return;
-                }
-
-                var stopAll = miningPairs == null;
-                // stop all
-                if (stopAll)
-                {
-                    // TODO STOP Ethlargement
-                    var keys = _devicesUUIDActiveAlgorithm.Keys.ToArray();
-                    foreach (var key in keys) _devicesUUIDActiveAlgorithm[key] = AlgorithmType.NONE;
-                    StopEthlargementProcess();
+                    // stop all
+                    _activeDeviceUUIDs.Clear();
                 }
                 else
                 {
-                    // check if any mining pair is supported and set current active 
-                    var supportedUUIDs = _registeredSupportedDevices.Select(kvp => kvp.Key);
-                    var supportedPairs = miningPairs
-                        .Where(pair => supportedUUIDs.Contains(pair.Device.UUID))
-                        .Select(pair => pair.Device.UUID).ToArray();
-                    if (supportedPairs.Count() == 0) return;
+                    // check what mining pairs to stop
+                    var devicesToStop = miningPairs
+                        .Select(pair => pair.Device.UUID)
+                        .Where(_activeDeviceUUIDs.Contains)
+                        .ToArray();
+                    foreach (var deviceUUID in devicesToStop) _activeDeviceUUIDs.Remove(deviceUUID);
+                }
 
-                    foreach (var uuid in supportedPairs)
-                    {
-                        _devicesUUIDActiveAlgorithm[uuid] = AlgorithmType.NONE;
-                    }
-                    if (!ShouldRun)
-                    {
-                        StopEthlargementProcess();
-                    }
+                // check if we should stop
+                if (!ShouldRun)
+                {
+                    StopEthlargementProcess();
                 }
             }
         }
@@ -166,7 +172,7 @@ namespace NHMCore.Mining.Plugins
             return binPath;
         }
 
-        public static string BinName = "ETHlargementPill-r2.exe";
+        public static readonly string BinName = "ETHlargementPill-r2.exe";
 
         public virtual string EthlargementBinPath()
         {
@@ -265,20 +271,8 @@ namespace NHMCore.Mining.Plugins
 
         #endregion Ethlargement Process
 
-        #region IMinerPlugin stubs
-        public IMiner CreateMiner()
-        {
-            return null;
-        }
-
-        public bool CanGroup(MiningPair a, MiningPair b)
-        {
-            return false;
-        }
-        #endregion IMinerPlugin stubs
-
         #region Internal settings
-
+        
         public virtual void InitInternals(){} // STUB
 
         public void InitAndCheckSupportedDevices(IEnumerable<BaseDevice> devices)
@@ -310,8 +304,7 @@ namespace NHMCore.Mining.Plugins
             if (readFromFileEnvSysVars != null && readFromFileEnvSysVars.UseUserSettings) _ethlargementSettings = readFromFileEnvSysVars;
 
             // Filter out supported ones
-            _registeredSupportedDevices = new Dictionary<string, string>();
-            devices.Where(dev => IsSupportedDeviceName(dev.Name)).ToList().ForEach(dev => _registeredSupportedDevices[dev.UUID] = dev.Name);
+            _systemContainsSupportedDevices = devices.Any(dev => IsSupportedDeviceName(dev.Name));
             OnPropertyChanged(nameof(SystemContainsSupportedDevices));
             OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
         }
@@ -350,7 +343,9 @@ namespace NHMCore.Mining.Plugins
         {
             try
             {
-                return _ethlargementSettings?.SupportedDeviceNames?.Any(supportedPart => deviceName.Contains(supportedPart)) ?? false;
+                var deviceNameLowered = deviceName.ToLower();
+                var supportedPartsLowered = _ethlargementSettings?.SupportedDeviceNames.Select(name => name.ToLower());
+                return supportedPartsLowered.Any(namePart => deviceNameLowered.Contains(namePart));
             }
             catch
             {
@@ -358,11 +353,12 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        protected bool ShouldIgnoreMinerPluginUUIDs(string pluginUUID)
+        protected bool IsSupportedMinerPluginUUID(string pluginUUID)
         {
             try
             {
-                return _ethlargementSettings?.IgnoreMinerPluginUUIDs?.Contains(pluginUUID) ?? false;
+                var ignore = _ethlargementSettings?.IgnoreMinerPluginUUIDs?.Contains(pluginUUID) ?? false;
+                return !ignore;
             }
             catch
             {
