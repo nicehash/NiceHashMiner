@@ -1,10 +1,8 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
-using NHM.MinerPlugin;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Grouping;
-using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
 using NHMCore.Switching;
 using NHMCore.Utils;
@@ -28,7 +26,6 @@ namespace NHMCore.Mining
         // assume we have internet
         private static bool _isConnectedToInternet = true;
 
-        private static object _lock = new object();
         public static bool IsMiningEnabled => _miningDevices.Count > 0;
 
         private static CancellationToken stopMiningManager = CancellationToken.None;
@@ -594,16 +591,13 @@ namespace NHMCore.Mining
             return (currentProfit, prevStateProfit);
         }
 
-        private static List<MiningPair> GetProfitableMiningPairs()
+        private static List<AlgorithmContainer> GetMostProfitableAlgorithmContainers()
         {
-            var profitableMiningPairs = new List<MiningPair>();
-            foreach (var device in _miningDevices)
-            {
-                // check if device has profitable algo
-                if (!device.HasProfitableAlgo()) continue;
-                profitableMiningPairs.Add(device.GetMostProfitablePair());
-            }
-            return profitableMiningPairs;
+            var profitableAlgorithmContainers = _miningDevices
+                .Where(device => device.HasProfitableAlgo())
+                .Select(device => device.GetMostProfitableAlgorithmContainer())
+                .ToList();
+            return profitableAlgorithmContainers;
         }
 
         private static async Task SwichMostProfitableGroupUpMethodTask(Dictionary<AlgorithmType, double> normalizedProfits, bool skipProfitsThreshold)
@@ -685,7 +679,7 @@ namespace NHMCore.Mining
 
             // grouping starting and stopping
             // group new miners 
-            var newGroupedMiningPairs = GroupingUtils.GetGroupedMiningPairs(GetProfitableMiningPairs());
+            var newGroupedMiningPairs = GroupingUtils.GetGroupedAlgorithmContainers(GetMostProfitableAlgorithmContainers());
             // check newGroupedMiningPairs and running Groups to figure out what to start/stop and keep running
             var currentRunningGroups = _runningMiners.Keys.ToArray();
             // check which groupMiners should be stopped and which ones should be started and which to keep running

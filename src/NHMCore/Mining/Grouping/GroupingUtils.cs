@@ -1,5 +1,4 @@
-﻿using NHM.MinerPlugin;
-using NHMCore.Mining.Plugins;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,63 +6,50 @@ namespace NHMCore.Mining.Grouping
 {
     public static class GroupingUtils
     {
-        public static string CalcGroupedDevicesKey(SortedSet<string> sortedKeys, string algorithmStringID)
+        private static string CalcGroupedDevicesKey(List<AlgorithmContainer> group, string algorithmStringID)
         {
+            var sortedKeys = new SortedSet<string>(group.Select(pair => pair.ComputeDevice.Uuid));
             var key = $"{algorithmStringID}({string.Join(",", sortedKeys)})";
             return key;
         }
 
-        public static bool ShouldGroup(MiningPair a, MiningPair b)
+        private static bool CanGroupAlgorithmContainer(AlgorithmContainer a, AlgorithmContainer b)
         {
-            if (a.Algorithm.MinerID != b.Algorithm.MinerID) return false;
-            if (a.Device.UUID == b.Device.UUID) return false;
-            var plugin = MinerPluginsManager.GetPluginWithUuid(a.Algorithm.MinerID);
-            if (plugin == null) return false;
-            var canGroup = plugin.CanGroup(a, b);
-            return canGroup;
+            // must be from the same plugin container instance (same miner binary)
+            if (a.PluginContainer != b.PluginContainer) return false;
+            // never group same devices
+            if (a.ComputeDevice.Uuid == b.ComputeDevice.Uuid) return false;
+            return a.PluginContainer.CanGroupAlgorithmContainer(a, b);
         }
 
-        public static Dictionary<string, List<MiningPair>> GetGroupedMiningPairs(List<MiningPair> profitableMiningPairs)
-        {
-            // group new miners 
-            var newGroupedMiningPairs = new Dictionary<string, List<MiningPair>>();
-            // group devices with same supported algorithms
-            var currentGroupedDevices = new List<SortedSet<string>>();
-            for (var first = 0; first < profitableMiningPairs.Count; ++first)
-            {
-                var firstDev = profitableMiningPairs[first].Device;
-                var firstAlgo = profitableMiningPairs[first].Algorithm;
-                // check if is in group
-                var isInGroup = currentGroupedDevices.Any(groupedDevices => groupedDevices.Contains(firstDev.UUID));
-                // if device is not in any group create new group and check if other device should group
-                if (isInGroup == false)
-                {
-                    var newGroup = new SortedSet<string>();
-                    var miningPairs = new List<MiningPair>()
-                        {
-                            profitableMiningPairs[first]
-                        };
-                    newGroup.Add(firstDev.UUID);
-                    for (var second = first + 1; second < profitableMiningPairs.Count; ++second)
-                    {
-                        // check if we should group
-                        var firstPair = profitableMiningPairs[first];
-                        var secondPair = profitableMiningPairs[second];
-                        if (ShouldGroup(firstPair, secondPair))
-                        {
-                            var secondDev = profitableMiningPairs[second].Device;
-                            newGroup.Add(secondDev.UUID);
-                            miningPairs.Add(profitableMiningPairs[second]);
-                        }
-                    }
+        private static bool IsCurrentWithinGroup(AlgorithmContainer current, List<AlgorithmContainer> group) => group.Any(p => p.ComputeDevice.Uuid == current.ComputeDevice.Uuid);
 
-                    currentGroupedDevices.Add(newGroup);
-                    var newGroupKey = CalcGroupedDevicesKey(newGroup, firstAlgo.AlgorithmStringID);
-                    newGroupedMiningPairs[newGroupKey] = miningPairs;
-                }
+        public static Dictionary<string, List<AlgorithmContainer>> GetGroupedAlgorithmContainers(List<AlgorithmContainer> profitableAlgorithmContainers)
+        {
+            // Group compatible mining pairs into miners.
+            // #1 mining pairs are compatible if they use the same miner binary (same Plugin/Miner UUID + Version)
+            // #2 after that we check the plugins CanGroup (most often the case is different devices same algorithm but this is dependant on the plugin)
+            // The less miner instances we have the better.
+            var groupedAlgorithms = new Dictionary<string, List<AlgorithmContainer>>();
+            Func<AlgorithmContainer, bool> isAlreadyGrouped = (AlgorithmContainer current) => groupedAlgorithms.Values.Any(group => IsCurrentWithinGroup(current, group));
+
+            foreach (var current in profitableAlgorithmContainers)
+            {
+                if (isAlreadyGrouped(current)) continue;
+
+                var newGroup = new List<AlgorithmContainer>() { current };
+                var restInGroup = profitableAlgorithmContainers
+                    .SkipWhile(algo => current != algo)
+                    .Where(algo => !isAlreadyGrouped(algo))
+                    .Where(algo => CanGroupAlgorithmContainer(current, algo));
+                newGroup.AddRange(restInGroup);
+
+                // save newly grouped mining pairs
+                var newGroupKey = CalcGroupedDevicesKey(newGroup, current.AlgorithmStringID);
+                groupedAlgorithms[newGroupKey] = newGroup;
             }
 
-            return newGroupedMiningPairs;
+            return groupedAlgorithms;
         }
     }
 }

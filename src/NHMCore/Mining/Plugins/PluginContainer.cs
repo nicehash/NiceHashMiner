@@ -266,6 +266,11 @@ namespace NHMCore.Mining.Plugins
 
         public string PluginUUID { get; private set; }
 
+        public bool CanGroupAlgorithmContainer(AlgorithmContainer a, AlgorithmContainer b)
+        {
+            return CanGroup(a.ToMiningPair(), b.ToMiningPair());
+        }
+
         public bool CanGroup(MiningPair a, MiningPair b)
         {
             return CheckExec(nameof(CanGroup), () => _plugin.CanGroup(a, b), false);
