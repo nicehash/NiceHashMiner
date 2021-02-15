@@ -96,10 +96,17 @@ namespace NHMCore.ApplicationState
 
         private void CalculateFiatBalance()
         {
-            var usdAmount = (BtcBalance * GetUsdExchangeRate()) ?? 0;
-            FiatBalance = ConvertToActiveCurrency(usdAmount);
-            // set display
-            DisplayFiatBalance = $"≈ {(FiatBalance ?? 0):F2} {SelectedFiatCurrency}";
+            if (BtcBalance.HasValue)
+            {
+                var usdAmount = (BtcBalance * GetUsdExchangeRate()) ?? 0;
+                FiatBalance = ConvertToActiveCurrency(usdAmount);
+                // set display
+                DisplayFiatBalance = $"≈ {(FiatBalance ?? 0):F2} {SelectedFiatCurrency}";
+            }
+            else
+            {
+                DisplayFiatBalance = "";
+            }
             OnPropertyChanged(nameof(DisplayFiatBalance));
             OnPropertyChanged(nameof(ExchangeTooltip));
         }
