@@ -239,7 +239,10 @@
                                Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverterFalse}}">
                         <TextBlock Style="{StaticResource local.StatsBTCValueText}" Margin="0,0,4,0" Text="Connecting" />
                     </WrapPanel>
-                    <TextBlock Style="{StaticResource local.StatsFiatEstimateText}"  Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding BalanceAndExchangeRates.ExchangeTooltip}"/>
+                    <TextBlock Style="{StaticResource local.StatsFiatEstimateText}" 
+                               Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"
+                               ToolTip="{Binding ExchangeTooltip}" 
+                               Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverter}}"/>
                 </StackPanel>
                 <GridSplitter Grid.Row="1" Grid.Column="8" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Collapsed"/>
                 <StackPanel Grid.Row="1" Grid.Column="9" Background="{DynamicResource BackgroundColor}" ToolTip="{Binding BalanceAndExchangeRates.ExchangeTooltip}" Visibility="Collapsed">
