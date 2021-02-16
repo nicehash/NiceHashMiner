@@ -29,7 +29,7 @@ namespace NHMCore.Utils
                     File.Create(Paths.RootPath("do.runasadmin"));
                     ApplicationStateManager.ExecuteApplicationExit();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Logger.Error("NICEHASH", $"RunAsAdmin IsLauncher error: {e.Message}");
                 }

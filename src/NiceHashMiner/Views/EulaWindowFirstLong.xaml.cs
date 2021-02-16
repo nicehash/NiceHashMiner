@@ -1,14 +1,10 @@
-﻿using NiceHashMiner.Views.Common;
-using NiceHashMiner.Views.Common.NHBase;
-using System;
-using System.ComponentModel;
+﻿using NiceHashMiner.Views.Common.NHBase;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace NiceHashMiner.Views

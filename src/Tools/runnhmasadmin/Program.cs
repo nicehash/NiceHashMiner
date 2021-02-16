@@ -44,7 +44,7 @@ namespace runnhmasadmin
             {
                 TryKillPid(args[0]);
                 RunProgram(args[1]);
-            }           
+            }
         }
     }
 }

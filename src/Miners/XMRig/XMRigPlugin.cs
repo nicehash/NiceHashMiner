@@ -1,9 +1,8 @@
-﻿using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common;
-using NHM.Common.Algorithm;
+﻿using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +51,8 @@ namespace XMRig
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
             var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
-            foreach (var cpu in cpus) {
+            foreach (var cpu in cpus)
+            {
                 supported.Add(cpu, GetSupportedAlgorithmsForDevice(cpu));
             }
 

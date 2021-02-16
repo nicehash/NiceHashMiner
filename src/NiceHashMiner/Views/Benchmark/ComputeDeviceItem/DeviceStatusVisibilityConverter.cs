@@ -1,5 +1,4 @@
 ﻿using NHM.Common.Enums;
-using NHMCore.Mining;
 using System;
 using System.Globalization;
 using System.Windows;

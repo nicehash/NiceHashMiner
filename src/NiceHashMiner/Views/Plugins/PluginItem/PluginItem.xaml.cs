@@ -2,21 +2,10 @@
 using NHMCore.Mining.Plugins;
 using NiceHashMiner.ViewModels.Plugins;
 using NiceHashMiner.Views.Common;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using static NHMCore.Translations;
 
 namespace NiceHashMiner.Views.Plugins.PluginItem
@@ -63,7 +52,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
         private void ToggleDetailsButton_Click(object sender, RoutedEventArgs e)
         {
             if (DetailsToggleButton.IsChecked.Value)
-            {          
+            {
                 Expand();
             }
             else
@@ -82,14 +71,15 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
                 _toggleButtonsGuard.Add(tButton);
                 PluginActionsButtonContext.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
-                closedHandler += (s, e2) => {
+                closedHandler += (s, e2) =>
+                {
                     _toggleButtonsGuard.Remove(tButton);
                     tButton.IsChecked = false;
                     PluginActionsButtonContext.Closed -= closedHandler;
                 };
                 PluginActionsButtonContext.Closed += closedHandler;
             }
-            
+
         }
 
         private async void Button_Click_Install(object sender, RoutedEventArgs e)

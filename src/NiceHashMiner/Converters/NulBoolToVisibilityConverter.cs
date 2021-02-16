@@ -17,7 +17,7 @@ namespace NiceHashMiner.Converters
             if (value is bool b)
             {
                 return b ? Visibility.Visible : Visibility.Collapsed;
-            } 
+            }
             // Explicit XAML parameters will come in as strings, here we say if it is a number > 0 
             // then we invert (show the opposite visibility)
             var invert = parameter is string s && int.TryParse(s, out var i) && i > 0;

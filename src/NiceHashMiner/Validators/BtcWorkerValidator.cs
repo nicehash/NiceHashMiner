@@ -1,7 +1,7 @@
-﻿using System.Globalization;
+﻿using NHMCore;
+using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using NHMCore;
 
 namespace NiceHashMiner.Validators
 {

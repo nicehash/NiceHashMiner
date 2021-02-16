@@ -90,7 +90,7 @@ namespace NanoMiner
             {
                 // get all keys and filter out 
                 var keys = new HashSet<string>();
-                foreach (var key in devs.Keys) keys.Add(key); 
+                foreach (var key in devs.Keys) keys.Add(key);
                 foreach (var key in algos.Keys) keys.Add(key);
                 keys.RemoveWhere(key => !key.Contains("GPU"));
 

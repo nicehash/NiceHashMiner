@@ -5,7 +5,6 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
-using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace NiceHashMiner.ViewModels.Models
 {
@@ -152,7 +150,8 @@ namespace NiceHashMiner.ViewModels.Models
                     if (GUISettings.Instance.DisplayPureProfit)
                     {
                         profitabilityWithCost = data?.TotalPayingRateDeductPowerCost(BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) ?? 0;
-                    }else
+                    }
+                    else
                     {
                         profitabilityWithCost = data?.TotalPayingRate() ?? 0;
                     }
@@ -289,7 +288,7 @@ namespace NiceHashMiner.ViewModels.Models
         }
 
         private SortColumn _sortColumn = SortColumn.PLUGIN;
-        private bool _sortDescending = false; 
+        private bool _sortDescending = false;
 
         public void OrderAlgorithmsByAlgorithm() => OrderAlgorithmsBy(SortColumn.ALGORITHM);
         public void OrderAlgorithmsByPlugin() => OrderAlgorithmsBy(SortColumn.PLUGIN);

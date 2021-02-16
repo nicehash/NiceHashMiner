@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
@@ -14,7 +13,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,7 +27,7 @@ namespace NHMCore.Nhmws
     static class NHWebSocket
     {
         #region locking
-        
+
         private static readonly object _lock = new object();
         private class LockingProperty<T>
         {
@@ -391,7 +389,7 @@ namespace NHMCore.Nhmws
             return sendData;
         }
 
-        
+
         static private async Task HandleMessage(MessageEventArgs e)
         {
             try
@@ -840,7 +838,7 @@ namespace NHMCore.Nhmws
 
         private static void SetPowerMode(string device, TDPSimpleType level)
         {
-            if(GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCode.UnableToHandleRpc);
+            if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCode.UnableToHandleRpc);
 
             var devs = device == "*" ?
                 AvailableDevices.Devices :
@@ -861,7 +859,7 @@ namespace NHMCore.Nhmws
 
             if (!setSuccess.All(t => t.success))
             {
-                if(setSuccess.Any(res => res.type == DeviceType.NVIDIA && !Helpers.IsElevated && !res.success))
+                if (setSuccess.Any(res => res.type == DeviceType.NVIDIA && !Helpers.IsElevated && !res.success))
                 {
                     throw new RpcException("Not able to set power modes for devices: Must start NiceHashMiner as Admin", ErrorCode.UnableToHandleRpc);
                 }
@@ -887,8 +885,9 @@ namespace NHMCore.Nhmws
                     HandleBurn("MinerReset app burn called");
                     return "";
                 case "rig restart":
-                    _ = Task.Run(async () => {
-                        await Task.Delay(3*1000);
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(3 * 1000);
                         var startInfo = new ProcessStartInfo
                         {
                             FileName = "shutdown",

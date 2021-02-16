@@ -1,12 +1,9 @@
-﻿using NHM.MinerPlugin;
+﻿using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
-using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,7 +29,7 @@ namespace FakePlugin
 
         #endregion members for simulation purposes
 
-        public FakeMiner(string uuid):base(uuid){}
+        public FakeMiner(string uuid) : base(uuid) { }
 
         public override async Task<ApiData> GetMinerStatsDataAsync()
         {

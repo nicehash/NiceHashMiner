@@ -1,6 +1,5 @@
 ﻿using NHM.Common;
 using System;
-using System.Collections.Generic;
 using System.Management;
 
 namespace NHMCore.Utils

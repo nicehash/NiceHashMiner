@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
 using System;
-using System.IO;
 using System.Security;
 using System.Windows.Forms;
 

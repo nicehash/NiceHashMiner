@@ -167,7 +167,7 @@ namespace NHMCore.Switching
                                 $" higher for {i}/{ticks} ticks for {algo}"
                             );
                         }
-                    } 
+                    }
                     else
                     {
                         // Profit has gone down

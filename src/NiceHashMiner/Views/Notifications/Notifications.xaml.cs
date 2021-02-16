@@ -27,10 +27,10 @@ namespace NiceHashMiner.Views.Notifications
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error("Notifications", ex.Message);
-            }           
+            }
         }
     }
 }

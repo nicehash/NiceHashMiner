@@ -65,7 +65,7 @@ namespace NHMCore
             TryInitTranslations();
 
             var flag = false;
-            foreach(var lang in _availableLanguages)
+            foreach (var lang in _availableLanguages)
             {
                 if (lang.Code == "en")
                 {
@@ -94,7 +94,7 @@ namespace NHMCore
                     {
                         Logger.Info("Translations", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
                     }
-                } 
+                }
                 if (translations.Translations != null)
                 {
                     _entries = translations.Translations;
@@ -106,8 +106,8 @@ namespace NHMCore
                         {
                             var enKey = enTrans.Key;
                             var enToOther = enTrans.Value;
-                            if (enToOther.ContainsKey(lang.Code) == false) continue; 
-                            var trKey = enToOther[lang.Code];                            
+                            if (enToOther.ContainsKey(lang.Code) == false) continue;
+                            var trKey = enToOther[lang.Code];
                             var trToOther = new Dictionary<string, string>();
                             trToOther["en"] = enKey;
                             foreach (var kvp in enToOther)
@@ -132,7 +132,7 @@ namespace NHMCore
         public static List<string> GetAvailableLanguagesNames()
         {
             var langNames = new List<string>();
-            foreach (var kvp in _availableLanguages) 
+            foreach (var kvp in _availableLanguages)
             {
                 langNames.Add(kvp.Name);
             }

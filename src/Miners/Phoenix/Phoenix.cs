@@ -56,7 +56,7 @@ namespace Phoenix
         private static HashSet<string> _deleteConfigs = new HashSet<string> { "config.txt", "dpools.txt", "epools.txt" };
         private static bool IsDeleteConfigFile(string file)
         {
-            foreach(var conf in _deleteConfigs)
+            foreach (var conf in _deleteConfigs)
             {
                 if (file.Contains(conf)) return true;
             }
@@ -69,7 +69,7 @@ namespace Phoenix
             var txtFiles = Directory.GetFiles(binCwd, "*.txt", SearchOption.AllDirectories)
                 .Where(file => IsDeleteConfigFile(file))
                 .ToArray();
-            foreach(var deleteFile in txtFiles)
+            foreach (var deleteFile in txtFiles)
             {
                 try
                 {

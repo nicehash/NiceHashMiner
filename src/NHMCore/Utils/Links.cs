@@ -5,7 +5,7 @@ namespace NHMCore.Utils
 {
     public static class Links
     {
-// TESTNET
+        // TESTNET
         public const string VisitUrl_TESTNET = "https://test.nicehash.com";
         public const string CheckStats_TESTNET = "https://test.nicehash.com/mining/stats";
         public const string CheckStatsRig_TESTNET = "https://test.nicehash.com/my/mining/rigs/{RIG_ID}";
@@ -115,8 +115,8 @@ namespace NHMCore.Utils
                 return "https://miner-plugins.nicehash.com/api/plugins";
             }
         }
-        
-        
+
+
         // add version
         public const string VisitReleasesUrl = "https://github.com/NiceHash/NiceHashMiner/releases/";
         public const string VisitNewVersionReleaseUrl = "https://github.com/NiceHash/NiceHashMiner/releases/tag/";
@@ -135,7 +135,7 @@ namespace NHMCore.Utils
         //nvidia help
         public const string NvidiaDriversHelp = "https://www.nvidia.com/download/find.aspx";
         public const string AVHelp = "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%253F";
-        public const string LargePagesHelp = "https://www.nicehash.com/blog/post/how-to-optimize-cpu-mining-performance-for-monero-random-x?utm_source=NHM&utm_medium=referral&utm_campaign=optimize%20cpu";      
-        public const string VirtualMemoryHelp = "https://www.nicehash.com/blog/post/how-to-increase-virtual-memory-on-windows?utm_source=NHM&utm_medium=referral&utm_campaign=nicehash%20miner";      
+        public const string LargePagesHelp = "https://www.nicehash.com/blog/post/how-to-optimize-cpu-mining-performance-for-monero-random-x?utm_source=NHM&utm_medium=referral&utm_campaign=optimize%20cpu";
+        public const string VirtualMemoryHelp = "https://www.nicehash.com/blog/post/how-to-increase-virtual-memory-on-windows?utm_source=NHM&utm_medium=referral&utm_campaign=nicehash%20miner";
     }
 }

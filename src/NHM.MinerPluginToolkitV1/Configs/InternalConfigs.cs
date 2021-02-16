@@ -1,6 +1,6 @@
-﻿using NHM.MinerPluginToolkitV1.Interfaces;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHM.Common;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Globalization;
 using System.IO;
@@ -21,9 +21,9 @@ namespace NHM.MinerPluginToolkitV1.Configs
         /// </summary>
         private static JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore,
-                Culture = CultureInfo.InvariantCulture
+            NullValueHandling = NullValueHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            Culture = CultureInfo.InvariantCulture
         };
 
         /// <summary>

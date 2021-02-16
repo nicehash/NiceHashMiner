@@ -1,6 +1,6 @@
 ﻿using NHM.Common.Enums;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NHM.Common.Algorithm
 {
@@ -17,8 +17,10 @@ namespace NHM.Common.Algorithm
         public IReadOnlyList<AlgorithmType> IDs { get; }
         public string MinerID { get; }
 
-        public AlgorithmType FirstAlgorithmType {
-            get {
+        public AlgorithmType FirstAlgorithmType
+        {
+            get
+            {
                 if (IDs.Count > 0) return IDs[0];
                 return AlgorithmType.NONE;
             }

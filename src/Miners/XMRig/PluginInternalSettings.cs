@@ -6,7 +6,7 @@ namespace XMRig
     internal static class PluginInternalSettings
     {
         internal static MinerOptionsPackage MinerOptionsPackage = new MinerOptionsPackage
-        { 
+        {
             GeneralOptions = new List<MinerOption>
             {
                 /// <summary>

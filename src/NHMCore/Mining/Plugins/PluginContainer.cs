@@ -8,7 +8,6 @@ using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore.Switching;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -206,7 +205,8 @@ namespace NHMCore.Mining.Plugins
         public void AddAlgorithmsToDevices()
         {
             var payingRates = NHSmaData.CurrentPayingRatesSnapshot();
-            CheckExec(nameof(AddAlgorithmsToDevices), () => {
+            CheckExec(nameof(AddAlgorithmsToDevices), () =>
+            {
                 if (!_initInternalsCalled && _plugin is IInitInternals impl)
                 {
                     _initInternalsCalled = true;
@@ -371,7 +371,8 @@ namespace NHMCore.Mining.Plugins
                 Type typecontroller = typeof(NHM.MinerPluginToolkitV1.PluginBase);
                 var propInfo = typecontroller.GetProperty("MinerOptionsPackage", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty);
                 var propInfo2 = typecontroller.GetProperty("MinerOptionsPackage");
-                if (propInfo != null) {
+                if (propInfo != null)
+                {
                     var ret = (MinerOptionsPackage)propInfo.GetValue(this._plugin);
                     return ret;
                 }
@@ -408,7 +409,8 @@ namespace NHMCore.Mining.Plugins
         private void CheckExec(string functionName, Action function)
         {
             // fake return
-            CheckExec(functionName, () => {
+            CheckExec(functionName, () =>
+            {
                 function();
                 return "success";
             }, "fail");

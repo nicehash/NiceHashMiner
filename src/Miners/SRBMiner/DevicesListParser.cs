@@ -16,7 +16,7 @@ namespace SRBMiner
             var gpuSections = output.Split(new[] { "GPU" }, StringSplitOptions.RemoveEmptyEntries);
             if (gpuSections.Count() != 0)
             {
-                foreach(var section in gpuSections)
+                foreach (var section in gpuSections)
                 {
                     if (!section.Contains("BUS:")) continue;
                     var lines = section.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);

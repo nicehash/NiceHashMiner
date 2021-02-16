@@ -14,7 +14,7 @@ namespace NHMCore.Mining.Benchmarking
     class BenchmarkingComputeDeviceHandler
     {
         #region STATIC
-        
+
         private static ConcurrentDictionary<ComputeDevice, BenchmarkingComputeDeviceHandler> BenchmarkingHandlers { get; set; } = new ConcurrentDictionary<ComputeDevice, BenchmarkingComputeDeviceHandler>();
 
         internal static void BenchmarkDeviceAlgorithms(ComputeDevice computeDevice, IEnumerable<AlgorithmContainer> algorithmContainers, BenchmarkPerformanceType performance, bool startMiningAfterBenchmark = false)
@@ -85,10 +85,11 @@ namespace NHMCore.Mining.Benchmarking
         public BenchmarkPerformanceType PerformanceType { get; set; } = BenchmarkPerformanceType.Standard;
         private readonly List<string> _benchmarkFailedAlgo = new List<string>();
 
-        private BenchmarkingComputeDeviceHandler(ComputeDevice device) {
+        private BenchmarkingComputeDeviceHandler(ComputeDevice device)
+        {
             Device = device;
         }
-        
+
 
         // APPEND, REMOVE, UPDATE (on plugin updates)
         internal bool AppendForBenchmarking(IEnumerable<AlgorithmContainer> algorithmContainers)
@@ -178,15 +179,17 @@ namespace NHMCore.Mining.Benchmarking
 
         public void StopBenchmark()
         {
-            try {
+            try
+            {
                 _stopBenchmark?.Cancel();
             }
-            catch { }            
+            catch { }
         }
 
         private void StopCurrentAlgorithmBenchmark()
         {
-            try {
+            try
+            {
                 _stopCurrentAlgorithmBenchmark?.Cancel();
             }
             catch { }
@@ -250,7 +253,7 @@ namespace NHMCore.Mining.Benchmarking
                 var result = await miner.StartBenchmark(stop, PerformanceType);
                 if (stop.IsCancellationRequested) return;
 
-                algo.IsReBenchmark = false; 
+                algo.IsReBenchmark = false;
                 //EthlargementIntegratedPlugin.Instance.Stop(miningPairs); // TODO check stopping
                 var power = powerHelper.Stop();
                 if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)

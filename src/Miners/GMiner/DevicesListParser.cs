@@ -23,7 +23,7 @@ namespace GMinerPlugin
                     var id = line.Substring(0, line.IndexOf(':')).Remove(0, 3);
                     var indexID = Convert.ToInt32(id);
                     var lastChar = pciId.ToCharArray();
-                    int comparePCIeBusID = int.Parse(pciId, System.Globalization.NumberStyles.HexNumber);                 
+                    int comparePCIeBusID = int.Parse(pciId, System.Globalization.NumberStyles.HexNumber);
                     foreach (var gpu in gpus)
                     {
                         if (gpu.PCIeBusID == comparePCIeBusID)

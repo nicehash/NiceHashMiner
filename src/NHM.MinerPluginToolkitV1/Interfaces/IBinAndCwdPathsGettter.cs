@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NHM.MinerPluginToolkitV1.Interfaces
+﻿namespace NHM.MinerPluginToolkitV1.Interfaces
 {
     // TODO change docs. Now we use this in PluginBase
     /// <summary>

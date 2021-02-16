@@ -8,7 +8,7 @@ namespace NHMCore.Mining.Plugins
     {
         private readonly CancellationTokenSource _cancelInstall = new CancellationTokenSource();
         private readonly object _progressLock = new object();
-        private Tuple<PluginInstallProgressState, int> _lastProgressValue = null; 
+        private Tuple<PluginInstallProgressState, int> _lastProgressValue = null;
         private List<IProgress<Tuple<PluginInstallProgressState, int>>> _progresses = new List<IProgress<Tuple<PluginInstallProgressState, int>>>();
 
         internal CancellationToken CancelInstallToken => _cancelInstall.Token;
@@ -19,8 +19,8 @@ namespace NHMCore.Mining.Plugins
             {
                 _cancelInstall.Cancel();
             }
-            catch 
-            {}
+            catch
+            { }
         }
 
         internal void AddProgress(IProgress<Tuple<PluginInstallProgressState, int>> progress)

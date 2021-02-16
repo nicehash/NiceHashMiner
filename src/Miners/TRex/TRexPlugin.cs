@@ -1,8 +1,8 @@
-﻿using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common.Algorithm;
+﻿using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +64,7 @@ namespace TRex
         protected override MinerBase CreateMinerBase()
         {
             return new TRex(PluginUUID);
-        }        
+        }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
@@ -79,7 +79,7 @@ namespace TRex
                 if (ids.Count() == 0) return false;
                 if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 4 && ids.FirstOrDefault() == AlgorithmType.Octopus) return true;
             }
-            catch {}
+            catch { }
             return false;
         }
     }

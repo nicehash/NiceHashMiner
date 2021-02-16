@@ -1,11 +1,6 @@
 ﻿using NHM.Common;
-using NHMCore.Mining;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NHM.DeviceMonitoring.TDP;
+using NHMCore.Mining;
 
 namespace NiceHashMiner.ViewModels.Models
 {

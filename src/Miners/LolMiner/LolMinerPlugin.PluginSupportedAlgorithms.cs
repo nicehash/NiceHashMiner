@@ -1,7 +1,6 @@
-﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1.Configs;
 using System.Collections.Generic;
-
 using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
 namespace LolMiner
@@ -36,9 +35,9 @@ namespace LolMiner
         {
             // fixed fee
             DefaultFee = 1.0,
-            AlgorithmFees = new Dictionary<AlgorithmType, double> 
-            { 
-                { AlgorithmType.DaggerHashimoto, 0.7 } 
+            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            {
+                { AlgorithmType.DaggerHashimoto, 0.7 }
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {

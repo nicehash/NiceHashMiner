@@ -1,7 +1,7 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common.Algorithm;
+﻿using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using System;
 using System.Collections.Generic;
 

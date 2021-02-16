@@ -60,17 +60,18 @@ namespace NHM.MinersDownloader
                 urlOrName = urlOrName.Replace(new Uri(urlOrNameIn).GetLeftPart(UriPartial.Path), "");
             }
             catch
-            {}
+            { }
             var dotAt = urlOrName.LastIndexOf('.');
             var invalidChars = Path.GetInvalidPathChars().Any(c => urlOrName.Contains(c));
-            if (dotAt < 0 || invalidChars) {
+            if (dotAt < 0 || invalidChars)
+            {
                 try
                 {
                     var ext = urlOrNameIn.Substring(urlOrNameIn.LastIndexOf('.') + 1);
                     return ext;
                 }
                 catch (Exception)
-                {}
+                { }
                 return "exe";
             }
             var extSize = urlOrName.Length - dotAt - 1;
@@ -89,7 +90,8 @@ namespace NHM.MinersDownloader
             using (var client = new System.Net.WebClient())
             {
                 client.Proxy = null;
-                client.DownloadProgressChanged += (s, e1) => {
+                client.DownloadProgressChanged += (s, e1) =>
+                {
                     progress?.Report(e1.ProgressPercentage);
                 };
                 client.DownloadFileCompleted += (s, e) =>
@@ -178,7 +180,8 @@ namespace NHM.MinersDownloader
             });
             timer.Change(0, 500);
 
-            stop.Register(() => {
+            stop.Register(() =>
+            {
                 DownloadManager.Instance.RemoveDownload(downloader);
                 timer.Dispose();
             });
@@ -240,7 +243,7 @@ namespace NHM.MinersDownloader
                 downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(node.Name));
                 await client.DownloadFileAsync(fileLink, downloadFileLocation, doubleProgress, stop);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error("MinersDownloadManager", $"MegaFile error: {e.Message}");
             }

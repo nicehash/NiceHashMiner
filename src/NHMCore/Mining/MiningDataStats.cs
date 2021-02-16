@@ -80,7 +80,8 @@ namespace NHMCore.Mining
             lock (_lock)
             {
                 // check what keys to remove
-                var removeKeys = _apiDataGroups.Keys.Where(checkKey => {
+                var removeKeys = _apiDataGroups.Keys.Where(checkKey =>
+                {
                     var minerUUIDDiffers = checkKey.StartsWith(minerUUID) == false;
                     var deviceInKey = sortedDeviceUUIDs.Any(uuid => checkKey.Contains(uuid));
                     return minerUUIDDiffers && deviceInKey;

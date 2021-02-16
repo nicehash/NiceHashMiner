@@ -15,7 +15,7 @@ namespace NHMCore.Configs
             DebugConsole = false;
             LogToFile = true;
             LogMaxFileSize = 1048576;
-    }
+        }
 
         private NotifyPropertyChangedHelper<long> _longProps;
         private NotifyPropertyChangedHelper<bool> _boolProps;

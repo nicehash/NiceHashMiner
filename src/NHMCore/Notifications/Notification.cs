@@ -1,5 +1,4 @@
 ﻿using NHM.Common;
-using System.Collections.Generic;
 
 namespace NHMCore.Notifications
 {

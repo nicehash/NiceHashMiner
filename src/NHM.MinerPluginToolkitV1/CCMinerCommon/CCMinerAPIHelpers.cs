@@ -1,6 +1,6 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -49,7 +49,7 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
                         }
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
                 }
@@ -95,13 +95,13 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
                         var deviceID = miningPair.Device.ID;
 
                         var apiDevice = apiDevices.Find(apiDev => apiDev.id == deviceID);
-                        if (apiDevice.Equals(default(IdPowerHash))) continue;                       
+                        if (apiDevice.Equals(default(IdPowerHash))) continue;
                         perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (algorithmType, apiDevice.speed * (1 - devFee * 0.01)) });
                         perDevicePowerInfo.Add(deviceUUID, apiDevice.power);
-                        totalPower += apiDevice.power;                       
+                        totalPower += apiDevice.power;
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
                 }

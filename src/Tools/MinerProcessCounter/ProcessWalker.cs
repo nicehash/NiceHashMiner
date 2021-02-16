@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MinerProcessCounter
 {
@@ -47,14 +44,17 @@ namespace MinerProcessCounter
             "z-enemy"
         };
 
-        private static bool isFilterIncluded(string psName) {
+        private static bool isFilterIncluded(string psName)
+        {
             return nameFilters.Any(filter => psName.Contains(filter));
         }
 
-        public static IEnumerable<PsInfo> ListRunning() {
+        public static IEnumerable<PsInfo> ListRunning()
+        {
             var snapshot = Process.GetProcesses();
             var filtered = snapshot.Where(p => isFilterIncluded(p.ProcessName));
-            var mapped = filtered.Select(p => new PsInfo() {
+            var mapped = filtered.Select(p => new PsInfo()
+            {
                 ProcessName = p.ProcessName,
                 FileName = p.StartInfo.FileName,
                 Arguments = p.StartInfo.Arguments,

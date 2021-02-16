@@ -119,7 +119,7 @@ namespace NanoMiner
             {
                 File.WriteAllText(Path.Combine(paths.Item2, $"config_nh_{devs}.ini"), configString);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error(_logGroup, $"Unable to create config file: {e.Message}");
             }

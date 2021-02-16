@@ -1,8 +1,8 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -125,7 +125,7 @@ namespace NHM.MinerPluginToolkitV1
         {
             if (!s.Contains(after))
             {
-                return Tuple.Create(0d, false);;
+                return Tuple.Create(0d, false);
             }
 
             var afterString = s.GetStringAfter(after).ToLower();
@@ -286,7 +286,7 @@ namespace NHM.MinerPluginToolkitV1
                     catch (Exception e)
                     {
                         Logger.Info("MinerToolkit", $"Error occured while waiting for benchmark result: {e.Message}");
-                        return new BenchmarkResult{ ErrorMessage = e.Message };
+                        return new BenchmarkResult { ErrorMessage = e.Message };
                     }
                 }
                 // #1 if canceled return canceled
@@ -295,12 +295,12 @@ namespace NHM.MinerPluginToolkitV1
                     Logger.Info("MinerToolkit", "Benchmark process was canceled by user");
                     return new BenchmarkResult { ErrorMessage = "Cancelling per user request." };
                 }
-                if (ret == null) return new BenchmarkResult{ ErrorMessage = "Benchmark result is null" };
+                if (ret == null) return new BenchmarkResult { ErrorMessage = "Benchmark result is null" };
                 if (ret.HasNonZeroSpeeds() || !string.IsNullOrEmpty(ret.ErrorMessage)) return ret;
                 if (timeout.IsCancellationRequested)
                 {
                     Logger.Info("MinerToolkit", "Benchmark process timed out");
-                    return new BenchmarkResult{ ErrorMessage = "Operation timed out." };
+                    return new BenchmarkResult { ErrorMessage = "Operation timed out." };
                 }
             }
             return new BenchmarkResult();

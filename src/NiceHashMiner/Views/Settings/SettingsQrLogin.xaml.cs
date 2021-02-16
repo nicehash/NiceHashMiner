@@ -1,14 +1,12 @@
 ﻿using Newtonsoft.Json;
 using NHMCore;
 using NHMCore.Configs;
-using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 
 namespace NiceHashMiner.Views.Settings
 {

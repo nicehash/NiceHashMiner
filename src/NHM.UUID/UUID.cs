@@ -149,7 +149,7 @@ namespace NHM.UUID
             {
                 File.WriteAllText(CachedRigUUIDPath, hexUUID);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error("NHM.UUID", $"Save GUID fallback failed: {ex.Message}");
                 saved = false;

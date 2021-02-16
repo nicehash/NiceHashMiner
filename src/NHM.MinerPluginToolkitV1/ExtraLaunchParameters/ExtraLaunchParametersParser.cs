@@ -1,5 +1,5 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common;
+﻿using NHM.Common;
+using NHM.MinerPlugin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +55,8 @@ namespace NHM.MinerPluginToolkitV1.ExtraLaunchParameters
             return true;
         }
 
-        public static bool CheckIfCanGroup(MiningPair a, MiningPair b, List<MinerOption> options, bool ignoreDefaultValueOptions) {
+        public static bool CheckIfCanGroup(MiningPair a, MiningPair b, List<MinerOption> options, bool ignoreDefaultValueOptions)
+        {
             if (options == null || options.Count == 0) return true;
 
             var filteredOptionsSingle = options.Where(optionType => optionType.Type == MinerOptionType.OptionWithSingleParameter).ToList();
@@ -80,7 +81,7 @@ namespace NHM.MinerPluginToolkitV1.ExtraLaunchParameters
         public static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool ignoreDefaultValueOptions = true)
         {
             if (options == null || options.Count == 0) return "";
-            
+
             // init all devices and options before we check parameters
             // order of devices matters!
             // order of parameters may matter
@@ -88,7 +89,7 @@ namespace NHM.MinerPluginToolkitV1.ExtraLaunchParameters
             foreach (var miningPair in miningPairs)
             {
                 var device = miningPair.Device;
-                var algorithm  = miningPair.Algorithm;
+                var algorithm = miningPair.Algorithm;
                 var parameters = algorithm.ExtraLaunchParameters
                     .Replace("=", "= ")
                     .Split(' ')
@@ -143,7 +144,7 @@ namespace NHM.MinerPluginToolkitV1.ExtraLaunchParameters
             // merge parameters and values for devices
             // they are merged in device order
             var mergedParsedMinerOptions = options
-                .Select(option => new MergedParsedMinerOption{ Option = option })
+                .Select(option => new MergedParsedMinerOption { Option = option })
                 .ToArray();
 
             foreach (var deviceOptions in devicesOptions)

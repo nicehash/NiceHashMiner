@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NHMCore;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using NHMCore;
 
 namespace NiceHashMiner.Converters
 {

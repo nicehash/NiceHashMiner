@@ -1,5 +1,5 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common;
+﻿using NHM.Common;
+using NHM.MinerPlugin;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,7 +48,8 @@ namespace NHM.MinerPluginLoader
         // mutates MinerPlugin
         public static IEnumerable<string> LoadPlugin(string pluginDirPath)
         {
-            if (!Directory.Exists(pluginDirPath)) {
+            if (!Directory.Exists(pluginDirPath))
+            {
                 Logger.Info("MinerPluginHost", $"Plugins path doesn't exist: {pluginDirPath}");
                 return Enumerable.Empty<string>();
             }
@@ -56,7 +57,8 @@ namespace NHM.MinerPluginLoader
             {
                 var loadedPlugins = Directory.GetFiles(pluginDirPath, "*.dll")
                     .SelectMany(LoadPluginsFromDllFile)
-                    .Select(plugin => {
+                    .Select(plugin =>
+                    {
                         try
                         {
                             if (MinerPlugin.ContainsKey(plugin.PluginUUID))

@@ -16,12 +16,13 @@ namespace NHMCore.Configs.Data
         public bool Enabled = true;
         public double PowerUsage = 0;
 
-        public List<AlgorithmType> GetAlgorithmIDs() {
+        public List<AlgorithmType> GetAlgorithmIDs()
+        {
             var ret = new List<AlgorithmType>();
             var ids = AlgorithmIDs.Split('-');
             foreach (var id in ids)
             {
-                
+
                 if (Enum.TryParse(id, out AlgorithmType enumId))
                 {
                     ret.Add(enumId);
@@ -29,7 +30,7 @@ namespace NHMCore.Configs.Data
                 else
                 {
                     ret.Add(AlgorithmType.INVALID);
-                }   
+                }
             }
 
             return ret;

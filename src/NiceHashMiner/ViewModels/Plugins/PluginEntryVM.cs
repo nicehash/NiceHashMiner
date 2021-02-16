@@ -1,15 +1,14 @@
 ﻿using NHM.Common;
-using NiceHashMiner.ViewModels.Models;
-using NHMCore;
 using NHMCore.Mining.Plugins;
+using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using static NHMCore.Translations;
-using System.Threading;
 
 namespace NiceHashMiner.ViewModels.Plugins
 {
@@ -92,7 +91,7 @@ namespace NiceHashMiner.ViewModels.Plugins
 
         public PluginEntryVM(PluginPackageInfoCR plugin)
             : this(plugin, new LoadProgress())
-        {}
+        { }
 
         protected override void Dispose(bool disposing)
         {
@@ -155,7 +154,7 @@ namespace NiceHashMiner.ViewModels.Plugins
             {
                 CommonInstallOnPropertyChanged();
             }
-                
+
         }
 
         private void Plugin_PropertyChanged(object sender, PropertyChangedEventArgs e)

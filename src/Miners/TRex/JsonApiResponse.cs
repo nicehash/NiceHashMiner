@@ -18,7 +18,7 @@ namespace TRex
         public string vendor { get; set; }
     }
 
-        [Serializable]
+    [Serializable]
     internal class JsonApiResponse
     {
         public string algorithm { get; set; }

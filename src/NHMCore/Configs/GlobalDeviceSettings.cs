@@ -33,7 +33,8 @@ namespace NHMCore.Configs
         public bool DisableDeviceStatusMonitoring
         {
             get => DeviceMonitorManager.DisableDeviceStatusMonitoring;
-            set {
+            set
+            {
                 DeviceMonitorManager.DisableDeviceStatusMonitoring = value;
                 OnPropertyChanged(nameof(DisableDeviceStatusMonitoring));
             }
@@ -42,7 +43,8 @@ namespace NHMCore.Configs
         public bool DisableDevicePowerModeSettings
         {
             get => DeviceMonitorManager.DisableDevicePowerModeSettings;
-            set {
+            set
+            {
                 DeviceMonitorManager.DisableDevicePowerModeSettings = value;
                 OnPropertyChanged(nameof(DisableDevicePowerModeSettings));
             }

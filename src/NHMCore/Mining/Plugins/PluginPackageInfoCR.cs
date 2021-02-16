@@ -1,10 +1,9 @@
-﻿using NHM.MinerPluginToolkitV1;
-using NHM.Common;
+﻿using NHM.Common;
+using NHM.MinerPluginToolkitV1;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -77,7 +76,8 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public bool Installed {
+        public bool Installed
+        {
             get
             {
                 return LocalInfo != null;
@@ -97,7 +97,8 @@ namespace NHMCore.Mining.Plugins
                 var isNHPlugin = "info@nicehash.com" == OnlineInfo?.PluginAuthor;
                 // 5 brings new interfaces + Eaglesong, 6 new algo Cuckaroom, 7 new algo GrinCuckatoo32
                 // current supported major versions are 5-7 inclusive (older not supported)
-                if (isNHPlugin && ver != null) {
+                if (isNHPlugin && ver != null)
+                {
                     return Checkers.IsMajorVersionSupported(ver.Major);
                 }
                 // here we assume it is compatible so allow install
@@ -124,12 +125,12 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        
+
         public Version PluginVersion
         {
             get
             {
-                var ver = LocalInfo?.PluginVersion ?? OnlineInfo?.PluginVersion ?? new Version(0,0);
+                var ver = LocalInfo?.PluginVersion ?? OnlineInfo?.PluginVersion ?? new Version(0, 0);
                 return ver;
             }
         }
@@ -153,7 +154,7 @@ namespace NHMCore.Mining.Plugins
                 return minerURL;
             }
         }
-        
+
         public Dictionary<string, List<string>> SupportedDevicesAlgorithms
         {
             get
@@ -168,7 +169,7 @@ namespace NHMCore.Mining.Plugins
                 return supportedDevicesAlgorithms;
             }
         }
-        
+
         public string PluginAuthor
         {
             get
@@ -178,7 +179,7 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        
+
         public string PluginDescription
         {
             get

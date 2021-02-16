@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using NiceHashMiner.Views.Common.NHBase.Utils;
-using NHMCore.Configs;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -90,7 +89,7 @@ namespace NiceHashMiner.Views.Common.NHBase
             NHMIcon = this.GetRequiredTemplateChild<Grid>("NHMIcon");
             WindowTitle = this.GetRequiredTemplateChild<TextBlock>("WindowTitle");
             this.HeaderBar2 = this.GetRequiredTemplateChild<Grid>("PART_HeaderBar2");
-             
+
 
             if (HideIconAndTitle)
             {

@@ -15,12 +15,12 @@ namespace NHM.MinerPlugin
         /// AlgorithmTypeSpeeds is list of AlgorithmTypeSpeedPair (one or two elements depending on if algorithm is single or dual); for more info about this class <see cref="AlgorithmTypeSpeedPair"/>
         /// </summary>
         public IReadOnlyList<(AlgorithmType type, double speed)> AlgorithmTypeSpeeds { get; set; } = null;
-      
+
         /// <summary>
         /// Success tells us if benchmark finished (we can still have some unsuccessfull benchmarks with speeds - this indicates that the benchmarks weren't executed as planned)
         /// </summary>
-        public bool Success  { get; set; } = false;
-      
+        public bool Success { get; set; } = false;
+
         /// <summary>
         /// ErrorMessage gives us error message in case of unsuccessfull benchmarking
         /// </summary>

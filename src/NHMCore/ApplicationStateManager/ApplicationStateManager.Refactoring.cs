@@ -1,6 +1,4 @@
 using NHMCore.Configs;
-using NHMCore.Mining;
-using System;
 
 namespace NHMCore
 {

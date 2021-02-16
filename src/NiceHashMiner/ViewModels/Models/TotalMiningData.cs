@@ -1,9 +1,9 @@
 ﻿using NHM.Common;
+using NHMCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using NHMCore;
 
 namespace NiceHashMiner.ViewModels.Models
 {
@@ -57,7 +57,7 @@ namespace NiceHashMiner.ViewModels.Models
         }
 
         public TotalMiningData(params MiningData[] datas)
-            : this((IEnumerable<MiningData>) datas)
+            : this((IEnumerable<MiningData>)datas)
         { }
 
         public void AddDevice(MiningData data)

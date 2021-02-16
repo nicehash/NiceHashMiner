@@ -1,11 +1,11 @@
-﻿using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -275,7 +275,7 @@ namespace NHM.MinerPluginToolkitV1
                 {
                     return MinersBinsUrlsSettings?.BinsPackagePassword ?? null;
                 }
-                catch {}
+                catch { }
                 return null;
             }
         }

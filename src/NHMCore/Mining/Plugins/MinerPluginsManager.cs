@@ -1,8 +1,10 @@
-﻿using NHM.MinerPlugin;
+﻿using Newtonsoft.Json;
+using NHM.Common;
+using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHM.MinerPluginLoader;
 using NHM.MinerPluginToolkitV1;
-using Newtonsoft.Json;
-using NHM.Common;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.MinersDownloader;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
@@ -17,8 +19,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using NHM.Common.Enums;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -108,7 +108,7 @@ namespace NHMCore.Mining.Plugins
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
-            
+
             (_initOnlinePlugins, OnlinePlugins) = ReadCachedOnlinePlugins();
         }
 
@@ -220,7 +220,8 @@ namespace NHMCore.Mining.Plugins
 
         public static void StartLoops(CancellationToken stop)
         {
-            RunninLoops = Task.Run(() => {
+            RunninLoops = Task.Run(() =>
+            {
                 var loop1 = PluginsUpdaterLoop(stop);
                 var loop2 = PluginInstaller.RestartDevicesStateLoop(stop);
                 return Task.WhenAll(loop1, loop2);
@@ -250,7 +251,7 @@ namespace NHMCore.Mining.Plugins
                     try
                     {
                         if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
-                        
+
                         var execAutoUpdate = false;
                         if (getOnlineMinerPluginsElapsedTimeChecker.CheckAndMarkElapsedTime())
                         {
@@ -405,7 +406,8 @@ namespace NHMCore.Mining.Plugins
                 //.Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID)) // WARNING We still want to mine with these 
                 .ToArray();
 
-            if (checkPlugins.Length > 0 && loader != null) {
+            if (checkPlugins.Length > 0 && loader != null)
+            {
                 loader.SecondaryVisible = true;
                 loader.SecondaryTitle = Translations.Tr("Devices Cross Reference");
                 loader?.SecondaryProgress?.Report((Translations.Tr("Pending"), 0));
@@ -445,7 +447,8 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        private static string PluginInstallProgressStateToString(PluginInstallProgressState state, string pluginName, int progressPerc) {
+        private static string PluginInstallProgressStateToString(PluginInstallProgressState state, string pluginName, int progressPerc)
+        {
             switch (state)
             {
                 case PluginInstallProgressState.DownloadingMiner:
@@ -464,7 +467,8 @@ namespace NHMCore.Mining.Plugins
 
         public static async Task UpdateMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
-            Func<PluginContainer, bool> hasUpdate = (p) => {
+            Func<PluginContainer, bool> hasUpdate = (p) =>
+            {
                 return PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr) && pcr.HasNewerVersion;
             };
             var pluginsToUpdate = PluginContainer.PluginContainers
@@ -478,7 +482,7 @@ namespace NHMCore.Mining.Plugins
                 var wrappedProgress = new Progress<Tuple<PluginInstallProgressState, int>>(status =>
                 {
                     var (state, progressPerc) = status;
-                    string statusText = PluginInstallProgressStateToString(state, plugin.Name, progressPerc); 
+                    string statusText = PluginInstallProgressStateToString(state, plugin.Name, progressPerc);
                     progress?.Report((statusText, progressPerc));
                 });
                 await DownloadAndInstall(plugin.PluginUUID, wrappedProgress, stop);
@@ -514,7 +518,8 @@ namespace NHMCore.Mining.Plugins
                 .Select(p => p.PluginUUID)
                 .ToArray();
             EulaConfirm = RankedPlugins.Where(pcr => nonAcceptedluginsUUIDs.Contains(pcr.PluginUUID)).ToList();
-            EulaConfirm.ForEach(el => {
+            EulaConfirm.ForEach(el =>
+            {
                 Logger.Info("MinerPluginsManager", $"Plugin is not accepted {el.PluginUUID}-{el.PluginName}. Skipping...");
                 el.IsUserActionRequired = true;
             });
@@ -571,7 +576,7 @@ namespace NHMCore.Mining.Plugins
         {
             var deletePath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID);
             var start = DateTime.UtcNow;
-            while(true)
+            while (true)
             {
                 var elapsedAfterStart = DateTime.UtcNow - start;
                 if (elapsedAfterStart.TotalSeconds > 15) return;
@@ -584,7 +589,7 @@ namespace NHMCore.Mining.Plugins
                         return;
                     }
                 }
-                catch {}
+                catch { }
             }
         }
 
@@ -794,7 +799,7 @@ namespace NHMCore.Mining.Plugins
             return ret;
         }
 
-#region DownloadingInstalling
+        #region DownloadingInstalling
 
         public static async Task DownloadInternalBins(PluginContainer pluginContainer, List<string> urls, IProgress<int> downloadProgress, IProgress<int> unzipProgress, CancellationToken stop)
         {
@@ -860,7 +865,7 @@ namespace NHMCore.Mining.Plugins
                     installedBins = true;
                     if (!downloadMinerBinsOK || stop.IsCancellationRequested) return false;
                     if (stop.IsCancellationRequested) return false;
-                    
+
                     break;
                 }
                 if (!installedBins)
@@ -944,11 +949,11 @@ namespace NHMCore.Mining.Plugins
                     MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
                     if (addSuccess) BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
 
-                    
+
                     AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, installSuccess);
                 }
             }
-        }        
+        }
 
         internal static async Task<PluginInstallProgressState> DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<Tuple<PluginInstallProgressState, int>> progress, CancellationToken stop)
         {
@@ -1089,7 +1094,7 @@ namespace NHMCore.Mining.Plugins
             }
             return finalState;
         }
-        
+
         internal static async Task<PluginInstallProgressState> DownloadAndInstallEthlargementIntegratedPlugin(PluginPackageInfoCR plugin, IProgress<Tuple<PluginInstallProgressState, int>> progress, CancellationToken stop)
         {
             var downloadPluginProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.DownloadingPlugin, perc)));
@@ -1178,11 +1183,11 @@ namespace NHMCore.Mining.Plugins
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error("MinerPluginsManager", $"Clearing of old plugin bins failed: {ex.Message}");
-            }            
+            }
         }
-#endregion DownloadingInstalling
+        #endregion DownloadingInstalling
     }
 }

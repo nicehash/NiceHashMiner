@@ -53,7 +53,7 @@ namespace NHMCore.Mining.Benchmarking
                 MiningSpeeds[speedID] = new List<MiningSpeed>();
             }
 
-            if (MiningSpeeds[speedID].Count() == MaxHistory) 
+            if (MiningSpeeds[speedID].Count() == MaxHistory)
             {
                 MiningSpeeds[speedID].RemoveAt(0);
             }
@@ -115,7 +115,7 @@ namespace NHMCore.Mining.Benchmarking
             var deviantPrimary = CheckIfDeviant(primarySpeeds);
 
             //secondary speeds
-            if(secondarySpeeds.Count() != 0)
+            if (secondarySpeeds.Count() != 0)
             {
                 var deviantSecondary = CheckIfDeviant(secondarySpeeds);
                 return deviantPrimary && deviantSecondary;
@@ -129,12 +129,12 @@ namespace NHMCore.Mining.Benchmarking
             if (speeds == null || speeds.Count() == 0) return 0d;
 
             var avg = 0.0;
-            for(int i=0; i<speeds.Count(); i++)
+            for (int i = 0; i < speeds.Count(); i++)
             {
                 avg += speeds[i];
             }
             return avg / speeds.Count();
-        } 
+        }
 
         public static List<double> NormalizedStandardDeviation(List<double> speeds)
         {
@@ -147,18 +147,18 @@ namespace NHMCore.Mining.Benchmarking
             var standardDeviationSpeed = new List<double>();
 
             //sum speed diff squares
-            for(int i=0; i< speeds.Count(); i++)
+            for (int i = 0; i < speeds.Count(); i++)
             {
                 sumSpeedDiffSquare.Add(Math.Pow(speeds[i] - meanSpeed, 2));
             }
 
             //sqrt
-            for(int i=0; i< sumSpeedDiffSquare.Count(); i++)
+            for (int i = 0; i < sumSpeedDiffSquare.Count(); i++)
             {
                 standardDeviationSpeed.Add(Math.Sqrt(sumSpeedDiffSquare[i] / speeds.Count()));
             }
 
-            for(int i=0; i<standardDeviationSpeed.Count(); i++)
+            for (int i = 0; i < standardDeviationSpeed.Count(); i++)
             {
                 normalizedSpeeds.Add(standardDeviationSpeed[i] / meanSpeed);
             }

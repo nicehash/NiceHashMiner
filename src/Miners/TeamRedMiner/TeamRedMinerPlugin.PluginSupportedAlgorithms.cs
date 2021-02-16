@@ -1,7 +1,6 @@
-﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1.Configs;
 using System.Collections.Generic;
-
 using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
 
 namespace TeamRedMiner

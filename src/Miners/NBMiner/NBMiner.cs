@@ -70,7 +70,7 @@ namespace NBMiner
             }
             return cmd;
         }
-        
+
         public override async Task<ApiData> GetMinerStatsDataAsync()
         {
             var api = new ApiData();

@@ -76,7 +76,7 @@ namespace GMinerPlugin
             {
                 var result = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/stat");
                 ad.ApiResponse = result;
-                var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);                
+                var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
                 var gpus = _miningPairs.Select(pair => pair.Device);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();

@@ -44,7 +44,8 @@ namespace WildRig
                 var totalPowerUsage = 0;
 
                 var hashrate = summary.hashrate;
-                if (hashrate != null) {
+                if (hashrate != null)
+                {
                     for (int i = 0; i < gpus.Count(); i++)
                     {
                         var deviceSpeed = hashrate.threads.ElementAtOrDefault(i).FirstOrDefault();

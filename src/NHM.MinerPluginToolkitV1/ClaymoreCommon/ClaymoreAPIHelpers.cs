@@ -1,8 +1,8 @@
-﻿using NHM.MinerPlugin;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -75,7 +75,7 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                             {
                                 perDeviceSpeeds.Add((secondAlgoType, secondaryCurrentSpeed * (1 - DualDevFee * 0.01)));
                             }
-                            perDeviceSpeedInfo.Add(uuid, perDeviceSpeeds );
+                            perDeviceSpeedInfo.Add(uuid, perDeviceSpeeds);
                             // no power usage info
                             perDevicePowerInfo.Add(uuid, -1);
                         }
@@ -84,7 +84,7 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                         if (isDual)
                         {
                             totalSpeed.Add((secondAlgoType, secondaryTotalSpeed * (1 - DualDevFee * 0.01)));
-                        } 
+                        }
                     }
                 }
             }

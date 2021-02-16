@@ -198,25 +198,30 @@ namespace NHMCore
             var rigState = RigStatus.Disabled;
             // order matters, we are excluding pending state
             var anyDisabled = allDevs.Any(dev => dev.IsDisabled);
-            if (anyDisabled) {
+            if (anyDisabled)
+            {
                 rigState = RigStatus.Disabled;
             }
             var anyStopped = allDevs.Any(dev => dev.State == DeviceState.Stopped);
-            if (anyStopped) {
+            if (anyStopped)
+            {
                 rigState = RigStatus.Stopped;
             }
             var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining);
-            if (anyMining) {
+            if (anyMining)
+            {
                 rigState = RigStatus.Mining;
             }
             var anyBenchmarking = allDevs.Any(dev => dev.State == DeviceState.Benchmarking);
-            if (anyBenchmarking) {
+            if (anyBenchmarking)
+            {
                 rigState = RigStatus.Benchmarking;
             }
             var anyError = allDevs.Any(dev => dev.State == DeviceState.Error);
-            if (anyError) {
+            if (anyError)
+            {
                 rigState = RigStatus.Error;
-            }           
+            }
 
             return rigState;
         }
@@ -238,7 +243,8 @@ namespace NHMCore
         }
 
 
-        public enum CurrentFormState {
+        public enum CurrentFormState
+        {
             Main,
             Benchmark,
             Settings,
@@ -259,10 +265,12 @@ namespace NHMCore
 
         public static bool IsInMainForm => CurrentForm == CurrentFormState.Main;
 
-        public static bool IsInBenchmarkForm() {
+        public static bool IsInBenchmarkForm()
+        {
             return CurrentForm == CurrentFormState.Benchmark;
         }
-        public static bool IsInSettingsForm() {
+        public static bool IsInSettingsForm()
+        {
             return CurrentForm == CurrentFormState.Settings;
         }
         public static bool IsInPluginsForm()

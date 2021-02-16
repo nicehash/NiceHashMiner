@@ -21,7 +21,7 @@ namespace TRex
         private readonly HttpClient _httpClient = new HttpClient();
 
         public TRex(string uuid) : base(uuid)
-        {}
+        { }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
@@ -35,7 +35,7 @@ namespace TRex
                 var summaryApiResult = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
                 ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(summaryApiResult);
-            
+
                 var gpuDevices = _miningPairs.Select(pair => pair.Device);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
@@ -56,7 +56,8 @@ namespace TRex
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
 
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 

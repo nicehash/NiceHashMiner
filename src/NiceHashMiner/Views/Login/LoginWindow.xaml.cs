@@ -1,25 +1,15 @@
-﻿using NiceHashMiner.Views.Common;
-using NiceHashMiner.Views.Common.NHBase;
+﻿using Newtonsoft.Json;
+using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Media;
-using ZXing.Rendering;
-using ZXing;
-using ZXing.QrCode.Internal;
-using System.Drawing;
-using ZXing.Common;
-using System.IO;
-using System.Windows.Media.Imaging;
-using System.Drawing.Imaging;
-using System.Net.Http;
-using NHMCore;
+using NiceHashMiner.Views.Common;
+using NiceHashMiner.Views.Common.NHBase;
 using System;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Net.Http;
 using System.Text;
-using Newtonsoft.Json;
-using NiceHashMiner.ViewModels;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace NiceHashMiner.Views.Login
 {

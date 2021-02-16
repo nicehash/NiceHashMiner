@@ -1,5 +1,5 @@
-﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common;
+﻿using NHM.Common;
+using NHM.MinerPluginToolkitV1.Configs;
 using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
@@ -58,7 +58,7 @@ namespace NHMCore.Configs
                     Directory.Delete(Paths.ConfigsPath(), true);
                     ZipFile.ExtractToDirectory(backupZipPath, Paths.ConfigsPath());
                     return true;
-                }          
+                }
             }
             catch (Exception e)
             {
@@ -94,7 +94,7 @@ namespace NHMCore.Configs
                     GeneralConfig = fromFile;
                     GeneralConfig.FixSettingBounds();
                     // TODO temp 
-                    GeneralConfig.PropertyChanged += BalanceAndExchangeRates.Instance.GeneralConfig_PropertyChanged; 
+                    GeneralConfig.PropertyChanged += BalanceAndExchangeRates.Instance.GeneralConfig_PropertyChanged;
                 }
                 else
                 {
@@ -163,12 +163,12 @@ namespace NHMCore.Configs
         {
             // since we have multitrheaded benchmarks
             lock (_lock)
-            lock (device)
-            {
-                var devSettingsPath = GetDeviceSettingsPath(device.Uuid);
-                var configs = device.GetDeviceConfig();
-                InternalConfigs.WriteFileSettings(devSettingsPath, configs);
-            }
+                lock (device)
+                {
+                    var devSettingsPath = GetDeviceSettingsPath(device.Uuid);
+                    var configs = device.GetDeviceConfig();
+                    InternalConfigs.WriteFileSettings(devSettingsPath, configs);
+                }
         }
 
         public static void InitDeviceSettings()

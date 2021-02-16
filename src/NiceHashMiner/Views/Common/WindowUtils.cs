@@ -1,14 +1,14 @@
-﻿using System;
+﻿using NHM.Common;
+//using NiceHashMiner.ViewModels.Settings;
+//using NiceHashMiner.Views.Settings.Controls;
+using NHMCore;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using NHM.Common;
 using System.Windows.Interop;
-//using NiceHashMiner.ViewModels.Settings;
-//using NiceHashMiner.Views.Settings.Controls;
-using NHMCore;
 
 namespace NiceHashMiner.Views.Common
 {
@@ -104,7 +104,7 @@ namespace NiceHashMiner.Views.Common
 
         public static void Translate(Panel p)
         {
-            if(p.ToolTip is string s)
+            if (p.ToolTip is string s)
             {
                 p.ToolTip = Translations.Tr(s);
             }
@@ -126,7 +126,7 @@ namespace NiceHashMiner.Views.Common
         {
             foreach (var item in i.Items)
             {
-                Translate(item);               
+                Translate(item);
             }
 
             if (i is DataGrid dg)
@@ -154,7 +154,7 @@ namespace NiceHashMiner.Views.Common
             //            ti.Header = Translations.Tr(ti.Header);
             //        }
             //    }
-                
+
             //}
         }
 
@@ -214,19 +214,19 @@ namespace NiceHashMiner.Views.Common
                     break;
                 case Decorator d:
                     Translate(d.Child);
-                    break;  
+                    break;
                 //case SettingsContainer sc:
                 //    Translate(sc);
                 //    break;
                 case ContentControl c:
                     Translate(c);
-                    break;               
+                    break;
                 case ItemsControl i:
                     Translate(i);
                     break;
                 case TextBlock tb:
                     Translate(tb);
-                    break;          
+                    break;
             }
         }
 
@@ -247,9 +247,9 @@ namespace NiceHashMiner.Views.Common
                 case UIElement u:
                     Translate(u);
                     break;
-                //case SettingsBaseVM sb:
-                //    Translate(sb);
-                //    break;
+                    //case SettingsBaseVM sb:
+                    //    Translate(sb);
+                    //    break;
             }
         }
 

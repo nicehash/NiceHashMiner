@@ -72,7 +72,8 @@ namespace NHMCore
                             return Tr("Checking Windows Video Controllers");
                     }
                 };
-                var devDetectionProgress = new Progress<DeviceDetectionStep>(step => {
+                var devDetectionProgress = new Progress<DeviceDetectionStep>(step =>
+                {
                     var msg = detectionStepMessage(step);
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
@@ -182,7 +183,7 @@ namespace NHMCore
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
                 NHWebSocket.SetCredentials(btc, worker, group);
                 NHWebSocket.StartLoop(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token);
-                
+
 
                 // STEP
                 // disable windows error reporting

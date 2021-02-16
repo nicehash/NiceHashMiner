@@ -34,7 +34,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
                 var uuid = pair.Key;
                 var busID = pair.Value;
 
-                
+
                 var nvmlResultStr = "InitalNVMLInitSuccess==FALSE";
                 if (InitalNVMLInitSuccess)
                 {
@@ -68,7 +68,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
             var nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
                                "\\NVIDIA Corporation\\NVSMI";
             var nvmlRootPathTag = "DEFAULT";
-            if(!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")))
+            if (!File.Exists(Path.Combine(nvmlRootPath, "nvml.dll")))
             {
                 nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) +
                                "\\System32";

@@ -58,7 +58,7 @@ namespace TeamRedMiner
                 {
                     var gpuID = kvp.Key;
                     var gpuUUID = kvp.Value;
-                    
+
                     var deviceStats = deviveStats
                         .Where(devStat => gpuID == devStat.GPU)
                         .FirstOrDefault();

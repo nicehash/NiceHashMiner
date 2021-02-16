@@ -4,11 +4,9 @@ using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -48,10 +46,10 @@ namespace NHMCore.Utils
         public static uint GetIdleTime()
         {
             var lastInPut = new LASTINPUTINFO();
-            lastInPut.cbSize = (uint) System.Runtime.InteropServices.Marshal.SizeOf(lastInPut);
+            lastInPut.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(lastInPut);
             GetLastInputInfo(ref lastInPut);
 
-            return ((uint) Environment.TickCount - lastInPut.dwTime);
+            return ((uint)Environment.TickCount - lastInPut.dwTime);
         }
 
         public static void DisableWindowsErrorReporting(bool en)
@@ -70,7 +68,7 @@ namespace NHMCore.Utils
                         var o = rk.GetValue("DontShowUI");
                         if (o != null)
                         {
-                            var val = (int) o;
+                            var val = (int)o;
                             Logger.Info("NICEHASH", $"Current DontShowUI value: {val}");
 
                             if (val == 0 && en)
@@ -154,7 +152,7 @@ namespace NHMCore.Utils
             using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32)
                 .OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\"))
             {
-                return ndpKey?.GetValue("Release") != null && Is45DotVersion((int) ndpKey.GetValue("Release"));
+                return ndpKey?.GetValue("Release") != null && Is45DotVersion((int)ndpKey.GetValue("Release"));
             }
         }
 
@@ -211,7 +209,7 @@ namespace NHMCore.Utils
                 using (var p = new Process { StartInfo = startInfo })
                 {
                     p.Start();
-                    p?.WaitForExit(10*1000);
+                    p?.WaitForExit(10 * 1000);
                     if (p?.ExitCode != 0)
                         Logger.Info("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
                     else
@@ -228,7 +226,7 @@ namespace NHMCore.Utils
         {
             try
             {
-                using (var p = Process.Start(urlLink)) {}
+                using (var p = Process.Start(urlLink)) { }
             }
             catch (Exception ex)
             {
@@ -242,7 +240,7 @@ namespace NHMCore.Utils
             {
                 // Create archive
                 if (!CreateLogArchive()) return false;
-                
+
                 // Upload archive
                 var tmpZipPath = Paths.RootPath($"tmp._archive_logs.zip");
                 var res2 = await UploadLogArchive(tmpZipPath, uuid);
@@ -259,7 +257,8 @@ namespace NHMCore.Utils
                 }
 
                 return true;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Logger.Error("Log-Report", ex.Message);
                 return false;

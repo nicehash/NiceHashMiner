@@ -1,9 +1,9 @@
-﻿using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using NHM.Common.Algorithm;
+﻿using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

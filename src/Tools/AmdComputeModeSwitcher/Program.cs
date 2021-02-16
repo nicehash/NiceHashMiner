@@ -1,10 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AmdComputeModeSwitcher
 {
@@ -12,7 +8,7 @@ namespace AmdComputeModeSwitcher
     {
         static void Main(string[] args)
         {
-            using(var localMachineKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}"))
+            using (var localMachineKey = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e968-e325-11ce-bfc1-08002be10318}"))
             {
                 var cardFolders = localMachineKey.GetSubKeyNames();
                 var results = new Dictionary<string, string>();

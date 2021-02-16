@@ -41,7 +41,7 @@ namespace NiceHashMiner.ViewModels.Models
 
         public double Hashrate => Stats?.Speeds?.Count > 0 ? Stats.Speeds[0].speed : 0;
 
-        public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate) s);
+        public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate)s);
 
         public double Payrate
         {
@@ -57,7 +57,7 @@ namespace NiceHashMiner.ViewModels.Models
                 }
             }
         }
-        
+
 
         public double FiatPayrate => BalanceAndExchangeRates.Instance.ConvertFromBtc(Payrate / 1000);
 

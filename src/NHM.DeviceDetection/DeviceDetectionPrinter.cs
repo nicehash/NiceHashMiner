@@ -48,7 +48,8 @@ namespace NHM.DeviceDetection
                     {
                         throw new InvalidOperationException("Could not start process: " + run);
                     }
-                    Action<string> stopProcess = (string stopFrom) => {
+                    Action<string> stopProcess = (string stopFrom) =>
+                    {
                         try
                         {
                             var isRunning = !run?.HasExited ?? false;

@@ -1,5 +1,4 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
 using NHMCore.Notifications;
 using System;
 using System.Collections.Generic;

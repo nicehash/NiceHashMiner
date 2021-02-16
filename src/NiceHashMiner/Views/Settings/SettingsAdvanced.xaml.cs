@@ -33,7 +33,8 @@ namespace NiceHashMiner.Views.Settings
             if (AvailableDevices.HasNvidia)
             {
                 wp_cuda.Visibility = System.Windows.Visibility.Visible;
-            } else
+            }
+            else
             {
                 wp_cuda.Visibility = System.Windows.Visibility.Collapsed;
             }

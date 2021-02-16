@@ -1,9 +1,9 @@
-﻿using NHM.MinerPlugin;
+﻿using Newtonsoft.Json;
+using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHM.MinerPluginLoader;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Interfaces;
-using Newtonsoft.Json;
-using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -194,7 +194,7 @@ namespace MinerPluginsPacker
                 //"1484c660-94ec-11ea-a64d-17be303ea466", // ZEnemy
                 "27315fe0-3b03-11eb-b105-8d43d5bd63be", // Excavator
             };
-            var bundlePluginsDlls = new Dictionary<string, string>(); 
+            var bundlePluginsDlls = new Dictionary<string, string>();
 
             foreach (var filePath in dllFiles)
             {
@@ -245,7 +245,8 @@ namespace MinerPluginsPacker
                         packedPlugins.Add(plugin.PluginUUID);
                         AddPluginToPluginPackageInfos(plugin);
 
-                    } catch(Exception e)
+                    }
+                    catch (Exception e)
                     {
                         Console.WriteLine($"\t\t{e.Message}");
                     }

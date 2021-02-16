@@ -19,7 +19,7 @@ namespace NHMCore.Configs
             }
         }
 
-        private string _iFTTTKey  = "";
+        private string _iFTTTKey = "";
         public string IFTTTKey
         {
             get => _iFTTTKey;

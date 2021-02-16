@@ -2,19 +2,8 @@
 using NiceHashMiner.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NiceHashMiner.Views.Benchmark
 {
@@ -50,7 +39,8 @@ namespace NiceHashMiner.Views.Benchmark
                 _toggleButtonsGuard.Add(tButton);
                 BenchmarkTypeContextMenu.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
-                closedHandler += (s, e2) => {
+                closedHandler += (s, e2) =>
+                {
                     _toggleButtonsGuard.Remove(tButton);
                     //tButton.IsChecked = false;
                     BenchmarkTypeContextMenu.Closed -= closedHandler;

@@ -1,6 +1,6 @@
-﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common.Algorithm;
+﻿using NHM.Common.Algorithm;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1.Configs;
 using System.Collections.Generic;
 
 namespace NHM.MinerPluginToolkitV1.Interfaces

@@ -1,10 +1,5 @@
-﻿using NHMCore.Notifications;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -16,7 +11,7 @@ namespace NiceHashMiner.Views.Notifications.Converters
         {
             if (value is bool notificationNew)
             {
-                if(notificationNew == true) return Visibility.Visible;
+                if (notificationNew == true) return Visibility.Visible;
                 return Visibility.Hidden;
             }
             return null;

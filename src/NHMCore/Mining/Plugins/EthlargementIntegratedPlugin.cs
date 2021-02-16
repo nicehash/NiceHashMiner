@@ -49,7 +49,7 @@ namespace NHMCore.Mining.Plugins
         public bool SystemContainsSupportedDevices => _systemContainsSupportedDevices;
 
         public bool SystemContainsSupportedDevicesNotSystemElevated => SystemContainsSupportedDevices && !Helpers.IsElevated;
-        
+
         // used inside XAML settings form
         public bool IsSystemElevated => Helpers.IsElevated;
 
@@ -112,7 +112,7 @@ namespace NHMCore.Mining.Plugins
         }
 
         private static object _startStopLock = new object();
-        
+
         public void Start(IEnumerable<MiningPair> miningPairs)
         {
             lock (_startStopLock)
@@ -272,8 +272,8 @@ namespace NHMCore.Mining.Plugins
         #endregion Ethlargement Process
 
         #region Internal settings
-        
-        public virtual void InitInternals(){} // STUB
+
+        public virtual void InitInternals() { } // STUB
 
         public void InitAndCheckSupportedDevices(IEnumerable<BaseDevice> devices)
         {
@@ -292,7 +292,7 @@ namespace NHMCore.Mining.Plugins
                 }
             }
             catch
-            {}
+            { }
 
 
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
@@ -321,11 +321,11 @@ namespace NHMCore.Mining.Plugins
             public List<AlgorithmType> SupportedAlgorithms { get; set; } = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto };
 
             [JsonProperty("ignore_miner_uuids")]
-            public List<string> IgnoreMinerPluginUUIDs { get; set; } = new List<string>{ };
+            public List<string> IgnoreMinerPluginUUIDs { get; set; } = new List<string> { };
             // "f683f550-94eb-11ea-a64d-17be303ea466" NBMiner
         }
 
-        protected SupportedDevicesSettings _ethlargementSettings = new SupportedDevicesSettings{};
+        protected SupportedDevicesSettings _ethlargementSettings = new SupportedDevicesSettings { };
 
         protected bool IsSupportedAlgorithm(AlgorithmType algorithmType)
         {
@@ -366,11 +366,11 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        
+
 
         protected MinersBinsUrlsSettings MinersBinsUrlsSettings { get; set; } = new MinersBinsUrlsSettings
         {
-            Urls = new List<string> { "https://github.com/Virosa/ETHlargementPill/raw/master/ETHlargementPill-r2.exe" } 
+            Urls = new List<string> { "https://github.com/Virosa/ETHlargementPill/raw/master/ETHlargementPill-r2.exe" }
         };
         #endregion Internal settings
 
@@ -394,7 +394,7 @@ namespace NHMCore.Mining.Plugins
         {
             return new PluginMetaInfo
             {
-                PluginDescription = "ETHlargement increases DaggerHashimoto hashrate for NVIDIA 1080, 1080 Ti and Titan Xp GPUs.", 
+                PluginDescription = "ETHlargement increases DaggerHashimoto hashrate for NVIDIA 1080, 1080 Ti and Titan Xp GPUs.",
                 SupportedDevicesAlgorithms = new Dictionary<DeviceType, List<AlgorithmType>> { { DeviceType.NVIDIA, new List<AlgorithmType> { AlgorithmType.DaggerHashimoto } } }
             };
         }

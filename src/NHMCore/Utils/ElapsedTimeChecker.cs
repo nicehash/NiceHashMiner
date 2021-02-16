@@ -7,7 +7,7 @@ namespace NHMCore.Utils
         private Func<TimeSpan> _elapsedTimeSpanInterval;
         private DateTime _lastElapsedDateTime;
         public ElapsedTimeChecker(TimeSpan elapsedTimeSpanInterval, bool startFromMinValue) : this(() => elapsedTimeSpanInterval, startFromMinValue)
-        {}
+        { }
 
         public ElapsedTimeChecker(Func<TimeSpan> elapsedTimeSpanIntervalFunc, bool startFromMinValue)
         {

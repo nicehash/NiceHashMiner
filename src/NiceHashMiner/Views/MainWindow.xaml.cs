@@ -10,6 +10,7 @@ using NiceHashMiner.Views.Common;
 using NiceHashMiner.Views.Common.NHBase;
 using NiceHashMiner.Views.TDPSettings;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,6 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Collections.ObjectModel;
 
 namespace NiceHashMiner.Views
 {
@@ -127,7 +127,7 @@ namespace NiceHashMiner.Views
 
         private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(nameof(NotificationsManager.NotificationNewCount) == e.PropertyName)
+            if (nameof(NotificationsManager.NotificationNewCount) == e.PropertyName)
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -150,7 +150,8 @@ namespace NiceHashMiner.Views
                         CancelVisible = Visibility.Collapsed,
                         AnimationVisible = Visibility.Collapsed
                     };
-                    nhmBurnDialog.OnExit += (s,e) => {
+                    nhmBurnDialog.OnExit += (s, e) =>
+                    {
                         ApplicationStateManager.ExecuteApplicationExit();
                     };
                     ShowContentAsModalDialog(nhmBurnDialog);
@@ -172,10 +173,12 @@ namespace NiceHashMiner.Views
                         CancelText = Translations.Tr("Cancel"),
                         AnimationVisible = Visibility.Collapsed
                     };
-                    nhmNoDeviceDialog.OKClick += (s, e) => {
+                    nhmNoDeviceDialog.OKClick += (s, e) =>
+                    {
                         Process.Start(Links.NhmNoDevHelp);
                     };
-                    nhmNoDeviceDialog.OnExit += (s, e) => {
+                    nhmNoDeviceDialog.OnExit += (s, e) =>
+                    {
                         ApplicationStateManager.ExecuteApplicationExit();
                     };
                     ShowContentAsModalDialog(nhmNoDeviceDialog);
@@ -337,7 +340,7 @@ namespace NiceHashMiner.Views
                             CancelVisible = Visibility.Collapsed,
                             OkVisible = Visibility.Collapsed,
                             AnimationVisible = Visibility.Collapsed,
-                           
+
                         };
                         CustomDialogManager.ShowModalDialog(dialog);
                     });
@@ -351,7 +354,7 @@ namespace NiceHashMiner.Views
                     Logger.Error("MainVM.IsNHMWSConnected", ex.Message);
                 }
             }
-            else if(_vm.NHMWSConnected && nhmwsDialogShown)
+            else if (_vm.NHMWSConnected && nhmwsDialogShown)
             {
                 try
                 {

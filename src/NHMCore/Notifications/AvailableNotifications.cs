@@ -87,7 +87,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => {Process.Start(Links.NhmNoDevHelp); }
+                Action = () => { Process.Start(Links.NhmNoDevHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -123,13 +123,15 @@ namespace NHMCore.Notifications
                     Info = Tr("Download updater"),
                     Action = () =>
                     {
-                        ApplicationStateManager.App.Dispatcher.Invoke(async () => {
+                        ApplicationStateManager.App.Dispatcher.Invoke(async () =>
+                        {
                             var ok = await UpdateHelpers.StartDownloadingUpdater(isInstallerVersion);
                             if (!ok)
                             {
                                 CreateNhmUpdateAttemptFail();
                             }
-                            else {
+                            else
+                            {
                                 NotificationsManager.Instance.RemoveNotificationFromList(notification);
                                 CreateNhmUpdateInfoUpdate();
                             }
@@ -153,7 +155,8 @@ namespace NHMCore.Notifications
                     Info = Tr("Start updater"),
                     Action = () =>
                     {
-                        ApplicationStateManager.App.Dispatcher.Invoke(async () => {
+                        ApplicationStateManager.App.Dispatcher.Invoke(async () =>
+                        {
                             var ok = await UpdateHelpers.StartUpdateProcess();
                             if (!ok) CreateNhmUpdateAttemptFail();
                         });
@@ -215,11 +218,11 @@ namespace NHMCore.Notifications
                 //clean previous notification
                 NotificationsManager.Instance.Notifications.Remove(pluginNotification);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error("Notifications", ex.Message);
             }
-            
+
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.PluginUpdate, Tr("Miner Plugin Update"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -328,7 +331,7 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.OpenClFallback, Tr("Fallback of OpenCL"), Tr("Please check if AMD drivers are installed properly. If they are please remove Intel video driver."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
-    
+
         public static void CreateNoAvailableAlgorithmsInfo()
         {
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.NoAvailableAlgorithms, Tr("No available algorithms"), Tr("There are no available algorithms to mine. Please check you rig stability and stability of installed plugins."));
@@ -339,11 +342,11 @@ namespace NHMCore.Notifications
         {
             //clean previous
             var logUploadNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.LogArchiveUpload).FirstOrDefault();
-            if(logUploadNotifications != null) logUploadNotifications.RemoveNotification();
+            if (logUploadNotifications != null) logUploadNotifications.RemoveNotification();
 
             var sentence = Tr("was uploaded.");
             if (!success) sentence = Tr("was not uploaded. Please contact our support team for help.");
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.LogArchiveUpload, Tr("Log archive upload result"), Tr("The log archive with the following ID: {0}", uuid) +" "+ sentence);
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.LogArchiveUpload, Tr("Log archive upload result"), Tr("The log archive with the following ID: {0}", uuid) + " " + sentence);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 

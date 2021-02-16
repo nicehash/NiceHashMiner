@@ -18,7 +18,7 @@ namespace NHMCore.Mining.IdleChecking
 
         private static void IdleSettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(IdleMiningSettings.IdleCheckType) || 
+            if (e.PropertyName == nameof(IdleMiningSettings.IdleCheckType) ||
                 e.PropertyName == nameof(IdleMiningSettings.StartMiningWhenIdle))
                 StartIdleCheck();
         }

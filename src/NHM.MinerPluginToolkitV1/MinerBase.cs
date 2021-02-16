@@ -1,10 +1,10 @@
-﻿using NHM.MinerPlugin;
+﻿using NHM.Common;
+using NHM.Common.Device;
+using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1.Configs;
 using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
-using NHM.Common.Device;
-using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,7 +62,7 @@ namespace NHM.MinerPluginToolkitV1
         protected object _lock = new object();
 
         private class StopMinerWatchdogException : Exception
-        {}
+        { }
 
         public MinerOptionsPackage MinerOptionsPackage { get; set; }
         public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
@@ -214,7 +214,7 @@ namespace NHM.MinerPluginToolkitV1
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 var commandType = startTrueStopFalse ? "START" : "STOP";
                 Logger.Error(_logGroup, $"ExecMinerCustomActionSettings {commandType} error: {e.Message}");
@@ -432,7 +432,7 @@ namespace NHM.MinerPluginToolkitV1
                         tickCancelSource.Cancel();
                     }
                     catch
-                    {}
+                    { }
                 }
                 await t;
                 if (stop.IsCancellationRequested)
@@ -481,7 +481,7 @@ namespace NHM.MinerPluginToolkitV1
                 // return API result
                 return result;
             }
-                
+
         }
 
 

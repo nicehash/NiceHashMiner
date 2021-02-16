@@ -1,7 +1,6 @@
 using NHM.Common;
 using NHM.DeviceDetection;
 using NHMCore.Configs;
-using NHMCore.Mining;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
@@ -67,7 +66,8 @@ namespace NHMCore
         private static void StartComputeDevicesCheckTimer()
         {
             if (_cudaDeviceCheckerTimer?.IsActive ?? false) return;
-            _cudaDeviceCheckerTimer = new AppTimer(async (object sender, ElapsedEventArgs e) => {
+            _cudaDeviceCheckerTimer = new AppTimer(async (object sender, ElapsedEventArgs e) =>
+            {
                 if (!GlobalDeviceSettings.Instance.CheckForMissingGPUs)
                     return;
                 // this function checks if count of CUDA devices is same as it was on application start, reason for that is

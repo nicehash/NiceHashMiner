@@ -52,7 +52,7 @@ namespace Example
             var totalSpeed = 0d;
             var totalPowerUsage = 0;
 
-            foreach(var mp in _miningPairs)
+            foreach (var mp in _miningPairs)
             {
                 var speedVariation = _rand.Next(-100, 100);
                 var speed = 1000 + speedVariation;
@@ -127,7 +127,7 @@ namespace Example
             batFileContents.AppendLine($"echo \"{$"On mining location {_miningLocation}"}\"");
             batFileContents.AppendLine($"echo \"{$"With username {_username}"}\"");
             batFileContents.AppendLine($"echo \"{$"With devices:"}\"");
-            foreach(var mp in _miningPairs)
+            foreach (var mp in _miningPairs)
             {
                 batFileContents.AppendLine($"echo \"    {$"{mp.Device.Name}:{mp.Device.ID}:{mp.Device.UUID}"}\"");
             }

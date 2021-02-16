@@ -1,7 +1,7 @@
-﻿using NHM.MinerPlugin;
-using NHM.Common;
+﻿using NHM.Common;
+using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHMCore.Configs;
-using NHMCore.Configs.Data;
 using NHMCore.Mining.Plugins;
 using NHMCore.Utils;
 using System;
@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NHM.Common.Enums;
 
 namespace NHMCore.Mining
 {
@@ -131,7 +130,7 @@ namespace NHMCore.Mining
                 {
                     IsUpdatingApi = false;
                     _apiSemaphore.Release();
-                    if(apiData.AlgorithmSpeedsPerDevice != null)
+                    if (apiData.AlgorithmSpeedsPerDevice != null)
                     {
                         var anyNegative = apiData.AlgorithmSpeedsPerDevice.Any(apiDev => apiDev.Value.Any(kvp => kvp.speed < 0));
                         if (anyNegative) await StopAsync();
@@ -289,7 +288,7 @@ namespace NHMCore.Mining
                             {
                                 restartCount = 0;
                             }
-                            if(restartCount >= maxRestartCount)
+                            if (restartCount >= maxRestartCount)
                             {
                                 var firstAlgo = _algos.FirstOrDefault();
                                 Random randWait = new Random();
@@ -323,7 +322,7 @@ namespace NHMCore.Mining
                     {
                         if (isOk()) await TaskHelpers.TryDelay(checkWaitTime, stop);
                         if (isOk() && minerStatusElapsedTimeChecker.CheckAndMarkElapsedTime()) await GetSummaryAsync();
-                        
+
                         // check if stagnated and restart
                         var restartGroups = MinerApiWatchdog.GetTimedoutGroups(DateTime.UtcNow);
                         if (isOk() && (restartGroups?.Contains(GroupKey) ?? false))

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Win32;
-using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
+using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore.Configs;
 using System;
 using System.Collections.Generic;

@@ -1,11 +1,11 @@
-﻿using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,7 +108,7 @@ namespace Phoenix
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedIDs.Count == 0) return;
-            
+
             var containsAMD = devices.Any(dev => dev.DeviceType == DeviceType.AMD);
             var containsNVIDIA = devices.Any(dev => dev.DeviceType == DeviceType.NVIDIA);
 

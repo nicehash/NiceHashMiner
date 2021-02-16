@@ -1,5 +1,5 @@
-﻿using NHM.MinerPluginToolkitV1.Interfaces;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -26,7 +26,7 @@ namespace NHM.MinerPluginToolkitV1.Configs
 
         [JsonProperty("default_system_environment_variables")]
         public Dictionary<string, string> DefaultSystemEnvironmentVariables { get; set; } = null;
-        
+
         [JsonProperty("custom_system_environment_variables")]
         public Dictionary<string, Dictionary<string, string>> CustomSystemEnvironmentVariables { get; set; } = null;
     }

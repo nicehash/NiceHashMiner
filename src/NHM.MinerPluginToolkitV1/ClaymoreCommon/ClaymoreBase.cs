@@ -114,5 +114,5 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
             return CreateCommandLine(_username) + $" -mport 127.0.0.1:-{_apiPort}";
         }
 
-     }
+    }
 }

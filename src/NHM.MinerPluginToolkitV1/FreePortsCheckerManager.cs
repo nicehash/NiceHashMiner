@@ -52,7 +52,7 @@ namespace NHM.MinerPluginToolkitV1
             {
                 var tcpFree = IsPortFree(port, tcpIpEndpoints);
                 var udpFree = IsPortFree(port, udpIpEndpoints);
-                lock(_lock)
+                lock (_lock)
                 {
                     var canReserve = CanReservePort(port, now);
                     if (tcpFree && udpFree && canReserve)

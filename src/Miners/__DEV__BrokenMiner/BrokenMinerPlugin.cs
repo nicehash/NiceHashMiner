@@ -1,8 +1,8 @@
-﻿using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using NHM.Common.Algorithm;
+﻿using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +11,7 @@ namespace BrokenMiner
     public class BrokenMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource
     {
 
-        Version IMinerPlugin.Version => GetValueOrErrorSettings.GetValueOrError("Version", new Version(1,0));
+        Version IMinerPlugin.Version => GetValueOrErrorSettings.GetValueOrError("Version", new Version(1, 0));
 
         string IMinerPlugin.Name => GetValueOrErrorSettings.GetValueOrError("Name", "Broken Plugin");
 
@@ -47,7 +47,7 @@ namespace BrokenMiner
 
         void IInitInternals.InitInternals() => GetValueOrErrorSettings.SetError("InitInternals");
 
-        bool IReBenchmarkChecker.ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids) => 
+        bool IReBenchmarkChecker.ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids) =>
             GetValueOrErrorSettings.GetValueOrError("ShouldReBenchmarkAlgorithmOnDevice", false);
 
         IEnumerable<string> IMinerBinsSource.GetMinerBinsUrlsForPlugin()

@@ -7,7 +7,8 @@ namespace XMRig
 {
     public static class BenchmarkHelpers
     {
-        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string contains) {
+        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string contains)
+        {
             if (!s.Contains(contains))
             {
                 return Tuple.Create(0d, false); ;

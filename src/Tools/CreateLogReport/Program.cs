@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CreateLogReport
 {
@@ -43,7 +39,7 @@ namespace CreateLogReport
                 using (var p = new Process { StartInfo = startInfo })
                 {
                     p.Start();
-                    p.WaitForExit(30 *1000);
+                    p.WaitForExit(30 * 1000);
                 }
             }
             catch (Exception e)
@@ -86,7 +82,8 @@ namespace CreateLogReport
                             fileRawBytes = File.ReadAllBytes("tmpLog.txt");
                             File.Delete("tmpLog.txt");
                         }
-                        else {
+                        else
+                        {
                             fileRawBytes = File.ReadAllBytes(filePath);
                         }
                         using (var entryStream = zipFile.Open())
@@ -107,7 +104,7 @@ namespace CreateLogReport
             Console.WriteLine("Done.");
             Console.WriteLine($"Packed file: '{archiveFileName}'");
             Console.WriteLine("You can close this window. Press any key to close.");
-            if(args.Length == 0) Console.ReadKey();
+            if (args.Length == 0) Console.ReadKey();
         }
     }
 }

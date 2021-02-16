@@ -1,13 +1,9 @@
-﻿using NHMCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Ink;
 using System.Windows.Input;
 
 namespace NiceHashMiner.Views.Common.NHBase
@@ -63,7 +59,7 @@ namespace NiceHashMiner.Views.Common.NHBase
             _gridLayoutRootOverlay = GetRequiredTemplateChild<Grid>("LayoutRootOverlay");
             _gridLayoutRootOverlay_MODAL_WINDOW = GetRequiredTemplateChild<Grid>("MODAL_WINDOW_BLUR");
             _gridLayoutRootOverlay_MODAL_WINDOW_ContentGrid = GetRequiredTemplateChild<Grid>("MODAL_WINDOW_ContentGrid");
-            
+
             _gridLayoutRootOverlay_MODAL_WINDOW_ContentGrid.MouseDown += _gridLayoutRootOverlay_MouseDown;
             _gridLayoutRootOverlay_MODAL_WINDOW.MouseDown += _gridLayoutRootOverlay_MouseDown;
             _gridLayoutRootOverlay.MouseDown += _gridLayoutRootOverlay_MouseDown;
@@ -174,9 +170,9 @@ namespace NiceHashMiner.Views.Common.NHBase
         public void SetNotificationCount(int count)
         {
             var notificationButton = GetRequiredTemplateChild<ToggleButton>("NotificationsButton");
-            if(notificationButton != null)
+            if (notificationButton != null)
             {
-                if(count == 0)
+                if (count == 0)
                 {
                     notificationButton.Style = this.FindResource("bellWindowStyle") as Style;
                     notificationButton.Content = "\uf0f3";

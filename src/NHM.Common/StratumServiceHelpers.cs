@@ -1,5 +1,5 @@
-﻿using NHM.Common.Enums;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

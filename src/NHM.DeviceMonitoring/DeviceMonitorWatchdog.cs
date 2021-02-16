@@ -13,7 +13,7 @@ namespace NHM.DeviceMonitoring
 
         internal DeviceMonitorWatchdog(params TimeSpan[] restartTimeouts)
         {
-            if(restartTimeouts.Count() == 0)
+            if (restartTimeouts.Count() == 0)
             {
                 Environment.FailFast("restartTimeouts MUST have at least one value");
             }

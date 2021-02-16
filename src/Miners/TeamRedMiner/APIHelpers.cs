@@ -1,12 +1,7 @@
-﻿using NHM.MinerPlugin;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHM.Common;
-using NHM.Common.Device;
-using NHM.Common.Enums;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;

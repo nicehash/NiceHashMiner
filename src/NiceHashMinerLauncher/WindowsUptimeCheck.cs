@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner
@@ -14,7 +11,7 @@ namespace NiceHashMiner
             var waitSecondsBeforeStart = WaitSecondsBeforeStart();
             if (waitSecondsBeforeStart > 0)
             {
-                await Task.Delay((int)waitSecondsBeforeStart *1000);
+                await Task.Delay((int)waitSecondsBeforeStart * 1000);
             }
         }
 
@@ -23,7 +20,7 @@ namespace NiceHashMiner
             var waitSeconds = 10 - GetUpTime().TotalSeconds;
             return waitSeconds;
         }
-        
+
         public static TimeSpan GetUpTime()
         {
             return TimeSpan.FromMilliseconds(GetTickCount64());

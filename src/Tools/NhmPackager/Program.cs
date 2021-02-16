@@ -1,15 +1,11 @@
-﻿using NHM.Common;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace NhmPackager
 {
@@ -167,7 +163,7 @@ namespace NhmPackager
                 File.WriteAllText(Path.Combine(filesToPackPath, "nsis", "include_common", "packageDefsGenerated.nsh"), generatedTemplate, new UTF8Encoding(true));
                 File.WriteAllText(Path.Combine(filesToPackPath, "version.txt"), version + buildTag);
                 // delete previous _files_to_pack from nhmpacker
-                var nhmPackerFilesToPack = GetRootPath("nhmpacker", "_files_to_pack"); 
+                var nhmPackerFilesToPack = GetRootPath("nhmpacker", "_files_to_pack");
                 RecreateFolderIfExists(nhmPackerFilesToPack);
                 ExecXCopy(filesToPackPath, nhmPackerFilesToPack);
                 RecreateFolderIfExists(GetRootPath("nhmpacker", "_files_to_pack", "assets")); // just so the packer works

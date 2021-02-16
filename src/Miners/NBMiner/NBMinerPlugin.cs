@@ -1,10 +1,10 @@
-﻿using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,7 +136,7 @@ namespace NBMiner
                     _mappedIDs[uuid] = indexID;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error("NBMiner", $"Error during DevicesCrossReference: {ex.Message}");
             }

@@ -18,7 +18,8 @@ namespace WildRig
 
     internal static class BenchmarkHelpers
     {
-        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after) {
+        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after)
+        {
             if (!s.Contains(after))
             {
                 return Tuple.Create(0d, false); ;

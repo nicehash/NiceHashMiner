@@ -16,7 +16,7 @@ namespace CryptoDredge
         private int _apiPort;
 
         public CryptoDredge(string uuid) : base(uuid)
-        {}
+        { }
 
         private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 

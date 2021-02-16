@@ -4,16 +4,16 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Excavator
 {
@@ -22,7 +22,7 @@ namespace Excavator
         private int _apiPort;
 
         public Excavator(string uuid) : base(uuid)
-        {}
+        { }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
@@ -129,7 +129,7 @@ namespace Excavator
             return ad;
         }
 
-        protected override void Init() {}
+        protected override void Init() { }
 
         private static string GetServiceLocation(string miningLocation)
         {

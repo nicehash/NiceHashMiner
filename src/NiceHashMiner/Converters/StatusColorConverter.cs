@@ -1,15 +1,15 @@
-﻿using System;
+﻿using NHM.Common.Enums;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using NHM.Common.Enums;
 
 namespace NiceHashMiner.Converters
 {
     public class StatusColorConverter : IValueConverter
     {
-        private static SolidColorBrush DEFAULT = new SolidColorBrush(Color.FromArgb(50,00,150,50));
+        private static SolidColorBrush DEFAULT = new SolidColorBrush(Color.FromArgb(50, 00, 150, 50));
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             //return Translations.Tr(value);

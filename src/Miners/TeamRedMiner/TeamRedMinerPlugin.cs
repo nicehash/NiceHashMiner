@@ -1,13 +1,12 @@
-﻿using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common.Algorithm;
+﻿using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NHM.Common;
 
 namespace TeamRedMiner
 {
@@ -83,8 +82,8 @@ namespace TeamRedMiner
         }
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
-        {           
-            if(ids.Count() != 0)
+        {
+            if (ids.Count() != 0)
             {
                 if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5) return true;
             }

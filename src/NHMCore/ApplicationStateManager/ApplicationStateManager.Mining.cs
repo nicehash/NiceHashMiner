@@ -1,16 +1,15 @@
 using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1.Configs;
 using NHMCore.ApplicationState;
-using NHMCore.Mining.Benchmarking;
-using NHMCore.Configs;
 using NHMCore.Mining;
+using NHMCore.Mining.Benchmarking;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using NHM.MinerPluginToolkitV1.Configs;
-using System.IO;
-using System;
 
 namespace NHMCore
 {
@@ -55,10 +54,13 @@ namespace NHMCore
                 device.State = setState; // THIS TRIGERS STATE CHANGE
             }
             var devicesToMine = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining).ToList();
-            if (devicesToMine.Count > 0) {
+            if (devicesToMine.Count > 0)
+            {
                 StartMining();
                 await MiningManager.UpdateMiningSession(devicesToMine);
-            } else {
+            }
+            else
+            {
                 await StopMining();
             }
             // TODO implement and clear devicePending state changed
@@ -81,7 +83,8 @@ namespace NHMCore
         {
             // TODO consider trying to start the error state devices as well
             var devicesToStart = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Stopped);
-            if (devicesToStart.Count() == 0) {
+            if (devicesToStart.Count() == 0)
+            {
                 return (false, "there are no new devices to start");
             }
 
@@ -101,7 +104,7 @@ namespace NHMCore
             startTasksAndMining.Add(UpdateDevicesToMineTask());
             // and await
             await Task.WhenAll(startTasksAndMining);
-            
+
             // get task statuses
             var startDeviceTasks = devicesToStart.Zip(startTasks, (dev, task) => new { Device = dev, Task = task });
             foreach (var pair in startDeviceTasks)
@@ -176,7 +179,8 @@ namespace NHMCore
             return true;
         }
 
-        public static async Task<(bool stopped, string failReason)> StopAllDevicesTask() {
+        public static async Task<(bool stopped, string failReason)> StopAllDevicesTask()
+        {
             // TODO when starting and stopping we are not taking Pending and Error states into account
             var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
             if (devicesToStop.Count() == 0)
@@ -204,7 +208,7 @@ namespace NHMCore
             {
                 await Task.WhenAll(stopTasks);
             }
-            
+
             var stopedDeviceTasks = devicesToStop.Zip(stopTasks, (dev, task) => new { Device = dev, Task = task });
             foreach (var pair in stopedDeviceTasks)
             {
@@ -323,7 +327,8 @@ namespace NHMCore
         internal static async Task RestoreMiningState()
         {
             var devicesRestoreStates = InternalConfigs.ReadFileSettings<Dictionary<string, DeviceRestoreState>>(_miningStateFilePath);
-            if (devicesRestoreStates == null) {
+            if (devicesRestoreStates == null)
+            {
                 var miningStateFilePathOLD = Paths.RootPath("DeviceRestoreStates.json");
                 // check the old path since older versions will save it there
                 devicesRestoreStates = InternalConfigs.ReadFileSettings<Dictionary<string, DeviceRestoreState>>(miningStateFilePathOLD);

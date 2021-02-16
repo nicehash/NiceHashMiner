@@ -37,7 +37,8 @@ namespace NHM.MinerPluginToolkitV1.ClaymoreCommon
                 {
                     // start proc
                     getDevicesHandle.Start();
-                    Action<string> getDevicesHandleStop = (string stopFrom) => {
+                    Action<string> getDevicesHandleStop = (string stopFrom) =>
+                    {
                         try
                         {
                             var isRunning = !getDevicesHandle?.HasExited ?? false;

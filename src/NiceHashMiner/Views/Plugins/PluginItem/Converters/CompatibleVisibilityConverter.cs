@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NHMCore.Mining.Plugins;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using NHMCore.Mining.Plugins;
 
 namespace NiceHashMiner.Views.Plugins.PluginItem.Converters
 {

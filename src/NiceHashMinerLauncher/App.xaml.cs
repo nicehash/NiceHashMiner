@@ -84,12 +84,12 @@ namespace NiceHashMiner
 
         private static Mutex _mutex = null;
 
-        static readonly string[] AppExeNames = new string[]{ "NiceHashMiner.exe", "app_nhm.exe" };
+        static readonly string[] AppExeNames = new string[] { "NiceHashMiner.exe", "app_nhm.exe" };
         private static (string appDir, string appPath, Version version) GetLatestApp()
         {
             var path = GetRootPath();
             var appDirs = Directory.GetDirectories(path, "app*");
-            
+
             if (appDirs.Length > 0)
             {
                 Version latest = null;
@@ -278,10 +278,10 @@ namespace NiceHashMiner
                 _mutex = new Mutex(true, appPath, out createdNew);
                 if (!createdNew)
                 {
-                   //MessageBox.Show("We have detected you are already running NiceHash Miner. Only a single instance should be running at a time.", "NiceHash Miner Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                   // shutdown
-                   Shutdown();
-                   return;
+                    //MessageBox.Show("We have detected you are already running NiceHash Miner. Only a single instance should be running at a time.", "NiceHash Miner Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    // shutdown
+                    Shutdown();
+                    return;
                 }
 
                 ClearAllTmpFiles();
@@ -318,7 +318,7 @@ namespace NiceHashMiner
                             // TODO 
                             Console.WriteLine(niceHashMiner.ExitCode);
                             //in case of crash try to restart the program
-                            if(niceHashMiner.ExitCode != 0)
+                            if (niceHashMiner.ExitCode != 0)
                             {
                                 var endTime = DateTime.UtcNow;
 

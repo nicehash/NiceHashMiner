@@ -23,7 +23,7 @@ namespace NHM.MinerPluginToolkitV1
                 using (var sr = new StreamReader(responseStream))
                 {
                     //Need to return this response 
-                    string strContent =  await sr.ReadToEndAsync();
+                    string strContent = await sr.ReadToEndAsync();
                     var json = JObject.Parse(strContent);
                     var currentBlockNum = json.GetValue("count").ToString();
                     return currentBlockNum;

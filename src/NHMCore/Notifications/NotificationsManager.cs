@@ -10,7 +10,7 @@ namespace NHMCore.Notifications
         private static readonly object _lock = new object();
 
         private NotificationsManager()
-        {}
+        { }
 
         private readonly List<Notification> _notifications = new List<Notification>();
 
@@ -47,7 +47,7 @@ namespace NHMCore.Notifications
 
         private void Notification_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(nameof(Notification.NotificationNew) == e.PropertyName)
+            if (nameof(Notification.NotificationNew) == e.PropertyName)
             {
                 OnPropertyChanged(nameof(NotificationNewCount));
             }

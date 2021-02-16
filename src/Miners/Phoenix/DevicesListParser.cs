@@ -12,7 +12,7 @@ namespace Phoenix
             var gpus = baseDevices.Where(dev => dev is IGpuDevice).Cast<IGpuDevice>();
             var mappedDevices = new Dictionary<string, int>();
             var lines = output.Split(new[] { "\r\n", "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            
+
             int index = -1;
             foreach (var line in lines)
             {
@@ -30,7 +30,7 @@ namespace Phoenix
                     mappedDevices.Add(gpuWithPCIeBusID.UUID, index);
                 }
             }
-            
+
             return mappedDevices;
         }
     }

@@ -18,7 +18,7 @@ namespace NHM.MinerPlugin
         {
             try
             {
-                if(AlgorithmSpeedsPerDevice != null)
+                if (AlgorithmSpeedsPerDevice != null)
                 {
                     List<(AlgorithmType type, double speed)> totalPairsSum = AlgorithmSpeedsPerDevice.Values.FirstOrDefault().Select(pair => (pair.type, 0.0)).ToList();
                     foreach (var pairs in AlgorithmSpeedsPerDevice.Values)
@@ -29,7 +29,7 @@ namespace NHM.MinerPlugin
                         }
                     }
                     return totalPairsSum;
-                }               
+                }
             }
             catch (Exception ex)
             {

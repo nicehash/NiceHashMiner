@@ -1,7 +1,6 @@
 ﻿using NHM.Common;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -70,7 +69,8 @@ namespace NHMCore.ApplicationState
 
         // if no login we have no balance
         private double? _btcBalance = null;
-        public double? BtcBalance {
+        public double? BtcBalance
+        {
             get => _btcBalance;
             internal set
             {
@@ -113,7 +113,7 @@ namespace NHMCore.ApplicationState
 
         public bool HasFiatCurrencyOptions => _fiatCurrencyKeys.Count > 0;
         public IReadOnlyList<string> FiatCurrencyOptions => _fiatCurrencyKeys;
-        private List<string> _fiatCurrencyKeys = new List<string>{};
+        private List<string> _fiatCurrencyKeys = new List<string> { };
 
         public bool HasSelectedFiatCurrency => _fiatCurrencyKeys.Contains(SelectedFiatCurrency);
         private string _fiatCurrency { get; set; } = "USD";

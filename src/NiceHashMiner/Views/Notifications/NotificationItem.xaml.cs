@@ -3,7 +3,6 @@ using NHMCore.Configs;
 using NHMCore.Notifications;
 using NiceHashMiner.Views.Common;
 using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -28,7 +27,7 @@ namespace NiceHashMiner.Views.Notifications
         {
             if (e.NewValue is Notification notification)
             {
-                _notification  = notification;
+                _notification = notification;
                 var action = _notification.Action;
                 if (action != null)
                 {
@@ -37,7 +36,8 @@ namespace NiceHashMiner.Views.Notifications
                     _isSingleShot = action.IsSingleShotAction;
                     if (action.BindProgress)
                     {
-                        action.Progress = new Progress<int>((int p) => {
+                        action.Progress = new Progress<int>((int p) =>
+                        {
                             ActionProgressBar.Value = p;
                         });
                     }

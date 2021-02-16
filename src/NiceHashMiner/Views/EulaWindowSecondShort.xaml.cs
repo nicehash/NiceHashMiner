@@ -1,6 +1,5 @@
-﻿using System.Windows;
-using NiceHashMiner.Views.Common;
-using NiceHashMiner.Views.Common.NHBase;
+﻿using NiceHashMiner.Views.Common.NHBase;
+using System.Windows;
 
 namespace NiceHashMiner.Views
 {

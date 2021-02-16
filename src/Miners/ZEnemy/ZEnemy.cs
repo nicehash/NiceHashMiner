@@ -15,7 +15,7 @@ namespace ZEnemy
         private int _apiPort;
 
         public ZEnemy(string uuid) : base(uuid)
-        {}
+        { }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 

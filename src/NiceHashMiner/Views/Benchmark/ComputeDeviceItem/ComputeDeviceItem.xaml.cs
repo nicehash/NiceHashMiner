@@ -1,23 +1,11 @@
-﻿using NiceHashMiner.ViewModels.Models;
-using NHMCore;
-using System;
+﻿using NHMCore;
+using NiceHashMiner.ViewModels.Models;
+using NiceHashMiner.Views.Common;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
 using static NHMCore.Translations;
-using NiceHashMiner.Views.Common;
 
 namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 {
@@ -85,12 +73,13 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 _toggleButtonsGuard.Add(tButton);
                 DeviceActionsButtonContext.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
-                closedHandler += (s, e2) => {
+                closedHandler += (s, e2) =>
+                {
                     _toggleButtonsGuard.Remove(tButton);
                     tButton.IsChecked = false;
                     DeviceActionsButtonContext.Closed -= closedHandler;
                 };
-                DeviceActionsButtonContext.Closed += closedHandler;           
+                DeviceActionsButtonContext.Closed += closedHandler;
             }
         }
 
@@ -138,7 +127,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             };
             DeviceActionsButtonContext.IsOpen = false;
             nhmConfirmDialog.OKClick += (s, e1) => { _deviceData.ClearAllSpeeds(); };
-            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);         
+            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
         }
 
         private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)

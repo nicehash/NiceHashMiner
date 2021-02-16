@@ -1,6 +1,6 @@
-﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1.Configs;
 using NHMCore.Configs;
 using System;
 using System.Collections.Generic;
@@ -69,7 +69,7 @@ namespace NHMCore.Switching
             }
         }
 
-#region Update Methods
+        #region Update Methods
 
         // TODO maybe just swap the dictionaries???
         /// <summary>
@@ -161,10 +161,10 @@ namespace NHMCore.Switching
             Logger.Info(Tag, sb.ToString());
         }
 
-#endregion
+        #endregion
 
-#region Get Methods
-        
+        #region Get Methods
+
         /// <summary>
         /// Attempt to get paying rate for an algorithm
         /// </summary>
@@ -198,7 +198,7 @@ namespace NHMCore.Switching
 
             lock (_currentPayingRates)
             {
-                var filtered = _currentPayingRates.Where(kvp => _stableAlgorithms.Contains(kvp.Key) == stable); 
+                var filtered = _currentPayingRates.Where(kvp => _stableAlgorithms.Contains(kvp.Key) == stable);
                 foreach (var kvp in filtered)
                 {
                     dict[kvp.Key] = kvp.Value;
@@ -240,6 +240,6 @@ namespace NHMCore.Switching
 
             return hasData;
         }
-#endregion
+        #endregion
     }
 }

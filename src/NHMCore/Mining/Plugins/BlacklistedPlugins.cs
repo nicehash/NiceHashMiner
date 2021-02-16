@@ -9,7 +9,7 @@ namespace NHMCore.Mining.Plugins
     {
         private static string BlacklistedPluginsPath => Paths.ConfigsPath("BlacklistedPlugins.json");
         private static List<string> BlacklistedPluginUUIDs = new List<string>();
-        
+
         // our dummy data class to keep it backward compatible when reading
         [Serializable]
         private class LegacyFileClass

@@ -1,12 +1,10 @@
-﻿using NHM.Common;
-using NHMCore;
+﻿using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,7 +24,7 @@ namespace NiceHashMiner.Views.Settings
             ThemeSettings.Visibility = AppRuntimeSettings.ThemeSettingsEnabled ? Visibility.Visible : Visibility.Collapsed;
             CredentialsSettings.Instance.PropertyChanged += (s, e) =>
             {
-                if(e.PropertyName == "BitcoinAddress")
+                if (e.PropertyName == "BitcoinAddress")
                 {
                     this.Dispatcher.Invoke(() =>
                     {
@@ -158,7 +156,7 @@ namespace NiceHashMiner.Views.Settings
             };
             nhmConfirmDialog.OKClick += (s, e1) => CommitGeneralAndRestart();
             nhmConfirmDialog.OnExit += (s, e1) => CommitGeneralAndRestart();
-            
+
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
         }
 
@@ -176,7 +174,7 @@ namespace NiceHashMiner.Views.Settings
         private void CreateLogReportButton_Click(object sender, RoutedEventArgs e)
         {
             var nhmConfirmDialog = new CustomDialog()
-            { 
+            {
                 Title = Translations.Tr("Pack and upload log files?"),
                 Description = Translations.Tr("This will upload log report to our server."),
                 OkText = Translations.Tr("Ok"),

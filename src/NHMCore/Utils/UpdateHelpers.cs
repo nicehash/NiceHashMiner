@@ -5,7 +5,6 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Notifications;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -39,7 +38,8 @@ namespace NHMCore.Utils
                     }
                 }
             }
-            RunninLoops = Task.Run(() => {
+            RunninLoops = Task.Run(() =>
+            {
                 var loop1 = NhmAutoUpdateCheckLoop(stop);
                 return Task.WhenAll(loop1);
             });
@@ -61,7 +61,7 @@ namespace NHMCore.Utils
                     var isAutoUpdate = UpdateSettings.Instance.AutoUpdateNiceHashMiner;
                     var hasNewVersion = VersionState.Instance.IsNewVersionAvailable;
                     // prevent sleep check
-                    
+
                     bool isUpdater = IsNHMInstalled() && IsRunningInstalledApp();
                     if (hasNewVersion)
                     {
@@ -97,7 +97,8 @@ namespace NHMCore.Utils
                 var downloadOk = await StartDownloadingUpdater(isUpdater);
                 if (!downloadOk) return false;
                 return await StartUpdateProcess();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Logger.Error(Tag, $"Check autoupdate Exception: {ex.Message}");
                 return false;
@@ -189,14 +190,14 @@ namespace NHMCore.Utils
             using (var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, false))
             {
                 isInstalled = key != null;
-            } 
+            }
             return isInstalled;
         }
 
         public static bool IsRunningInstalledApp()
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var localAppData =  Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             return path.Contains(localAppData);
         }
     }

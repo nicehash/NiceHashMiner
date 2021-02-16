@@ -41,7 +41,7 @@ namespace NiceHashMiner
                 if (launcherPIDArg != null && int.TryParse(launcherPIDArg.Replace("-PID", ""), out var pid)) return pid;
             }
             catch
-            {}
+            { }
             return -1;
         }
 
@@ -157,7 +157,7 @@ namespace NiceHashMiner
             {
                 Logger.Info(Tag, $"TOS differs! agreed: {ToSSetings.Instance.AgreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}");
 
-                var eula = new EulaWindowFirstLong{};
+                var eula = new EulaWindowFirstLong { };
                 var accepted = eula.ShowDialog();
                 if (accepted.HasValue && eula.AcceptedTos)
                 {
@@ -174,7 +174,7 @@ namespace NiceHashMiner
             // Check 3rd party miners TOS
             if (ToSSetings.Instance.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
             {
-                var thirdPty = new EulaWindowSecondShort{};
+                var thirdPty = new EulaWindowSecondShort { };
                 thirdPty.ShowDialog();
                 if (!thirdPty.Accepted)
                 {
@@ -191,7 +191,7 @@ namespace NiceHashMiner
             {
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
                 {
-                    var lang = new ChooseLanguageWindow{};
+                    var lang = new ChooseLanguageWindow { };
                     lang.ShowDialog();
                 }
                 // check if user didn't choose anything

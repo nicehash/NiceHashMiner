@@ -1,11 +1,10 @@
-﻿using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1;
-using NHM.MinerPluginToolkitV1.Configs;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,7 +53,7 @@ namespace FakePlugin
                 var settingsObject = JsonConvert.DeserializeObject<testSettingsJson>(text);
                 if (settingsObject != null) return settingsObject;
             }
-            catch {}
+            catch { }
             return DEFAULT_SETTINGS;
         }
 
@@ -85,10 +84,10 @@ namespace FakePlugin
 
                 if (device is AMDDevice amd)
                 {
-                    if(amdAlgos != null)
+                    if (amdAlgos != null)
                     {
                         var amdList = new List<Algorithm>();
-                        foreach(var algo in amdAlgos.algorithms)
+                        foreach (var algo in amdAlgos.algorithms)
                         {
                             amdList.Add(new Algorithm(PluginUUID, algo));
                         }
@@ -107,7 +106,7 @@ namespace FakePlugin
                         supported.Add(device, cudaList);
                     }
                 }
-                if(device is CPUDevice cpu)
+                if (device is CPUDevice cpu)
                 {
                     if (cpuAlgos != null)
                     {
@@ -149,7 +148,7 @@ namespace FakePlugin
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            return new List<string>() {};
+            return new List<string>() { };
         }
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {

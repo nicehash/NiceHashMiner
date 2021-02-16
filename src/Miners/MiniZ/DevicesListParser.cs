@@ -51,12 +51,14 @@ namespace MiniZ
                 var dataArray = line.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                 var minerID = GetDeviceID(dataArray.FirstOrDefault());
                 var busID = GetBusID(dataArray.LastOrDefault());
-                if (minerID == -1 || busID == -1) {
+                if (minerID == -1 || busID == -1)
+                {
                     Logger.Error("MiniZ.DevicesListParser.ParseMiniZOutput", $"MinerID({minerID}) or BusID({busID}) is negative {line}");
                     continue;
                 }
                 var devWithBusID = gpus.Where(gpu => gpu.PCIeBusID == busID).FirstOrDefault();
-                if (devWithBusID == null) {
+                if (devWithBusID == null)
+                {
                     Logger.Error("MiniZ.DevicesListParser.ParseMiniZOutput", $"Cannot find GPU with PCI bus {busID}");
                     continue;
                 }

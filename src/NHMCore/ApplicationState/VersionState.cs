@@ -59,7 +59,7 @@ namespace NHMCore.ApplicationState
             }
         }
 
-        
+
 
         public void OnVersionUpdate(string version)
         {

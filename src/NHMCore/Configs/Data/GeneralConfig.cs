@@ -1,8 +1,5 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
-using NHMCore.ApplicationState;
-using NHMCore.Mining;
-using NHMCore.Nhmws;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;

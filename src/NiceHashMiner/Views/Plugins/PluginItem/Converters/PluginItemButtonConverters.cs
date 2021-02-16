@@ -2,8 +2,6 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using NHMCore;
-using NHMCore.Mining.Plugins;
 
 namespace NiceHashMiner.Views.Plugins.PluginItem.Converters
 {

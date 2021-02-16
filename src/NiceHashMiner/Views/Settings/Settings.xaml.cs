@@ -99,7 +99,8 @@ namespace NiceHashMiner.Views.Settings
                 CancelText = Tr("No"),
                 AnimationVisible = Visibility.Collapsed
             };
-            nhmConfirmDialog.OKClick += (s, e1) => { 
+            nhmConfirmDialog.OKClick += (s, e1) =>
+            {
                 Translations.SelectedLanguage = "en";
                 ConfigManager.SetDefaults();
                 Task.Run(() => ApplicationStateManager.RestartProgram());

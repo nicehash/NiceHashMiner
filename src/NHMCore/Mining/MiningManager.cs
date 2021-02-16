@@ -393,7 +393,7 @@ namespace NHMCore.Mining
                 Logger.Info(Tag, "Exiting MiningManagerMainLoop run cleanup");
                 // cleanup
                 PInvokeHelpers.AllowMonitorPowerdownAndSleep();
-            }            
+            }
         }
 
 
@@ -518,7 +518,8 @@ namespace NHMCore.Mining
         // full of state
         private static bool CheckIfProfitable(double currentProfit, bool log = true)
         {
-            if (MiningProfitSettings.Instance.MineRegardlessOfProfit) {
+            if (MiningProfitSettings.Instance.MineRegardlessOfProfit)
+            {
                 if (log) Logger.Info(Tag, $"Mine always regardless of profit");
                 return true;
             }

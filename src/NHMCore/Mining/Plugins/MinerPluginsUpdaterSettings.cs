@@ -1,7 +1,7 @@
-﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.Interfaces;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHM.Common;
+using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 
 namespace NHMCore.Mining.Plugins

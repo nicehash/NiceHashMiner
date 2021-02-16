@@ -8,7 +8,7 @@ namespace NHMCore.Mining.Benchmarking
     {
         public static bool IsBenchmarking => BenchmarkingComputeDeviceHandler.IsBenchmarking;
 
-#region Start/Stop methods
+        #region Start/Stop methods
 
         private static bool ShouldBenchmark(AlgorithmContainer algo, BenchmarkOption benchmarkOption)
         {
@@ -45,12 +45,12 @@ namespace NHMCore.Mining.Benchmarking
             return BenchmarkingComputeDeviceHandler.StopBenchmarkingAllDevices();
         }
 
-#endregion
+        #endregion
 
-#region In-bench status updates
+        #region In-bench status updates
 
         internal static void EndBenchmarkForDevice(ComputeDevice device, bool failedAlgos, bool startMiningAfterBenchmark = false)
-        {            
+        {
             if (!IsBenchmarking)
             {
                 // TODO now that we start mining afer benchmark maybe this line makes no sense? Check if we will always start mining after bench
@@ -68,6 +68,6 @@ namespace NHMCore.Mining.Benchmarking
                 _ = ApplicationStateManager.StartDeviceTask(device, true);
             }
         }
-#endregion
+        #endregion
     }
 }

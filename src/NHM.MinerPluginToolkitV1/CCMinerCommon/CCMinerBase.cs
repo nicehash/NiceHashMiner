@@ -15,7 +15,7 @@ namespace NHM.MinerPluginToolkitV1.CCMinerCommon
         protected bool _noTimeLimitOption = false;
 
         public CCMinerBase(string uuid) : base(uuid)
-        {}
+        { }
 
         protected abstract string AlgorithmName(AlgorithmType algorithmType);
 

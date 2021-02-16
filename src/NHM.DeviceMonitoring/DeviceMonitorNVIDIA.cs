@@ -95,7 +95,8 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var execRet = ExecNvmlProcedure(-1f, nameof(Load), () => {
+                var execRet = ExecNvmlProcedure(-1f, nameof(Load), () =>
+                {
                     var nvmlDevice = GetNvmlDevice();
                     var rates = new nvmlUtilization();
                     var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(nvmlDevice, ref rates);
@@ -113,10 +114,11 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var execRet = ExecNvmlProcedure(-1f, nameof(Temp), () => {
+                var execRet = ExecNvmlProcedure(-1f, nameof(Temp), () =>
+                {
                     var nvmlDevice = GetNvmlDevice();
                     var utemp = 0u;
-                    var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(nvmlDevice, nvmlTemperatureSensors.Gpu,  ref utemp);
+                    var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(nvmlDevice, nvmlTemperatureSensors.Gpu, ref utemp);
                     if (ret != nvmlReturn.Success)
                         throw new NvmlException($"nvmlDeviceGetTemperature", ret);
 
@@ -129,7 +131,8 @@ namespace NHM.DeviceMonitoring
 
         (int status, int percentage) IGetFanSpeedPercentage.GetFanSpeedPercentage()
         {
-            int execRet = ExecNvmlProcedure(-1, nameof(IGetFanSpeedPercentage.GetFanSpeedPercentage), () => {
+            int execRet = ExecNvmlProcedure(-1, nameof(IGetFanSpeedPercentage.GetFanSpeedPercentage), () =>
+            {
                 var nvmlDevice = GetNvmlDevice();
                 uint percentage = 0;
                 var ret = NvmlNativeMethods.nvmlDeviceGetFanSpeed(nvmlDevice, ref percentage);
@@ -189,7 +192,8 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var execRet = ExecNvmlProcedure(-1d, nameof(PowerUsage), () => {
+                var execRet = ExecNvmlProcedure(-1d, nameof(PowerUsage), () =>
+                {
                     var nvmlDevice = GetNvmlDevice();
                     var power = 0u;
                     var nvmlRet = NvmlNativeMethods.nvmlDeviceGetPowerUsage(nvmlDevice, ref power);
@@ -212,7 +216,8 @@ namespace NHM.DeviceMonitoring
                 return false;
             }
 
-            var cooler = new nv_fandata {
+            var cooler = new nv_fandata
+            {
                 count = 1,
                 version = 132040
             };
@@ -225,7 +230,7 @@ namespace NHM.DeviceMonitoring
             }
 
             var levels = new NvGPULevels { Version = 65700 };
-            levels.Levels = new nv_level_internal [20];
+            levels.Levels = new nv_level_internal[20];
             levels.Levels[0] = new nv_level_internal { level = percentage, policy = cooler.internals[0].current_policy };
 
             var result = NVAPI.NvAPI_GPU_SetCoolerLevels(nvHandle.Value, 0, ref levels);
@@ -298,7 +303,8 @@ namespace NHM.DeviceMonitoring
 
         private bool ExecNvmlSetTDP(string calledFrom, double percentage)
         {
-            var execRet = ExecNvmlProcedure(false, calledFrom, () => {
+            var execRet = ExecNvmlProcedure(false, calledFrom, () =>
+            {
                 var nvmlDevice = GetNvmlDevice();
                 uint minLimit = 0;
                 uint maxLimit = 0;
@@ -327,7 +333,7 @@ namespace NHM.DeviceMonitoring
         }
 
         #region ITDP
-        public TDPSettingType SettingType { get; set;  } = TDPSettingType.SIMPLE;
+        public TDPSettingType SettingType { get; set; } = TDPSettingType.SIMPLE;
 
         public TDPSimpleType TDPSimple { get; private set; } = TDPSimpleType.HIGH;
 
@@ -335,7 +341,8 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var execRet = ExecNvmlProcedure(-1d, $"{nameof(TDPPercentage)}", () => {
+                var execRet = ExecNvmlProcedure(-1d, $"{nameof(TDPPercentage)}", () =>
+                {
                     var nvmlDevice = GetNvmlDevice();
                     uint minLimit = 0;
                     uint maxLimit = 0;

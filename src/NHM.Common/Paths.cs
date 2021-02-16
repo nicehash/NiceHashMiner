@@ -5,8 +5,8 @@ namespace NHM.Common
 {
     public static class Paths
     {
-        public static string Root { get; private set; }  = "";
-        public static string AppRoot { get; private set; }  = "";
+        public static string Root { get; private set; } = "";
+        public static string AppRoot { get; private set; } = "";
 
         public static void SetRoot(string rootPath)
         {
@@ -24,7 +24,8 @@ namespace NHM.Common
             return RootPath("miner_plugins");
         }
 
-        public static string MinerPluginsPath(params string[] paths) {
+        public static string MinerPluginsPath(params string[] paths)
+        {
             return RootPath("miner_plugins", paths);
         }
 

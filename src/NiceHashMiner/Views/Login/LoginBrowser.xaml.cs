@@ -1,16 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
+using Newtonsoft.Json;
 using NHM.Common;
 using NHMCore;
 using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
-using System.Collections.Generic;
-using System.Net.Http;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -66,7 +66,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Browser_NavigationCompleted(object sender, WebViewControlNavigationCompletedEventArgs e)
         {
-            if(e.IsSuccess == false)
+            if (e.IsSuccess == false)
             {
                 btn_refresh.Visibility = Visibility.Visible;
                 _canRefresh = true;
@@ -88,8 +88,8 @@ namespace NiceHashMiner.Views.Login
             if (_canRefresh)
             {
                 _canRefresh = false;
-                NavigateAndStartTimer();                
-            }           
+                NavigateAndStartTimer();
+            }
         }
 
         private async void EvalTimer_Elapsed()
@@ -104,7 +104,7 @@ namespace NiceHashMiner.Views.Login
                 if (!tryLock.HasAcquiredLock) return;
                 try
                 {
-                    #warning handle case for logged in sessions with/without btc
+#warning handle case for logged in sessions with/without btc
                     string html = await browser.InvokeScriptAsync("eval", new string[] { "document.getElementById('nhmResponse').value;" });
                     var webResponse = JsonConvert.DeserializeObject<Response>(html);
                     if (webResponse == null) return;
@@ -120,7 +120,7 @@ namespace NiceHashMiner.Views.Login
                             description = Translations.Tr("Login performed successfully.");
                             Logger.Info("Login", $"Navigation and processing successfull.");
                         }
-                        else 
+                        else
                         {
                             Logger.Error("Login", $"Btc address: {webResponse.btcAddress} was not saved. Result: {result}.");
                         }
@@ -144,7 +144,8 @@ namespace NiceHashMiner.Views.Login
                         AnimationVisible = Visibility.Collapsed,
                         Description = description
                     };
-                    btcLoginDialog.OKClick += (s, e) => {
+                    btcLoginDialog.OKClick += (s, e) =>
+                    {
                         Process.Start(Links.Login);
                     };
 
@@ -165,6 +166,6 @@ namespace NiceHashMiner.Views.Login
         {
             public string btcAddress { get; set; }
             public string error { get; set; }
-        }      
+        }
     }
 }

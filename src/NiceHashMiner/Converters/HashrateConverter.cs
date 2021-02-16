@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using NHM.Common;
+﻿using NHM.Common;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Converters
 {

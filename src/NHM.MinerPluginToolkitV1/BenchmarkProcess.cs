@@ -44,7 +44,7 @@ namespace NHM.MinerPluginToolkitV1
                 return;
             }
 
-            Result  = CheckData(e.Data);
+            Result = CheckData(e.Data);
             if (Result.Success)
             {
                 TryExit();
@@ -82,7 +82,8 @@ namespace NHM.MinerPluginToolkitV1
 
             //tcs.SetCanceled()
 
-            Handle.Exited += (s, ea) => {
+            Handle.Exited += (s, ea) =>
+            {
                 _exitCalled = true;
                 tcs.SetResult(Result);
             };
@@ -101,7 +102,8 @@ namespace NHM.MinerPluginToolkitV1
 
             Handle.BeginOutputReadLine();
             Handle.BeginErrorReadLine();
-            stop.Register(() => {
+            stop.Register(() =>
+            {
                 TryExit();
             });
 

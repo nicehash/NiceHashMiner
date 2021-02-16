@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NHM.Common;
+using System;
 using System.Windows;
-using NHM.Common;
 
 namespace NiceHashMiner.ViewModels.Models
 {

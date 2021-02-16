@@ -62,7 +62,7 @@ namespace NHM.DeviceDetection.AMD
                 {
                     Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback has duplicate files as well... Taking filtering lower platform devices");
                     // #3 try merging both results and take lower platform unique devices
-                    result =  MergeResults(openCLResult.parsed, openCLResult2.parsed);
+                    result = MergeResults(openCLResult.parsed, openCLResult2.parsed);
                 }
                 else
                 {

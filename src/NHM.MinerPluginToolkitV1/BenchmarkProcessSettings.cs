@@ -1,5 +1,5 @@
-﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.Common;
+﻿using NHM.Common;
+using NHM.MinerPluginToolkitV1.Configs;
 using System.Collections.Generic;
 using System.Linq;
 

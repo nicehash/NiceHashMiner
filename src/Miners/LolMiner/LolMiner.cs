@@ -25,7 +25,7 @@ namespace LolMiner
 
         private readonly HttpClient _http = new HttpClient();
 
-        public LolMiner (string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        public LolMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
             _mappedIDs = mappedIDs;
         }

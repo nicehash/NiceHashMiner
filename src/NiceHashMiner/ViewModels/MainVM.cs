@@ -1,7 +1,5 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
-using NiceHashMiner.ViewModels.Models;
-using NiceHashMiner.ViewModels.Plugins;
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
@@ -12,6 +10,8 @@ using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
 using NHMCore.Switching;
+using NiceHashMiner.ViewModels.Models;
+using NiceHashMiner.ViewModels.Plugins;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -93,7 +93,7 @@ namespace NiceHashMiner.ViewModels
 
 
         public IReadOnlyList<string> ThemeOptions => _themeList;
-        private List<string> _themeList = new List<string>{ "Light", "Dark" };
+        private List<string> _themeList = new List<string> { "Light", "Dark" };
 
         #endregion settingsLists
 
@@ -225,7 +225,7 @@ namespace NiceHashMiner.ViewModels
         {
             lock (_lock)
             {
-                if (Plugins == null) return; 
+                if (Plugins == null) return;
                 var rankedPlugins = MinerPluginsManagerState.Instance.RankedPlugins;
                 var rankedPluginsArray = rankedPlugins.ToArray();
                 // add new
@@ -247,7 +247,7 @@ namespace NiceHashMiner.ViewModels
                 var pluginsToSort = Plugins.ToList();
                 for (int i = 0; i < sorted.Count; i++)
                 {
-                    var oldIndex = pluginsToSort.FindIndex(p => p.Plugin == sorted[i]); 
+                    var oldIndex = pluginsToSort.FindIndex(p => p.Plugin == sorted[i]);
                     Plugins.Move(oldIndex, i);
                 }
             }
@@ -305,7 +305,7 @@ namespace NiceHashMiner.ViewModels
             HelpNotificationList = new ObservableCollection<Notification>();
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
-            Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
+            Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData)d));
             DevicesTDP = new ObservableCollection<DeviceDataTDP>(AvailableDevices.Devices.Select(d => new DeviceDataTDP(d)));
             MiningDevs = new ObservableCollection<IMiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
 

@@ -39,7 +39,8 @@ namespace NHM.MinerPluginToolkitV1
                 using (var ct = new CancellationTokenSource(timeoutMilliseconds))
                 {
                     getDevicesHandle.Start();
-                    Action<string> getDevicesHandleStop = (string stopFrom) => {
+                    Action<string> getDevicesHandleStop = (string stopFrom) =>
+                    {
                         try
                         {
                             var isRunning = !getDevicesHandle?.HasExited ?? false;
@@ -93,7 +94,8 @@ namespace NHM.MinerPluginToolkitV1
                 using (var ct = new CancellationTokenSource(timeoutMilliseconds))
                 {
                     getDevicesHandle.Start();
-                    Action<string> getDevicesHandleStop = (string stopFrom) => {
+                    Action<string> getDevicesHandleStop = (string stopFrom) =>
+                    {
                         try
                         {
                             var isRunning = !getDevicesHandle?.HasExited ?? false;

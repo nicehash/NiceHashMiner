@@ -12,9 +12,9 @@ namespace NHMCore.Mining
         private static bool _enabled = true;
         public static bool Enabled
         {
-            get 
+            get
             {
-                lock(_lock)
+                lock (_lock)
                 {
                     return _enabled;
                 }
@@ -30,7 +30,7 @@ namespace NHMCore.Mining
 
         public static void AddGroup(string groupKey, TimeSpan maxTimeout, DateTime addTime)
         {
-            lock(_lock)
+            lock (_lock)
             {
                 _groupKeyMaxTimeout[groupKey] = maxTimeout;
                 _groupKeyLastApiTimestamps[groupKey] = addTime;

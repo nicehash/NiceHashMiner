@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
+using System.Globalization;
 
 namespace NHM.Common
 {
