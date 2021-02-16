@@ -12,7 +12,6 @@ namespace BundleAndCacheOnlinePlugins
 {
     class Program
     {
-        private const string ApiKey_DoNotCommitToGit = "token 43602aa0a9293a60f2a081a5dbe12c654e6a5297";
         private static List<string> bundlePlugins = new List<string>
                     {
                         "eb75e920-94eb-11ea-a64d-17be303ea466", // LolMiner
