@@ -93,6 +93,29 @@ namespace NhmPackager
             }
         }
 
+        private static bool ExecPluginsBundler(string exePath, string exeCwd, string args)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = exePath,
+                Arguments = args,
+                WorkingDirectory = exeCwd,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true,
+            };
+            using (var proc = new Process { StartInfo = startInfo })
+            {
+                var ok = proc.Start();
+                while (!proc.StandardOutput.EndOfStream)
+                {
+                    string line = proc.StandardOutput.ReadLine();
+                    Console.WriteLine(line);
+                }
+                return ok && proc.ExitCode == 0;
+            }
+        }
+
         private static void DeleteFileIfExists(string filePath)
         {
             if (File.Exists(filePath)) File.Delete(filePath);
@@ -132,7 +155,9 @@ namespace NhmPackager
                 Console.WriteLine("ExecPluginsPacker START");
                 Console.WriteLine();
                 Console.WriteLine();
-                ExecPluginsPacker(GetRootPath("MinerPluginsPacker.exe"), GetRootPath(tmpWorkFolder, "Release"), GetRootPath(@"..\", "src", "Miners"));
+                //ExecPluginsPacker(GetRootPath("MinerPluginsPacker.exe"), GetRootPath(tmpWorkFolder, "Release"), GetRootPath(@"..\", "src", "Miners"));
+                //WIP
+                //PluginPackageBundler.DownloadAndCachePluginPackages();
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("ExecPluginsPacker Done. Press any key to continue");
