@@ -3,6 +3,7 @@ using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace NHMCore.Mining.Plugins
@@ -158,6 +159,12 @@ namespace NHMCore.Mining.Plugins
             get
             {
                 var supportedDevicesAlgorithms = LocalInfo?.SupportedDevicesAlgorithms ?? OnlineInfo?.SupportedDevicesAlgorithms ?? new Dictionary<string, List<string>>();
+                var keysWithNoAlgorithms = supportedDevicesAlgorithms
+                    .Where(pair => !pair.Value.Any())
+                    .Select(pair => pair.Key)
+                    .Where(key => key != null)
+                    .ToArray();
+                foreach (var removeKey in keysWithNoAlgorithms) supportedDevicesAlgorithms.Remove(removeKey);
                 return supportedDevicesAlgorithms;
             }
         }

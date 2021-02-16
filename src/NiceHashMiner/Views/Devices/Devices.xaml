@@ -124,7 +124,7 @@
                         <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="{Binding GlobalRate}"/>
                         <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Margin="2,6,0,0" Text="{Binding ScaledBtcPerTime}"/>
                     </WrapPanel>
-                    <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}"  Margin="24,10,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding ExchangeTooltip}"/>
+                    <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}"  Margin="24,10,0,0" Text="{Binding GlobalRateFiat}" ToolTip="{Binding BalanceAndExchangeRates.ExchangeTooltip}"/>
                 </Grid>
             </Grid>
             <Grid Grid.Column="2" Margin="16,0,0,0" ToolTip="{StaticResource unpaidBalance}">
@@ -148,11 +148,15 @@
                     <WrapPanel Grid.Row="2" Margin="24,10,0,0" Orientation="Horizontal" Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverterFalse}}">
                         <TextBlock Style="{DynamicResource local.InfoBTCValue}" Text="Connecting" />
                     </WrapPanel>
-                    
-                    <TextBlock Grid.Row="3" Style="{DynamicResource local.InfoFiatValue}" Margin="24,10,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}" ToolTip="{Binding ExchangeTooltip}"/>
+                    <TextBlock Grid.Row="3"
+                               Style="{DynamicResource local.InfoFiatValue}"
+                               Margin="24,10,0,0"
+                               Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"
+                               ToolTip="{Binding ExchangeTooltip}"
+                               Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverter}}"/>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding ExchangeTooltip}" Visibility="Collapsed">
+            <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding BalanceAndExchangeRates.ExchangeTooltip}" Visibility="Collapsed">
                 <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
                 <Grid>
                     <Grid.RowDefinitions>

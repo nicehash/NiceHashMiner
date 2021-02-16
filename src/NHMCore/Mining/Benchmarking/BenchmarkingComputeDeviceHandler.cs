@@ -259,8 +259,6 @@ namespace NHMCore.Mining.Benchmarking
                     var speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.speed).ToList();
                     algo.Speeds = speeds;
                     algo.PowerUsage = power;
-                    // set status to empty string it will return speed
-                    BenchmarkManager.SetCurrentStatus(algo.ComputeDevice, algo, "");
                     ConfigManager.CommitBenchmarksForDevice(algo.ComputeDevice);
                 }
                 else
@@ -270,7 +268,6 @@ namespace NHMCore.Mining.Benchmarking
                     // add new failed list
                     _benchmarkFailedAlgo.Add(algo.AlgorithmName);
                     algo.SetBenchmarkError(result.ErrorMessage);
-                    BenchmarkManager.SetCurrentStatus(algo.ComputeDevice, algo, result.ErrorMessage);
                 }
             }
         }

@@ -37,7 +37,8 @@ namespace NHM.DeviceMonitoring
         private static readonly AMD_ODN.log_cb _amdLog = new AMD_ODN.log_cb(LogAMD_ODN);
         private static void LogAMD_ODN(string logStr)
         {
-            Logger.Info("AMD_ODN", logStr);
+#warning AMD monitoring will attempt to run on each adapter hence the delay log fix this inside AMD monitoring library
+            Logger.InfoDelayed("AMD_ODN", logStr, TimeSpan.FromSeconds(10));
         }
 
         public static Task<List<DeviceMonitor>> GetDeviceMonitors(IEnumerable<BaseDevice> devices)

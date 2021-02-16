@@ -184,7 +184,7 @@ namespace MinerPluginsPacker
                 //"eda6abd0-94eb-11ea-a64d-17be303ea466", // MiniZ - BROKEN
                 //"f25fee20-94eb-11ea-a64d-17be303ea466", // NanoMiner
                 "f683f550-94eb-11ea-a64d-17be303ea466", // NBMiner
-                "fa369d10-94eb-11ea-a64d-17be303ea466", // Phoenix
+                //"fa369d10-94eb-11ea-a64d-17be303ea466", // Phoenix
                 //"fd45fff0-94eb-11ea-a64d-17be303ea466", // SRBMiner
                 //"01177a50-94ec-11ea-a64d-17be303ea466", // TeamRedMiner
                 //"03f80500-94ec-11ea-a64d-17be303ea466", // TRex

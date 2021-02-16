@@ -119,11 +119,11 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
             }
         }
 
-        private void Button_Click_Uninstall(object sender, RoutedEventArgs e)
+        private async void Button_Click_Uninstall(object sender, RoutedEventArgs e)
         {
             AcceptedPlugins.Remove(_vm.Plugin.PluginUUID);
             PluginActionsButtonContext.IsOpen = false;
-            _vm.UninstallPlugin();
+            await _vm.UninstallPlugin();
         }
 
         private void Button_Click_ShowInternals(object sender, RoutedEventArgs e)

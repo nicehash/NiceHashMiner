@@ -77,11 +77,11 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
             OnAcceptOrDecline?.Invoke(sender, e);
         }
 
-        private void Button_Click_Remove(object sender, RoutedEventArgs e)
+        private async void Button_Click_Remove(object sender, RoutedEventArgs e)
         {
             _vm.IsUserActionRequired = false;
             AcceptedPlugins.Remove(_vm.PluginUUID);
-            MinerPluginsManager.RemovePlugin(_vm.PluginUUID);
+            await MinerPluginsManager.RemovePlugin(_vm.PluginUUID);
             OnAcceptOrDecline?.Invoke(sender, e);
         }
     }

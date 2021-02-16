@@ -32,7 +32,7 @@ namespace NHMCore.Configs
             set
             {
                 _useEthlargement = value;
-                EthlargementIntegratedPlugin.Instance.ServiceEnabled = value && Helpers.IsElevated;
+                EthlargementIntegratedPlugin.Instance.ServiceEnabled = value;
                 OnPropertyChanged(nameof(UseEthlargement));
             }
         }
