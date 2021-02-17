@@ -1,45 +1,47 @@
-﻿using System;
+﻿using NHM.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+
+using static NhmPackager.PackagerPaths;
 
 namespace NhmPackager
 {
-    class PluginPackageBundler
+    internal static class PluginPackageBundler
     {
-        public static async Task ExecuteTask(List<string> preinstalledUuids, List<int> supportedVersions)
+        public static async Task ExecuteTask(IEnumerable<string> preinstalledUuids, IEnumerable<int> supportedVersions)
         {
-            var tagVersion = 15;
-
-            await CachePackage.DownloadAndCachePluginPackages(tagVersion);
-            UnzipPackages();
+            foreach (var tagVersion in supportedVersions)
+            {
+                await CachePackage.DownloadAndCachePluginPackages(tagVersion);
+            }
+            UnzipPackages(preinstalledUuids);
         }
 
-        private static void UnzipPackages()
+        private static void UnzipPackages(IEnumerable<string> preinstalledUuids)
         {
-            var cachedPluginsPath = Path.Combine(Directory.GetCurrentDirectory(), "cached_plugins");
-            if (!Directory.Exists(cachedPluginsPath)) return;
+            var allPackages = Directory.GetFiles(GetCachedPluginsPath())
+                .Where(path => path.EndsWith(".zip"));
 
-            var bundledPluginsPath = Path.Combine(Directory.GetCurrentDirectory(), "miner_plugins");
-            if (Directory.Exists(bundledPluginsPath)) Directory.Delete(bundledPluginsPath, true);
-
-            var allPackages = Directory.GetFiles(cachedPluginsPath).Where(path => path.EndsWith(".zip"));
             var uuids = allPackages
                 .Select(GetPackageUUID)
                 .Where(uuid => Guid.TryParse(uuid, out var _))
+                .Where(uuid => preinstalledUuids.Contains(uuid))
                 .Distinct();
+
             foreach (var uuid in uuids)
             {
-                var packages = allPackages.Where(path => path.Contains(uuid));
-                var bundledPackageDllsPath = Path.Combine(Directory.GetCurrentDirectory(), "miner_plugins", uuid, "dlls");
-                var packageVersionPaths = packages.Select(package => (package, Path.Combine(bundledPackageDllsPath, GetPackageVersion(package))));
+                var sameUuidPackage_VersionPathPairs = allPackages
+                    .Where(path => path.Contains(uuid))
+                    .Select(package => (package, version: GetPackageVersion(package)))
+                    .Select(p => (p.package, versionPath: GetMinerPluginsPath(uuid, "dlls", p.version)));
 
-                foreach (var (package, versionPath) in packageVersionPaths)
+                foreach (var (package, versionPath) in sameUuidPackage_VersionPathPairs)
                 {
                     Directory.CreateDirectory(versionPath);
                     ZipFile.ExtractToDirectory(package, versionPath);
@@ -78,7 +80,7 @@ namespace NhmPackager
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Logger.Error("PluginPackageBundler", $"GetContentFromApi error: {e}");
             }
             return "";
         }
@@ -94,8 +96,8 @@ namespace NhmPackager
                     content = await GetContentFromApi($"https://api.github.com/repos/nicehash/NHM_MinerPluginsDownloads/releases/{release.id}/assets?per_page=100");
                     var parsedResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<List<GitHubAsset>>(content);
 
-                    //create cached plugins
-                    var cachedPluginsPath = Path.Combine(Directory.GetCurrentDirectory(), "cached_plugins");
+                    // create cached plugins
+                    var cachedPluginsPath = GetCachedPluginsPath();
                     if (!Directory.Exists(cachedPluginsPath)) Directory.CreateDirectory(cachedPluginsPath);
 
                     var downloadPackages = parsedResponse
@@ -103,14 +105,14 @@ namespace NhmPackager
                         .Where(asset => asset.name.EndsWith(".zip"));
                     foreach (var package in downloadPackages)
                     {
-                        Console.WriteLine($"Downloading {package.name}");
+                        Logger.Info("CachePackage", $"Downloading {package.name}...");
                         var success = await DownloadAndCachePluginPackage(package.browser_download_url, package.name, package.updated_at);
-                        Console.WriteLine($"Download of {package.name} was {success}.");
+                        Logger.Info("CachePackage", $"Download of {package.name} was {success}.");
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Logger.Error("CachePackage", $"DownloadAndCachePluginPackages error: {e}");
                 }
             }
 
@@ -123,12 +125,12 @@ namespace NhmPackager
             {
                 try
                 {
-                    var cachedPluginsPath = Path.Combine(Directory.GetCurrentDirectory(), "cached_plugins", name);
+                    var cachedPluginsPath = GetCachedPluginsPath(name);
                     return File.Exists(cachedPluginsPath);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("CheckIfPluginPackageExists throw: ", e.Message);
+                    Logger.Error("CachePackage", $"CheckIfPluginPackageExists error: {e}");
                     return false;
                 }
             }
@@ -137,13 +139,13 @@ namespace NhmPackager
             {
                 try
                 {
-                    var cachedPluginsUpdatedPath = Path.Combine(Directory.GetCurrentDirectory(), "cached_plugins", $"{name}.txt");
-                    if (!File.Exists(cachedPluginsUpdatedPath)) return true;
-                    return File.ReadAllText(cachedPluginsUpdatedPath) != lastUpdated;
+                    var cachedPluginPackageUpdatedInfoPath = GetCachedPluginsPath($"{name}.txt");
+                    if (!File.Exists(cachedPluginPackageUpdatedInfoPath)) return true;
+                    return File.ReadAllText(cachedPluginPackageUpdatedInfoPath) != lastUpdated;
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("CheckIfPluginPackageNeedsUpdate throw: ", e.Message);
+                    Logger.Error("CachePackage", $"CheckIfPluginPackageNeedsUpdate error: {e}");
                     return true;
                 }
             }
@@ -152,8 +154,8 @@ namespace NhmPackager
             {
                 try
                 {
-                    var cachedPluginsPath = Path.Combine(Directory.GetCurrentDirectory(), "cached_plugins", name);
-                    var cachedPluginsUpdatedPath = Path.Combine(Directory.GetCurrentDirectory(), "cached_plugins", $"{name}.txt");
+                    var cachedPluginsPath = GetCachedPluginsPath(name);
+                    var cachedPluginsUpdatedPath = GetCachedPluginsPath($"{name}.txt");
                     using (WebClient wc = new WebClient())
                     {
                         await wc.DownloadFileTaskAsync(new Uri(url), cachedPluginsPath);
@@ -163,25 +165,25 @@ namespace NhmPackager
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("DownloadAndCachePluginPackage throw: ", e.Message);
+                    Logger.Error("CachePackage", $"DownloadAndCachePluginPackage error: {e}");
                     return false;
                 }
             }
         }
-    }
 
-    [Serializable]
-    public class GitHubRelease
-    {
-        public string url { get; set; }
-        public int id { get; set; }
-    }
+        [Serializable]
+        private class GitHubRelease
+        {
+            public string url { get; set; }
+            public int id { get; set; }
+        }
 
-    [Serializable]
-    public class GitHubAsset
-    {
-        public string name { get; set; }
-        public string browser_download_url { get; set; }
-        public string updated_at { get; set; }
+        [Serializable]
+        private class GitHubAsset
+        {
+            public string name { get; set; }
+            public string browser_download_url { get; set; }
+            public string updated_at { get; set; }
+        }
     }
 }
