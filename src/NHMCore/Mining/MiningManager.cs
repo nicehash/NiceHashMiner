@@ -87,6 +87,7 @@ namespace NHMCore.Mining
         #region Command Tasks
         public static Task StopAllMiners()
         {
+            if (RunninLoops == null) return Task.CompletedTask;
             var command = new Command(CommandType.StopAllMiners, null);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
@@ -94,6 +95,7 @@ namespace NHMCore.Mining
 
         public static Task ChangeUsername(string username)
         {
+            if (RunninLoops == null) return Task.CompletedTask;
             var command = new Command(CommandType.UsernameChanged, username);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
@@ -101,6 +103,7 @@ namespace NHMCore.Mining
 
         public static Task UpdateMiningSession(IEnumerable<ComputeDevice> devices)
         {
+            if (RunninLoops == null) return Task.CompletedTask;
             var command = new Command(CommandType.DevicesStartStop, devices);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
@@ -108,6 +111,7 @@ namespace NHMCore.Mining
 
         private static Task NormalizedProfitsUpdate(Dictionary<AlgorithmType, double> normalizedProfits)
         {
+            if (RunninLoops == null) return Task.CompletedTask;
             var command = new Command(CommandType.NormalizedProfitsUpdate, normalizedProfits);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
@@ -115,6 +119,7 @@ namespace NHMCore.Mining
 
         private static Task MiningLocationChanged(string miningLocation)
         {
+            if (RunninLoops == null) return Task.CompletedTask;
             var command = new Command(CommandType.MiningLocationChanged, miningLocation);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
@@ -122,12 +127,14 @@ namespace NHMCore.Mining
 
         private static Task UseEthlargementChanged()
         {
+            if (RunninLoops == null) return Task.CompletedTask;
             var command = new Command(CommandType.RunEthlargementChanged, null);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
         private static Task MiningProfitSettingsChanged()
         {
+            if (RunninLoops == null) return Task.CompletedTask;
             var command = new Command(CommandType.MiningProfitSettingsChanged, null);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
@@ -135,6 +142,7 @@ namespace NHMCore.Mining
 
         public static Task MinerRestartLoopNotify()
         {
+            if (RunninLoops == null) return Task.CompletedTask;
             var command = new Command(CommandType.MinerRestartLoopNotify, null);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
