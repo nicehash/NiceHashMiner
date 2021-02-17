@@ -224,7 +224,7 @@ namespace NiceHashMiner
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid && AppRuntimeSettings.ShowLoginWindow && SystemVersion.BuildNumber >= 17110)
             {
                 var login = new LoginWindow { };
-                var nek = login.ShowDialog();
+                login.ShowDialog();
             }
 #endif
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid)

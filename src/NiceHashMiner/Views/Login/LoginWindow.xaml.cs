@@ -55,10 +55,16 @@ namespace NiceHashMiner.Views.Login
         {
             Hide();
             var browser = new LoginBrowser();
+            browser.Top = this.Top;
+            browser.Left = this.Left;
             browser.ShowDialog();
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
             {
                 ShowDialog();
+            }
+            else
+            {
+                Close();
             }
         }
 
