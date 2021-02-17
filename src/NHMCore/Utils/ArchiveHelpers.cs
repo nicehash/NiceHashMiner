@@ -65,7 +65,7 @@ namespace NHMCore.Utils
             }
             catch (Exception e)
             {
-                Logger.Info("ArchiveHelpers", $"Error occured while unzipping file with: {e.Message}");
+                Logger.Error("ArchiveHelpers", $"Error occured while unzipping file with: {e.Message}");
                 return false;
             }
         }
@@ -111,7 +111,7 @@ namespace NHMCore.Utils
             }
             catch (Exception e)
             {
-                Logger.Info("ArchiveHelpers", $"Error occured while unzipping file with 7zip: {e.Message}");
+                Logger.Error("ArchiveHelpers", $"Error occured while unzipping file with 7zip: {e.Message}");
                 return false;
             }
         }

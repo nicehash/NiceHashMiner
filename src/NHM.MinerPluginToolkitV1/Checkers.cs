@@ -101,6 +101,7 @@ namespace NHM.MinerPluginToolkitV1
         }
 
         private static int[] _supportedMajorVersions = new int[] { 15 };
+        public static IEnumerable<int> SupportedMajorVersions => _supportedMajorVersions;
         public static bool IsMajorVersionSupported(int major)
         {
             return _supportedMajorVersions.Contains(major);

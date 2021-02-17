@@ -159,6 +159,24 @@ namespace NHM.Common
             }
         }
 
+        public static void ConfigureWithFile(string logFilePath, long maxFileSize = 1048576)
+        {
+            Enabled = true;
+            try
+            {
+                var h = (Hierarchy)LogManager.GetRepository(Assembly.GetEntryAssembly());
+                h.Root.Level = Level.Info;
+                h.Root.AddAppender(CreateFileAppender(logFilePath, maxFileSize));
+                h.Configured = true;
+
+                _isInitSucceess = true;
+            }
+            catch
+            {
+                _isInitSucceess = false;
+            }
+        }
+
         public static IAppender CreateFileAppender(string logFilePath, long maxFileSize)
         {
             var appender = new RollingFileAppender
