@@ -71,6 +71,17 @@ namespace NhmPackager
             }
         }
 
+        private static void CopyInstallerScriptIfAvailable()
+        {
+            try
+            {
+                File.Copy(GetRootPath(@"..\", "prepare_installers.bat"), GetTemporaryWorkFolder("prepare_installers.bat"));
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Main", $"CopyInstallerScriptIfAvailable error: {e}");
+            }
+        }
 
         // #1 copy release folder
         // #2 delete all json settings from release folder
@@ -176,6 +187,7 @@ namespace NhmPackager
                 Directory.Delete(GetTemporaryWorkFolder("_files_to_pack"), true);
                 Directory.Delete(GetTemporaryWorkFolder("Release"), true);
                 Logger.Info("Main", "Finishing...");
+                CopyInstallerScriptIfAvailable();
                 Directory.Move(GetTemporaryWorkFolder(), GetRootPath($"nhm_windows_{version}_release_files"));
                 Logger.Info("Main", "DONE! SUCCESS!!! Press any key to continue\n\n");
                 Console.ReadKey();
