@@ -78,8 +78,6 @@ namespace NiceHashMiner.Views.Login
                 _canRefresh = true;
                 Logger.Error("Login", $"Navigation to {e.Uri} failed with error: {e.WebErrorStatus}");
             }
-            // TEMP
-            btn_refresh.Visibility = Visibility.Visible;
         }
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
