@@ -27,6 +27,8 @@ namespace NiceHashMiner.Views.Login
             _ = ProcessQRCode();
         }
 
+        public bool? LoginSuccess { get; private set; } = null;
+
         private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
         {
             GUISettings.Instance.DisplayTheme = "Dark";
@@ -58,6 +60,7 @@ namespace NiceHashMiner.Views.Login
             browser.Top = this.Top;
             browser.Left = this.Left;
             browser.ShowDialog();
+            LoginSuccess = browser.LoginSuccess;
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
             {
                 ShowDialog();

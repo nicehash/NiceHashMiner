@@ -218,6 +218,7 @@ namespace NiceHashMiner
                 return;
             }
 
+            bool? loginSuccess = null;
 #if ENABLE_LOGIN
             FilterOSSpecific.GetWindowsVersion();
             // show login if no BTC
@@ -225,6 +226,7 @@ namespace NiceHashMiner
             {
                 var login = new LoginWindow { };
                 login.ShowDialog();
+                loginSuccess = login.LoginSuccess;
             }
 #endif
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
@@ -233,7 +235,7 @@ namespace NiceHashMiner
                 btcNotice.ShowDialog();
             }
 
-            var main = new MainWindow();
+            var main = new MainWindow(loginSuccess);
             main.Show();
 
             //// Set shutdown mode back to default

@@ -30,10 +30,12 @@ namespace NiceHashMiner.Views
         private bool _miningStoppedOnClose;
         private Timer _timer = new Timer();
 
-        public MainWindow()
+        public readonly bool? LoginSuccess = null;
+
+        public MainWindow(bool? loginSuccess)
         {
             InitializeComponent();
-
+            LoginSuccess = loginSuccess;
             _vm = this.AssertViewModel<MainVM>();
             Title = ApplicationStateManager.Title;
 
@@ -214,6 +216,24 @@ namespace NiceHashMiner.Views
                         Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.EulaConfirm)
                     };
                     ShowContentAsModalDialog(pluginsPopup);
+                }
+
+                if (LoginSuccess.HasValue)
+                {
+                    var description = LoginSuccess.Value ? Translations.Tr("Login performed successfully.") : Translations.Tr("Unable to retreive BTC address. Please retreive it by yourself from web page.");
+                    var btcLoginDialog = new CustomDialog()
+                    {
+                        Title = Translations.Tr("Login"),
+                        OkText = Translations.Tr("Ok"),
+                        CancelVisible = Visibility.Collapsed,
+                        AnimationVisible = Visibility.Collapsed,
+                        Description = description
+                    };
+                    btcLoginDialog.OKClick += (s, e) =>
+                    {
+                        if (!LoginSuccess.Value) Process.Start(Links.Login);
+                    };
+                    CustomDialogManager.ShowModalDialog(btcLoginDialog);
                 }
 
                 if (Launcher.IsUpdated)
