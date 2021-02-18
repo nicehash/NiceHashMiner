@@ -194,6 +194,16 @@
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Text="" 
+                                        Name="BuildTagTextBlock"
+                                        Grid.Column="0"
+                                        TextTrimming="CharacterEllipsis"
+                                        FontSize="20"
+                                        TextAlignment="Left"
+                                        Width="Auto"
+                                        Foreground="Red"
+                                        Panel.ZIndex="-1"/>
+
+                                <TextBlock Text="" 
                                            Grid.Column="0"
                                            Grid.ColumnSpan="3"
                                            TextTrimming="CharacterEllipsis"
@@ -204,8 +214,7 @@
                                            Width="Auto"
                                            Foreground="Black"
                                            Panel.ZIndex="0"
-                                           IsEnabled="{TemplateBinding IsActive}">
-                                    
+                                           IsEnabled="{TemplateBinding IsActive}">                                    
                                     
                                     <StackPanel Orientation="Horizontal" Margin="0,32,0,0" x:Name="PageTabTextButtonsStackPanel">
                                         <ToggleButton x:Name="DashboardButton" Style="{StaticResource TabButton}"

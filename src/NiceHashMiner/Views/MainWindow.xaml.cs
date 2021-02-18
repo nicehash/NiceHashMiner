@@ -74,6 +74,7 @@ namespace NiceHashMiner.Views
         #region Start-Loaded/Closing
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
+            SetBuildTag();
             ThemeSetterManager.SetThemeSelectedThemes();
             UpdateHelpers.OnAutoUpdate = () =>
             {

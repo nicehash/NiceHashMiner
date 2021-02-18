@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NHM.Common;
+using NHM.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -71,6 +73,17 @@ namespace NiceHashMiner.Views.Common.NHBase
                 _contentPresenter.Content = null;
             }
             base.OnApplyTemplate();
+        }
+
+        public void SetBuildTag()
+        {
+            try
+            {
+                var buildTextBlock = GetRequiredTemplateChild<TextBlock>("BuildTagTextBlock");
+                if (BuildOptions.BUILD_TAG != BuildTag.PRODUCTION && buildTextBlock != null) buildTextBlock.Text = BuildOptions.BUILD_TAG.ToString();
+            }
+            catch
+            { }
         }
 
         private bool _isModalDialog = false;
