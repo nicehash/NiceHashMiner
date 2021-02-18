@@ -11,7 +11,7 @@ namespace NHMCore.Utils
         public const int MAX_BTC_LENGTH = 35;
         public static bool ValidateBitcoinAddress(string address)
         {
-            if (BuildOptions.BUILD_TAG != BuildTag.PRODUCTION) return true;
+            if (BuildOptions.BUILD_TAG != BuildTag.PRODUCTION) return !string.IsNullOrEmpty(address) && !string.IsNullOrWhiteSpace(address);
             // production
             try
             {
