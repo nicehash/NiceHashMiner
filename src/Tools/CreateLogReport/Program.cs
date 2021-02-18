@@ -48,6 +48,30 @@ namespace CreateLogReport
             }
         }
 
+        private static bool IsFileLocked(string filePath)
+        {
+            try
+            {
+                using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+            catch
+            { }
+
+            //file is not locked
+            return false;
+        }
+
         static void Main(string[] args)
         {
             // TODO
@@ -57,48 +81,36 @@ namespace CreateLogReport
             Run_device_detection_Bat(appRoot);
 
             var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var filesToPack = Directory.GetFiles(exePath, "*.*", SearchOption.AllDirectories).Where(s => IsPackExtension(s)).ToList();
+            var filesToPack = Directory.GetFiles(exePath, "*.*", SearchOption.AllDirectories)
+                .Where(s => IsPackExtension(s))
+                .ToList();
+
             //Console.WriteLine(filesToPack.Count);
             string archiveFileName = "tmp._archive_logs.zip";
             Console.Write($"Preparing logs archive file '{archiveFileName}'...");
 
+            const string tmpLocked = "tmpLocked";
             double max = filesToPack.Count;
             double step = 0;
             using (var progress = new ProgressBar())
-            using (var memoryStream = new MemoryStream())
+            using (var fileStream = new FileStream(archiveFileName, FileMode.Create))
+            using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true))
             {
-                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                foreach (var filePath in filesToPack)
                 {
-                    foreach (var filePath in filesToPack)
+                    step += 1;
+                    var entryPath = filePath.Replace(exePath, "").Substring(1);
+                    var zipFile = archive.CreateEntry(entryPath);
+                    var lockedFile = IsFileLocked(filePath);
+                    if (lockedFile) File.Copy(filePath, tmpLocked, true);
+                    var openFilePath = lockedFile ? tmpLocked : filePath;
+                    using (var readFile = File.Open(openFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    using (var entryStream = zipFile.Open())
                     {
-                        step += 1;
-                        var entryPath = filePath.Replace(exePath, "");
-                        entryPath = entryPath.Substring(1);
-                        var zipFile = archive.CreateEntry(entryPath);
-                        byte[] fileRawBytes;
-                        if (filePath.Contains("logs"))
-                        {
-                            File.Copy(filePath, "tmpLog.txt");
-                            fileRawBytes = File.ReadAllBytes("tmpLog.txt");
-                            File.Delete("tmpLog.txt");
-                        }
-                        else
-                        {
-                            fileRawBytes = File.ReadAllBytes(filePath);
-                        }
-                        using (var entryStream = zipFile.Open())
-                        using (var b = new BinaryWriter(entryStream))
-                        {
-                            b.Write(fileRawBytes);
-                        }
-                        progress.Report(step / max);
+                        readFile.CopyTo(entryStream);
                     }
-                }
-
-                using (var fileStream = new FileStream(archiveFileName, FileMode.Create))
-                {
-                    memoryStream.Seek(0, SeekOrigin.Begin);
-                    memoryStream.CopyTo(fileStream);
+                    if (lockedFile) File.Delete(tmpLocked);
+                    progress.Report(step / max);
                 }
             }
             Console.WriteLine("Done.");
