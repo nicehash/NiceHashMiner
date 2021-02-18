@@ -427,6 +427,16 @@ namespace Phoenix
                     ID = "phoenix_stales",
                     ShortName = "-stales",
                     DefaultValue = "0"
+                },
+                /// <summary>
+                /// Price of the electricity in USD per kWh (e.g. -prate 0.1).
+                /// If specified the miner will calculate the rig daily electricity cost
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_prate",
+                    ShortName = "-prate"
                 }
             },
             TemperatureOptions = new List<MinerOption>
