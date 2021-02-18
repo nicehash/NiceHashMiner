@@ -244,7 +244,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.AMDComputeModeHelp_PRODUCTION); }
+                Action = () => { Process.Start(Links.AMDComputeModeHelp); }
             };
             notification.NotificationUUID = "AMDModeSwitchNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
