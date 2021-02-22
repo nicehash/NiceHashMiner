@@ -61,6 +61,8 @@ namespace NiceHashMiner.Views.Login
             browser.Left = this.Left;
             browser.ShowDialog();
             LoginSuccess = browser.LoginSuccess;
+            this.Top = browser.Top;
+            this.Left = browser.Left;
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
             {
                 ShowDialog();

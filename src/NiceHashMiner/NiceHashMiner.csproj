@@ -91,6 +91,9 @@
     <Compile Include="Converters\TemperatureValueToText.cs" />
     <Compile Include="CustomDialogManager.cs" />
     <Compile Include="IThemeSetter.cs" />
+    <Compile Include="Views\ManuallyEnterBTCTutorial.xaml.cs">
+      <DependentUpon>ManuallyEnterBTCTutorial.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="QrCodeHelpers.cs" />
     <Compile Include="ThemeSetterManager.cs" />
@@ -269,6 +272,10 @@
     <Compile Include="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml.cs">
       <DependentUpon>__DESIGN_DEVELOP.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\ManuallyEnterBTCTutorial.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Xaml\Brushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -711,4 +718,9 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>REM create directory
+If NOT exist "$(SolutionDir)$(Configuration)\app\assets\" mkdir "$(SolutionDir)$(Configuration)\app\assets\"
+copy /Y "$(SolutionDir)\Resources\enter_BTC_manually.gif" "$(SolutionDir)$(Configuration)\app\assets\enter_BTC_manually.gif"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

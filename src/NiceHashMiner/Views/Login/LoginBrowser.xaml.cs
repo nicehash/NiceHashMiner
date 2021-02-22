@@ -20,20 +20,24 @@ namespace NiceHashMiner.Views.Login
         public LoginBrowser()
         {
             InitializeComponent();
+            Closing += (s, e) => CancelNavigateAndCheck();
         }
 
         private CancellationTokenSource _cts;
         private bool _canRefresh = false;
+        private DateTime _navigationStart = DateTime.MinValue;
 
         public bool? LoginSuccess { get; private set; } = null;
 
+        private bool? _isOnLoginPage { get; set; } = null;
+
         private void Browser_Loaded(object sender, RoutedEventArgs e)
         {
-            browser.NavigationCompleted += Browser_NavigationCompleted;
+            WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
             _ = StartNavigateAndCheck();
         }
 
-        private async Task StartNavigateAndCheck()
+        private void CancelNavigateAndCheck()
         {
             try
             {
@@ -41,7 +45,14 @@ namespace NiceHashMiner.Views.Login
             }
             catch
             { }
+        }
 
+        private async Task StartNavigateAndCheck()
+        {
+            LabelStatus.Content = Translations.Tr("Loading, please wait...");
+            TryAgainButton.Visibility = Visibility.Collapsed;
+            ReturnButton.Visibility = Visibility.Collapsed;
+            CancelNavigateAndCheck();
             using (_cts = CancellationTokenSource.CreateLinkedTokenSource(ApplicationStateManager.ExitApplication.Token))
             {
                 await NavigateAndCheck(_cts.Token);
@@ -50,9 +61,10 @@ namespace NiceHashMiner.Views.Login
 
         private async Task NavigateAndCheck(CancellationToken stop)
         {
+            _navigationStart = DateTime.UtcNow;
             var headers = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("User-Agent", "NHM/" + System.Windows.Forms.Application.ProductVersion) };
-            browser.NavigationCompleted += Browser_NavigationCompleted;
-            browser.Navigate(new Uri(Links.LoginNHM), HttpMethod.Get, null, headers);
+            WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
+            WebViewBrowser.Navigate(new Uri(Links.LoginNHM), HttpMethod.Get, null, headers);
             Func<bool> isActive = () => !stop.IsCancellationRequested;
             while (isActive())
             {
@@ -68,16 +80,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Browser_NavigationCompleted(object sender, WebViewControlNavigationCompletedEventArgs e)
         {
-            if (e.IsSuccess && e.Uri.ToString() == Links.LoginNHM)
-            {
-                btn_refresh.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                btn_refresh.Visibility = Visibility.Visible;
-                _canRefresh = true;
-                Logger.Error("Login", $"Navigation to {e.Uri} failed with error: {e.WebErrorStatus}");
-            }
+            Logger.InfoDelayed("Login", $"Navigation to {e.Uri} {e.WebErrorStatus}", TimeSpan.FromSeconds(5));
         }
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
@@ -94,13 +97,52 @@ namespace NiceHashMiner.Views.Login
             }
         }
 
+        const string _jsEvalCode = @"
+        (() => {
+            try {
+                const nhmResponse = document.getElementById('nhmResponse');
+                if (!nhmResponse) return 'NO_RESPONSE';
+                return nhmResponse.value;
+            } catch (error) {
+                return 'INJ_ERROR ' + error;
+            }
+        })();";
+
+        private class Response
+        {
+            public string btcAddress { get; set; }
+            public string error { get; set; }
+        }
+
+
+
         private async Task<bool?> CheckForBtc()
         {
+            var showRetry = (DateTime.UtcNow - _navigationStart).TotalSeconds > 5;
+            string htmlEvalValue = null;
             try
             {
 #warning handle case for logged in sessions with/without btc
-                string html = await browser.InvokeScriptAsync("eval", new string[] { "document.getElementById('nhmResponse').value;" });
-                var webResponse = JsonConvert.DeserializeObject<Response>(html);
+
+                htmlEvalValue = await WebViewBrowser.InvokeScriptAsync("eval", _jsEvalCode);
+                Logger.InfoDelayed("Login", $"JS eval returned htmlEvalValue='{htmlEvalValue}'", TimeSpan.FromSeconds(15));
+                var noNhmResponse = htmlEvalValue == null || htmlEvalValue == "NO_RESPONSE" || htmlEvalValue.Contains("INJ_ERROR");
+                if (showRetry)
+                {
+                    LabelStatus.Content = Translations.Tr("Something went wrong");
+                    TryAgainButton.Visibility = Visibility.Visible;
+                    ReturnButton.Visibility = Visibility.Visible;
+                }
+                if (noNhmResponse) return null;
+
+
+                if (LoadingPanel.Visibility != Visibility.Collapsed)
+                {
+                    LoadingPanel.Visibility = Visibility.Collapsed;
+                    WebViewGrid.Visibility = Visibility.Visible;
+                }
+
+                var webResponse = JsonConvert.DeserializeObject<Response>(htmlEvalValue);
                 if (webResponse == null) return null;
 
                 if (webResponse.btcAddress != null)
@@ -129,16 +171,15 @@ namespace NiceHashMiner.Views.Login
             }
             catch (Exception e)
             {
-                Logger.ErrorDelayed("Login", e.Message, TimeSpan.FromSeconds(15));
+                if (showRetry)
+                {
+                    LabelStatus.Content = Translations.Tr("Something went wrong");
+                    TryAgainButton.Visibility = Visibility.Visible;
+                    ReturnButton.Visibility = Visibility.Visible;
+                }
+                Logger.ErrorDelayed("Login", $"CheckForBtc error: {e}. htmlEvalValue='{htmlEvalValue}'", TimeSpan.FromSeconds(15));
                 return null;
             }
-        }
-
-        [Serializable]
-        private class Response
-        {
-            public string btcAddress { get; set; }
-            public string error { get; set; }
         }
     }
 }

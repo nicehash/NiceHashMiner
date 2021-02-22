@@ -1,9 +1,11 @@
-﻿using NHMCore;
+﻿using NHM.Common;
+using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using NiceHashMiner.Views.Common.NHBase;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,11 +19,23 @@ namespace NiceHashMiner.Views
     /// </summary>
     public partial class DemoBTCNotice : BaseDialogWindow
     {
+        private Window _showMeHowWindow = null;
         public DemoBTCNotice()
         {
             InitializeComponent();
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             BtcTextValidation();
+            Closing += DemoBTCNotice_Closing;
+        }
+
+        private void DemoBTCNotice_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                _showMeHowWindow.Close();
+            }
+            catch
+            { }
         }
 
         private void BtcTextValidation()
@@ -86,6 +100,18 @@ namespace NiceHashMiner.Views
         private void DemoMiningButtonClicked(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void BaseDialogWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            var gifPath = Paths.AppRootPath("assets", "enter_BTC_manually.gif");
+            if (File.Exists(gifPath))
+            {
+                _showMeHowWindow = new ManuallyEnterBTCTutorial();
+                _showMeHowWindow.Left = this.Left + this.Width;
+                _showMeHowWindow.Top = this.Top;
+                _showMeHowWindow.Show();
+            }
         }
     }
 }

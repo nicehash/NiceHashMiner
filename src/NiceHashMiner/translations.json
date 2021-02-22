@@ -4095,6 +4095,16 @@
     },
     "Login performed successfully.": {
       "ru": "Вход был выполнен успешно."
+    },
+    "Something went wrong": {
+      "ru": "Что-то пошло не так"
+    },
+    "Try Again": {
+      "ru": "Попробуйте снова"
+    },
+    "Return and enter Bitcoin address manually": {
+      "ru": "Вернитесь и введите Биткоин-адрес вручную"
     }
+
   }
 }
