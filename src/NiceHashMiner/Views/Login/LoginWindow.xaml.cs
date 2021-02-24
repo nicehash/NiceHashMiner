@@ -18,13 +18,27 @@ namespace NiceHashMiner.Views.Login
     /// </summary>
     public partial class LoginWindow : BaseDialogWindow
     {
+        private LoginBrowser _loginBrowser;
         private string _uuid = Guid.NewGuid().ToString();
         public LoginWindow()
         {
             InitializeComponent();
+            Unloaded += LoginBrowser_Unloaded;
             HideIconAndTitle = true;
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             _ = ProcessQRCode();
+        }
+
+        private void LoginBrowser_Unloaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_loginBrowser != null) _loginBrowser.AllowClose = true;
+                _loginBrowser?.ForceCleanup();
+                _loginBrowser?.Close();
+            }
+            catch
+            { }
         }
 
         public bool? LoginSuccess { get; private set; } = null;
@@ -56,13 +70,13 @@ namespace NiceHashMiner.Views.Login
         private void Login_OnClick(object sender, RoutedEventArgs e)
         {
             Hide();
-            var browser = new LoginBrowser();
-            browser.Top = this.Top;
-            browser.Left = this.Left;
-            browser.ShowDialog();
-            LoginSuccess = browser.LoginSuccess;
-            this.Top = browser.Top;
-            this.Left = browser.Left;
+            if (_loginBrowser == null) _loginBrowser = new LoginBrowser();
+            _loginBrowser.Top = this.Top;
+            _loginBrowser.Left = this.Left;
+            _loginBrowser.ShowDialog();
+            LoginSuccess = _loginBrowser.LoginSuccess;
+            this.Top = _loginBrowser.Top;
+            this.Left = _loginBrowser.Left;
             if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
             {
                 ShowDialog();

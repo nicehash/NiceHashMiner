@@ -5,6 +5,8 @@ using NHMCore;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,11 +22,65 @@ namespace NiceHashMiner.Views.Login
         public LoginBrowser()
         {
             InitializeComponent();
-            Closing += (s, e) => CancelNavigateAndCheck();
+            Closing += LoginBrowser_Closing;
+            Unloaded += LoginBrowser_Unloaded;
+            IsVisibleChanged += LoginBrowser_IsVisibleChanged;
+        }
+
+        private void LoginBrowser_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var oldIsVisible = e.OldValue as bool?;
+
+            var wasVisible = oldIsVisible.HasValue && oldIsVisible.Value;
+            var wasInvisible = oldIsVisible.HasValue && !oldIsVisible.Value;
+            if (wasVisible)
+            {
+                CancelNavigateAndCheck();
+                LoadingPanel.Visibility = Visibility.Visible;
+                WebViewGrid.Visibility = Visibility.Collapsed;
+                WebViewBrowser.Navigate("about:blank");
+            }
+            else if (wasInvisible)
+            {
+                Logger.Info("LoginBrowser", $"LoginBrowser_IsVisibleChanged e.OldValue={e.OldValue}; e.NewValue={e.NewValue}");
+                _ = StartNavigateAndCheck();
+            }
+            else
+            {
+                Logger.Error("LoginBrowser", "Unexpected case");
+            }
+        }
+
+        public bool AllowClose { get; set; } = false;
+
+        public void ForceCleanup()
+        {
+            WebViewBrowser.Dispose();
+            try
+            {
+                Process.GetProcessById((int)WebViewBrowser.Process.ProcessId)?.Kill();
+            }
+            catch
+            { }
+        }
+
+        private void LoginBrowser_Unloaded(object sender, RoutedEventArgs e)
+        {
+            CancelNavigateAndCheck();
+        }
+
+        private void LoginBrowser_Closing(object sender, CancelEventArgs e)
+        {
+            if (!AllowClose)
+            {
+                e.Cancel = true;
+                Hide();
+                return;
+            }
+            CancelNavigateAndCheck();
         }
 
         private CancellationTokenSource _cts;
-        private bool _canRefresh = false;
         private DateTime _navigationStart = DateTime.MinValue;
 
         public bool? LoginSuccess { get; private set; } = null;
@@ -34,7 +90,6 @@ namespace NiceHashMiner.Views.Login
         private void Browser_Loaded(object sender, RoutedEventArgs e)
         {
             WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
-            _ = StartNavigateAndCheck();
         }
 
         private void CancelNavigateAndCheck()
@@ -62,7 +117,10 @@ namespace NiceHashMiner.Views.Login
         private async Task NavigateAndCheck(CancellationToken stop)
         {
             _navigationStart = DateTime.UtcNow;
-            var headers = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("User-Agent", "NHM/" + System.Windows.Forms.Application.ProductVersion) };
+            var headers = new List<KeyValuePair<string, string>>() {
+                new KeyValuePair<string, string>("User-Agent", "NHM/" + System.Windows.Forms.Application.ProductVersion),
+                new KeyValuePair<string, string>("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0"),
+            };
             WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
             WebViewBrowser.Navigate(new Uri(Links.LoginNHM), HttpMethod.Get, null, headers);
             Func<bool> isActive = () => !stop.IsCancellationRequested;
@@ -73,7 +131,7 @@ namespace NiceHashMiner.Views.Login
                 if (!ok.HasValue) continue;
 
                 LoginSuccess = ok;
-                Close();
+                Hide();
                 return;
             }
         }
@@ -85,16 +143,12 @@ namespace NiceHashMiner.Views.Login
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            Hide();
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            if (_canRefresh)
-            {
-                _canRefresh = false;
-                _ = StartNavigateAndCheck();
-            }
+            _ = StartNavigateAndCheck();
         }
 
         const string _jsEvalCode = @"
@@ -114,16 +168,12 @@ namespace NiceHashMiner.Views.Login
             public string error { get; set; }
         }
 
-
-
         private async Task<bool?> CheckForBtc()
         {
             var showRetry = (DateTime.UtcNow - _navigationStart).TotalSeconds > 5;
             string htmlEvalValue = null;
             try
             {
-#warning handle case for logged in sessions with/without btc
-
                 htmlEvalValue = await WebViewBrowser.InvokeScriptAsync("eval", _jsEvalCode);
                 Logger.InfoDelayed("Login", $"JS eval returned htmlEvalValue='{htmlEvalValue}'", TimeSpan.FromSeconds(15));
                 var noNhmResponse = htmlEvalValue == null || htmlEvalValue == "NO_RESPONSE" || htmlEvalValue.Contains("INJ_ERROR");
