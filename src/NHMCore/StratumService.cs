@@ -40,6 +40,9 @@ namespace NHMCore
                 }
                 OnPropertyChanged(nameof(ServiceLocation));
                 OnPropertyChanged(nameof(SelectedServiceLocation));
+                var (serviceLocationCode, _) = SelectedOrFallbackServiceLocationCode();
+                // sending null pauses mining
+                OnServiceLocationChanged?.Invoke(this, serviceLocationCode);
             }
         }
 
