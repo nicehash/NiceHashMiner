@@ -91,8 +91,24 @@
                     <Label Content="Select Your Service Location" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
-            <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding StratumService.MiningLocationNames}" SelectedIndex="{Binding StratumService.ServiceLocation, Mode=TwoWay}" Width="218" />
-            </WrapPanel>
+            <ComboBox Margin="0,0,24,0"
+                      Width="218" 
+                      Style="{StaticResource smallComboBox}"
+                      ItemsSource="{Binding StratumService.MiningLocationNames}"
+                      DisplayMemberPath="Name"
+                      SelectedIndex="{Binding StratumService.ServiceLocation, Mode=TwoWay}" >
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource ItemStyle}">
+                        <Setter Property="IsEnabled" Value="{Binding MarketEnabled}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="False">
+                                <Setter Property="Opacity" Value="0.5" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
+        </WrapPanel>
             <!--LOCALIZATION-->
             <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
                 <Label Content="Localization" Style="{StaticResource FontsTypography.Heading3/Secondary}" />

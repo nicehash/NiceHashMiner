@@ -162,6 +162,14 @@ _DEVICES_
                 .Replace("_DEVICES_", devices);
         }
 
+        private static string GetMiningLocation(string location)
+        {
+            // new mining locations new clients
+            if (location.StartsWith("eu") || location.StartsWith("usa")) return location;
+            // old mining locations old clients with obsolete locations fallback to usa
+            return "usa";
+        }
+
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
@@ -174,8 +182,8 @@ _DEVICES_
             var fileName = $"cmd_{string.Join("_", ids)}.json";
             //Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             //var logName = $"log_{string.Join("_", ids)}_{unixTimestamp}.log";
-            var miningLocation = _miningLocation != "eu" ? "usa" : "eu"; // until nhm with obsolete versions is released
-            File.WriteAllText(Path.Combine(cwd, fileName), CmdJSONString(miningLocation, _username, uuids.ToArray()));
+            var miningLocation = GetMiningLocation(_miningLocation);
+            File.WriteAllText(Path.Combine(cwd, fileName), CmdJSONString(_miningLocation, _username, uuids.ToArray()));
             var commandLine = $"-p {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
             return commandLine;
         }

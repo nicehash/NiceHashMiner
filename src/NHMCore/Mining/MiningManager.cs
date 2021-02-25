@@ -239,6 +239,7 @@ namespace NHMCore.Mining
                         await CheckGroupingAndUpdateMiners(command.CommandType);
                         break;
                     case CommandResolutionType.RestartCurrentActiveMiners:
+                        // TODO this looks like a problem if no mining location is present
                         await RestartMiners();
                         break;
                     case CommandResolutionType.StopAllMiners:
@@ -271,9 +272,8 @@ namespace NHMCore.Mining
         {
             ApplicationStateManager.OnInternetCheck += OnInternetCheck;
 
-            _miningLocation = StratumService.Instance.SelectedServiceLocation;
-
-            StratumService.Instance.PropertyChanged += StratumServiceInstance_PropertyChanged;
+            _miningLocation = StratumService.Instance.SelectedOrFallbackServiceLocationCode().miningLocationCode;
+            StratumService.Instance.OnServiceLocationChanged += StratumServiceInstance_PropertyChanged;
 
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
@@ -293,16 +293,9 @@ namespace NHMCore.Mining
             return Task.WhenAll(loop1, loop2);
         }
 
-        private static void StratumServiceInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private static void StratumServiceInstance_PropertyChanged(object sender, string miningLocation)
         {
-            if (e.PropertyName == nameof(StratumService.SelectedServiceLocation))
-            {
-                _ = MiningLocationChanged(StratumService.Instance.SelectedServiceLocation);
-            }
-            if (e.PropertyName == nameof(StratumService.SelectedFallbackServiceLocation))
-            {
-                _ = MiningLocationChanged(StratumService.Instance.SelectedFallbackServiceLocation);
-            }
+            _ = MiningLocationChanged(miningLocation);
         }
 
         private static void MiscSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -703,7 +696,6 @@ namespace NHMCore.Mining
                 await stopGroup.StopTask();
             }
             // start new
-            var miningLocation = StratumService.Instance.SelectedServiceLocation;
             foreach (var startKey in toStartMinerGroupKeys)
             {
                 var miningPairs = newGroupedMiningPairs[startKey];
@@ -714,7 +706,7 @@ namespace NHMCore.Mining
                     continue;
                 }
                 _runningMiners[startKey] = toStart;
-                await toStart.StartMinerTask(stopMiningManager, miningLocation, _username);
+                await toStart.StartMinerTask(stopMiningManager, _miningLocation, _username);
             }
             // log scope
             {

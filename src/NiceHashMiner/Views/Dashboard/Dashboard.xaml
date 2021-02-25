@@ -241,7 +241,7 @@
                     </WrapPanel>
                     <TextBlock Style="{StaticResource local.StatsFiatEstimateText}" 
                                Margin="24,8,0,0" Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"
-                               ToolTip="{Binding ExchangeTooltip}" 
+                               ToolTip="{Binding BalanceAndExchangeRates.ExchangeTooltip}" 
                                Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverter}}"/>
                 </StackPanel>
                 <GridSplitter Grid.Row="1" Grid.Column="8" Width="1" HorizontalAlignment="Stretch" Background="{DynamicResource BorderColor}" Visibility="Collapsed"/>

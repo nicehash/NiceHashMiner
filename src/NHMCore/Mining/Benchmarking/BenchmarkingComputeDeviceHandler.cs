@@ -233,6 +233,10 @@ namespace NHMCore.Mining.Benchmarking
 
         private async Task BenchmarkAlgorithm(AlgorithmContainer algo, CancellationToken stop)
         {
+            var miningLocation = StratumService.Instance.SelectedOrFallbackServiceLocationCode().miningLocationCode;
+            // TODO hidden issue here if our market is not available we will not be able to execute benchmarks
+            // unable to benchmark service locations are not operational
+            if (miningLocation == null) return; 
             using (var powerHelper = new PowerHelper(algo.ComputeDevice))
             {
                 var plugin = algo.PluginContainer;
@@ -247,7 +251,7 @@ namespace NHMCore.Mining.Benchmarking
                 EthlargementIntegratedPlugin.Instance.Start(miningPairs);
                 miner.InitMiningPairs(miningPairs);
                 // fill service since the benchmark might be online. DemoUser.BTC must be used
-                miner.InitMiningLocationAndUsername(StratumService.Instance.SelectedServiceLocation, DemoUser.BTC);
+                miner.InitMiningLocationAndUsername(miningLocation, DemoUser.BTC);
                 powerHelper.Start();
                 algo.ComputeDevice.State = DeviceState.Benchmarking;
                 var result = await miner.StartBenchmark(stop, PerformanceType);

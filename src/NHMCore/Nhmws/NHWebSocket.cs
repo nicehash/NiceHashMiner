@@ -497,13 +497,11 @@ namespace NHMCore.Nhmws
             try
             {
                 var markets = JsonConvert.DeserializeObject<MarketsMessage>(data);
-                var hasEU = markets.data.Contains("EU");
-                var hasUSA = markets.data.Contains("USA");
 #if !DEBUG_MARKETS
-                StratumService.Instance.SetEnabled(hasEU, hasUSA);
+                StratumService.Instance.SetEnabledMarkets(markets.data);
 #else
                 changeDebugMarkets();
-                StratumService.Instance.SetEnabled(debugEU, debugUSA);
+                StratumService.Instance.SetEnabledMarkets(debugEU, debugUSA);
 #endif
             }
             catch (Exception e)

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common.Enums;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -79,6 +80,38 @@ namespace NHM.Common
             return (name.ToLower(), ok);
         }
 
+        public class Location
+        {
+            public Location(string code, string name, params string[] markets)
+            {
+                Code = code;
+                Name = name;
+                Markets = markets;
+            }
+
+            public string Code { get; }
+            public string Name { get; }
+            public IReadOnlyList<string> Markets { get; }
+            public bool IsOperational { get; private set; } = true;
+
+            public (bool IsOperationalBeforeSet, bool IsOperationalAfterSet) SetAndReturnIsOperational(IEnumerable<string> markets)
+            {
+                var before = IsOperational;
+                IsOperational = Markets.Any(market => markets.Contains(market));
+                return (before, IsOperational);
+            }
+        }
+
+        public static IReadOnlyList<Location> MiningServiceLocations = new List<Location>
+        {
+            new Location("eu", "Europe", "EU", "EU_N"),
+            new Location("usa", "USA", "USA", "USA_E"),
+            new Location("eu-west", "Europe - West", "EU"),
+            new Location("eu-north", "Europe - North", "EU_N"),
+            new Location("usa-west", "USA - West", "USA"),
+            new Location("usa-east", "USA - East", "USA_E"),
+        };
+
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         {
             var (name, ok) = GetAlgorithmUrlName(algorithmType);
@@ -120,8 +153,7 @@ namespace NHM.Common
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
             {
                 return prefix
-                   + name
-                   + "-test." + miningLocation
+                   + "algo-test." + miningLocation
                    + ".nicehash.com:"
                    + port;
             }

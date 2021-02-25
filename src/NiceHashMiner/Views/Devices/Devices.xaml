@@ -152,7 +152,7 @@
                                Style="{DynamicResource local.InfoFiatValue}"
                                Margin="24,10,0,0"
                                Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"
-                               ToolTip="{Binding ExchangeTooltip}"
+                               ToolTip="{Binding BalanceAndExchangeRates.ExchangeTooltip}"
                                Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverter}}"/>
                 </Grid>
             </Grid>

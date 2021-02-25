@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common.Enums;
+using System;
 using System.Globalization;
 using System.IO;
 
@@ -46,7 +47,7 @@ namespace NHM.Common
                     }
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Logger.Error("BuildOptions", $"Constructor {e.Message}");
             }
@@ -59,7 +60,7 @@ namespace NHM.Common
                     File.WriteAllText(customSettingsFile, JsonConvert.SerializeObject(defaultCustomSettings, Formatting.Indented));
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Logger.Error("BuildOptions", $"Constructor2 {e.Message}");
             }

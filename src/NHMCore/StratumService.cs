@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHMCore.Configs;
 using NHMCore.Notifications;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,21 +13,25 @@ namespace NHMCore
 
         private StratumService() { }
 
-        public string SelectedServiceLocation => MiningLocations[_serviceLocation];
-        public string SelectedFallbackServiceLocation { get; private set; } = null;
-        public bool SelectedServiceLocationOperational { get; private set; } = true;
-        public bool EU_ServiceLocationOperational { get; private set; } = true;
-        public bool USA_ServiceLocationOperational { get; private set; } = true;
-        public bool ServiceLocationsNotOperational { get; private set; } = false;
+        public event EventHandler<string> OnServiceLocationChanged;
 
+        private string SelectedServiceLocation => StratumServiceHelpers.MiningServiceLocations[_serviceLocation].Code;
+        public bool SelectedServiceLocationOperational => StratumServiceHelpers.MiningServiceLocations[_serviceLocation].IsOperational;
+        public bool ServiceLocationsNotOperational => StratumServiceHelpers.MiningServiceLocations.All(location => !location.IsOperational);
+
+        // XAML
+        public static IReadOnlyList<StratumServiceHelpers.Location> MiningLocationNames => StratumServiceHelpers.MiningServiceLocations;
+
+        // TODO this here doesn't take into account disabled markets
         public int _serviceLocation = 0;
         public int ServiceLocation
         {
             get => _serviceLocation;
             set
             {
-                var defaultValue = value >= 1 ? 1 : 0;
-                var newValue = (-1 < value && value < MiningLocations.Count) ? value : defaultValue;
+                var maxIndex = StratumServiceHelpers.MiningServiceLocations.Count - 1;
+                var defaultValue = value >= maxIndex ? maxIndex : 0;
+                var newValue = (-1 < value && value < StratumServiceHelpers.MiningServiceLocations.Count) ? value : defaultValue;
                 if (_serviceLocation != newValue)
                 {
                     _serviceLocation = newValue;
@@ -38,111 +43,61 @@ namespace NHMCore
             }
         }
 
-        private class Location
+        public (string miningLocationCode, bool isSelected) SelectedOrFallbackServiceLocationCode()
         {
-            public Location(int index, string code, string name)
-            {
-                Index = index;
-                Code = code;
-                Name = name;
-            }
-            public int Index { get; }
-            public string Code { get; }
-            public string Name { get; }
-            public bool Enabled { get; set; } = true;
+            if (SelectedServiceLocationOperational) return (SelectedServiceLocation, true);
+
+            var setFallbackLocation = StratumServiceHelpers.MiningServiceLocations
+                    .Where(loc => loc.Code != SelectedServiceLocation)
+                    .Where(loc => loc.IsOperational)
+                    .OrderByDescending(loc => string.CompareOrdinal(SelectedServiceLocation, loc.Code))
+                    .FirstOrDefault();
+
+            var serviceLocationCode = setFallbackLocation?.Code ?? null;
+            return (serviceLocationCode, false);
         }
 
-        public void SetEnabled(bool eu, bool usa)
+        public void SetEnabledMarkets(IEnumerable<string> markets)
         {
-            // backup old states
-            var oldStates = new Dictionary<string, bool>();
-            foreach (var kvp in _miningLocations)
-            {
-                oldStates[kvp.Key] = kvp.Value.Enabled;
-            }
-            // set operational states
-            foreach (var key in _miningLocationsEU)
-            {
-                _miningLocations[key].Enabled = eu;
-            }
-            foreach (var key in _miningLocationsUSA)
-            {
-                _miningLocations[key].Enabled = usa;
-            }
-            // check 
-            EU_ServiceLocationOperational = eu;
-            USA_ServiceLocationOperational = usa;
-            ServiceLocationsNotOperational = !eu && !usa;
-            SelectedServiceLocationOperational = _miningLocations[SelectedServiceLocation].Enabled;
-            OnPropertyChanged(nameof(EU_ServiceLocationOperational));
-            OnPropertyChanged(nameof(USA_ServiceLocationOperational));
+            // set/update operational markets for ALL locations and determine determine if there is a change
+            var hasMarketsChange = StratumServiceHelpers.MiningServiceLocations
+                .Select(location => location.SetAndReturnIsOperational(markets))
+                .ToArray() // exec ALL
+                .Any(p => p.IsOperationalBeforeSet != p.IsOperationalAfterSet);
+
+            if (!hasMarketsChange) return;
+            
+            OnPropertyChanged(nameof(MiningLocationNames));
             OnPropertyChanged(nameof(ServiceLocationsNotOperational));
             OnPropertyChanged(nameof(SelectedServiceLocationOperational));
 
-            // determine if there is a change
-            var hasChange = false;
-            foreach (var kvp in oldStates)
+
+            var (serviceLocationCode, isSelected) = SelectedOrFallbackServiceLocationCode();
+
+            if (isSelected && serviceLocationCode != null)
             {
-                var key = kvp.Key;
-                if (oldStates[key] != _miningLocations[key].Enabled)
-                {
-                    hasChange = true;
-                    break;
-                }
+                var marketNotificationsRemoved = NotificationsManager.Instance.Notifications
+                    .Where(notif => notif.Group == NotificationsGroup.Market)
+                    .Select(NotificationsManager.Instance.RemoveNotificationFromList)
+                    .ToArray()
+                    .All(removed => removed);
             }
-            if (hasChange)
+            else if (!isSelected && serviceLocationCode != null)
             {
-                if (SelectedServiceLocationOperational)
-                {
-                    var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market);
-                    foreach (var marketNotif in marketNotifications)
-                    {
-                        NotificationsManager.Instance.RemoveNotificationFromList(marketNotif);
-                    }
-                    OnPropertyChanged(nameof(SelectedServiceLocation));
-                }
-                else if (EU_ServiceLocationOperational)
-                {
-                    AvailableNotifications.CreateUnavailablePrimaryMarketLocationInfo();
-                    SelectedFallbackServiceLocation = _miningLocationsEU.FirstOrDefault();
-                    OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
-                }
-                else if (USA_ServiceLocationOperational)
-                {
-                    AvailableNotifications.CreateUnavailablePrimaryMarketLocationInfo();
-                    SelectedFallbackServiceLocation = _miningLocationsUSA.FirstOrDefault();
-                    OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
-                }
-                else
-                {
-                    // pause mining
-                    AvailableNotifications.CreateUnavailableAllMarketsLocationInfo();
-                    SelectedFallbackServiceLocation = null;
-                    OnPropertyChanged(nameof(SelectedFallbackServiceLocation));
-                }
+                // TODO pass what is the fallback mining location
+                AvailableNotifications.CreateUnavailablePrimaryMarketLocationInfo();
             }
+            else if (serviceLocationCode == null)
+            {
+                AvailableNotifications.CreateUnavailableAllMarketsLocationInfo();
+            }
+            else
+            {
+                // NEVER
+            }
+
+            // sending null pauses mining
+            OnServiceLocationChanged?.Invoke(this, serviceLocationCode);
         }
-
-        // Constants
-        private static IReadOnlyDictionary<string, Location> _miningLocations { get; } = new Dictionary<string, Location> {
-            { "eu",     new Location(0, "eu", "Europe - Amsterdam") },
-            { "usa",    new Location(1, "usa", "USA - San Jose") },
-        };
-
-        private static IReadOnlyList<string> _miningLocationsEU { get; } =
-            new[] { "eu" };
-
-        private static IReadOnlyList<string> _miningLocationsUSA { get; } =
-            new[] { "usa" };
-
-        // Constants
-        public static IReadOnlyList<string> MiningLocations { get; } =
-            new[] { "eu", "usa" };
-
-        public static IReadOnlyList<string> MiningLocationNames { get; } = new List<string>
-        {
-            "Europe - Amsterdam",
-            "USA - San Jose",
-        };
     }
 }
