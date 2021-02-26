@@ -357,7 +357,6 @@ namespace NiceHashMiner
                                         sw.WriteLine($"Too many restarts! Closing nhm");
                                     }
                                     MessageBox.Show("NHM experienced too many crashes recently, therefore it will close itself", "Too many restarts");
-                                    run = false;
                                 }
                             }
                             else
