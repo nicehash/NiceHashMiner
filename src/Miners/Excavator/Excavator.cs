@@ -182,8 +182,7 @@ _DEVICES_
             var fileName = $"cmd_{string.Join("_", ids)}.json";
             //Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             //var logName = $"log_{string.Join("_", ids)}_{unixTimestamp}.log";
-            var miningLocation = GetMiningLocation(_miningLocation);
-            File.WriteAllText(Path.Combine(cwd, fileName), CmdJSONString(_miningLocation, _username, uuids.ToArray()));
+            File.WriteAllText(Path.Combine(cwd, fileName), CmdJSONString(GetMiningLocation(_miningLocation), _username, uuids.ToArray()));
             var commandLine = $"-p {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
             return commandLine;
         }
