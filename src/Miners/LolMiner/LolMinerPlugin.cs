@@ -1,4 +1,5 @@
-﻿using NHM.Common.Algorithm;
+﻿using NHM.Common;
+using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1;
@@ -6,6 +7,7 @@ using NHM.MinerPluginToolkitV1.Configs;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,7 +39,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(15, 6);
+        public override Version Version => new Version(15, 7);
 
         public override string Name => "lolMiner";
 
@@ -94,16 +96,25 @@ namespace LolMiner
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedDeviceIds.Count == 0) return;
-            // will block
-            var minerBinPath = GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--benchmark BEAM-III --longstats 60 --devices -1", new List<string> { "Start Benchmark..." });
+
+            var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list-devices --nocolor=on");
+            var ts = DateTime.UtcNow.Ticks;
+            var dumpFile = $"d{ts}.txt";
+            try
+            {
+                File.WriteAllText(Path.Combine(minerCwdPath, dumpFile), output);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("LolMinerPlugin", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
+            }
             var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices.ToList());
 
-            foreach (var kvp in mappedDevs)
+            foreach (var (uuid, minerGpuId) in mappedDevs)
             {
-                var uuid = kvp.Key;
-                var indexID = kvp.Value;
-                _mappedDeviceIds[uuid] = indexID;
+                Logger.Info("LolMinerPlugin", $"DevicesCrossReference '{uuid}' => {minerGpuId}");
+                _mappedDeviceIds[uuid] = minerGpuId;
             }
         }
 
