@@ -8,6 +8,7 @@ using NHM.MinerPluginToolkitV1.Configs;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace Phoenix
 
         public override string PluginUUID => "fa369d10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 7);
+        public override Version Version => new Version(15, 8);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -83,7 +84,7 @@ namespace Phoenix
 
         private static bool IsSupportedAMDDevice(IGpuDevice dev)
         {
-            var isSupported = dev is AMDDevice gpu;
+            var isSupported = dev is AMDDevice;
             return isSupported;
         }
 
@@ -109,32 +110,38 @@ namespace Phoenix
         {
             if (_mappedIDs.Count == 0) return;
 
-            var containsAMD = devices.Any(dev => dev.DeviceType == DeviceType.AMD);
-            var containsNVIDIA = devices.Any(dev => dev.DeviceType == DeviceType.NVIDIA);
-
-            var minerBinPath = GetBinAndCwdPaths().Item1;
-
-            if (containsAMD)
+            var ts = DateTime.UtcNow.Ticks;
+            var crossRefferenceList = new (DeviceType deviceType, string parameters, string dumpFile)[]
             {
-                await MapDeviceCrossRefference(devices, minerBinPath, "-list -amd -gbase 0");
+                (DeviceType.AMD,    "-list -gbase 0 -amd",    $"d{ts}_AMD.txt"),
+                (DeviceType.NVIDIA, "-list -gbase 0 -nvidia", $"d{ts}_NVIDIA.txt"),
+            };
+            var crossRefRunParams = crossRefferenceList
+                .Where(p => devices.Any(dev => dev.DeviceType == p.deviceType))
+                .Select(p => (p.parameters, p.dumpFile));
+
+            var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
+            var crossRefOutputs = new List<string> { };
+            // exec await sequentially
+            foreach (var (parameters, dumpFile) in crossRefRunParams)
+            {
+                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, parameters);
+                crossRefOutputs.Add(output);
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                try
+                {
+                    File.WriteAllText(Path.Combine(minerCwdPath, dumpFile), output);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("PhoenixPlugin", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
+                }
             }
-            if (containsNVIDIA)
+            var mappedDevs = crossRefOutputs.SelectMany(output => DevicesListParser.ParsePhoenixOutput(output, devices));
+            foreach (var (uuid, gpuId) in mappedDevs)
             {
-                await MapDeviceCrossRefference(devices, minerBinPath, "-list -nvidia -gbase 0");
-            }
-
-        }
-
-        private async Task MapDeviceCrossRefference(IEnumerable<BaseDevice> devices, string minerBinPath, string parameters)
-        {
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, parameters);
-            var mappedDevs = DevicesListParser.ParsePhoenixOutput(output, devices);
-
-            foreach (var kvp in mappedDevs)
-            {
-                var uuid = kvp.Key;
-                var indexID = kvp.Value;
-                _mappedIDs[uuid] = indexID;
+                Logger.Info("PhoenixPlugin", $"DevicesCrossReference '{uuid}' => {gpuId}");
+                _mappedIDs[uuid] = gpuId;
             }
         }
 
