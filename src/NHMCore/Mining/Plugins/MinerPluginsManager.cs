@@ -403,6 +403,7 @@ namespace NHMCore.Mining.Plugins
             var baseDevices = AvailableDevices.Devices.Select(dev => dev.BaseDevice);
             var checkPlugins = PluginContainer.PluginContainers
                 .Where(p => p.Enabled)
+                .Where(p => p.HasDevicesCrossReference())
                 //.Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID)) // WARNING We still want to mine with these 
                 .ToArray();
 
@@ -415,10 +416,18 @@ namespace NHMCore.Mining.Plugins
             var pluginDoneCount = 0d;
             foreach (var plugin in checkPlugins)
             {
-                loader?.SecondaryProgress?.Report((Translations.Tr("Cross Reference {0}", plugin.Name), (int)((pluginDoneCount / checkPlugins.Length) * 100)));
-                await plugin.DevicesCrossReference(baseDevices);
-                pluginDoneCount += 1;
-                loader?.SecondaryProgress?.Report((Translations.Tr("Cross Reference {0}", plugin.Name), (int)((pluginDoneCount / checkPlugins.Length) * 100)));
+                try
+                {
+                    Logger.Info("MinerPluginsManager", $"Cross Reference {plugin.Name}_{plugin.Version}_{plugin.PluginUUID}");
+                    loader?.SecondaryProgress?.Report((Translations.Tr("Cross Reference {0}", plugin.Name), (int)((pluginDoneCount / checkPlugins.Length) * 100)));
+                    await plugin.DevicesCrossReference(baseDevices);
+                    pluginDoneCount += 1;
+                    loader?.SecondaryProgress?.Report((Translations.Tr("Cross Reference {0}", plugin.Name), (int)((pluginDoneCount / checkPlugins.Length) * 100)));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("MinerPluginsManager", $"DevicesCrossReferenceIDsWithMinerIndexes error: {e.Message}");
+                }
             }
             if (loader != null)
             {
@@ -523,7 +532,10 @@ namespace NHMCore.Mining.Plugins
                 Logger.Info("MinerPluginsManager", $"Plugin is not accepted {el.PluginUUID}-{el.PluginName}. Skipping...");
                 el.IsUserActionRequired = true;
             });
-            var nonAcceptedPluginsWithMissingBinaries = nonAcceptedlugins.Where(p => p.HasMisingBinaryPackageFiles()).ToArray();
+            var nonAcceptedPluginsWithMissingBinaries = nonAcceptedlugins
+                .Where(p => p.HasMisingBinaryPackageFiles())
+                .Where(p => Directory.Exists(Paths.MinerPluginsPath(p.PluginUUID, "dlls")))
+                .ToArray();
             foreach (var p in nonAcceptedPluginsWithMissingBinaries)
             {
                 try
@@ -631,54 +643,57 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public static void CrossReferenceInstalledWithOnline()
+        private static void CrossReferenceInstalledWithOnlineEthlargementIntegratedPlugin()
         {
-            // EthlargementIntegratedPlugin scope special case
+            if (!EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevices) return;
+            var uuid = EthlargementIntegratedPlugin.Instance.PluginUUID;
+            if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
             {
-                var uuid = EthlargementIntegratedPlugin.Instance.PluginUUID;
-                if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
-                {
-                    PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
-                }
-                var ethlargementPluginContainer = PluginContainer.PluginContainers.FirstOrDefault(p => p.PluginUUID == EthlargementIntegratedPlugin.Instance.PluginUUID);
-                if (EthlargementIntegratedPlugin.Instance.IsInstalled)
-                {
-                    var localPluginInfo = new PluginPackageInfo
-                    {
-                        PluginAuthor = EthlargementIntegratedPlugin.Instance.Author,
-                        PluginName = EthlargementIntegratedPlugin.Instance.Name,
-                        PluginUUID = uuid,
-                        PluginVersion = EthlargementIntegratedPlugin.Instance.Version,
-                        // other stuff is not inside the plugin
-                    };
-                    PluginsPackagesInfosCRs[uuid].LocalInfo = localPluginInfo;
-                }
-                var online = new PluginPackageInfo
+                PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
+            }
+            if (EthlargementIntegratedPlugin.Instance.IsInstalled)
+            {
+                var localPluginInfo = new PluginPackageInfo
                 {
                     PluginAuthor = EthlargementIntegratedPlugin.Instance.Author,
                     PluginName = EthlargementIntegratedPlugin.Instance.Name,
                     PluginUUID = uuid,
                     PluginVersion = EthlargementIntegratedPlugin.Instance.Version,
-                    MinerPackageURL = EthlargementIntegratedPlugin.Instance.GetMinerBinsUrlsForPlugin().FirstOrDefault(),
-                    PackagePassword = null,
-                    PluginDescription = "ETHlargement increases DaggerHashimoto hashrate for NVIDIA 1080, 1080 Ti and Titan Xp GPUs.",
-                    PluginPackageURL = "N/A",
-                    SupportedDevicesAlgorithms = new Dictionary<string, List<string>> {
+                    // other stuff is not inside the plugin
+                };
+                PluginsPackagesInfosCRs[uuid].LocalInfo = localPluginInfo;
+            }
+            var online = new PluginPackageInfo
+            {
+                PluginAuthor = EthlargementIntegratedPlugin.Instance.Author,
+                PluginName = EthlargementIntegratedPlugin.Instance.Name,
+                PluginUUID = uuid,
+                PluginVersion = EthlargementIntegratedPlugin.Instance.Version,
+                MinerPackageURL = EthlargementIntegratedPlugin.Instance.GetMinerBinsUrlsForPlugin().FirstOrDefault(),
+                PackagePassword = null,
+                PluginDescription = "ETHlargement increases DaggerHashimoto hashrate for NVIDIA 1080, 1080 Ti and Titan Xp GPUs.",
+                PluginPackageURL = "N/A",
+                SupportedDevicesAlgorithms = new Dictionary<string, List<string>> {
                         { DeviceType.NVIDIA.ToString(), new List<string> { AlgorithmType.DaggerHashimoto.ToString() } }
                     }
-                };
-                PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
-                if (online.SupportedDevicesAlgorithms != null)
-                {
-                    var supportedDevices = online.SupportedDevicesAlgorithms
-                        .Where(kvp => kvp.Value.Count > 0)
-                        .Select(kvp => kvp.Key);
-                    var devRank = AvailableDevices.Devices
-                        .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
-                        .Count();
-                    PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
-                }
+            };
+            PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
+            if (online.SupportedDevicesAlgorithms != null)
+            {
+                var supportedDevices = online.SupportedDevicesAlgorithms
+                    .Where(kvp => kvp.Value.Count > 0)
+                    .Select(kvp => kvp.Key);
+                var devRank = AvailableDevices.Devices
+                    .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
+                    .Count();
+                PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
             }
+        }
+
+        public static void CrossReferenceInstalledWithOnline()
+        {
+            // EthlargementIntegratedPlugin special case
+            CrossReferenceInstalledWithOnlineEthlargementIntegratedPlugin();
 
             // first go over the installed plugins
             var installedPlugins = PluginContainer.PluginContainers
@@ -686,7 +701,7 @@ namespace NHMCore.Mining.Plugins
                 .Where(p => !_integratedPlugins.Any(integrated => integrated.PluginUUID == p.PluginUUID)) // ignore integrated
                 .ToArray();
             foreach (var installed in installedPlugins)
-            {
+            { 
                 var uuid = installed.PluginUUID;
                 var localPluginInfo = new PluginPackageInfo
                 {
@@ -776,7 +791,9 @@ namespace NHMCore.Mining.Plugins
         {
             try
             {
-                string s = File.ReadAllText(Paths.RootPath("plugins_packages", "update.json"));
+                var cachedPluginsInfoPath = Paths.RootPath("plugins_packages", "update.json");
+                if (!File.Exists(cachedPluginsInfoPath)) return (false, null);
+                string s = File.ReadAllText(cachedPluginsInfoPath);
 
                 var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
@@ -875,6 +892,7 @@ namespace NHMCore.Mining.Plugins
 
                 //clear old bins
                 clearOldPluginBins(Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins"));
+                CrossReferenceInstalledWithOnlineEthlargementIntegratedPlugin();
                 return installedBins;
             }
             catch (Exception e)

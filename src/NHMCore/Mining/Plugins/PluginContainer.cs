@@ -302,6 +302,12 @@ namespace NHMCore.Mining.Plugins
         #endregion IBinaryPackageMissingFilesChecker
 
         #region IDevicesCrossReference
+
+        public bool HasDevicesCrossReference()
+        {
+            return _plugin is IDevicesCrossReference;
+        }
+
 #warning Check this with NVIDIA and AMD driver recovery 
         private bool _devicesCrossReference = false;
         public Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
