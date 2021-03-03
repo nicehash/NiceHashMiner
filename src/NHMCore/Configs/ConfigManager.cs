@@ -1,5 +1,5 @@
 ﻿using NHM.Common;
-using NHM.MinerPluginToolkitV1.Configs;
+using NHM.Common.Configs;
 using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;

@@ -1,74 +1,58 @@
 ﻿using Newtonsoft.Json;
+using NHM.Common.Configs;
 using NHM.Common.Enums;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace NHM.Common
 {
     public static class StratumServiceHelpers
     {
         #region CUSTOM_ENDPOINTS
-        internal class StratumTemplateEntry
-        {
-            public string Template { get; set; } = "";
-            public int Port { get; set; } = -1;
-        }
         internal class ServiceCustomSettings
         {
+            internal class StratumTemplateEntry
+            {
+                public string Template { get; set; } = "";
+                public int Port { get; set; } = -1;
+            }
+
             public string NhmSocketAddress { get; set; } = "";
             public Dictionary<AlgorithmType, StratumTemplateEntry> StratumEndpointTemplatesByAlgorithmType { get; set; } = new Dictionary<AlgorithmType, StratumTemplateEntry>();
+
+            public static ServiceCustomSettings Defaults()
+            {
+                var ret = new ServiceCustomSettings
+                {
+                    NhmSocketAddress = Nhmws.BuildTagNhmSocketAddress()
+                };
+                foreach (AlgorithmType algorithmType in Enum.GetValues(typeof(AlgorithmType)))
+                {
+                    if (algorithmType < 0) continue;
+                    var name = GetAlgorithmUrlName(algorithmType).name;
+                    // we get something like this "{PREFIX://}daggerhashimoto.{LOCATION}.nicehash.com{:PORT}"
+                    ret.StratumEndpointTemplatesByAlgorithmType[algorithmType] = new StratumTemplateEntry
+                    {
+                        Template = $"{PREFIX_TEMPLATE}{name}.{LOCATION_TEMPLATE}.nicehash.com{PORT_TEMPLATE}",
+                        Port = (int)(3333 + algorithmType)
+                    };
+                }
+                return ret;
+            }
         }
         const string LOCATION_TEMPLATE = "{LOCATION}";
         const string PREFIX_TEMPLATE = "{PREFIX://}";
         const string PORT_TEMPLATE = "{:PORT}";
         //const string NAME_TEMPLATE = "NAME";
-        internal static string NhmSocketAddress { get; private set; }
-        private static Dictionary<AlgorithmType, StratumTemplateEntry> _stratumEndpointTemplatesByAlgorithmType { get; set; } = new Dictionary<AlgorithmType, StratumTemplateEntry>();
+        internal static string NhmSocketAddress => _serviceCustomSettings.NhmSocketAddress;
+        private static readonly ServiceCustomSettings _serviceCustomSettings;
         static StratumServiceHelpers()
         {
             if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED == false) return;
-            var jsonSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore,
-                Culture = CultureInfo.InvariantCulture
-            };
-            const string customSettingsFile = "custom_endpoints_settings.json";
-            if (File.Exists(customSettingsFile))
-            {
-                var customSettings = JsonConvert.DeserializeObject<ServiceCustomSettings>(File.ReadAllText(customSettingsFile), jsonSettings);
-                if (customSettings != null)
-                {
-                    NhmSocketAddress = customSettings.NhmSocketAddress;
-                    _stratumEndpointTemplatesByAlgorithmType = customSettings.StratumEndpointTemplatesByAlgorithmType;
-                }
-            }
-            else
-            {
-                foreach (AlgorithmType algorithmType in Enum.GetValues(typeof(AlgorithmType)))
-                {
-                    if (algorithmType < 0) continue;
-                    var nPort = 3333 + algorithmType;
-                    var name = GetAlgorithmUrlName(algorithmType).name;
-                    var endpointTemplate = $"{PREFIX_TEMPLATE}{name}.{LOCATION_TEMPLATE}.nicehash.com{PORT_TEMPLATE}";
-                    _stratumEndpointTemplatesByAlgorithmType[algorithmType] = new StratumTemplateEntry
-                    {
-                        Template = endpointTemplate,
-                        Port = (int)nPort
-                    };
-                }
-
-                // create defaults
-                var defaultCustomSettings = new ServiceCustomSettings
-                {
-                    NhmSocketAddress = Nhmws.BuildTagNhmSocketAddress(),
-                    StratumEndpointTemplatesByAlgorithmType = _stratumEndpointTemplatesByAlgorithmType,
-                };
-                File.WriteAllText(customSettingsFile, JsonConvert.SerializeObject(defaultCustomSettings, Formatting.Indented));
-            }
+            (_serviceCustomSettings, _) = InternalConfigs.GetDefaultOrFileSettings(Paths.RootPath("custom_endpoints_settings.json"), ServiceCustomSettings.Defaults());
         }
         #endregion CUSTOM_ENDPOINTS
 
@@ -138,7 +122,7 @@ namespace NHM.Common
             }
             if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED)
             {
-                var customEndpointTemplateEntry = _stratumEndpointTemplatesByAlgorithmType[algorithmType];
+                var customEndpointTemplateEntry = _serviceCustomSettings.StratumEndpointTemplatesByAlgorithmType[algorithmType];
                 var customPort = customEndpointTemplateEntry.Port;
                 if (conectionType == NhmConectionType.STRATUM_SSL)
                 {

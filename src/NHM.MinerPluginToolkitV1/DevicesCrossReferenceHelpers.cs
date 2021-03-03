@@ -21,9 +21,9 @@ namespace NHM.MinerPluginToolkitV1
         public static async Task<string> MinerOutput(string path, string arguments, int timeoutMilliseconds = 30 * 1000)
         {
             string output = "";
-            string workingDirectory = Path.GetDirectoryName(path);
             try
             {
+                string workingDirectory = Path.GetDirectoryName(path);
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = path,
@@ -71,15 +71,16 @@ namespace NHM.MinerPluginToolkitV1
             return output;
         }
 
+#warning DO NOT DELETE THIS function old plugins rely on IT!
         /// <summary>
         /// MinerOutput creates new process and gets its StandardOutput
         /// </summary>
         public static async Task<string> MinerOutput(string path, string arguments, IEnumerable<string> breakLines, int timeoutMilliseconds = 30 * 1000)
         {
             var output = new StringBuilder();
-            string workingDirectory = Path.GetDirectoryName(path);
             try
             {
+                string workingDirectory = Path.GetDirectoryName(path);
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = path,

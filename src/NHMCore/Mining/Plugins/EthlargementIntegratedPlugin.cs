@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using InternalConfigsCommon = NHM.Common.Configs.InternalConfigs;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -166,7 +167,7 @@ namespace NHMCore.Mining.Plugins
 
         private string EthlargementOldBinPath()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRoot = Paths.MinerPluginsPath(PluginUUID);
             var pluginRootBins = Path.Combine(pluginRoot, "bins", $"{11}.{1}");
             var binPath = Path.Combine(pluginRootBins, "OhGodAnETHlargementPill-r2.exe");
             return binPath;
@@ -176,17 +177,12 @@ namespace NHMCore.Mining.Plugins
 
         public virtual string EthlargementBinPath()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", $"{Version.Major}.{Version.Minor}");
-            var binPath = Path.Combine(pluginRootBins, BinName);
-            return binPath;
+            return Paths.MinerPluginsPath(PluginUUID, "bins", $"{Version.Major}.{Version.Minor}", BinName);
         }
 
         public virtual string EthlargementCwdPath()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", $"{Version.Major}.{Version.Minor}");
-            return pluginRootBins;
+            return Paths.MinerPluginsPath(PluginUUID, "bins", $"{Version.Major}.{Version.Minor}");
         }
 
 
@@ -294,14 +290,9 @@ namespace NHMCore.Mining.Plugins
             catch
             { }
 
-
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var fileMinersBinsUrlsSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinersBinsUrlsSettings, "MinersBinsUrlsSettings.json");
-            if (fileMinersBinsUrlsSettings != null) MinersBinsUrlsSettings = fileMinersBinsUrlsSettings;
-
-            var readFromFileEnvSysVars = InternalConfigs.InitInternalSetting(pluginRoot, _ethlargementSettings, "EthlargementSettings.json");
-            if (readFromFileEnvSysVars != null && readFromFileEnvSysVars.UseUserSettings) _ethlargementSettings = readFromFileEnvSysVars;
+            // internals
+            (MinersBinsUrlsSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinersBinsUrlsSettings.json"), MinersBinsUrlsSettings);
+            (_ethlargementSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "EthlargementSettings.json"), _ethlargementSettings);
 
             // Filter out supported ones
             _systemContainsSupportedDevices = devices.Any(dev => IsSupportedDeviceName(dev.Name));
@@ -309,7 +300,7 @@ namespace NHMCore.Mining.Plugins
             OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
         }
 
-        public class SupportedDevicesSettings : IInternalSetting
+        public class SupportedDevicesSettings : NHM.Common.Configs.IInternalSetting
         {
             [JsonProperty("use_user_settings")]
             public bool UseUserSettings { get; set; } = false;

@@ -1,4 +1,5 @@
-﻿using NHM.Common.Enums;
+﻿using Newtonsoft.Json;
+using NHM.Common.Enums;
 
 namespace NHM.Common.Device
 {
@@ -12,6 +13,8 @@ namespace NHM.Common.Device
             ID = bd.ID;
         }
 
+
+        [JsonConstructor]
         public BaseDevice(DeviceType deviceType, string uuid, string name, int id)
         {
             DeviceType = deviceType;

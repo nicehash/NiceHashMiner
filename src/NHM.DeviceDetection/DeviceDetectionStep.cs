@@ -5,6 +5,7 @@
         CPU = 0,
         WMIVideoControllers,
         NVIDIA_CUDA,
-        AMD_OpenCL
+        AMD_OpenCL,
+        FAKE
     }
 }

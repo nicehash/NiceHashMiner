@@ -1,5 +1,7 @@
 ﻿using NHM.Common;
+using NHM.Common.Configs;
 using NHM.Common.Device;
+using NHM.Common.Enums;
 using NHM.DeviceDetection.NVIDIA;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,27 @@ namespace NHM.DeviceDetection
         private static bool _initCalled = false;
 
         public static DeviceDetectionResult DetectionResult { get; } = new DeviceDetectionResult();
+
+
+        private class DeviceDetectionSettings : IInternalSetting
+        {
+            public bool UseUserSettings { get; set; } = false;
+            public bool FakeDevices { get; set; } = false;
+            public List<BaseDevice> Devices { get; set; } = new List<BaseDevice>
+            {
+                new BaseDevice(DeviceType.CPU, "FCPU-d0e3cc7b-9455-4386-9d7c-154754ae577e", "Fake CPU", 0),
+                new BaseDevice(DeviceType.NVIDIA, "FGPU-75555d30-b049-4e10-8add-eff796028b14", "Fake NVIDIA", 0),
+                new BaseDevice(DeviceType.NVIDIA, "FGPU-da69753a-4d27-4ab2-95ba-6504be9e8a9a", "Fake NVIDIA", 1),
+                new BaseDevice(DeviceType.AMD, "FAMD-bbc36d15-61db-4342-bb0d-2c97c62fe387", "Fake AMD", 0),
+                new BaseDevice(DeviceType.AMD, "FAMD-7c779e99-4b58-47e1-825c-0a4d6c01a70d", "Fake AMD", 1),
+            };
+        }
+
+        private static readonly DeviceDetectionSettings Settings;
+        static DeviceDetection()
+        {
+            (Settings, _) = InternalConfigs.GetDefaultOrFileSettings(Paths.InternalsPath("devices.json"), new DeviceDetectionSettings { });
+        }
 
 
         private static async Task DetectCPU()
@@ -164,18 +187,25 @@ namespace NHM.DeviceDetection
             Logger.Info(Tag, stringBuilder.ToString());
         }
 
+        private static void DetectFAKE_Devices()
+        {
+            DetectionResult.FAKEDevices = Settings.Devices.Select(bd => new FakeDevice(bd)).ToList();
+        }
+
         public static async Task DetectDevices(IProgress<DeviceDetectionStep> progress)
         {
             if (_initCalled) return;
             _initCalled = true;
             progress?.Report(DeviceDetectionStep.CPU);
-            await DetectCPU();
+            if (!Settings.FakeDevices) await DetectCPU();
             progress?.Report(DeviceDetectionStep.WMIVideoControllers);
-            await DetectWMIVideoControllers();
+            if (!Settings.FakeDevices) await DetectWMIVideoControllers();
             progress?.Report(DeviceDetectionStep.NVIDIA_CUDA);
-            await DetectCUDADevices();
+            if (!Settings.FakeDevices) await DetectCUDADevices();
             progress?.Report(DeviceDetectionStep.AMD_OpenCL);
-            await DetectAMDDevices();
+            if (!Settings.FakeDevices) await DetectAMDDevices();
+            progress?.Report(DeviceDetectionStep.FAKE);
+            if (Settings.FakeDevices) DetectFAKE_Devices();
             // after we detect AMD we will have platforms and now we can check if NVIDIA OpenCL backend works
             if (DetectionResult.CUDADevices?.Count > 0 && AMD.AMDDetector.Platforms?.Count > 0)
             {
@@ -209,6 +239,13 @@ namespace NHM.DeviceDetection
                 foreach (var amdDev in DetectionResult.AMDDevices)
                 {
                     yield return amdDev;
+                }
+            }
+            if (DetectionResult.FAKEDevices != null)
+            {
+                foreach (var fakeDev in DetectionResult.FAKEDevices)
+                {
+                    yield return fakeDev;
                 }
             }
             // simulate no devices

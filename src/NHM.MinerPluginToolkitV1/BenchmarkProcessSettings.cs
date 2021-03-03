@@ -3,6 +3,8 @@ using NHM.MinerPluginToolkitV1.Configs;
 using System.Collections.Generic;
 using System.Linq;
 
+using InternalConfigsCommon = NHM.Common.Configs.InternalConfigs;
+
 namespace NHM.MinerPluginToolkitV1
 {
     static class BenchmarkProcessSettings
@@ -31,8 +33,7 @@ namespace NHM.MinerPluginToolkitV1
 
         static BenchmarkProcessSettings()
         {
-            var fileSettings = InternalConfigs.InitInternalSetting(Paths.Root, _settingsGlobal, "GlobalBenchmarkExceptions.json");
-            if (fileSettings != null) _settingsGlobal = fileSettings;
+            (_settingsGlobal, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.InternalsPath("GlobalBenchmarkExceptions.json"), _settingsGlobal);
         }
 
         public static string IsBenchmarkExceptionLine(string line, Dictionary<string, string> localExceptions)

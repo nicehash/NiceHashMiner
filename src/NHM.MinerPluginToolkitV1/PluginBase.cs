@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Algorithm;
+using NHM.Common.Configs;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
@@ -10,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using InternalConfigsCommon = NHM.Common.Configs.InternalConfigs;
 
 namespace NHM.MinerPluginToolkitV1
 {
@@ -59,37 +62,19 @@ namespace NHM.MinerPluginToolkitV1
 
         public abstract Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
 
-
         protected PluginMetaInfo PluginMetaInfo { get; set; } = null;
 
         #region IInitInternals
         public virtual void InitInternals()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var readFromFileEnvSysVars = InternalConfigs.InitInternalSetting(pluginRoot, MinerSystemEnvironmentVariables, "MinerSystemEnvironmentVariables.json");
-            if (readFromFileEnvSysVars != null) MinerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalSetting(pluginRoot, MinerOptionsPackage, "MinerOptionsPackage.json");
-            if (fileMinerOptionsPackage != null) MinerOptionsPackage = fileMinerOptionsPackage;
-
-            var fileMinerReservedPorts = InternalConfigs.InitInternalSetting(pluginRoot, MinerReservedApiPorts, "MinerReservedPorts.json");
-            if (fileMinerReservedPorts != null) MinerReservedApiPorts = fileMinerReservedPorts;
-
-            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitInternalSetting(pluginRoot, GetApiMaxTimeoutConfig, "MinerApiMaxTimeoutSetting.json");
-            if (fileMinerApiMaxTimeoutSetting != null) GetApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
-
-            var fileMinerBenchmarkTimeSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinerBenchmarkTimeSettings, "MinerBenchmarkTimeSettings.json");
-            if (fileMinerBenchmarkTimeSettings != null) MinerBenchmarkTimeSettings = fileMinerBenchmarkTimeSettings;
-
-            var fileMinersBinsUrlsSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinersBinsUrlsSettings, "MinersBinsUrlsSettings.json");
-            if (fileMinersBinsUrlsSettings != null) MinersBinsUrlsSettings = fileMinersBinsUrlsSettings;
-
-            var filePluginSupportedAlgorithmsSettings = InternalConfigs.InitInternalSetting(pluginRoot, PluginSupportedAlgorithmsSettings, "PluginSupportedAlgorithmsSettings.json");
-            if (filePluginSupportedAlgorithmsSettings != null) PluginSupportedAlgorithmsSettings = filePluginSupportedAlgorithmsSettings;
-
-            var fileMinerCustomActionSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinerCustomActionSettings, "MinerCustomActionSettings.json");
-            if (fileMinerCustomActionSettings != null) MinerCustomActionSettings = fileMinerCustomActionSettings;
+            (MinerSystemEnvironmentVariables, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerSystemEnvironmentVariables.json"), MinerSystemEnvironmentVariables);
+            (MinerOptionsPackage, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerOptionsPackage.json"), MinerOptionsPackage);
+            (MinerReservedApiPorts, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerReservedPorts.json"), MinerReservedApiPorts);
+            (GetApiMaxTimeoutConfig, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerApiMaxTimeoutSetting.json"), GetApiMaxTimeoutConfig);
+            (MinerBenchmarkTimeSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerBenchmarkTimeSettings.json"), MinerBenchmarkTimeSettings);
+            (MinersBinsUrlsSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinersBinsUrlsSettings.json"), MinersBinsUrlsSettings);
+            (PluginSupportedAlgorithmsSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "PluginSupportedAlgorithmsSettings.json"), PluginSupportedAlgorithmsSettings);
+            (MinerCustomActionSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerCustomActionSettings.json"), MinerCustomActionSettings);
         }
 
         // internal settings
@@ -112,9 +97,7 @@ namespace NHM.MinerPluginToolkitV1
         {
             PluginSupportedAlgorithmsSettings = DefaultPluginSupportedAlgorithmsSettings;
             if (IS_CALLED_FROM_PACKER) return;
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-            var filePluginSupportedAlgorithmsSettings = InternalConfigs.InitInternalSetting(pluginRoot, PluginSupportedAlgorithmsSettings, "PluginSupportedAlgorithmsSettings.json");
-            if (filePluginSupportedAlgorithmsSettings != null) PluginSupportedAlgorithmsSettings = filePluginSupportedAlgorithmsSettings;
+            (PluginSupportedAlgorithmsSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "PluginSupportedAlgorithmsSettings.json"), DefaultPluginSupportedAlgorithmsSettings);
         }
 
         #endregion IInitInternals
@@ -154,7 +137,7 @@ namespace NHM.MinerPluginToolkitV1
             {
                 throw new Exception("Unable to return cwd and exe paths MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Path == null || MinersBinsUrlsSettings.Path.Count == 0");
             }
-            var paths = new List<string> { Paths.MinerPluginsPath(), PluginUUID, "bins", $"{Version.Major}.{Version.Minor}" };
+            var paths = new List<string> { Paths.MinerPluginsPath(PluginUUID, "bins", $"{Version.Major}.{Version.Minor}" ) };
             paths.AddRange(MinersBinsUrlsSettings.ExePath);
             var binCwd = Path.Combine(paths.GetRange(0, paths.Count - 1).ToArray());
             var binPath = Path.Combine(paths.ToArray());
@@ -259,9 +242,9 @@ namespace NHM.MinerPluginToolkitV1
         {
             var deviceType = dev.DeviceType;
             var algorithms = GetSupportedAlgorithmsForDeviceType(deviceType);
-            if (UnsafeLimits() || dev is CPUDevice) return algorithms;
-            // GPU RAM filtering
             var gpu = dev as IGpuDevice;
+            if (UnsafeLimits() || gpu == null) return algorithms;
+            // GPU RAM filtering
             var ramLimits = GetCustomMinimumMemoryPerAlgorithm(deviceType);
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsListCustom(gpu.GpuRam, algorithms, ramLimits);
             return filteredAlgorithms;

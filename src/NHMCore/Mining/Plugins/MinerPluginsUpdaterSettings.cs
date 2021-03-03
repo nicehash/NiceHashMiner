@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
-using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.Interfaces;
+using NHM.Common.Configs;
 using System;
 
 namespace NHMCore.Mining.Plugins
@@ -17,12 +16,11 @@ namespace NHMCore.Mining.Plugins
             public TimeSpan CheckPluginsInterval = TimeSpan.FromMinutes(30);
         }
 
-        static SupportedAlgorithmsFilterSettingsFile _settings = new SupportedAlgorithmsFilterSettingsFile();
+        static readonly SupportedAlgorithmsFilterSettingsFile _settings;
 
         static MinerPluginsUpdaterSettings()
         {
-            var fileSettings = InternalConfigs.InitInternalSetting(Paths.Root, _settings, "MinerPluginsUpdaterSettings.json");
-            if (fileSettings != null) _settings = fileSettings;
+            (_settings, _) = InternalConfigs.GetDefaultOrFileSettings(Paths.InternalsPath("MinerPluginsUpdaterSettings.json"), new SupportedAlgorithmsFilterSettingsFile());
         }
 
         public static TimeSpan CheckPluginsInterval => _settings.CheckPluginsInterval;

@@ -1,5 +1,5 @@
 ﻿using NHM.Common;
-using NHM.MinerPluginToolkitV1.Configs;
+using NHM.Common.Configs;
 using System;
 using System.Collections.Generic;
 
@@ -9,42 +9,35 @@ namespace BrokenMiner
     {
         static GetValueOrErrorSettings()
         {
-            var settingsPath = Paths.MinerPluginsPath("BrokenMinerPluginUUID", "settings.json");
-            var globalBenchmarkExceptions = InternalConfigs.ReadFileSettings<Dictionary<string, bool>>(settingsPath);
-            if (globalBenchmarkExceptions != null)
+            var defaultSettings = new Dictionary<string, bool>
             {
-                _settings = globalBenchmarkExceptions;
-            }
-            else
-            {
-                InternalConfigs.WriteFileSettings(settingsPath, _settings);
-            }
+                //plugin
+                { "Version", false }, //breaks at MinerPluginsManager.cs:127
+                { "Name", false}, //breaks at MinerPluginsManager.cs:127
+                { "Author", false }, //doesn't break anything
+                { "PluginUUID", false }, //breaks at MinerPluginsManager.cs:90
+                { "CanGroup", false}, //doesn't break anything
+                { "CheckBinaryPackageMissingFiles", false}, // broken miner doesn't get downloaded
+                { "CreateMiner", false}, // NHML crashes if the mining wants to be started
+                { "GetApiMaxTimeout", false}, // doesn't break anything
+                { "GetSupportedAlgorithms", false}, //breaks at MinerPluginsManager.cs:116
+                { "InitInternals", false}, //breaks at MinerPluginsManager.cs:138
+                { "ShouldReBenchmarkAlgorithmOnDevice", false}, // doesn't break anything
+
+                //miner
+                { "GetMinerStatsDataAsync", false}, // doesn't break anything
+                { "InitMiningLocationAndUsername", false}, // doesn't break anything
+                { "InitMiningPairs", false}, // doesn't break anything
+                { "StartBenchmark", false}, // doesn't break anything
+                { "StartMining", false}, // doesn't break anything
+                { "StopMining", false} // doesn't break anything
+                //{ "KEY", false }
+            };
+            var fromFile = false;
+            (_settings, fromFile) = InternalConfigs.GetDefaultOrFileSettings(Paths.MinerPluginsPath("BrokenMinerPluginUUID", "settings.json"), defaultSettings);
         }
 
-        private static Dictionary<string, bool> _settings = new Dictionary<string, bool>
-        {
-            //plugin
-            { "Version", false }, //breaks at MinerPluginsManager.cs:127
-            { "Name", false}, //breaks at MinerPluginsManager.cs:127
-            { "Author", false }, //doesn't break anything
-            { "PluginUUID", false }, //breaks at MinerPluginsManager.cs:90
-            { "CanGroup", false}, //doesn't break anything
-            { "CheckBinaryPackageMissingFiles", false}, // broken miner doesn't get downloaded
-            { "CreateMiner", false}, // NHML crashes if the mining wants to be started
-            { "GetApiMaxTimeout", false}, // doesn't break anything
-            { "GetSupportedAlgorithms", false}, //breaks at MinerPluginsManager.cs:116
-            { "InitInternals", false}, //breaks at MinerPluginsManager.cs:138
-            { "ShouldReBenchmarkAlgorithmOnDevice", false}, // doesn't break anything
-
-            //miner
-            { "GetMinerStatsDataAsync", false}, // doesn't break anything
-            { "InitMiningLocationAndUsername", false}, // doesn't break anything
-            { "InitMiningPairs", false}, // doesn't break anything
-            { "StartBenchmark", false}, // doesn't break anything
-            { "StartMining", false}, // doesn't break anything
-            { "StopMining", false} // doesn't break anything
-            //{ "KEY", false }
-        };
+        private static readonly Dictionary<string, bool> _settings;
 
         public static T GetValueOrError<T>(string interfacePropertyOrMethod, T value)
         {

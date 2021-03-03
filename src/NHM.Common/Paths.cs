@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NHM.Common
@@ -18,7 +19,7 @@ namespace NHM.Common
             AppRoot = appRootPath;
         }
 
-        // TODO deprecate this one
+        [Obsolete("Use MinerPluginsPath(params string[] paths)", true)]
         public static string MinerPluginsPath()
         {
             return RootPath("miner_plugins");

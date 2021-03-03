@@ -178,7 +178,7 @@ namespace NHMCore.Mining.Plugins
                 CheckAndDeleteUnsupportedPlugins();
 
                 // load dll's and create plugin containers
-                var externalLoadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath())
+                var externalLoadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath(new string[] { }))
                     .Where(BlacklistedPlugins.IsNotBlacklisted)
                     .Where(MinerPluginHost.MinerPlugin.ContainsKey)
                     .Select(pluginUUID => MinerPluginHost.MinerPlugin[pluginUUID])
@@ -586,7 +586,7 @@ namespace NHMCore.Mining.Plugins
 
         private static async Task DelayedPluginDelete(string pluginUUID)
         {
-            var deletePath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID);
+            var deletePath = Paths.MinerPluginsPath(pluginUUID);
             var start = DateTime.UtcNow;
             while (true)
             {
@@ -701,7 +701,7 @@ namespace NHMCore.Mining.Plugins
                 .Where(p => !_integratedPlugins.Any(integrated => integrated.PluginUUID == p.PluginUUID)) // ignore integrated
                 .ToArray();
             foreach (var installed in installedPlugins)
-            { 
+            {
                 var uuid = installed.PluginUUID;
                 var localPluginInfo = new PluginPackageInfo
                 {
@@ -827,7 +827,7 @@ namespace NHMCore.Mining.Plugins
             }
             var pluginUUID = pluginContainer.PluginUUID;
             var ver = pluginContainer.Version;
-            var installingPluginBinsPath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins", $"{ver.Major}.{ver.Minor}");
+            var installingPluginBinsPath = Paths.MinerPluginsPath(pluginUUID, "bins", $"{ver.Major}.{ver.Minor}");
             try
             {
                 if (Directory.Exists(installingPluginBinsPath)) Directory.Delete(installingPluginBinsPath, true);
@@ -856,7 +856,7 @@ namespace NHMCore.Mining.Plugins
                 }
 
                 //clear old bins
-                clearOldPluginBins(Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins"));
+                clearOldPluginBins(Paths.MinerPluginsPath(pluginUUID, "bins"));
             }
             catch (Exception e)
             {
@@ -868,7 +868,7 @@ namespace NHMCore.Mining.Plugins
         {
             var pluginUUID = EthlargementIntegratedPlugin.Instance.PluginUUID;
             var ver = EthlargementIntegratedPlugin.Instance.Version;
-            var installingPluginBinsPath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins", $"{ver.Major}.{ver.Minor}");
+            var installingPluginBinsPath = Paths.MinerPluginsPath(pluginUUID, "bins", $"{ver.Major}.{ver.Minor}");
             try
             {
                 if (Directory.Exists(installingPluginBinsPath)) Directory.Delete(installingPluginBinsPath, true);
@@ -891,7 +891,7 @@ namespace NHMCore.Mining.Plugins
                 }
 
                 //clear old bins
-                clearOldPluginBins(Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins"));
+                clearOldPluginBins(Paths.MinerPluginsPath(pluginUUID, "bins"));
                 CrossReferenceInstalledWithOnlineEthlargementIntegratedPlugin();
                 return installedBins;
             }
@@ -984,7 +984,7 @@ namespace NHMCore.Mining.Plugins
             try
             {
                 var versionStr = $"{plugin.OnlineInfo.PluginVersion.Major}.{plugin.OnlineInfo.PluginVersion.Minor}";
-                var pluginRootPath = Path.Combine(Paths.MinerPluginsPath(), plugin.PluginUUID);
+                var pluginRootPath = Paths.MinerPluginsPath(plugin.PluginUUID);
                 var installDllPath = Path.Combine(pluginRootPath, "dlls", versionStr);
                 var installBinsPath = Path.Combine(pluginRootPath, "bins", versionStr);
 
@@ -1124,7 +1124,7 @@ namespace NHMCore.Mining.Plugins
             try
             {
                 var versionStr = $"{plugin.OnlineInfo.PluginVersion.Major}.{plugin.OnlineInfo.PluginVersion.Minor}";
-                var pluginRootPath = Path.Combine(Paths.MinerPluginsPath(), plugin.PluginUUID);
+                var pluginRootPath = Paths.MinerPluginsPath(plugin.PluginUUID);
                 var installDllPath = Path.Combine(pluginRootPath, "dlls", versionStr);
                 var installBinsPath = Path.Combine(pluginRootPath, "bins", versionStr);
 

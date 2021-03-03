@@ -48,7 +48,7 @@ namespace FakePlugin
         {
             try
             {
-                var path = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "testSettings.json");
+                var path = Paths.MinerPluginsPath(PluginUUID, "testSettings.json");
                 string text = File.ReadAllText(path);
                 var settingsObject = JsonConvert.DeserializeObject<testSettingsJson>(text);
                 if (settingsObject != null) return settingsObject;

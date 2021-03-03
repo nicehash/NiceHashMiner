@@ -11,19 +11,12 @@ namespace NHM.DeviceDetection
 
     internal static class DeviceDetectionPrinter
     {
-        #region JSON settings
-        private static readonly JsonSerializerSettings _jsonSettings;
-
-        static DeviceDetectionPrinter()
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
-            _jsonSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore,
-                Culture = CultureInfo.InvariantCulture
-            };
-        }
-        #endregion JSON settings
+            NullValueHandling = NullValueHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            Culture = CultureInfo.InvariantCulture
+        };
 
         public static async Task<(string readData, T parsed)> GetDeviceDetectionResultAsync<T>(string args, int milliseconds = (30 * 1000)) where T : class
         {

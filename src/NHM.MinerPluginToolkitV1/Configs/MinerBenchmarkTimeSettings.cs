@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
+using NHM.Common.Configs;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

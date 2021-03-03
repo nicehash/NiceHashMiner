@@ -1,6 +1,6 @@
 using NHM.Common;
+using NHM.Common.Configs;
 using NHM.Common.Enums;
-using NHM.MinerPluginToolkitV1.Configs;
 using NHMCore.ApplicationState;
 using NHMCore.Mining;
 using NHMCore.Mining.Benchmarking;

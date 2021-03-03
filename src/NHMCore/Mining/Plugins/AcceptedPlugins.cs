@@ -1,5 +1,5 @@
 ﻿using NHM.Common;
-using NHM.MinerPluginToolkitV1.Configs;
+using NHM.Common.Configs;
 using System.Collections.Generic;
 
 namespace NHMCore.Mining.Plugins
@@ -7,12 +7,11 @@ namespace NHMCore.Mining.Plugins
     static public class AcceptedPlugins
     {
         private static string AcceptedPluginsPath => Paths.ConfigsPath("AcceptedPlugins.json");
-        private static List<string> AcceptedPluginUUIDs = new List<string>();
+        private static readonly List<string> AcceptedPluginUUIDs = new List<string>();
 
         static AcceptedPlugins()
         {
-            var file = InternalConfigs.ReadFileSettings<List<string>>(AcceptedPluginsPath);
-            if (file != null) AcceptedPluginUUIDs = file;
+            (AcceptedPluginUUIDs, _) = InternalConfigs.GetDefaultOrFileSettings(AcceptedPluginsPath, new List<string> { });
         }
 
         private static void CommitToFile() => InternalConfigs.WriteFileSettings(AcceptedPluginsPath, AcceptedPluginUUIDs);

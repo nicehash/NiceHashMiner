@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using NHM.Common.Configs;
 using NHM.Common.Enums;
-using System;
-using System.Globalization;
-using System.IO;
 
 namespace NHM.Common
 {
@@ -21,49 +18,13 @@ namespace NHM.Common
 
         static BuildOptions()
         {
-            bool isSettingsLoaded = false;
-            string customSettingsFile = null;
-            try
-            {
-                var jsonSettings = new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    MissingMemberHandling = MissingMemberHandling.Ignore,
-                    Culture = CultureInfo.InvariantCulture
-                };
-                customSettingsFile = Paths.RootPath("build_settings.json");
-                if (File.Exists(customSettingsFile))
-                {
-                    var customSettings = JsonConvert.DeserializeObject<BuildOptionSettings>(File.ReadAllText(customSettingsFile), jsonSettings);
-                    if (customSettings != null)
-                    {
-                        isSettingsLoaded = true;
-                        BUILD_TAG = customSettings.BUILD_TAG;
-                        IS_PLUGINS_TEST_SOURCE = customSettings.IS_PLUGINS_TEST_SOURCE;
-                        CUSTOM_ENDPOINTS_ENABLED = customSettings.CUSTOM_ENDPOINTS_ENABLED;
-                        FORCE_MINING = customSettings.FORCE_MINING;
-                        FORCE_PROFITABLE = customSettings.FORCE_PROFITABLE;
-                        SHOW_TDP_SETTINGS = customSettings.SHOW_TDP_SETTINGS;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("BuildOptions", $"Constructor {e.Message}");
-            }
-            try
-            {
-                if (!isSettingsLoaded && customSettingsFile != null)
-                {
-                    // create defaults
-                    var defaultCustomSettings = new BuildOptionSettings { };
-                    File.WriteAllText(customSettingsFile, JsonConvert.SerializeObject(defaultCustomSettings, Formatting.Indented));
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("BuildOptions", $"Constructor2 {e.Message}");
-            }
+            var (buildSettings, buildSettingsFromFile) = InternalConfigs.GetDefaultOrFileSettings(Paths.RootPath("build_settings.json"), new BuildOptionSettings { });
+            BUILD_TAG = buildSettings.BUILD_TAG;
+            IS_PLUGINS_TEST_SOURCE = buildSettings.IS_PLUGINS_TEST_SOURCE;
+            CUSTOM_ENDPOINTS_ENABLED = buildSettings.CUSTOM_ENDPOINTS_ENABLED;
+            FORCE_MINING = buildSettings.FORCE_MINING;
+            FORCE_PROFITABLE = buildSettings.FORCE_PROFITABLE;
+            SHOW_TDP_SETTINGS = buildSettings.SHOW_TDP_SETTINGS;
         }
 
         public static BuildTag BUILD_TAG { get; private set; } = BuildTag.PRODUCTION;
