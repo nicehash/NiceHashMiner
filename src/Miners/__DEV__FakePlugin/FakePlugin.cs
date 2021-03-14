@@ -15,33 +15,18 @@ namespace FakePlugin
     /// <summary>
     /// Plugin class inherits IMinerPlugin interface for registering plugin
     /// </summary>
-    public class FakePlugin : PluginBase
+    public partial class FakePlugin : PluginBase
     {
-        // TODO implement this one
-        protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings();
-
-        //public override string PluginUUID => "12a1dc50-1d9d-11ea-8dad-816592d8b973"; //plugin 1
-        //public override string PluginUUID => "1d21d950-1d9d-11ea-8dad-816592d8b973"; //plugin 2
-        public override string PluginUUID => "24c913d0-1d9d-11ea-8dad-816592d8b973"; //plugin3
+        //public override string PluginUUID => "b82f4e50-8002-11eb-9bca-b75efa9f41af"; //plugin 1
+        public override string PluginUUID => "4ecb5de0-8003-11eb-9bca-b75efa9f41af"; //plugin 2
         public override string Name => GetPluginName();
         public override Version Version => GetPluginVersion();
 
         internal static testSettingsJson DEFAULT_SETTINGS = new testSettingsJson
         {
-            name = "FakePlugin1",
+            name = "FakePlugin2",
             exitTimeWaitSeconds = 5,
-            version = new Version(8, 0),
-            supportedAlgorithmsPerType = new List<SupportedAlgorithmsPerType>
-            {
-                new SupportedAlgorithmsPerType
-                {
-                    type = DeviceType.NVIDIA,
-                    algorithms = new List<AlgorithmType>
-                    {
-                        AlgorithmType.GrinCuckatoo32
-                    }
-                }
-            }
+            version = new Version(15, 0),
         };
 
         private testSettingsJson GetTestSettings()
@@ -72,59 +57,16 @@ namespace FakePlugin
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-
-            var settingsObject = GetTestSettings();
-            var amdAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.AMD).FirstOrDefault();
-            var cudaAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.NVIDIA).FirstOrDefault();
-            var cpuAlgos = settingsObject.supportedAlgorithmsPerType.Where(type => type.type == DeviceType.CPU).FirstOrDefault();
-
-            foreach (var device in devices)
-            {
-
-                if (device is AMDDevice amd)
-                {
-                    if (amdAlgos != null)
-                    {
-                        var amdList = new List<Algorithm>();
-                        foreach (var algo in amdAlgos.algorithms)
-                        {
-                            amdList.Add(new Algorithm(PluginUUID, algo));
-                        }
-                        supported.Add(device, amdList);
-                    }
-                }
-                if (device is CUDADevice cuda)
-                {
-                    if (cudaAlgos != null)
-                    {
-                        var cudaList = new List<Algorithm>();
-                        foreach (var algo in cudaAlgos.algorithms)
-                        {
-                            cudaList.Add(new Algorithm(PluginUUID, algo));
-                        }
-                        supported.Add(device, cudaList);
-                    }
-                }
-                if (device is CPUDevice cpu)
-                {
-                    if (cpuAlgos != null)
-                    {
-                        var cpuList = new List<Algorithm>();
-                        foreach (var algo in cpuAlgos.algorithms)
-                        {
-                            cpuList.Add(new Algorithm(PluginUUID, algo));
-                        }
-                        supported.Add(device, cpuList);
-                    }
-                }
-            }
-
+            var supported = devices.Select(device => (device, algorithms: GetSupportedAlgorithmsForDevice(device)))
+                .Where(p => p.algorithms.Any())
+                .ToDictionary(p => p.device, p => p.algorithms);
             return supported;
         }
 
         public FakePlugin()
         {
+            // mandatory init
+            InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
@@ -140,7 +82,8 @@ namespace FakePlugin
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "Fake miner - High-performance miner for NVIDIA and AMD GPUs."
+                PluginDescription = "Fake miner - High-performance miner for NVIDIA and AMD GPUs.",
+                SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
@@ -154,7 +97,7 @@ namespace FakePlugin
         {
             var settingsObject = GetTestSettings();
             var rebenchAlgos = settingsObject.rebenchmarkAlgorithms;
-
+            if (rebenchAlgos == null) return false;
             var isReBenchVersion = benchmarkedPluginVersion.Major == Version.Major && benchmarkedPluginVersion.Minor < Version.Minor;
             var first = ids.FirstOrDefault();
             var isInList = rebenchAlgos.Contains(first);
