@@ -61,6 +61,7 @@ namespace NHM.MinerPluginLoader
                     {
                         try
                         {
+                            if (!pluginDirPath.Contains(plugin.PluginUUID)) throw new Exception($"Plugin UUID ({plugin.PluginUUID}) not within correct path {pluginDirPath}.");
                             if (MinerPlugin.ContainsKey(plugin.PluginUUID))
                             {
                                 var existingPlugin = MinerPlugin[plugin.PluginUUID];
