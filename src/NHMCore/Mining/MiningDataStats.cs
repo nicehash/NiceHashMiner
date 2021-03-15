@@ -70,22 +70,21 @@ namespace NHMCore.Mining
             if (apiData.AlgorithmSpeedsPerDevice == null || apiData.AlgorithmSpeedsPerDevice.Count == 0) return;
             if (apiData.PowerUsagePerDevice == null || apiData.PowerUsagePerDevice.Count == 0) return;
 
-            var sortedDeviceUUIDs = apiData.AlgorithmSpeedsPerDevice.Select(speedInfo => speedInfo.Key).OrderBy(uuid => uuid).ToList();
+            var sortedDeviceUUIDs = apiData.AlgorithmSpeedsPerDevice
+                .Select(speedInfo => speedInfo.Key)
+                .OrderBy(uuid => uuid)
+                .ToArray();
             var uuidsKeys = string.Join(",", sortedDeviceUUIDs);
-
-
             var groupKey = $"{minerUUID}-{uuidsKeys}";
 
             // update groups
             lock (_lock)
             {
                 // check what keys to remove
-                var removeKeys = _apiDataGroups.Keys.Where(checkKey =>
-                {
-                    var minerUUIDDiffers = checkKey.StartsWith(minerUUID) == false;
-                    var deviceInKey = sortedDeviceUUIDs.Any(uuid => checkKey.Contains(uuid));
-                    return minerUUIDDiffers && deviceInKey;
-                }).ToArray();
+                var removeKeys = _apiDataGroups.Keys
+                    .Where(checkKey => checkKey.StartsWith(minerUUID) == false) // minerUUIDDiffers
+                    .Where(checkKey => sortedDeviceUUIDs.Any(uuid => checkKey.Contains(uuid))) // deviceInKey
+                    .ToArray();
                 foreach (var removeKey in removeKeys)
                 {
                     _apiDataGroups.Remove(removeKey);
@@ -116,9 +115,12 @@ namespace NHMCore.Mining
                 stat = new MinerMiningStats { GroupKey = groupKey, MinerName = minerName };
                 _minersMiningStats[groupKey] = stat;
             }
-            var deviceUUIDs = apiData.AlgorithmSpeedsPerDevice.Select(speedInfo => speedInfo.Key).ToArray();
-            stat.Clear();
 
+            var deviceUUIDs = apiData.AlgorithmSpeedsPerDevice
+                .Select(speedInfo => speedInfo.Key)
+                .ToArray();
+
+            stat.Clear();
             // add device UUIDs
             foreach (var deviceUuid in deviceUUIDs) stat.DeviceUUIDs.Add(deviceUuid);
 
@@ -134,8 +136,11 @@ namespace NHMCore.Mining
             var relevantDevices = AvailableDevices.Devices.Where(dev => deviceUUIDs.Contains(dev.Uuid)).ToArray();
             double powerUsageFromDevice = relevantDevices.Select(dev => dev.PowerUsage).Sum();
             double powerUsageFromAlgorithmSettings = relevantDevices
-                .Select(dev => dev.GetAlgorithm(minerUUID, apiData.AlgorithmSpeedsPerDevice[dev.Uuid].Select(info => info.type).ToArray()))
-                .Select(algo => algo == null ? 0d : algo.PowerUsage)
+                .Select(dev => (dev, speeds: apiData.AlgorithmSpeedsPerDevice[dev.Uuid]))
+                .Select(p => (p.dev, algoIds: p.speeds.Select(info => info.type).ToArray()))
+                .Select(p => p.dev.GetAlgorithm(minerUUID, p.algoIds))
+                .Where(algo => algo != null)
+                .Select(algo => algo.PowerUsage)
                 .Sum();
             stat.PowerUsageDeviceReading = powerUsageFromDevice;
             stat.PowerUsageAlgorithmSetting = powerUsageFromAlgorithmSettings;

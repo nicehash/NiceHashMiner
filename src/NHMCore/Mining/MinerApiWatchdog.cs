@@ -14,17 +14,11 @@ namespace NHMCore.Mining
         {
             get
             {
-                lock (_lock)
-                {
-                    return _enabled;
-                }
+                lock (_lock) return _enabled;
             }
             set
             {
-                lock (_lock)
-                {
-                    _enabled = value;
-                }
+                lock (_lock) _enabled = value;
             }
         }
 

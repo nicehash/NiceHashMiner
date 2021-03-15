@@ -33,18 +33,9 @@ namespace NHMCore.Mining.MiningStats
 
         public double GetPowerUsage()
         {
-            if (PowerUsageAPI > 0)
-            {
-                return PowerUsageAPI;
-            }
-            if (PowerUsageDeviceReading > 0)
-            {
-                return PowerUsageDeviceReading;
-            }
-            if (PowerUsageAlgorithmSetting > 0)
-            {
-                return PowerUsageAlgorithmSetting;
-            }
+            if (PowerUsageAPI > 0) return PowerUsageAPI;
+            if (PowerUsageDeviceReading > 0) return PowerUsageDeviceReading;
+            if (PowerUsageAlgorithmSetting > 0) return PowerUsageAlgorithmSetting;
             return 0d;
         }
 

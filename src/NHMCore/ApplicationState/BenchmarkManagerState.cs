@@ -97,10 +97,7 @@ namespace NHMCore.ApplicationState
         {
             get
             {
-                lock (_lock)
-                {
-                    return _selectedBenchmarkType;
-                }
+                lock (_lock) return _selectedBenchmarkType;
             }
             set
             {
@@ -116,10 +113,7 @@ namespace NHMCore.ApplicationState
         {
             get
             {
-                lock (_lock)
-                {
-                    return _benchmarksPending;
-                }
+                lock (_lock) return _benchmarksPending;
             }
         }
 
@@ -127,10 +121,7 @@ namespace NHMCore.ApplicationState
         {
             get
             {
-                lock (_lock)
-                {
-                    return _benchmarksPending > 0;
-                }
+                lock (_lock) return _benchmarksPending > 0;
             }
         }
 
@@ -138,10 +129,7 @@ namespace NHMCore.ApplicationState
         {
             get
             {
-                lock (_lock)
-                {
-                    return _canStartCount > 0;
-                }
+                lock (_lock) return _canStartCount > 0;
             }
         }
 

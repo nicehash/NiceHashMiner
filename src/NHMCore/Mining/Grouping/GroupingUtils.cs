@@ -8,8 +8,8 @@ namespace NHMCore.Mining.Grouping
     {
         private static string CalcGroupedDevicesKey(List<AlgorithmContainer> group, string algorithmStringID)
         {
-            var sortedKeys = new SortedSet<string>(group.Select(pair => pair.ComputeDevice.Uuid));
-            var key = $"{algorithmStringID}({string.Join(",", sortedKeys)})";
+            var sortedDeviceUuids = new SortedSet<string>(group.Select(pair => pair.ComputeDevice.Uuid));
+            var key = $"{algorithmStringID}({string.Join(",", sortedDeviceUuids)})";
             return key;
         }
 
