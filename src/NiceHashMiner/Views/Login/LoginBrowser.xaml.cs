@@ -27,6 +27,17 @@ namespace NiceHashMiner.Views.Login
             IsVisibleChanged += LoginBrowser_IsVisibleChanged;
         }
 
+        private static string _userAgent => "NHM/" + System.Windows.Forms.Application.ProductVersion;
+
+        private void NavigateTo(string url)
+        {
+            var headers = new List<KeyValuePair<string, string>>() {
+                new KeyValuePair<string, string>("User-Agent", _userAgent),
+                new KeyValuePair<string, string>("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0"),
+            };
+            WebViewBrowser.Navigate(new Uri(url), HttpMethod.Get, null, headers);
+        }
+
         private void LoginBrowser_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var oldIsVisible = e.OldValue as bool?;
@@ -38,7 +49,7 @@ namespace NiceHashMiner.Views.Login
                 CancelNavigateAndCheck();
                 LoadingPanel.Visibility = Visibility.Visible;
                 WebViewGrid.Visibility = Visibility.Collapsed;
-                WebViewBrowser.Navigate("about:blank");
+                NavigateTo("about:blank");
             }
             else if (wasInvisible)
             {
@@ -117,12 +128,9 @@ namespace NiceHashMiner.Views.Login
         private async Task NavigateAndCheck(CancellationToken stop)
         {
             _navigationStart = DateTime.UtcNow;
-            var headers = new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("User-Agent", "NHM/" + System.Windows.Forms.Application.ProductVersion),
-                new KeyValuePair<string, string>("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0"),
-            };
             WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
-            WebViewBrowser.Navigate(new Uri(Links.LoginNHM), HttpMethod.Get, null, headers);
+            var urlEncoded = Uri.EscapeUriString($"{Links.LoginNHM}?nhm=1&client={_userAgent}");
+            NavigateTo(urlEncoded);
             Func<bool> isActive = () => !stop.IsCancellationRequested;
             while (isActive())
             {
