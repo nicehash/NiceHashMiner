@@ -64,6 +64,7 @@ namespace NHMCore.Utils
             }
         }
 
+        // ?nhm=1 - LoginNHM
         public static string Login
         {
             get
@@ -74,21 +75,6 @@ namespace NHMCore.Utils
                     case BuildTag.TESTNETDEV: return "https://test-dev.nicehash.com/my/login";
                     // BuildTag.PRODUCTION
                     default: return "https://www.nicehash.com/my/login";
-                }
-            }
-        }
-
-        public static string LoginNHM
-        {
-            get
-            {
-                // TODO missing
-                switch (BuildOptions.BUILD_TAG)
-                {
-                    case BuildTag.TESTNET: return "NO_URL";
-                    case BuildTag.TESTNETDEV: return "https://test-dev.nicehash.com/my/login?nhm=1";
-                    // BuildTag.PRODUCTION
-                    default: return "https://www.nicehash.com/my/login?nhm=1";
                 }
             }
         }
