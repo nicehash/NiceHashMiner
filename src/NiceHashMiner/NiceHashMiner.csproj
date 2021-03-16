@@ -112,10 +112,8 @@
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\DeviceData.cs" />
     <Compile Include="ViewModels\Models\DeviceDataTDP.cs" />
-    <Compile Include="ViewModels\Models\IMiningData.cs" />
     <Compile Include="ViewModels\Models\LoadProgress.cs" />
     <Compile Include="ViewModels\Models\MiningData.cs" />
-    <Compile Include="ViewModels\Models\TotalMiningData.cs" />
     <Compile Include="ViewModels\Plugins\PluginEntryVM.cs" />
     <Compile Include="ViewModels\StartupLoadingVM.cs" />
     <Compile Include="Validators\BtcWorkerValidator.cs" />

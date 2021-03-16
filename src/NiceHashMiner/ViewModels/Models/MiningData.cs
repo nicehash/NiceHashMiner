@@ -14,7 +14,7 @@ namespace NiceHashMiner.ViewModels.Models
     /// <summary>
     /// Wrapper for <see cref="ComputeDevice"/> and <see cref="MiningStats.DeviceMiningStats"/> to convert for mining stats ListView
     /// </summary>
-    public class MiningData : NotifyChangedBase, IMiningData
+    public class MiningData : NotifyChangedBase
     {
         public ComputeDevice Dev { get; }
 

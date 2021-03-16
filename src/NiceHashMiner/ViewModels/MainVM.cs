@@ -66,11 +66,11 @@ namespace NiceHashMiner.ViewModels
             get => _devices?.Where(d => d.Dev.DeviceType != DeviceType.CPU) ?? Enumerable.Empty<DeviceData>();
         }
 
-        public int DeviceGPUCount => _devices?.Where(d => d.Dev.DeviceType != DeviceType.CPU).Count() ?? 0;
-        public int DeviceCPUCount => _devices?.Where(d => d.Dev.DeviceType == DeviceType.CPU).Count() ?? 0;
+        public int DeviceGPUCount => GPUs.Count();
+        public int DeviceCPUCount => CPUs.Count();
 
-        private ObservableCollection<IMiningData> _miningDevs;
-        public ObservableCollection<IMiningData> MiningDevs
+        private ObservableCollection<MiningData> _miningDevs;
+        public ObservableCollection<MiningData> MiningDevs
         {
             get => _miningDevs;
             set
@@ -307,7 +307,7 @@ namespace NiceHashMiner.ViewModels
 
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData)d));
             DevicesTDP = new ObservableCollection<DeviceDataTDP>(AvailableDevices.Devices.Select(d => new DeviceDataTDP(d)));
-            MiningDevs = new ObservableCollection<IMiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
+            MiningDevs = new ObservableCollection<MiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
 
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
@@ -327,7 +327,6 @@ namespace NiceHashMiner.ViewModels
                 await StartMining();
         }
 
-        // This complicated callback will add in total rows to mining stats ListView if they are needed.
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -338,42 +337,7 @@ namespace NiceHashMiner.ViewModels
                     {
                         // Update this device row
                         var miningDev = MiningDevs.OfType<MiningData>().FirstOrDefault(d => d.Dev.Uuid == stat.DeviceUUID);
-                        if (miningDev == null) continue;
-
-                        miningDev.Stats = stat;
-
-                        // Check for existing total row
-                        var totalRow = MiningDevs.OfType<TotalMiningData>().FirstOrDefault(d => d.StateName == miningDev.StateName);
-                        if (totalRow != null)
-                        {
-                            totalRow.AddDevice(miningDev);
-                            continue;
-                        }
-
-                        // Else add new total row
-                        totalRow = new TotalMiningData(miningDev);
-                        lock (_lock)
-                        {
-                            MiningDevs.Add(totalRow);
-                        }
-                    }
-
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    var toRemove = new List<TotalMiningData>();
-
-                    foreach (var miningDev in MiningDevs)
-                    {
-                        if (miningDev is MiningData data)
-                            data.Stats = null;
-                        else if (miningDev is TotalMiningData total)
-                            toRemove.Add(total);
-                    }
-
-                    foreach (var remove in toRemove)
-                    {
-                        MiningDevs.Remove(remove);
-                        remove.Dispose();
+                        if (miningDev != null) miningDev.Stats = stat;
                     }
 
                     break;

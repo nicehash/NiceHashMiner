@@ -133,13 +133,14 @@ namespace NiceHashMiner.ViewModels.Models
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //Logger.Info("DEBUG", $"DevicesMiningStatsOnCollectionChanged {e.Action.ToString()}");
-            if (e.NewItems == null)
+            var oldData = e.OldItems?.OfType<DeviceMiningStats>().FirstOrDefault(d => d.DeviceUUID == Dev.Uuid);
+            if (e.NewItems == null && oldData != null)
             {
                 DeviceMiningStats = null;
                 DeviceMiningStatsProfitability = MISSING_INFO;
                 DeviceMiningStatsPluginAlgo = MISSING_INFO;
             }
-            else
+            else if (e.NewItems != null)
             {
                 var data = e.NewItems.OfType<DeviceMiningStats>().FirstOrDefault(d => d.DeviceUUID == Dev.Uuid);
                 if (data != null)
