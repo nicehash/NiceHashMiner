@@ -481,36 +481,23 @@ namespace NHMCore.Mining
         #endregion Config Setters/Getters
 
         #region Checker
-        public bool AllEnabledAlgorithmsWithoutBenchmarks()
-        {
-            var allEnabledAlgorithms = AlgorithmSettings.Where(algo => algo.Enabled);
-            var allEnabledAlgorithmsWithoutBenchmarks = allEnabledAlgorithms.Where(algo => algo.BenchmarkNeeded);
-            return allEnabledAlgorithms.Count() == allEnabledAlgorithmsWithoutBenchmarks.Count();
-        }
 
-        public bool HasEnabledAlgorithmsWithReBenchmark()
-        {
-            var reBenchmarks = AlgorithmSettings.Where(algo => algo.Enabled && algo.IsReBenchmark && !algo.BenchmarkNeeded);
-            return reBenchmarks.Any();
-        }
-
-        public bool AnyAlgorithmEnabled()
-        {
-            var anyEnabled = AlgorithmSettings.Any(a => a.Enabled);
-            return anyEnabled;
-        }
+        public bool AnyAlgorithmEnabled() => AlgorithmSettings.Any(a => a.Enabled);
 
         public bool AllEnabledAlgorithmsZeroPaying()
         {
-            var isAllZeroPayingState = AlgorithmSettings.Where(a => a.Enabled).Select(a => a.CurrentEstimatedProfit <= 0d);
-            var ret = isAllZeroPayingState.All(t => t);
-            return ret;
+            return AlgorithmSettings
+                .Where(a => a.Enabled)
+                .All(a => a.CurrentEstimatedProfit <= 0d);
         }
 
-        public bool AnyEnabledAlgorithmsNeedBenchmarking()
+        public bool AnyEnabledAlgorithmsNeedBenchmarking() => AlgorithmsForBenchmark().Any();
+
+        public IEnumerable<AlgorithmContainer> AlgorithmsForBenchmark()
         {
-            var reBenchmarks = AlgorithmSettings.Where(algo => algo.Enabled && (algo.IsReBenchmark || algo.BenchmarkNeeded));
-            return reBenchmarks.Any();
+            return AlgorithmSettings
+                .Where(algo => algo.Enabled)
+                .Where(algo => algo.IsReBenchmark || algo.BenchmarkNeeded);
         }
 
         #endregion Checker

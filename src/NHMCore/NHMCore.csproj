@@ -140,10 +140,7 @@
     <Compile Include="Mining\ComputeDevice.cs" />
     <Compile Include="Mining\Benchmarking\PowerHelper.cs" />
     <Compile Include="Mining\Benchmarking\BenchmarkingAnalyzer.cs" />
-    <Compile Include="Mining\Benchmarking\BenchmarkingComputeDeviceHandler.cs" />
-    <Compile Include="Mining\Benchmarking\BenchmarkManager.cs" />
-    <Compile Include="Mining\Benchmarking\BenchmarkOption.cs" />
-    <Compile Include="Mining\Benchmarking\BenchmarkStartSettings.cs" />
+    <Compile Include="Mining\Grouping\BenchmarkingDevice.cs" />
     <Compile Include="Mining\IdleChecking\IdleChangedEventArgs.cs" />
     <Compile Include="Mining\IdleChecking\IdleChecker.cs" />
     <Compile Include="Mining\IdleChecking\IdleCheckManager.cs" />
@@ -214,6 +211,7 @@
     <Compile Include="Switching\NHSmaData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\TaskHelpers.cs" />
+    <Compile Include="Utils\TrivialChannel.cs" />
     <Compile Include="Utils\UpdateHelpers.cs" />
     <Compile Include="Utils\AmdModeSwitcher.cs" />
     <Compile Include="Utils\WindowsUptimeCheck.cs" />

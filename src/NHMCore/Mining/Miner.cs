@@ -111,7 +111,46 @@ namespace NHMCore.Mining
             return _minerTag;
         }
 
-        private async Task<ApiData> GetSummaryAsync()
+        private enum ApiDataStatus
+        {
+            NULL,
+            ALGO_SPEEDS_NULL,
+            OK,
+            NEGATIVE_SPEEDS,
+            ABNORMAL_SPEEDS,
+            OK_MISSING_DEVICE
+        }
+
+        private static ApiDataStatus ExamineApiData(ApiData apiData, List<MiningPair> miningPairs)
+        {
+            if (apiData == null) return ApiDataStatus.NULL;
+            if (apiData.AlgorithmSpeedsPerDevice == null) return ApiDataStatus.ALGO_SPEEDS_NULL;
+
+
+            var anyNegative = apiData.AlgorithmSpeedsPerDevice.Any(apiDev => apiDev.Value.Any(kvp => kvp.speed < 0));
+            if (anyNegative) return ApiDataStatus.NEGATIVE_SPEEDS;
+
+            var miningPairAndReportedSpeedsPairs = apiData.AlgorithmSpeedsPerDevice.Select(p => (mp: miningPairs.FirstOrDefault(mp => mp.Device.UUID == p.Key), speeds: p.Value.Select(s => s.speed).ToArray()))
+                .ToArray();
+            
+            var andDeviceMissing = miningPairAndReportedSpeedsPairs.Any(p => p.mp == null);
+            
+            var deviceMeasuredBenchmarkSpeedDifferences = miningPairAndReportedSpeedsPairs.Where(p => p.mp == null)
+                .Where(p => p.mp.Algorithm.Speeds.Count == p.speeds.Length)
+                .Select(p => (p.mp.Device.UUID, speeds: p.mp.Algorithm.Speeds.Zip(p.speeds, (benchmarked, measured) => (benchmarked, measured))))
+                .Select(p => (p.UUID, speeds: p.speeds.ToArray()))
+                .Where(p => p.speeds.Length > 0)
+                .Where(p => p.speeds.All(sp => sp.benchmarked > 0)) // we cannot have 0 benchmarked speeds when mining but just in case if we start it with some debug feature
+                .Select(p => (p.UUID, speedsDifferences: p.speeds.Select(sp => sp.measured / sp.benchmarked)))
+                .Select(p => (p.UUID, diffAvg: p.speedsDifferences.Sum() / (double)p.speedsDifferences.Count()))
+                .ToArray();
+
+
+            // API data all good
+            return ApiDataStatus.OK;
+        }
+
+        private async Task GetSummaryAsync()
         {
             var apiData = new ApiData();
             if (!IsUpdatingApi)
@@ -139,6 +178,11 @@ namespace NHMCore.Mining
             }
 
             UpdateApiTimestamp(apiData);
+            //if (ExamineApiData(apiData) == false)
+            //{
+            //    // TODO kill miner or just return 
+            //    return;
+            //}
 
             // TODO workaround plugins should return this info
             // create empty stub if it is null
@@ -177,8 +221,6 @@ namespace NHMCore.Mining
 
             // TODO temporary here move it outside later
             MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
-
-            return apiData;
         }
 
         private async Task<object> StartAsync(CancellationToken stop, string miningLocation, string username)
@@ -190,6 +232,7 @@ namespace NHMCore.Mining
             var maxTimeout = _plugin.GetApiMaxTimeout(_miningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
             _algos.ForEach(a => a.IsCurrentlyMining = true);
+            _algos.ForEach(a => a.ComputeDevice.State = DeviceState.Mining);
             return ret;
         }
 
@@ -358,7 +401,7 @@ namespace NHMCore.Mining
             }
             catch (Exception e)
             {
-                Logger.Info(MinerTag(), $"Stop: {e.Message}");
+                Logger.Error(MinerTag(), $"Stop: {e.Message}");
             }
         }
 

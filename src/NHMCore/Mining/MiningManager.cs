@@ -26,85 +26,100 @@ namespace NHMCore.Mining
         // assume we have internet
         private static bool _isConnectedToInternet = true;
 
-        public static bool IsMiningEnabled => _miningDevices.Count > 0;
+        public static bool IsMiningEnabled => _miningDevices.Any();
 
         private static CancellationToken stopMiningManager = CancellationToken.None;
         #region State for mining
         private static string _username = DemoUser.BTC;
         private static string _miningLocation = null;
         private static Dictionary<AlgorithmType, double> _normalizedProfits = null;
-        private static IEnumerable<ComputeDevice> _devices = null;
 
         // TODO make sure _miningDevices and _runningMiners are in sync
         private static List<MiningDevice> _miningDevices = new List<MiningDevice>();
+        private static List<BenchmarkingDevice> _benchmarkingDevices = new List<BenchmarkingDevice>();
         private static Dictionary<string, Miner> _runningMiners = new Dictionary<string, Miner>();
         #endregion State for mining
 
-        private enum CommandType
-        {
-
-            DevicesStartStop,
-            StopAllMiners,
-
-            NormalizedProfitsUpdate,
-            MiningLocationChanged,
-            UsernameChanged,
-
-            // TODO profitability changed
-            MiningProfitSettingsChanged,
-
-            // This will be handled like MiningProfitSettingsChanged to skip the profit threshold that can prevent switching
-            MinerRestartLoopNotify,
-
-            RunEthlargementChanged
-        }
+        
         private class Command
         {
-            public Command(CommandType commandType, object commandParameters)
-            {
-                CommandType = commandType;
-                CommandParameters = commandParameters;
-            }
-            public CommandType CommandType { get; private set; }
-            public object CommandParameters { get; private set; }
-            public TaskCompletionSource<bool> Tsc { get; private set; } = new TaskCompletionSource<bool>();
+            public TaskCompletionSource<object> Tsc { get; private set; } = new TaskCompletionSource<object>();
         }
 
-        private enum CommandResolutionType
+        private class MainCommand : Command
         {
-            NONE,
-            CheckGroupingAndUpdateMiners,
-            RestartCurrentActiveMiners,
-            StopAllMiners,
-            PauseMining,
-            ResumeMining
+            //public bool IsMain { get; } = true;
         }
 
-        private static ConcurrentQueue<Command> _commandQueue { get; set; } = new ConcurrentQueue<Command>();
+        private class NormalizedProfitsUpdateCommand : MainCommand
+        {
+            public NormalizedProfitsUpdateCommand(Dictionary<AlgorithmType, double> normalizedProfits) { this.normalizedProfits = normalizedProfits; }
+            public Dictionary<AlgorithmType, double> normalizedProfits { get; private set; }
+        }
+
+        private class MiningLocationChangedCommand : MainCommand
+        {
+            public MiningLocationChangedCommand(string miningLocation) { this.miningLocation = miningLocation; }
+            public string miningLocation { get; private set; }
+        }
+
+        private class UsernameChangedCommand : MainCommand
+        {
+            public UsernameChangedCommand(string username) { this.username = username; }
+            public string username { get; private set; }
+        }
+
+        private class MiningProfitSettingsChangedCommand : MainCommand
+        { }
+
+        private class MinerRestartLoopNotifyCommand : MainCommand
+        { }
+
+        private class RunEthlargementChangedCommand : MainCommand
+        { }
+
+        #region Deferred Device Commands
+
+        private class DeferredDeviceCommand : Command
+        {
+            public ComputeDevice device { get; set; }
+        }
+
+        // deffered commands
+        private class StartDeviceCommand : DeferredDeviceCommand
+        { }
+
+        private class StopDeviceCommand : DeferredDeviceCommand
+        { }
+
+        #endregion Deferred Device Commands
+
+        private static readonly TrivialChannel<Command> _commandQueue = new TrivialChannel<Command>();
 
         public static Task RunninLoops { get; private set; } = null;
 
         #region Command Tasks
-        public static Task StopAllMiners()
-        {
-            if (RunninLoops == null) return Task.CompletedTask;
-            var command = new Command(CommandType.StopAllMiners, null);
-            _commandQueue.Enqueue(command);
-            return command.Tsc.Task;
-        }
 
         public static Task ChangeUsername(string username)
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new Command(CommandType.UsernameChanged, username);
+            var command = new UsernameChangedCommand(username);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
 
-        public static Task UpdateMiningSession(IEnumerable<ComputeDevice> devices)
+        public static Task StartDevice(ComputeDevice device)
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new Command(CommandType.DevicesStartStop, devices);
+            var command = new StartDeviceCommand { device = device };
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        public static Task StopDevice(ComputeDevice device)
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new StopDeviceCommand { device = device };
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -112,7 +127,7 @@ namespace NHMCore.Mining
         private static Task NormalizedProfitsUpdate(Dictionary<AlgorithmType, double> normalizedProfits)
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new Command(CommandType.NormalizedProfitsUpdate, normalizedProfits);
+            var command = new NormalizedProfitsUpdateCommand(normalizedProfits);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -120,7 +135,7 @@ namespace NHMCore.Mining
         private static Task MiningLocationChanged(string miningLocation)
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new Command(CommandType.MiningLocationChanged, miningLocation);
+            var command = new MiningLocationChangedCommand(miningLocation);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -128,14 +143,14 @@ namespace NHMCore.Mining
         private static Task UseEthlargementChanged()
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new Command(CommandType.RunEthlargementChanged, null);
+            var command = new RunEthlargementChangedCommand();
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
         private static Task MiningProfitSettingsChanged()
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new Command(CommandType.MiningProfitSettingsChanged, null);
+            var command = new MiningProfitSettingsChangedCommand();
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -143,115 +158,19 @@ namespace NHMCore.Mining
         public static Task MinerRestartLoopNotify()
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new Command(CommandType.MinerRestartLoopNotify, null);
+            var command = new MinerRestartLoopNotifyCommand();
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
 
-        private static async Task HandleCommand(Command command)
+        private static async Task HandleCommand(MainCommand command)
         {
             // check what kind of command is it and ALWAYS set Tsc.Result
             // do stuff with the command
             var commandExecSuccess = true;
             try
             {
-                var commandResolutionType = CommandResolutionType.NONE;
-                Logger.Debug(Tag, $"Command type {command.CommandType}");
-                switch (command.CommandType)
-                {
-                    case CommandType.DevicesStartStop:
-                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
-                        if (command.CommandParameters is IEnumerable<ComputeDevice> devices)
-                        {
-                            _devices = devices;
-                            Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                        }
-                        break;
-                    case CommandType.NormalizedProfitsUpdate:
-                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
-                        if (command.CommandParameters is Dictionary<AlgorithmType, double> profits)
-                        {
-                            _normalizedProfits = profits;
-                            Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                        }
-                        break;
-                    case CommandType.UsernameChanged:
-                        commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
-                        if (command.CommandParameters is string username)
-                        {
-                            _username = username;
-                            Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                        }
-                        break;
-                    case CommandType.MiningLocationChanged:
-                        commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
-                        var location = command.CommandParameters as string;
-                        //if (command.CommandParameters is string location || command.CommandParameters is null)
-                        {
-                            if (_miningLocation == location)
-                            {
-                                commandResolutionType = CommandResolutionType.NONE;
-                                Logger.Debug(Tag, $"Command type {command.CommandType} Location is same no action needed");
-                            }
-                            else if (location == null)
-                            {
-                                commandResolutionType = CommandResolutionType.PauseMining;
-                                Logger.Debug(Tag, $"Command type {command.CommandType} Location is null pause mining");
-                            }
-                            else if (_miningLocation == null)
-                            {
-                                commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
-                                Logger.Debug(Tag, $"Command type {command.CommandType} _miningLocation == null CheckGroupingAndUpdateMiners");
-                            }
-
-                            _miningLocation = location;
-                            Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                        }
-                        break;
-                    case CommandType.StopAllMiners:
-                        commandResolutionType = CommandResolutionType.StopAllMiners;
-                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                        break;
-
-                    case CommandType.RunEthlargementChanged:
-                        commandResolutionType = CommandResolutionType.RestartCurrentActiveMiners;
-                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                        break;
-
-                    case CommandType.MiningProfitSettingsChanged:
-                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
-                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                        break;
-                    case CommandType.MinerRestartLoopNotify:
-                        commandResolutionType = CommandResolutionType.CheckGroupingAndUpdateMiners;
-                        Logger.Debug(Tag, $"Command type {command.CommandType} Updated");
-                        break;
-
-                    default:
-                        Logger.Debug(Tag, $"command type not handled {command.CommandType}");
-                        break;
-                }
-                // tasks to await
-                Logger.Debug(Tag, $"Command type {command.CommandType} Resolution {commandResolutionType}");
-                switch (commandResolutionType)
-                {
-                    case CommandResolutionType.CheckGroupingAndUpdateMiners:
-                        await CheckGroupingAndUpdateMiners(command.CommandType);
-                        break;
-                    case CommandResolutionType.RestartCurrentActiveMiners:
-                        // TODO this looks like a problem if no mining location is present
-                        await RestartMiners();
-                        break;
-                    case CommandResolutionType.StopAllMiners:
-                        await StopAllMinersTask();
-                        break;
-                    case CommandResolutionType.PauseMining:
-                        await PauseAllMiners();
-                        break;
-                    default:
-                        break;
-                }
-
+                await CheckGroupingAndUpdateMiners(command);
             }
             catch (Exception e)
             {
@@ -311,9 +230,164 @@ namespace NHMCore.Mining
             _ = MiningProfitSettingsChanged();
         }
 
+        private static async Task StopAndRemoveBenchmark(DeferredDeviceCommand c)
+        {
+            var stopBenchmark = _benchmarkingDevices.FirstOrDefault(benchDevice => c.device == benchDevice.Device);
+            if (stopBenchmark != null)
+            {
+                await stopBenchmark.StopBenchmark();
+                _benchmarkingDevices.Remove(stopBenchmark);
+            }
+        }
+
+        private static async Task StopAndRemoveMiner(DeferredDeviceCommand c)
+        {
+            var stopMiningKey = _runningMiners.Keys.ToArray().Where(key => key.Contains(c.device.Uuid)).FirstOrDefault();
+            if (stopMiningKey != null)
+            {
+                await _runningMiners[stopMiningKey].StopTask();
+                _runningMiners.Remove(stopMiningKey);
+            }
+        }
+
+        private static async Task HandleDeferredCommands(List<DeferredDeviceCommand> deferredCommands)
+        {
+            try
+            {
+                var deviceActions = deferredCommands
+                    .GroupBy(ddc => ddc.device)
+                    .Select(g => g.Select(c => c).ToArray())
+                    .Select(commands => (finalCommand: commands.LastOrDefault(), redundantCommands: commands.Reverse().Skip(1)))
+                    .ToArray();
+                
+                var redundantCommands = deviceActions
+                    .SelectMany(p => p.redundantCommands)
+                    .ToArray();
+                // mark redundan't actions as complete
+                foreach (var redundantCommand in redundantCommands) redundantCommand.Tsc.TrySetResult(false);
+
+                var validCommands = deviceActions.Select(p => p.finalCommand)
+                    .Where(c => c != null)
+                    .ToArray();
+
+                var stopCommands = validCommands.Where(c => c is StopDeviceCommand).ToArray();
+
+                var partitionedStartCommands = validCommands
+                    .Where(c => c is StartDeviceCommand)
+                    .Select(c => (command: c, anyAlgoToBenchmark: c.device.AnyEnabledAlgorithmsNeedBenchmarking(), anyAlgoToMine: c.device.AlgorithmSettings.Any(GroupSetupUtils.IsAlgoMiningCapable)))
+                    .ToArray();
+
+                var startBenchmarkingCommands = partitionedStartCommands
+                    .Where(t => t.anyAlgoToBenchmark)
+                    .Select(t => t.command)
+                    .ToArray();
+
+                var startMiningCommands = partitionedStartCommands
+                    .Where(t => !t.anyAlgoToBenchmark && t.anyAlgoToMine)
+                    .Select(t => t.command)
+                    .ToArray();
+
+                var startErrorCommands = partitionedStartCommands
+                    .Where(t => !t.anyAlgoToBenchmark && !t.anyAlgoToMine)
+                    .Select(t => t.command)
+                    .ToArray();
+
+                var nonMiningCommands = stopCommands
+                    .Concat(startErrorCommands)
+                    .Concat(startBenchmarkingCommands)
+                    .ToArray();
+
+                var nonBenchmarkingCommands = stopCommands
+                    .Concat(startErrorCommands)
+                    .Concat(startMiningCommands)
+                    .ToArray();
+
+                // stop all newly obsolete miners 
+                foreach (var stopMiner in nonMiningCommands) await StopAndRemoveMiner(stopMiner);
+                // stop all newly obsolete benchmarks
+                foreach (var stopBenchmark in nonBenchmarkingCommands) await StopAndRemoveBenchmark(stopBenchmark);
+                // set the stop and error states
+                foreach (var stop in stopCommands) stop.device.State = DeviceState.Stopped; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+                foreach (var stop in startErrorCommands) stop.device.State = DeviceState.Error; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+
+                // start and group devices for mining
+                var devicesToMineChange = startMiningCommands
+                    .Select(c => _miningDevices.FirstOrDefault(miningDev => miningDev.Device == c.device))
+                    .Any(MiningDevice.ShouldUpdate);
+                Func<ComputeDevice, bool> isValidMiningDevice = (ComputeDevice dev) => nonMiningCommands.All(c => c.device != dev);
+                var devicesToMine = _miningDevices
+                    .Select(md => md.Device)
+                    .Concat(startMiningCommands.Select(c => c.device))
+                    .Distinct()
+                    .Where(isValidMiningDevice)
+                    .ToArray();
+                var anyMiningDeviceInactive = devicesToMine.Any(dev => !_runningMiners.Keys.Any(key => key.Contains(dev.Uuid)));
+                var miningDevicesMissmatch = _miningDevices.Count != devicesToMine.Length;
+                // check if there is a difference
+                if (devicesToMineChange || anyMiningDeviceInactive || miningDevicesMissmatch)
+                {
+                    _miningDevices = GroupSetupUtils.GetMiningDevices(devicesToMine, true);
+                    GroupSetupUtils.AvarageSpeeds(_miningDevices);
+                    //// TODO enable StabilityAnalyzer
+                    //// set benchmarked speeds for BenchmarkingAnalyzer
+                    //foreach (var miningDev in _miningDevices)
+                    //{
+                    //    var deviceUuid = miningDev.Device.Uuid;
+                    //    foreach (var algorithm in miningDev.Algorithms)
+                    //    {
+                    //        var speedID = $"{deviceUuid}-{algorithm.AlgorithmStringID}";
+                    //        var benchmarkSpeed = new BenchmarkingAnalyzer.BenchmarkSpeed {
+                    //            PrimarySpeed = algorithm.BenchmarkSpeed,
+                    //            SecondarySpeed = algorithm.SecondaryAveragedSpeed,
+                    //        };
+                    //        BenchmarkingAnalyzer.SetBenchmarkSpeeds(speedID, benchmarkSpeed);
+                    //    }
+                    //}
+                    await CheckGroupingAndUpdateMiners(new MainCommand());
+                }
+                foreach (var startMining in startMiningCommands) startMining.device.State = DeviceState.Mining; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+
+                // start devices to benchmark or update existing benchmarks algorithms
+                var devicesToBenchmark = startBenchmarkingCommands.Select(c => c.device)
+                    .Select(dev => (dev, benchmarkingDev: _benchmarkingDevices.FirstOrDefault(benchDev => benchDev.Device == dev)))
+                    .ToArray();
+                // to update 
+                devicesToBenchmark
+                    .Where(p => p.benchmarkingDev != null)
+                    .Select(p => p.benchmarkingDev)
+                    .ToList()
+                    .ForEach(benchDev => benchDev.Update());
+                // new benchmarks
+                devicesToBenchmark
+                    .Where(p => p.benchmarkingDev == null)
+                    .Select(p => new BenchmarkingDevice(p.dev))
+                    .ToList()
+                    .ForEach(benchDev => {
+                        benchDev.StartBenchmark();
+                        _benchmarkingDevices.Add(benchDev);
+                    });
+                foreach (var startMining in startBenchmarkingCommands) startMining.device.State = DeviceState.Benchmarking;
+
+                foreach (var c in validCommands)
+                {
+                    c.Tsc.TrySetResult(true);
+                    c.device.IsPendingChange = false;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Info(Tag, $"HandleDeferredCommands error {e.Message}");
+            }
+            // TODO finally on the deferred commands??
+        }
+
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
             var switchingManager = new AlgorithmSwitchingManager();
+
+            var lastDeferredCommandTime = DateTime.UtcNow;
+            Func<bool> handleDeferredCommands = () => (DateTime.UtcNow - lastDeferredCommandTime).TotalSeconds >= 0.5;
+            var deferredCommands = new List<DeferredDeviceCommand>();
             try
             {
                 switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
@@ -325,11 +399,27 @@ namespace NHMCore.Mining
                 while (isActive())
                 {
                     if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
-                    // command handling
-                    if (isActive() && _commandQueue.TryDequeue(out var command))
+                    if (handleDeferredCommands() && deferredCommands.Any())
                     {
-                        await HandleCommand(command);
+                        await HandleDeferredCommands(deferredCommands);
+                        deferredCommands.Clear();
                     }
+                    // command handling
+                    var (command, hasTimedout, exceptionString) = await _commandQueue.ReadAsync(checkWaitTime, stop);
+                    if (command == null)
+                    {
+                        if (exceptionString != null) Logger.Error(Tag, $"Channel.ReadAsync error: {exceptionString}");
+                        continue;
+                    }
+                    if (command is DeferredDeviceCommand deferredCommand)
+                    {
+                        deferredCommand.device.IsPendingChange = true; // TODO check if we can be without this one
+                        deferredCommand.device.State = DeviceState.Pending;
+                        lastDeferredCommandTime = DateTime.UtcNow;
+                        deferredCommands.Add(deferredCommand);
+                        continue;
+                    }
+                    if (command is MainCommand mainCommand) await HandleCommand(mainCommand);
                 }
             }
             catch (TaskCanceledException e)
@@ -442,76 +532,55 @@ namespace NHMCore.Mining
         //    // TODO resume devices to Mining state
         //}
 
-        private static async Task CheckGroupingAndUpdateMiners(CommandType commandType)
+        private static async Task CheckGroupingAndUpdateMiners(MainCommand command)
         {
-            // first update mining devices
-            if (commandType == CommandType.DevicesStartStop)
+            // #1 parse the command
+            var commandType = command.GetType().Name;
+            Logger.Debug(Tag, $"Command type {commandType}");
+            if (command is NormalizedProfitsUpdateCommand normalizedProfitsUpdateCommand)
             {
-                //// TODO should we check new and old miningDevices???
-                //var oldMiningDevices = _miningDevices;
-                _miningDevices = GroupSetupUtils.GetMiningDevices(_devices, true);
-                if (_miningDevices.Count > 0)
-                {
-                    GroupSetupUtils.AvarageSpeeds(_miningDevices);
-                    //// TODO enable StabilityAnalyzer
-                    //// set benchmarked speeds for BenchmarkingAnalyzer
-                    //foreach (var miningDev in _miningDevices)
-                    //{
-                    //    var deviceUuid = miningDev.Device.Uuid;
-                    //    foreach (var algorithm in miningDev.Algorithms)
-                    //    {
-                    //        var speedID = $"{deviceUuid}-{algorithm.AlgorithmStringID}";
-                    //        var benchmarkSpeed = new BenchmarkingAnalyzer.BenchmarkSpeed {
-                    //            PrimarySpeed = algorithm.BenchmarkSpeed,
-                    //            SecondarySpeed = algorithm.SecondaryAveragedSpeed,
-                    //        };
-                    //        BenchmarkingAnalyzer.SetBenchmarkSpeeds(speedID, benchmarkSpeed);
-                    //    }
-                    //}
-                }
+                _normalizedProfits = normalizedProfitsUpdateCommand.normalizedProfits;
             }
-            if (commandType == CommandType.MiningLocationChanged)
+            else if (command is MiningLocationChangedCommand miningLocationChangedCommand)
             {
-                _runningMiners.Clear();
-                // re-init mining devices
-                _miningDevices = GroupSetupUtils.GetMiningDevices(_devices, true);
-                if (_miningDevices.Count > 0)
-                {
-                    GroupSetupUtils.AvarageSpeeds(_miningDevices);
-                }
+                var oldLocation = _miningLocation;
+                _miningLocation = miningLocationChangedCommand.miningLocation;
+                if (_miningLocation == oldLocation) return;
             }
-            // TODO check if there is nothing to check maybe
-            if (_normalizedProfits == null)
+            else if (command is UsernameChangedCommand usernameChangedCommand)
             {
-                Logger.Error(Tag, "Profits is null");
-                await PauseAllMiners();
-                return;
+                _username = usernameChangedCommand.username;
             }
-            if (_miningDevices.Count == 0)
-            {
-                return;
-            }
-            if (_miningLocation == null)
-            {
-                Logger.Error(Tag, "_miningLocation is null");
-                await PauseAllMiners();
-                return;
-            }
+            
 
-            await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, CommandType.MiningProfitSettingsChanged == commandType || CommandType.MinerRestartLoopNotify == commandType);
-        }
-
-        private static async Task RestartMiners()
-        {
-            // STOP
-            foreach (var key in _runningMiners.Keys)
+            // here we do the deciding
+            // to mine we need to have the username mining location set and ofc device to mine with
+            if (_username == null || _normalizedProfits == null || _miningLocation == null)
             {
-                await _runningMiners[key].StopTask();
+                if (_username == null) Logger.Error(Tag, "_username is null");
+                if (_normalizedProfits == null) Logger.Error(Tag, "_normalizedProfits is null");
+                if (_miningLocation == null) Logger.Error(Tag, "_miningLocation is null");
+                await PauseAllMiners();
             }
-            // START
-            foreach (var key in _runningMiners.Keys)
+            else if (command is MiningLocationChangedCommand || command is UsernameChangedCommand || command is RunEthlargementChangedCommand)
             {
-                await _runningMiners[key].StartMinerTask(stopMiningManager, _miningLocation, _username);
+                // TODO this is miner restarts on mining location and username change, you should take into account the mining location changed for benchmarking
+                // RESTART-STOP-START
+                // STOP
+                foreach (var miner in _runningMiners.Values) await miner.StopTask();
+                // START
+                foreach (var miner in _runningMiners.Values) await miner.StartMinerTask(stopMiningManager, _miningLocation, _username);
+            }
+            else if (_miningDevices.Count == 0)
+            {
+                await StopAllMinersTask();
+                ApplicationStateManager.StopMining();
+            }
+            else
+            {
+                ApplicationStateManager.StartMining();
+                bool skipProfitsThreshold = command is MiningProfitSettingsChangedCommand || command is MinerRestartLoopNotifyCommand;
+                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
         }
 
@@ -635,7 +704,7 @@ namespace NHMCore.Mining
                     }
                     // most profitable
                     stringBuilderDevice.AppendLine(
-                        $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
+                        $"\t\tMOST PROFITABLE ALGO: {device.MostProfitableAlgorithmStringID}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
                     stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
                 }
                 Logger.Info(Tag, stringBuilderFull.ToString());

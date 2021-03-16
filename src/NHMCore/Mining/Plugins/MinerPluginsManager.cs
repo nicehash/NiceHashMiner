@@ -308,9 +308,8 @@ namespace NHMCore.Mining.Plugins
 
         private static class PluginInstaller
         {
+            private static readonly TrivialChannel<IPluginInstallerCommand> Channel = new TrivialChannel<IPluginInstallerCommand>();
             private interface IPluginInstallerCommand { string PluginUUID { get; set; } };
-            private static readonly ConcurrentQueue<IPluginInstallerCommand> _commandQueue = new ConcurrentQueue<IPluginInstallerCommand>();
-
             private class RemoveCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } }
             private class RemovedCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } public bool Success { get; set; } }
             private class InstallCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } }
@@ -321,22 +320,22 @@ namespace NHMCore.Mining.Plugins
 
             public static void RemovePlugin(string pluginUUID)
             {
-                _commandQueue.Enqueue(new RemoveCommand { PluginUUID = pluginUUID });
+                Channel.Enqueue(new RemoveCommand { PluginUUID = pluginUUID });
             }
 
             public static void RemovedPluginStatus(string pluginUUID, bool success)
             {
-                _commandQueue.Enqueue(new RemovedCommand { PluginUUID = pluginUUID, Success = success });
+                Channel.Enqueue(new RemovedCommand { PluginUUID = pluginUUID, Success = success });
             }
 
             public static void InstallPlugin(string pluginUUID)
             {
-                _commandQueue.Enqueue(new InstallCommand { PluginUUID = pluginUUID });
+                Channel.Enqueue(new InstallCommand { PluginUUID = pluginUUID });
             }
 
             public static void InstalledPluginStatus(string pluginUUID, bool success)
             {
-                _commandQueue.Enqueue(new InstalledCommand { PluginUUID = pluginUUID, Success = success });
+                Channel.Enqueue(new InstalledCommand { PluginUUID = pluginUUID, Success = success });
             }
 
             public static async Task RestartDevicesStateLoop(CancellationToken stop)
@@ -344,6 +343,7 @@ namespace NHMCore.Mining.Plugins
                 var lastCommandTime = DateTime.UtcNow;
                 Func<bool> checkCommandsForRestart = () => (DateTime.UtcNow - lastCommandTime).TotalSeconds >= 0.5;
                 var pairedCommands = new Dictionary<string, List<IPluginInstallerCommand>>();
+                var pluginsToDelete = new List<string>();
                 try
                 {
                     var checkWaitTime = TimeSpan.FromMilliseconds(50);
@@ -354,31 +354,52 @@ namespace NHMCore.Mining.Plugins
                         if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
 
                         // TODO check last command time and after a delay execute device restart
-                        if (_commandQueue.IsEmpty && pairedCommands.Any() && checkCommandsForRestart())
+                        if (pairedCommands.Any() && checkCommandsForRestart())
                         {
-                            var keys = pairedCommands.Keys.ToArray();
-                            foreach (var key in keys)
+                            var partitionedCommands = pairedCommands.Keys
+                                .ToArray()
+                                .Select(pluginUUID => (pluginUUID, commands: pairedCommands[pluginUUID]))
+                                .Select(p => (p.pluginUUID, removal: p.commands.Where(IsRemovalCommand), installation: p.commands.Where(IsInstallationCommand)))
+                                .ToArray();
+
+                            var currentPluginsToDelete = partitionedCommands.Where(p => p.removal.Count() > 1)
+                                .Where(p => p.installation.Count() == 0)
+                                .Select(p => p.pluginUUID)
+                                .ToArray();
+                            pluginsToDelete.AddRange(currentPluginsToDelete);
+
+                            foreach (var (pluginUUID, removal, installation) in partitionedCommands)
                             {
-                                var commands = pairedCommands[key];
-                                var removal = commands.Where(IsRemovalCommand);
-                                var installation = commands.Where(IsInstallationCommand);
                                 if (removal.Any() && installation.Any())
                                 {
-                                    Logger.Error("PluginInstaller", $"Plugin {key} has installation and removal commands at same time!!!");
-                                    pairedCommands.Remove(key);
+                                    Logger.Error("PluginInstaller", $"Plugin {pluginUUID} has installation and removal commands at same time!!!");
+                                    pairedCommands.Remove(pluginUUID);
                                 }
                                 else if (removal.Count() > 1 || installation.Count() > 1)
                                 {
-                                    pairedCommands.Remove(key);
+                                    pairedCommands.Remove(pluginUUID);
                                 }
                             }
                             // when we have no commands pending restart devices
-                            if (!pairedCommands.Any()) await ApplicationStateManager.RestartDevicesState();
+                            if (!pairedCommands.Any())
+                            {
+                                await ApplicationStateManager.RestartDevicesState();
+                                var deletePluginTasks = pluginsToDelete
+                                    .Distinct()
+                                    .Select(DelayedPluginDelete)
+                                    .ToArray();
+                                pluginsToDelete.Clear();
+                                _ = Task.WhenAll(deletePluginTasks); // TODO await or leave
+                            }
                         }
 
                         // command handling
-                        IPluginInstallerCommand command = null;
-                        if (!_commandQueue.TryDequeue(out command) || command == null) continue;
+                        var (command, hasTimedout, exceptionString) = await Channel.ReadAsync(checkWaitTime, stop);
+                        if (command == null)
+                        {
+                            if (exceptionString != null) Logger.Error("PluginInstaller", $"Channel.ReadAsync error: {exceptionString}");
+                            continue;
+                        }
                         // handle commands
                         if (!pairedCommands.ContainsKey(command.PluginUUID)) pairedCommands[command.PluginUUID] = new List<IPluginInstallerCommand>() { };
                         pairedCommands[command.PluginUUID].Add(command);
@@ -586,6 +607,7 @@ namespace NHMCore.Mining.Plugins
 
         private static async Task DelayedPluginDelete(string pluginUUID)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));
             var deletePath = Paths.MinerPluginsPath(pluginUUID);
             var start = DateTime.UtcNow;
             while (true)
@@ -630,7 +652,6 @@ namespace NHMCore.Mining.Plugins
                 }
 
                 if (crossReferenceInstalledWithOnline) CrossReferenceInstalledWithOnline();
-                _ = DelayedPluginDelete(pluginUUID);
             }
             catch (Exception e)
             {

@@ -161,22 +161,19 @@ namespace NHMCore
         // StartMining function should be called only if all mining requirements are met, btc or demo, valid workername, and sma data
         // don't call this function ever unless credentials are valid or if we will be using Demo mining
         // And if there are missing mining requirements
-        private static bool StartMining()
+        internal static bool StartMining()
         {
             StartComputeDevicesCheckTimer();
             StartInternetCheckTimer();
             return true;
         }
 
-        private static async Task<bool> StopMining()
+        internal static void StopMining()
         {
-            await MiningManager.StopAllMiners();
-
             StopComputeDevicesCheckTimer();
             StopInternetCheckTimer();
             DisplayNoInternetConnection(false); // hide warning
             DisplayMiningProfitable(true); // hide warning
-            return true;
         }
 
 

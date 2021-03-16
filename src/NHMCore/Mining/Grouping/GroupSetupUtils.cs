@@ -134,138 +134,32 @@ namespace NHMCore.Mining.Grouping
             return miningNonMiningDevs.Item1;
         }
 
-        // avarage passed in benchmark values
-        public static void AvarageSpeeds(List<MiningDevice> miningDevs)
+        // TODO we can now add by device name device type or whatever avarage passed in benchmark values
+        public static void AvarageSpeeds(IEnumerable<MiningDevice> miningDevs)
         {
+            if (miningDevs == null || !miningDevs.Any()) return; 
             // calculate avarage speeds, to ensure mining stability
             // device name, algo key, algos refs list
-            var allAvaragers = new Dictionary<string, AveragerGroup>();
-
-            // init empty avarager
-            foreach (var device in miningDevs)
+            var groupedAlgorithmsAll = miningDevs
+                .GroupBy(md => md.Device.Name)
+                .SelectMany(devsByName => devsByName.SelectMany(md => md.Algorithms)
+                    .GroupBy(algo => algo.AlgorithmStringID)
+                    .Select(g => g.Select(setAlgo => setAlgo).ToArray()))
+                .Where(groupedAlgorithms => groupedAlgorithms.Length > 0)
+                .ToArray(); 
+            foreach (var groupedAlgorithms in groupedAlgorithmsAll)
             {
-                var devName = device.Device.Name;
-                allAvaragers[devName] = new AveragerGroup();
-            }
-
-            // fill avarager
-            foreach (var device in miningDevs)
-            {
-                var devName = device.Device.Name;
-                // add UUID
-                allAvaragers[devName].UuidList.Add(device.Device.Uuid);
-                allAvaragers[devName].AddAlgorithms(device.Algorithms);
-            }
-
-            // calculate and set new AvarageSpeeds for miningDeviceReferences
-            foreach (var curAvaragerKvp in allAvaragers)
-            {
-                var curAvarager = curAvaragerKvp.Value;
-                var calculatedAvaragers = curAvarager.CalculateAvarages();
-                foreach (var uuid in curAvarager.UuidList)
+                // keep BenchmarkSpeed because of the dev features get rid of those
+                var avgSpeeds = groupedAlgorithms.Select(algo => new double[] { algo.BenchmarkSpeed, algo.SecondaryBenchmarkSpeed })
+                .Aggregate(new double[] { 0.0, 0.0 }, (total, next) => total.Zip(next, (sum, plus) => sum + plus).ToArray())
+                .Select(sumSpeed => sumSpeed / groupedAlgorithms.Length)
+                .ToArray();
+                foreach (var algo in groupedAlgorithms)
                 {
-                    var minerDevIndex = miningDevs.FindIndex((dev) => dev.Device.Uuid == uuid);
-                    if (minerDevIndex > -1)
-                    {
-                        foreach (var avgKvp in calculatedAvaragers)
-                        {
-                            var algoID = avgKvp.Key;
-                            var avaragedSpeed = avgKvp.Value[0];
-                            var secondaryAveragedSpeed = avgKvp.Value[1];
-                            var index = miningDevs[minerDevIndex].Algorithms
-                                .FindIndex((a) => a.AlgorithmStringID == algoID);
-                            if (index > -1)
-                            {
-                                miningDevs[minerDevIndex].Algorithms[index].AveragedSpeeds[0] = avaragedSpeed;
-                                if (miningDevs[minerDevIndex].Algorithms[index].IsDual)
-                                {
-                                    miningDevs[minerDevIndex].Algorithms[index].AveragedSpeeds[1] = secondaryAveragedSpeed;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    internal class SpeedSumCount
-    {
-        public double Speed = 0;
-        public double SecondarySpeed = 0;
-        public int Count = 0;
-
-        public double GetAvarage()
-        {
-            if (Count > 0)
-            {
-                return Speed / Count;
-            }
-            return 0;
-        }
-
-        public double GetSecondaryAverage()
-        {
-            if (Count > 0)
-            {
-                return SecondarySpeed / Count;
-            }
-            return 0;
-        }
-    }
-
-    internal class AveragerGroup
-    {
-        public string DeviceName;
-
-        public List<string> UuidList = new List<string>();
-
-        // algo_id, speed_sum, speed_count
-        public Dictionary<string, SpeedSumCount> BenchmarkSums = new Dictionary<string, SpeedSumCount>();
-
-        public Dictionary<string, List<double>> CalculateAvarages()
-        {
-            var ret = new Dictionary<string, List<double>>();
-            foreach (var kvp in BenchmarkSums)
-            {
-                var algoID = kvp.Key;
-                var ssc = kvp.Value;
-                ret[algoID] = new List<double>
-                {
-                    ssc.GetAvarage(),
-                    ssc.GetSecondaryAverage()
-                };
-            }
-            return ret;
-        }
-
-        public void AddAlgorithms(List<AlgorithmContainer> algos)
-        {
-            foreach (var algo in algos)
-            {
-                var algoID = algo.AlgorithmStringID;
-                double secondarySpeed = 0;
-                if (algo.IsDual)
-                {
-                    secondarySpeed = algo.SecondaryBenchmarkSpeed;
-                }
-                if (BenchmarkSums.ContainsKey(algoID) == false)
-                {
-                    var ssc = new SpeedSumCount
-                    {
-                        Count = 1,
-                        Speed = algo.BenchmarkSpeed,
-                        SecondarySpeed = secondarySpeed
-                    };
-                    BenchmarkSums[algoID] = ssc;
-                }
-                else
-                {
-                    BenchmarkSums[algoID].Count++;
-                    BenchmarkSums[algoID].Speed += algo.BenchmarkSpeed;
-                    BenchmarkSums[algoID].SecondarySpeed += secondarySpeed;
+                    for (int i = 0; i < avgSpeeds.Length; i++) algo.AveragedSpeeds[i] = avgSpeeds[i];
                 }
             }
         }
     }
 }
+
