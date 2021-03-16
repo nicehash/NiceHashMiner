@@ -15,15 +15,12 @@ namespace NHMCore
 
         public event EventHandler<string> OnServiceLocationChanged;
 
-        private string SelectedServiceLocation => StratumServiceHelpers.MiningServiceLocations[_serviceLocation].Code;
         public bool SelectedServiceLocationOperational => StratumServiceHelpers.MiningServiceLocations[_serviceLocation].IsOperational;
         public bool ServiceLocationsNotOperational => StratumServiceHelpers.MiningServiceLocations.All(location => !location.IsOperational);
-
         // XAML
         public static IReadOnlyList<StratumServiceHelpers.Location> MiningLocationNames => StratumServiceHelpers.MiningServiceLocations;
 
-        // TODO this here doesn't take into account disabled markets
-        public int _serviceLocation = 0;
+        private int _serviceLocation = 0;
         public int ServiceLocation
         {
             get => _serviceLocation;
@@ -39,7 +36,8 @@ namespace NHMCore
                     ConfigManager.GeneralConfigFileCommit();
                 }
                 OnPropertyChanged(nameof(ServiceLocation));
-                OnPropertyChanged(nameof(SelectedServiceLocation));
+                OnPropertyChanged(nameof(SelectedServiceLocationOperational));
+                // update market
                 var (serviceLocationCode, _) = SelectedOrFallbackServiceLocationCode();
                 // sending null pauses mining
                 OnServiceLocationChanged?.Invoke(this, serviceLocationCode);
@@ -48,12 +46,13 @@ namespace NHMCore
 
         public (string miningLocationCode, bool isSelected) SelectedOrFallbackServiceLocationCode()
         {
-            if (SelectedServiceLocationOperational) return (SelectedServiceLocation, true);
+            var selectedServiceLocationCode = StratumServiceHelpers.MiningServiceLocations[_serviceLocation].Code;
+            if (SelectedServiceLocationOperational) return (selectedServiceLocationCode, true);
 
             var setFallbackLocation = StratumServiceHelpers.MiningServiceLocations
-                    .Where(loc => loc.Code != SelectedServiceLocation)
+                    .Where(loc => loc.Code != selectedServiceLocationCode)
                     .Where(loc => loc.IsOperational)
-                    .OrderByDescending(loc => string.CompareOrdinal(SelectedServiceLocation, loc.Code))
+                    .OrderByDescending(loc => string.CompareOrdinal(selectedServiceLocationCode, loc.Code))
                     .FirstOrDefault();
 
             var serviceLocationCode = setFallbackLocation?.Code ?? null;
@@ -69,7 +68,7 @@ namespace NHMCore
                 .Any(p => p.IsOperationalBeforeSet != p.IsOperationalAfterSet);
 
             if (!hasMarketsChange) return;
-            
+
             OnPropertyChanged(nameof(MiningLocationNames));
             OnPropertyChanged(nameof(ServiceLocationsNotOperational));
             OnPropertyChanged(nameof(SelectedServiceLocationOperational));
