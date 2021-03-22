@@ -27,7 +27,7 @@ namespace NiceHashMiner.Views.Login
             IsVisibleChanged += LoginBrowser_IsVisibleChanged;
         }
 
-        private static string _userAgent => "NHM/" + System.Windows.Forms.Application.ProductVersion;
+        private static string _userAgent => "NiceHashMiner/" + System.Windows.Forms.Application.ProductVersion;
 
         private void NavigateTo(string url)
         {
