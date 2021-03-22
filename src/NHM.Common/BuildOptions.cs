@@ -16,9 +16,13 @@ namespace NHM.Common
             public bool SHOW_TDP_SETTINGS { get; set; } = false;
         }
 
-        static BuildOptions()
+        private static bool _initCalled = false;
+        public static void Init()
         {
-            var (buildSettings, buildSettingsFromFile) = InternalConfigs.GetDefaultOrFileSettings(Paths.RootPath("build_settings.json"), new BuildOptionSettings { });
+            if (_initCalled) return;
+            _initCalled = true;
+            var (buildSettings, buildSettingsFromFile) = InternalConfigs.GetDefaultOrFileSettings(Paths.RootPath("build_settings.json"), new BuildOptionSettings { }, true);
+            Logger.Info("BuildOptions", $"Init from file '{buildSettingsFromFile}'");
             BUILD_TAG = buildSettings.BUILD_TAG;
             IS_PLUGINS_TEST_SOURCE = buildSettings.IS_PLUGINS_TEST_SOURCE;
             CUSTOM_ENDPOINTS_ENABLED = buildSettings.CUSTOM_ENDPOINTS_ENABLED;
