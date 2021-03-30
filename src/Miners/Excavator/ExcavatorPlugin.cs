@@ -6,6 +6,7 @@ using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Excavator
@@ -24,11 +25,11 @@ namespace Excavator
             // TODO link
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.6.2a",
+                BinVersion = "v1.6.11a",
                 ExePath = new List<string> { "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/excavator/releases/download/v1.6.2a/excavator_1.6.2a_build514_Win64.zip"
+                    "https://github.com/nicehash/excavator/releases/download/v1.6.11a/excavator_v1.6.11a_build800_Win64.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -38,7 +39,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(15, 9);
+        public override Version Version => new Version(15, 11);
 
         public override string Name => "Excavator";
 
@@ -58,6 +59,19 @@ namespace Excavator
             {
                 var algos = GetSupportedAlgorithmsForDevice(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
+            }
+            try
+            {
+                var templatePath = CmdConfig.CommandFileTemplatePath(PluginUUID);
+                var template = CmdConfig.CreateTemplate(supported.Select(p => p.Key.UUID));
+                if (!File.Exists(templatePath) && template != null)
+                {
+                    File.WriteAllText(templatePath, template);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("ExcavatorPlugin", $"GetSupportedAlgorithms create cmd template {e}");
             }
 
             return supported;

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -28,6 +29,8 @@ namespace Excavator
 
         private object _lockLastApiData = new object();
         private ApiData _lastApiData = null;
+        private HttpClient _httpClient;
+        private const bool USE_HTTP_CLIENT = true;
 
         private ApiData LastApiData
         {
@@ -52,6 +55,25 @@ namespace Excavator
                 {
                     _lastApiData = value;
                 }
+            }
+        }
+
+        public async Task<string> HttpGet(string command)
+        {
+            try
+            {
+                // lazy init
+                if (_httpClient == null) _httpClient = new HttpClient();
+                var requestUri = Uri.EscapeUriString($"http://localhost:{_apiPort}/api?command={command}");
+                // http://bind-ip:bind-port/api?command=%7BJSON-command-here%7D
+                Logger.Info(_logGroup, $"Excavator_DELETE HttpGet requestUri: '{requestUri}'");
+                var result = await _httpClient.GetStringAsync(requestUri);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logGroup, $"Excavator HttpGet error: {e.Message}");
+                return "";
             }
         }
 
@@ -84,8 +106,17 @@ namespace Excavator
         {
             try
             {
-                var response = await GetApiDataAsync(_apiPort, command + "\r\n", _logGroup, stop);
-                return response;
+                if (USE_HTTP_CLIENT)
+                {
+                    _ = stop;
+                    var response = await HttpGet(command);
+                    return response;
+                }
+                else
+                {
+                    var response = await GetApiDataAsync(_apiPort, command + "\r\n", _logGroup, stop);
+                    return response;
+                }
             }
             catch (Exception e)
             {
@@ -139,8 +170,12 @@ namespace Excavator
             return $"nhmp-ssl.{miningLocation}.nicehash.com:443";
         }
 
-        private static string CmdJSONString(string miningLocation, string username, params string[] uuids)
+        private static (string templateStr, bool oldTemplate) CmdJSONString(string pluginUUID, string miningLocation, string username, params string[] uuids)
         {
+            var templatePath = CmdConfig.CommandFileTemplatePath(pluginUUID);
+            var miningServiceLocation = GetServiceLocation(miningLocation);
+            var str = CmdConfig.CreateCommandFileWithTemplate(miningServiceLocation, username, uuids, templatePath);
+            if (str != null) return (str, false);
             const string DEVICE = @"		{""id"":3,""method"":""worker.add"",""params"":[""daggerhashimoto"",""_DEV_ID_""]}";
             const string TEMPLATE = @"
 [
@@ -155,11 +190,11 @@ _DEVICES_
 	]}
 ]";
             var devices = string.Join(",\n", uuids.Select(uuid => DEVICE.Replace("_DEV_ID_", uuid)));
-            var miningServiceLocation = GetServiceLocation(miningLocation);
-            return TEMPLATE
+            var oldTemplateStr = TEMPLATE
                 .Replace("_MINING_SERVICE_LOCATION_", miningServiceLocation)
                 .Replace("_PUT_YOUR_BTC_HERE_", username)
                 .Replace("_DEVICES_", devices);
+            return (oldTemplateStr, true);
         }
 
         private static string GetMiningLocation(string location)
@@ -182,9 +217,19 @@ _DEVICES_
             var fileName = $"cmd_{string.Join("_", ids)}.json";
             //Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             //var logName = $"log_{string.Join("_", ids)}_{unixTimestamp}.log";
-            File.WriteAllText(Path.Combine(cwd, fileName), CmdJSONString(GetMiningLocation(_miningLocation), _username, uuids.ToArray()));
-            var commandLine = $"-p {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
-            return commandLine;
+            var (cmdStr, isOldCmd) = CmdJSONString(_uuid, GetMiningLocation(_miningLocation), _username, uuids.ToArray());
+            if (isOldCmd) Logger.Warn(_logGroup, $"MiningCreateCommandLine usign old command file template");
+            File.WriteAllText(Path.Combine(cwd, fileName), cmdStr);
+            if (USE_HTTP_CLIENT)
+            {
+                var commandLine = $"-wp {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
+                return commandLine;
+            }
+            else
+            {
+                var commandLine = $"-p {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
+                return commandLine;
+            }
         }
 
         void IAfterStartMining.AfterStartMining()
@@ -215,6 +260,13 @@ _DEVICES_
             if (isPerGPUAnomaly || isPerGPUZeroSpeed || isSumGPUAnomaly) return false; // speeds anomally
 
             return true;
+        }
+
+        public override async Task StopMiningTask()
+        {
+            var quit = @"{""id"":123456789,""method"":""quit"",""params"":[]}";
+            _ = await ExecuteCommand(quit, CancellationToken.None);
+            await base.StopMiningTask();
         }
 
         private async Task MinerSpeedsLoop(CancellationTokenSource ct)
