@@ -31,6 +31,7 @@ namespace Excavator
         private ApiData _lastApiData = null;
         private HttpClient _httpClient;
         private const bool USE_HTTP_CLIENT = true;
+        private string _authToken = Guid.NewGuid().ToString();
 
         private ApiData LastApiData
         {
@@ -63,7 +64,12 @@ namespace Excavator
             try
             {
                 // lazy init
-                if (_httpClient == null) _httpClient = new HttpClient();
+                if (_httpClient == null)
+                {
+                    _httpClient = new HttpClient();
+                    _httpClient.DefaultRequestHeaders.Add("Authorization", _authToken);
+                }
+                //Authorization
                 var requestUri = Uri.EscapeUriString($"http://localhost:{_apiPort}/api?command={command}");
                 // http://bind-ip:bind-port/api?command=%7BJSON-command-here%7D
                 Logger.Info(_logGroup, $"Excavator_DELETE HttpGet requestUri: '{requestUri}'");
@@ -222,7 +228,7 @@ _DEVICES_
             File.WriteAllText(Path.Combine(cwd, fileName), cmdStr);
             if (USE_HTTP_CLIENT)
             {
-                var commandLine = $"-wp {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
+                var commandLine = $"-wp {_apiPort} -wa \"{_authToken}\" -c {fileName} -m -qx {_extraLaunchParameters}";
                 return commandLine;
             }
             else
