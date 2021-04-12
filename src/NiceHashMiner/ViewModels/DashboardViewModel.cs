@@ -4,6 +4,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using System.Linq;
 using System.Windows;
+using System.ComponentModel;
 
 namespace NiceHashMiner.ViewModels
 {
@@ -90,7 +91,7 @@ namespace NiceHashMiner.ViewModels
             //if (CredentialsSettings.Instance.IsBitcoinAddressValid && ) 
         }
 
-        private void MiningStateInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void MiningStateInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             lock (_lock)
             {
@@ -104,7 +105,7 @@ namespace NiceHashMiner.ViewModels
             OnPropertyChanged(nameof(ShowProgress));
         }
 
-        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
 
             if (e.PropertyName == nameof(CredentialsSettings.IsBitcoinAddressValid))

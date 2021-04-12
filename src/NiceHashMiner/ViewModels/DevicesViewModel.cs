@@ -54,8 +54,8 @@ namespace NiceHashMiner.ViewModels
                 setColor = WhatCollor.Error;
             }
 
-            Application.Current.Resources["MiningDevices"] = Application.Current.FindResource($"MiningDevices.{setColor.ToString()}");
-            Application.Current.Resources["MiningDevicesBackground"] = Application.Current.FindResource($"MiningDevicesBackground.{setColor.ToString()}");
+            Application.Current.Resources["MiningDevices"] = Application.Current.FindResource($"MiningDevices.{setColor}");
+            Application.Current.Resources["MiningDevicesBackground"] = Application.Current.FindResource($"MiningDevicesBackground.{setColor}");
         }
     }
 }
