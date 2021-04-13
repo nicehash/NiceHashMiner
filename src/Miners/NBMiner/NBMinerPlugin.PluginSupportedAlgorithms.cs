@@ -38,7 +38,7 @@ namespace NBMiner
                     {
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
+                        //new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                     }
                 }
             },
