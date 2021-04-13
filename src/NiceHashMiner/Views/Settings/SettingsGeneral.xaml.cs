@@ -45,6 +45,8 @@ namespace NiceHashMiner.Views.Settings
             }
         }
 
+        private string _reportId = null;
+
         private void AddressHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             Process.Start(e.Uri.AbsoluteUri);
@@ -189,7 +191,16 @@ namespace NiceHashMiner.Views.Settings
         {
             var uuid = Guid.NewGuid().ToString();
             var success = await Helpers.CreateAndUploadLogReport(uuid);
-
+            if (success)
+            {
+                _reportId = uuid;
+                CopyId.Visibility = Visibility.Visible;
+                LogReportIdText.Content = Translations.Tr("Last report ID: {0}", uuid);
+            }
+            else
+            {
+                CopyId.Visibility = Visibility.Collapsed;
+            }
             CreateBugUUIDDialog(uuid, success);
             AvailableNotifications.CreateLogUploadResultInfo(success, uuid);
         }
@@ -217,6 +228,12 @@ namespace NiceHashMiner.Views.Settings
             }
 
             CustomDialogManager.ShowModalDialog(bugUUIDDialog);
+        }
+
+        private void CopyLogReportIdButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_reportId == null) return;
+            Clipboard.SetText(_reportId);
         }
 
         private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

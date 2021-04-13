@@ -165,6 +165,15 @@
                         Height="24"
                         ToolTip="Click the button to create a zip file and upload it to the server."
                         Click="CreateLogReportButton_Click" />
-        </WrapPanel>
+             </WrapPanel>
+        <!-- LOG REPORT Copy -->
+        <StackPanel Margin="24,0,24,16" Orientation="Horizontal" x:Name="CopyId" Visibility="Collapsed">
+            <Label Content="Last report ID: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" x:Name="LogReportIdText" Style="{StaticResource FontsTypography.Heading3/Secondary}" Margin="0,0,4,0"/>
+            <Button Content="Copy"
+                            Style="{StaticResource BigButtonPrimary}"
+                            Height="24"
+                            ToolTip="Copy log report ID to Clipboard."
+                            Click="CopyLogReportIdButton_Click" />
+        </StackPanel>
     </StackPanel>
 </UserControl>
