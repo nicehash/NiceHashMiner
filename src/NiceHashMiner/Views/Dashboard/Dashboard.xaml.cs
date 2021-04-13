@@ -1,4 +1,5 @@
-﻿using NHMCore.ApplicationState;
+﻿using NHM.Common;
+using NHMCore.ApplicationState;
 using NiceHashMiner.ViewModels;
 using NiceHashMiner.Views.Common;
 using System;
@@ -46,14 +47,26 @@ namespace NiceHashMiner.Views.Dashboard
 
         private async Task ToggleButtonStartStop_ClickTask()
         {
-            // IF ANY MINING execute STOP
-            if (MiningState.Instance.AnyDeviceRunning)
+            try
             {
-                await _vm.StopMining();
+                StartStopToggleButton.IsEnabled = false;
+                // IF ANY MINING execute STOP
+                if (MiningState.Instance.AnyDeviceRunning)
+                {
+                    await _vm.StopMining();
+                }
+                else
+                {
+                    await _vm.StartMining();
+                }
             }
-            else
+            catch (Exception e)
             {
-                await _vm.StartMining();
+                Logger.Error("NiceHashMiner.Views.Dashboard", $"ToggleButtonStartStop_ClickTask Error: {e}");
+            }
+            finally
+            {
+                StartStopToggleButton.IsEnabled = true;
             }
         }
 
