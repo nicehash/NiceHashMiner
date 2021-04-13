@@ -217,6 +217,15 @@ namespace SRBMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "srbminer_shutdown_temp",
                     ShortName = "--shutdown-temperature"
+                },
+                /// <summary>
+                /// GPU boost
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "srbminer_--gpu-boost",
+                    ShortName = "--gpu-boost"
                 }
             }
         };
