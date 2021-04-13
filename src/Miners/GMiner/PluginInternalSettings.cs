@@ -163,7 +163,43 @@ namespace GMinerPlugin
                     ID = "gminer_dagLimit",
                     LongName = "--dag_limit",
                     Delimiter = " "
-                }
+                },
+                /// <summary>
+                /// memory tweaks for Nvidia GPUs with GDDR5X and GDDR5 memory, requires admin privileges (--mt 1-6)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_memory_tweaks",
+                    LongName = "--mt",
+                },
+                /// <summary>
+                /// improved DAG generation, now miner generates valid DAG in extremal OC modes.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "gminer_--safe_dag",
+                    LongName = "--safe_dag",
+                },
+                /// <summary>
+                /// log date
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "gminer_memory_tweaks",
+                    LongName = "--log_date",
+                },
+                /// <summary>
+                /// log stratum
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "gminer_--log_stratum",
+                    LongName = "--log_stratum",
+                },
             },
             TemperatureOptions = new List<MinerOption>{
                 /// <summary>
@@ -177,7 +213,16 @@ namespace GMinerPlugin
                     LongName = "--templimit",
                     DefaultValue = "90",
                     Delimiter = " "
-                }
+                },
+                /// <summary>
+                /// improved DAG generation, now miner generates valid DAG in extremal OC modes.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_memory_tweaks",
+                    LongName = "--tfan",
+                },
             }
         };
     }
