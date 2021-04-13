@@ -39,7 +39,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(15, 7);
+        public override Version Version => new Version(16, 0);
 
         public override string Name => "lolMiner";
 

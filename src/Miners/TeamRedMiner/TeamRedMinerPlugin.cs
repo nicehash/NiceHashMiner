@@ -38,7 +38,7 @@ namespace TeamRedMiner
 
         public override string PluginUUID => "01177a50-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 6);
+        public override Version Version => new Version(16, 0);
 
         public override string Name => "TeamRedMiner";
 
