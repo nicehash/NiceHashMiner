@@ -29,6 +29,7 @@ namespace NHM.Common
             FORCE_MINING = buildSettings.FORCE_MINING;
             FORCE_PROFITABLE = buildSettings.FORCE_PROFITABLE;
             SHOW_TDP_SETTINGS = buildSettings.SHOW_TDP_SETTINGS;
+            StratumServiceHelpers.InitStratumServiceHelpers();
         }
 
         public static BuildTag BUILD_TAG { get; private set; } = BuildTag.PRODUCTION;

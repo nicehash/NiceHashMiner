@@ -172,6 +172,7 @@
             <Button Content="Copy"
                             Style="{StaticResource BigButtonPrimary}"
                             Height="24"
+                            MinWidth="80"
                             ToolTip="Copy log report ID to Clipboard."
                             Click="CopyLogReportIdButton_Click" />
         </StackPanel>

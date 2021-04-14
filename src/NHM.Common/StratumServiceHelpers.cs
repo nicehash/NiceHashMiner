@@ -48,8 +48,8 @@ namespace NHM.Common
         const string PORT_TEMPLATE = "{:PORT}";
         //const string NAME_TEMPLATE = "NAME";
         internal static string NhmSocketAddress => _serviceCustomSettings.NhmSocketAddress;
-        private static readonly ServiceCustomSettings _serviceCustomSettings;
-        static StratumServiceHelpers()
+        private static ServiceCustomSettings _serviceCustomSettings;
+        internal static void InitStratumServiceHelpers()
         {
             if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED == false) return;
             (_serviceCustomSettings, _) = InternalConfigs.GetDefaultOrFileSettings(Paths.RootPath("custom_endpoints_settings.json"), ServiceCustomSettings.Defaults());
