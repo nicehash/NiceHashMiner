@@ -154,14 +154,14 @@ namespace NHMCore
                 //{
                 //    AvailableNotifications.CreateEnableLargePagesInfo();
                 //}
-                // TODO add check and only show if not enabled
-                if (AvailableDevices.HasAmd)
-                {
-                    if (detectionResult.AMDDevices.Any(amd => amd.InfSection.ToLower().Contains("polaris")))
-                    {
-                        AvailableNotifications.CreateEnableComputeModeAMDInfo();
-                    }
-                }
+                //// TODO add check and only show if not enabled
+                //if (AvailableDevices.HasAmd)
+                //{
+                //    if (detectionResult.AMDDevices.Any(amd => amd.InfSection.ToLower().Contains("polaris")))
+                //    {
+                //        AvailableNotifications.CreateEnableComputeModeAMDInfo();
+                //    }
+                //}
 
                 #endregion Device Detection
                 // STEP
