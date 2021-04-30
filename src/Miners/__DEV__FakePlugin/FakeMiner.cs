@@ -1,4 +1,5 @@
-﻿using NHM.Common.Enums;
+﻿using NHM.Common;
+using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
 using System;
@@ -85,7 +86,8 @@ namespace FakePlugin
 
         protected override string MiningCreateCommandLine()
         {
-            return $"-devices={_devices} -algorithm={_algorithmType.ToString()} -miningLocaiton={_miningLocation} -username={_username} -UUID {_uuid}";
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
+            return $"-devices={_devices} -algorithm={_algorithmType.ToString()} -miningLocaiton={_miningLocation} -username={_username} -UUID {_uuid} -url {urlWithPort}";
         }
     }
 }

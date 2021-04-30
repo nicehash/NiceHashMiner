@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Phoenix
 {
-    public partial class PhoenixPlugin : PluginBase, IDevicesCrossReference
+    public partial class PhoenixPlugin : PluginBase //, IDevicesCrossReference
     {
         public PhoenixPlugin()
         {
@@ -30,7 +30,7 @@ namespace Phoenix
                 ExePath = new List<string> { "PhoenixMiner_5.5c_Windows", "PhoenixMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://mega.nz/folder/2VskDJrI#lsQsz1CdDe8x5cH3L8QaBw/file/OBNSQJIR" // original
+                    //"https://mega.nz/folder/2VskDJrI#lsQsz1CdDe8x5cH3L8QaBw/file/OBNSQJIR" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,7 +42,7 @@ namespace Phoenix
 
         public override string PluginUUID => "fa369d10-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(15, 8);
+        public override Version Version => new Version(16, 0);
         public override string Name => "Phoenix";
 
         public override string Author => "info@nicehash.com";
@@ -51,6 +51,30 @@ namespace Phoenix
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
+            // cleanup all 
+            var pluginDir = Paths.MinerPluginsPath(PluginUUID);
+            Directory.EnumerateDirectories(pluginDir)
+                .ToList()
+                .ForEach(dirPath => {
+                    try
+                    {
+                        Directory.Delete(dirPath, true);
+                    }
+                    catch
+                    { }
+                });
+            Directory.EnumerateFiles(pluginDir)
+                .ToList()
+                .ForEach(filePath => {
+                    try
+                    {
+                        File.Delete(filePath);
+                    }
+                    catch
+                    { }
+                });
+            // return empty 
+            return new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             // map ids by bus ids
             var gpus = devices
                 .Where(dev => dev is IGpuDevice)
@@ -106,44 +130,44 @@ namespace Phoenix
             return new Phoenix(PluginUUID, _mappedIDs);
         }
 
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
-        {
-            if (_mappedIDs.Count == 0) return;
+        //public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        //{
+        //    if (_mappedIDs.Count == 0) return;
 
-            var ts = DateTime.UtcNow.Ticks;
-            var crossRefferenceList = new (DeviceType deviceType, string parameters, string dumpFile)[]
-            {
-                (DeviceType.AMD,    "-list -gbase 0 -amd",    $"d{ts}_AMD.txt"),
-                (DeviceType.NVIDIA, "-list -gbase 0 -nvidia", $"d{ts}_NVIDIA.txt"),
-            };
-            var crossRefRunParams = crossRefferenceList
-                .Where(p => devices.Any(dev => dev.DeviceType == p.deviceType))
-                .Select(p => (p.parameters, p.dumpFile));
+        //    var ts = DateTime.UtcNow.Ticks;
+        //    var crossRefferenceList = new (DeviceType deviceType, string parameters, string dumpFile)[]
+        //    {
+        //        (DeviceType.AMD,    "-list -gbase 0 -amd",    $"d{ts}_AMD.txt"),
+        //        (DeviceType.NVIDIA, "-list -gbase 0 -nvidia", $"d{ts}_NVIDIA.txt"),
+        //    };
+        //    var crossRefRunParams = crossRefferenceList
+        //        .Where(p => devices.Any(dev => dev.DeviceType == p.deviceType))
+        //        .Select(p => (p.parameters, p.dumpFile));
 
-            var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
-            var crossRefOutputs = new List<string> { };
-            // exec await sequentially
-            foreach (var (parameters, dumpFile) in crossRefRunParams)
-            {
-                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, parameters);
-                crossRefOutputs.Add(output);
-                await Task.Delay(TimeSpan.FromSeconds(1));
-                try
-                {
-                    File.WriteAllText(Path.Combine(minerCwdPath, dumpFile), output);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("PhoenixPlugin", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
-                }
-            }
-            var mappedDevs = crossRefOutputs.SelectMany(output => DevicesListParser.ParsePhoenixOutput(output, devices));
-            foreach (var (uuid, gpuId) in mappedDevs)
-            {
-                Logger.Info("PhoenixPlugin", $"DevicesCrossReference '{uuid}' => {gpuId}");
-                _mappedIDs[uuid] = gpuId;
-            }
-        }
+        //    var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
+        //    var crossRefOutputs = new List<string> { };
+        //    // exec await sequentially
+        //    foreach (var (parameters, dumpFile) in crossRefRunParams)
+        //    {
+        //        var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, parameters);
+        //        crossRefOutputs.Add(output);
+        //        await Task.Delay(TimeSpan.FromSeconds(1));
+        //        try
+        //        {
+        //            File.WriteAllText(Path.Combine(minerCwdPath, dumpFile), output);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Logger.Error("PhoenixPlugin", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
+        //        }
+        //    }
+        //    var mappedDevs = crossRefOutputs.SelectMany(output => DevicesListParser.ParsePhoenixOutput(output, devices));
+        //    foreach (var (uuid, gpuId) in mappedDevs)
+        //    {
+        //        Logger.Info("PhoenixPlugin", $"DevicesCrossReference '{uuid}' => {gpuId}");
+        //        _mappedIDs[uuid] = gpuId;
+        //    }
+        //}
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
