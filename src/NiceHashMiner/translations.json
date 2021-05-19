@@ -20,7 +20,7 @@
       "ro": " (curent {0})",
       "ru": " (текущий {0})",
       "zh_cn": "(当前 {0})",
-      "de": "(aktuell {0})"
+      "de": " (aktuell {0})"
     },
     "_(Don't have an account? Register here)": {
       "ru": "_(Нет аккаунта? Зарегистрируйтесь здесь)",
@@ -2487,7 +2487,7 @@
       "ro": "Locație serviciu:",
       "ru": "Локация:",
       "zh_cn": "服务器地址:",
-      "de": "Servicestandort:"
+      "de": "Standort:"
     },
     "SessionLock": {
       "en": "Session Lock",
@@ -2999,7 +2999,7 @@
       "ro": "Pentru identificarea calculatorului utilizatorului.",
       "ru": "Для идентификации компьютера пользователя.",
       "zh_cn": "用于识别该计算机。",
-      "de": "Um den Computer des Nutzers zu identifizieren"
+      "de": "Um diesen Worker zu identifizieren"
     },
     "Total": {
       "ru": "Итого",
@@ -3556,7 +3556,7 @@
     },
     "Benchmarked": {
       "ru": "Бенчмарк пройден",
-      "de": "Benchmark vorhanden"
+      "de": "Benchmarkergebnis vorhanden"
     },
     "ReBencmark": {
       "en": "Retry Benchmark",
@@ -3574,7 +3574,7 @@
     },
     "Benchmarking": {
       "ru": "Бенчмарк",
-      "de": "Benchmarke"
+      "de": "Benchmark läuft"
     },
     "ErrorNegativeSMA": {
       "en": "Error: Negative SMA",
@@ -3827,7 +3827,7 @@
     },
     "Main": {
       "ru": "Основные",
-      "de": "Haupt"
+      "de": "Generelles"
     },
     "Time Unit": {
       "ru": "Единица времени",
@@ -3843,15 +3843,15 @@
     },
     "Service Location": {
       "ru": "Локация сервиса",
-      "de": "Dienststandort"
+      "de": "Servicestandort"
     },
     "Select Your Service Location": {
       "ru": "Выберите вашу локацию сервиса",
-      "de": "Wähle deinen Dienststandort"
+      "de": "Wähle den Servicestandort"
     },
     "Localization": {
       "ru": "Локализация",
-      "de": "Standort"
+      "de": "Region"
     },
     "Language": {
       "ru": "Язык",
@@ -3963,7 +3963,7 @@
     },
     "If 'MineRegardlessOfProfit' is unchecked, NiceHash Miner will stop mining if the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {
       "ru": "Если 'Майнить независимо от дохода' не отмечено, NiceHash Miner остановит майнинг, когда приблизительный доход будет ниже указанной суммы (в выбранной валюте). Отрицательные значения допускаются.",
-      "de": "Wenn 'Mining unabhängig von der Rentabilität' nicht ausgewählt ist, wird der Nicehash Miner das mining beenden, wenn der geschätzte Profit unter den eingestellten Wert (in der ausgewählten FIAT-Währung) fällt. Negative Werte werden ignoriert."
+      "de": "Wenn 'Mining unabhängig von der Rentabilität' nicht ausgewählt ist, wird der Nicehash Miner das Mining beenden, wenn der geschätzte Profit unter den eingestellten Wert (in der ausgewählten FIAT-Währung) fällt. Negative Werte werden ignoriert."
     },
     "Changes the default language for NiceHash Miner.": {
       "ru": "Изменяет язык по умолчанию для NiceHash Miner.",
@@ -4059,7 +4059,7 @@
     },
     "Amount of BTC not yet paid to you.": {
       "ru": "Количество BTC, которое еще не было выплачено вам.",
-      "de": "BTC-Guthaben, dass noch nicht an dich ausgezahlt wurde."
+      "de": "BTC-Guthaben, das noch nicht an dich ausgezahlt wurde."
     },
     "Estimated current profitability of your system.": {
       "ru": "Приблизительная текущая прибыльность вашей системы.",
@@ -4067,7 +4067,7 @@
     },
     "Number of devices that are currently mining.": {
       "ru": "Количество устройств, которые на данный момент майнят.",
-      "de": "Anzahl von Geräten, die aktuell minen."
+      "de": "Anzahl von Geräten, die zur Zeit minen."
     },
     "Include this alrogithm in benchmark sessions (on next benchmark or device start). This will ensure the best possible hash rate.": {
       "ru": "Включает этот алгоритм в процесс бенчмарка при следующем запуске бенчмарка или майнинга. Это обеспечит наилучший хэшрейт.",
@@ -4602,7 +4602,7 @@
     },
     "Copy to clipboard": {
       "ru": "Копировать в буфер обмена",
-      "de": "Kopiere in Zwischenablage"
+      "de": "Kopiere in die Zwischenablage"
     },
     "Your program will be restarted in order to completely change the language of NiceHash Miner.": {
       "ru": "Ваша программа будет перезапущена для изменения языка NiceHash Miner.",
