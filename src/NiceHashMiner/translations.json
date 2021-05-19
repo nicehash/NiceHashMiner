@@ -777,7 +777,7 @@
       "ro": "Bifați, dacă doriți să vedeți valorile BTC autoscalate la cea mai apropiată scară.",
       "ru": "Отметьте, если хотите видеть значения BTC в подходящем масштабе.",
       "zh_cn": "选择此处来自动调整BTC金额的显示单位。",
-      "de": "Auswählen, wenn die BTC Werte automatisch zu einer geeigneten Skalierung skalieren sollen"
+      "de": "Auswählen, wenn die BTC Werte automatisch zu einer geeigneten Einheit skalieren sollen"
     },
     "Check it, if you would like to skip the detection of {0} GPUs.": {
       "bg": "Маркирайте тази опция, ако искате да прескочите откриването на видеокарти {0}.",
@@ -1485,7 +1485,7 @@
       "ro": "Ascunde Ferestre Mineri",
       "ru": "Скрывать окна майнинга",
       "zh_cn": "隐藏挖矿窗口",
-      "de": "Verstecke Mining Fenster"
+      "de": "Verstecke Miningfenster"
     },
     "Hour": {
       "bg": "час",
@@ -3367,7 +3367,7 @@
       "ro": "Când bifați, {0} o să vă avertizeze dacă\nnu este disponibilă conexiunea la internet.",
       "ru": "Если отмечено, {0} будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
       "zh_cn": "若选择此复选框，{0} Legacy将会在\n互联网连接不可用时显示警告。",
-      "de": "Wenn asugewählt würde {0} eine Warnung zeigen, wenn\nkeine Internetverbindung besteht."
+      "de": "Wenn ausgewählt würde {0} eine Warnung zeigen, wenn\nkeine Internetverbindung besteht."
     },
     "When checked, in the event of a miner crash,\n{0} would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
       "bg": "Когато тази опция е активна, при блокиране на програмата за изчисления\n{0} ще може да я рестартира, тъй като контролът няма да бъде\r\nблокиран от съобщението за грешка на Windows.\r\n\r\nПрепоръчително е тази настройка да бъде активирана, за да се гарантира\r\nнепрекъснатост на изчислителния процес, тъй като програмите\r\nот този тип не са 100% стабилни.",
@@ -3935,7 +3935,7 @@
     },
     "Switching": {
       "ru": "Переключение",
-      "de": "Wechsle"
+      "de": "Wechsel"
     },
     "Switch Minimum [s]": {
       "ru": "Минимум переключения [с]",
@@ -3955,7 +3955,7 @@
     },
     "Miners": {
       "ru": "Майнеры",
-      "de": "Mienr"
+      "de": "Miner"
     },
     "When checked, NiceHash Miner will mine regardless of profit.": {
       "ru": "Если отмечено, NiceHash Miner будет майнить независимо от дохода.",
@@ -3987,7 +3987,7 @@
     },
     "When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).": {
       "ru": "Если не отмечено, NiceHash Miner разрешит работу только одного экземпляра (он закроет новый запущенный экземпляр, если один экземпляр уже работает).",
-      "de": "Wenn nciht ausgewählt wird der NiceHash Miner nur eine laufende Instanz erlauben (er wird neue Instanzen schließen wenn bereits eine läuft)."
+      "de": "Wenn nicht ausgewählt wird der NiceHash Miner nur eine laufende Instanz erlauben (er wird neue Instanzen schließen wenn bereits eine läuft)."
     },
     "When checked, NiceHash Miner will run on login.": {
       "ru": "Если отмечено, NiceHash Miner будет запущен при входе в систему.",
@@ -4187,7 +4187,7 @@
     },
     "STOP ALL": {
       "ru": "ОСТАНОВИТЬ ВСЕ",
-      "de": "SOPPE ALLE"
+      "de": "STOPPE ALLE"
     },
     "View Stats Online": {
       "ru": "Просмотр статистики онлайн",
@@ -4239,7 +4239,7 @@
     },
     "Plugins": {
       "ru": "Плагины",
-      "de": "plugins"
+      "de": "Plugins"
     },
     "UNPAID BALANCE": {
       "ru": "НЕВЫПЛАЧЕННЫЙ БАЛАНС",
@@ -4546,7 +4546,7 @@
     },
     "By running the NiceHash Miner or NHM (in short) you are connecting your PC or a mining rig to NiceHash hash-power marketplace. NiceHash Miner enables you to rent out the computing power of your machine and in return, you earn bitcoins. To learn more about how NiceHash works, ": {
       "ru": "Запуская NiceHash Miner или сокращенно NHM, вы подключаете ваш ПК или риг для майнинга к рынку мощности NiceHash. NiceHash Miner позволяет вам сдавать в аренду вычислительную мощность вашего оборудования и взамен зарабатывать биткоины. Чтобы узнать больше о том, как работает NiceHash, ",
-      "de": "Durch das ausführen des NiceHash Miner oder NHM (Kurzschreibweise) verbindest du deinen PC oder dein Mining Rig mit dem NiceHash hash-Power Marketplace. Der NiceHash Miner ermöglicht es dir die Rechenleistung zu vermieten und zum Ausgleich bekommst du Bitcoins. Um genauer zu erfahren wie NiceHash funktionier, "
+      "de": "Durch das Ausführen des NiceHash Miner oder NHM (Kurzschreibweise) verbindest du deinen PC oder dein Mining Rig mit dem NiceHash hash-Power Marketplace. Der NiceHash Miner ermöglicht es dir die Rechenleistung zu vermieten und zum Ausgleich bekommst du Bitcoins. Um genauer zu erfahren wie NiceHash funktionier, "
     },
     "About": {
       "ru": "О нас",
