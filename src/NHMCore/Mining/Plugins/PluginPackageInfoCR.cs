@@ -116,6 +116,24 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
+        public string PluginPackageHash
+        {
+            get
+            {
+                var hash = LocalInfo?.PluginPackageHash ?? OnlineInfo.PluginPackageHash ?? "N/A";
+                return hash;
+            }
+        }
+
+        public string BinaryPackageHash
+        {
+            get
+            {
+                var hash = LocalInfo?.BinaryPackageHash ?? OnlineInfo.BinaryPackageHash ?? "N/A";
+                return hash;
+            }
+        }
+
         public string PluginName
         {
             get

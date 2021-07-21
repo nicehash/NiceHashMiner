@@ -17,6 +17,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -1022,6 +1023,16 @@ namespace NHMCore.Mining.Plugins
                 var downloadPluginResult = await MinersDownloadManager.DownloadFileAsync(plugin.PluginPackageURL, installDllPath, "plugin", downloadPluginProgressChangedEventHandler, stop);
                 var pluginPackageDownloaded = downloadPluginResult.downloadedFilePath;
                 var downloadPluginOK = downloadPluginResult.success;
+                if (!checkPluginHash(downloadPluginResult.downloadedFilePath, plugin.PluginPackageHash))
+                {
+                    //uninstall plugin dll
+                    if (File.Exists(downloadPluginResult.downloadedFilePath))
+                    {
+                        File.Delete(downloadPluginResult.downloadedFilePath);
+                    }
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedWrongHashPlugin;
+                    return finalState;
+                }
                 if (!downloadPluginOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedDownloadingPlugin;
@@ -1042,6 +1053,16 @@ namespace NHMCore.Mining.Plugins
                 var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(plugin.MinerPackageURL, installBinsPath, "miner_bins", downloadMinerProgressChangedEventHandler, stop);
                 var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
                 var downloadMinerBinsOK = downloadMinerBinsResult.success;
+                if (!checkPluginHash(downloadMinerBinsResult.downloadedFilePath, plugin.BinaryPackageHash))
+                {
+                    //uninstall plugin binary
+                    if (File.Exists(downloadMinerBinsResult.downloadedFilePath))
+                    {
+                        File.Delete(downloadMinerBinsResult.downloadedFilePath);
+                    }
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedWrongHashMiner;
+                    return finalState;
+                }
                 if (!downloadMinerBinsOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedDownloadingMiner;
@@ -1228,5 +1249,28 @@ namespace NHMCore.Mining.Plugins
             }
         }
         #endregion DownloadingInstalling
+
+        private static bool checkPluginHash(string filepath, string databaseHash)
+        {
+            var hashString = string.Empty;
+
+            //make hash from file stream and compare to database hash
+            using (var sha256Hash = SHA256.Create())
+            {
+                using (var stream = File.OpenRead(filepath))
+                {
+                    var hash = sha256Hash.ComputeHash(stream);
+                    hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+
+                }
+
+                if (hashString == databaseHash.ToString())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
