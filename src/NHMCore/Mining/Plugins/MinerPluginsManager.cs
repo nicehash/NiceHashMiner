@@ -959,6 +959,7 @@ namespace NHMCore.Mining.Plugins
 
             var addSuccess = false;
             var installSuccess = false;
+            var installResult = PluginInstallProgressState.Canceled;
             using (var minerInstall = new MinerPluginInstallTask())
             using (var tcs = CancellationTokenSource.CreateLinkedTokenSource(stop, minerInstall.CancelInstallToken))
             {
@@ -972,7 +973,6 @@ namespace NHMCore.Mining.Plugins
                         progress?.Report(Tuple.Create(PluginInstallProgressState.Pending, 0));
                         minerInstall.AddProgress(progress);
                     }
-                    var installResult = PluginInstallProgressState.Canceled;
                     if (pluginPackageInfo.PluginUUID == EthlargementIntegratedPlugin.Instance.PluginUUID)
                     {
                         installResult = await DownloadAndInstallEthlargementIntegratedPlugin(pluginPackageInfo, minerInstall, tcs.Token);
@@ -985,6 +985,7 @@ namespace NHMCore.Mining.Plugins
                 }
                 finally
                 {
+                    Logger.Info("MinerPluginsManager", $"DownloadAndInstall {pluginUUID} result: {installResult}");
                     PluginInstaller.InstalledPluginStatus(pluginUUID, installSuccess);
                     MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
                     if (addSuccess) BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
