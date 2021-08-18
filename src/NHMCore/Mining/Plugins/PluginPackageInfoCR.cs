@@ -120,7 +120,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                var hash = LocalInfo?.PluginPackageHash ?? OnlineInfo.PluginPackageHash ?? "N/A";
+                var hash = LocalInfo?.PluginPackageHash ?? OnlineInfo?.PluginPackageHash ?? "N/A";
                 return hash;
             }
         }
@@ -129,7 +129,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                var hash = LocalInfo?.BinaryPackageHash ?? OnlineInfo.BinaryPackageHash ?? "N/A";
+                var hash = LocalInfo?.BinaryPackageHash ?? OnlineInfo?.BinaryPackageHash ?? "N/A";
                 return hash;
             }
         }

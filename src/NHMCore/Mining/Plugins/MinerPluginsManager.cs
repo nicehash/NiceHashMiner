@@ -1023,7 +1023,7 @@ namespace NHMCore.Mining.Plugins
                 var downloadPluginResult = await MinersDownloadManager.DownloadFileAsync(plugin.PluginPackageURL, installDllPath, "plugin", downloadPluginProgressChangedEventHandler, stop);
                 var pluginPackageDownloaded = downloadPluginResult.downloadedFilePath;
                 var downloadPluginOK = downloadPluginResult.success;
-                if (!checkPluginHash(downloadPluginResult.downloadedFilePath, plugin.PluginPackageHash))
+                if (!FilePathHashEqualsToDatabaseHash(downloadPluginResult.downloadedFilePath, plugin.PluginPackageHash))
                 {
                     //uninstall plugin dll
                     if (File.Exists(downloadPluginResult.downloadedFilePath))
@@ -1053,7 +1053,7 @@ namespace NHMCore.Mining.Plugins
                 var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(plugin.MinerPackageURL, installBinsPath, "miner_bins", downloadMinerProgressChangedEventHandler, stop);
                 var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
                 var downloadMinerBinsOK = downloadMinerBinsResult.success;
-                if (!checkPluginHash(downloadMinerBinsResult.downloadedFilePath, plugin.BinaryPackageHash))
+                if (!FilePathHashEqualsToDatabaseHash(downloadMinerBinsResult.downloadedFilePath, plugin.BinaryPackageHash))
                 {
                     //uninstall plugin binary
                     if (File.Exists(downloadMinerBinsResult.downloadedFilePath))
@@ -1250,27 +1250,16 @@ namespace NHMCore.Mining.Plugins
         }
         #endregion DownloadingInstalling
 
-        private static bool checkPluginHash(string filepath, string databaseHash)
+        private static bool FilePathHashEqualsToDatabaseHash(string filepath, string databaseHash)
         {
-            var hashString = string.Empty;
-
             //make hash from file stream and compare to database hash
             using (var sha256Hash = SHA256.Create())
-            {
-                using (var stream = File.OpenRead(filepath))
-                {
-                    var hash = sha256Hash.ComputeHash(stream);
-                    hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-
-                }
-
-                if (hashString == databaseHash.ToString())
-                {
-                    return true;
-                }
+            using (var stream = File.OpenRead(filepath))
+            {                
+                var hash = sha256Hash.ComputeHash(stream);
+                var hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                return hashString == databaseHash;
             }
-
-            return false;
         }
     }
 }
