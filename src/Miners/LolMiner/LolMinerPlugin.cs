@@ -25,11 +25,11 @@ namespace LolMiner
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.21",
-                ExePath = new List<string> { "1.21", "lolMiner.exe" },
+                BinVersion = "1.31",
+                ExePath = new List<string> { "1.31", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.22/lolMiner_v1.21_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.31/lolMiner_v1.31_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(16, 0);
+        public override Version Version => new Version(16, 1);
 
         public override string Name => "lolMiner";
 
@@ -53,14 +53,15 @@ namespace LolMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            var minDrivers = new Version(384, 0);
+            var minDrivers = new Version(470, 5);
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
 
             var gpus = devices
                 .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported))
                 .Where(dev => dev is IGpuDevice)
                 .Cast<IGpuDevice>()
-                .OrderBy(gpu => gpu.PCIeBusID);
+                .OrderBy(gpu => gpu.PCIeBusID)
+                .Cast<BaseDevice>();
 
             var pcieId = 0;
             foreach (var gpu in gpus)
@@ -68,9 +69,9 @@ namespace LolMiner
                 // map supported NVIDIA devices so indexes match
                 _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
-                var algorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 // add only AMD
-                if (algorithms.Count > 0 && gpu is AMDDevice) supported.Add(gpu as BaseDevice, algorithms);
+                if (algorithms.Count > 0 && gpu is AMDDevice) supported.Add(gpu, algorithms);
             }
 
             return supported;
@@ -84,7 +85,7 @@ namespace LolMiner
 
         private static bool IsSupportedNVIDIADevice(BaseDevice dev, bool isDriverSupported)
         {
-            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 2 && gpu.IsOpenCLBackendEnabled;
+            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 5;
             return isSupported && isDriverSupported;
         }
 
@@ -109,7 +110,7 @@ namespace LolMiner
             {
                 Logger.Error("LolMinerPlugin", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
             }
-            var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices.ToList());
+            var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices);
 
             foreach (var (uuid, minerGpuId) in mappedDevs)
             {

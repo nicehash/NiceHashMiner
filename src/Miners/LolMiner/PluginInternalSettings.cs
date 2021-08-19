@@ -144,6 +144,45 @@ namespace LolMiner
                     ShortName = "--apihost"
                 },
                 /// <summary>
+                /// Added verify routine for Ethash dag epochs 400 to 450. In case the miner will detect defect entries, the CPU will try to fix this.
+                /// Mining will be paused until the repair is completed.
+                /// Use --disable-dag-verify to disable the verify & repair mechanism routine.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "lolMiner_disable-dag-verify",
+                    ShortName = "--disable-dag-verify",
+                },
+                /// <summary>
+                /// The "wall of stats". To personalize your stats there are different parameters, you only need to select what you want to show. You have to add --statsformat and values separeted by comma
+                /// gpuName : A shortcut name of the GPU, e.g. "RX 580" or "RTX 2060"
+                /// algo : The current algorithm running. Only visible in dual modes
+                ///speed : Speed in Mhs of the rig
+                ///inflatedHr : Inflated Speed Mhs to compare it to the stats of inflated miners
+                ///poolHr: Pool Average, it will say how luck or unluck are you. If it is higher than the speed that means you are lucky if it is lower you are in an unlucky moment. That will take in long time to the same as speed.
+                ///shares: Number of shares submited. A: parameter is shares, S: are Stales and Hw: are Hardware errors
+                ///sharesPerMin : Number of shares accepted per minute
+                ///bestShare: Best share you have
+                ///power: Power Consumption, normally in Nvidia is quite real to the Wall Watts and AMD is different depending on the board
+                ///hrPerWatt: Efficiency of Mhs you get for 1 Watts usage
+                ///wattPerHr: Efficiency of the Watts you need to have 1 Mhs
+                ///coreclk: Core Clock in Mhz
+                ///memclk: Memory Clock in Mhz, that depending on Nvidia or AMD it is show different
+                ///coreT: Temperature of the Core
+                ///juncT: Temperature Junction of the Core, this will be avalaible in all Polaris & newer
+                ///memT: Memory Temperature, this is not avalaible in all the GPUs, at the moment only in Vega, Navi and Big Navi
+                ///fanPct : Fan speed in %
+                ///speedctxc : Does the g/s to h/s conversion for cortex (CTCX)
+                ///fidelity : Cuckoo Solver Accuracy, fraction of found graph cycles over expected number
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_statsformat",
+                    ShortName = "--statsformat",
+                },
+                /// <summary>
                 /// Use parameter --watchdog off/exit/script to turn off any action, exit the miner with a specific exit code or to run an external script.
                 ///--watchdog off
                 ///This will do nothing except for printing a message. If only a single card did crash and not the whole driver this means the other cards will continue mining.
