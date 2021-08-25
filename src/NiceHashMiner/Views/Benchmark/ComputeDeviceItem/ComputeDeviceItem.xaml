@@ -113,7 +113,7 @@
         </Style>
 
     </UserControl.Resources>
-    <Grid Background="Transparent">
+    <Grid Background="Transparent" x:Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -178,6 +178,39 @@
                                                         <!--<Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StartBenchmarking" />-->
                                                         <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanClearAllSpeeds, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Clear all speeds" Click="Button_Click_ClearAllSpeeds" />
                                                         <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanClearAllSpeeds, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Enable Benchmarked Only" Click="Button_Click_EnablebenchmarkedOnly" />
+                                                        <ToggleButton 
+                                                                Padding="16,7,16,7" 
+                                                                Style="{StaticResource ContextMenuButton}"  
+                                                                Content="Copy Benchmarks from Another Device"
+                                                                Click="Copy_Button_Click"
+                                                            >
+                                                            <ToggleButton.ContextMenu>
+                                                                <ContextMenu x:Name="subContext">
+                                                                    <ContextMenu.Template>
+                                                                        <ControlTemplate>
+                                                                            <Grid DataContext="{Binding .}" x:Name="deviceSelectionGrid">
+                                                                                <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
+                                                                                <StackPanel>
+                                                                                    <Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>
+                                                                                    <Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>
+                                                                                    <Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>
+                                                                                </StackPanel>
+                                                                            </Grid>
+                                                                        </ControlTemplate>
+                                                                    </ContextMenu.Template>
+                                                                    <!--<MenuItem  Header="Menu item 1">
+                                                                        <Button Content="ASD">
+                                                                           
+                                                                        </Button>
+                                                                    </MenuItem>
+                                                                    <MenuItem Header="Menu item 2" />
+                                                                    <Separator />
+                                                                    <MenuItem Header="Menu item 3" />-->
+                                                                </ContextMenu>
+                                                            </ToggleButton.ContextMenu>
+                                                        </ToggleButton>
+                                                        <!--<Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StopBenchmarking" />-->
+
                                                     </StackPanel>
                                                 </Grid>
                                             </ControlTemplate>

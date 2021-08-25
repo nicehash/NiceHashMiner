@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
+    <ProjectReference Include="..\TRex\MP.TRex.csproj" />
   </ItemGroup>
   
   <PropertyGroup>

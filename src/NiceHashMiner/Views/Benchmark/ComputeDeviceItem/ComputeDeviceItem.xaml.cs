@@ -1,7 +1,11 @@
-﻿using NHMCore;
+﻿using NHM.Common;
+using NHMCore;
 using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.Views.Common;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -31,6 +35,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             {
                 _deviceData = dd;
                 DeviceActionsButtonContext.DataContext = dd;
+
                 return;
             }
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
@@ -49,12 +54,13 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             AlgorithmsGridToggleButton.IsChecked = true;
             AlgorithmsGridToggleButtonHidden.IsChecked = true;
         }
-
+         
         private void DropDownAlgorithms_Button_Click(object sender, RoutedEventArgs e)
         {
             var tb = e.Source as ToggleButton;
             if (EnableDisableCheckBox == tb) return; // don't trigger algo dropdown if we click disable button
             if (ToggleButtonActions == tb) return; // don't trigger algo dropdown if we click disable button
+            //if (CopyDataButtonActions == tb) return;
             if (tb.IsChecked.Value)
             {
                 Expand();
@@ -66,20 +72,93 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         }
 
         private readonly HashSet<ToggleButton> _toggleButtonsGuard = new HashSet<ToggleButton>();
+        //private void Action_Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
+        //    {
+        //        _toggleButtonsGuard.Add(tButton);
+        //        DeviceActionsButtonContext.IsOpen = true;
+        //        RoutedEventHandler closedHandler = null;
+        //        closedHandler += (s, e2) =>
+        //        {
+        //            _toggleButtonsGuard.Remove(tButton);
+        //            tButton.IsChecked = false;
+        //            DeviceActionsButtonContext.Closed -= closedHandler;
+        //        };
+        //        DeviceActionsButtonContext.Closed += closedHandler;
+        //    }
+        //}
+
+        //private void Copy_Data_Button_Click(object sender, RoutedEventArgs e)
+        //{
+
+        //    //cButton == Copy button
+        //    if (sender is ToggleButton cButton && !_toggleButtonsGuard.Contains(cButton))
+        //    {
+        //        Logger.Info("Info", "test");
+        //        _toggleButtonsGuard.Add(cButton);
+        //        DeviceActionsButtonContext.IsOpen = true;
+
+        //        RoutedEventHandler closedHandler = null;
+        //        closedHandler += (s, e2) =>
+        //        {
+        //            _toggleButtonsGuard.Remove(cButton);
+        //            cButton.IsChecked = false;
+        //            DeviceActionsButtonContext.Closed -= closedHandler;
+        //        };
+        //        DeviceActionsButtonContext.Closed += closedHandler;
+
+        //        //WindowUtils.Translate(myControl);
+        //        //cButton.DataContext is 
+        //        //_toggleButtonsGuard.Add(cButton);
+        //        //DeviceActionsButtonContext.IsOpen = true;
+        //    }
+        //}
+
         private void Action_Button_Click(object sender, RoutedEventArgs e)
         {
+
             if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
             {
+                
                 _toggleButtonsGuard.Add(tButton);
                 DeviceActionsButtonContext.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
+                Logger.Info("INFO", "ACTIONBTN");
                 closedHandler += (s, e2) =>
                 {
+                    ContextMenu obj = s as ContextMenu;
+                    string _name = obj.Name;
+
                     _toggleButtonsGuard.Remove(tButton);
                     tButton.IsChecked = false;
                     DeviceActionsButtonContext.Closed -= closedHandler;
+                    Logger.Info("INFO", "CLOSING! " + _name);
                 };
                 DeviceActionsButtonContext.Closed += closedHandler;
+            }
+        }
+
+
+
+        private void Copy_Button_Click(object sender, RoutedEventArgs e)
+        {
+            //var context = (ContextMenu)DeviceActionsButtonContext.Template.FindName("subContext", DeviceActionsButtonContext);
+            if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
+            {
+                Logger.Info("INFO", "COPYBTN");
+                var context = (ContextMenu)DeviceActionsButtonContext.Template.FindName("subContext", DeviceActionsButtonContext);
+                //_toggleButtonsGuard.Add(tButton);
+                context.IsOpen = true;
+                //RoutedEventHandler closedHandler = null;
+                //closedHandler += (s, e2) =>
+                //{
+                //    _toggleButtonsGuard.Remove(tButton);
+                //    tButton.IsChecked = false;
+                //    context.Closed -= closedHandler;
+                //    //DeviceActionsButtonContext.Closed -= closedHandler;
+                //};
+                //context.Closed += closedHandler;
             }
         }
 
@@ -148,10 +227,35 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             _deviceData.EnablebenchmarkedOnly();
         }
 
+        //TODO open copy window function
+
         private void DeviceActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
         {
+            Logger.Info("INFO", "LOAD");
+
             var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceActionsGrid", DeviceActionsButtonContext);
             WindowUtils.Translate(myControl);
         }
+
+        private void DeviceSelectionButtonContext_Loaded(object sender, RoutedEventArgs e)
+        {
+            var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceSelectionGrid", DeviceActionsButtonContext);
+            WindowUtils.Translate(myControl);
+        }
+        //private void DeviceActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    Logger.Info("Info", "Normal");
+        //    var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceActionsGrid", DeviceActionsButtonContext);
+        //    WindowUtils.Translate(myControl);
+        //}
+
+        //private void DeviceSelectionButtonContext_Loaded(object sender, RoutedEventArgs e)//TODO problem here, not referencing
+        //{
+        //    Logger.Info("Info", "LoadedSelect_________________________________________________________________________________");
+
+        //    //var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceListGrid", DeviceActionsButtonContext);
+        //    //WindowUtils.Translate(myControl);
+        //    //var myControl = (Grid)DeviceSelectionButtonContext.Template.FindName("deviceListGrid", DeviceSelectionButtonContext);
+        //}
     }
 }
