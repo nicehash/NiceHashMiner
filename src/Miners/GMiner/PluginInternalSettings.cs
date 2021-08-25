@@ -222,6 +222,7 @@ namespace GMinerPlugin
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "gminer_memory_tweaks",
                     LongName = "--tfan",
+                    Delimiter = " ",
                 },
                 /// <summary>
                 /// space-separated list of core clock offsets (for Nvidia GPUs) or absolute core clocks (for AMD GPUs) for each device in MHz (0 - ignore),
