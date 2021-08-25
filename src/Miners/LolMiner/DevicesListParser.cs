@@ -8,8 +8,15 @@ namespace LolMiner
 {
     internal class DevicesListParser
     {
-        private static string[] _keywords = new string[] { "Device", "Name:", "Address:", "Vendor:", "Memory:" };
-        private static bool KeepLine(string line) => _keywords.Any(word => line?.Contains(word) ?? false);
+        private static string[] _keywords = new string[] { "Device", "Address:" };
+
+        private static bool KeepLine(string line)
+        {
+            if (string.IsNullOrEmpty(line) || string.IsNullOrWhiteSpace(line)) return false;
+            var words = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return words.Any(_keywords.Contains);
+        }
+        
 
         private static int? NumberAfterPattern(string pattern, string line)
         {
@@ -33,14 +40,13 @@ namespace LolMiner
         private static int[] ChunkToGPU_PCIe_Pair(string[] chunk)
         {
             return _keywords.Zip(chunk, (pattern, line) => (pattern, line))
-                .Where((p, index) => index == 0 || index == 2)
                 .Select(p => NumberAfterPattern(p.pattern, p.line))
                 .Where(num => num.HasValue)
                 .Select(num => num.Value)
                 .ToArray();
         }
 
-        public static IEnumerable<(string uuid, int minerGpuId)> ParseLolMinerOutput(string output, List<BaseDevice> baseDevices)
+        public static IEnumerable<(string uuid, int minerGpuId)> ParseLolMinerOutput(string output, IEnumerable<BaseDevice> baseDevices)
         {
             try
             {
