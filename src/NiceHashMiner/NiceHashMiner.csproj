@@ -91,6 +91,9 @@
     <Compile Include="Converters\TemperatureValueToText.cs" />
     <Compile Include="CustomDialogManager.cs" />
     <Compile Include="IThemeSetter.cs" />
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\CopyDeviceData.xaml.cs">
+      <DependentUpon>CopyDeviceData.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ManuallyEnterBTCTutorial.xaml.cs">
       <DependentUpon>ManuallyEnterBTCTutorial.xaml</DependentUpon>
     </Compile>
@@ -270,6 +273,10 @@
     <Compile Include="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml.cs">
       <DependentUpon>__DESIGN_DEVELOP.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\Benchmark\ComputeDeviceItem\CopyDeviceData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ManuallyEnterBTCTutorial.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

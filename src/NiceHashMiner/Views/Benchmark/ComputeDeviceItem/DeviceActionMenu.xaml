@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Benchmark.ComputeDeviceItem.CopyDeviceData"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
+             mc:Ignorable="d" 
+             xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore"
+             d:DesignHeight="400" d:DesignWidth="392"
+             d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
+    <Grid DataContext="{Binding .}" x:Name="deviceActionsGrid">
+        <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
+        <StackPanel>
+            <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StopBenchmarking" />
+            <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStart, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Start Benchmark" Click="Button_Click_StartBenchmarking" />
+            <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StartBenchmarking" />
+            <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanClearAllSpeeds, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Clear all speeds" Click="Button_Click_ClearAllSpeeds" />
+            <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanClearAllSpeeds, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Enable Benchmarked Only" Click="Button_Click_EnablebenchmarkedOnly" />
+            <ToggleButton 
+                 Padding="16,7,16,7" 
+                 Style="{StaticResource ContextMenuButton}"  
+                 Content="Copy Benchmarks From Another Device"
+                 Click="Copy_Button_Click"
+                 DataContext="{Binding Drugi}">
+                <ToggleButton.ContextMenu>
+                    <ContextMenu x:Name="subContext" DataContext="{Binding .}">
+                        <ContextMenu.Template>
+                            <ControlTemplate>
+                                
+                                <!--<Grid DataContext="{Binding .}" DataContextChanged="WTF" Background="{DynamicResource BackgroundColor}" x:Name="deviceSelectionGrid">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Margin="24,16,24,16" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="17" Foreground="{DynamicResource TextColorBrush}" Text="Select a Device To Copy From" />
+                                    <StackPanel Grid.Row="1">
+                                        <ItemsControl ItemsSource="{Binding .}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="{Binding .}" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        --><!--<Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>
+                                                                                    <Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>--><!--
+                                    </StackPanel>
+                                    <TextBlock Grid.Row="2" Text="{Binding Dev.Name}"/>
+                                </Grid>-->
+                            </ControlTemplate>
+                        </ContextMenu.Template>
+                    </ContextMenu>
+                </ToggleButton.ContextMenu>
+            </ToggleButton>
+            <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StopBenchmarking" />
+
+        </StackPanel>
+    </Grid>
+</UserControl>

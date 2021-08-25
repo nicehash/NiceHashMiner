@@ -24,6 +24,8 @@ namespace NiceHashMiner.ViewModels.Models
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
 
+        public List<string> Drugi { get; } = new List<string> { "1", "2", "3" };
+
         public DeviceMiningStats DeviceMiningStats { get; private set; } = null;
         public string DeviceMiningStatsProfitability { get; private set; } = MISSING_INFO;
         public string DeviceMiningStatsPluginAlgo { get; private set; } = MISSING_INFO;

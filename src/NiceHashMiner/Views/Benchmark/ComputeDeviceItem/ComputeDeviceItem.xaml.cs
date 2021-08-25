@@ -41,6 +41,15 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
         }
 
+        private void WTF(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is DeviceData dd)
+            {
+                var a = 0;
+            }
+            //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
+        }
+
         private void Collapse()
         {
             AlgorithmsGrid.Visibility = Visibility.Collapsed;
@@ -122,43 +131,35 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             {
                 
                 _toggleButtonsGuard.Add(tButton);
+                //lastPlacementTarget = DeviceActionsButtonContext.Placement;
                 DeviceActionsButtonContext.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
-                Logger.Info("INFO", "ACTIONBTN");
                 closedHandler += (s, e2) =>
                 {
-                    ContextMenu obj = s as ContextMenu;
-                    string _name = obj.Name;
-
                     _toggleButtonsGuard.Remove(tButton);
                     tButton.IsChecked = false;
                     DeviceActionsButtonContext.Closed -= closedHandler;
-                    Logger.Info("INFO", "CLOSING! " + _name);
                 };
                 DeviceActionsButtonContext.Closed += closedHandler;
             }
         }
-
-
 
         private void Copy_Button_Click(object sender, RoutedEventArgs e)
         {
             //var context = (ContextMenu)DeviceActionsButtonContext.Template.FindName("subContext", DeviceActionsButtonContext);
             if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
             {
-                Logger.Info("INFO", "COPYBTN");
-                var context = (ContextMenu)DeviceActionsButtonContext.Template.FindName("subContext", DeviceActionsButtonContext);
-                //_toggleButtonsGuard.Add(tButton);
+                var context = DeviceActionsButtonContext.Template.FindName("subContext", DeviceActionsButtonContext) as ContextMenu;
+                _toggleButtonsGuard.Add(tButton);               
                 context.IsOpen = true;
-                //RoutedEventHandler closedHandler = null;
-                //closedHandler += (s, e2) =>
-                //{
-                //    _toggleButtonsGuard.Remove(tButton);
-                //    tButton.IsChecked = false;
-                //    context.Closed -= closedHandler;
-                //    //DeviceActionsButtonContext.Closed -= closedHandler;
-                //};
-                //context.Closed += closedHandler;
+                RoutedEventHandler closedHandler = null;
+                closedHandler += (s, e2) =>
+                {
+                    _toggleButtonsGuard.Remove(tButton);
+                    tButton.IsChecked = false;
+                    context.Closed -= closedHandler;
+                };
+                context.Closed += closedHandler;
             }
         }
 
