@@ -219,9 +219,43 @@ namespace GMinerPlugin
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithSingleParameter,
+                    Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "gminer_memory_tweaks",
                     LongName = "--tfan",
+                },
+                /// <summary>
+                /// space-separated list of core clock offsets (for Nvidia GPUs) or absolute core clocks (for AMD GPUs) for each device in MHz (0 - ignore),
+                /// only Windows is supported, requires running miner with admin privileges (for example: '100 0 -90')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_cclock",
+                    LongName = "--cclock",
+                    Delimiter = " ",
+                },
+                /// <summary>
+                /// space-separated list of memory clock offsets (for Nvidia GPUs) or absolute memory clocks (for AMD GPUs) for each device in MHz (0 - ignore),
+                /// only Windows is supported, requires running miner with admin privileges (for example: '100 0 -90')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_mclock",
+                    LongName = "--mclock",
+                    Delimiter = " ",
+
+                },
+                /// <summary>
+                /// space-separated list of core voltage offsets in % (for Nvidia GPUs) or absolute core voltages (for AMD GPUs) for each device in mV (0 - ignore),
+                /// only Windows is supported, requires running miner with admin privileges (for example: '900 0 1100')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_cvddc",
+                    LongName = "--cvddc",
+                    Delimiter = " ",
                 },
             }
         };
