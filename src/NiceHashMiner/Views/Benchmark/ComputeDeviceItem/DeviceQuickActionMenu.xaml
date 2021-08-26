@@ -25,12 +25,12 @@
                     Style="{StaticResource ContextMenuButton}"  
                     Content="Copy Benchmarks From Another Device"
                     Click="Copy_Button_Click"
-                    DataContext="{Binding Drugi}">
+                    DataContext="{Binding .}">
                 <ToggleButton.ContextMenu>
                     <ContextMenu x:Name="subContext" DataContext="{Binding .}">
                         <ContextMenu.Template>
                             <ControlTemplate>
-                                <local:DeviceDataCopy  DataContext="{Binding .}"/>
+                                <local:DeviceDataCopy DataContext="{Binding .}"/>
                             </ControlTemplate>
                         </ContextMenu.Template>
                     </ContextMenu>

@@ -33,28 +33,36 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="16" Foreground="{DynamicResource TextColorBrush}" Text="Select a Device To Copy From" />
-            <!--TODO BUTTON-->
-            <Button Grid.Column="1" HorizontalAlignment="Right">
-                <Button.Resources>
-                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
-                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource StartStopTextBlock}">
-                        <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
-                    </Style>
-                </Button.Resources>
-                <TextBlock Text="&#xF00D;"/>
-            </Button>
         </Grid>
         <Separator Grid.Row="1" />
         <!--FIRST SPEED-->
         <WrapPanel Grid.Row="2" Margin="24,16,24,16">
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="CPU" />
-            <TextBox Style="{StaticResource inputBox}" Text="{Binding BenchmarkSpeed}" Margin="0,16,0,0" />
+            <ItemsControl ItemsSource="{Binding .}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        
+                        <!--<local:AlgorithmItem DataContext="{Binding .}" Margin="0,8,0,0" />-->
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!--<TextBox Style="{StaticResource inputBox}" Text="{Binding BenchmarkSpeed}" Margin="0,16,0,0" />-->
         </WrapPanel>
 
         <!--SECOND SPEED-->
         <WrapPanel Grid.Row="3" Margin="24,16,24,16" x:Name="secondarySpeedPanel">
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="GPU" />
-            <TextBox Style="{StaticResource inputBox}" Text="{Binding SecondaryBenchmarkSpeed}" Margin="0,16,0,0" />
+            <ItemsControl ItemsSource="{Binding drugi}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding drugi}"></TextBlock>
+                        <!--<Button Content="{Binding .}"/>-->
+                        <!--<local:AlgorithmItem DataContext="{Binding .}" Margin="0,8,0,0" />-->
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <!--<TextBox Style="{StaticResource inputBox}" Text="{Binding SecondaryBenchmarkSpeed}" Margin="0,16,0,0" />-->
         </WrapPanel>
     </Grid>
 </UserControl>

@@ -32,18 +32,19 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         public DeviceQuickActionMenu()
         {
             InitializeComponent();
-            DataContextChanged += ComputeDeviceItem_DataContextChanged;
+            DataContextChanged += QuickActionMenu_DataContextChanged;
             WindowUtils.Translate(this);
         }
 
 
-        private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void QuickActionMenu_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is DeviceData dd)
             {
                 _deviceData = dd;
                 DataContext = dd;
                 //DeviceActionsButtonContext.DataContext = dd;
+                subContext.DataContext = dd;
 
                 return;
             }
@@ -105,32 +106,5 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             }
         }
 
-        //private void Action_Button_Click(object sender, RoutedEventArgs e)
-        //{
-
-        //    if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
-        //    {
-        //        _toggleButtonsGuard.Add(tButton);
-        //        //lastPlacementTarget = DeviceActionsButtonContext.Placement;
-        //        DeviceActionsButtonContext.IsOpen = true;
-        //        RoutedEventHandler closedHandler = null;
-        //        closedHandler += (s, e2) =>
-        //        {
-        //            _toggleButtonsGuard.Remove(tButton);
-        //            tButton.IsChecked = false;
-        //            DeviceActionsButtonContext.Closed -= closedHandler;
-        //        };
-        //        DeviceActionsButtonContext.Closed += closedHandler;
-        //    }
-        //}
-
-        //private void DeviceActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    //Logger.Info("INFO", "LOAD");
-
-        //    //var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceActionsGrid", DeviceActionsButtonContext);
-        //    //deviceActionsGrid
-        //    WindowUtils.Translate(deviceActionsGrid);
-        //}
     }
 }
