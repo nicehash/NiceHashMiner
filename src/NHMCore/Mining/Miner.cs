@@ -3,6 +3,7 @@ using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
+using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -288,6 +289,7 @@ namespace NHMCore.Mining
                             if (!firstStart)
                             {
                                 Logger.Info(MinerTag(), $"Restart Mining in {MiningSettings.Instance.MinerRestartDelayMS}ms");
+                                AvailableNotifications.CreateRestartedMinerInfo(DateTime.UtcNow.ToLocalTime());
                             }
                             await TaskHelpers.TryDelay(MiningSettings.Instance.MinerRestartDelayMS, linkedEndMiner.Token);
                             var result = await StartAsync(linkedEndMiner.Token, miningLocation, username);

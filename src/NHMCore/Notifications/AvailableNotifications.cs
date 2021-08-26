@@ -367,5 +367,28 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NvidiaDCH, Tr("Nvidia DCH drivers detected"), Tr("Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateRestartedMinerInfo(DateTime dateTime)
+        {
+            var content = "Miner was restarted at " + dateTime.ToString("HH:mm:ss MM/dd/yyyy");
+            try
+            {
+                var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart).FirstOrDefault();
+                if (restartNotification != null)
+                {
+                    //add new content to prev content
+                    content = restartNotification.NotificationContent + "\nMiner was restarted at " + dateTime.ToString("HH:mm:ss MM/dd/yyyy");
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(restartNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.MinerRestart, Tr("Miner restarted"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }
