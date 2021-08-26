@@ -387,7 +387,7 @@ namespace NHMCore.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
 
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.MinerRestart, Tr("Miner restarted"), content);
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.MinerRestart, Tr("Miner restarted"), Tr(content));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

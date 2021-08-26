@@ -4104,7 +4104,12 @@
     },
     "Return and enter Bitcoin address manually": {
       "ru": "Вернитесь и введите Биткоин-адрес вручную"
+    },
+    "Miner was restarted at": {
+      "ru":  "DELAAAA"
     }
+    "Miner restarted": {
 
+    }
   }
 }
