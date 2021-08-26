@@ -31,11 +31,17 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="24,16,24,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="16" Foreground="{DynamicResource TextColorBrush}" Text="Select a Device To Copy From" />
+            <TextBlock Grid.Row="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="18" Foreground="{DynamicResource TextColorBrush}" Text="Select a Device To Copy From" />
+            <TextBlock Grid.Row="1" Style="{StaticResource local.SettingTitle}" FontSize="10" Text="{Binding Dev.Name}" />
+
         </Grid>
         <Separator Grid.Row="1" />
         
