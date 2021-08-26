@@ -172,7 +172,7 @@
                                     <ContextMenu x:Name="DeviceActionsButtonContext" Loaded="DeviceActionsButtonContext_Loaded" Unloaded="DeviceActionsButtonContext_Loaded">
                                         <ContextMenu.Template>
                                             <ControlTemplate>
-                                                <local:DeviceActionMenu DataContext="{Binding .}"/>
+                                                <local:DeviceQuickActionMenu x:Name="ActionMenu" DataContext="{Binding .}" />
 
                                                 <!--<Grid DataContext="{Binding .}" x:Name="deviceActionsGrid">
                                                     <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
@@ -211,8 +211,8 @@
                                                                                             </DataTemplate>
                                                                                         </ItemsControl.ItemTemplate>
                                                                                     </ItemsControl>
-                                                                                    --><!--<Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>
-                                                                                    <Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>--><!--
+                                                                                    <Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>
+                                                                                    <Button Content="ASD" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"></Button>
                                                                                 </StackPanel>
                                                                                 <TextBlock Grid.Row="2" Text="{Binding Dev.Name}"/>
                                                                             </Grid>

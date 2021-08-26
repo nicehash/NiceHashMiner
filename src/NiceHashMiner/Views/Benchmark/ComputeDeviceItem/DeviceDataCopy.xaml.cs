@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 {
     /// <summary>
-    /// Interaction logic for DeviceActionMenu.xaml
+    /// Interaction logic for DeviceDataCopy.xaml
     /// </summary>
-    public partial class DeviceActionMenu : UserControl
+    public partial class DeviceDataCopy : UserControl
     {
-        public DeviceActionMenu()
+        public DeviceDataCopy()
         {
             InitializeComponent();
         }

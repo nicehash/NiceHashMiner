@@ -1,12 +1,12 @@
-﻿<UserControl x:Class="NiceHashMiner.Views.Benchmark.ComputeDeviceItem.CopyDeviceData"
+﻿<UserControl x:Class="NiceHashMiner.Views.Benchmark.ComputeDeviceItem.DeviceDataCopy"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
-             mc:Ignorable="d" 
              xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore"
-             d:DesignHeight="889" d:DesignWidth="392"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
     <UserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="local.SettingTitle">
@@ -18,21 +18,22 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
         </Style>
+
     </UserControl.Resources>
-    <Grid Background="{DynamicResource BackgroundColor}">
+    <Grid DataContext="{Binding .}" x:Name="DeviceSelection" Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="1"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="24,16,24,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="20" Foreground="{DynamicResource TextColorBrush}" Text="Select a Device To Copy From" />
-            <!--TODO CloseButtonClick-->
+            <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="16" Foreground="{DynamicResource TextColorBrush}" Text="Select a Device To Copy From" />
+            <!--TODO BUTTON-->
             <Button Grid.Column="1" HorizontalAlignment="Right">
                 <Button.Resources>
                     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource StartStopButton}" />
@@ -43,26 +44,17 @@
                 <TextBlock Text="&#xF00D;"/>
             </Button>
         </Grid>
-        <Separator Grid.Row="1"/>
+        <Separator Grid.Row="1" />
+        <!--FIRST SPEED-->
         <WrapPanel Grid.Row="2" Margin="24,16,24,16">
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="CPU" />
-            <ItemsControl ItemsSource="{Binding .}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Content="{Binding Dev.Name}" Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <TextBox Style="{StaticResource inputBox}" Text="{Binding BenchmarkSpeed}" Margin="0,16,0,0" />
         </WrapPanel>
-        <WrapPanel Grid.Row="3" Margin="24,16,24,16">
-            <TextBlock Style="{StaticResource local.SettingTitle}" Text="GPU" />
-            <ItemsControl ItemsSource="{Binding .}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
 
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+        <!--SECOND SPEED-->
+        <WrapPanel Grid.Row="3" Margin="24,16,24,16" x:Name="secondarySpeedPanel">
+            <TextBlock Style="{StaticResource local.SettingTitle}" Text="GPU" />
+            <TextBox Style="{StaticResource inputBox}" Text="{Binding SecondaryBenchmarkSpeed}" Margin="0,16,0,0" />
         </WrapPanel>
     </Grid>
 </UserControl>
