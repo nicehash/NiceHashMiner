@@ -40,10 +40,26 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 _deviceData = dd;
                 DataContext = dd;
                 //DeviceActionsButtonContext.DataContext = dd;
+                //var item = ListItem.Template.FindName("ListedDevice", ListItem) as Button;
+                //var a = 0;
+
 
                 return;
             }
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
+        }
+
+        private void Button_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is DeviceData dd)
+            {
+                _deviceData = dd;
+                DataContext = dd;
+
+                //DeviceActionsButtonContext.DataContext = dd;
+
+                return;
+            }
         }
     }
 }

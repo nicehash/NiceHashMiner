@@ -20,10 +20,13 @@
         </Style>
 
     </UserControl.Resources>
+    
     <Grid DataContext="{Binding .}" x:Name="DeviceSelection" Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -35,34 +38,35 @@
             <TextBlock Grid.Column="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="16" Foreground="{DynamicResource TextColorBrush}" Text="Select a Device To Copy From" />
         </Grid>
         <Separator Grid.Row="1" />
-        <!--FIRST SPEED-->
+        
+        <!--CPUs-->
         <WrapPanel Grid.Row="2" Margin="24,16,24,16">
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="CPU" />
-            <ItemsControl ItemsSource="{Binding .}">
+        </WrapPanel>
+        
+        <StackPanel Grid.Row="3">
+            <ItemsControl x:Name="ListedDevcesCPU" ItemsSource="{Binding FakeCPU}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        
-                        <!--<local:AlgorithmItem DataContext="{Binding .}" Margin="0,8,0,0" />-->
+                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding .}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+        </StackPanel>
 
-            <!--<TextBox Style="{StaticResource inputBox}" Text="{Binding BenchmarkSpeed}" Margin="0,16,0,0" />-->
-        </WrapPanel>
-
-        <!--SECOND SPEED-->
-        <WrapPanel Grid.Row="3" Margin="24,16,24,16" x:Name="secondarySpeedPanel">
+        <!--GPUs-->
+        <WrapPanel Grid.Row="4" Margin="24,16,24,16" x:Name="secondarySpeedPanel">
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="GPU" />
-            <ItemsControl ItemsSource="{Binding drugi}">
+        </WrapPanel>
+
+        <StackPanel Grid.Row="5">
+            <ItemsControl x:Name="ListedDevcesGPU" ItemsSource="{Binding FakeGPU}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding drugi}"></TextBlock>
-                        <!--<Button Content="{Binding .}"/>-->
-                        <!--<local:AlgorithmItem DataContext="{Binding .}" Margin="0,8,0,0" />-->
+                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding .}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <!--<TextBox Style="{StaticResource inputBox}" Text="{Binding SecondaryBenchmarkSpeed}" Margin="0,16,0,0" />-->
-        </WrapPanel>
+        </StackPanel>
     </Grid>
 </UserControl>
