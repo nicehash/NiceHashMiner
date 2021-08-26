@@ -38,7 +38,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             if (e.NewValue is DeviceData dd)
             {
                 _deviceData = dd;
-                DataContext = dd;
+                //DataContext = dd;
                 //DeviceActionsButtonContext.DataContext = dd;
                 //var item = ListItem.Template.FindName("ListedDevice", ListItem) as Button;
                 //var a = 0;
@@ -49,17 +49,5 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
         }
 
-        private void Button_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue is DeviceData dd)
-            {
-                _deviceData = dd;
-                DataContext = dd;
-
-                //DeviceActionsButtonContext.DataContext = dd;
-
-                return;
-            }
-        }
     }
 }

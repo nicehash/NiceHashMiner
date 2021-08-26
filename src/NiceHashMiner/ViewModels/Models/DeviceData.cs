@@ -24,6 +24,21 @@ namespace NiceHashMiner.ViewModels.Models
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
 
+        //public MainVM MainVm
+        //{
+        //    get => Dev.
+        //}
+
+        //public IEnumerable<DeviceData> CPUs
+        //{
+        //    get => MainVm.CPUs;
+        //}
+
+        //public IEnumerable<DeviceData> GPUs
+        //{
+        //    get => MainVm.GPUs;
+        //}
+
         public List<string> FakeGPU { get; } = new List<string> { "CPU #1 Intel Core i5-8600K CPU @ 3.60GHz", "CPU #2 Intel Core i5-8600K CPU @ 3.60GHz" };
         public List<string> FakeCPU { get; } = new List<string> { "GPU #1 Gigabyte NVIDIA GeForce RTX 2060", "GPU #2 Gigabyte NVIDIA GeForce GTX 1660", "GPU #3 Gigabyte NVIDIA GeForce RTX 3060 Ti" };
 
