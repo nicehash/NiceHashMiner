@@ -358,6 +358,7 @@ namespace NHMCore.Mining
                     true);
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
+                var isRoundMinute = true;
                 Logger.Info(MinerTag(), $"MinerStatsLoop START");
                 while (isOk())
                 {
@@ -365,7 +366,13 @@ namespace NHMCore.Mining
                     {
                         if (isOk()) await TaskHelpers.TryDelay(checkWaitTime, stop);
                         if (isOk() && minerStatusElapsedTimeChecker.CheckAndMarkElapsedTime()) await GetSummaryAsync();
-
+                        if (DateTime.UtcNow.Second == 0 && isRoundMinute)
+                        {
+                            
+                            isRoundMinute = false;
+                        }
+                        if (DateTime.UtcNow.Second != 0 && !isRoundMinute)
+                            isRoundMinute = true;
                         // check if stagnated and restart
                         var restartGroups = MinerApiWatchdog.GetTimedoutGroups(DateTime.UtcNow);
                         if (isOk() && (restartGroups?.Contains(GroupKey) ?? false))
