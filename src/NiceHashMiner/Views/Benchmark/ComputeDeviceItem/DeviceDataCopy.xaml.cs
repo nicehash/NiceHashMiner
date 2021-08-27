@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.ViewModels;
+﻿using NHMCore.Mining;
+using NiceHashMiner.ViewModels;
 using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.Views.Common;
 using System;
@@ -48,6 +49,30 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             }
 
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
+        }
+
+        private void Copy_Device_Click(object sender, RoutedEventArgs e)
+        {
+            int changedN = 0;
+            if(sender is Button devBtn)
+            {
+
+                //DeviceSelection.vi = false;
+                //devBtn.IsEnabled = false;
+                var sourceDevice = devBtn.DataContext as ComputeDevice;
+                foreach(var item in sourceDevice.AlgorithmSettings)
+                {
+                    var destAlgoSetting = _deviceData.ContainsSameAlgoAndPlugin(item.AlgorithmName, item.PluginName);
+                    if (destAlgoSetting != null)
+                    {
+                        destAlgoSetting.BenchmarkSpeed = item.BenchmarkSpeed;
+                        destAlgoSetting.SecondaryBenchmarkSpeed = item.SecondaryBenchmarkSpeed;
+                        destAlgoSetting.PowerUsage = item.PowerUsage;
+                        destAlgoSetting.ExtraLaunchParameters = item.ExtraLaunchParameters;
+                        changedN++;
+                    }
+                }
+            }
         }
     }
 }

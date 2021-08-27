@@ -24,13 +24,6 @@ namespace NiceHashMiner.ViewModels.Models
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
 
-
-        //public MainVM MainVm
-        //{
-        //    get => Dev.
-        //}
-
-        //public IEnumerable<DeviceData> _devices;
         public IEnumerable<ComputeDevice> Devices
         {
             get => AvailableDevices.Devices;
@@ -46,14 +39,6 @@ namespace NiceHashMiner.ViewModels.Models
             get => AvailableDevices.GetAvailGPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
         }
 
-        //private List<ComputeDevice> RemoveThisDevice(List<ComputeDevice> devices)
-        //{
-        //    for
-        //}
-
-
-        //public List<string> FakeCPU { get; } = new List<string> { "CPU #1 Intel Core i5-8600K CPU @ 3.60GHz", "CPU #2 Intel Core i5-8600K CPU @ 3.60GHz" };
-        //public List<string> FakeGPU { get; } = new List<string> { "GPU #1 Gigabyte NVIDIA GeForce RTX 2060", "GPU #2 Gigabyte NVIDIA GeForce GTX 1660", "GPU #3 Gigabyte NVIDIA GeForce RTX 3060 Ti" };
 
         public DeviceMiningStats DeviceMiningStats { get; private set; } = null;
         public string DeviceMiningStatsProfitability { get; private set; } = MISSING_INFO;
@@ -258,6 +243,18 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 OnPropertyChanged(nameof(Enabled));
             }
+        }
+
+        public AlgorithmContainer ContainsSameAlgoAndPlugin(string AlgoName, string AlgoPlugin)
+        {
+            foreach(var item in Dev.AlgorithmSettings)
+            {
+                if(item.AlgorithmName == AlgoName && item.PluginName == AlgoPlugin)
+                {
+                    return item;
+                }
+            }
+            return null;
         }
 
         public float Load { get; private set; } = -1;
