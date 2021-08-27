@@ -26,7 +26,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
     public partial class DeviceDataCopy : UserControl
     {
         private DeviceData _deviceData;
-        private MainVM _vm;
 
         public DeviceDataCopy()
         {

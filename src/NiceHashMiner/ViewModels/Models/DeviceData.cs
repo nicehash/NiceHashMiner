@@ -38,13 +38,18 @@ namespace NiceHashMiner.ViewModels.Models
 
         public List<ComputeDevice> CPUs
         {
-            get => AvailableDevices.GetAvailCPUs().ToList();
+            get => AvailableDevices.GetAvailCPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
         }
 
         public List<ComputeDevice> GPUs
         {
-            get => AvailableDevices.GetAvailGPUs().ToList();
+            get => AvailableDevices.GetAvailGPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
         }
+
+        //private List<ComputeDevice> RemoveThisDevice(List<ComputeDevice> devices)
+        //{
+        //    for
+        //}
 
 
         //public List<string> FakeCPU { get; } = new List<string> { "CPU #1 Intel Core i5-8600K CPU @ 3.60GHz", "CPU #2 Intel Core i5-8600K CPU @ 3.60GHz" };
