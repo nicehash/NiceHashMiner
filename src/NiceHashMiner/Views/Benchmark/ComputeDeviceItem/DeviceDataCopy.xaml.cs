@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.ViewModels.Models;
+﻿using NiceHashMiner.ViewModels;
+using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.Views.Common;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
     public partial class DeviceDataCopy : UserControl
     {
         private DeviceData _deviceData;
+        private MainVM _vm;
 
         public DeviceDataCopy()
         {
@@ -43,11 +45,10 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 //var item = ListItem.Template.FindName("ListedDevice", ListItem) as Button;
                 //var a = 0;
 
-
                 return;
             }
+
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
         }
-
     }
 }

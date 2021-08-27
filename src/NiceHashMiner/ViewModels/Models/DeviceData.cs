@@ -24,23 +24,31 @@ namespace NiceHashMiner.ViewModels.Models
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
 
+
         //public MainVM MainVm
         //{
         //    get => Dev.
         //}
 
-        //public IEnumerable<DeviceData> CPUs
-        //{
-        //    get => MainVm.CPUs;
-        //}
+        //public IEnumerable<DeviceData> _devices;
+        public IEnumerable<ComputeDevice> Devices
+        {
+            get => AvailableDevices.Devices;
+        }
 
-        //public IEnumerable<DeviceData> GPUs
-        //{
-        //    get => MainVm.GPUs;
-        //}
+        public List<ComputeDevice> CPUs
+        {
+            get => AvailableDevices.GetAvailCPUs().ToList();
+        }
 
-        public List<string> FakeCPU { get; } = new List<string> { "CPU #1 Intel Core i5-8600K CPU @ 3.60GHz", "CPU #2 Intel Core i5-8600K CPU @ 3.60GHz" };
-        public List<string> FakeGPU { get; } = new List<string> { "GPU #1 Gigabyte NVIDIA GeForce RTX 2060", "GPU #2 Gigabyte NVIDIA GeForce GTX 1660", "GPU #3 Gigabyte NVIDIA GeForce RTX 3060 Ti" };
+        public List<ComputeDevice> GPUs
+        {
+            get => AvailableDevices.GetAvailGPUs().ToList();
+        }
+
+
+        //public List<string> FakeCPU { get; } = new List<string> { "CPU #1 Intel Core i5-8600K CPU @ 3.60GHz", "CPU #2 Intel Core i5-8600K CPU @ 3.60GHz" };
+        //public List<string> FakeGPU { get; } = new List<string> { "GPU #1 Gigabyte NVIDIA GeForce RTX 2060", "GPU #2 Gigabyte NVIDIA GeForce GTX 1660", "GPU #3 Gigabyte NVIDIA GeForce RTX 3060 Ti" };
 
         public DeviceMiningStats DeviceMiningStats { get; private set; } = null;
         public string DeviceMiningStatsProfitability { get; private set; } = MISSING_INFO;
@@ -132,6 +140,10 @@ namespace NiceHashMiner.ViewModels.Models
 
         public DeviceData(ComputeDevice dev)
         {
+            //var AllDevices = AvailableDevices.Devices.Select(d => (DeviceData)d);
+            //var Devices = AvailableDevices.Devices;
+            //Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData)d));
+
             AlgoNames = dev.AlgorithmSettings.Select(a => a.AlgorithmName).ToList();
             Dev = dev;
 
@@ -146,7 +158,9 @@ namespace NiceHashMiner.ViewModels.Models
 
             MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
             RefreshDiag();
+
         }
+
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

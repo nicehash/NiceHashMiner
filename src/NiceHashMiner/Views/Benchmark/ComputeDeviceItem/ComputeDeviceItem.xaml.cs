@@ -30,6 +30,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             WindowUtils.Translate(this);
         }
 
+
         private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is DeviceData dd)

@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
-             xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore"
+             xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore" 
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
+
+    <!--<UserControl.DataContext>
+        <viewModels:MainVM />
+    </UserControl.DataContext>-->
     <UserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="local.SettingTitle">
             <Setter Property="FontSize" Value="20" />
@@ -20,6 +25,8 @@
         </Style>
 
     </UserControl.Resources>
+    
+    
     
     <Grid DataContext="{Binding .}" x:Name="DeviceSelection" Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -50,11 +57,12 @@
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="CPU" />
         </WrapPanel>
         
+
         <StackPanel Grid.Row="3">
-            <ItemsControl x:Name="ListedDevcesCPU" ItemsSource="{Binding FakeCPU}">
+            <ItemsControl x:Name="ListedDevcesCPU" ItemsSource="{Binding CPUs}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding .}"/>
+                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding FullName}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
@@ -66,10 +74,10 @@
         </WrapPanel>
 
         <StackPanel Grid.Row="5">
-            <ItemsControl x:Name="ListedDevcesGPU" ItemsSource="{Binding FakeGPU}">
+            <ItemsControl x:Name="ListedDevcesGPU" ItemsSource="{Binding GPUs}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding .}"/>
+                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Content="{Binding FullName}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
