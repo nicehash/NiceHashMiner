@@ -93,6 +93,8 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
             {
                 _toggleButtonsGuard.Add(tButton);
+                subContext.PlacementTarget = tButton;//TODO ok?
+
                 subContext.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
                 closedHandler += (s, e2) =>

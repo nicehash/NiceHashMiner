@@ -128,40 +128,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         }
         #endregion Algorithm sorting
 
-        //private void Button_Click_ClearAllSpeeds(object sender, RoutedEventArgs e)
-        //{
-        //    var nhmConfirmDialog = new CustomDialog()
-        //    {
-        //        Title = Tr("Set default settings?"),
-        //        Description = Tr("Are you sure you would like to clear all speeds for {0}?", _deviceData.Dev.FullName),
-        //        OkText = Tr("Yes"),
-        //        CancelText = Tr("No"),
-        //        AnimationVisible = Visibility.Collapsed
-        //    };
-        //    DeviceActionsButtonContext.IsOpen = false;
-        //    nhmConfirmDialog.OKClick += (s, e1) => { _deviceData.ClearAllSpeeds(); };
-        //    CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
-        //}
-
-        //private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)
-        //{
-        //    DeviceActionsButtonContext.IsOpen = false;
-        //    await ApplicationStateManager.StopSingleDevicePublic(_deviceData.Dev);
-        //}
-
-        //private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
-        //{
-        //    DeviceActionsButtonContext.IsOpen = false;
-        //    await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
-        //}
-
-        //private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)
-        //{
-        //    DeviceActionsButtonContext.IsOpen = false;
-        //    _deviceData.EnablebenchmarkedOnly();
-        //}
-
-        //TODO open copy window function
 
         private void DeviceActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
         {

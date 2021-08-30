@@ -40,11 +40,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             if (e.NewValue is DeviceData dd)
             {
                 _deviceData = dd;
-                //DataContext = dd;
-                //DeviceActionsButtonContext.DataContext = dd;
-                //var item = ListItem.Template.FindName("ListedDevice", ListItem) as Button;
-                //var a = 0;
-
                 return;
             }
         }
