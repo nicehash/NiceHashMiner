@@ -245,17 +245,6 @@ namespace NiceHashMiner.ViewModels.Models
             }
         }
 
-        public AlgorithmContainer ContainsSameAlgoAndPlugin(string AlgoName, string AlgoPlugin)
-        {
-            foreach(var item in Dev.AlgorithmSettings)
-            {
-                if(item.AlgorithmName == AlgoName && item.PluginName == AlgoPlugin)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
 
         public float Load { get; private set; } = -1;
 
@@ -300,6 +289,36 @@ namespace NiceHashMiner.ViewModels.Models
             foreach (var a in Dev.AlgorithmSettings)
             {
                 a.ClearSpeeds();
+            }
+        }
+
+        public AlgorithmContainer ContainsSameAlgoAndPlugin(string AlgoName, string AlgoPlugin)
+        {
+            foreach (var item in Dev.AlgorithmSettings)
+            {
+                if (item.AlgorithmName == AlgoName && item.PluginName == AlgoPlugin)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+
+        public void CopySettingsFromAnotherDevice(ComputeDevice source)
+        {
+            foreach (var item in source.AlgorithmSettings)
+            {
+                foreach (var algo_dest in Dev.AlgorithmSettings)
+                {
+                    if (algo_dest.AlgorithmName == item.AlgorithmName && algo_dest.PluginName == item.PluginName)
+                    {
+                        algo_dest.BenchmarkSpeed = item.BenchmarkSpeed;
+                        algo_dest.SecondaryBenchmarkSpeed = item.SecondaryBenchmarkSpeed;
+                        algo_dest.PowerUsage = item.PowerUsage;
+                        algo_dest.ExtraLaunchParameters = item.ExtraLaunchParameters;
+                    }
+                }
             }
         }
 

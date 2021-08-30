@@ -208,6 +208,7 @@ namespace NHMCore.Mining
             set
             {
                 if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
+                OnPropertyChanged();
             }
         }
 
@@ -248,6 +249,14 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(HasBenchmark));
         }
+
+        //protected void NotifySettingsChanged()
+        //{
+        //    OnPropertyChanged(nameof(PowerUsage));
+        //    OnPropertyChanged(nameof(ExtraLaunchParameters));
+        //}
+
+
 
         #endregion
 
@@ -361,7 +370,17 @@ namespace NHMCore.Mining
         /// <summary>
         /// Power consumption of this algorithm, in Watts
         /// </summary>
-        public virtual double PowerUsage { get; set; }
+        public virtual double PowerUsage {
+            get
+            {
+                return Algorithm.PowerUsage;
+            }
+            set
+            {
+                Algorithm.PowerUsage = value;
+                OnPropertyChanged(nameof(PowerUsage));
+            }
+        }
 
         #endregion
 
@@ -437,6 +456,8 @@ namespace NHMCore.Mining
             var allZero = this.Speeds.Select(v => 0d).ToList();
             this.Speeds = allZero;
         }
+
+ 
 
         #endregion
 
