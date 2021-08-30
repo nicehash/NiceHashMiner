@@ -165,9 +165,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void DeviceActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
         {
-            //Logger.Info("INFO", "LOAD");
-
-            //var myControl = DeviceActionsButtonContext.Template.FindName("deviceActionsGrid", DeviceActionsButtonContext) as Grid;
             Logger.Info("INFO", "LOAD");
             var ActionsMenu = DeviceActionsButtonContext.Template.FindName("ActionMenu", DeviceActionsButtonContext) as DeviceQuickActionMenu;
             var myControl = ActionsMenu.deviceActionsGrid;

@@ -1,4 +1,5 @@
-﻿using NHMCore;
+﻿using NHM.Common;
+using NHMCore;
 using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.Views.Common;
 using System;
@@ -91,8 +92,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             //var context = (ContextMenu)DeviceActionsButtonContext.Template.FindName("subContext", DeviceActionsButtonContext);
             if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
             {
-                //var context = DeviceActionsButtonContext.Template.FindName("subContext", DeviceActionsButtonContext) as ContextMenu;
-
                 _toggleButtonsGuard.Add(tButton);
                 subContext.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
@@ -101,10 +100,18 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                     _toggleButtonsGuard.Remove(tButton);
                     tButton.IsChecked = false;
                     subContext.Closed -= closedHandler;
+                    subContext.IsOpen = false;
                 };
                 subContext.Closed += closedHandler;
             }
         }
 
+        private void subContext_Loaded(object sender, RoutedEventArgs e)
+        {
+            Logger.Info("INFO", "LOAD2");
+            var ActionsMenu = subContext.Template.FindName("CopyMenu", subContext) as DeviceDataCopy;
+            var myControl = ActionsMenu.DeviceSelection;
+            WindowUtils.Translate(myControl);
+        }
     }
 }

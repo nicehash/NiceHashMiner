@@ -49,12 +49,15 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             }
         }
 
+
         private void Copy_Device_Click(object sender, RoutedEventArgs e)
         {
             if(sender is Button devBtn)
             {
                 var sourceDevice = devBtn.DataContext as ComputeDevice;
                 _deviceData.CopySettingsFromAnotherDevice(sourceDevice);
+                var ParentContext = this.TemplatedParent as ContextMenu;
+                ParentContext.IsOpen = false;
             }
         }
     }

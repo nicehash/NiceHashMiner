@@ -27,10 +27,10 @@
                     Click="Copy_Button_Click"
                     DataContext="{Binding .}">
                 <ToggleButton.ContextMenu>
-                    <ContextMenu x:Name="subContext" DataContext="{Binding .}">
+                    <ContextMenu x:Name="subContext" Loaded="subContext_Loaded" Unloaded="subContext_Loaded" DataContext="{Binding .}">
                         <ContextMenu.Template>
                             <ControlTemplate>
-                                <local:DeviceDataCopy DataContext="{Binding .}"/>
+                                <local:DeviceDataCopy x:Name="CopyMenu" DataContext="{Binding .}"/>
                             </ControlTemplate>
                         </ContextMenu.Template>
                     </ContextMenu>
