@@ -87,6 +87,7 @@ namespace NBMiner
             {
                 _mappedIDs[gpu.UUID] = minerDeviceId;
                 var algorithms = GetSupportedAlgorithmsForDevice(gpu);
+                if (gpu is CUDADevice cuda && cuda.SM_major >= 8) algorithms = algorithms.Where(a => a.FirstAlgorithmType != AlgorithmType.GrinCuckatoo32).ToList();
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
