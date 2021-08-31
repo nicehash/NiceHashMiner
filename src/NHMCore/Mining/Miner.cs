@@ -133,7 +133,7 @@ namespace NHMCore.Mining
 
             var miningPairAndReportedSpeedsPairs = apiData.AlgorithmSpeedsPerDevice.Select(p => (mp: miningPairs.FirstOrDefault(mp => mp.Device.UUID == p.Key), speeds: p.Value.Select(s => s.speed).ToArray()))
                 .ToArray();
-            
+
             var andDeviceMissing = miningPairAndReportedSpeedsPairs.Any(p => p.mp == null);
             
             var deviceMeasuredBenchmarkSpeedDifferences = miningPairAndReportedSpeedsPairs.Where(p => p.mp == null)
@@ -146,6 +146,15 @@ namespace NHMCore.Mining
                 .Select(p => (p.UUID, diffAvg: p.speedsDifferences.Sum() / (double)p.speedsDifferences.Count()))
                 .ToArray();
 
+            foreach (var (mp, speeds) in miningPairAndReportedSpeedsPairs)
+            {
+                if ((speeds[speeds.Length - 1] < (0.7 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]) && speeds[speeds.Length - 1] != 0) || speeds[speeds.Length - 1] > (1.3 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]))
+                {
+                    AvailableNotifications.CreateWarningHashrateDiffers();
+                    Logger.Warn("Miner", "Hashrate was too low or too high on " + mp.Device.Name);
+                    return ApiDataStatus.ABNORMAL_SPEEDS;
+                }
+            }
 
             // API data all good
             return ApiDataStatus.OK;
@@ -179,11 +188,6 @@ namespace NHMCore.Mining
             }
 
             UpdateApiTimestamp(apiData);
-            //if (ExamineApiData(apiData) == false)
-            //{
-            //    // TODO kill miner or just return 
-            //    return;
-            //}
 
             // TODO workaround plugins should return this info
             // create empty stub if it is null
@@ -219,6 +223,12 @@ namespace NHMCore.Mining
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
             }
+            if (ExamineApiData(apiData, _miningPairs) != ApiDataStatus.OK)
+            {
+                // TODO kill miner or just return 
+                return;
+            }
+
             // TODO temporary here move it outside later
             MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
         }
@@ -367,47 +377,6 @@ namespace NHMCore.Mining
                         if (isOk()) await TaskHelpers.TryDelay(checkWaitTime, stop);
                         if (isOk() && minerStatusElapsedTimeChecker.CheckAndMarkElapsedTime()) await GetSummaryAsync();
 
-                        if (DateTime.UtcNow.Second == 0 && isRoundMinute)
-                        {
-                            var apiData = new ApiData();
-                            if (!IsUpdatingApi)
-                            {
-                                IsUpdatingApi = true;
-                                await _apiSemaphore.WaitAsync();
-                                try
-                                {
-                                    apiData = await _miner.GetMinerStatsDataAsync();
-                                }
-                                catch (Exception e)
-                                {
-                                    Logger.Error(MinerTag(), $"GetSummaryAsync error: {e.Message}");
-                                }
-                                finally
-                                {
-                                    IsUpdatingApi = false;
-                                    _apiSemaphore.Release();
-                                    if (apiData.AlgorithmSpeedsPerDevice != null)
-                                    {
-                                        var anyNegative = apiData.AlgorithmSpeedsPerDevice.Any(apiDev => apiDev.Value.Any(kvp => kvp.speed < 0));
-                                        if (anyNegative) await StopAsync();
-                                    }
-                                }
-                            }
-                            var miningPairAndReportedSpeedsPairs = apiData.AlgorithmSpeedsPerDevice.Select(p => (mp: _miningPairs.FirstOrDefault(mp => mp.Device.UUID == p.Key), speeds: p.Value.Select(s => s.speed).ToArray()))
-                                .ToArray();
-
-                            foreach(var (mp, speeds) in miningPairAndReportedSpeedsPairs)
-                            {
-                                if ((speeds[speeds.Length - 1] < (0.7 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]) && speeds[speeds.Length - 1] != 0) || speeds[speeds.Length - 1] > (1.3 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count-1]))
-                                {
-                                    AvailableNotifications.CreateWarningHashrateDiffers();
-                                    Logger.Warn("Miner", "Hashrate was too low or too high on " + mp.Device.Name);
-                                }
-                            }
-                            isRoundMinute = false;
-                        }
-                        if (DateTime.UtcNow.Second != 0 && !isRoundMinute)
-                            isRoundMinute = true;
                         // check if stagnated and restart
                         var restartGroups = MinerApiWatchdog.GetTimedoutGroups(DateTime.UtcNow);
                         if (isOk() && (restartGroups?.Contains(GroupKey) ?? false))
