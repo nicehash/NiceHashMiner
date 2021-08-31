@@ -367,5 +367,11 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NvidiaDCH, Tr("Nvidia DCH drivers detected"), Tr("Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateWarningHashrateDiffers()
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.HashrateDeviatesFromBenchmark, Tr("Hashrate differs from benchmark"), Tr("Hashrate was lower or higher than benchmarked."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

@@ -3,6 +3,7 @@ using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
+using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -218,7 +219,6 @@ namespace NHMCore.Mining
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
             }
-
             // TODO temporary here move it outside later
             MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
         }
@@ -366,9 +366,42 @@ namespace NHMCore.Mining
                     {
                         if (isOk()) await TaskHelpers.TryDelay(checkWaitTime, stop);
                         if (isOk() && minerStatusElapsedTimeChecker.CheckAndMarkElapsedTime()) await GetSummaryAsync();
+
                         if (DateTime.UtcNow.Second == 0 && isRoundMinute)
                         {
-                            
+                            var apiData = new ApiData();
+                            if (!IsUpdatingApi)
+                            {
+                                IsUpdatingApi = true;
+                                await _apiSemaphore.WaitAsync();
+                                try
+                                {
+                                    apiData = await _miner.GetMinerStatsDataAsync();
+                                }
+                                catch (Exception e)
+                                {
+                                    Logger.Error(MinerTag(), $"GetSummaryAsync error: {e.Message}");
+                                }
+                                finally
+                                {
+                                    IsUpdatingApi = false;
+                                    _apiSemaphore.Release();
+                                    if (apiData.AlgorithmSpeedsPerDevice != null)
+                                    {
+                                        var anyNegative = apiData.AlgorithmSpeedsPerDevice.Any(apiDev => apiDev.Value.Any(kvp => kvp.speed < 0));
+                                        if (anyNegative) await StopAsync();
+                                    }
+                                }
+                            }
+                            var miningPairAndReportedSpeedsPairs = apiData.AlgorithmSpeedsPerDevice.Select(p => (mp: _miningPairs.FirstOrDefault(mp => mp.Device.UUID == p.Key), speeds: p.Value.Select(s => s.speed).ToArray()))
+                                .ToArray();
+                            foreach(var miningPair in miningPairAndReportedSpeedsPairs)
+                            {
+                                if ((miningPair.speeds[miningPair.speeds.Length - 1] < 0.7 * miningPair.speeds[0] && miningPair.speeds[miningPair.speeds.Length - 1] != 0) || miningPair.speeds[miningPair.speeds.Length - 1] > 1.3 * miningPair.speeds[0]) {
+                                    AvailableNotifications.CreateWarningHashrateDiffers();
+                                    Logger.Warn("Miner", "Hashrate was too low or too high");
+                                }
+                            }
                             isRoundMinute = false;
                         }
                         if (DateTime.UtcNow.Second != 0 && !isRoundMinute)
