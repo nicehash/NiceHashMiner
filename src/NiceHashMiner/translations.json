@@ -4104,7 +4104,24 @@
     },
     "Return and enter Bitcoin address manually": {
       "ru": "Вернитесь и введите Биткоин-адрес вручную"
-    }
+    },
+    "Miner speed fluctuations noticed": {
 
+    },
+    "We have detected that {0} speed when mining {1} is 10% {2} than benchmark speed.\nTo solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.": {
+
+    },
+    "Miner was restarted at": {
+
+    },
+    "Miner restarted": {
+
+    },
+    "lower": {
+
+    },
+    "higher": {
+
+    }
   }
 }

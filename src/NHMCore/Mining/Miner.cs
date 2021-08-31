@@ -233,6 +233,7 @@ namespace NHMCore.Mining
 
             if (ExamineApiData(apiData, _miningPairs) != ApiDataStatus.OK)
             {
+
                 // TODO kill miner or just return 
                 return;
             }
