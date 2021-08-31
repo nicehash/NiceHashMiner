@@ -395,11 +395,13 @@ namespace NHMCore.Mining
                             }
                             var miningPairAndReportedSpeedsPairs = apiData.AlgorithmSpeedsPerDevice.Select(p => (mp: _miningPairs.FirstOrDefault(mp => mp.Device.UUID == p.Key), speeds: p.Value.Select(s => s.speed).ToArray()))
                                 .ToArray();
-                            foreach(var miningPair in miningPairAndReportedSpeedsPairs)
+
+                            foreach(var (mp, speeds) in miningPairAndReportedSpeedsPairs)
                             {
-                                if ((miningPair.speeds[miningPair.speeds.Length - 1] < 0.7 * miningPair.speeds[0] && miningPair.speeds[miningPair.speeds.Length - 1] != 0) || miningPair.speeds[miningPair.speeds.Length - 1] > 1.3 * miningPair.speeds[0]) {
+                                if ((speeds[speeds.Length - 1] < (0.7 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]) && speeds[speeds.Length - 1] != 0) || speeds[speeds.Length - 1] > (1.3 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count-1]))
+                                {
                                     AvailableNotifications.CreateWarningHashrateDiffers();
-                                    Logger.Warn("Miner", "Hashrate was too low or too high");
+                                    Logger.Warn("Miner", "Hashrate was too low or too high on " + mp.Device.Name);
                                 }
                             }
                             isRoundMinute = false;
