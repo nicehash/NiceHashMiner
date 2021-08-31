@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHMCore.Utils;
 using System;
@@ -368,9 +369,39 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateWarningHashrateDiffers()
+        public static void CreateWarningHashrateDiffers(MiningPair mp, string s)
         {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.HashrateDeviatesFromBenchmark, Tr("Hashrate differs from benchmark"), Tr("Hashrate was lower or higher than benchmarked."));
+            var content = Tr("We have detected that {0} speed when mining {1} is 10% {2} than benchmark speed.\n" +
+                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.Name, mp.Algorithm.AlgorithmName, s);
+
+            try
+            {
+                var hashrateNofitication = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.HashrateDeviatesFromBenchmark).FirstOrDefault();
+                if (hashrateNofitication != null)
+                {
+                    if (hashrateNofitication.NotificationNew == true)
+                    {
+                        //check if the same sentence was already written to notification
+                        var newSentence = Tr("We have detected that {0} speed when mining {1} is 10% {2} than benchmark speed.\n" +
+                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.Name, mp.Algorithm.AlgorithmName, s);
+                        if (hashrateNofitication.NotificationContent.Contains(newSentence))
+                        {
+                            return;
+                        }
+
+                        //add new content to prev content
+                        content = hashrateNofitication.NotificationContent + "\n" + newSentence;
+                    }
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(hashrateNofitication);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.HashrateDeviatesFromBenchmark, Tr("Miner speed fluctuations noticed"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

@@ -135,26 +135,30 @@ namespace NHMCore.Mining
                 .ToArray();
 
             var andDeviceMissing = miningPairAndReportedSpeedsPairs.Any(p => p.mp == null);
-            
-            var deviceMeasuredBenchmarkSpeedDifferences = miningPairAndReportedSpeedsPairs.Where(p => p.mp == null)
-                .Where(p => p.mp.Algorithm.Speeds.Count == p.speeds.Length)
-                .Select(p => (p.mp.Device.UUID, speeds: p.mp.Algorithm.Speeds.Zip(p.speeds, (benchmarked, measured) => (benchmarked, measured))))
-                .Select(p => (p.UUID, speeds: p.speeds.ToArray()))
-                .Where(p => p.speeds.Length > 0)
-                .Where(p => p.speeds.All(sp => sp.benchmarked > 0)) // we cannot have 0 benchmarked speeds when mining but just in case if we start it with some debug feature
-                .Select(p => (p.UUID, speedsDifferences: p.speeds.Select(sp => sp.measured / sp.benchmarked)))
-                .Select(p => (p.UUID, diffAvg: p.speedsDifferences.Sum() / (double)p.speedsDifferences.Count()))
-                .ToArray();
-
+            var checkHashrate = false;
             foreach (var (mp, speeds) in miningPairAndReportedSpeedsPairs)
             {
-                if ((speeds[speeds.Length - 1] < (0.9 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]) && speeds[speeds.Length - 1] != 0) || speeds[speeds.Length - 1] > (1.1 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]))
+                foreach (var speed in speeds)
                 {
-                    AvailableNotifications.CreateWarningHashrateDiffers();
-                    Logger.Warn("Miner", "Hashrate was too low or too high on " + mp.Device.Name);
-                    return ApiDataStatus.ABNORMAL_SPEEDS;
+                    foreach (var benchSpeed in mp.Algorithm.Speeds)
+                    {
+                        if (speed < (0.9*benchSpeed) && speed != 0)
+                        {
+                            AvailableNotifications.CreateWarningHashrateDiffers(mp, "lower");
+                            Logger.Warn("Miner", "Hashrate was too low on " + mp.Device.Name);
+                            checkHashrate = true;
+                        }
+                        else if (speed > (1.1 * benchSpeed))
+                        {
+                            AvailableNotifications.CreateWarningHashrateDiffers(mp, "higher");
+                            Logger.Warn("Miner", "Hashrate was too high on " + mp.Device.Name);
+                            checkHashrate = true;
+                        }
+                    }
                 }
             }
+            if (checkHashrate)
+                return ApiDataStatus.ABNORMAL_SPEEDS;
 
             // API data all good
             return ApiDataStatus.OK;
@@ -223,14 +227,15 @@ namespace NHMCore.Mining
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
             }
+           
+            // TODO temporary here move it outside later
+            MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
+
             if (ExamineApiData(apiData, _miningPairs) != ApiDataStatus.OK)
             {
                 // TODO kill miner or just return 
                 return;
             }
-
-            // TODO temporary here move it outside later
-            MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
         }
 
         private async Task<object> StartAsync(CancellationToken stop, string miningLocation, string username)
