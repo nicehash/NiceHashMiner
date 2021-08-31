@@ -368,7 +368,6 @@ namespace NHMCore.Mining
                     true);
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
-                var isRoundMinute = true;
                 Logger.Info(MinerTag(), $"MinerStatsLoop START");
                 while (isOk())
                 {
