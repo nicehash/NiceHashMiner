@@ -250,14 +250,6 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(HasBenchmark));
         }
 
-        //protected void NotifySettingsChanged()
-        //{
-        //    OnPropertyChanged(nameof(PowerUsage));
-        //    OnPropertyChanged(nameof(ExtraLaunchParameters));
-        //}
-
-
-
         #endregion
 
         #region Profitability
@@ -367,17 +359,21 @@ namespace NHMCore.Mining
 
         #endregion NormalizedProfit FOR SWITCHING
 
+
+
+
         /// <summary>
         /// Power consumption of this algorithm, in Watts
         /// </summary>
+        private double powerUsage = 0;
         public virtual double PowerUsage {
             get
             {
-                return Algorithm.PowerUsage;
+                return powerUsage;
             }
             set
             {
-                Algorithm.PowerUsage = value;
+                powerUsage = value;
                 OnPropertyChanged(nameof(PowerUsage));
             }
         }

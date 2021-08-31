@@ -24,11 +24,6 @@ namespace NiceHashMiner.ViewModels.Models
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
 
-        public IEnumerable<ComputeDevice> Devices
-        {
-            get => AvailableDevices.Devices;
-        }
-
         public List<ComputeDevice> CPUs
         {
             get => AvailableDevices.GetAvailCPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
@@ -75,6 +70,21 @@ namespace NiceHashMiner.ViewModels.Models
 
         public bool CanClearAllSpeeds => !(Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining);
         public bool CanStopBenchmark => Dev.State == DeviceState.Benchmarking;
+
+        public bool IsOnlyDeviceOfType
+        {
+            get
+            {
+                if (Dev.DeviceType == DeviceType.CPU)
+                {
+                    return AvailableDevices.GetAvailCPUs().ToList().Count > 1 ? true : false;
+                }
+                else
+                {
+                    return AvailableDevices.GetAvailGPUs().ToList().Count > 1 ? true : false;
+                }
+            }
+        }
 
         public List<string> AlgoNames { get; private set; }
 
@@ -130,10 +140,6 @@ namespace NiceHashMiner.ViewModels.Models
 
         public DeviceData(ComputeDevice dev)
         {
-            //var AllDevices = AvailableDevices.Devices.Select(d => (DeviceData)d);
-            //var Devices = AvailableDevices.Devices;
-            //Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData)d));
-
             AlgoNames = dev.AlgorithmSettings.Select(a => a.AlgorithmName).ToList();
             Dev = dev;
 
@@ -309,14 +315,14 @@ namespace NiceHashMiner.ViewModels.Models
         {
             foreach (var item in source.AlgorithmSettings)
             {
-                foreach (var algo_dest in Dev.AlgorithmSettings)
+                foreach (var algoDestination in Dev.AlgorithmSettings)
                 {
-                    if (algo_dest.AlgorithmName == item.AlgorithmName && algo_dest.PluginName == item.PluginName)
+                    if (algoDestination.AlgorithmStringID == item.AlgorithmStringID && algoDestination.PluginContainer.PluginUUID == item.PluginContainer.PluginUUID)
                     {
-                        algo_dest.BenchmarkSpeed = item.BenchmarkSpeed;
-                        algo_dest.SecondaryBenchmarkSpeed = item.SecondaryBenchmarkSpeed;
-                        algo_dest.PowerUsage = item.PowerUsage;
-                        algo_dest.ExtraLaunchParameters = item.ExtraLaunchParameters;
+                        algoDestination.BenchmarkSpeed = item.BenchmarkSpeed;
+                        algoDestination.SecondaryBenchmarkSpeed = item.SecondaryBenchmarkSpeed;
+                        algoDestination.PowerUsage = item.PowerUsage;
+                        algoDestination.ExtraLaunchParameters = item.ExtraLaunchParameters;
                     }
                 }
             }

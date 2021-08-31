@@ -70,7 +70,6 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Button Grid.Row="0"
                 Style="{StaticResource local.ExitTextButton}"
@@ -99,7 +98,7 @@
             <Run Text="We strongly suggest using the wallet address provided on the NiceHash platform."/>
         </TextBlock>
 
-        <TextBox Grid.Row="4"
+        <TextBox Grid.Row="3"
                  Style="{StaticResource inputBox}"
                  x:Name="textBoxBTCAddress"
                  Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
@@ -107,7 +106,7 @@
                  KeyUp="TextBoxBitcoinAddress_KeyUp"
                  LostFocus="TextBoxBitcoinAddress_LostFocus"
                  Margin="0,8,0,0" />
-        <TextBlock Grid.Row="5"
+        <TextBlock Grid.Row="4"
                    TextWrapping="WrapWithOverflow"
                    TextAlignment="Left"
                    VerticalAlignment="Stretch"
@@ -125,7 +124,7 @@
             
         </TextBlock>
 
-        <WrapPanel Grid.Row="6" Margin="25,24,24,24" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+        <WrapPanel Grid.Row="5" Margin="25,24,24,24" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button
                     x:Name="CancelButton"
                     Style="{DynamicResource CancelDangerButton}"

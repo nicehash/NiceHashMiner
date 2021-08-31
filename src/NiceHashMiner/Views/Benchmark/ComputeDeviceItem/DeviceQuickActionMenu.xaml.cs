@@ -27,7 +27,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
     /// </summary>
     public partial class DeviceQuickActionMenu : UserControl
     {
-        //private ContextMenu DeviceActionsButtonContext;
         private DeviceData _deviceData;
         private readonly HashSet<ToggleButton> _toggleButtonsGuard = new HashSet<ToggleButton>();
         public DeviceQuickActionMenu()
@@ -44,7 +43,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             {
                 _deviceData = dd;
                 DataContext = dd;
-                //DeviceActionsButtonContext.DataContext = dd;
                 subContext.DataContext = dd;
 
                 return;
@@ -64,36 +62,31 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             };
 
 
-            //DeviceActionsButtonContext.IsOpen = false;
             nhmConfirmDialog.OKClick += (s, e1) => { _deviceData.ClearAllSpeeds(); };
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
         }
 
         private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)
         {
-            //DeviceActionsButtonContext.IsOpen = false;
             await ApplicationStateManager.StopSingleDevicePublic(_deviceData.Dev);
         }
 
         private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
         {
-            //DeviceActionsButtonContext.IsOpen = false;
             await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
         }
 
         private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)
         {
-            //DeviceActionsButtonContext.IsOpen = false;
             _deviceData.EnablebenchmarkedOnly();
         }
 
         private void Copy_Button_Click(object sender, RoutedEventArgs e)
         {
-            //var context = (ContextMenu)DeviceActionsButtonContext.Template.FindName("subContext", DeviceActionsButtonContext);
             if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
             {
                 _toggleButtonsGuard.Add(tButton);
-                subContext.PlacementTarget = tButton;//TODO ok?
+                subContext.PlacementTarget = tButton;
 
                 subContext.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
@@ -110,10 +103,11 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void subContext_Loaded(object sender, RoutedEventArgs e)
         {
-            Logger.Info("INFO", "LOAD2");
-            var ActionsMenu = subContext.Template.FindName("CopyMenu", subContext) as DeviceDataCopy;
-            var myControl = ActionsMenu.DeviceSelection;
-            WindowUtils.Translate(myControl);
+            if(subContext.Template.FindName("CopyMenu", subContext) is DeviceDataCopy ActionsMenu)
+            {
+                var myControl = ActionsMenu.DeviceSelection;
+                WindowUtils.Translate(myControl);
+            }
         }
     }
 }

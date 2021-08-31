@@ -63,7 +63,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             var tb = e.Source as ToggleButton;
             if (EnableDisableCheckBox == tb) return; // don't trigger algo dropdown if we click disable button
             if (ToggleButtonActions == tb) return; // don't trigger algo dropdown if we click disable button
-            //if (CopyDataButtonActions == tb) return;
             if (tb.IsChecked.Value)
             {
                 Expand();
@@ -81,7 +80,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
             {
                 _toggleButtonsGuard.Add(tButton);
-                //lastPlacementTarget = DeviceActionsButtonContext.Placement;
                 DeviceActionsButtonContext.IsOpen = true;
                 RoutedEventHandler closedHandler = null;
                 closedHandler += (s, e2) =>
@@ -131,16 +129,13 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void DeviceActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
         {
-            Logger.Info("INFO", "LOAD");
-            var ActionsMenu = DeviceActionsButtonContext.Template.FindName("ActionMenu", DeviceActionsButtonContext) as DeviceQuickActionMenu;
-            var myControl = ActionsMenu.deviceActionsGrid;
-            WindowUtils.Translate(myControl);
+            if (DeviceActionsButtonContext.Template.FindName("ActionMenu", DeviceActionsButtonContext) is DeviceQuickActionMenu ActionsMenu)
+            {
+                var myControl = ActionsMenu.deviceActionsGrid;
+                WindowUtils.Translate(myControl);
+            }    
+
         }
 
-        private void DeviceSelectionButtonContext_Loaded(object sender, RoutedEventArgs e)
-        {
-            var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceSelectionGrid", DeviceActionsButtonContext);
-            WindowUtils.Translate(myControl);
-        }
     }
 }
