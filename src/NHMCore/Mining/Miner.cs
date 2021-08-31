@@ -148,7 +148,7 @@ namespace NHMCore.Mining
 
             foreach (var (mp, speeds) in miningPairAndReportedSpeedsPairs)
             {
-                if ((speeds[speeds.Length - 1] < (0.7 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]) && speeds[speeds.Length - 1] != 0) || speeds[speeds.Length - 1] > (1.3 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]))
+                if ((speeds[speeds.Length - 1] < (0.9 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]) && speeds[speeds.Length - 1] != 0) || speeds[speeds.Length - 1] > (1.1 * mp.Algorithm.Speeds[mp.Algorithm.Speeds.Count - 1]))
                 {
                     AvailableNotifications.CreateWarningHashrateDiffers();
                     Logger.Warn("Miner", "Hashrate was too low or too high on " + mp.Device.Name);
