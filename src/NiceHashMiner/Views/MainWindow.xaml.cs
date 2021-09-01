@@ -176,9 +176,9 @@ namespace NiceHashMiner.Views
                         CancelText = Translations.Tr("Cancel"),
                         AnimationVisible = Visibility.Collapsed
                     };
-                    nhmNoDeviceDialog.OKClick += (s, e) =>
+                    nhmNoDeviceDialog.OKClick += async (s, e) =>
                     {
-                        Process.Start(Links.NhmNoDevHelp);
+                        Process.Start(await DNSQuery.QueryOrDefault(Links.NhmNoDevHelp));
                     };
                     nhmNoDeviceDialog.OnExit += (s, e) =>
                     {
@@ -230,9 +230,9 @@ namespace NiceHashMiner.Views
                         AnimationVisible = Visibility.Collapsed,
                         Description = description
                     };
-                    btcLoginDialog.OKClick += (s, e) =>
+                    btcLoginDialog.OKClick += async (s, e) =>
                     {
-                        if (!LoginSuccess.Value) Process.Start(Links.Login);
+                        if (!LoginSuccess.Value) Process.Start(await DNSQuery.QueryOrDefault(Links.Login));
                     };
                     CustomDialogManager.ShowModalDialog(btcLoginDialog);
                 }

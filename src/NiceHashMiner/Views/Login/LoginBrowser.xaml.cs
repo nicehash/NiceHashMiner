@@ -129,7 +129,7 @@ namespace NiceHashMiner.Views.Login
         {
             _navigationStart = DateTime.UtcNow;
             WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
-            var urlEncoded = Uri.EscapeUriString($"{Links.Login}?nhm=1&client={_userAgent}");
+            var urlEncoded = Uri.EscapeUriString($"{await DNSQuery.QueryOrDefault(Links.Login)}?nhm=1&client={_userAgent}");
             NavigateTo(urlEncoded);
             Func<bool> isActive = () => !stop.IsCancellationRequested;
             while (isActive())

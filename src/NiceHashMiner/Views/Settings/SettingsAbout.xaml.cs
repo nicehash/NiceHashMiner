@@ -21,13 +21,13 @@ namespace NiceHashMiner.Views.Settings
             SetHyperlinkToArticle();
         }
 
-        private void SetHyperlinkToArticle()
+        private async void SetHyperlinkToArticle()
         {
             try
             {
                 var text = new Run("read this article.");
                 var article = new Hyperlink(text);
-                article.NavigateUri = new Uri(Links.About);
+                article.NavigateUri = new Uri(await DNSQuery.QueryOrDefault(Links.About));
                 article.RequestNavigate += ((sender, e) =>
                 {
                     Process.Start(e.Uri.ToString());

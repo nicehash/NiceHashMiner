@@ -87,14 +87,14 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.NhmNoDevHelp); }
+                Action =  async () => { Process.Start(await DNSQuery.QueryOrDefault(Links.NhmNoDevHelp)); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateMissingMinersInfo()
+        public static async void CreateMissingMinersInfo()
         {
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.MissingMiners, Tr("Missing miner files"), Tr("There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", Links.AVHelp));
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.MissingMiners, Tr("Missing miner files"), Tr("There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", await DNSQuery.QueryOrDefault(Links.AVHelp)));
             notification.Action = new NotificationAction
             {
                 Info = Tr("Restart NiceHash Miner"),
@@ -170,11 +170,11 @@ namespace NHMCore.Notifications
 
         public static void CreateNhmUpdateAttemptFail()
         {
-            var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, NotificationsGroup.NhmUpdateFailed, Tr("NiceHash Miner Update Failed"), Tr("Update procedure failed please install manually. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", Links.AVHelp));
+            var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, NotificationsGroup.NhmUpdateFailed, Tr("NiceHash Miner Update Failed"), Tr("Update procedure failed please install manually. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", await DNSQuery.QueryOrDefault(Links.AVHelp)));
             notificationIfUnsuccessfull.Action = new NotificationAction
             {
                 Info = Tr("Visit release Page"),
-                Action = () => { Process.Start(Links.VisitReleasesUrl); }
+                Action = async () => { Process.Start(await DNSQuery.QueryOrDefault(Links.VisitReleasesUrl)); }
             };
             NotificationsManager.Instance.AddNotificationToList(notificationIfUnsuccessfull);
             var notification = NotificationsManager.Instance.Notifications.FirstOrDefault(n => n.Group == NotificationsGroup.NhmUpdate);
@@ -233,7 +233,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.AVHelp); }
+                Action = async () => { Process.Start(await DNSQuery.QueryOrDefault(Links.AVHelp)); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -244,7 +244,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.AMDComputeModeHelp); }
+                Action = async () => { Process.Start(await DNSQuery.QueryOrDefault(Links.AMDComputeModeHelp)); }
             };
             notification.NotificationUUID = "AMDModeSwitchNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -256,7 +256,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.LargePagesHelp); }
+                Action = async () => { Process.Start(await DNSQuery.QueryOrDefault(Links.LargePagesHelp)); }
             };
             notification.NotificationUUID = "LargePagesNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -268,7 +268,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.VirtualMemoryHelp); }
+                Action = async () => { Process.Start(await DNSQuery.QueryOrDefault(Links.VirtualMemoryHelp)); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -279,7 +279,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.FailedBenchmarkHelp); }
+                Action = async () => { Process.Start(await DNSQuery.QueryOrDefault(Links.FailedBenchmarkHelp)) ; }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }

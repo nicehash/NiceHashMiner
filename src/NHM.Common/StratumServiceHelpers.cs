@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NHM.Common
 {
@@ -55,6 +56,29 @@ namespace NHM.Common
             (_serviceCustomSettings, _) = InternalConfigs.GetDefaultOrFileSettings(Paths.RootPath("custom_endpoints_settings.json"), ServiceCustomSettings.Defaults());
         }
         #endregion CUSTOM_ENDPOINTS
+
+        //public static async void MyCallback()
+        //{
+        //    await Init();
+        //}
+
+        public static async Task Init()
+        {
+            //return Task.CompletedTask;
+            foreach (AlgorithmType algorithmType in Enum.GetValues(typeof(AlgorithmType)))
+            {
+                foreach (Location location in MiningServiceLocations)
+                {
+
+                }
+            }
+            //// kakrkoli asinhrono
+            //await Task.Delay(1000);
+            //await Task.Delay(1000);
+            //await Task.Delay(1000);
+            //await Task.Delay(1000);
+            //await Task.Delay(1000);
+        }
 
         private static (string name, bool ok) GetAlgorithmUrlName(AlgorithmType algorithmType)
         {
@@ -155,5 +179,64 @@ namespace NHM.Common
                    + ".nicehash.com:"
                    + port;
         }
+        //public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
+        //{
+        //    var (name, ok) = GetAlgorithmUrlName(algorithmType);
+        //    // if name is not ok return
+        //    if (!ok) return "";
+
+        //    var nPort = 3333 + algorithmType;
+        //    var sslPort = 30000 + nPort;
+
+        //    // NHMConectionType.NONE
+        //    var prefix = "";
+        //    var port = nPort;
+        //    switch (conectionType)
+        //    {
+        //        case NhmConectionType.LOCKED:
+        //            return miningLocation;
+        //        case NhmConectionType.STRATUM_TCP:
+        //            prefix = "stratum+tcp://";
+        //            break;
+        //        case NhmConectionType.STRATUM_SSL:
+        //            prefix = "stratum+ssl://";
+        //            port = sslPort;
+        //            break;
+        //    }
+        //    if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED)
+        //    {
+        //        var customEndpointTemplateEntry = _serviceCustomSettings.StratumEndpointTemplatesByAlgorithmType[algorithmType];
+        //        var customPort = customEndpointTemplateEntry.Port;
+        //        if (conectionType == NhmConectionType.STRATUM_SSL)
+        //        {
+        //            customPort = customPort + 30000;
+        //        }
+        //        var customEndpointTemplate = customEndpointTemplateEntry.Template;
+        //        customEndpointTemplate = customEndpointTemplate.Replace(PREFIX_TEMPLATE, prefix);
+        //        customEndpointTemplate = customEndpointTemplate.Replace(LOCATION_TEMPLATE, miningLocation);
+        //        customEndpointTemplate = customEndpointTemplate.Replace(PORT_TEMPLATE, $":{customPort}");
+        //        return customEndpointTemplate;
+        //    }
+        //    if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
+        //    {
+        //        return prefix
+        //           + "algo-test." + miningLocation
+        //           + ".nicehash.com:"
+        //           + port;
+        //    }
+        //    if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
+        //    {
+        //        return prefix
+        //           + "stratum-dev." + miningLocation
+        //           + ".nicehash.com:"
+        //           + port;
+        //    }
+        //    //BuildTag.PRODUCTION
+        //    return prefix
+        //           + name
+        //           + "." + miningLocation
+        //           + ".nicehash.com:"
+        //           + port;
+        //}
     }
 }

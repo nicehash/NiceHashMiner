@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
@@ -57,9 +58,9 @@ namespace NiceHashMiner.Views.Login
             rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
         }
 
-        private void Register_OnClick(object sender, RoutedEventArgs e)
+        private async void Register_OnClick(object sender, RoutedEventArgs e)
         {
-            Process.Start(Links.Register);
+            Process.Start(await DNSQuery.QueryOrDefault(Links.Register));
         }
 
         private void ManuallyEnterBtc_OnClick(object sender, RoutedEventArgs e)
