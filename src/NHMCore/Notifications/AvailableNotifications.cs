@@ -404,5 +404,11 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.HashrateDeviatesFromBenchmark, Tr("Miner speed fluctuations noticed"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateErrorExtremeHashrate()
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.ExtremeHashrate, Tr("Miner extreme speed noticed"), Tr("Restart is required, due to GPU driver error."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }
