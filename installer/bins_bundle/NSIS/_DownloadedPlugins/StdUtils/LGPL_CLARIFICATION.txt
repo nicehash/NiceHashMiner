@@ -1,0 +1,31 @@
+StdUtils plug-in LGPL Clarification
+===================================
+
+The author of the StdUtils plug-in Library for NSIS adds the following clarification to the GNU Lesser General Public License version 2.1:
+
+Installer programs created with NSIS (Nullsoft Scriptable Install System) that incorporate and use the StdUtils plug-in Library, strictly through the NSIS plug-in interface, and that contain/distribute *verbatim* copies of the StdUtils plug-in Library are considered a "work that uses the Library"; they do NOT(!) represent a derivative of the Library.
+
+This means that if you incorporate a *verbatim* (unmodified) copy of the provided StdUtils plug-in DLL into your NSIS-based installer, then you still *are* allowed to distribute that installer under the license of your choice, including (but not limited to) "proprietary" licenses.
+
+
+Rationalization
+---------------
+
+Technically, incorporating a plug-in DLL into your NSIS-based installer is NO(!) different from storing the plug-in DLL in an, e.g., ZIP archive. The plug-in DLL therefore will NOT(!) be linked "statically" to the actual installer program (i.e. the NSIS "exehead"), but instead resides in the "data" (archive) section of the installer file as a payload.
+
+The plug-in DLL will be extracted from the installer file and will be called/linked by the installer program (i.e. the NSIS "exehead") at runtime, in the form of a separate DLL file. The calling application consequently does NOT(!) need to be distributed under the GNU Lesser General Public License; it *may* be distributed under a proprietary license.
+
+
+Limitations
+-----------
+
+Even though the StdUtils plug-in Library *may* be incorporated into "proprietary" installer programs, the plug-in DLL itself will still be distributed under the terms of the General Public License version 2.1, which means that all restrictions of the General Public License version 2.1 must still be adhered to!
+
+In particular this means that:
+
+(a) If you make any modifications to the StdUtils plug-in Library, either by modifying the provided DLL file directly or by recompiling the DLL file from a *modified* version of the original source codes, then you MUST(!) ship your *modified* source codes alongside with the installer and share them under the same license terms as the original library.
+
+(b) If you include any code of the StdUtils plug-in Library directly into your software, rather than making your software call the StdUtils plug-in Library at runtime (as a separate DLL file), then your software becomes derivative of the Library and therefore your software as a whole MUST(!) be distributed under the General Public License version 2.1.
+
+
+LoRd_MudeR <mulder2@gmx.de>

@@ -34,6 +34,14 @@ namespace NiceHashMiner.ViewModels.Models
             get => AvailableDevices.GetAvailGPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
         }
 
+        public List<ComputeDevice> DevicesOfSameType
+        {
+            get
+            {
+                return Dev.DeviceType == DeviceType.CPU ? CPUs : GPUs;
+            }
+        }
+
 
         public DeviceMiningStats DeviceMiningStats { get; private set; } = null;
         public string DeviceMiningStatsProfitability { get; private set; } = MISSING_INFO;

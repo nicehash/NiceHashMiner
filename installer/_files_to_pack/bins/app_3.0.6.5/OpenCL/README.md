@@ -1,0 +1,1 @@
+AMD APP SDK\3.0\bin\x86_64\OpenCL.dll

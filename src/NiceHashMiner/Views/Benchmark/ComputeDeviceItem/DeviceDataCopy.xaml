@@ -52,14 +52,7 @@
         
 
         <StackPanel Grid.Row="3">
-            <ItemsControl x:Name="ListedDevcesCPU" ItemsSource="{Binding CPUs}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Padding="16,7,16,7" Click="Copy_Device_Click" Style="{StaticResource ContextMenuButton}" Content="{Binding FullName}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <ItemsControl x:Name="ListedDevcesGPU" ItemsSource="{Binding GPUs}">
+            <ItemsControl x:Name="ListedDevces" ItemsSource="{Binding DevicesOfSameType}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Button Padding="16,7,16,7" Click="Copy_Device_Click" Style="{StaticResource ContextMenuButton}" Content="{Binding FullName}"/>

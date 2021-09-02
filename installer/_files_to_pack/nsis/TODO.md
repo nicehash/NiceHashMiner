@@ -1,0 +1,10 @@
+- Add support for russian language (look at `langStrings.nsh`)
+- Remove all hardcoded strings to `langStrings.nsh`
+- Add automation scripts for building uninstaller and installer. (this is done via nhmpacker)
+- Remove unused macros and unused code (complete refactor)
+- Remove unneeded plugins (if any still present)
+- Check APP_GUID generation
+- Insert icon and product details in main executable file (this is now done via go build)
+- Prepare NSIS with 3rd party packages and prepare bundle (reduce time setting up NSIS) - (this is done via nhmpacker)
+- Remove unneeded installer assets
+- CHECK NHM2 already installed and install

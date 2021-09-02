@@ -1,0 +1,65 @@
+SpiderBanner plugin for NSIS
+
+Coded by Jason Ross aka JasonFriday13 on the forums.
+
+2006-2007, 2010-2011, 2013-2014, 2016 MouseHelmet Software
+
+Requires NSIS 2.42, uses new plugin api's.
+File structure refined to follow NSIS 3.0a0 and up.
+Fixed unloading bug, other minor tweaks in preparation for x64 support.
+
+Introduction
+------------
+
+This plugin displays a custom dialog that looks like a small installing dialog.
+This plugin was originally coded for the InstallSpider user interface, but can
+be used in any installer. Update in November 2010 added the cool blue smooth bar
+with colour changing percent display like the old installers. Update in June 2016
+added support for changing the icon.
+
+Functions
+---------
+
+There are only three functions in this plugin. 'Show' and 'ShowPBOnly' must
+be called in a section.
+
+SpiderBanner::Show [POS DIST] [/MODERN] [/ICON FILENAME]
+
+All flags are optional. Except for /MODERN, all flags can be used multiple
+times, only the last one takes effect. Processing stops at the first unknown
+flag, and it stays on the stack along with any following flags, valid or not.
+
+POS is the position of the dialog, DIST is the distance from the corner
+specified in pixels. Must be called in this order.
+/TL	     Top Left corner
+/TR	     Top Right corner
+/BL	     Bottom Left corner
+/BR      Bottom Right corner
+/CENTER  Center the dialog. DIST is not valid for this flag. This is the default if the
+         input doesn't match any in the list, even nothing defaults to /CENTER.
+
+/MODERN  Shows the standard Windows progressbar instead.
+
+/ICON    Sets a custom icon for the banner. FILENAME must be quoted. If the file does
+         not exist, the installers icon will be used instead.
+
+If the commandline is like this:
+
+SpiderBanner::Show /MODERN /BR 48
+
+It means that the dialog will be placed 48 pixels up and left from the bottom
+right hand corner with a standard windows progress bar.
+
+SpiderBanner::Show /TL 100
+
+It means that the dialog will be placed 100 pixels down and right from the top
+left hand corner with the custom progress bar.
+
+SpiderBanner::ShowPBOnly
+
+This changes the progress bar on the main installer window. Doesn't require any flags.
+
+SpiderBanner::Destroy
+
+Destroys the dialog and restores the original size of the installer. You can call this
+at any time in your installer. This is automatically called when the installer closes.
