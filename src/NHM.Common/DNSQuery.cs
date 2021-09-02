@@ -10,29 +10,13 @@ namespace NHM.Common
 {
     public static class DNSQuery
     {
-        public class Question
+        private class Answer
         {
-            public string name { get; set; }
-            public int type { get; set; }
-        }
-
-        public class Answer
-        {
-            public string name { get; set; }
-            public int type { get; set; }
-            public int TTL { get; set; }
             public string data { get; set; }
         }
 
-        public class DNSReply
+        private class DNSReply
         {
-            public int Status { get; set; }
-            public bool TC { get; set; }
-            public bool RD { get; set; }
-            public bool RA { get; set; }
-            public bool AD { get; set; }
-            public bool CD { get; set; }
-            public List<Question> Question { get; set; }
             public List<Answer> Answer { get; set; }
         }
 
@@ -79,7 +63,6 @@ namespace NHM.Common
                 if (parsedObject.Answer == null) return null;
                 if (parsedObject.Answer.Count == 0) return null;
                 var addresses = GetAddressList(parsedObject.Answer);
-                if (addresses.Count == 0) return null;
                 return addresses.FirstOrDefault();
             }
             catch (HttpRequestException e)
@@ -91,13 +74,7 @@ namespace NHM.Common
 
         private static List<string> GetAddressList(List<Answer> answers)
         {
-            List<string> returnedAddressList = new List<string>();
-            foreach (var ans in answers)
-            {
-                if (ans.data == null) continue;
-                if (ValidateIPv4(ans.data)) returnedAddressList.Add(ans.data);
-            }
-            return returnedAddressList;
+            return answers.Select(resIP => resIP.data).Where(resIP => ValidateIPv4(resIP)).ToList();
         }
 
         private static bool ValidateIPv4(string ipString)
