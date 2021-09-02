@@ -52,6 +52,9 @@ namespace NHMCore
                 // Checking System Memory
                 loader.PrimaryProgress?.Report((Tr("Checking System Specs"), nextProgPerc()));
                 await Task.Run(() => SystemSpecs.QueryWin32_OperatingSystemDataAndLog());
+
+                await StratumServiceHelpers.InitUrlMap();
+
                 await WindowsUptimeCheck.DelayUptime();
 
                 // TODO extract in function

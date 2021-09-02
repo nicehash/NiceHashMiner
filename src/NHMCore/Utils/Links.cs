@@ -7,24 +7,7 @@ namespace NHMCore.Utils
     public static class Links
     {
         public static string AddWDExclusionHelp_PRODUCTION => "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%3F?utm_source=NHM&utm_medium=Guide";
-
-        //public static async void MyCallback()
-        //{
-        //    await Init();
-        //}
-
-        //public static async Task Init()
-        //{
-        //    // kakrkoli asinhrono
-        //    await Task.Delay(1000);
-        //    await Task.Delay(1000);
-        //    await Task.Delay(1000);
-        //    await Task.Delay(1000);
-        //    await Task.Delay(1000);
-        //    //return Task.CompletedTask;
-        //}
-
-        public static string VisitUrl //K
+        public static string VisitUrl
         {
             get
             {
@@ -38,7 +21,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public static string CheckStats//K
+        public static string CheckStats
         {
             get
             {
@@ -51,7 +34,7 @@ namespace NHMCore.Utils
                 }
             }
         }
-        public static string CheckStatsRig//K
+        public static string CheckStatsRig
         {
             get
             {
@@ -65,7 +48,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public static string Register //K
+        public static string Register
         {
             get
             {
@@ -81,7 +64,7 @@ namespace NHMCore.Utils
         }
 
         // ?nhm=1 - LoginNHM
-        public static string Login//PROBLEM?
+        public static string Login
         {
             get
             {
@@ -95,7 +78,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public static string NhmPayingFaq//K
+        public static string NhmPayingFaq
         {
             get
             {
@@ -110,7 +93,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public static string AMDComputeModeHelp//K
+        public static string AMDComputeModeHelp
         {
             get
             {
@@ -126,7 +109,7 @@ namespace NHMCore.Utils
         }
 
 
-        public static string PluginsJsonApiUrl//PROBLEM
+        public static string PluginsJsonApiUrl
         {
             get
             {
@@ -137,24 +120,24 @@ namespace NHMCore.Utils
 
 
         // add version
-        public static string VisitReleasesUrl => "https://github.com/NiceHash/NiceHashMiner/releases/"; //K
-        public static string VisitNewVersionReleaseUrl => "https://github.com/NiceHash/NiceHashMiner/releases/tag/";//K
+        public static string VisitReleasesUrl => "https://github.com/NiceHash/NiceHashMiner/releases/";
+        public static string VisitNewVersionReleaseUrl => "https://github.com/NiceHash/NiceHashMiner/releases/tag/";
 
 
         // add btc adress as parameter
 
         // help and faq
-        public static string NhmHelp => "https://github.com/nicehash/NiceHashMiner/";//K
-        public static string NhmNoDevHelp => "https://github.com/nicehash/NiceHashMiner/blob/master/doc/Troubleshooting.md#-no-supported-devices";//K
-        public static string FailedBenchmarkHelp => "https://www.nicehash.com/blog/post/benchmark-error-in-nicehash-miner";//K
+        public static string NhmHelp => "https://github.com/nicehash/NiceHashMiner/";
+        public static string NhmNoDevHelp => "https://github.com/nicehash/NiceHashMiner/blob/master/doc/Troubleshooting.md#-no-supported-devices";
+        public static string FailedBenchmarkHelp => "https://www.nicehash.com/blog/post/benchmark-error-in-nicehash-miner";
 
         //about
-        public static string About => "https://www.nicehash.com/support/general-help/nicehash-service/what-is-nicehash-and-how-it-works";//K
+        public static string About => "https://www.nicehash.com/support/general-help/nicehash-service/what-is-nicehash-and-how-it-works";
 
         //nvidia help
-        public static string NvidiaDriversHelp => "https://www.nvidia.com/download/find.aspx";//K
-        public static string AVHelp => "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%253F";//K
-        public static string LargePagesHelp => "https://www.nicehash.com/blog/post/how-to-optimize-cpu-mining-performance-for-monero-random-x?utm_source=NHM&utm_medium=referral&utm_campaign=optimize%20cpu";//K
-        public static string VirtualMemoryHelp => "https://www.nicehash.com/blog/post/how-to-increase-virtual-memory-on-windows?utm_source=NHM&utm_medium=referral&utm_campaign=nicehash%20miner";//K
+        public static string NvidiaDriversHelp => "https://www.nvidia.com/download/find.aspx";
+        public static string AVHelp => "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%253F";
+        public static string LargePagesHelp => "https://www.nicehash.com/blog/post/how-to-optimize-cpu-mining-performance-for-monero-random-x?utm_source=NHM&utm_medium=referral&utm_campaign=optimize%20cpu";
+        public static string VirtualMemoryHelp => "https://www.nicehash.com/blog/post/how-to-increase-virtual-memory-on-windows?utm_source=NHM&utm_medium=referral&utm_campaign=nicehash%20miner";
     }
 }
