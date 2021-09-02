@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NHM.Common
@@ -47,6 +48,7 @@ namespace NHM.Common
         const string LOCATION_TEMPLATE = "{LOCATION}";
         const string PREFIX_TEMPLATE = "{PREFIX://}";
         const string PORT_TEMPLATE = "{:PORT}";
+
         //const string NAME_TEMPLATE = "NAME";
         internal static string NhmSocketAddress => _serviceCustomSettings.NhmSocketAddress;
         private static ServiceCustomSettings _serviceCustomSettings;
@@ -61,23 +63,47 @@ namespace NHM.Common
         //{
         //    await Init();
         //}
-
+        static Dictionary<string, string> urlMap = new Dictionary<string, string>();
+        static string[] urlPrefix = { "stratum+tcp://", "stratum+ssl://" };
         public static async Task Init()
         {
-            //return Task.CompletedTask;
             foreach (AlgorithmType algorithmType in Enum.GetValues(typeof(AlgorithmType)))
             {
                 foreach (Location location in MiningServiceLocations)
                 {
+                    foreach(var prefix in urlPrefix)
+                    {
+                        var port = 3333 + algorithmType;
+                        if(prefix == urlPrefix[1]) port = port + 30000;
+                        var originalUrl = prefix + algorithmType + "." + location + ".nicehash.com:" + port;
+                        var testUrl = prefix + "algo-test." + location + ".nicehash.com:" + port;
+                        var devUrl = prefix + "stratum-dev." + location + ".nicehash.com:" + port;
+                        urlMap.Add(originalUrl, await DNSQuery.QueryOrDefault(originalUrl));
+                        urlMap.Add(testUrl, await DNSQuery.QueryOrDefault(testUrl));
+                        urlMap.Add(devUrl, await DNSQuery.QueryOrDefault(devUrl));
 
+                    }
                 }
             }
+            InitIntervalTimerForUrlUpdate();
             //// kakrkoli asinhrono
             //await Task.Delay(1000);
-            //await Task.Delay(1000);
-            //await Task.Delay(1000);
-            //await Task.Delay(1000);
-            //await Task.Delay(1000);
+        }
+        private static Timer Timer;
+
+        private static void InitIntervalTimerForUrlUpdate()
+        {
+            int wait = 10 * 1000;
+            var timerDelegate = new TimerCallback(OnUpdateUrlInterval);
+            Timer _dispatcherTimer = new Timer(timerDelegate, null, wait, wait);
+        }
+
+        private static async void OnUpdateUrlInterval(object state)
+        {
+            foreach(var key in urlMap.Keys)
+            {
+                urlMap[key] = await DNSQuery.QueryOrDefault(key);
+            }
         }
 
         private static (string name, bool ok) GetAlgorithmUrlName(AlgorithmType algorithmType)
@@ -160,24 +186,14 @@ namespace NHM.Common
             }
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
             {
-                return prefix
-                   + "algo-test." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
+                return urlMap[prefix + "algo-test." + miningLocation + ".nicehash.com:"+ port];
             }
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
             {
-                return prefix
-                   + "stratum-dev." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
+                return urlMap[prefix + "stratum-dev." + miningLocation + ".nicehash.com:" + port];
             }
             //BuildTag.PRODUCTION
-            return prefix
-                   + name
-                   + "." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
+            return urlMap[prefix + name + "." + miningLocation + ".nicehash.com:" + port];
         }
         //public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         //{

@@ -16,20 +16,26 @@ namespace NHM.Common
             //client = new HttpClient();
             client.DefaultRequestHeaders.Add("Accept", "application/dns-json");
         }
-        private static string[] urls =
+        private static string[] destinations =
         {
-            "https://cloudflare-dns.com/dns-query?name=",
-            "https://1.1.1.1/dns-query?name=",
-            "https://1.0.0.1/dns-query?name=",
+            "cloudflare-dns.com","1.1.1.1","1.0.0.1",
         };
+        private static string URL = "https://{DESTINATION}/dns-query?name={REQUEST}&type={TYPE}";
+        const string DESTINATION_TEMPLATE = "{DESTINATION}";
+        const string REQUEST_TEMPLATE = "{REQUEST}";
+        const string TYPE_TEMPLATE = "{TYPE}";
 
 
         public static async Task<string> QueryOrDefault(string url)
         {
 
-            for (int i = 0; i < 3; i++)
+            foreach (var dest in destinations)
             {
-                var ip = await Request(urls[i] + url + "&type=A");
+                var requestLocation = URL;
+                requestLocation = requestLocation.Replace(DESTINATION_TEMPLATE, dest);
+                requestLocation = requestLocation.Replace(REQUEST_TEMPLATE, url);
+                requestLocation = requestLocation.Replace(TYPE_TEMPLATE, "A");//TODO?
+                var ip = await Request(requestLocation);
                 if (ip != null) return ip;
             }
             return url;

@@ -168,7 +168,7 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateNhmUpdateAttemptFail()
+        public static async void CreateNhmUpdateAttemptFail()
         {
             var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, NotificationsGroup.NhmUpdateFailed, Tr("NiceHash Miner Update Failed"), Tr("Update procedure failed please install manually. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", await DNSQuery.QueryOrDefault(Links.AVHelp)));
             notificationIfUnsuccessfull.Action = new NotificationAction
