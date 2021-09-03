@@ -2,6 +2,7 @@
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -18,10 +19,16 @@ namespace NiceHashMiner.Views.Settings
         {
             InitializeComponent();
 
-            SetHyperlinkToArticle();
+            //SetHyperlinkToArticle();
+            HyperlinkCall();
         }
 
-        private async void SetHyperlinkToArticle()
+        private async void HyperlinkCall()
+        {
+            await SetHyperlinkToArticle();
+        }
+
+        private async Task SetHyperlinkToArticle()
         {
             try
             {

@@ -4,6 +4,7 @@ using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
@@ -92,7 +93,7 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static async void CreateMissingMinersInfo()
+        public static async Task CreateMissingMinersInfo()
         {
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.MissingMiners, Tr("Missing miner files"), Tr("There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", await DNSQuery.QueryOrDefault(Links.AVHelp)));
             notification.Action = new NotificationAction
@@ -168,7 +169,7 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static async void CreateNhmUpdateAttemptFail()
+        public static async Task CreateNhmUpdateAttemptFail()
         {
             var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, NotificationsGroup.NhmUpdateFailed, Tr("NiceHash Miner Update Failed"), Tr("Update procedure failed please install manually. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", await DNSQuery.QueryOrDefault(Links.AVHelp)));
             notificationIfUnsuccessfull.Action = new NotificationAction

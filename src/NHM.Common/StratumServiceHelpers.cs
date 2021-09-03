@@ -61,27 +61,46 @@ namespace NHM.Common
         #endregion CUSTOM_ENDPOINTS
 
         private static readonly object _lock = new object();
-        static ConcurrentDictionary<string, string> urlMap = new ConcurrentDictionary<string, string>();
+        static Dictionary<string, string> urlMap = new Dictionary<string, string>();
         static List<string> onlyURLs = new List<string>();
-        static string[] urlPrefix = { "stratum+tcp://", "stratum+ssl://" };
+        //static string[] urlPrefix = { "stratum+tcp://", "stratum+ssl://" };
+
+        private static List<AlgorithmType> GetViableAlgorithms()
+        {
+            List<AlgorithmType> viableAlgos = new List<AlgorithmType>();
+            var allAlgos = Enum.GetValues(typeof(AlgorithmType)).Cast<AlgorithmType>().ToList();
+            foreach(var algo in allAlgos)
+            {
+                var enumType = typeof(AlgorithmType);
+                var memberInfos = enumType.GetMember(algo.ToString());
+                var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
+                var valueAttributes = enumValueMemberInfo.GetCustomAttributes(typeof(ObsoleteAttribute), false);
+                var isObsolete = valueAttributes.Any(att => att.GetType() == typeof(ObsoleteAttribute));
+                if (!isObsolete)
+                {
+                    viableAlgos.Add(algo);
+                }
+            }
+            return viableAlgos;
+        }
+
         public static async Task InitUrlMap()
         {
-            foreach (AlgorithmType algorithmType in Enum.GetValues(typeof(AlgorithmType)))
+            foreach (AlgorithmType algorithmType in GetViableAlgorithms())
             {
                 foreach (Location location in MiningServiceLocations)
                 {
-                    foreach (var prefix in urlPrefix)
+                    string targetUrl;
+                    if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) targetUrl = "algo-test." + location + ".nicehash.com";
+                    else if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) targetUrl = "stratum-dev." + location + ".nicehash.com";
+                    else
                     {
-                        var originalUrl = prefix + algorithmType + "." + location + ".nicehash.com";
-                        var testUrl = prefix + "algo-test." + location + ".nicehash.com";
-                        var devUrl = prefix + "stratum-dev." + location + ".nicehash.com";
-                        urlMap.TryAdd(originalUrl, await DNSQuery.QueryOrDefault(originalUrl));
-                        urlMap.TryAdd(testUrl, await DNSQuery.QueryOrDefault(testUrl));
-                        urlMap.TryAdd(devUrl, await DNSQuery.QueryOrDefault(devUrl));
-                        onlyURLs.Add(originalUrl);
-                        onlyURLs.Add(testUrl);
-                        onlyURLs.Add(devUrl);
+                        var (name, ok) = GetAlgorithmUrlName(algorithmType);
+                        if (!ok) continue;
+                        targetUrl = name + "." + location.Code + ".nicehash.com";
                     }
+                    urlMap.Add(targetUrl, await DNSQuery.QueryOrDefault(targetUrl));
+                    onlyURLs.Add(targetUrl);
                 }
             }
             InitIntervalTimerForUrlUpdate();
@@ -100,14 +119,14 @@ namespace NHM.Common
 
         private static async Task OnUpdateUrlInterval()
         {
-            ConcurrentDictionary<string, string> newUrlList = new ConcurrentDictionary<string, string>();
+            Dictionary<string, string> newUrlList = new Dictionary<string, string>();
             foreach (var urlItem in onlyURLs)
             {
-                newUrlList.TryAdd(urlItem, await DNSQuery.QueryOrDefault(urlItem));
+                newUrlList.Add(urlItem, await DNSQuery.QueryOrDefault(urlItem));
             }
             lock (_lock)
             {
-                urlMap = new ConcurrentDictionary<string, string>(newUrlList);
+                urlMap = new Dictionary<string, string>(newUrlList);
             }
 
         }
@@ -190,16 +209,29 @@ namespace NHM.Common
                 customEndpointTemplate = customEndpointTemplate.Replace(PORT_TEMPLATE, $":{customPort}");
                 return customEndpointTemplate;
             }
+            string locationURL = "";
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
             {
-                return urlMap[prefix + "algo-test." + miningLocation + ".nicehash.com"];
+                lock (_lock)
+                {
+                    locationURL = prefix + urlMap["algo-test." + miningLocation + ".nicehash.com"] + ":" + port;
+                }
+                return locationURL;
             }
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
             {
-                return urlMap[prefix + "stratum-dev." + miningLocation + ".nicehash.com"];
+                lock (_lock)
+                {
+                    locationURL = prefix + urlMap["stratum-dev." + miningLocation + ".nicehash.com"] + ":" + port;
+                }
+                return locationURL;
             }
             //BuildTag.PRODUCTION
-            return urlMap[prefix + name + "." + miningLocation + ".nicehash.com"];
+            lock (_lock)
+            {
+                locationURL = prefix + urlMap[name + "." + miningLocation + ".nicehash.com"] + ":" + port;
+            }
+            return locationURL;
         }
     }
 }

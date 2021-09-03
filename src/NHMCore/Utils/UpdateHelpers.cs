@@ -71,7 +71,7 @@ namespace NHMCore.Utils
                     if (isActive() && isAutoUpdate && hasNewVersion && !Launcher.IsUpdatedFailed)
                     {
                         var ok = await StartAutoUpdateProcess(isUpdater);
-                        if (!ok) AvailableNotifications.CreateNhmUpdateAttemptFail();
+                        if (!ok) await AvailableNotifications.CreateNhmUpdateAttemptFail();
                     }
                 }
             }

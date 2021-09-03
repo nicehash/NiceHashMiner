@@ -42,7 +42,7 @@ namespace NHMCore
         }
         #endregion BuildTag
 
-        public async static void VisitMiningStatsPage()
+        public static async Task VisitMiningStatsPage()//was void
         {
             var urlLink = await DNSQuery.QueryOrDefault(Links.CheckStatsRig.Replace("{RIG_ID}", RigID()));
             Helpers.VisitUrlLink(urlLink);

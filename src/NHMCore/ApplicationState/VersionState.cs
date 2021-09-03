@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHMCore.Utils;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NHMCore.ApplicationState
@@ -83,7 +84,7 @@ namespace NHMCore.ApplicationState
             }
         }
 
-        public async void VisitNewVersionUrl()
+        public async Task VisitNewVersionUrl()
         {
             // let's not throw anything if online version is missing just go to releases
             var url = Links.VisitReleasesUrl;
