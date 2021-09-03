@@ -58,9 +58,9 @@ namespace NiceHashMiner.Views.Login
             rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
         }
 
-        private async void Register_OnClick(object sender, RoutedEventArgs e)
+        private void Register_OnClick(object sender, RoutedEventArgs e)
         {
-            Process.Start(await DNSQuery.QueryOrDefault(Links.Register));
+            Process.Start(Links.Register);
         }
 
         private void ManuallyEnterBtc_OnClick(object sender, RoutedEventArgs e)

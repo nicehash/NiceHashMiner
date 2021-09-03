@@ -84,7 +84,7 @@ namespace NHMCore.ApplicationState
             }
         }
 
-        public async Task VisitNewVersionUrl()
+        public void VisitNewVersionUrl()
         {
             // let's not throw anything if online version is missing just go to releases
             var url = Links.VisitReleasesUrl;
@@ -92,7 +92,7 @@ namespace NHMCore.ApplicationState
             {
                 url = Links.VisitNewVersionReleaseUrl + OnlineVersion;
             }
-            Helpers.VisitUrlLink(await DNSQuery.QueryOrDefault(url));
+            Helpers.VisitUrlLink(url);
         }
 
         public string GetNewVersionUpdaterUrl()

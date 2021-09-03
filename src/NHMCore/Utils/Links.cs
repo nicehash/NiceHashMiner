@@ -34,7 +34,7 @@ namespace NHMCore.Utils
                 }
             }
         }
-        public static string CheckStatsRig//MODDED
+        public static string CheckStatsRig//REVERTED
         {
             get
             {
@@ -48,7 +48,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public static string Register//callback
+        public static string Register//callback REVERTED
         {
             get
             {
@@ -64,7 +64,7 @@ namespace NHMCore.Utils
         }
 
         // ?nhm=1 - LoginNHM
-        public static string Login//ok
+        public static string Login//REVERTED
         {
             get
             {
@@ -78,7 +78,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public static string NhmPayingFaq//ok
+        public static string NhmPayingFaq
         {
             get
             {
@@ -93,7 +93,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public static string AMDComputeModeHelp//ok
+        public static string AMDComputeModeHelp//REVERTED
         {
             get
             {
@@ -109,7 +109,7 @@ namespace NHMCore.Utils
         }
 
 
-        public static string PluginsJsonApiUrl//ok
+        public static string PluginsJsonApiUrl//CHECK?
         {
             get
             {
@@ -120,24 +120,24 @@ namespace NHMCore.Utils
 
 
         // add version
-        public static string VisitReleasesUrl => "https://github.com/NiceHash/NiceHashMiner/releases/";//MODDED, lack await?
-        public static string VisitNewVersionReleaseUrl => "https://github.com/NiceHash/NiceHashMiner/releases/tag/";//MODDED
+        public static string VisitReleasesUrl => "https://github.com/NiceHash/NiceHashMiner/releases/";//REVERTED
+        public static string VisitNewVersionReleaseUrl => "https://github.com/NiceHash/NiceHashMiner/releases/tag/";//REVERTED
 
 
         // add btc adress as parameter
 
         // help and faq
-        public static string NhmHelp => "https://github.com/nicehash/NiceHashMiner/";//ok
-        public static string NhmNoDevHelp => "https://github.com/nicehash/NiceHashMiner/blob/master/doc/Troubleshooting.md#-no-supported-devices";//ok
-        public static string FailedBenchmarkHelp => "https://www.nicehash.com/blog/post/benchmark-error-in-nicehash-miner";//ok
+        public static string NhmHelp => "https://github.com/nicehash/NiceHashMiner/";
+        public static string NhmNoDevHelp => "https://github.com/nicehash/NiceHashMiner/blob/master/doc/Troubleshooting.md#-no-supported-devices";//REVERTED
+        public static string FailedBenchmarkHelp => "https://www.nicehash.com/blog/post/benchmark-error-in-nicehash-miner";//REVERTED
 
         //about
-        public static string About => "https://www.nicehash.com/support/general-help/nicehash-service/what-is-nicehash-and-how-it-works";//ok
+        public static string About => "https://www.nicehash.com/support/general-help/nicehash-service/what-is-nicehash-and-how-it-works";//REVERTED
 
         //nvidia help
-        public static string NvidiaDriversHelp => "https://www.nvidia.com/download/find.aspx";//ok
-        public static string AVHelp => "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%253F";//MODDED, lack await?
-        public static string LargePagesHelp => "https://www.nicehash.com/blog/post/how-to-optimize-cpu-mining-performance-for-monero-random-x?utm_source=NHM&utm_medium=referral&utm_campaign=optimize%20cpu";//ok
-        public static string VirtualMemoryHelp => "https://www.nicehash.com/blog/post/how-to-increase-virtual-memory-on-windows?utm_source=NHM&utm_medium=referral&utm_campaign=nicehash%20miner";//ok
+        public static string NvidiaDriversHelp => "https://www.nvidia.com/download/find.aspx";
+        public static string AVHelp => "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%253F";//REVERTED
+        public static string LargePagesHelp => "https://www.nicehash.com/blog/post/how-to-optimize-cpu-mining-performance-for-monero-random-x?utm_source=NHM&utm_medium=referral&utm_campaign=optimize%20cpu";//REVERTED
+        public static string VirtualMemoryHelp => "https://www.nicehash.com/blog/post/how-to-increase-virtual-memory-on-windows?utm_source=NHM&utm_medium=referral&utm_campaign=nicehash%20miner";//REVERTED
     }
 }
