@@ -1,4 +1,5 @@
 ﻿//#define DELETE_NON_CURRENT_APPS
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -201,6 +202,7 @@ namespace NiceHashMiner
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var isUpdater = Environment.GetCommandLineArgs().Contains("-update");
             var isUpdated = Environment.GetCommandLineArgs().Contains("-updated");
+            var afterUpdate = false;
             if (isUpdater)
             {
                 var latestUpdaterFile = GetLatestUpdater();
@@ -217,6 +219,7 @@ namespace NiceHashMiner
                         }
                     };
                     restartProcessUpdatefailed.Start();
+                    //runCount++;
                     // shutdown
                     Shutdown();
                     return;
@@ -246,7 +249,9 @@ namespace NiceHashMiner
                             WindowStyle = ProcessWindowStyle.Normal
                         }
                     };
+                    afterUpdate = true;
                     restartProcess.Start();
+                    //runCount++;
                 }
                 else
                 {
@@ -294,7 +299,11 @@ namespace NiceHashMiner
 #endif
                 var nhmApp = GetRootPath(latestAppDir, latestAppExe);
                 var args = $"-lc -PID{Process.GetCurrentProcess().Id}";
-                if (isUpdated) args += " -updated";
+                if (isUpdated)
+                {
+                    afterUpdate = true;
+                    args += " -updated";
+                }
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = nhmApp,
@@ -315,6 +324,13 @@ namespace NiceHashMiner
                         {
                             var hasStarted = niceHashMiner?.Start();
                             niceHashMiner?.WaitForExit();
+                            if (afterUpdate == true)
+                            {
+                                afterUpdate = false;
+                                startInfo.Arguments = startInfo.Arguments.Replace("-updated", "");
+                            }
+
+
                             // TODO 
                             Console.WriteLine(niceHashMiner.ExitCode);
                             //in case of crash try to restart the program
@@ -389,6 +405,7 @@ namespace NiceHashMiner
                                             WindowStyle = ProcessWindowStyle.Normal
                                         }
                                     };
+                                    afterUpdate = true;
                                     var updateStarted = doUpdate.Start();
                                     run = !updateStarted; // set if we are good
                                 }

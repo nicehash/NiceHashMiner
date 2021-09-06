@@ -111,5 +111,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
+      <Project>{279A5B29-3799-43FA-9734-E462E046BA81}</Project>
+      <Name>NHM.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
