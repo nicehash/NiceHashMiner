@@ -151,7 +151,7 @@ namespace NHMCore.Mining
                         }
                         else if (speed > (4 * benchSpeed))
                         {
-                            AvailableNotifications.CreateErrorExtremeHashrate();
+                            AvailableNotifications.CreateErrorExtremeHashrate(mp);
                             Logger.Error("Miner", "Hashrate was abnormal on " + mp.Device.Name);
                             return ApiDataStatus.ABNORMAL_SPEEDS;
                         }
@@ -299,7 +299,7 @@ namespace NHMCore.Mining
             // if we fail 3 times in a row under certain conditions mark on of them
             const int maxRestartCount = 3;
             int restartCount = 0;
-            const int minRestartTimeInSeconds = 15;
+            const int minRestartTimeInSeconds = 240;
             try
             {
                 var firstStart = true;
