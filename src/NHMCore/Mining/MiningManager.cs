@@ -595,19 +595,20 @@ namespace NHMCore.Mining
             }
 
             // TODO FOR NOW USD ONLY
-            var currentProfitUsd = (currentProfit * BalanceAndExchangeRates.Instance.GetUsdExchangeRate());
+            //var currentProfitUsd = (currentProfit * BalanceAndExchangeRates.Instance.GetUsdExchangeRate());
+            var currentProfitFIAT = BalanceAndExchangeRates.Instance.ConvertFromBtc(currentProfit);
             var minProfit = MiningProfitSettings.Instance.MinimumProfit;
-            _isProfitable = currentProfitUsd >= minProfit;
+            _isProfitable = currentProfitFIAT >= minProfit;
             if (log)
             {
-                Logger.Info(Tag, $"Current global profit = {currentProfitUsd.ToString("F8")} USD/Day");
+                Logger.Info(Tag, $"Current global profit = {currentProfitFIAT.ToString("F8")} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/Day");
                 if (!_isProfitable)
                 {
-                    Logger.Info(Tag, $"Current global profit = NOT PROFITABLE, MinProfit: {minProfit.ToString("F8")} USD/Day");
+                    Logger.Info(Tag, $"Current global profit = NOT PROFITABLE, MinProfit: {minProfit.ToString("F8")} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/Day");
                 }
                 else
                 {
-                    var profitabilityInfo = minProfit.ToString("F8") + " USD/Day";
+                    var profitabilityInfo = minProfit.ToString("F8") + $" {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/Day";
                     Logger.Info(Tag, $"Current global profit = IS PROFITABLE, MinProfit: {profitabilityInfo}");
                 }
             }

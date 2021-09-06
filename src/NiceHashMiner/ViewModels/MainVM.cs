@@ -87,6 +87,8 @@ namespace NiceHashMiner.ViewModels
         private IEnumerable<MiningData> WorkingMiningDevs =>
             MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining);
 
+
+
         #region settingsLists
 
         public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
@@ -204,8 +206,41 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.SelectedFiatCurrency}{PerTime}";
 
+
+        private string _globalRateFiat { get; set; }
+        public string GlobalRateFiat
+        {
+            get
+            {
+                if(_globalRateFiat == null)
+                {
+                    _globalRateFiat = $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}{PerTime}";
+                }
+                return _globalRateFiat;
+              
+            }
+            set
+            {
+                //_globalRateFiat = value;
+                _globalRateFiat = $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {value}{PerTime}";
+                OnPropertyChanged(nameof(GlobalRateFiat));
+            }
+
+        }
+
+        private string _minimumProfitString { get; set; }
+        public string MinimumProfitString {
+            get
+            {
+                return _minimumProfitString;
+            }
+            set
+            {
+                _minimumProfitString = $"Minimum Profit ({value}/day)";
+                OnPropertyChanged(nameof(MinimumProfitString));
+            }
+        }
 
         #endregion
 
@@ -286,6 +321,21 @@ namespace NiceHashMiner.ViewModels
             {
                 NHMWSConnected = nhmwsConnected;
                 OnPropertyChanged(nameof(NHMWSConnected));
+            };
+
+            BalanceAndExchangeRates.Instance.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(BalanceAndExchangeRates.SelectedFiatCurrency))
+                {
+
+                    MinimumProfitString = BalanceAndExchangeRates.SelectedFiatCurrency;
+                    OnPropertyChanged(nameof(MinimumProfitString));
+                    GlobalRateFiat = BalanceAndExchangeRates.SelectedFiatCurrency;
+                    OnPropertyChanged(nameof(GlobalRateFiat));
+
+
+                }
+                //else if(e.PropertyName =)
             };
         }
 
