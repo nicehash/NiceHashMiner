@@ -26,6 +26,7 @@ namespace NiceHashMiner.Views.Settings
         public SettingsCheckBoxItem()
         {
             InitializeComponent();
+            
         }
 
         public event EventHandler<RoutedEventArgs> ToggleClick;

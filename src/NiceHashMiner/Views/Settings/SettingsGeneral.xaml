@@ -61,7 +61,7 @@
                     <ComboBox Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding TimeUnits}" SelectedItem="{Binding GUISettings.TimeUnit, Mode=TwoWay}" SelectionChanged="ComboBox_SelectionChanged" />
                 </WrapPanel>
 
-                <local:SettingsCheckBoxItem Margin="0,24,0,0" Enabled="{Binding MiningProfitSettings.MineRegardlessOfProfit}"
+                <local:SettingsCheckBoxItem x:Name="minProfitToggleButton" Margin="0,24,0,0" Enabled="{Binding MiningProfitSettings.MineRegardlessOfProfit}"
                                             Label="Mine Regardless Of Profit"
                                             Description="{StaticResource mineRegardless}"/>
                 <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">

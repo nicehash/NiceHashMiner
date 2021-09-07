@@ -21,7 +21,7 @@ namespace NHMCore.Mining
     {
         private const string Tag = "MiningManager";
         private const string DoubleFormat = "F12";
-
+        private static bool isPaused = false;
         // assume profitable
         private static bool _isProfitable = true;
         // assume we have internet
@@ -151,7 +151,8 @@ namespace NHMCore.Mining
 
         private static async Task CheckIfContinueMining()
         {
-            if (_runningMiners.Count == 0) return;
+
+            if (_runningMiners.Count == 0 && !isPaused) return;
             var (currentProfit, _) = GetCurrentAndPreviousProfits();
             var continueMiningNow = CheckIfShouldMine(currentProfit);
             if (continueMiningNow)
@@ -160,14 +161,14 @@ namespace NHMCore.Mining
             }
             //return Task.CompletedTask;
         }
-        private static async Task MiningProfitSettingsChanged()
+        private static Task MiningProfitSettingsChanged()
         {
             //TODO CONTINUE MINING HERE
-            if (RunninLoops == null) return;
-            await CheckIfContinueMining();
+            if (RunninLoops == null) return Task.CompletedTask;
+            //CheckIfContinueMining();
             var command = new MiningProfitSettingsChangedCommand();
             _commandQueue.Enqueue(command);
-            return;
+            return command.Tsc.Task;
         }
 
         public static Task MinerRestartLoopNotify()
@@ -530,6 +531,7 @@ namespace NHMCore.Mining
             {
                 await groupMiner.StopTask();
             }
+            isPaused = true;
             // TODO the pending state breaks start/stop buttons
             //foreach (var groupMiner in _runningMiners.Values)
             //{
