@@ -9,6 +9,7 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace NHMCore.Mining
         private static bool _isProfitable = true;
         // assume we have internet
         private static bool _isConnectedToInternet = true;
-
+        
         public static bool IsMiningEnabled => _miningDevices.Any();
 
         private static CancellationToken stopMiningManager = CancellationToken.None;
@@ -147,12 +148,26 @@ namespace NHMCore.Mining
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
-        private static Task MiningProfitSettingsChanged()
+
+        private static async Task CheckIfContinueMining()
         {
-            if (RunninLoops == null) return Task.CompletedTask;
+            if (_runningMiners.Count == 0) return;
+            var (currentProfit, _) = GetCurrentAndPreviousProfits();
+            var continueMiningNow = CheckIfShouldMine(currentProfit);
+            if (continueMiningNow)
+            {
+                await ResumeAllMiners();
+            }
+            //return Task.CompletedTask;
+        }
+        private static async Task MiningProfitSettingsChanged()
+        {
+            //TODO CONTINUE MINING HERE
+            if (RunninLoops == null) return;
+            await CheckIfContinueMining();
             var command = new MiningProfitSettingsChangedCommand();
             _commandQueue.Enqueue(command);
-            return command.Tsc.Task;
+            return;
         }
 
         public static Task MinerRestartLoopNotify()
@@ -196,6 +211,11 @@ namespace NHMCore.Mining
 
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
+
+
+            //BalanceAndExchangeRates.Instance.PropertyChanged += BalanceAndExchangeRatesInstance_PropertyChanged;
+            //TODO TU NOVI EVENT KI HANDLA oni box change
+
         }
 
         public static void StartLoops(CancellationToken stop, string username)
@@ -225,9 +245,9 @@ namespace NHMCore.Mining
             }
         }
 
-        private static void MiningProfitSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private static async void MiningProfitSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            _ = MiningProfitSettingsChanged();
+            await MiningProfitSettingsChanged();
         }
 
         private static async Task StopAndRemoveBenchmark(DeferredDeviceCommand c)
@@ -523,14 +543,14 @@ namespace NHMCore.Mining
             _runningMiners.Clear();
             // TODO set devices to Pending state
         }
-        //private static async Task ResumeAllMiners()
-        //{
-        //    foreach (var groupMiner in _runningMiners.Values)
-        //    {
-        //        await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
-        //    }
-        //    // TODO resume devices to Mining state
-        //}
+        private static async Task ResumeAllMiners()
+        {
+            foreach (var groupMiner in _runningMiners.Values)
+            {
+                await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
+            }
+            // TODO resume devices to Mining state
+        }
 
         private static async Task CheckGroupingAndUpdateMiners(MainCommand command)
         {

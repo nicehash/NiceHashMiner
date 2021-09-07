@@ -171,6 +171,10 @@ namespace NiceHashMiner.Views.Settings
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             ConfigManager.GeneralConfigFileCommit();
+            var tb = sender as TextBox;
+            MiningProfitSettings.Instance.MinimumProfit = Convert.ToDouble(tb.Text);
+            //MiningProfitSettings.Instance.MinimumProfit =
+            //MiningProfitSettings.Instance.OnPropertyChanged(nameof(MiningProfitSettings.Instance.MinimumProfit));
         }
 
         private void CreateLogReportButton_Click(object sender, RoutedEventArgs e)

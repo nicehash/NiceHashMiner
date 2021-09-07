@@ -94,7 +94,7 @@ namespace NHMCore.ApplicationState
             }
         }
 
-        private void CalculateFiatBalance()
+        public void CalculateFiatBalance()
         {
             if (BtcBalance.HasValue)
             {
