@@ -67,15 +67,15 @@
                 <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" ToolTip="{StaticResource electricityCost}">
-                            <Label Content="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
-                            <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                            <TextBlock Text="Electricity Cost (/KWh)" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
+                            <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,3">&#xF05A;</TextBlock>
                         </StackPanel>
                         <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.KwhPrice, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
                         <StackPanel Orientation="Horizontal" ToolTip="{StaticResource minimumProfit}">
-                            <Label Content="{Binding MinimumProfitString}" Style="{StaticResource FontsTypography.SmallRegular/Active}"/>
-                            <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
+                        <TextBlock Text="{Binding MinimumProfitString, Mode=OneWay}" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"></TextBlock>
+                            <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,2">&#xF05A;</TextBlock>
                         </StackPanel>
                         <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningProfitSettings.MinimumProfit, Mode=TwoWay}" Margin="0,0,24,0" TextChanged="TextBox_TextChanged"/>
                     </StackPanel>

@@ -206,41 +206,9 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
+        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}{PerTime}";
+        public string MinimumProfitString => $"Minimum Profit ({BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/day)";
 
-
-        private string _globalRateFiat { get; set; }
-        public string GlobalRateFiat
-        {
-            get
-            {
-                if(_globalRateFiat == null)
-                {
-                    _globalRateFiat = $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}{PerTime}";
-                }
-                return _globalRateFiat;
-              
-            }
-            set
-            {
-                //_globalRateFiat = value;
-                _globalRateFiat = $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {value}{PerTime}";
-                OnPropertyChanged(nameof(GlobalRateFiat));
-            }
-
-        }
-
-        private string _minimumProfitString { get; set; }
-        public string MinimumProfitString {
-            get
-            {
-                return _minimumProfitString;
-            }
-            set
-            {
-                _minimumProfitString = $"Minimum Profit ({value}/day)";
-                OnPropertyChanged(nameof(MinimumProfitString));
-            }
-        }
 
         #endregion
 
@@ -327,17 +295,12 @@ namespace NiceHashMiner.ViewModels
             {
                 if (e.PropertyName == nameof(BalanceAndExchangeRates.SelectedFiatCurrency))
                 {
-
-                    MinimumProfitString = BalanceAndExchangeRates.SelectedFiatCurrency;
-                    OnPropertyChanged(nameof(MinimumProfitString));
-                    GlobalRateFiat = BalanceAndExchangeRates.SelectedFiatCurrency;
                     OnPropertyChanged(nameof(GlobalRateFiat));
-
-
+                    OnPropertyChanged(nameof(MinimumProfitString));
                 }
-                //else if(e.PropertyName =)
             };
         }
+
 
         // TODO I don't like this way, a global refresh and notify would be better
         private void UpdateTimerOnElapsed(object sender, ElapsedEventArgs e)
