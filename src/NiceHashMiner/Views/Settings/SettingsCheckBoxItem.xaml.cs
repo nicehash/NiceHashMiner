@@ -26,7 +26,6 @@ namespace NiceHashMiner.Views.Settings
         public SettingsCheckBoxItem()
         {
             InitializeComponent();
-            
         }
 
         public event EventHandler<RoutedEventArgs> ToggleClick;
@@ -60,6 +59,17 @@ namespace NiceHashMiner.Views.Settings
             ToggleClick?.Invoke(sender, e);
             // we save on every change
             ConfigManager.GeneralConfigFileCommit();
+        }
+
+        public void TurnOffCondition()
+        {
+            if (Enabled.HasValue)
+            {
+                if (!Enabled.Value) Enabled = true;
+                ConfigManager.GeneralConfigFileCommit();
+            }
+            //check if name
+
         }
     }
 }

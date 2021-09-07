@@ -9,7 +9,6 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -21,12 +20,12 @@ namespace NHMCore.Mining
     {
         private const string Tag = "MiningManager";
         private const string DoubleFormat = "F12";
-        private static bool isPaused = false;
+
         // assume profitable
         private static bool _isProfitable = true;
         // assume we have internet
         private static bool _isConnectedToInternet = true;
-        
+
         public static bool IsMiningEnabled => _miningDevices.Any();
 
         private static CancellationToken stopMiningManager = CancellationToken.None;
@@ -148,24 +147,10 @@ namespace NHMCore.Mining
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
-
-        private static async Task CheckIfContinueMining()
-        {
-
-            if (_runningMiners.Count == 0 && !isPaused) return;
-            var (currentProfit, _) = GetCurrentAndPreviousProfits();
-            var continueMiningNow = CheckIfShouldMine(currentProfit);
-            if (continueMiningNow)
-            {
-                await ResumeAllMiners();
-            }
-            //return Task.CompletedTask;
-        }
         private static Task MiningProfitSettingsChanged()
         {
-            //TODO CONTINUE MINING HERE
+            //TODO continue mining here?
             if (RunninLoops == null) return Task.CompletedTask;
-            //CheckIfContinueMining();
             var command = new MiningProfitSettingsChangedCommand();
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
@@ -212,11 +197,6 @@ namespace NHMCore.Mining
 
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
-
-
-            //BalanceAndExchangeRates.Instance.PropertyChanged += BalanceAndExchangeRatesInstance_PropertyChanged;
-            //TODO TU NOVI EVENT KI HANDLA oni box change
-
         }
 
         public static void StartLoops(CancellationToken stop, string username)
@@ -246,9 +226,9 @@ namespace NHMCore.Mining
             }
         }
 
-        private static async void MiningProfitSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private static void MiningProfitSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            await MiningProfitSettingsChanged();
+            _ = MiningProfitSettingsChanged();
         }
 
         private static async Task StopAndRemoveBenchmark(DeferredDeviceCommand c)
@@ -531,7 +511,6 @@ namespace NHMCore.Mining
             {
                 await groupMiner.StopTask();
             }
-            isPaused = true;
             // TODO the pending state breaks start/stop buttons
             //foreach (var groupMiner in _runningMiners.Values)
             //{
@@ -545,14 +524,14 @@ namespace NHMCore.Mining
             _runningMiners.Clear();
             // TODO set devices to Pending state
         }
-        private static async Task ResumeAllMiners()
-        {
-            foreach (var groupMiner in _runningMiners.Values)
-            {
-                await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
-            }
-            // TODO resume devices to Mining state
-        }
+        //private static async Task ResumeAllMiners()
+        //{
+        //    foreach (var groupMiner in _runningMiners.Values)
+        //    {
+        //        await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
+        //    }
+        //    // TODO resume devices to Mining state
+        //}
 
         private static async Task CheckGroupingAndUpdateMiners(MainCommand command)
         {
@@ -637,7 +616,6 @@ namespace NHMCore.Mining
 
             return _isProfitable;
         }
-
         private static bool CheckIfShouldMine(double currentProfit, bool log = true)
         {
             var isProfitable = CheckIfProfitable(currentProfit, log);

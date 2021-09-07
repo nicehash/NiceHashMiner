@@ -170,23 +170,16 @@ namespace NiceHashMiner.Views.Settings
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ConfigManager.GeneralConfigFileCommit();
-
-            //var tb = sender as TextBox;
-            //if(tb.Text != "")
-            //{
-            //    if (Double.TryParse(tb.Text, out double resDouble))
-            //    {
-            //        MiningProfitSettings.Instance.MinimumProfit = resDouble;
-
-            //    }
-
-
-            //}
-            //MiningProfitSettings.Instance.MinimumProfit =
-            //MiningProfitSettings.Instance.OnPropertyChanged(nameof(MiningProfitSettings.Instance.MinimumProfit));
+            if(sender is TextBox tb)
+            {
+                //necessary because we dont want this to be triggered on load
+                if(tb.Name == "MinProfitTB" && tb.Text != MiningProfitSettings.Instance.MinimumProfit.ToString())
+                {
+                    minProfitToggleButton.TurnOffCondition();
+                }
+                ConfigManager.GeneralConfigFileCommit();
+            }
         }
-
 
         private void CreateLogReportButton_Click(object sender, RoutedEventArgs e)
         {
