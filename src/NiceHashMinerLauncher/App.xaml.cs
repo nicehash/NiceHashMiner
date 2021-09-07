@@ -218,7 +218,6 @@ namespace NiceHashMiner
                         }
                     };
                     restartProcessUpdatefailed.Start();
-                    //runCount++;
                     // shutdown
                     Shutdown();
                     return;
@@ -250,7 +249,6 @@ namespace NiceHashMiner
                     };
                     afterUpdate = true;
                     restartProcess.Start();
-                    //runCount++;
                 }
                 else
                 {
