@@ -7,9 +7,14 @@ using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Security.Cryptography;
 using static NhmPackager.PackagerFileDirectoryUtils;
 using static NhmPackager.PackagerPaths;
 
@@ -83,7 +88,7 @@ namespace NhmPackager
         private static PluginPackageInfoForJson ToPluginToPluginPackageInfos(IMinerPlugin plugin)
         {
             var version = new MajorMinorVersion(plugin.Version.Major, plugin.Version.Minor);
-
+            
             if (!Checkers.IsMajorVersionSupported(version.major))
             {
                 throw new Exception($"Plugin version '{version.major}' not supported. Make sure you add the download link for this version");
@@ -92,6 +97,30 @@ namespace NhmPackager
             if (plugin is IMinerBinsSource binsSource)
             {
                 minerPackageURL = binsSource.GetMinerBinsUrlsForPlugin().FirstOrDefault();
+            }
+            string binaryHash = null;
+            if (minerPackageURL != null)
+            {
+                WebClient myWebClient = new WebClient();
+                Logger.Info("MinerPluginsPacker", "Calculating hash for "+plugin.Name+".zip");
+                var filepath = Assembly.GetEntryAssembly().Location.Replace("NhmPackager.exe", plugin.Name + ".zip");
+                myWebClient.DownloadFile(minerPackageURL, plugin.Name+".zip");
+                using (var sha256Hash = SHA256.Create())
+                using (var stream = File.OpenRead(filepath))
+                {
+                    var hash = sha256Hash.ComputeHash(stream);
+                    binaryHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+                File.Delete(filepath);
+            }
+            string pluginPackageHash = null;
+            var pluginZipFileName = GetPluginPackageName(plugin);
+            var dllPackageZip = GetPluginsPackagesPath(pluginZipFileName);
+            using (var sha256Hash = SHA256.Create())
+            using (var stream = File.OpenRead(dllPackageZip))
+            {
+                var hash = sha256Hash.ComputeHash(stream);
+                pluginPackageHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
 
             var binaryVersion = "N/A";
@@ -110,6 +139,8 @@ namespace NhmPackager
             var packageInfo = new PluginPackageInfoForJson
             {
                 PluginUUID = plugin.PluginUUID,
+                BinaryPackageHash = binaryHash,
+                PluginPackageHash = pluginPackageHash,
                 PluginAuthor = "info@nicehash.com",
                 PluginName = plugin.Name,
                 PluginVersion = version,
@@ -166,17 +197,16 @@ namespace NhmPackager
             PluginBase.IS_CALLED_FROM_PACKER = true;
 
             RecreateDirectoryIfExists(GetPluginsPackagesPath());
-
+            List<string> temporaryPath = new List<string>();
+            //get all plugin projects paths
+            var pluginProjectPaths = Directory.GetFiles(pluginsSearchRoot, "*.csproj", SearchOption.AllDirectories)
+                .Where(PathMustNOTContain)
+                .Select(projectPath => Directory.GetParent(projectPath).ToString());
             // get all managed plugin dll's 
             var plugins = Directory.GetFiles(pluginsSearchRoot, "*.dll", SearchOption.AllDirectories)
                 .Where(PathMustContain)
                 .Where(PathMustNOTContain)
                 .SelectMany(dllFilePath => MinerPluginHost.LoadPluginsFromDllFile(dllFilePath).Select(plugin => (dllFilePath, plugin)));
-            // dump our plugin packages
-            var pluginPackageInfos = plugins
-                .Select(pair => ToPluginToPluginPackageInfos(pair.plugin))
-                .ToList();
-            File.WriteAllText(GetPluginsPackagesPath("update.json"), JsonConvert.SerializeObject(pluginPackageInfos, Formatting.Indented));
 
             Logger.Info("MinerPluginsPacker", "Checking and packaging plugins:");
             foreach (var (dllFilePath, plugin) in plugins)
@@ -188,10 +218,23 @@ namespace NhmPackager
                 var dllPackageZip = GetPluginsPackagesPath(pluginZipFileName);
                 Logger.Info("MinerPluginsPacker", $"Packaging: {dllPackageZip}");
                 var fileName = Path.GetFileName(dllFilePath);
+                temporaryPath.Add(dllPackageZip);
                 using (var archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Create))
                 {
                     archive.CreateEntryFromFile(dllFilePath, fileName);
                 }
+                var pluginProjectPath = pluginProjectPaths.FirstOrDefault(path => dllFilePath.Contains(path));
+
+                var dateTimeStr=GetLastCommitDateTime(GetGitCommitHash(pluginProjectPath));
+                DateTimeOffset.TryParseExact(dateTimeStr, "ddd MMM d HH:mm:ss yyyy K",
+                                 CultureInfo.InvariantCulture,
+                                 DateTimeStyles.None, out var dateTime);
+
+                using (ZipArchive archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Update))
+                {
+                    archive.Entries.FirstOrDefault().LastWriteTime = dateTime;
+                }
+
             }
             Logger.Info("MinerPluginsPacker", "Packaging pre inastalled plugins:");
             var preInstalledPlugins = plugins.Where(pair => PreInstalledPlugins.Contains(pair.plugin.PluginUUID));
@@ -203,6 +246,53 @@ namespace NhmPackager
                 if (!Directory.Exists(preinstalledDllPlugin)) Directory.CreateDirectory(preinstalledDllPlugin);
                 File.Copy(dllFilePath, dllPath);
             }
+
+            // dump our plugin packages
+            var pluginPackageInfos = plugins
+                .Select(pair => ToPluginToPluginPackageInfos(pair.plugin))
+                .ToList();
+            File.WriteAllText(GetPluginsPackagesPath("update.json"), JsonConvert.SerializeObject(pluginPackageInfos, Formatting.Indented));
+        }
+        public static string GetGitCommitHash(string pluginProjectPath)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "git",
+                Arguments = $"rev-list --all {pluginProjectPath}\\**",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            };
+            using (var getGitHash = new Process { StartInfo = startInfo })
+            {
+                var ok = getGitHash.Start();
+                if (!getGitHash.StandardOutput.EndOfStream)
+                    return getGitHash.StandardOutput.ReadLine();
+            }
+            return null;
+        }
+
+        public static string GetLastCommitDateTime(string commitHash)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "git",
+                Arguments = $"show {commitHash}",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            };
+            using (var getGitCommitDateTime = new Process { StartInfo = startInfo })
+            {
+                getGitCommitDateTime.Start();
+
+                while (!getGitCommitDateTime.StandardOutput.EndOfStream)
+                {
+                    var line = getGitCommitDateTime.StandardOutput.ReadLine();
+                    if (line.StartsWith("Date:")) return line.Replace("Date:", "").Trim();
+                }
+            }
+            return null;
         }
     }
 }

@@ -17,8 +17,10 @@ namespace NHMCore.Mining.Plugins
         // failed cases
         FailedDownloadingPlugin,
         FailedExtractingPlugin,
+        FailedWrongHashPlugin,
         FailedDownloadingMiner,
         FailedExtractingMiner,
+        FailedWrongHashMiner,
         // installing
         FailedPluginLoad,
         FailedPluginInit,
