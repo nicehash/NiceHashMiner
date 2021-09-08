@@ -46,5 +46,6 @@ namespace NHMCore.Notifications
         NVMLInitFail,
         NVMLLoadFail,
         HashrateDeviatesFromBenchmark,
+        ExtremeHashrate,
     }
 }

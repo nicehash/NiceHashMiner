@@ -119,7 +119,8 @@ namespace NHMCore.Mining
             OK,
             NEGATIVE_SPEEDS,
             ABNORMAL_SPEEDS,
-            OK_MISSING_DEVICE
+            OK_MISSING_DEVICE,
+            TEN_PERCENT_ABOVE_OR_BELOW,
         }
 
         private static ApiDataStatus ExamineApiData(ApiData apiData, List<MiningPair> miningPairs)
@@ -135,7 +136,7 @@ namespace NHMCore.Mining
                 .ToArray();
 
             var andDeviceMissing = miningPairAndReportedSpeedsPairs.Any(p => p.mp == null);
-            var checkHashrate = false;
+            var hashDiffers = false;
             foreach (var (mp, speeds) in miningPairAndReportedSpeedsPairs)
             {
                 foreach (var speed in speeds)
@@ -146,19 +147,24 @@ namespace NHMCore.Mining
                         {
                             AvailableNotifications.CreateWarningHashrateDiffers(mp, "lower");
                             Logger.Warn("Miner", "Hashrate was too low on " + mp.Device.Name);
-                            checkHashrate = true;
+                            hashDiffers = true;
+                        }
+                        else if (speed > (4 * benchSpeed))
+                        {
+                            AvailableNotifications.CreateErrorExtremeHashrate(mp);
+                            Logger.Error("Miner", "Hashrate was abnormal on " + mp.Device.Name);
+                            return ApiDataStatus.ABNORMAL_SPEEDS;
                         }
                         else if (speed > (1.1 * benchSpeed))
                         {
                             AvailableNotifications.CreateWarningHashrateDiffers(mp, "higher");
                             Logger.Warn("Miner", "Hashrate was too high on " + mp.Device.Name);
-                            checkHashrate = true;
+                            hashDiffers = true;
                         }
                     }
                 }
             }
-            if (checkHashrate)
-                return ApiDataStatus.ABNORMAL_SPEEDS;
+            if (hashDiffers) return ApiDataStatus.TEN_PERCENT_ABOVE_OR_BELOW;
 
             // API data all good
             return ApiDataStatus.OK;
@@ -231,10 +237,15 @@ namespace NHMCore.Mining
             // TODO temporary here move it outside later
             MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
 
-            if (ExamineApiData(apiData, _miningPairs) != ApiDataStatus.OK)
+            var ads = ExamineApiData(apiData, _miningPairs);
+            
+            if (ads != ApiDataStatus.OK)
             {
-
-                // TODO kill miner or just return 
+                if (ads == ApiDataStatus.ABNORMAL_SPEEDS)
+                {
+                    _ = _miner.StopMiningTask();
+                    Logger.Info("Miner", "Miner stopped due to extreme hash");
+                }
                 return;
             }
         }
@@ -288,7 +299,7 @@ namespace NHMCore.Mining
             // if we fail 3 times in a row under certain conditions mark on of them
             const int maxRestartCount = 3;
             int restartCount = 0;
-            const int minRestartTimeInSeconds = 15;
+            const int minRestartTimeInSeconds = 240;
             try
             {
                 var firstStart = true;
@@ -338,7 +349,7 @@ namespace NHMCore.Mining
                         finally
                         {
                             var endTime = DateTime.UtcNow;
-                            var elapsedSeconds = (endTime - startTime).TotalSeconds - (MiningSettings.Instance.MinerRestartDelayMS);
+                            var elapsedSeconds = (endTime - startTime).TotalSeconds - (MiningSettings.Instance.MinerRestartDelayMS/1000);
                             if (elapsedSeconds < minRestartTimeInSeconds)
                             {
                                 restartCount++;
