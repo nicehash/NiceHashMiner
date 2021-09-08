@@ -289,7 +289,7 @@ namespace NHMCore.Mining
                             if (!firstStart)
                             {
                                 Logger.Info(MinerTag(), $"Restart Mining in {MiningSettings.Instance.MinerRestartDelayMS}ms");
-                                AvailableNotifications.CreateRestartedMinerInfo(DateTime.UtcNow.ToLocalTime());
+                                AvailableNotifications.CreateRestartedMinerInfo(DateTime.UtcNow.ToLocalTime(), MinerDeviceName);
                             }
                             await TaskHelpers.TryDelay(MiningSettings.Instance.MinerRestartDelayMS, linkedEndMiner.Token);
                             var result = await StartAsync(linkedEndMiner.Token, miningLocation, username);

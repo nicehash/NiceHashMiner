@@ -368,16 +368,16 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateRestartedMinerInfo(DateTime dateTime)
+        public static void CreateRestartedMinerInfo(DateTime dateTime, string minerUUID)
         {
-            var content = "Miner was restarted at " + dateTime.ToString("HH:mm:ss MM/dd/yyyy");
+            var content = Tr("Miner {0} was restarted at " + dateTime.ToString("HH:mm:ss MM/dd/yyyy"), minerUUID);
             try
             {
                 var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart).FirstOrDefault();
                 if (restartNotification != null)
                 {
                     //add new content to prev content
-                    content = restartNotification.NotificationContent + "\nMiner was restarted at " + dateTime.ToString("HH:mm:ss MM/dd/yyyy");
+                    content = restartNotification.NotificationContent + "\n" + content;
                 }
                 //clean previous notification
                 NotificationsManager.Instance.Notifications.Remove(restartNotification);
