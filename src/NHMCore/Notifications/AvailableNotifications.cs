@@ -367,5 +367,11 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NvidiaDCH, Tr("Nvidia DCH drivers detected"), Tr("Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateFailedDownloadWrongHashBinary()
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.WrongChecksumBinary, Tr("Wrong checksum"), Tr("The downlaoded plugin checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

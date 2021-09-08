@@ -1061,6 +1061,7 @@ namespace NHMCore.Mining.Plugins
                     {
                         File.Delete(downloadMinerBinsResult.downloadedFilePath);
                     }
+                    AvailableNotifications.CreateFailedDownloadWrongHashBinary();
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedWrongHashMiner;
                     return finalState;
                 }
