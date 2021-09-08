@@ -139,28 +139,26 @@ namespace NHMCore.Mining
             var hashDiffers = false;
             foreach (var (mp, speeds) in miningPairAndReportedSpeedsPairs)
             {
-                foreach (var speed in speeds)
+                for(var i=0; i<speeds.Length; i++)
                 {
-                    foreach (var benchSpeed in mp.Algorithm.Speeds)
+                    Logger.Info("SPEEDS LEN", speeds.Length.ToString());
+                    if (speeds[i] < (0.9 * mp.Algorithm.Speeds[i]) && speeds[i] != 0)
                     {
-                        if (speed < (0.9*benchSpeed) && speed != 0)
-                        {
-                            AvailableNotifications.CreateWarningHashrateDiffers(mp, "lower");
-                            Logger.Warn("Miner", "Hashrate was too low on " + mp.Device.Name);
-                            hashDiffers = true;
-                        }
-                        else if (speed > (4 * benchSpeed))
-                        {
-                            AvailableNotifications.CreateErrorExtremeHashrate(mp);
-                            Logger.Error("Miner", "Hashrate was abnormal on " + mp.Device.Name);
-                            return ApiDataStatus.ABNORMAL_SPEEDS;
-                        }
-                        else if (speed > (1.1 * benchSpeed))
-                        {
-                            AvailableNotifications.CreateWarningHashrateDiffers(mp, "higher");
-                            Logger.Warn("Miner", "Hashrate was too high on " + mp.Device.Name);
-                            hashDiffers = true;
-                        }
+                        AvailableNotifications.CreateWarningHashrateDiffers(mp, "lower");
+                        Logger.Warn("Miner", "Hashrate was too low on " + mp.Device.Name);
+                        hashDiffers = true;
+                    }
+                    else if (speeds[i] > (4 * mp.Algorithm.Speeds[i]))
+                    {
+                        AvailableNotifications.CreateErrorExtremeHashrate(mp);
+                        Logger.Error("Miner", "Hashrate was abnormal on " + mp.Device.Name);
+                        return ApiDataStatus.ABNORMAL_SPEEDS;
+                    }
+                    else if (speeds[i] > (1.1 * mp.Algorithm.Speeds[i]))
+                    {
+                        AvailableNotifications.CreateWarningHashrateDiffers(mp, "higher");
+                        Logger.Warn("Miner", "Hashrate was too high on " + mp.Device.Name);
+                        hashDiffers = true;
                     }
                 }
             }
@@ -237,11 +235,11 @@ namespace NHMCore.Mining
             // TODO temporary here move it outside later
             MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
 
-            var ads = ExamineApiData(apiData, _miningPairs);
+            var apiDataStatus = ExamineApiData(apiData, _miningPairs);
             
-            if (ads != ApiDataStatus.OK)
+            if (apiDataStatus != ApiDataStatus.OK)
             {
-                if (ads == ApiDataStatus.ABNORMAL_SPEEDS)
+                if (apiDataStatus == ApiDataStatus.ABNORMAL_SPEEDS)
                 {
                     _ = _miner.StopMiningTask();
                     Logger.Info("Miner", "Miner stopped due to extreme hash");
