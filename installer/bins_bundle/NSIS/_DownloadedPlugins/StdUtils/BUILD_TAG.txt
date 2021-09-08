@@ -1,4 +1,0 @@
-StdUtils plug-in for NSIS
-Copyright (C) 2004-2018 LoRd_MuldeR <MuldeR2@GMX.de>
-
-Built on 29.03.2018, at 21:49:07,09.
