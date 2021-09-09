@@ -3,7 +3,7 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net5.0-windows</TargetFramework>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
         <UseWPF>true</UseWPF>
         <AssemblyName>NiceHashMiner</AssemblyName>
         <RootNamespace>NiceHashMiner</RootNamespace>

@@ -1,415 +1,75 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{43DCAF38-D0C4-4335-983D-650F78461EB2}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NHMCore</RootNamespace>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>NHMCore</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <Deterministic>true</Deterministic>
+    <RootNamespace>NHMCore</RootNamespace>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\Debug\app\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\Release\app\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(DefineConstants.Contains('INTEGRATE_ALL_PLUGINS'))">
-    <DefineConstants>INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_Phoenix_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_WildRig_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_ZEnemy_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;INTEGRATE_MiniZ_PLUGIN;$(DefineConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCompress, Version=0.28.3.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpCompress.0.28.3\lib\netstandard2.0\SharpCompress.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
-    <Compile Include="ApplicationStateManager\ApplicationStateManager.Devices.cs" />
-    <Compile Include="ApplicationStateManager\ApplicationStateManager.Init.cs" />
-    <Compile Include="ApplicationStateManager\ApplicationStateManager.Mining.cs" />
-    <Compile Include="ApplicationStateManager\ApplicationStateManager.Program.cs" />
-    <Compile Include="ApplicationStateManager\ApplicationStateManager.Refactoring.cs" />
-    <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
-    <Compile Include="ApplicationState\BalanceAndExchangeRates.cs" />
-    <Compile Include="ApplicationState\BenchmarkManagerState.cs" />
-    <Compile Include="ApplicationState\MinerPluginsManagerState.cs" />
-    <Compile Include="ApplicationState\MiningState.cs" />
-    <Compile Include="ApplicationState\VersionState.cs" />
-    <Compile Include="Configs\CredentialsSettings.cs" />
-    <Compile Include="Configs\Data\DeviceTDPSettings.cs" />
-    <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
-    <Compile Include="Configs\GlobalDeviceSettings.cs" />
-    <Compile Include="Configs\GUISettings.cs" />
-    <Compile Include="Configs\IdleMiningSettings.cs" />
-    <Compile Include="Configs\IFTTTSettings.cs" />
-    <Compile Include="Configs\LoggingDebugConsoleSettings.cs" />
-    <Compile Include="Configs\MiningProfitSettings.cs" />
-    <Compile Include="Configs\MiningSettings.cs" />
-    <Compile Include="Configs\MiscSettings.cs" />
-    <Compile Include="Configs\RunAtStartup.cs" />
-    <Compile Include="Configs\SwitchSettings.cs" />
-    <Compile Include="Configs\ToSSetings.cs" />
-    <Compile Include="Configs\TranslationsSettings.cs" />
-    <Compile Include="Configs\UpdateSettings.cs" />
-    <Compile Include="Configs\WarningSettings.cs" />
-    <Compile Include="IFTTT.cs" />
-    <Compile Include="Launcher.cs" />
-    <Compile Include="Mining\AlgorithmStatus.cs" />
-    <Compile Include="Mining\AvailableDevices.cs" />
-    <Compile Include="Mining\ComputeDevice.cs" />
-    <Compile Include="Mining\Benchmarking\PowerHelper.cs" />
-    <Compile Include="Mining\Benchmarking\BenchmarkingAnalyzer.cs" />
-    <Compile Include="Mining\Grouping\BenchmarkingDevice.cs" />
-    <Compile Include="Mining\IdleChecking\IdleChangedEventArgs.cs" />
-    <Compile Include="Mining\IdleChecking\IdleChecker.cs" />
-    <Compile Include="Mining\IdleChecking\IdleCheckManager.cs" />
-    <Compile Include="Mining\IdleChecking\InputTimeoutChecker.cs" />
-    <Compile Include="Mining\IdleChecking\SessionLockChecker.cs" />
-    <Compile Include="Mining\AlgorithmContainer.cs" />
-    <Compile Include="Mining\MiningStats\BaseStats.cs" />
-    <Compile Include="Mining\MiningStats\DeviceMiningStats.cs" />
-    <Compile Include="Mining\MiningStats\MinerMiningStats.cs" />
-    <Compile Include="Mining\Plugins\AcceptedPlugins.cs" />
-    <Compile Include="Mining\Plugins\BlacklistedPlugins.cs" />
-    <Compile Include="Mining\Plugins\EthlargementIntegratedPlugin.cs" />
-    <Compile Include="Mining\Plugins\MinerPluginInstallTask.cs" />
-    <Compile Include="Mining\Plugins\MinerPluginsUpdaterSettings.cs" />
-    <Compile Include="Mining\Plugins\PluginInstallProgressState.cs" />
-    <Compile Include="Mining\Plugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
-    <Compile Include="Mining\MinerApiWatchdog.cs" />
-    <Compile Include="Mining\MiningManager.cs" />
-    <Compile Include="Mining\MiningDataStats.cs" />
-    <Compile Include="NHMProductInfo.cs" />
-    <Compile Include="Mining\Plugins\PluginContainer.cs" />
-    <Compile Include="Mining\Plugins\MinerPluginsManager.cs" />
-    <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
-    <Compile Include="Nhmws\ErrorCode.cs" />
-    <Compile Include="Nhmws\Models\ExchangeRateJson.cs" />
-    <Compile Include="Nhmws\Models\MarketsMessage.cs" />
-    <Compile Include="Nhmws\Models\MinerStatusMessage.cs" />
-    <Compile Include="Nhmws\Models\ExecutedCall.cs" />
-    <Compile Include="Nhmws\Models\LoginMessage.cs" />
-    <Compile Include="Nhmws\Models\RpcException.cs" />
-    <Compile Include="Nhmws\NHWebSocket.cs" />
-    <Compile Include="Nhmws\StatusCodes.cs" />
-    <Compile Include="Nhmws\TimeFactor.cs" />
-    <Compile Include="Notifications\AvailableNotifications.cs" />
-    <Compile Include="Notifications\NotificationAction.cs" />
-    <Compile Include="Notifications\Notification.cs" />
-    <Compile Include="Notifications\NotificationsGroup.cs" />
-    <Compile Include="Notifications\NotificationsManager.cs" />
-    <Compile Include="Notifications\NotificationsType.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="StratumService.cs" />
-    <Compile Include="Utils\ArchiveHelpers.cs" />
-    <Compile Include="Utils\DelayedSingleExecActionTask.cs" />
-    <Compile Include="Utils\ElapsedTimeChecker.cs" />
-    <Compile Include="Utils\FilterOSSpecific.cs" />
-    <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
-    <Compile Include="Utils\PInvokeHelpers.cs" />
-    <Compile Include="Utils\RunAsAdmin.cs" />
-    <Compile Include="Utils\SystemSpecs.cs" />
-    <Compile Include="Switching\AlgorithmHistory.cs" />
-    <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
-    <Compile Include="Switching\Interval.cs" />
-    <Compile Include="Translations.cs" />
-    <Compile Include="Configs\ConfigManager.cs" />
-    <Compile Include="Configs\Data\DeviceConfig.cs" />
-    <Compile Include="Configs\Data\GeneralConfig.cs" />
-    <Compile Include="Utils\Links.cs" />
-    <Compile Include="Mining\Grouping\GroupSetupUtils.cs" />
-    <Compile Include="Mining\Grouping\MiningDevice.cs" />
-    <Compile Include="Mining\Grouping\GroupingUtils.cs" />
-    <Compile Include="Utils\CredentialValidators.cs" />
-    <Compile Include="Utils\Helpers.cs" />
-    <Compile Include="Mining\Miner.cs" />
-    <Compile Include="Switching\NHSmaData.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\TaskHelpers.cs" />
-    <Compile Include="Utils\TrivialChannel.cs" />
-    <Compile Include="Utils\UpdateHelpers.cs" />
-    <Compile Include="Utils\AmdModeSwitcher.cs" />
-    <Compile Include="Utils\WindowsUptimeCheck.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="OnGPUsLost.bat" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <None Include="README.md" />
-    <None Include="Resources\Eula.rtf" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj">
-      <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
-      <Name>MyDownloader.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj">
-      <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
-      <Name>MyDownloader.Extension</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\CryptoDredge\MP.CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
-      <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
-      <Name>MP.CryptoDredge</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\GMiner\MP.GMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_GMiner_PLUGIN'))">
-      <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
-      <Name>MP.GMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\LolMiner\MP.LolMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_LolMiner_PLUGIN'))">
-      <Project>{fbb69b33-8a14-4087-909c-f33791384d35}</Project>
-      <Name>MP.LolMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\MiniZ\MP.MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
-      <Project>{EB73427B-90E0-4E5B-85D8-C33E810E970A}</Project>
-      <Name>MP.MiniZ</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\NanoMiner\MP.NanoMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NanoMiner_PLUGIN'))">
-      <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
-      <Name>MP.NanoMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\NBMiner\MP.NBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NBMiner_PLUGIN'))">
-      <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>
-      <Name>MP.NBMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\Phoenix\MP.Phoenix.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Phoenix_PLUGIN'))">
-      <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
-      <Name>MP.Phoenix</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\SRBMiner\MP.SRBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_SRBMiner_PLUGIN'))">
-      <Project>{eaf3b1d7-a8b1-4bb0-a325-50422fe39dd2}</Project>
-      <Name>MP.SRBMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\TeamRedMiner\MP.TeamRedMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TeamRedMiner_PLUGIN'))">
-      <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>
-      <Name>MP.TeamRedMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\TRex\MP.TRex.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TRex_PLUGIN'))">
-      <Project>{1b00711a-2ca2-49c0-a9fd-8bf9e478e3b0}</Project>
-      <Name>MP.TRex</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\TTMiner\MP.TTMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TTMiner_PLUGIN'))">
-      <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
-      <Name>MP.TTMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\WildRig\MP.WildRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_WildRig_PLUGIN'))">
-      <Project>{fa68227d-27a2-4058-8d36-005fadafecc0}</Project>
-      <Name>MP.WildRig</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\XMRig\MP.XMRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XMRig_PLUGIN'))">
-      <Project>{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}</Project>
-      <Name>MP.XMRig</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\ZEnemy\MP.ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
-      <Project>{059e2ca2-85c5-453e-a48c-ada45a3c5879}</Project>
-      <Name>MP.ZEnemy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\__DEV__BrokenMiner\MP.__DEV__BrokenMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BrokenMiner_PLUGIN'))">
-      <Project>{e9a55ce7-37b9-462f-92e8-ae929c5adcca}</Project>
-      <Name>MP.__DEV__BrokenMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\__DEV__ExamplePlugin\MP.__DEV__ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
-      <Project>{0a50a58c-ff4d-48c4-91f0-1babe974f16a}</Project>
-      <Name>MP.__DEV__ExamplePlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\__DEV__FakePlugin\MP.__DEV__FakePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_FakePlugin_PLUGIN'))">
-      <Project>{e7f9794d-e2d2-41ef-8166-8029b6b5c035}</Project>
-      <Name>MP.__DEV__FakePlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
-      <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
-      <Name>NHM.DeviceDetection</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
-      <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
-      <Name>NHM.DeviceMonitoring</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.MinerPluginLoader\NHM.MinerPluginLoader.csproj">
-      <Project>{bd538ba6-6548-4eeb-b882-597c3f0eebfd}</Project>
-      <Name>NHM.MinerPluginLoader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj">
-      <Project>{ec0e538a-1966-4434-af96-0e25223bbc19}</Project>
-      <Name>NHM.MinerPluginToolkitV1</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.MinerPlugin\NHM.MinerPlugin.csproj">
-      <Project>{77db0a8c-4cb6-45eb-bdbc-6ca5c37f5070}</Project>
-      <Name>NHM.MinerPlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
-      <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>
-      <Name>NHM.MinersDownloader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.UUID\NHM.UUID.csproj">
-      <Project>{ee6160cc-8c19-4ad8-bb1e-c295347203ee}</Project>
-      <Name>NHM.UUID</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
-      <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
-      <Name>NHM.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\..\Debug\app\</OutputPath>
+      <DefineConstants>TRACECOREAPP;DEBUG</DefineConstants>
+      <PlatformTarget>x64</PlatformTarget>
+      <Prefer32bit>true</Prefer32bit>
+      <DebugType>full</DebugType>
+      <WarningLevel>4</WarningLevel>
+      <WarningsAsErrors />
+      <NoWarn />
     </PropertyGroup>
-  </Target>
-  <PropertyGroup>
-    <PostBuildEvent>REM copy translations. Always copy and replace file
-copy /Y "$(ProjectDir)\translations.json" "$(SolutionDir)$(Configuration)\app\translations.json"
-REM device detection test script
-copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_test.bat" "$(SolutionDir)$(Configuration)\app\device_detection_test.bat"
-REM script to reboot if NVIDIA CUDA is down
-copy /Y "$(ProjectDir)\OnGPUsLost.bat" "$(SolutionDir)$(Configuration)\OnGPUsLost.bat"
 
-REM copy device device_detection_x64 exe's, dll's, scripts. Copy only if files don't exist
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection.exe" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection.exe" "$(SolutionDir)$(Configuration)\app\device_detection.exe"
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection.bat" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection.bat" "$(SolutionDir)$(Configuration)\app\device_detection.bat"
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection_cpu.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection_cpu.dll" "$(SolutionDir)$(Configuration)\app\device_detection_cpu.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection_cuda_nvml.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection_cuda_nvml.dll" "$(SolutionDir)$(Configuration)\app\device_detection_cuda_nvml.dll"
-REM OpenCL.dll inside a separate folder
-If NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\app\OpenCL\"
-if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll"
-if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\README.md" "$(SolutionDir)$(Configuration)\app\OpenCL\README.md"
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection_opencl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection_opencl.dll" "$(SolutionDir)$(Configuration)\app\device_detection_opencl.dll"
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\..\Release\app\</OutputPath>
+      <PlatformTarget>x64</PlatformTarget>
+      <DebugType>pdbonly</DebugType>
+      <WarningLevel>4</WarningLevel>
+      <WarningsAsErrors />
+      <NoWarn />
+    </PropertyGroup>
 
-REM commons dll's for downloaded miners. Copy only if files don't exist. Remove this after plugin system fully replaces integrated miners
-REM create directory
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\" mkdir "$(SolutionDir)$(Configuration)\app\common\"
-REM copy over dll's
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\cudart32_80.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart32_80.dll" "$(SolutionDir)$(Configuration)\app\common\cudart32_80.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\cudart64_80.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart64_80.dll" "$(SolutionDir)$(Configuration)\app\common\cudart64_80.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\cudart64_91.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart64_91.dll" "$(SolutionDir)$(Configuration)\app\common\cudart64_91.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\libcurl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\libcurl.dll" "$(SolutionDir)$(Configuration)\app\common\libcurl.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp120.dll" "$(SolutionDir)$(Configuration)\app\common\msvcp120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcp140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp140.dll" "$(SolutionDir)$(Configuration)\app\common\msvcp140.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcr110.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr110.dll" "$(SolutionDir)$(Configuration)\app\common\msvcr110.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\app\common\msvcr120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\app\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\app\common\vcruntime140.dll"
+    <ItemGroup>
+      <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj" />
+      <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj" />
+      <ProjectReference Include="..\NHM.Common\NHM.Common.csproj" />
+      <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj" />
+      <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj" />
+      <ProjectReference Include="..\NHM.MinerPluginLoader\NHM.MinerPluginLoader.csproj" />
+      <ProjectReference Include="..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
+      <ProjectReference Include="..\NHM.MinerPlugin\NHM.MinerPlugin.csproj" />
+      <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj" />
+      <ProjectReference Include="..\NHM.UUID\NHM.UUID.csproj" />
+    </ItemGroup>
 
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_monitoring_x64\device_monitoring_amd.dll" "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll"</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+    <ItemGroup>
+      <EmbeddedResource Update="Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="log4net" Version="2.0.12" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="SharpCompress" Version="0.28.3" />
+      <PackageReference Include="SharpZipLib" Version="1.3.2" />
+      <PackageReference Include="System.Buffers" Version="4.5.1" />
+      <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+      <PackageReference Include="System.Management" Version="5.0.0" />
+      <PackageReference Include="System.Memory" Version="4.5.4" />
+      <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+      <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+      <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+      <PackageReference Include="WebSocketSharp-netstandard" Version="1.0.1" />
+    </ItemGroup>
+
 </Project>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NHMCore.Properties {
+namespace NHMCore {
     using System;
     
     
@@ -19,7 +19,7 @@ namespace NHMCore.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -36,10 +36,10 @@ namespace NHMCore.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NHMCore.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NHMCorev2.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace NHMCore.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,8 +61,12 @@ namespace NHMCore.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\uc0\stshfdbch0\stshfloch0\stshfhich0\stshfbi0\deff0\adeff0{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f1\froman\fcharset2\fprq2{\*\panose 05050102010706020507}Symbol;}{\f2\fswiss\fcharset0\fprq2{\*\panose 020b0604020202020204}Arial;}}{\colortbl;\red0\green0\blue0;\red224\green102\blue102
-        ///;\red67\green67\blue67;\red102\green102\blue102;}{\stylesheet{\s0\snext0\sqformat\spriority0\fi0\sb0\sa0\aspalpha\aspnum\adjustright\widctlpar\ltrpar\li0\l [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to {\rtf1\ansi\ansicpg1252\cocoartf2577
+        ///\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Arial-BoldMT;\f1\froman\fcharset0 Times-Roman;\f2\fswiss\fcharset0 ArialMT;
+        ///}
+        ///{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red16\green60\blue192;}
+        ///{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c6667\c33333\c80000;}
+        ///{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\ [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Eula {
             get {

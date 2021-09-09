@@ -66,8 +66,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.MiniZ", "src\Miners\Mini
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.XMRig", "src\Miners\XMRig\MP.XMRig.csproj", "{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHMCore", "src\NHMCore\NHMCore.csproj", "{43DCAF38-D0C4-4335-983D-650F78461EB2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmdComputeModeSwitcher", "src\Tools\AmdComputeModeSwitcher\AmdComputeModeSwitcher.csproj", "{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhmPackager", "src\Tools\NhmPackager\NhmPackager.csproj", "{ED4101C4-C44E-4C6C-8F93-73A950388823}"
@@ -93,6 +91,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLauncher", "src\NiceHashMinerLauncher\NiceHashMinerLauncher.csproj", "{9C95FB4D-A213-4676-A5D4-CD830DD0027A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMiner", "src\NiceHashMiner\NiceHashMiner.csproj", "{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHMCore", "src\NHMCore\NHMCore.csproj", "{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -302,14 +302,6 @@ Global
 		{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}.Release|x64.ActiveCfg = Release|Any CPU
 		{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}.Release|x64.Build.0 = Release|Any CPU
-		{43DCAF38-D0C4-4335-983D-650F78461EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43DCAF38-D0C4-4335-983D-650F78461EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43DCAF38-D0C4-4335-983D-650F78461EB2}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{43DCAF38-D0C4-4335-983D-650F78461EB2}.Debug|x64.Build.0 = Debug|Any CPU
-		{43DCAF38-D0C4-4335-983D-650F78461EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43DCAF38-D0C4-4335-983D-650F78461EB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43DCAF38-D0C4-4335-983D-650F78461EB2}.Release|x64.ActiveCfg = Release|Any CPU
-		{43DCAF38-D0C4-4335-983D-650F78461EB2}.Release|x64.Build.0 = Release|Any CPU
 		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4E145F5-A528-4C5F-A365-5490C6B7BD4A}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -414,6 +406,14 @@ Global
 		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Release|x64.ActiveCfg = Release|Any CPU
 		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Release|x64.Build.0 = Release|Any CPU
+		{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}.Debug|x64.Build.0 = Debug|Any CPU
+		{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}.Release|x64.ActiveCfg = Release|Any CPU
+		{3398E899-3CCD-4BA9-9FB9-86C99DCD0E54}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

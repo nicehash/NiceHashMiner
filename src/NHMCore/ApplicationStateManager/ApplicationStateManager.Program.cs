@@ -98,7 +98,7 @@ namespace NHMCore
             // TODO we can have disable multiple instances so make a helper program that "swaps"/restarts parent/child
             if (!Launcher.IsLauncher)
             {
-                Process.Start(Application.ExecutablePath);
+                Process.Start(AppContext.BaseDirectory);
             }
             else
             {

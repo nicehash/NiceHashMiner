@@ -20,7 +20,7 @@ namespace NiceHashMiner.Views
         {
             InitializeComponent();
 
-            using (var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(NHMCore.Properties.Resources.Eula)))
+            using (var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(NHMCore.Resources.Eula)))
             {
                 stream.Position = 0;
                 EulaRtb.SelectAll();
