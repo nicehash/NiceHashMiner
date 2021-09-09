@@ -44,8 +44,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nvidiasetp0state", "src\Too
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLogReport", "src\Tools\CreateLogReport\CreateLogReport.csproj", "{663285C0-8F68-4638-BEB2-4BB042868445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.UUID", "src\NHM.UUID\NHM.UUID.csproj", "{EE6160CC-8C19-4AD8-BB1E-C295347203EE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.NanoMiner", "src\Miners\NanoMiner\MP.NanoMiner.csproj", "{1B657592-641E-42EC-BC44-ABCAE62EF1FD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.Phoenix", "src\Miners\Phoenix\MP.Phoenix.csproj", "{CE5DC45C-1E1C-498B-BAB7-5540E346AC21}"
@@ -93,6 +91,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.MinerPluginToolkitV1", "src\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj", "{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.Packager", "src\Tools\NHM.Packager\NHM.Packager.csproj", "{E66C623B-57C8-48E2-9106-B40C44BFAFE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.UUID", "src\NHM.UUID\NHM.UUID.csproj", "{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -214,14 +214,6 @@ Global
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|Any CPU.Build.0 = Release|Any CPU
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|x64.ActiveCfg = Release|Any CPU
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|x64.Build.0 = Release|Any CPU
-		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Debug|x64.Build.0 = Debug|Any CPU
-		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Release|x64.ActiveCfg = Release|Any CPU
-		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Release|x64.Build.0 = Release|Any CPU
 		{1B657592-641E-42EC-BC44-ABCAE62EF1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B657592-641E-42EC-BC44-ABCAE62EF1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B657592-641E-42EC-BC44-ABCAE62EF1FD}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -414,6 +406,14 @@ Global
 		{E66C623B-57C8-48E2-9106-B40C44BFAFE3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E66C623B-57C8-48E2-9106-B40C44BFAFE3}.Release|x64.ActiveCfg = Release|Any CPU
 		{E66C623B-57C8-48E2-9106-B40C44BFAFE3}.Release|x64.Build.0 = Release|Any CPU
+		{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}.Debug|x64.Build.0 = Debug|Any CPU
+		{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}.Release|x64.ActiveCfg = Release|Any CPU
+		{80ED8550-F7E4-413E-B499-7FF6FDA3B40F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
