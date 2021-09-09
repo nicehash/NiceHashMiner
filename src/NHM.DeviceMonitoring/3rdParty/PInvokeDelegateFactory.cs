@@ -14,46 +14,47 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
+
 // ReSharper disable All
 #pragma warning disable
 
 namespace NVIDIA
 {
-
     internal static class PInvokeDelegateFactory
     {
-
         private static readonly ModuleBuilder moduleBuilder =
-          AppDomain.CurrentDomain.DefineDynamicAssembly(
-            new AssemblyName("PInvokeDelegateFactoryInternalAssembly"),
-            AssemblyBuilderAccess.Run).DefineDynamicModule(
-            "PInvokeDelegateFactoryInternalModule");
+            AssemblyBuilder.DefineDynamicAssembly(
+                new AssemblyName("PInvAppDomain.CurrentDomain.DefineDynamicAssemblyokeDelegateFactoryInternalAssembly"),
+                AssemblyBuilderAccess.Run).DefineDynamicModule(
+                "PInvokeDelegateFactoryInternalModule");
 
         private static readonly IDictionary<Tuple<DllImportAttribute, Type>, Type> wrapperTypes =
-          new Dictionary<Tuple<DllImportAttribute, Type>, Type>();
+            new Dictionary<Tuple<DllImportAttribute, Type>, Type>();
 
         public static void CreateDelegate<T>(DllImportAttribute dllImportAttribute,
-          out T newDelegate) where T : class {
+            out T newDelegate) where T : class
+        {
             Type wrapperType;
             Tuple<DllImportAttribute, Type> key =
-              new Tuple<DllImportAttribute, Type>(dllImportAttribute, typeof(T));
+                new Tuple<DllImportAttribute, Type>(dllImportAttribute, typeof(T));
             wrapperTypes.TryGetValue(key, out wrapperType);
 
-            if (wrapperType == null) {
+            if (wrapperType == null)
+            {
                 wrapperType = CreateWrapperType(typeof(T), dllImportAttribute);
                 wrapperTypes.Add(key, wrapperType);
             }
 
             newDelegate = Delegate.CreateDelegate(typeof(T), wrapperType,
-              dllImportAttribute.EntryPoint) as T;
+                dllImportAttribute.EntryPoint) as T;
         }
 
 
         private static Type CreateWrapperType(Type delegateType,
-          DllImportAttribute dllImportAttribute) {
-
+            DllImportAttribute dllImportAttribute)
+        {
             TypeBuilder typeBuilder = moduleBuilder.DefineType(
-              "PInvokeDelegateFactoryInternalWrapperType" + wrapperTypes.Count);
+                "PInvokeDelegateFactoryInternalWrapperType" + wrapperTypes.Count);
 
             MethodInfo methodInfo = delegateType.GetMethod("Invoke");
 
@@ -65,16 +66,16 @@ namespace NVIDIA
                 parameterTypes[i] = parameterInfos[i].ParameterType;
 
             MethodBuilder methodBuilder = typeBuilder.DefinePInvokeMethod(
-              dllImportAttribute.EntryPoint, dllImportAttribute.Value,
-              MethodAttributes.Public | MethodAttributes.Static |
-              MethodAttributes.PinvokeImpl, CallingConventions.Standard,
-              methodInfo.ReturnType, parameterTypes,
-              dllImportAttribute.CallingConvention,
-              dllImportAttribute.CharSet);
+                dllImportAttribute.EntryPoint, dllImportAttribute.Value,
+                MethodAttributes.Public | MethodAttributes.Static |
+                MethodAttributes.PinvokeImpl, CallingConventions.Standard,
+                methodInfo.ReturnType, parameterTypes,
+                dllImportAttribute.CallingConvention,
+                dllImportAttribute.CharSet);
 
             foreach (ParameterInfo parameterInfo in parameterInfos)
                 methodBuilder.DefineParameter(parameterInfo.Position + 1,
-                  parameterInfo.Attributes, parameterInfo.Name);
+                    parameterInfo.Attributes, parameterInfo.Name);
 
             if (dllImportAttribute.PreserveSig)
                 methodBuilder.SetImplementationFlags(MethodImplAttributes.PreserveSig);
