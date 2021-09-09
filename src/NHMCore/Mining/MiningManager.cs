@@ -101,11 +101,6 @@ namespace NHMCore.Mining
 
         public static Task RunninLoops { get; private set; } = null;
 
-        public static bool IsRunning()
-        {
-            return _runningMiners.Count == 0? false : true;
-        }
-
 
         #region Command Tasks
 
@@ -156,14 +151,13 @@ namespace NHMCore.Mining
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
-        private static Task MiningProfitSettingsChanged(string propName)//TODO RUN?
+        private static Task MiningProfitSettingsChanged(string propName)
         {
             if (propName == nameof(MiningProfitSettings.Instance.MineRegardlessOfProfit) && 
                 ApplicationStateManager.CalcRigStatus() == RigStatus.Mining && 
-                MiningProfitSettings.Instance.MineRegardlessOfProfit)//TODO REMOVE IF PROBLEMS
+                MiningProfitSettings.Instance.MineRegardlessOfProfit)
             {
                 ApplicationStateManager.StartMining();
-                //bool skipProfitsThreshold = command is MiningProfitSettingsChangedCommand || command is MinerRestartLoopNotifyCommand;
                 SwichMostProfitableGroupUpMethodTask(_normalizedProfits, true, true);
             }
             if (RunninLoops == null) return Task.CompletedTask;
@@ -598,7 +592,6 @@ namespace NHMCore.Mining
             else
             {
                 ApplicationStateManager.StartMining();
-                //bool skipProfitsThreshold = command is MiningProfitSettingsChangedCommand || command is MinerRestartLoopNotifyCommand;
                 bool skipProfitsThreshold = checkIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold, false);
 
@@ -753,7 +746,7 @@ namespace NHMCore.Mining
 
             // check profit threshold
             Logger.Info(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
-            if (prevStateProfit > 0 && currentProfit > 0 && !skipProfitsThreshold)//TODO ACTION here
+            if (prevStateProfit > 0 && currentProfit > 0 && !skipProfitsThreshold)
             {
                 var a = Math.Max(prevStateProfit, currentProfit);
                 var b = Math.Min(prevStateProfit, currentProfit);

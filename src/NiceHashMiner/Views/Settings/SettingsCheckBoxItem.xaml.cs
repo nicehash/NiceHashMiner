@@ -51,7 +51,7 @@ namespace NiceHashMiner.Views.Settings
             set => SetValue(DescriptionProperty, value);
         }
 
-        private async void ToggleClickHandler(object sender, RoutedEventArgs e)
+        private void ToggleClickHandler(object sender, RoutedEventArgs e)
         {
             var tb = e.Source as ToggleButton;
             if (ToggleButtonHidden == tb)
@@ -62,40 +62,20 @@ namespace NiceHashMiner.Views.Settings
             ToggleClick?.Invoke(sender, e);
             // we save on every change
             ConfigManager.GeneralConfigFileCommit();
-
-            await DisableToggleCondition();
         }
 
 
 
-        public async void TurnOffCondition()
+        public void TurnOffCondition()
         {
             if (Enabled.HasValue)
             {
                 if (!Enabled.Value)
                 {
                     Enabled = true;
-                    await DisableToggleCondition();
                 }
                 ConfigManager.GeneralConfigFileCommit();
             }
-            //check if name
-
         }
-
-
-        public async Task DisableToggleCondition()
-        {
-            this.IsEnabled = false;
-            await OnElapsedButton();
-        }
-
-        private async Task OnElapsedButton()
-        {
-            await Task.Delay(3000);
-            this.IsEnabled = true;
-        }
-
-
     }
 }
