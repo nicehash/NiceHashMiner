@@ -170,7 +170,15 @@ namespace NiceHashMiner.Views.Settings
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ConfigManager.GeneralConfigFileCommit();
+            if(sender is TextBox tb)
+            {
+                //necessary because we dont want this to be triggered on load
+                if(tb.Name == "MinProfitTB" && tb.Text != MiningProfitSettings.Instance.MinimumProfit.ToString())
+                {
+                    minProfitToggleButton.TurnOffCondition();
+                }
+                ConfigManager.GeneralConfigFileCommit();
+            }
         }
 
         private void CreateLogReportButton_Click(object sender, RoutedEventArgs e)

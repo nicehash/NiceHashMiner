@@ -101,10 +101,11 @@ namespace NhmPackager
             string binaryHash = null;
             if (minerPackageURL != null)
             {
-                WebClient myWebClient = new WebClient();
-                Logger.Info("MinerPluginsPacker", "Calculating hash for "+plugin.Name+".zip");
-                var filepath = Assembly.GetEntryAssembly().Location.Replace("NhmPackager.exe", plugin.Name + ".zip");
-                myWebClient.DownloadFile(minerPackageURL, plugin.Name+".zip");
+                var filename = plugin.PluginUUID + ".zip";
+                Logger.Info("MinerPluginsPacker", "Calculating hash for " + filename);
+                var filepath = Assembly.GetEntryAssembly().Location.Replace("NhmPackager.exe", filename);
+                using (var myWebClient = new WebClient())
+                    myWebClient.DownloadFile(minerPackageURL, filename);
                 using (var sha256Hash = SHA256.Create())
                 using (var stream = File.OpenRead(filepath))
                 {
@@ -225,7 +226,7 @@ namespace NhmPackager
                 }
                 var pluginProjectPath = pluginProjectPaths.FirstOrDefault(path => dllFilePath.Contains(path));
 
-                var dateTimeStr=GetLastCommitDateTime(GetGitCommitHash(pluginProjectPath));
+                var dateTimeStr = GetLastCommitDateTime(GetGitCommitHash(pluginProjectPath));
                 DateTimeOffset.TryParseExact(dateTimeStr, "ddd MMM d HH:mm:ss yyyy K",
                                  CultureInfo.InvariantCulture,
                                  DateTimeStyles.None, out var dateTime);
