@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHMCore;
 using NHMCore.Utils;
@@ -11,6 +10,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Web.WebView2.Core;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -31,11 +31,13 @@ namespace NiceHashMiner.Views.Login
 
         private void NavigateTo(string url)
         {
-            var headers = new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("User-Agent", _userAgent),
-                new KeyValuePair<string, string>("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0"),
-            };
-            WebViewBrowser.Navigate(new Uri(url), HttpMethod.Get, null, headers);
+            // TODO: Check if the cache control is needed
+            // var headers = new List<KeyValuePair<string, string>>() {
+            //     new KeyValuePair<string, string>("User-Agent", _userAgent),
+            //     new KeyValuePair<string, string>("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0"),
+            // };
+            WebViewBrowser.CoreWebView2.Settings.UserAgent = _userAgent;
+            WebViewBrowser.CoreWebView2.Navigate(url);
         }
 
         private void LoginBrowser_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -69,10 +71,11 @@ namespace NiceHashMiner.Views.Login
             WebViewBrowser.Dispose();
             try
             {
-                Process.GetProcessById((int)WebViewBrowser.Process.ProcessId)?.Kill();
+                Process.GetProcessById((int)WebViewBrowser.CoreWebView2.BrowserProcessId)?.Kill();
             }
             catch
-            { }
+            { // ignore
+            }
         }
 
         private void LoginBrowser_Unloaded(object sender, RoutedEventArgs e)
@@ -144,9 +147,9 @@ namespace NiceHashMiner.Views.Login
             }
         }
 
-        private void Browser_NavigationCompleted(object sender, WebViewControlNavigationCompletedEventArgs e)
+        private void Browser_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
         {
-            Logger.InfoDelayed("Login", $"Navigation to {e.Uri} {e.WebErrorStatus}", TimeSpan.FromSeconds(5));
+            Logger.InfoDelayed("Login", $"Navigation: {e.WebErrorStatus}", TimeSpan.FromSeconds(5));
         }
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
@@ -182,7 +185,7 @@ namespace NiceHashMiner.Views.Login
             string htmlEvalValue = null;
             try
             {
-                htmlEvalValue = await WebViewBrowser.InvokeScriptAsync("eval", _jsEvalCode);
+                htmlEvalValue = await WebViewBrowser.CoreWebView2.ExecuteScriptAsync(_jsEvalCode);
                 Logger.InfoDelayed("Login", $"JS eval returned htmlEvalValue='{htmlEvalValue}'", TimeSpan.FromSeconds(15));
                 var noNhmResponse = htmlEvalValue == null || htmlEvalValue == "NO_RESPONSE" || htmlEvalValue.Contains("INJ_ERROR");
                 if (showRetry)

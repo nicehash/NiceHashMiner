@@ -3,6 +3,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="obj\Debug\netstandard2.0\MP.Excavator.csproj.AssemblyReference.cache" />
+  </ItemGroup>
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>

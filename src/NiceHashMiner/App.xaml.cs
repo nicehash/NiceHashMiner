@@ -52,7 +52,7 @@ namespace NiceHashMiner
             designWindow.ShowDialog();
             return;
 #endif
-            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+            System.Windows.Media.RenderOptions.ProcessRenderMode = System.Windows.Interop.RenderMode.SoftwareOnly;
             ApplicationStateManager.App = this;
             ApplicationStateManager.ApplicationExit = () =>
             {
@@ -80,7 +80,7 @@ namespace NiceHashMiner
                     // TODO this might be problematic
                     Environment.CurrentDirectory = oneUpPath;
                 }
-                else if (isDevelop)
+                else if (!isDevelop)
                 {
                     Paths.SetRoot(path);
                     Paths.SetAppRoot(path);
@@ -105,10 +105,10 @@ namespace NiceHashMiner
 
             // Set security protocols
             ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls |
+            ServicePointManager.SecurityProtocol = //SecurityProtocolType.Tls |
                                                    SecurityProtocolType.Tls11 |
                                                    SecurityProtocolType.Tls12 |
-                                                   SecurityProtocolType.Ssl3;
+                                                   SecurityProtocolType.Tls13;
 
             // Initialize config
             ConfigManager.InitializeConfig();

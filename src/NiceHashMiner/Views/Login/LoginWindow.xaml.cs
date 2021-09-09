@@ -19,7 +19,7 @@ namespace NiceHashMiner.Views.Login
     public partial class LoginWindow : BaseDialogWindow
     {
         private LoginBrowser _loginBrowser;
-        private string _uuid = Guid.NewGuid().ToString();
+        private string _uuid = System.Guid.NewGuid().ToString();
         public LoginWindow()
         {
             InitializeComponent();

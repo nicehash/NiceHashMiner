@@ -33,7 +33,7 @@ namespace NiceHashMiner
             var bm = bw.Write(uuid);
             try
             {
-                var overlay = new Bitmap(Properties.Resources.logoLight32);
+                var overlay = new Bitmap(Resources.logoLight32);
                 if (!LightTheme)
                 {
                     for (int j = 0; (j <= (bm.Height - 1)); j++)
@@ -45,7 +45,7 @@ namespace NiceHashMiner
                             bm.SetPixel(k, j, inv);
                         }
                     }
-                    overlay = new Bitmap(Properties.Resources.logoDark32);
+                    overlay = new Bitmap(Resources.logoDark32);
                 }
 
                 var g = Graphics.FromImage(bm);

@@ -1,724 +1,348 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{56653651-3BF1-4A89-A20C-3178C06A29A3}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>NiceHashMiner</RootNamespace>
-    <AssemblyName>app_nhm</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\Debug\app\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ENABLE_LOGIN</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\Release\app\</OutputPath>
-    <DefineConstants>TRACE;ENABLE_LOGIN</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="AppRuntimeSettings.cs" />
-    <Compile Include="Converters\LoadValueToText.cs" />
-    <Compile Include="Converters\NulBoolToVisibilityConverterFalse.cs" />
-    <Compile Include="Converters\NumberToVisibilityConverter.cs" />
-    <Compile Include="Converters\NumberToVisibilityConverterZero.cs" />
-    <Compile Include="Converters\StatusColorConverter.cs" />
-    <Compile Include="Converters\TemperatureValueToText.cs" />
-    <Compile Include="CustomDialogManager.cs" />
-    <Compile Include="IThemeSetter.cs" />
-    <Compile Include="Views\ManuallyEnterBTCTutorial.xaml.cs">
-      <DependentUpon>ManuallyEnterBTCTutorial.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="QrCodeHelpers.cs" />
-    <Compile Include="ThemeSetterManager.cs" />
-    <Compile Include="ViewModels\BaseVM.cs" />
-    <Compile Include="ViewModels\BenchmarkViewModel.cs" />
-    <Compile Include="Converters\ConverterBase.cs" />
-    <Compile Include="Converters\DoubleToStringConverter.cs" />
-    <Compile Include="Converters\EnumToBoolConverter.cs" />
-    <Compile Include="Converters\HashrateConverter.cs" />
-    <Compile Include="Converters\NulBoolToBoolConverter.cs" />
-    <Compile Include="Converters\NulBoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\TranslatingConverter.cs" />
-    <Compile Include="ViewModels\ChooseLanguageVM.cs" />
-    <Compile Include="ViewModels\DashboardViewModel.cs" />
-    <Compile Include="ViewModels\DevicesViewModel.cs" />
-    <Compile Include="ViewModels\MainVM.cs" />
-    <Compile Include="ViewModels\Models\DeviceData.cs" />
-    <Compile Include="ViewModels\Models\DeviceDataTDP.cs" />
-    <Compile Include="ViewModels\Models\LoadProgress.cs" />
-    <Compile Include="ViewModels\Models\MiningData.cs" />
-    <Compile Include="ViewModels\Plugins\PluginEntryVM.cs" />
-    <Compile Include="ViewModels\StartupLoadingVM.cs" />
-    <Compile Include="Validators\BtcWorkerValidator.cs" />
-    <Compile Include="Validators\ValidatorBase.cs" />
-    <Compile Include="Views\Benchmark\BenchmarkTypeToStringConverter.cs" />
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemStatusVisibilityConverter.cs" />
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemStatusTextConverter.cs" />
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml.cs">
-      <DependentUpon>AlgorithmSettings.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItemHeader.xaml.cs">
-      <DependentUpon>ComputeDeviceItemHeader.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceStatusVisibilityConverter.cs" />
-    <Compile Include="Views\Benchmark\CpuGpuGroupVisibilityConverter.cs" />
-    <Compile Include="Views\Common\CustomDialog.xaml.cs">
-      <DependentUpon>CustomDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\EnterWalletDialog.xaml.cs">
-      <DependentUpon>EnterWalletDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\EnterWalletDialogDemo.xaml.cs">
-      <DependentUpon>EnterWalletDialogDemo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\EnterWorkernameDialog.xaml.cs">
-      <DependentUpon>EnterWorkernameDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DemoBTCNotice.xaml.cs">
-      <DependentUpon>DemoBTCNotice.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\EulaWindowSecondShort.xaml.cs">
-      <DependentUpon>EulaWindowSecondShort.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Benchmark\Benchmarks.xaml.cs">
-      <DependentUpon>Benchmarks.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItem.xaml.cs">
-      <DependentUpon>AlgorithmItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemSpeedsConverter.cs" />
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItemStatusStyleConverter.cs" />
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItem.xaml.cs">
-      <DependentUpon>ComputeDeviceItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ChooseLanguageWindow.xaml.cs">
-      <DependentUpon>ChooseLanguageWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\WorkernamePanel.xaml.cs">
-      <DependentUpon>WorkernamePanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\NHBase\BaseDialogWindow.cs" />
-    <Compile Include="Views\Common\NHBase\BaseDialogWindow.Sizing.cs" />
-    <Compile Include="Views\Common\NHBase\NHMMainWindow.cs" />
-    <Compile Include="Views\Common\NHBase\Utils\NativeUtils.cs" />
-    <Compile Include="Views\Common\NHBase\Utils\SystemHelper.cs" />
-    <Compile Include="Views\Common\ViewStatsOnline.xaml.cs">
-      <DependentUpon>ViewStatsOnline.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\WindowUtils.cs" />
-    <Compile Include="Views\Dashboard\Dashboard.xaml.cs">
-      <DependentUpon>Dashboard.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Devices\ComputeDeviceItem.xaml.cs">
-      <DependentUpon>ComputeDeviceItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Devices\Devices.xaml.cs">
-      <DependentUpon>Devices.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\EulaWindowFirstLong.xaml.cs">
-      <DependentUpon>EulaWindowFirstLong.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Help\Help.xaml.cs">
-      <DependentUpon>Help.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Login\LoginBrowser.xaml.cs" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
-      <DependentUpon>LoginBrowser.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Login\LoginWindow.xaml.cs" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
-      <DependentUpon>LoginWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Login\compiler_stub.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Notifications\Converters\NewVisibilityConverter.cs" />
-    <Compile Include="Views\Notifications\Notifications.xaml.cs">
-      <DependentUpon>Notifications.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Notifications\NotificationItem.xaml.cs">
-      <DependentUpon>NotificationItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Plugins\PluginItem\Converters\CompatibleVisibilityConverter.cs" />
-    <Compile Include="Views\Plugins\PluginItem\Converters\PluginItemButtonConverters.cs" />
-    <Compile Include="Views\Plugins\PluginItem\Converters\SupportedDeviceAlgorithmsConverter.cs" />
-    <Compile Include="Views\Plugins\PluginItem\Converters\SupportedDevicesConverter.cs" />
-    <Compile Include="Views\Plugins\PluginItem\PluginIcon.xaml.cs">
-      <DependentUpon>PluginIcon.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Plugins\PluginItem\PluginItem.xaml.cs">
-      <DependentUpon>PluginItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Plugins\PluginItem\PluginItemConfirm.xaml.cs">
-      <DependentUpon>PluginItemConfirm.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Plugins\Plugins.xaml.cs">
-      <DependentUpon>Plugins.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Plugins\PluginsConfirmDialog.xaml.cs">
-      <DependentUpon>PluginsConfirmDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\Settings.xaml.cs">
-      <DependentUpon>Settings.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\SettingsAbout.xaml.cs">
-      <DependentUpon>SettingsAbout.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\SettingsAdvanced.xaml.cs">
-      <DependentUpon>SettingsAdvanced.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\SettingsCheckBoxItem.xaml.cs">
-      <DependentUpon>SettingsCheckBoxItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Settings\SettingsGeneral.xaml.cs">
-      <DependentUpon>SettingsGeneral.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Views\Settings\SettingsQrLogin.xaml.cs">
-      <DependentUpon>SettingsQrLogin.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SingleInstanceNotice.xaml.cs">
-      <DependentUpon>SingleInstanceNotice.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TDPSettings\TDPComputeDeviceItem.xaml.cs">
-      <DependentUpon>TDPComputeDeviceItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TDPSettings\TDPSettings.xaml.cs">
-      <DependentUpon>TDPSettings.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TDPSettings\TDPSettingsWindow.xaml.cs">
-      <DependentUpon>TDPSettingsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TemporaryStartupLoadingControl.xaml.cs">
-      <DependentUpon>TemporaryStartupLoadingControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="_DESIGN_DEVELOP\Colors\Colors.xaml.cs">
-      <DependentUpon>Colors.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="_DESIGN_DEVELOP\Components\ThemeSwitch.xaml.cs">
-      <DependentUpon>ThemeSwitch.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml.cs">
-      <DependentUpon>__DESIGN_DEVELOP.xaml</DependentUpon>
-    </Compile>
-    <Page Include="Views\ManuallyEnterBTCTutorial.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Brushes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Colors\Colors.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Colors\Dark.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Colors\Light.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\Buttons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\CheckBoxes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\ComboBoxes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\Controls.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\InvisibleToggleButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\MenuDropdownButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\ProgressBars.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\ScrollBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\SpinCirclePath.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\StartStopButtonDark.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\StartStopButtonLight.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\Switches.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\TabButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\TextBoxes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Controls\ToolTip.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Fonts\Fonts.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Fonts\Spacing.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Fonts\Typography.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\Icons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\LoginCircleLogoDark.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\LoginCircleLogoLight.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\LoginQRCircleLight.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\MiningAxeIcon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\MiningAxeIconDark.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\MoonCircleDark.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\NHMLogoBigLight.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\NHMLogoDark.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\NHMLogoLight.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\QRIcon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\QrIconDefault.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Icons\SunCircleLight.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\NHMLogos.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\Xaml\Tooltips.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItemHeader.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\CustomDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\EnterWalletDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\EnterWalletDialogDemo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\EnterWorkernameDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DemoBTCNotice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\EulaWindowSecondShort.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\Benchmarks.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\ComputeDeviceItem\AlgorithmItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ChooseLanguageWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\WorkernamePanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\NHBase\NHBaseWindowStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\NHBase\NHMMainWindowStyle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\Styles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\ViewStatsOnline.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Dashboard\Dashboard.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Devices\ComputeDeviceItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Devices\Devices.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\EulaWindowFirstLong.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Help\Help.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Login\LoginBrowser.xaml" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Login\LoginWindow.xaml" Condition="$(DefineConstants.Contains('ENABLE_LOGIN'))">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Notifications\Notifications.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Notifications\NotificationItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Plugins\PluginItem\PluginIcon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Plugins\PluginItem\PluginItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Plugins\PluginItem\PluginItemConfirm.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Plugins\Plugins.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Plugins\PluginsConfirmDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\Settings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\SettingsAbout.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\SettingsAdvanced.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\SettingsCheckBoxItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\SettingsGeneral.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Settings\SettingsQrLogin.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SingleInstanceNotice.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TDPSettings\TDPComputeDeviceItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TDPSettings\TDPSettings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TDPSettings\TDPSettingsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TemporaryStartupLoadingControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="_DESIGN_DEVELOP\Colors\Colors.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="_DESIGN_DEVELOP\Components\ThemeSwitch.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="README.md" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-R.ttf" />
-    <Resource Include="Resources\Fonts\FontAwesome\fa-solid-900.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-B.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-BI.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-C.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-L.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-LI.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-M.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-MI.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-RI.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-Th.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-B.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-BI.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-R.ttf" />
-    <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-RI.ttf" />
-    <Resource Include="Resources\Fonts\FontAwesome\fa-brands-400.ttf" />
-    <None Include="translations.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\logo.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
-      <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
-      <Name>NHM.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
-      <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
-      <Name>NHM.DeviceMonitoring</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj">
-      <Project>{ec0e538a-1966-4434-af96-0e25223bbc19}</Project>
-      <Name>NHM.MinerPluginToolkitV1</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHMCore\NHMCore.csproj">
-      <Project>{43dcaf38-d0c4-4335-983d-650f78461eb2}</Project>
-      <Name>NHMCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\logoDark32.png" />
-    <Resource Include="Resources\logoLight32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
-      <Version>1.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="log4net">
-      <Version>2.0.12</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView">
-      <Version>6.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Windows.SDK.Contracts">
-      <Version>10.0.19041.1</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="System.Runtime.WindowsRuntime">
-      <Version>4.7.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
-      <Version>4.7.0</Version>
-    </PackageReference>
-    <PackageReference Include="ZXing.Net">
-      <Version>0.16.6</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>REM create directory
-If NOT exist "$(SolutionDir)$(Configuration)\app\assets\" mkdir "$(SolutionDir)$(Configuration)\app\assets\"
-copy /Y "$(SolutionDir)\Resources\enter_BTC_manually.gif" "$(SolutionDir)$(Configuration)\app\assets\enter_BTC_manually.gif"</PostBuildEvent>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>disable</Nullable>
+        <UseWPF>true</UseWPF>
+        <AssemblyName>app_nhm</AssemblyName>
+        <RootNamespace>NiceHashMiner</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\..\Debug\app\</OutputPath>
+      <DefineConstants>TRACECOREAPP;ENABLE_LOGIN</DefineConstants>
+      <PlatformTarget>x64</PlatformTarget>
+      <Prefer32bit>true</Prefer32bit>
+      <DebugType>full</DebugType>
+      <WarningLevel>4</WarningLevel>
+      <WarningsAsErrors />
+      <NoWarn />
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\..\Release\app\</OutputPath>
+      <DefineConstants>TRACECOREAPP;ENABLE_LOGIN</DefineConstants>
+      <PlatformTarget>x64</PlatformTarget>
+      <Prefer32bit>true</Prefer32bit>
+      <DebugType>pdbonly</DebugType>
+      <WarningLevel>4</WarningLevel>
+      <WarningsAsErrors />
+      <NoWarn />
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Page Update="_DESIGN_DEVELOP\Colors\Colors.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="_DESIGN_DEVELOP\Components\ThemeSwitch.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Colors\Colors.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Colors\Dark.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Colors\Light.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\Buttons.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\CheckBoxes.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\ComboBoxes.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\Controls.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\InvisibleToggleButton.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\MenuDropdownButton.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\ProgressBars.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\ScrollBar.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\SpinCirclePath.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\StartStopButtonDark.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\StartStopButtonLight.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\Switches.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\TabButton.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\TextBoxes.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Controls\ToolTip.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Fonts\Fonts.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Fonts\Spacing.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Fonts\Typography.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\Icons.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\LoginCircleLogoDark.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\LoginCircleLogoLight.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\LoginQRCircleLight.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\MiningAxeIcon.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\MiningAxeIconDark.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\MoonCircleDark.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\NHMLogoBigLight.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\NHMLogoDark.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\NHMLogoLight.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\QRIcon.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\QrIconDefault.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Icons\SunCircleLight.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Brushes.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\NHMLogos.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Resources\Xaml\Tooltips.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Benchmark\ComputeDeviceItem\AlgorithmSettings.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItemHeader.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Benchmark\ComputeDeviceItem\AlgorithmItem.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Benchmark\ComputeDeviceItem\ComputeDeviceItem.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Benchmark\Benchmarks.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\NHBase\NHBaseWindowStyles.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\NHBase\NHMMainWindowStyle.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\CustomDialog.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\EnterWalletDialog.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\EnterWalletDialogDemo.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\EnterWorkernameDialog.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\WorkernamePanel.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\Styles.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Common\ViewStatsOnline.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Dashboard\Dashboard.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Devices\ComputeDeviceItem.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Devices\Devices.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Help\Help.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Login\LoginBrowser.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Login\LoginWindow.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Notifications\Notifications.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Notifications\NotificationItem.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Plugins\PluginItem\PluginIcon.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Plugins\PluginItem\PluginItem.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Plugins\PluginItem\PluginItemConfirm.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Plugins\Plugins.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Plugins\PluginsConfirmDialog.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Settings\Settings.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Settings\SettingsAbout.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Settings\SettingsAdvanced.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Settings\SettingsCheckBoxItem.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Settings\SettingsGeneral.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\Settings\SettingsQrLogin.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\TDPSettings\TDPComputeDeviceItem.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\TDPSettings\TDPSettings.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\TDPSettings\TDPSettingsWindow.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\ManuallyEnterBTCTutorial.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\DemoBTCNotice.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\EulaWindowSecondShort.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\ChooseLanguageWindow.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\EulaWindowFirstLong.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\MainWindow.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\SingleInstanceNotice.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Views\TemporaryStartupLoadingControl.xaml">
+        <SubType>Designer</SubType>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Resources\Fonts\FontAwesome\fa-brands-400.ttf" />
+      <Resource Include="Resources\Fonts\FontAwesome\fa-solid-900.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-B.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-BI.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-C.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-L.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-LI.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-M.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-MI.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-R.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-RI.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-Th.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-B.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-BI.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-R.ttf" />
+      <Resource Include="Resources\Fonts\Ubuntu\UbuntuMono-RI.ttf" />
+      <Resource Include="Resources\logo.ico" />
+      <Resource Include="Resources\logoDark32.png" />
+      <Resource Include="Resources\logoLight32.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="translations.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NHM.Common\NHM.Common.csproj" />
+      <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj" />
+      <ProjectReference Include="..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
+      <ProjectReference Include="..\NHMCore\NHMCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+      <PackageReference Include="log4net" Version="2.0.12" />
+      <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.961.33" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="System.Management" Version="5.0.0" />
+      <PackageReference Include="ZXing.Net" Version="0.16.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

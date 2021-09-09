@@ -4,6 +4,10 @@
     <ProjectReference Include="..\NHM.MinerPlugin\NHM.MinerPlugin.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="obj\Debug\netstandard2.0\NHM.MinerPluginLoader.csproj.AssemblyReference.cache" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>

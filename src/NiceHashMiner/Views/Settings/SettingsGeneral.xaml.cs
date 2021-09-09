@@ -189,7 +189,7 @@ namespace NiceHashMiner.Views.Settings
 
         private async void ProcessLogReport()
         {
-            var uuid = Guid.NewGuid().ToString();
+            var uuid = System.Guid.NewGuid().ToString();
             var success = await Helpers.CreateAndUploadLogReport(uuid);
             if (success)
             {

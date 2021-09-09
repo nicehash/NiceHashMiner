@@ -1064,7 +1064,7 @@ namespace NHMCore.Mining.Plugins
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedWrongHashMiner;
                     return finalState;
                 }
-                if (!downloadMinerBinsOK || stop.IsCancellationRequested)
+                 if (!downloadMinerBinsOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedDownloadingMiner;
                     return finalState;

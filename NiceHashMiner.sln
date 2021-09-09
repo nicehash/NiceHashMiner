@@ -60,8 +60,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.WildRig", "src\Miners\Wi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "runnhmasadmin", "src\Tools\runnhmasadmin\runnhmasadmin.csproj", "{3712894A-0836-4CE3-A4A9-C21A32AACBEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMiner", "src\NiceHashMiner\NiceHashMiner.csproj", "{56653651-3BF1-4A89-A20C-3178C06A29A3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.SRBMiner", "src\Miners\SRBMiner\MP.SRBMiner.csproj", "{EAF3B1D7-A8B1-4BB0-A325-50422FE39DD2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.MiniZ", "src\Miners\MiniZ\MP.MiniZ.csproj", "{EB73427B-90E0-4E5B-85D8-C33E810E970A}"
@@ -93,6 +91,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoMiner", "src\Tools\DemoMiner\DemoMiner.csproj", "{FC2DF88E-4D80-4FCC-A4AB-88E764DB035B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLauncher", "src\NiceHashMinerLauncher\NiceHashMinerLauncher.csproj", "{9C95FB4D-A213-4676-A5D4-CD830DD0027A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMiner", "src\NiceHashMiner\NiceHashMiner.csproj", "{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -278,14 +278,6 @@ Global
 		{3712894A-0836-4CE3-A4A9-C21A32AACBEC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3712894A-0836-4CE3-A4A9-C21A32AACBEC}.Release|x64.ActiveCfg = Release|Any CPU
 		{3712894A-0836-4CE3-A4A9-C21A32AACBEC}.Release|x64.Build.0 = Release|Any CPU
-		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|x64.Build.0 = Debug|Any CPU
-		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|x64.ActiveCfg = Release|Any CPU
-		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|x64.Build.0 = Release|Any CPU
 		{EAF3B1D7-A8B1-4BB0-A325-50422FE39DD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EAF3B1D7-A8B1-4BB0-A325-50422FE39DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAF3B1D7-A8B1-4BB0-A325-50422FE39DD2}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -414,6 +406,14 @@ Global
 		{9C95FB4D-A213-4676-A5D4-CD830DD0027A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9C95FB4D-A213-4676-A5D4-CD830DD0027A}.Release|x64.ActiveCfg = Release|Any CPU
 		{9C95FB4D-A213-4676-A5D4-CD830DD0027A}.Release|x64.Build.0 = Release|Any CPU
+		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Debug|x64.Build.0 = Debug|Any CPU
+		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Release|x64.ActiveCfg = Release|Any CPU
+		{682EABF2-B2BC-4E96-96B3-15F72ED7B8C5}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

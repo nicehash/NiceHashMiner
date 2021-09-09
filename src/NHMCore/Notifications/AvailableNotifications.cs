@@ -81,17 +81,6 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateNoSupportedDevicesInfo()
-        {
-            var notification = new Notification(NotificationsType.Fatal, NotificationsGroup.NoSupportedDevices, Tr("No Supported Devices"), Tr("No supported devices are found."));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Process.Start(Links.NhmNoDevHelp); }
-            };
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         public static void CreateMissingMinersInfo()
         {
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.MissingMiners, Tr("Missing miner files"), Tr("There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", Links.AVHelp));
