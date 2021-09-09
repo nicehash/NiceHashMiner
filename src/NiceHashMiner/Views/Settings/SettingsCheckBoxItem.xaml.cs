@@ -1,5 +1,7 @@
 ﻿using NHMCore.Configs;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -22,6 +24,7 @@ namespace NiceHashMiner.Views.Settings
 
         public static readonly DependencyProperty DescriptionProperty =
             DependencyProperty.Register(nameof(Description), typeof(string), typeof(SettingsCheckBoxItem));
+
 
         public SettingsCheckBoxItem()
         {
@@ -48,7 +51,7 @@ namespace NiceHashMiner.Views.Settings
             set => SetValue(DescriptionProperty, value);
         }
 
-        private void ToggleClickHandler(object sender, RoutedEventArgs e)
+        private async void ToggleClickHandler(object sender, RoutedEventArgs e)
         {
             var tb = e.Source as ToggleButton;
             if (ToggleButtonHidden == tb)
@@ -59,17 +62,40 @@ namespace NiceHashMiner.Views.Settings
             ToggleClick?.Invoke(sender, e);
             // we save on every change
             ConfigManager.GeneralConfigFileCommit();
+
+            await DisableToggleCondition();
         }
 
-        public void TurnOffCondition()
+
+
+        public async void TurnOffCondition()
         {
             if (Enabled.HasValue)
             {
-                if (!Enabled.Value) Enabled = true;
+                if (!Enabled.Value)
+                {
+                    Enabled = true;
+                    await DisableToggleCondition();
+                }
                 ConfigManager.GeneralConfigFileCommit();
             }
             //check if name
 
         }
+
+
+        public async Task DisableToggleCondition()
+        {
+            this.IsEnabled = false;
+            await OnElapsedButton();
+        }
+
+        private async Task OnElapsedButton()
+        {
+            await Task.Delay(3000);
+            this.IsEnabled = true;
+        }
+
+
     }
 }
