@@ -1,8 +1,10 @@
-﻿using NHMCore;
+﻿using NHM.Common;
+using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Notifications;
 using NiceHashMiner.Views.Common;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -91,6 +93,11 @@ namespace NiceHashMiner.Views.Notifications
             notificationsDetailsGrid.Visibility = Visibility.Visible;
             InfoToggleButton.IsChecked = true;
             InfoToggleButtonText.Text = "Less Info";
+        }
+
+        private void notificationHyperLink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(e.Uri.AbsoluteUri);
         }
     }
 }

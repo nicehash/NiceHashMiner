@@ -141,7 +141,6 @@ namespace NHMCore.Mining
             {
                 for(var i=0; i<speeds.Length; i++)
                 {
-                    Logger.Info("SPEEDS LEN", speeds.Length.ToString());
                     if (speeds[i] < (0.9 * mp.Algorithm.Speeds[i]) && speeds[i] != 0)
                     {
                         AvailableNotifications.CreateWarningHashrateDiffers(mp, "lower");

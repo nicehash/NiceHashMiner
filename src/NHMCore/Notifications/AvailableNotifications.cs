@@ -187,7 +187,7 @@ namespace NHMCore.Notifications
             var sentence = "was updated";
             if (!success) sentence = "was not updated";
 
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmWasUpdated, Tr("NiceHash Miner was Updated"), Tr($"NiceHash Miner {sentence} to the latest version."));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmWasUpdated, Tr("NiceHash Miner was updated"), Tr($"NiceHash Miner {sentence} to the latest version."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -333,9 +333,9 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateNoAvailableAlgorithmsInfo()
+        public static void CreateNoAvailableAlgorithmsInfo(int deviceId, string deviceName)
         {
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NoAvailableAlgorithms, Tr("No available algorithms"), Tr("There are no available algorithms to mine. Please check you rig stability and stability of installed plugins."));
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NoAvailableAlgorithms, Tr("No available algorithms"), Tr("There are no available algorithms to mine with GPU #{0} {1}. Please check you rig stability and stability of installed plugins.", deviceId.ToString(), deviceName));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -371,8 +371,10 @@ namespace NHMCore.Notifications
 
         public static void CreateWarningHashrateDiffers(MiningPair mp, string s)
         {
-            var content = Tr("We have detected that {0} speed when mining {1} is more than 10% {2} than benchmark speed.\n" +
-                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.Name, mp.Algorithm.AlgorithmName, s);
+            var comparison = Tr(s);
+
+            var content = Tr("We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\n" +
+                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
             try
             {
                 var hashrateNofitication = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.HashrateDeviatesFromBenchmark).FirstOrDefault();
@@ -381,8 +383,8 @@ namespace NHMCore.Notifications
                     if (hashrateNofitication.NotificationNew == true)
                     {
                         //check if the same sentence was already written to notification
-                        var newSentence = Tr("We have detected that {0} speed when mining {1} is more than 10% {2} than benchmark speed.\n" +
-                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.Name, mp.Algorithm.AlgorithmName, s);
+                        var newSentence = Tr("We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\n" +
+                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
                         if (hashrateNofitication.NotificationContent.Contains(newSentence))
                         {
                             return;
@@ -400,14 +402,15 @@ namespace NHMCore.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
 
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.HashrateDeviatesFromBenchmark, Tr("Miner speed fluctuations noticed"), content);
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.HashrateDeviatesFromBenchmark, Tr("Miner speed fluctuations detected"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateErrorExtremeHashrate(MiningPair mp)
         {
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.ExtremeHashrate, Tr("Miner extreme speed noticed"), Tr("Miner was restarted due to big difference between benchmarked speed and miner speed." +
-                " Please re-benchmark {0} with {1}. Otherwise, please reinstall the GPU drivers by following this guide.\n https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers", mp.Device.Name, mp.Algorithm.AlgorithmName));
+            var url = @"https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers";
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.ExtremeHashrate, Tr("Miner extreme speed detected"), Tr("Miner was restarted due to big difference between benchmarked speed and miner speed." +
+                " Please re-benchmark GPU #{0} {1} with {2}. Otherwise, please reinstall the GPU drivers by following this guide.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName), url);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

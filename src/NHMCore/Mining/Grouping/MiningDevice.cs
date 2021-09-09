@@ -89,7 +89,7 @@ namespace NHMCore.Mining.Grouping
 
             if (mostProfitable == null)
             {
-                AvailableNotifications.CreateNoAvailableAlgorithmsInfo();
+                AvailableNotifications.CreateNoAvailableAlgorithmsInfo(Device.ID, Device.Name);
                 MostProfitableAlgorithmStringID = "NONE";
             }
             else
