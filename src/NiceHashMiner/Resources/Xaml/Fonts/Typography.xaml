@@ -252,7 +252,15 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="TextBlock.LineHeight" Value="18" />
     </Style>
+    <Style x:Key="FontsTypography.SmallRegular-TextBlock" TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextBlock.LineHeight" Value="18" />
+    </Style>
     <Style x:Key="FontsTypography.SmallRegular/Active" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
+        <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
+    </Style>
+    <Style x:Key="FontsTypography.SmallRegular/Active-TextBlock" BasedOn="{StaticResource FontsTypography.SmallRegular-TextBlock}" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource Brushes.Light.Grey.MainBlack}" />
     </Style>
     <Style x:Key="FontsTypography.SmallRegular/Disabled" BasedOn="{StaticResource FontsTypography.SmallRegular}" TargetType="Control">
