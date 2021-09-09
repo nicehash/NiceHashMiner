@@ -5,7 +5,7 @@
 
   <PropertyGroup>
     <PlatformTarget>x64</PlatformTarget>
-    <TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
 </Project>
