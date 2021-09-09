@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>..\..\..\installer\</OutputPath>
+      <PlatformTarget>x64</PlatformTarget>
+      <Prefer32bit>true</Prefer32bit>
+      <DebugType>full</DebugType>
+      <WarningLevel>4</WarningLevel>
+      <WarningsAsErrors />
+      <NoWarn />
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>..\..\..\installer\</OutputPath>
+      <PlatformTarget>x64</PlatformTarget>
+      <Prefer32bit>true</Prefer32bit>
+      <DebugType>pdbonly</DebugType>
+      <WarningLevel>4</WarningLevel>
+      <WarningsAsErrors />
+      <NoWarn />
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\NHM.Common\NHM.Common.csproj" />
+      <ProjectReference Include="..\..\NHM.MinerPluginLoader\NHM.MinerPluginLoader.csproj" />
+      <ProjectReference Include="..\..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
+      <ProjectReference Include="..\..\NHM.MinerPlugin\NHM.MinerPlugin.csproj" />
+    </ItemGroup>
+
+</Project>
