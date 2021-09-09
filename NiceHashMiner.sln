@@ -44,8 +44,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nvidiasetp0state", "src\Too
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLogReport", "src\Tools\CreateLogReport\CreateLogReport.csproj", "{663285C0-8F68-4638-BEB2-4BB042868445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.MinersDownloader", "src\NHM.MinersDownloader\NHM.MinersDownloader.csproj", "{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.UUID", "src\NHM.UUID\NHM.UUID.csproj", "{EE6160CC-8C19-4AD8-BB1E-C295347203EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.NanoMiner", "src\Miners\NanoMiner\MP.NanoMiner.csproj", "{1B657592-641E-42EC-BC44-ABCAE62EF1FD}"
@@ -70,10 +68,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.LolMiner", "src\Miners\L
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.MinerPlugin", "src\NHM.MinerPlugin\NHM.MinerPlugin.csproj", "{77DB0A8C-4CB6-45EB-BDBC-6CA5C37F5070}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.MinerPluginLoader", "src\NHM.MinerPluginLoader\NHM.MinerPluginLoader.csproj", "{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.MinerPluginToolkitV1", "src\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj", "{EC0E538A-1966-4434-AF96-0E25223BBC19}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.__DEV__BrokenMiner", "src\Miners\__DEV__BrokenMiner\MP.__DEV__BrokenMiner.csproj", "{E9A55CE7-37B9-462F-92E8-AE929C5ADCCA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.__DEV__ExamplePlugin", "src\Miners\__DEV__ExamplePlugin\MP.__DEV__ExamplePlugin.csproj", "{0A50A58C-FF4D-48C4-91F0-1BABE974F16A}"
@@ -93,6 +87,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.DeviceDetection", "src\NHM.DeviceDetection\NHM.DeviceDetection.csproj", "{1153D12A-BD1F-4C9E-9F8D-5BC8951AE389}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.DeviceMonitoring", "src\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj", "{67666544-CE56-4ACA-818C-5BBCDF59E4E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.MinerPluginLoader", "src\NHM.MinerPluginLoader\NHM.MinerPluginLoader.csproj", "{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.MinersDownloader", "src\NHM.MinersDownloader\NHM.MinersDownloader.csproj", "{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.MinerPluginToolkitV1", "src\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj", "{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -214,14 +214,6 @@ Global
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|Any CPU.Build.0 = Release|Any CPU
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|x64.ActiveCfg = Release|Any CPU
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|x64.Build.0 = Release|Any CPU
-		{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}.Debug|x64.Build.0 = Debug|Any CPU
-		{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}.Release|x64.ActiveCfg = Release|Any CPU
-		{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}.Release|x64.Build.0 = Release|Any CPU
 		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE6160CC-8C19-4AD8-BB1E-C295347203EE}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -318,22 +310,6 @@ Global
 		{77DB0A8C-4CB6-45EB-BDBC-6CA5C37F5070}.Release|Any CPU.Build.0 = Release|Any CPU
 		{77DB0A8C-4CB6-45EB-BDBC-6CA5C37F5070}.Release|x64.ActiveCfg = Release|Any CPU
 		{77DB0A8C-4CB6-45EB-BDBC-6CA5C37F5070}.Release|x64.Build.0 = Release|Any CPU
-		{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}.Debug|x64.Build.0 = Debug|Any CPU
-		{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}.Release|x64.ActiveCfg = Release|Any CPU
-		{BD538BA6-6548-4EEB-B882-597C3F0EEBFD}.Release|x64.Build.0 = Release|Any CPU
-		{EC0E538A-1966-4434-AF96-0E25223BBC19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC0E538A-1966-4434-AF96-0E25223BBC19}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC0E538A-1966-4434-AF96-0E25223BBC19}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{EC0E538A-1966-4434-AF96-0E25223BBC19}.Debug|x64.Build.0 = Debug|Any CPU
-		{EC0E538A-1966-4434-AF96-0E25223BBC19}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC0E538A-1966-4434-AF96-0E25223BBC19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC0E538A-1966-4434-AF96-0E25223BBC19}.Release|x64.ActiveCfg = Release|Any CPU
-		{EC0E538A-1966-4434-AF96-0E25223BBC19}.Release|x64.Build.0 = Release|Any CPU
 		{E9A55CE7-37B9-462F-92E8-AE929C5ADCCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E9A55CE7-37B9-462F-92E8-AE929C5ADCCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9A55CE7-37B9-462F-92E8-AE929C5ADCCA}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -414,6 +390,30 @@ Global
 		{67666544-CE56-4ACA-818C-5BBCDF59E4E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{67666544-CE56-4ACA-818C-5BBCDF59E4E4}.Release|x64.ActiveCfg = Release|Any CPU
 		{67666544-CE56-4ACA-818C-5BBCDF59E4E4}.Release|x64.Build.0 = Release|Any CPU
+		{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}.Debug|x64.Build.0 = Debug|Any CPU
+		{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}.Release|x64.ActiveCfg = Release|Any CPU
+		{5AFAAC28-BEEE-4F7A-A0F0-CAF977776125}.Release|x64.Build.0 = Release|Any CPU
+		{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}.Debug|x64.Build.0 = Debug|Any CPU
+		{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}.Release|x64.ActiveCfg = Release|Any CPU
+		{A06D1D2D-E3AC-4CA9-89D3-2A0659AF99BE}.Release|x64.Build.0 = Release|Any CPU
+		{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}.Debug|x64.Build.0 = Debug|Any CPU
+		{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}.Release|x64.ActiveCfg = Release|Any CPU
+		{C82332C8-F990-4395-9F4A-CDEB25FCC3FB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

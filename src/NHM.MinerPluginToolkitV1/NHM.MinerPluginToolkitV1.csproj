@@ -1,11 +1,24 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  
-  <ItemGroup>
-    <ProjectReference Include="..\NHM.MinerPlugin\NHM.MinerPlugin.csproj" />
-  </ItemGroup>
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <AssemblyName>NHM.MinerPluginToolkitV1</AssemblyName>
+        <RootNamespace>NHM.MinerPluginToolkitV1</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <PlatformTarget>x64</PlatformTarget>
+      <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <PlatformTarget>x64</PlatformTarget>
+      <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NHM.MinerPlugin\NHM.MinerPlugin.csproj" />
+    </ItemGroup>
+
 </Project>
