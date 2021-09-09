@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
@@ -11,7 +10,7 @@ namespace NiceHashMiner
             try
             {
                 var current = Process.GetCurrentProcess();
-                Execute(current.Id, Application.ExecutablePath);
+                Execute(current.Id, AppDomain.CurrentDomain.BaseDirectory);
             }
             catch (Exception)
             {

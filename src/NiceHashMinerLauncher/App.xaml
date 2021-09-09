@@ -4,5 +4,6 @@
              xmlns:local="clr-namespace:NiceHashMiner"
              Startup="App_OnStartup">
     <Application.Resources>
+         
     </Application.Resources>
 </Application>

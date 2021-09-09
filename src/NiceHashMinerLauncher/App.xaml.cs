@@ -294,7 +294,11 @@ namespace NiceHashMiner
 #error "Comment this line if you really wish to execute apps cleanup"
                 DeleteAllExceptCurrentVersion(version); // cleanup on next release
 #endif
+                // Temporary while doing the migration
                 var nhmApp = GetRootPath(latestAppDir, latestAppExe);
+                if (!File.Exists(nhmApp))
+                    nhmApp = nhmApp.Replace("net5.0-windows\\", string.Empty, StringComparison.InvariantCultureIgnoreCase);
+                
                 var args = $"-lc -PID{Process.GetCurrentProcess().Id}";
                 if (isUpdated)
                 {
@@ -326,7 +330,6 @@ namespace NiceHashMiner
                                 afterUpdate = false;
                                 startInfo.Arguments = startInfo.Arguments.Replace("-updated", "");
                             }
-
 
                             // TODO 
                             Console.WriteLine(niceHashMiner.ExitCode);
