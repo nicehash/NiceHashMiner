@@ -615,9 +615,6 @@ namespace NHMCore.Mining
                 if (log) Logger.Info(Tag, $"Mine always regardless of profit");
                 return true;
             }
-
-            // TODO FOR NOW USD ONLY
-            //var currentProfitUsd = (currentProfit * BalanceAndExchangeRates.Instance.GetUsdExchangeRate());
             var currentProfitFIAT = BalanceAndExchangeRates.Instance.ConvertFromBtc(currentProfit);
             var minProfit = MiningProfitSettings.Instance.MinimumProfit;
             _isProfitable = currentProfitFIAT >= minProfit;
