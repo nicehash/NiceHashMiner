@@ -1251,16 +1251,24 @@ namespace NHMCore.Mining.Plugins
         }
         #endregion DownloadingInstalling
 
-        private static bool FilePathHashEqualsToDatabaseHash(string filepath, string databaseHash)
+        private static string CalculateHash(string filepath)
         {
             //make hash from file stream and compare to database hash
             using (var sha256Hash = SHA256.Create())
             using (var stream = File.OpenRead(filepath))
             {                
                 var hash = sha256Hash.ComputeHash(stream);
-                var hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                return hashString == databaseHash;
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
+        }
+        
+        private static bool FilePathHashEqualsToDatabaseHash(string filepath, string databaseHash)
+        {
+            // TODO: need to check why the database hash is not populated
+            if (string.IsNullOrWhiteSpace(databaseHash))
+                return true;
+            
+            return CalculateHash(filepath) == databaseHash;
         }
     }
 }
