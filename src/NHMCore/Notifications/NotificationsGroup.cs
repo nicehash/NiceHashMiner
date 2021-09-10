@@ -45,6 +45,8 @@ namespace NHMCore.Notifications
         MissingGPUs,
         NVMLInitFail,
         NVMLLoadFail,
+        WrongChecksumBinary,
         MinerRestart,
+
     }
 }
