@@ -13,6 +13,16 @@ namespace NHM.MinerPluginToolkitV1
         public string PluginUUID { get; set; }
 
         /// <summary>
+        /// Hash for the plugin. This identifies the plugin and is used to check if is changed.
+        /// </summary>
+        public string PluginPackageHash { get; set; }
+
+        /// <summary>
+        /// Hash for the miner. This identifies the miner and is used to check if is changed.
+        /// </summary>
+        public string BinaryPackageHash { get; set; }
+
+        /// <summary>
         /// Name of the plugin. Usualy the name of the underlying miner.
         /// </summary>
         public string PluginName { get; set; }

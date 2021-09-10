@@ -144,7 +144,35 @@ namespace NBMiner
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "nbminer_noInterupt",
                     LongName = "--no-interrupt",
-                }
+                },
+                /// <summary>
+                /// feature: add option --enable-dag-cache to allow an extra DAG for different epoch cached in GPU memory, useful for ETH+ZIL mining and mining on NiceHash.
+                /// </summary>  
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "nbminer_--enable-dag-cache",
+                    LongName = "--enable-dag-cache",
+                },
+                /// <summary>
+                /// feature: ethash New LHR mode for ETH mining on RTX 30 series LHR GPUs, supports Windows & Linux, able to get ~70% of maximum unlocked hashrate.
+                /// This mode can be tuned by argument -lhr, only works for ethash right now.
+                /// -lhr default to 0, meaning even if -lhr is not set, LHR mode with -lhr 68 will be applied to LHR GPUs if certain GPUs are detected.
+                /// Tune LHR mode by setting -lhr <value>, a specific value will tell miner try to reach value percent of maximum unlocker hashrate, e.g. -lhr 68 will expect to get 68% of hashrate for same model non-LHR GPU.
+                /// Higher -lhr value will results in higher hashrate, but has higher possibility to run into lock state, which will leads to much less hashrate.
+                /// A good start tuning value is 68, which has been tested to be stable on most rig configurations.
+                /// -lhr value can be set for each GPU by using comma separeted list, -lhr 65,68,0,-1, where -1 means turn off LHR mode.
+                /// Known issue
+                /// unable to unlock LHR hashrate under windows driver 471.11
+                /// </summary>  
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "nbminer_lhr",
+                    LongName = "-lhr",
+                    DefaultValue = "-1",
+                    Delimiter = ","
+                },
             },
             TemperatureOptions = new List<MinerOption>
             {

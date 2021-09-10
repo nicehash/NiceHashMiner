@@ -47,5 +47,7 @@ namespace NHMCore.Notifications
         NVMLLoadFail,
         HashrateDeviatesFromBenchmark,
         ExtremeHashrate,
+        WrongChecksumBinary,
+        MinerRestart,
     }
 }
