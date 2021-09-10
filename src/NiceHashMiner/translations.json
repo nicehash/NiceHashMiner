@@ -4104,62 +4104,38 @@
     },
     "Return and enter Bitcoin address manually": {
       "ru": "Вернитесь и введите Биткоин-адрес вручную"
-<<<<<<< HEAD
     },
     "Miner speed fluctuations noticed": {
-
+    "ru": "Замечено колебание скорости майнера"
+   
     },
-    "We have detected that {0} speed when mining {1} is 10% {2} than benchmark speed.\nTo solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.": {
-
+    "We have detected that {0} speed when mining {1} is more than 10% {2} than benchmark speed.\nTo solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.": {
+    "ru": "Мы обнаружили, что скорость {0} при майнинге {1} более чем на 10% {2} скорости бенчмарка.\nДля решения проблемы выберите точный тип бенчмарка и повторите бенчмарк или используйте одинаковые настройки разгона при майнинге и бенчмарке."
+   
     },
-    "Miner was restarted at": {
-
+    "Miner {0} was restarted at {1}": {
+    "ru": "Майнер {0} был перезапущен {1}"
+   
     },
     "Miner restarted": {
-
+    "ru": "Майнер перезапущен"
+   
     },
     "lower": {
-
+    "ru": "ниже"
+   
     },
     "higher": {
-
+    "ru": "выше"
+   
+    },
+    "Miner extreme speed noticed": {
+    "ru": "Замечена экстремальная скорость майнера"
+   
+    },
+    "Miner was restarted due to big difference between benchmarked speed and miner speed. Please re-benchmark {0} with {1}. Otherwise, please reinstall the GPU drivers by following this guide.\n https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers": {
+    "ru": "Майнер был перезапущен в связи с большой разницей между скоростями бенчмарка и майнинга. Пожалуйста, повторите бенчмарк {0} с помощью {1} или переустановите драйверы видеокарт, следуя этому руководству.\n https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers"
+   
     }
   }
-}
-=======
-     },
-     "Miner speed fluctuations noticed": {
-      "ru": "Замечено колебание скорости майнера"
-   
-     },
-     "We have detected that {0} speed when mining {1} is more than 10% {2} than benchmark speed.\nTo solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.": {
-      "ru": "Мы обнаружили, что скорость {0} при майнинге {1} более чем на 10% {2} скорости бенчмарка.\nДля решения проблемы выберите точный тип бенчмарка и повторите бенчмарк или используйте одинаковые настройки разгона при майнинге и бенчмарке."
-   
-     },
-     "Miner {0} was restarted at {1}": {
-      "ru": "Майнер {0} был перезапущен {1}"
-   
-     },
-     "Miner restarted": {
-      "ru": "Майнер перезапущен"
-   
-     },
-     "lower": {
-      "ru": "ниже"
-   
-     },
-     "higher": {
-      "ru": "выше"
-   
-     },
-     "Miner extreme speed noticed": {
-      "ru": "Замечена экстремальная скорость майнера"
-   
-     },
-     "Miner was restarted due to big difference between benchmarked speed and miner speed. Please re-benchmark {0} with {1}. Otherwise, please reinstall the GPU drivers by following this guide.\n https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers": {
-      "ru": "Майнер был перезапущен в связи с большой разницей между скоростями бенчмарка и майнинга. Пожалуйста, повторите бенчмарк {0} с помощью {1} или переустановите драйверы видеокарт, следуя этому руководству.\n https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers"
-   
-     }
-    }
-   }
->>>>>>> master
+} 
