@@ -46,5 +46,7 @@ namespace NHMCore.Notifications
         NVMLInitFail,
         NVMLLoadFail,
         WrongChecksumBinary,
+        MinerRestart,
+
     }
 }

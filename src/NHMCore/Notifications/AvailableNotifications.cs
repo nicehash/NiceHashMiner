@@ -371,7 +371,8 @@ namespace NHMCore.Notifications
         public static void CreateFailedDownloadWrongHashBinary(string pluginName)
         {
             var content = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
-            try{
+            try
+            {
                 var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumBinary).FirstOrDefault();
                 if (pluginNotification != null)
                 {
@@ -390,6 +391,29 @@ namespace NHMCore.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.WrongChecksumBinary, Tr("Checksum validation failed"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateRestartedMinerInfo(DateTime dateTime, string minerName)
+        {
+            var content = Tr("Miner \"{0}\" was restarted at {1}", minerName, dateTime.ToString("HH:mm:ss MM/dd/yyyy"));
+            try
+            {
+                var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart).FirstOrDefault();
+                if (restartNotification != null)
+                {
+                    //add new content to prev content
+                    content = restartNotification.NotificationContent + "\n" + content;
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(restartNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.MinerRestart, Tr("Miner restarted"), Tr(content));
+
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

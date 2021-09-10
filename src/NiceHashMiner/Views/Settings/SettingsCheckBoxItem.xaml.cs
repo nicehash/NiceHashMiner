@@ -1,5 +1,7 @@
 ﻿using NHMCore.Configs;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -22,6 +24,7 @@ namespace NiceHashMiner.Views.Settings
 
         public static readonly DependencyProperty DescriptionProperty =
             DependencyProperty.Register(nameof(Description), typeof(string), typeof(SettingsCheckBoxItem));
+
 
         public SettingsCheckBoxItem()
         {
@@ -59,6 +62,20 @@ namespace NiceHashMiner.Views.Settings
             ToggleClick?.Invoke(sender, e);
             // we save on every change
             ConfigManager.GeneralConfigFileCommit();
+        }
+
+
+
+        public void TurnOffCondition()
+        {
+            if (Enabled.HasValue)
+            {
+                if (!Enabled.Value)
+                {
+                    Enabled = true;
+                }
+                ConfigManager.GeneralConfigFileCommit();
+            }
         }
     }
 }

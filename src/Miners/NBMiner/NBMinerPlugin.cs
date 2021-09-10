@@ -7,6 +7,7 @@ using NHM.MinerPluginToolkitV1.Configs;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,11 +27,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v37.2",
+                BinVersion = "v39.1",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v37.2/NBMiner_37.2_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v39.1/NBMiner_39.1_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,7 +43,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 1);
+        public override Version Version => new Version(16, 2);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -76,23 +77,17 @@ namespace NBMiner
                 .Where(dev => dev is IGpuDevice)
                 .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNvidiaDevice(dev))
                 .Cast<IGpuDevice>()
-                .OrderBy(gpu => gpu.PCIeBusID);
+                .OrderBy(gpu => gpu.PCIeBusID)
+                .Cast<BaseDevice>()
+                .Select((gpu, minerDeviceId) => (gpu, minerDeviceId))
+                .ToArray();
 
-            var pcieId = 0; // NBMiner sortes devices by PCIe
-            foreach (var gpu in gpus)
+            // NBMiner sortes devices by PCIe and indexes are 0 based
+            foreach (var (gpu, minerDeviceId) in gpus)
             {
-                _mappedIDs[gpu.UUID] = pcieId;
-                ++pcieId;
-                if (gpu is AMDDevice amd)
-                {
-                    var algorithms = GetSupportedAlgorithmsForDevice(amd);
-                    if (algorithms.Count > 0) supported.Add(amd, algorithms);
-                }
-                if (gpu is CUDADevice cuda)
-                {
-                    var algorithms = GetSupportedAlgorithmsForDevice(cuda);
-                    if (algorithms.Count > 0) supported.Add(cuda, algorithms);
-                }
+                _mappedIDs[gpu.UUID] = minerDeviceId;
+                var algorithms = GetSupportedAlgorithmsForDevice(gpu);
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
@@ -102,10 +97,8 @@ namespace NBMiner
         {
             var minDrivers = new Version(377, 0);
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
-            var device = dev as CUDADevice;
-            var isSupported = isSupportedVersion(device.SM_major, device.SM_minor);
-            return isDriverSupported && isSupported;
-
+            if (isDriverSupported && dev is CUDADevice cudaDev) return isSupportedVersion(cudaDev.SM_major, cudaDev.SM_minor);
+            return false;
         }
 
         private static bool IsSupportedAMDDevice(BaseDevice dev)
@@ -124,15 +117,21 @@ namespace NBMiner
             try
             {
                 if (_mappedIDs.Count == 0) return;
-                // TODO will break
-                var minerBinPath = GetBinAndCwdPaths().Item1;
+                var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
                 var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json --no-watchdog"); // AMD + NVIDIA
-                var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices.ToList());
-
-                foreach (var kvp in mappedDevs)
+                var dumpFile = $"d{DateTime.UtcNow.Ticks}.txt";
+                try
                 {
-                    var uuid = kvp.Key;
-                    var indexID = kvp.Value;
+                    File.WriteAllText(Path.Combine(minerCwdPath, dumpFile), output);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("NBMiner", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
+                }
+                var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices);
+
+                foreach (var (uuid, indexID) in mappedDevs.Select(kvp => (kvp.Key, kvp.Value)))
+                {
                     _mappedIDs[uuid] = indexID;
                 }
             }
@@ -154,7 +153,7 @@ namespace NBMiner
             {
                 if (ids.Count() == 0) return false;
                 if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 3 && device.DeviceType == DeviceType.NVIDIA && ids.Contains(AlgorithmType.DaggerHashimoto)) return true;
-                if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5 && device.DeviceType == DeviceType.NVIDIA && ids.Contains(AlgorithmType.Octopus)) return true;
+                if ((benchmarkedPluginVersion.Major < 16 || (benchmarkedPluginVersion.Major == 16 && benchmarkedPluginVersion.Minor < 2)) && device.DeviceType == DeviceType.AMD && ids.Contains(AlgorithmType.DaggerHashimoto)) return true;
             }
             catch (Exception e)
             {
