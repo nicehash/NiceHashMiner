@@ -4106,36 +4106,46 @@
       "ru": "Вернитесь и введите Биткоин-адрес вручную"
     },
     "Miner speed fluctuations noticed": {
-    "ru": "Замечено колебание скорости майнера"
-   
+      "ru": "Замечено колебание скорости майнера"
+
     },
-    "We have detected that {0} speed when mining {1} is more than 10% {2} than benchmark speed.\nTo solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.": {
-    "ru": "Мы обнаружили, что скорость {0} при майнинге {1} более чем на 10% {2} скорости бенчмарка.\nДля решения проблемы выберите точный тип бенчмарка и повторите бенчмарк или используйте одинаковые настройки разгона при майнинге и бенчмарке."
-   
+    "We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\nTo solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.": {
+
     },
-    "Miner {0} was restarted at {1}": {
-    "ru": "Майнер {0} был перезапущен {1}"
-   
+    "Miner \"{0}\" was restarted at {1}": {
+      "ru": "Майнер \"{0}\" был перезапущен {1}"
+
     },
     "Miner restarted": {
-    "ru": "Майнер перезапущен"
-   
+      "ru": "Майнер перезапущен"
+
     },
     "lower": {
-    "ru": "ниже"
-   
+      "ru": "ниже"
+
     },
     "higher": {
-    "ru": "выше"
-   
+      "ru": "выше"
+
     },
-    "Miner extreme speed noticed": {
-    "ru": "Замечена экстремальная скорость майнера"
-   
+    "Miner extreme speed detected": {
+      "ru": "Замечена экстремальная скорость майнера"
+
     },
-    "Miner was restarted due to big difference between benchmarked speed and miner speed. Please re-benchmark {0} with {1}. Otherwise, please reinstall the GPU drivers by following this guide.\n https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers": {
-    "ru": "Майнер был перезапущен в связи с большой разницей между скоростями бенчмарка и майнинга. Пожалуйста, повторите бенчмарк {0} с помощью {1} или переустановите драйверы видеокарт, следуя этому руководству.\n https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers"
-   
+    "Miner was restarted due to big difference between benchmarked speed and miner speed. Please re-benchmark GPU #{0} {1} with {2}. Otherwise, please reinstall the GPU drivers by following this guide.": {
+
+    },
+    "Checksum validation failed": {
+
+    },
+    "The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.": {
+
+    },
+    "There are no available algorithms to mine with GPU #{0} {1}. Please check you rig stability and stability of installed plugins.": {
+
+    },
+    "No available algorithms": {
+
     }
   }
 } 
