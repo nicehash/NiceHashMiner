@@ -208,6 +208,7 @@ namespace NHMCore.Mining
             set
             {
                 if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
+                OnPropertyChanged();
             }
         }
 
@@ -358,10 +359,24 @@ namespace NHMCore.Mining
 
         #endregion NormalizedProfit FOR SWITCHING
 
+
+
+
         /// <summary>
         /// Power consumption of this algorithm, in Watts
         /// </summary>
-        public virtual double PowerUsage { get; set; }
+        private double powerUsage = 0;
+        public virtual double PowerUsage {
+            get
+            {
+                return powerUsage;
+            }
+            set
+            {
+                powerUsage = value;
+                OnPropertyChanged(nameof(PowerUsage));
+            }
+        }
 
         #endregion
 
@@ -437,6 +452,8 @@ namespace NHMCore.Mining
             var allZero = this.Speeds.Select(v => 0d).ToList();
             this.Speeds = allZero;
         }
+
+ 
 
         #endregion
 

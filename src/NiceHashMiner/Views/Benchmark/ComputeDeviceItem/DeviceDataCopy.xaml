@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Benchmark.ComputeDeviceItem.DeviceDataCopy"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
+             xmlns:nhmMining="clr-namespace:NHMCore.Mining;assembly=NHMCore" 
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance Type=nhmMining:AlgorithmContainer}">
+
+    <!--<UserControl.DataContext>
+        <viewModels:MainVM />
+    </UserControl.DataContext>-->
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="local.SettingTitle">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+        </Style>
+
+        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseUbuntuTextBlock}" x:Key="local.SettingDetail">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+        </Style>
+
+    </UserControl.Resources>
+    
+    
+    
+    <Grid DataContext="{Binding .}" x:Name="DeviceSelection" Background="{DynamicResource BackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="24,16,24,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Style="{StaticResource BaseUbuntuTextBlock}" FontSize="18" Foreground="{DynamicResource TextColorBrush}" Text="Select a Device To Copy From" />
+            <TextBlock Grid.Row="1" Margin="0,10,0,0" Style="{StaticResource local.SettingTitle}" FontSize="10" Text="{Binding Dev.Name}" />
+
+        </Grid>
+        <Separator Grid.Row="1" />
+        
+
+        <StackPanel Grid.Row="3">
+            <ItemsControl x:Name="ListedDevces" ItemsSource="{Binding DevicesOfSameType}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Padding="16,7,16,7" Click="Copy_Device_Click" Style="{StaticResource ContextMenuButton}" Content="{Binding FullName}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>
