@@ -28,6 +28,15 @@ namespace NHMCore.Notifications
             NotificationContent = content;
         }
 
+        public Notification(NotificationsType type, NotificationsGroup group, string name, string content, string url)
+        {
+            Type = type;
+            Group = group;
+            Name = name;
+            NotificationContent = content;
+            NotificationUrl = url;
+        }
+
         public NotificationAction Action { get; internal set; } = null;
 
         private string _notificationName { get; set; }
@@ -71,6 +80,17 @@ namespace NHMCore.Notifications
             {
                 _notificationContent = value;
                 OnPropertyChanged(nameof(NotificationContent));
+            }
+        }
+
+        private string _notificationUrl { get; set; }
+        public string NotificationUrl
+        {
+            get => _notificationUrl;
+            set
+            {
+                _notificationUrl = value;
+                OnPropertyChanged(nameof(NotificationUrl));
             }
         }
 
