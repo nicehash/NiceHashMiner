@@ -7,6 +7,7 @@ using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -15,12 +16,12 @@ using System.Threading.Tasks;
 
 namespace MiniZ
 {
-    public class MiniZ : MinerBase, IAfterStartMining
+    public class MiniZ : MinerBase
     {
         private const double DevFee = 2.0;
         private int _apiPort;
         private string _devices;
-        private DateTime _started;
+        private DateTime _started = DateTime.MinValue;
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
@@ -30,13 +31,9 @@ namespace MiniZ
         }
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
-        public void AfterStartMining()
-        {
-            _started = DateTime.UtcNow;
-        }
-
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
+            if (_started == DateTime.MinValue) _started = DateTime.Now;
             var api = new ApiData();
             var elapsedSeconds = DateTime.UtcNow.Subtract(_started).Seconds;
             if (elapsedSeconds < 10)
@@ -75,7 +72,7 @@ namespace MiniZ
 
                 foreach (var gpu in gpus)
                 {
-                    var currentDevStats = results.Where(r => int.Parse(r.busid.Split(':')[1], System.Globalization.NumberStyles.HexNumber) == gpu.PCIeBusID).FirstOrDefault();
+                    var currentDevStats = results.Where(r => int.Parse(r.busid.Split(':')[1], NumberStyles.HexNumber) == gpu.PCIeBusID).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed_sps;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentDevStats.speed_sps * (1 - DevFee * 0.01)) });

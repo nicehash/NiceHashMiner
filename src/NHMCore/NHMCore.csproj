@@ -278,6 +278,10 @@
       <Project>{EB73427B-90E0-4E5B-85D8-C33E810E970A}</Project>
       <Name>MP.MiniZ</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\MP.Joker\MP.Joker.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Joker_PLUGIN'))">
+      <Project>{a23e8384-0c0b-4cf2-a2b9-46f34e32d0fb}</Project>
+      <Name>MP.Joker</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\NanoMiner\MP.NanoMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NanoMiner_PLUGIN'))">
       <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
       <Name>MP.NanoMiner</Name>

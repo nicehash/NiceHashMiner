@@ -14,17 +14,17 @@ namespace WildRig
     public class WildRig : MinerBase
     {
         private int _apiPort;
-        private readonly HttpClient _http = new HttpClient();
+        private readonly HttpClient _httpClient = new HttpClient();
         private string _devices = "";
-        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         private string AlgoName => PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
 
         private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
-        public WildRig(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        public WildRig(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
         {
-            _mappedIDs = mappedIDs;
+            _mappedDeviceIds = mappedDeviceIds;
         }
 
 
@@ -33,7 +33,7 @@ namespace WildRig
             var ad = new ApiData();
             try
             {
-                var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}");
+                var result = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}");
                 ad.ApiResponse = result;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
@@ -69,13 +69,13 @@ namespace WildRig
         {
             var pairsList = miningPairs.ToList();
             // sort by mapped ids
-            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
             return pairsList;
         }
 
         protected override void Init()
         {
-            _devices = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
+            _devices = string.Join(",", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
         }
 
         protected override string MiningCreateCommandLine()

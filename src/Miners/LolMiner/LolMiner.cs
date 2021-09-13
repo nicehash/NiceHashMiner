@@ -21,13 +21,13 @@ namespace LolMiner
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
-        protected Dictionary<string, int> _mappedIDs;
+        protected Dictionary<string, int> _mappedDeviceIds;
 
-        private readonly HttpClient _http = new HttpClient();
+        private readonly HttpClient _httpClient = new HttpClient();
 
-        public LolMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        public LolMiner(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
         {
-            _mappedIDs = mappedIDs;
+            _mappedDeviceIds = mappedDeviceIds;
         }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
@@ -37,7 +37,7 @@ namespace LolMiner
             var ad = new ApiData();
             try
             {
-                var summaryApiResult = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
+                var summaryApiResult = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
                 ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
@@ -64,7 +64,7 @@ namespace LolMiner
                 foreach (var pair in _miningPairs)
                 {
                     var gpuUUID = pair.Device.UUID;
-                    var gpuID = _mappedIDs[gpuUUID];
+                    var gpuID = _mappedDeviceIds[gpuUUID];
                     var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault();
                     if (currentStats == null) continue;
                     perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.Performance * multiplier * (1 - DevFee * 0.01)) });
@@ -86,13 +86,13 @@ namespace LolMiner
         {
             var pairsList = miningPairs.ToList();
             // sort by mapped ids
-            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
             return pairsList;
         }
 
         protected override void Init()
         {
-            _devices = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
+            _devices = string.Join(",", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
 
             // ???????? GetSortedMiningPairs is now sorted so this thing probably makes no sense anymore
             var miningPairs = _miningPairs.ToList();

@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace TTMiner
 {
-    public class TTMiner : MinerBase, IAfterStartMining
+    public class TTMiner : MinerBase
     {
         private int _apiPort;
         private string _devices;
         private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
         // figure out how to fix API workaround without this started time
-        private DateTime _started;
+        private DateTime _started = DateTime.MinValue;
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
@@ -43,6 +43,7 @@ namespace TTMiner
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
+            if (_started == DateTime.MinValue) _started = DateTime.Now;
             var api = new ApiData();
             var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
             if (elapsedSeconds < 15)
@@ -67,11 +68,6 @@ namespace TTMiner
         {
             var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
             _devices = string.Join(" ", mappedDevIDs);
-        }
-
-        public void AfterStartMining()
-        {
-            _started = DateTime.Now;
         }
     }
 }

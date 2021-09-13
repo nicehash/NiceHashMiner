@@ -84,6 +84,9 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_MiniZ_PLUGIN
                 new MiniZ.MiniZPlugin(),
 #endif
+#if INTEGRATE_Joker_PLUGIN
+                new MP.Joker.JokerPlugin(),
+#endif
 
 #if INTEGRATE_ALL_PLUGINS
                 new GMinerPlugin.GMinerPlugin(),
