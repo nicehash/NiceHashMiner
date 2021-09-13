@@ -2,14 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NHM.Common
 {
     public static class DNSQuery
     {
+        #region JSON DTOs
+#pragma warning disable IDE1006 // Naming Styles
         private class Answer
         {
             public string data { get; set; }
@@ -19,71 +21,54 @@ namespace NHM.Common
         {
             public List<Answer> Answer { get; set; }
         }
+#pragma warning restore IDE1006 // Naming Styles
+        #endregion JSON DTOs
 
-        static readonly HttpClient client = new HttpClient();
+        private static readonly HttpClient _client = new HttpClient();
+
+        private static readonly IReadOnlyList<string> _destinations = new string[]
+        {
+            "cloudflare-dns.com", "1.1.1.1", "1.0.0.1",
+        };
+
         static DNSQuery()
         {
-            //client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Accept", "application/dns-json");
+            _client.DefaultRequestHeaders.Add("Accept", "application/dns-json");
         }
-        private static string[] destinations =
-        {
-            "cloudflare-dns.com","1.1.1.1","1.0.0.1",
-        };
-        private static string URL = "https://{DESTINATION}/dns-query?name={REQUEST}&type={TYPE}";
+
+        private static string URL = "https://{DESTINATION}/dns-query?name={REQUEST}&type=A";
         const string DESTINATION_TEMPLATE = "{DESTINATION}";
         const string REQUEST_TEMPLATE = "{REQUEST}";
-        const string TYPE_TEMPLATE = "{TYPE}";
 
-
-        public static async Task<string> QueryOrDefault(string url)
+        public static async Task<(string IP, bool gotIP)> QueryOrDefault(string url)
         {
-
-            foreach (var dest in destinations)
+            foreach (var dest in _destinations)
             {
-                var requestLocation = URL;
-                requestLocation = requestLocation.Replace(DESTINATION_TEMPLATE, dest);
-                requestLocation = requestLocation.Replace(REQUEST_TEMPLATE, url);
-                requestLocation = requestLocation.Replace(TYPE_TEMPLATE, "A");//TODO?
+                var requestLocation = URL
+                    .Replace(DESTINATION_TEMPLATE, dest)
+                    .Replace(REQUEST_TEMPLATE, url);
                 var ip = await Request(requestLocation);
-                if (ip != null) return ip;
+                if (ip != null) return (ip, true);
             }
-            return url;
+            return (url, false);
         }
 
         private static async Task<string> Request(string targetUrl)
         {
             try
             {
-
-                HttpResponseMessage response = await client.GetAsync(targetUrl);
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                var parsedObject = JsonConvert.DeserializeObject<DNSReply>(responseBody);
-                if (parsedObject.Answer == null) return null;
-                if (parsedObject.Answer.Count == 0) return null;
-                var addresses = GetAddressList(parsedObject.Answer);
-                return addresses.FirstOrDefault();
+                var response = await _client.GetStringAsync(targetUrl);
+                var parsedObject = JsonConvert.DeserializeObject<DNSReply>(response);
+                var ips = parsedObject?.Answer?
+                    .Select(answer => answer.data)
+                    .Where(ipString => IPAddress.TryParse(ipString, out var _));
+                return ips.FirstOrDefault();
             }
-            catch (HttpRequestException e)
+            catch (Exception e)
             {
-                Console.WriteLine("Request to " + targetUrl + " failed!");
+                Logger.Error("DNSQuery", $"Request to {targetUrl} failed with Error: {e.Message}");
                 return null;
             }
-        }
-
-        private static List<string> GetAddressList(List<Answer> answers)
-        {
-            return answers.Select(resIP => resIP.data).Where(resIP => ValidateIPv4(resIP)).ToList();
-        }
-
-        private static bool ValidateIPv4(string ipString)
-        {
-            if (String.IsNullOrWhiteSpace(ipString)) return false;
-            string[] splitValues = ipString.Split('.');
-            if (splitValues.Length != 4) return false;
-            byte parsingValues;
-            return splitValues.All(r => byte.TryParse(r, out parsingValues));
         }
     }
 }
