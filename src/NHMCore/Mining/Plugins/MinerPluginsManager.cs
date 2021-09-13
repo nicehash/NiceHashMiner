@@ -787,7 +787,6 @@ namespace NHMCore.Mining.Plugins
             {
                 using (var client = new NoKeepAlivesWebClient())
                 {
-
                     string s = await client.DownloadStringTaskAsync(Links.PluginsJsonApiUrl);
                     //// local fake string
                     //string s = Properties.Resources.pluginJSON;

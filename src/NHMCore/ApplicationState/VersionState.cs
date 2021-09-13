@@ -1,7 +1,6 @@
 ﻿using NHM.Common;
 using NHMCore.Utils;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NHMCore.ApplicationState

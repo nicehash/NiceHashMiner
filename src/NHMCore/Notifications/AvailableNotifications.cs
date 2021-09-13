@@ -4,7 +4,6 @@ using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
@@ -280,7 +279,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.FailedBenchmarkHelp) ; }
+                Action = () => { Process.Start(Links.FailedBenchmarkHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }

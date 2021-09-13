@@ -2,7 +2,6 @@
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
