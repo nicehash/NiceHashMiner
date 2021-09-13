@@ -463,5 +463,32 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.MinerRestart, Tr("Miner restarted"), Tr(content));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateNullChecksumError(string pluginName)
+        {
+            var content = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
+            try
+            {
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NullChecksum).FirstOrDefault();
+                if (pluginNotification != null)
+                {
+                    var newSentence = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
+                    if (pluginNotification.NotificationNew == true)
+                    {
+                        //add new content to prev content
+                        content = pluginNotification.NotificationContent + "\n" + newSentence;
+                    }
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NullChecksum, Tr("Checksum validation null"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

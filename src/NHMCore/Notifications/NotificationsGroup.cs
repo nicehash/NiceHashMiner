@@ -49,5 +49,6 @@ namespace NHMCore.Notifications
         ExtremeHashrate,
         WrongChecksumBinary,
         MinerRestart,
+        NullChecksum,
     }
 }
