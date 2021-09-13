@@ -87,6 +87,8 @@ namespace NiceHashMiner.ViewModels
         private IEnumerable<MiningData> WorkingMiningDevs =>
             MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining);
 
+
+
         #region settingsLists
 
         public IEnumerable<TimeUnitType> TimeUnits => GetEnumValues<TimeUnitType>();
@@ -204,7 +206,8 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.SelectedFiatCurrency}{PerTime}";
+        public string GlobalRateFiat => $"≈ {(WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0):F2} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}{PerTime}";
+        public string MinimumProfitString => $"Minimum Profit ({BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/day)";
 
 
         #endregion
@@ -287,7 +290,17 @@ namespace NiceHashMiner.ViewModels
                 NHMWSConnected = nhmwsConnected;
                 OnPropertyChanged(nameof(NHMWSConnected));
             };
+
+            BalanceAndExchangeRates.Instance.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(BalanceAndExchangeRates.SelectedFiatCurrency))
+                {
+                    OnPropertyChanged(nameof(GlobalRateFiat));
+                    OnPropertyChanged(nameof(MinimumProfitString));
+                }
+            };
         }
+
 
         // TODO I don't like this way, a global refresh and notify would be better
         private void UpdateTimerOnElapsed(object sender, ElapsedEventArgs e)

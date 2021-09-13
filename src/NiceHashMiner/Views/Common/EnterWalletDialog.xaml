@@ -94,9 +94,9 @@
                  Margin="0,8,0,0" />
                 <TextBlock Grid.Row="4"
                    Margin="25,8,0,0">
-            <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
-                How to create a Wallet Address?
-            </Hyperlink>
+                    <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                        How to create a Wallet Address?
+                    </Hyperlink>
                 </TextBlock>
                 <Button Grid.Row="5"
                 x:Name="SaveButton"

@@ -44,6 +44,11 @@ namespace NHMCore.Notifications
         LogArchiveUpload,
         MissingGPUs,
         NVMLInitFail,
-        NVMLLoadFail
+        NVMLLoadFail,
+        HashrateDeviatesFromBenchmark,
+        ExtremeHashrate,
+        WrongChecksumBinary,
+        MinerRestart,
+        NullChecksum,
     }
 }

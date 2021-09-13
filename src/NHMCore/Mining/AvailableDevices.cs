@@ -21,6 +21,18 @@ namespace NHMCore.Mining
         public static int AvailNVGpus => GetCountForType(DeviceType.NVIDIA);
         public static int AvailAmdGpus => GetCountForType(DeviceType.AMD);
 
+        public static IEnumerable<ComputeDevice> GetAvailGPUs()
+        {
+            var devs = Devices.Where(dev => dev.DeviceType != DeviceType.CPU);
+            return devs;
+        }
+
+        public static IEnumerable<ComputeDevice> GetAvailCPUs()
+        {
+            var devs = Devices.Where(dev => dev.DeviceType == DeviceType.CPU);
+            return devs;
+        }
+
         public static int AvailGpus => AvailAmdGpus + AvailNVGpus;
 
 
@@ -100,6 +112,8 @@ namespace NHMCore.Mining
         {
             return Devices.Count(device => device.DeviceType == type);
         }
+
+
 
         internal static void UncheckCpuIfGpu()
         {
