@@ -17,7 +17,6 @@ namespace NiceHashMiner.Views.Settings
         public SettingsAbout()
         {
             InitializeComponent();
-
             SetHyperlinkToArticle();
         }
 
