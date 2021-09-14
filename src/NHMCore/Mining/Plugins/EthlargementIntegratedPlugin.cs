@@ -22,7 +22,7 @@ namespace NHMCore.Mining.Plugins
     public class EthlargementIntegratedPlugin : NotifyChangedBase, IMinerPlugin, IInitInternals, IBackgroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource, IGetPluginMetaInfo
     {
         #region IMinerPlugin
-        public Version Version => new Version(15, 0);
+        public Version Version => new Version(16, 0);
         public string Name => "Ethlargement";
 
         public string Author => "info@nicehash.com";
