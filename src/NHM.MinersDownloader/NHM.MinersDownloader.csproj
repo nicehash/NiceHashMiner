@@ -55,14 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj">
-      <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
-      <Name>MyDownloader.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj">
-      <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
-      <Name>MyDownloader.Extension</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>

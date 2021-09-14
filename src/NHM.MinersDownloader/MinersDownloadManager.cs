@@ -1,11 +1,6 @@
 ﻿using CG.Web.MegaApiClient;
-using MyDownloader.Core;
-using MyDownloader.Core.Extensions;
-using MyDownloader.Core.UI;
-using MyDownloader.Extension.Protocols;
 using NHM.Common;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -16,9 +11,6 @@ namespace NHM.MinersDownloader
 {
     public static class MinersDownloadManager
     {
-        // don't use this it is faster but less stable
-        public static bool UseMyDownloader { get; set; } = true;
-
         static MinersDownloadManager()
         {
             ServicePointManager.Expect100Continue = true;
@@ -30,20 +22,11 @@ namespace NHM.MinersDownloader
 
         public static async Task<(bool success, string downloadedFilePath)> DownloadFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
-
             // TODO switch for mega upload
             if (IsMegaUpload(url))
             {
                 return await DownlaodWithMegaAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
             }
-
-            // check if url is valid because if it isn't MyDownloader will block
-            var urlIsValid = await UrlIsValid(url);
-            if (UseMyDownloader && urlIsValid)
-            {
-                return await DownlaodWithMyDownloaderAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
-            }
-
             return await DownloadFileWebClientAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
         }
 
@@ -104,113 +87,6 @@ namespace NHM.MinersDownloader
             }
             return (downloadStatus, downloadFileLocation);
         }
-
-        // This is 2-5 times faster
-        #region MyDownloader
-        internal static Downloader CreateDownloader(string url, string downloadLocation)
-        {
-            var location = ResourceLocation.FromURL(url);
-            var mirrors = new ResourceLocation[0];
-            var downloader = DownloadManager.Instance.Add(
-                location,
-                mirrors,
-                downloadLocation,
-                10,
-                true);
-
-            return downloader;
-        }
-
-        // #2 download the file
-        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMyDownloaderAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
-        {
-            // these extensions must be here otherwise it will not downlaod
-            var extensions = new List<IExtension>();
-            try
-            {
-                extensions.Add(new CoreExtention());
-                extensions.Add(new HttpFtpProtocolExtension());
-            }
-            catch { }
-
-            var downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(url));
-            long lastProgress = 0;
-            var ticksSinceUpdate = 0;
-            bool _isDownloadSizeInit = false;
-            var downloader = CreateDownloader(url, downloadFileLocation);
-
-            var timer = new Timer((object stateInfo) =>
-            {
-                if (downloader.State != DownloaderState.Working) return;
-                if (!_isDownloadSizeInit)
-                {
-                    _isDownloadSizeInit = true;
-                }
-
-                if (downloader.LastError != null)
-                {
-                    Logger.Info("MinersDownloadManager", $"Error occured while downloading: {downloader.LastError.Message}");
-                }
-
-                var speedString = $"{downloader.Rate / 1024d:0.00} kb/s";
-                var percString = downloader.Progress.ToString("0.00") + "%";
-                var labelDownloaded =
-                    $"{downloader.Transfered / 1024d / 1024d:0.00} MB / {downloader.FileSize / 1024d / 1024d:0.00} MB";
-
-                var progPerc = (int)(((double)downloader.Transfered / downloader.FileSize) * 100);
-                var progMessage = $"{speedString}   {percString}   {labelDownloaded}";
-                progress?.Report(progPerc);
-
-                // Diagnostic stuff
-                if (downloader.Transfered > lastProgress)
-                {
-                    ticksSinceUpdate = 0;
-                    lastProgress = downloader.Transfered;
-                }
-                else if (ticksSinceUpdate > 20)
-                {
-                    Logger.Debug("MinersDownloadManager", "Maximum ticks reached, retrying");
-                    ticksSinceUpdate = 0;
-                }
-                else
-                {
-                    Logger.Debug("MinersDownloadManager", $"No progress in ticks {ticksSinceUpdate}");
-                    ticksSinceUpdate++;
-                }
-            });
-            timer.Change(0, 500);
-
-            stop.Register(() =>
-            {
-                DownloadManager.Instance.RemoveDownload(downloader);
-                timer.Dispose();
-            });
-
-            var tcs = new TaskCompletionSource<bool>();
-            var onDownloadEnded = new EventHandler<DownloaderEventArgs>((object sender, DownloaderEventArgs e) =>
-            {
-                timer.Dispose();
-                if (downloader != null)
-                {
-                    if (downloader.State == DownloaderState.EndedWithError)
-                    {
-                        Logger.Info("MinersDownloadManager", $"Download didn't complete successfully: {downloader.LastError.Message}");
-                        tcs.SetResult(false);
-                    }
-                    else if (downloader.State == DownloaderState.Ended)
-                    {
-                        Logger.Info("MinersDownloadManager", "DownloadCompleted Success");
-                        tcs.SetResult(true);
-                    }
-                }
-            });
-            DownloadManager.Instance.DownloadEnded += onDownloadEnded;
-            var result = await tcs.Task;
-            DownloadManager.Instance.DownloadEnded -= onDownloadEnded;
-
-            return (result, downloadFileLocation);
-        }
-        #endregion MyDownloader
 
         #region Mega
 
@@ -285,46 +161,5 @@ namespace NHM.MinersDownloader
         }
         #endregion Mega 
 
-
-
-        private static async Task<bool> UrlIsValid(string url)
-        {
-            try
-            {
-                var request = HttpWebRequest.Create(url) as HttpWebRequest;
-                request.Timeout = 5000; //set the timeout to 5 seconds to keep the user from waiting too long for the page to load
-                request.Method = "HEAD"; //Get only the header information -- no need to download any content
-
-                using (var response = await request.GetResponseAsync() as HttpWebResponse)
-                {
-                    int statusCode = (int)response.StatusCode;
-                    if (statusCode >= 100 && statusCode < 400) //Good requests
-                    {
-                        return true;
-                    }
-                    else if (statusCode >= 500 && statusCode <= 510) //Server Errors
-                    {
-                        Logger.Info("MinersDownloadManager", $"The remote server has thrown an internal error. Url is not valid: {url}");
-                        return false;
-                    }
-                }
-            }
-            catch (WebException ex)
-            {
-                if (ex.Status == WebExceptionStatus.ProtocolError) //400 errors
-                {
-                    return false;
-                }
-                else
-                {
-                    Logger.Error("MinersDownloadManager", $"Unhandled status [{ex.Status}] returned for url: {url}. Ex {ex.Message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("MinersDownloadManager", $"Could not test url {url}. Ex {ex}");
-            }
-            return false;
-        }
     }
 }

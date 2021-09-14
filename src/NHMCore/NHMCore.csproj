@@ -254,14 +254,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj">
-      <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
-      <Name>MyDownloader.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj">
-      <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
-      <Name>MyDownloader.Extension</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\CryptoDredge\MP.CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>MP.CryptoDredge</Name>
