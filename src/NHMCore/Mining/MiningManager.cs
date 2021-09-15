@@ -26,7 +26,7 @@ namespace NHMCore.Mining
         // assume we have internet
         private static bool _isConnectedToInternet = true;
 
-        public static AlgorithmSwitchingManager switchingManager;
+        public static AlgorithmSwitchingManager _switchingManager;
 
         public static bool IsMiningEnabled => _miningDevices.Any();
 
@@ -396,15 +396,15 @@ namespace NHMCore.Mining
 
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
-            switchingManager = new AlgorithmSwitchingManager();
+            _switchingManager = new AlgorithmSwitchingManager();
 
             var lastDeferredCommandTime = DateTime.UtcNow;
             Func<bool> handleDeferredCommands = () => (DateTime.UtcNow - lastDeferredCommandTime).TotalSeconds >= 0.5;
             var deferredCommands = new List<DeferredDeviceCommand>();
             try
             {
-                switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
-                switchingManager.ForceUpdate();
+                _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+                _switchingManager.ForceUpdate();
 
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Func<bool> isActive = () => !stop.IsCancellationRequested;
@@ -443,8 +443,8 @@ namespace NHMCore.Mining
             {
                 Logger.Info(Tag, "Exiting MiningManagerCommandQueueLoop run cleanup");
                 // cleanup
-                switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
-                switchingManager.Stop();
+                _switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
+                _switchingManager.Stop();
                 foreach (var groupMiner in _runningMiners.Values)
                 {
                     await groupMiner.StopTask();
@@ -592,14 +592,14 @@ namespace NHMCore.Mining
             else
             {
                 ApplicationStateManager.StartMining();
-                bool skipProfitsThreshold = checkIfShouldSkipProfitsThreshold(command);
+                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold, false);
 
             }
         }
 
 
-        private static bool checkIfShouldSkipProfitsThreshold(MainCommand command)
+        private static bool CheckIfShouldSkipProfitsThreshold(MainCommand command)
         {
             if (MiningProfitSettings.Instance.MineRegardlessOfProfit ||
                 command is MiningProfitSettingsChangedCommand || 
@@ -769,7 +769,7 @@ namespace NHMCore.Mining
 
             if (forceSwitch)
             {
-                switchingManager.ForceUpdate();
+                _switchingManager.ForceUpdate();
             }
 
             // grouping starting and stopping
