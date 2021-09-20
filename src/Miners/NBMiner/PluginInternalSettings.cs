@@ -186,7 +186,6 @@ namespace NBMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_lhrMode",
                     LongName = "-lhr-mode",
-                    DefaultValue = "2",
                 }
             },
             TemperatureOptions = new List<MinerOption>
