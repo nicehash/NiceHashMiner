@@ -173,6 +173,21 @@ namespace NBMiner
                     DefaultValue = "-1",
                     Delimiter = ","
                 },
+                /// <summary>
+                /// ethash new low power LHR mode, add -lhr-mode option.
+                /// -lhr-mode 2 is the default LHR mode, which is the new lower power mode.
+                /// -lhr-mode 1 changes LHR mode to old version, which is the same as v39.2
+                /// -lhr-mode 1 is suitable for only power limit bounded GPU, can achieve higher hashrate than mode 2
+                /// -lhr-mode 2 is able to achieve lower average power and temperature. espacially suitable for GPUs with gddr6x e.g.3070ti, 3080, 3080ti.
+                /// Power consumtion is fluctuating in this mode, better be used with locked core clock.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_lhrMode",
+                    LongName = "-lhr-mode",
+                    DefaultValue = "2",
+                }
             },
             TemperatureOptions = new List<MinerOption>
             {
