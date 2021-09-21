@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using Microsoft.Win32;
+using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -741,6 +743,23 @@ namespace NHMCore.Mining
                 return;
             }
 
+            //Pause mining when steam game is running
+            if (SteamRegistryValueExists())
+            {
+                var keyName = @"HKEY_USERS\" + WindowsIdentity.GetCurrent().User.Value + @"\SOFTWARE\Valve\Steam";
+                var valueName = "RunningAppID";
+                var RunningAppID = (int)Registry.GetValue(keyName, valueName, null);
+
+                //RunningAppID will be 0 if no game is running.
+                if (RunningAppID != 0)
+                {
+                    foreach (var device in _miningDevices) device.Device.State = DeviceState.Stopped;
+                    await PauseAllMiners();
+                    ApplicationStateManager.StopMining();
+                    return;
+                }
+            }
+
             // check profit threshold
             Logger.Info(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
             if (prevStateProfit > 0 && currentProfit > 0 && !skipProfitsThreshold)
@@ -840,5 +859,16 @@ namespace NHMCore.Mining
         //        _semaphore.Release();
         //    }
         //}
+
+        //function gets validKey if steam is installed
+        private static bool SteamRegistryValueExists()
+        {
+            var keyName = @"HKEY_USERS\" + WindowsIdentity.GetCurrent().User.Value + @"\SOFTWARE\Valve\Steam";
+            var valueName = "RunningAppID";
+
+            var invalidKey = Registry.GetValue(keyName, valueName, null) == null;
+            var validKey = !invalidKey;
+            return validKey;
+        }
     }
 }
