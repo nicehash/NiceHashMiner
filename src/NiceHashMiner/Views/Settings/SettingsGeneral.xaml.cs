@@ -172,11 +172,6 @@ namespace NiceHashMiner.Views.Settings
         {
             if(sender is TextBox tb)
             {
-                //necessary because we dont want this to be triggered on load
-                if(tb.Name == "MinProfitTB" && tb.Text != MiningProfitSettings.Instance.MinimumProfit.ToString())
-                {
-                    minProfitToggleButton.TurnOffCondition();
-                }
                 ConfigManager.GeneralConfigFileCommit();
             }
         }

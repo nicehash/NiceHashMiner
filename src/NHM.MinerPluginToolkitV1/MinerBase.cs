@@ -337,11 +337,13 @@ namespace NHM.MinerPluginToolkitV1
                     {
                         Logger.Info(_logGroup, $"Watchdog stopped in StartMining");
                         startProcessTaskCompletionSource.SetResult(false);
+                        //startProcessTaskCompletionSource.TrySetResult(false);
                     }
                     catch (Exception e)
                     {
                         Logger.Error(_logGroup, $"Error occured in StartMining : {e.Message}");
                         startProcessTaskCompletionSource.SetResult(e);
+                        //startProcessTaskCompletionSource.TrySetResult(e);
                     }
                     finally
                     {

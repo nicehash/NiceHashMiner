@@ -30,6 +30,8 @@ namespace NHMCore.Mining
 
         public static bool IsMiningEnabled => _miningDevices.Any();
 
+        public static bool Mining = false;
+
 
         private static CancellationToken stopMiningManager = CancellationToken.None;
         #region State for mining
@@ -183,12 +185,18 @@ namespace NHMCore.Mining
             var commandExecSuccess = true;
             try
             {
-                await CheckGroupingAndUpdateMiners(command);
+                await CheckGroupingAndUpdateMiners(command);//source problem from here
             }
             catch (Exception e)
             {
                 commandExecSuccess = false;
                 Logger.Error(Tag, $"HandleCommand Exception: {e.Message}");
+                if (command is MiningProfitSettingsChangedCommand)
+                {
+                    //try once more? TODO SET LIMIT (try 3 times and shutdown?)
+                    Logger.Error(Tag, $"Retrying miner restart after settings changed");
+                    _commandQueue.Enqueue(new MiningProfitSettingsChangedCommand());
+                }
             }
             finally
             {
@@ -731,6 +739,7 @@ namespace NHMCore.Mining
 
             // check if should mine
             // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
+            
             if (CheckIfShouldMine(currentProfit) == false)
             {
                 foreach (var device in _miningDevices)
