@@ -32,6 +32,8 @@ namespace NHMCore.Mining
 
         public static bool Mining = false;
 
+        private static int FailCount = 0;
+
 
         private static CancellationToken stopMiningManager = CancellationToken.None;
         #region State for mining
@@ -186,6 +188,7 @@ namespace NHMCore.Mining
             try
             {
                 await CheckGroupingAndUpdateMiners(command);//source problem from here
+                FailCount = 0;//reset failCount if not 0;
             }
             catch (Exception e)
             {
@@ -193,9 +196,12 @@ namespace NHMCore.Mining
                 Logger.Error(Tag, $"HandleCommand Exception: {e.Message}");
                 if (command is MiningProfitSettingsChangedCommand)
                 {
-                    //try once more? TODO SET LIMIT (try 3 times and shutdown?)
-                    Logger.Error(Tag, $"Retrying miner restart after settings changed");
-                    _commandQueue.Enqueue(new MiningProfitSettingsChangedCommand());
+                    if(FailCount < 3)
+                    {   //try 3 times and then do default until triggered by textbox entering again...?
+                        Logger.Error(Tag, $"Retrying miner restart after settings changed");
+                        _commandQueue.Enqueue(new MiningProfitSettingsChangedCommand());
+                        FailCount++;
+                    }
                 }
             }
             finally
