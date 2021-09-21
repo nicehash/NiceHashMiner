@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using System;
 
 namespace NHMCore.Notifications
 {
@@ -11,6 +12,7 @@ namespace NHMCore.Notifications
         {
             Name = name;
             NotificationContent = content;
+            NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
         public Notification(NotificationsType type, string name, string content)
@@ -18,6 +20,7 @@ namespace NHMCore.Notifications
             Type = type;
             Name = name;
             NotificationContent = content;
+            NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
         public Notification(NotificationsType type, NotificationsGroup group, string name, string content)
@@ -26,6 +29,7 @@ namespace NHMCore.Notifications
             Group = group;
             Name = name;
             NotificationContent = content;
+            NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
         public Notification(NotificationsType type, NotificationsGroup group, string name, string content, string url)
@@ -35,6 +39,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationUrl = url;
+            NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
         public NotificationAction Action { get; internal set; } = null;
@@ -69,6 +74,17 @@ namespace NHMCore.Notifications
             {
                 _notificationNew = value;
                 OnPropertyChanged(nameof(NotificationNew));
+            }
+        }
+
+        private string _notificationTime { get; set; }
+        public string NotificationTime
+        {
+            get => _notificationTime;
+            set
+            {
+                _notificationTime = value;
+                OnPropertyChanged(nameof(NotificationTime));
             }
         }
 
