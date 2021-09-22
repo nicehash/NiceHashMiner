@@ -314,8 +314,15 @@ namespace NHMCore.Notifications
         public static void CreateNotProfitableInfo(bool shouldClear)
         {
             // clear old state
-            var profitNotification = NotificationsManager.Instance.Notifications.FirstOrDefault(notif => notif.Group == NotificationsGroup.Profit);
-            NotificationsManager.Instance.Notifications.Remove(profitNotification);
+            try
+            {
+                var profitNotification = NotificationsManager.Instance.Notifications.FirstOrDefault(notif => notif.Group == NotificationsGroup.Profit);
+                if(profitNotification != null) NotificationsManager.Instance.Notifications.Remove(profitNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
             if (!shouldClear)
             {
                 var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Profit, Tr("Mining not profitable"), Tr("Currently mining is not profitable. Mining will be resumed once it will be profitable again."));
