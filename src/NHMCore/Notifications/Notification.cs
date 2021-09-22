@@ -12,7 +12,8 @@ namespace NHMCore.Notifications
         {
             Name = name;
             NotificationContent = content;
-            NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
+            NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
         public Notification(NotificationsType type, string name, string content)
@@ -20,7 +21,8 @@ namespace NHMCore.Notifications
             Type = type;
             Name = name;
             NotificationContent = content;
-            NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
+            NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
         public Notification(NotificationsType type, NotificationsGroup group, string name, string content)
@@ -29,7 +31,8 @@ namespace NHMCore.Notifications
             Group = group;
             Name = name;
             NotificationContent = content;
-            NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
+            NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
         public Notification(NotificationsType type, NotificationsGroup group, string name, string content, string url)
@@ -39,7 +42,8 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationUrl = url;
-            NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
+            NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
         public NotificationAction Action { get; internal set; } = null;
@@ -77,6 +81,28 @@ namespace NHMCore.Notifications
             }
         }
 
+        //private string _notificationTime { get; set; }
+        //public string NotificationTime
+        //{
+        //    get => _notificationTime;
+        //    set
+        //    {
+        //        _notificationTime = value;
+        //        OnPropertyChanged(nameof(NotificationTime));
+        //    }
+        //}
+
+        private int _notificationEpochTime { get; set; }
+        public int NotificationEpochTime
+        {
+            get => _notificationEpochTime;
+            set
+            {
+                _notificationEpochTime = value;
+                OnPropertyChanged(nameof(NotificationEpochTime));
+            }
+        }
+
         private string _notificationTime { get; set; }
         public string NotificationTime
         {
@@ -86,6 +112,23 @@ namespace NHMCore.Notifications
                 _notificationTime = value;
                 OnPropertyChanged(nameof(NotificationTime));
             }
+        }
+
+        public void UpdateNotificationTimeString()
+        {
+            var returnTime = "";
+            DateTimeOffset dateTimeOffSet = DateTimeOffset.FromUnixTimeSeconds(NotificationEpochTime);
+            DateTime dateTimeOfNotification = dateTimeOffSet.UtcDateTime;
+            var now = DateTime.UtcNow;
+            var secondsDiff = (now - dateTimeOfNotification).TotalSeconds;
+            if (secondsDiff < 60) returnTime = "Under a minute ago";
+            else if (secondsDiff < 120) returnTime = "A minute ago";
+            else if (secondsDiff < 3600) returnTime = Math.Floor(secondsDiff / 60) + " minutes ago";
+            else if (secondsDiff < 86400) returnTime = Math.Floor(secondsDiff / 60 / 60) + " hours ago";
+            else if (secondsDiff < 172800) returnTime = "Yesterday at " + dateTimeOfNotification.TimeOfDay;
+            else if (secondsDiff < 604800) returnTime = dateTimeOfNotification.DayOfWeek + " at " + dateTimeOfNotification.TimeOfDay;
+            else returnTime = dateTimeOfNotification.Date + " at " + dateTimeOfNotification.TimeOfDay;
+            NotificationTime = returnTime;
         }
 
         private string _notificationContent { get; set; }
