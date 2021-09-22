@@ -58,6 +58,7 @@ namespace NiceHashMiner.Views.Common
         public event EventHandler<RoutedEventArgs> CancelClick;
 
 
+
         public string Title
         {
             get => (string)GetValue(TitleProperty);
