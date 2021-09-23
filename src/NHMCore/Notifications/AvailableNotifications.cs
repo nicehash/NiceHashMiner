@@ -372,9 +372,12 @@ namespace NHMCore.Notifications
         public static void CreateWarningHashrateDiffers(MiningPair mp, string s)
         {
             var comparison = Tr(s);
+            var deviceType = "GPU";
+            if (mp.Device.DeviceType == NHM.Common.Enums.DeviceType.CPU)
+                deviceType = "CPU";
 
-            var content = Tr("We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\n" +
-                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
+            var content = Tr("We have detected that {0} #{1} {2} speed when mining {3} is more than 10% {4} than benchmark speed.\n" +
+                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", deviceType, mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
             try
             {
                 var hashrateNofitication = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.HashrateDeviatesFromBenchmark).FirstOrDefault();
@@ -383,8 +386,8 @@ namespace NHMCore.Notifications
                     if (hashrateNofitication.NotificationNew == true)
                     {
                         //check if the same sentence was already written to notification
-                        var newSentence = Tr("We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\n" +
-                            "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
+                        var newSentence = Tr("We have detected that {0} #{1} {2} speed when mining {3} is more than 10% {4} than benchmark speed.\n" +
+                            "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", deviceType, mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
                         if (hashrateNofitication.NotificationContent.Contains(newSentence))
                         {
                             return;
