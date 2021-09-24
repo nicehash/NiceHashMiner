@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibreHardwareMonitorLib">
+      <HintPath>..\..\..\LibreHardwareMonitor\LibreHardwareMonitorLib\obj\Debug\net452\LibreHardwareMonitorLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

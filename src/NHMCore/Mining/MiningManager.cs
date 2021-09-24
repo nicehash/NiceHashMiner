@@ -10,6 +10,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -359,6 +360,9 @@ namespace NHMCore.Mining
                     await CheckGroupingAndUpdateMiners(new MainCommand());
                 }
                 foreach (var startMining in startMiningCommands) startMining.device.State = DeviceState.Mining; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+
+                //check if any CPU starts mining in anadministrator role
+                if (startMiningCommands.Any(dev => dev.device.DeviceType == DeviceType.CPU) && !IsAdministrator()) AvailableNotifications.CreateAdminRunRequired();
 
                 // start devices to benchmark or update existing benchmarks algorithms
                 var devicesToBenchmark = startBenchmarkingCommands.Select(c => c.device)
@@ -810,6 +814,13 @@ namespace NHMCore.Mining
                 var sameLog = noChangeGroupMinersKeys.Length > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
                 Logger.Info(Tag, $"No change : ({sameLog})");
             }
+        }
+
+        private static bool IsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         // TODO check the stats calculation

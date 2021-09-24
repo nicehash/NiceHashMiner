@@ -50,5 +50,7 @@ namespace NHMCore.Notifications
         WrongChecksumBinary,
         MinerRestart,
         NullChecksum,
+        AdminRunRequired,
+        MotherboardNotCompatible
     }
 }
