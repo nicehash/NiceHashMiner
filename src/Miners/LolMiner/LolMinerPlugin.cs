@@ -34,7 +34,7 @@ namespace LolMiner
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "Miner for AMD gpus.",
+                PluginDescription = "Miner for AMD and Nvidia gpus.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
@@ -70,8 +70,8 @@ namespace LolMiner
                 _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
                 var algorithms = GetSupportedAlgorithmsForDevice(gpu);
-                // add only AMD
-                if (algorithms.Count > 0 && gpu is AMDDevice) supported.Add(gpu, algorithms);
+                // add AMD and Nvidia
+                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
             }
 
             return supported;

@@ -50,6 +50,17 @@ namespace LolMiner
                     DeviceType.AMD,
                     SupportedAMDAlgos()
                 },
+                {
+                    DeviceType.NVIDIA,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.BeamV3),
+                        new SAS(AlgorithmType.GrinCuckatoo31),
+                        new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.ZHash),
+                        new SAS(AlgorithmType.DaggerHashimoto)
+                    }
+                }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
