@@ -753,7 +753,7 @@ namespace NHMCore.Mining
                 //RunningAppID will be 0 if no game is running.
                 if (RunningAppID != 0)
                 {
-                    foreach (var device in _miningDevices) device.Device.State = DeviceState.Stopped;
+                    foreach (var device in _miningDevices) device.Device.State = DeviceState.Gaming;
                     await PauseAllMiners();
                     ApplicationStateManager.StopMining();
                     return;
