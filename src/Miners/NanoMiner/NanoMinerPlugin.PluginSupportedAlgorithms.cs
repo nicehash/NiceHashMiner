@@ -16,7 +16,8 @@ namespace NanoMiner
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 }
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
+                        new SAS(AlgorithmType.DaggerHashimoto)
                     }
                 },
                 {
@@ -25,6 +26,7 @@ namespace NanoMiner
                     {
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.Octopus),
+                        new SAS(AlgorithmType.DaggerHashimoto)
                     }
                 }
             },
@@ -32,6 +34,7 @@ namespace NanoMiner
             {
                 { AlgorithmType.KAWPOW, "Kawpow" },
                 { AlgorithmType.Octopus, "Octopus" },
+                { AlgorithmType.DaggerHashimoto, "Ethash" }
             }
         };
     }
