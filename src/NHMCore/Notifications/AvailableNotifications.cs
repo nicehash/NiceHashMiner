@@ -494,6 +494,11 @@ namespace NHMCore.Notifications
         public static void CreateAdminRunRequired()
         {
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.AdminRunRequired, Tr("NiceHash Miner can't obtain CPU information"), Tr("Start NiceHash Miner with administrator rights."));
+            notification.Action = new NotificationAction
+            {
+                Info = Tr("Run As Administrator"),
+                Action = () => { RunAsAdmin.SelfElevate(); }
+            };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
