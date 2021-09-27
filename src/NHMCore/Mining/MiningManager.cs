@@ -744,7 +744,7 @@ namespace NHMCore.Mining
             }
 
             //Pause mining when steam game is running
-            if (SteamRegistryValueExists())
+            if (SteamRegistryValueExists() && GlobalDeviceSettings.Instance.EnableGamingMode)
             {
                 var keyName = @"HKEY_USERS\" + WindowsIdentity.GetCurrent().User.Value + @"\SOFTWARE\Valve\Steam";
                 var valueName = "RunningAppID";
@@ -755,7 +755,8 @@ namespace NHMCore.Mining
                 {
                     foreach (var device in _miningDevices) device.Device.State = DeviceState.Gaming;
                     await PauseAllMiners();
-                    ApplicationStateManager.StopMining();
+                    ApplicationStateManager.CalcRigStatus();
+                    AvailableNotifications.CreateGamingStatus();
                     return;
                 }
             }

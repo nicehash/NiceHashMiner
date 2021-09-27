@@ -60,5 +60,16 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(ShowGPUPCIeBusIDs));
             }
         }
+
+        private bool _enableGamingMode = false;
+        public bool EnableGamingMode
+        {
+            get => _enableGamingMode;
+            set
+            {
+                _enableGamingMode = value;
+                OnPropertyChanged(nameof(EnableGamingMode));
+            }
+        }
     }
 }

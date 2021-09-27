@@ -490,5 +490,11 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.NullChecksum, Tr("Checksum validation null"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+        
+        public static void CreateGamingStatus()
+        {
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingState, Tr("Game started, mining is paused"), Tr("NiceHash Miner detected game is running and paused the mining.Mining will resume after the game is closed"));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

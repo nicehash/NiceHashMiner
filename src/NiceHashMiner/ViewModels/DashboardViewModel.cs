@@ -17,8 +17,8 @@ namespace NiceHashMiner.ViewModels
             {
                 var ret = "";
                 // Start/Stop
-                ret += !_isRunning ? "Start Mining" : "";
-                var statuses = new string[] { null, null };
+                ret += !_isRunning && !_isGaming ? "Start Mining" : "";
+                var statuses = new string[] { null, null, null };
                 if (_isMining)
                 {
                     statuses[0] = "Mining";
@@ -26,6 +26,10 @@ namespace NiceHashMiner.ViewModels
                 if (_isBenchmarking)
                 {
                     statuses[1] = "Benchmarking";
+                }
+                if (_isGaming)
+                {
+                    statuses[2] = "Gaming";
                 }
                 ret += string.Join(" / ", statuses.Where(s => s != null));
                 return Translations.Tr(ret);
@@ -39,7 +43,7 @@ namespace NiceHashMiner.ViewModels
                 var ret = "";
                 // Start/Stop
                 ret += !_isRunning ? "Start " : "Stop ";
-                var statuses = new string[] { null, null };
+                var statuses = new string[] { null, null, null };
                 if (_isMining)
                 {
                     statuses[0] = "Mining";
@@ -47,6 +51,10 @@ namespace NiceHashMiner.ViewModels
                 if (_isBenchmarking)
                 {
                     statuses[1] = "Benchmarking";
+                }
+                if (_isGaming)
+                {
+                    statuses[2] = "Gaming";
                 }
                 ret += string.Join(" / ", statuses.Where(s => s != null));
                 return Translations.Tr(ret);
@@ -57,7 +65,7 @@ namespace NiceHashMiner.ViewModels
         {
             get
             {
-                return _isRunning || _isMining || _isBenchmarking;
+                return _isRunning || _isMining || _isBenchmarking || _isGaming;
             }
         }
 
@@ -66,6 +74,7 @@ namespace NiceHashMiner.ViewModels
         private bool _isRunning = false;
         private bool _isMining = false;
         private bool _isBenchmarking = false;
+        private bool _isGaming = false;
         private static object _lock = new object();
 
         public DashboardViewModel()
@@ -98,6 +107,7 @@ namespace NiceHashMiner.ViewModels
                 _isRunning = MiningState.Instance.AnyDeviceRunning;
                 _isMining = MiningState.Instance.MiningDeviceStateCount > 0;
                 _isBenchmarking = MiningState.Instance.BenchmarkingDeviceStateCount > 0;
+                _isGaming = MiningState.Instance.GamingDeviceStateCount > 0;
             }
 
             OnPropertyChanged(nameof(StatusText));
