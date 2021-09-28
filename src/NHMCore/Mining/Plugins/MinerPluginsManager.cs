@@ -580,7 +580,7 @@ namespace NHMCore.Mining.Plugins
 
                         if (plugin.Enabled)
                         {
-                            plugin.AddAlgorithmsToDevices();
+                            plugin.AddAlgorithmsToDevices(true);
                             break; // we are good stop fallback plugins init
                         }
                         else
@@ -1131,7 +1131,7 @@ namespace NHMCore.Mining.Plugins
                         var installedDllPath = Path.Combine(pluginRootPath, $"{name}.dll");
                         File.Copy(newDllPath, installedDllPath);
 
-                        newPlugin.AddAlgorithmsToDevices();
+                        newPlugin.AddAlgorithmsToDevices(true);
                         await newPlugin.DevicesCrossReference(AvailableDevices.Devices.Select(d => d.BaseDevice));
                         finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.Success;
                     }

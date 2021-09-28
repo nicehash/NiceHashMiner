@@ -316,5 +316,10 @@ namespace NHMCore.Utils
                 return false;
             }
         }
+
+        public static string[] LHRDevices =
+        {
+            "GeForce RTX 3070 Ti", "GeForce RTX 3080 Ti", "GeForce RTX 3060 Ti"
+        };
     }
 }

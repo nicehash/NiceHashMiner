@@ -74,7 +74,7 @@
         <WrapPanel Grid.Row="5" Margin="24,16,24,16">
             <TextBlock Style="{StaticResource local.SettingTitle}" Text="Extra Launch Parameters" />
             <TextBlock Style="{StaticResource local.SettingDetail}" Text="Additional launch parameters when launching miner and this algorithm." TextWrapping="Wrap"/>
-            <TextBox Style="{StaticResource inputBox}" Text="{Binding ExtraLaunchParameters}" TextWrapping="Wrap" Margin="0,16,0,0" KeyUp="TextBox_KeyUp" Name="textBox">
+            <TextBox Style="{StaticResource inputBox}" Text="{Binding ExtraLaunchParameters, Mode=TwoWay}" TextWrapping="Wrap" Margin="0,16,0,0" KeyUp="TextBox_KeyUp" Name="textBox">
             </TextBox>
             <Border Width="298" MaxHeight="300" BorderBrush="Black" BorderThickness="1" Visibility="Collapsed">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">

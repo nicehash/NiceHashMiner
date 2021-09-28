@@ -202,7 +202,7 @@ namespace NHMCore.Mining.Plugins
         }
 
         private bool _initInternalsCalled = false;
-        public void AddAlgorithmsToDevices()
+        public void AddAlgorithmsToDevices(bool addingFirstTime = false)
         {
             var payingRates = NHSmaData.CurrentPayingRatesSnapshot();
             CheckExec(nameof(AddAlgorithmsToDevices), () =>
@@ -222,10 +222,18 @@ namespace NHMCore.Mining.Plugins
                         algo.UpdateEstimatedProfit(payingRates);
                         // try get data from configs
                         var pluginConf = dev.GetPluginAlgorithmConfig(algo.AlgorithmStringID);
-                        if (pluginConf == null) continue;
+                        if (pluginConf == null)
+                        {
+                            if (addingFirstTime) algo.ExtraLaunchParameters = ResolveExtraLaunchParameters(dev);
+                            continue;
+                        }
                         // set plugin algo
                         algo.Speeds = pluginConf.Speeds;
                         algo.Enabled = pluginConf.Enabled;
+
+                        //LHR-capability detection
+                        //if (addingFirstTime) algo.ExtraLaunchParameters = ResolveExtraLaunchParameters(dev, pluginConf);
+                        //else algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                         algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                         algo.PowerUsage = pluginConf.PowerUsage;
                         algo.ConfigVersion = pluginConf.GetVersion();
@@ -243,6 +251,22 @@ namespace NHMCore.Mining.Plugins
                     dev.AddPluginAlgorithms(algos);
                 }
             });
+        }
+
+        public bool DoesSupportLHR(ComputeDevice dev)
+        {
+            var supports = NHMCore.Utils.Helpers.LHRDevices.Any(lhrdev => dev.Name.Contains(lhrdev));
+            return supports;
+        }
+
+        public string ResolveExtraLaunchParameters(ComputeDevice dev)
+        {
+            string ret = "";
+            if (DoesSupportLHR(dev))
+            {
+                ret += "-LHR 68";
+            }
+            return ret;
         }
 
         public void RemoveAlgorithmsFromDevices()
