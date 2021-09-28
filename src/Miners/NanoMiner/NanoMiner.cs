@@ -112,6 +112,8 @@ namespace NanoMiner
                 }
             }
 
+            //if (_algorithmType == AlgorithmType.DaggerHashimoto) username = username.Split('$')[0];
+
             var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
 
             configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\nrigName=\r\ndevices={devs}\r\npool1={url}";
