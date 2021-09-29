@@ -220,7 +220,7 @@ namespace NHMCore
                 rigState = RigStatus.Error;
             }
             var anyGaming = allDevs.Any(dev => dev.State == DeviceState.Gaming);
-            if (anyError)
+            if (anyGaming)
             {
                 rigState = RigStatus.Gaming;
             }
