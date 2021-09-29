@@ -9,9 +9,7 @@ namespace NHM.DeviceDetection.AMD
     internal class AmdDriver
     {
         //Table of versions: https://gpuopen.com/version-table/
-        //public static readonly (string DriveStoreFormat, string AdrenalinFormat) MinimumVersion = ("27.20.21003.8013", "21.5.2");
-        //public static readonly (Version DriveStoreFormat, Version AdrenalinFormat) MinimumVersion = (new Version(27,20,21003,8013), new Version(21,5,2));
-        public static readonly (Version DriveStoreFormat, Version AdrenalinFormat) MinimumVersion = (new Version(28, 20, 22025, 1006), new Version(21, 8, 2));
+        public static readonly (Version DriveStoreFormat, Version AdrenalinFormat) MinimumVersion = (new Version(27,20,21003,8013), new Version(21,5,2));
         private bool CorrectFormat;
         public bool IsValid;
         public bool IsCorrectVersion;

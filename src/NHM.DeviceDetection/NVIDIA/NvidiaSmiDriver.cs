@@ -5,9 +5,7 @@ namespace NHM.DeviceDetection.NVIDIA
     // format 372.54;
     internal struct NvidiaSmiDriver : IComparable<NvidiaSmiDriver>
     {
-        //public static readonly Version MinimumVersion = new Version(461, 33);
-        public static readonly Version MinimumVersion = new Version(472, 68);
-
+        public static readonly Version MinimumVersion = new Version(461, 33);
 
         public bool IsCorrectVersion;
         public int LeftPart { get; }
