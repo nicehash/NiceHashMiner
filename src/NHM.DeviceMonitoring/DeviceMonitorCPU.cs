@@ -56,17 +56,18 @@ namespace NHM.DeviceMonitoring
             get
             {
                 var updateVisitor = new UpdateVisitor();
-                 var computer = new Computer();
-                 computer.Open();
-                 computer.IsCpuEnabled = true;
-                 computer.Accept(updateVisitor);
-                 var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
-                 var cpuSensors = cpu.Sensors.Where(s => s.SensorType == SensorType.Temperature);
-                 var cpuSensor = cpuSensors.FirstOrDefault(s => s.Name == "CPU Package" || s.Name.Contains("(Tdie)"));
-                 if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault(s => s.Name.Contains("(Tctl/Tdie)"));
-                 if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault();
-                 if (cpuSensor != null) return Convert.ToInt32(cpuSensor.Value);
-                 computer.Close();
+                var computer = new Computer();
+                computer.Open();
+                computer.IsCpuEnabled = true;
+                computer.Accept(updateVisitor);
+                var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
+                var cpuSensors = cpu.Sensors.Where(s => s.SensorType == SensorType.Temperature);
+                var cpuSensor = cpuSensors.FirstOrDefault(s => s.Name == "CPU Package" || s.Name.Contains("(Tdie)"));
+                if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault(s => s.Name.Contains("(Tctl/Tdie)"));
+                if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault();
+                computer.Close();
+                if (cpuSensor != null) return Convert.ToInt32(cpuSensor.Value);
+                
                 return -1;
             }
         }
