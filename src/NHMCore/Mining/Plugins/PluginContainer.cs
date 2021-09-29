@@ -224,16 +224,13 @@ namespace NHMCore.Mining.Plugins
                         var pluginConf = dev.GetPluginAlgorithmConfig(algo.AlgorithmStringID);
                         if (pluginConf == null)
                         {
-                            if (addingFirstTime) algo.ExtraLaunchParameters = ResolveExtraLaunchParameters(dev);
+                            //CHECKING NAME INSTEAD OF UUID... WHAT TO COMPARE IT WITH?
+                            if (addingFirstTime && Name == "NBMiner" && algo.AlgorithmName == "DaggerHashimoto") algo.ExtraLaunchParameters = ResolveExtraLaunchParameters(dev);
                             continue;
                         }
                         // set plugin algo
                         algo.Speeds = pluginConf.Speeds;
                         algo.Enabled = pluginConf.Enabled;
-
-                        //LHR-capability detection
-                        //if (addingFirstTime) algo.ExtraLaunchParameters = ResolveExtraLaunchParameters(dev, pluginConf);
-                        //else algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                         algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                         algo.PowerUsage = pluginConf.PowerUsage;
                         algo.ConfigVersion = pluginConf.GetVersion();
