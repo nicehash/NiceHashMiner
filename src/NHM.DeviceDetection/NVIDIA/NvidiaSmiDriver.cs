@@ -5,6 +5,11 @@ namespace NHM.DeviceDetection.NVIDIA
     // format 372.54;
     internal struct NvidiaSmiDriver : IComparable<NvidiaSmiDriver>
     {
+        //public static readonly Version MinimumVersion = new Version(461, 33);
+        public static readonly Version MinimumVersion = new Version(472, 68);
+
+
+        public bool IsCorrectVersion;
         public int LeftPart { get; }
 
         private readonly int _rightPart;
@@ -25,6 +30,24 @@ namespace NHM.DeviceDetection.NVIDIA
         {
             LeftPart = left;
             _rightPart = right;
+            //IsCorrectVersion = false;
+            IsCorrectVersion = false;
+            IsVersionGreater();
+        }
+
+        private void IsVersionGreater()
+        {
+            if (LeftPart < MinimumVersion.Major)
+            {
+                IsCorrectVersion = false;
+                return;
+            }
+            else if (RightPart < MinimumVersion.Minor)
+            {
+                IsCorrectVersion = false;
+                return;
+            }
+            this.IsCorrectVersion = true;
         }
 
         public override string ToString()

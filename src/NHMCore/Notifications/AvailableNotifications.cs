@@ -490,5 +490,17 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.NullChecksum, Tr("Checksum validation null"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateOutdatedNVIDIADriverWarning(Version minimum)
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverNVIDIAObsolete, Tr("Wrong NVIDIA driver version detected"), Tr("Invalid NVIDIA driver version. Minimum is {0}. Please install latest NVIDIA drivers.", minimum.ToString()));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateOutdatedAMDDriverWarning(Version minimum)
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverAMDObsolete, Tr("Wrong AMD driver version detected"), Tr("Invalid AMD driver version. Minimum is Adrenalin {0}. Please install latest AMD drivers.", minimum.ToString()));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }
