@@ -493,13 +493,13 @@ namespace NHMCore.Notifications
 
         public static void CreateOutdatedNVIDIADriverWarning(Version minimum)
         {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverNVIDIAObsolete, Tr("Older NVIDIA driver version detected"), Tr("Older NVIDIA driver version. Minimum is {0}. Please install latest NVIDIA drivers.", minimum.ToString()));
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverNVIDIAObsolete, Tr("Older NVIDIA driver version detected"), Tr("Older NVIDIA driver version was detected. Minimum is {0}. Please install latest NVIDIA drivers.", minimum.ToString()));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateOutdatedAMDDriverWarning(Version minimum)
         {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverAMDObsolete, Tr("Older AMD driver version detected"), Tr("Older AMD driver version. Minimum is Adrenalin {0}. Please install latest AMD drivers.", minimum.ToString()));
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverAMDObsolete, Tr("Older AMD driver version detected"), Tr("Older AMD driver version was detected. Minimum is Adrenalin {0}. Please install latest AMD drivers.", minimum.ToString()));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }
