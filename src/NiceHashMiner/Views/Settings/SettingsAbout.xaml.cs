@@ -2,6 +2,7 @@
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -14,10 +15,21 @@ namespace NiceHashMiner.Views.Settings
     /// </summary>
     public partial class SettingsAbout : UserControl
     {
+        static System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+
         public SettingsAbout()
         {
             InitializeComponent();
             SetHyperlinkToArticle();
+            var startTime = DateTime.UtcNow;
+            timer.Tick += delegate (object s, EventArgs args)
+            {
+                var dateTime = DateTime.UtcNow - startTime;
+                if(dateTime.TotalDays >= 1) tbl_uptimeText.Text = "Uptime: " + dateTime.Days + "d " + dateTime.Hours + "h " + dateTime.Minutes + "m";
+                else tbl_uptimeText.Text = "Uptime: " + dateTime.Hours + "h " + dateTime.Minutes + "m";
+            };
+            timer.Interval = new TimeSpan(0, 1, 0);
+            timer.Start();
         }
 
         private void SetHyperlinkToArticle()
