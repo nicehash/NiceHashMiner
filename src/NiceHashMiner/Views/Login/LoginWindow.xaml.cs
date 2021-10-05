@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Utils;
@@ -100,6 +101,7 @@ namespace NiceHashMiner.Views.Login
             }
             // create qr code
             rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
+            Logger.Info("Login", $"QR code set with uuid: {_uuid}");
         }
 
         [Serializable]
@@ -119,6 +121,7 @@ namespace NiceHashMiner.Views.Login
             {
                 using (var client = new HttpClient())
                 {
+                    Logger.Info("Login", "Waiting for btc address");
                     var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
                     if (resp.IsSuccessStatusCode)
                     {
@@ -130,9 +133,18 @@ namespace NiceHashMiner.Views.Login
                             {
                                 if (CredentialValidators.ValidateBitcoinAddress(btcResp.btc))
                                 {
+                                    Logger.Info("Login", $"Got correct btc address: {btcResp.btc}");
                                     CredentialsSettings.Instance.SetBitcoinAddress(btcResp.btc);
                                     Close();
                                 }
+                                else
+                                {
+                                    Logger.Info("Login", $"Got incorrect btc address: {btcResp.btc}");
+                                }
+                            }
+                            else
+                            {
+                                Logger.Warn("Login", $"Didn't get correct btc response: {contentString}");
                             }
                         }
                     }
@@ -140,7 +152,7 @@ namespace NiceHashMiner.Views.Login
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Logger.Error("Login", $"BtnClickTask failed with {ex.Message}");
             }
         }
     }
