@@ -141,6 +141,16 @@ namespace NiceHashMiner.Views.Settings
             ValidateWorkername();
         }
 
+        private void TextBoxElectricityCost_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (textBoxElectricityCost.Text == "") textBoxElectricityCost.Text = "0";
+        }
+
+        private void TextBoxMinimumProfit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (MinProfitTB.Text == "") MinProfitTB.Text = "0";
+        }
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ConfigManager.GeneralConfigFileCommit();
