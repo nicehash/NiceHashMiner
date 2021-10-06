@@ -13,7 +13,6 @@ namespace NHM.DeviceDetection
 
         // CPU
         public CPUDevice CPU { get; internal set; }
-        public bool IsMotherboardCompatible { get; internal set; }
 
         // NVIDIA
         public IReadOnlyList<CUDADevice> CUDADevices { get; internal set; }

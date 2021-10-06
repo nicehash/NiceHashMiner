@@ -134,7 +134,8 @@ namespace NHMCore
                     return;
                 }
                 //no compatible CPU
-                if (!DeviceDetection.DetectionResult.IsMotherboardCompatible) AvailableNotifications.CreateMotherboardNotCompatible();
+                if (!DeviceMonitorManager.IsMotherboardCompatible()) AvailableNotifications.CreateMotherboardNotCompatible();
+
 
                 // STEP
                 loader.PrimaryProgress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));

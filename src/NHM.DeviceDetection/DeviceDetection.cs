@@ -1,5 +1,4 @@
-﻿using LibreHardwareMonitor.Hardware;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -61,8 +60,6 @@ namespace NHM.DeviceDetection
                 stringBuilder.AppendLine($"\tThreadsPerCPU: {cpu.ThreadsPerCPU}");
                 stringBuilder.AppendLine($"\tSupportsHyperThreading: {cpu.SupportsHyperThreading}");
                 Logger.Info(Tag, stringBuilder.ToString());
-                DetectionResult.IsMotherboardCompatible = true;
-                if (!CheckIfMissingCPUInfo()) DetectionResult.IsMotherboardCompatible = false;
 
             }
             Logger.Info(Tag, $"DetectCPU END");
@@ -304,58 +301,6 @@ namespace NHM.DeviceDetection
                 }
             }
             return cudaMissing || amdMissing;
-        }
-
-        public class UpdateVisitor : IVisitor
-        {
-            public void VisitComputer(IComputer computer)
-            {
-                computer.Traverse(this);
-            }
-            public void VisitHardware(IHardware hardware)
-            {
-                hardware.Update();
-                foreach (IHardware subHardware in hardware.SubHardware) subHardware.Accept(this);
-            }
-            public void VisitSensor(ISensor sensor) { }
-            public void VisitParameter(IParameter parameter) { }
-        }
-
-        private static bool CheckIfMissingCPUInfo()
-        {
-            var updateVisitor = new UpdateVisitor();
-            var computer = new Computer();
-            computer.Open();
-            computer.IsCpuEnabled = true;
-            computer.IsMotherboardEnabled = true;
-            computer.Accept(updateVisitor);
-            var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
-            var mainboard = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);
-            var cpuSensors = cpu.Sensors.Where(s => s.SensorType == SensorType.Temperature);
-            var cpuSensor = cpuSensors.FirstOrDefault(s => s.Name == "CPU Package" || s.Name.Contains("(Tdie)"));
-            if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault(s => s.Name.Contains("(Tctl/Tdie)"));
-            if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault();
-            foreach (var subHW in mainboard.SubHardware)
-            {
-                var groupedSensors = subHW.Sensors
-                    .Where(s => (s.SensorType == SensorType.Fan || s.SensorType == SensorType.Control) && s.Value != 0).OrderBy(s => s.Name)
-                    .Select(s => new { id = s.Identifier.ToString().Replace("fan", "*").Replace("control", "*"), s })
-                    .GroupBy(p => p.id)
-                    .Select(g => g.ToArray().Select(p => p.s).OrderBy(s => s.SensorType))
-                    .ToArray();
-
-                ISensor sensor = null;
-                if (groupedSensors.Any(sg => sg.Count() == 2)) sensor = groupedSensors.FirstOrDefault(sg => sg.Count() == 2).FirstOrDefault(s => s.SensorType == SensorType.Control);
-                if (!sensor.Value.HasValue || sensor == null)
-                {
-                    computer.Close();
-                    return false;
-                }
-            }
-            computer.Close();
-            if (cpuSensor == null || !cpuSensor.Value.HasValue) return false;
-
-            return true;
         }
     }
 }
