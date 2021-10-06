@@ -156,9 +156,11 @@ namespace NBMiner
                 // determine benchmark time 
                 // settup times
                 int benchmarkTime;
-                if(_miningPairs.Any(dev => dev.Algorithm.AlgorithmName == "DaggerHashimoto" && dev.Algorithm.ExtraLaunchParameters.Contains("-LHR")))
+                if (_miningPairs.Any(dev => dev.Algorithm.AlgorithmName == "DaggerHashimoto" &&
+                 (dev.Algorithm.ExtraLaunchParameters.Contains("-LHR") ||
+                 dev.Algorithm.ExtraLaunchParameters.Contains("-lhr"))))
                 {
-                    benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 120, 240 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
+                    benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 80, 120, 200 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
                 }
                 else
                 {
@@ -185,10 +187,13 @@ namespace NBMiner
                 var ticks = benchmarkTime / 10; // on each 10 seconds tick
                 var result = new BenchmarkResult();
                 var benchmarkApiData = new List<ApiData>();
+                int delay = maxTicksEnabled ? (benchmarkTime / maxTicks) * 1000 : 10 * 1000;
+
+
                 for (var tick = 0; tick < ticks; tick++)
                 {
                     if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
-                    await Task.Delay(10 * 1000, stop); // 10 seconds delay
+                    await Task.Delay(delay, stop); // 10 seconds delay
                     if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
 
                     var ad = await GetMinerStatsDataAsync();
