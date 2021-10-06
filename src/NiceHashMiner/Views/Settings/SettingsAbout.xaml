@@ -56,7 +56,10 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <StackPanel>
-        <Grid Width="154" Height="40" Grid.Row="1" HorizontalAlignment="Left" Margin="16,32,0,0" Background="{DynamicResource NHMBigLogo}" />
+        <DockPanel>
+            <Grid Width="154" Height="40" Grid.Row="0" HorizontalAlignment="Left" Margin="16,32,0,0" Background="{DynamicResource NHMBigLogo}" />
+            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1"  Style="{StaticResource FontsTypography.Caption-Primary}" Margin="16,32,16,0" TextWrapping="Wrap" x:Name="tbl_uptimeText"/>
+        </DockPanel>
         <TextBlock Text="{StaticResource textAboutNH}" Style="{StaticResource FontsTypography.Caption-Primary}" Margin="16,16,16,0" TextWrapping="Wrap" x:Name="tbl_aboutText" />
         <StackPanel Margin="16,16,0,0" Orientation="Vertical">
             <Label Content="Version Information" Style="{StaticResource FontsTypography.Heading3/Secondary}" Padding="0,5,0,5" />
