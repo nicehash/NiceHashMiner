@@ -71,7 +71,7 @@ namespace LolMiner
                 ++pcieId;
                 var algorithms = GetSupportedAlgorithmsForDevice(gpu);
                 // add AMD and Nvidia
-                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
