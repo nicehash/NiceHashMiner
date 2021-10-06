@@ -4146,6 +4146,9 @@
     },
     "No available algorithms": {
 
+    },
+    "Currently mining is not profitable. Mining will be resumed once it will be profitable again.": {
+
     }
   }
 } 
