@@ -55,20 +55,28 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var updateVisitor = new UpdateVisitor();
-                var computer = new Computer();
-                computer.Open();
-                computer.IsCpuEnabled = true;
-                computer.Accept(updateVisitor);
-                var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
-                var cpuSensors = cpu.Sensors.Where(s => s.SensorType == SensorType.Temperature);
-                var cpuSensor = cpuSensors.FirstOrDefault(s => s.Name == "CPU Package" || s.Name.Contains("(Tdie)"));
-                if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault(s => s.Name.Contains("(Tctl/Tdie)"));
-                if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault();
-                computer.Close();
-                if (cpuSensor != null) return Convert.ToInt32(cpuSensor.Value);
-                
-                return -1;
+                var temperature = -1;
+                try
+                {
+                    var updateVisitor = new UpdateVisitor();
+                    var computer = new Computer();
+                    computer.Open();
+                    computer.IsCpuEnabled = true;
+                    computer.Accept(updateVisitor);
+                    var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
+                    var cpuSensors = cpu.Sensors.Where(s => s.SensorType == SensorType.Temperature);
+                    var cpuSensor = cpuSensors.FirstOrDefault(s => s.Name == "CPU Package" || s.Name.Contains("(Tdie)"));
+                    if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault(s => s.Name.Contains("(Tctl/Tdie)"));
+                    if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault();
+                    computer.Close();
+                    if (cpuSensor != null) temperature = Convert.ToInt32(cpuSensor.Value);
+                }
+                catch(Exception e)
+                {
+                    Logger.Error("DeviceMonitorCPU", "Error when getting CPU temperature: " + e.Message);
+                }
+
+                return temperature;
             }
         }
 
@@ -76,27 +84,36 @@ namespace NHM.DeviceMonitoring
         {
             var percentage = 0;
             var ok = 0;
-            var updateVisitor = new UpdateVisitor();
-            var computer = new Computer();
-            computer.Open();
-            computer.IsMotherboardEnabled = true;
-            computer.Accept(updateVisitor);
-            var mainboard = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);
-            foreach (var subHW in mainboard.SubHardware)
+            try
             {
-                var groupedSensors = subHW.Sensors
-                    .Where(s => (s.SensorType == SensorType.Fan || s.SensorType == SensorType.Control) && s.Value != 0).OrderBy(s => s.Name)
-                    .Select(s => new { id = s.Identifier.ToString().Replace("fan", "*").Replace("control", "*"), s })
-                    .GroupBy(p => p.id)
-                    .Select(g => g.ToArray().Select(p => p.s).OrderBy(s => s.SensorType))
-                    .ToArray();
+                var updateVisitor = new UpdateVisitor();
+                var computer = new Computer();
+                computer.Open();
+                computer.IsMotherboardEnabled = true;
+                computer.Accept(updateVisitor);
+                var mainboard = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);
+                foreach (var subHW in mainboard.SubHardware)
+                {
+                    var groupedSensors = subHW.Sensors
+                        .Where(s => (s.SensorType == SensorType.Fan || s.SensorType == SensorType.Control) && s.Value != 0).OrderBy(s => s.Name)
+                        .Select(s => new { id = s.Identifier.ToString().Replace("fan", "*").Replace("control", "*"), s })
+                        .GroupBy(p => p.id)
+                        .Select(g => g.ToArray().Select(p => p.s).OrderBy(s => s.SensorType))
+                        .ToArray();
 
-                ISensor sensor = null;
-                if (groupedSensors.Any(sg => sg.Count() == 2)) sensor = groupedSensors.FirstOrDefault(sg => sg.Count() == 2).FirstOrDefault(s => s.SensorType == SensorType.Control);
+                    ISensor sensor = null;
+                    if (groupedSensors.Any(sg => sg.Count() == 2)) sensor = groupedSensors.FirstOrDefault(sg => sg.Count() == 2).FirstOrDefault(s => s.SensorType == SensorType.Control);
 
-                if (sensor != null) percentage = Convert.ToInt32(sensor.Value);
+                    if (sensor != null) percentage = Convert.ToInt32(sensor.Value);
+                }
+                computer.Close();
             }
-            computer.Close();
+            catch(Exception e)
+            {
+                Logger.Error("DeviceMonitorCPU", "Error when getting CPU fan speed: " + e.Message);
+                ok = -1;
+            }
+
             return (ok, percentage);
         }
     }
