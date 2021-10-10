@@ -28,14 +28,13 @@ namespace NHM.DeviceDetection.AMD
                 return _driverVersion;
             }
         }
-        private int[] IntDriverVersion = new int[4];
-
+        public Version VerDriverVersion;
         private bool IsValidVersion()
         {
             string[] splitVerCurrent = DriverVersion.Split('.');
             if (splitVerCurrent.Length != 4) return false;
-            var currentV = ToIntVersion();
-            bool res = IsMoreThanMinimumVersion(currentV);
+            VerDriverVersion = ToVersion();
+            bool res = IsMoreThanMinimumVersion(VerDriverVersion);
             return res;
         }
 
@@ -56,33 +55,27 @@ namespace NHM.DeviceDetection.AMD
             return true;
         }
 
+
         public Version ToVersion()
         {
-            return new Version(IntDriverVersion[0], IntDriverVersion[1], IntDriverVersion[2], IntDriverVersion[3]);
-        }
-
-        public Version ToIntVersion()
-        {
+            int major = -1;
+            int minor = -1;
+            int build = -1;
+            int rev = -1;
             List<int> ver = new List<int>();
             var splitVerCurrent = DriverVersion.Split('.');
             if (splitVerCurrent.Length != 4)
             {
-                IntDriverVersion.SetValue(-1, new int[4] { 0, 1, 2, 3 });
+                return new Version(major, minor, build, rev);
             }
 
-            for (int i = 0; i < 4; i++)
-            {
-                int num;
-                if (Int32.TryParse(splitVerCurrent[i], out num))
-                {
-                    IntDriverVersion[i] = num;
-                }
-                else
-                {
-                    IntDriverVersion[i] = -1;
-                }
-            }
-            if (IntDriverVersion.Contains(-1))
+            Int32.TryParse(splitVerCurrent[0], out major);
+            Int32.TryParse(splitVerCurrent[1], out minor);
+            Int32.TryParse(splitVerCurrent[2], out build);
+            Int32.TryParse(splitVerCurrent[3], out rev);
+
+
+            if (major == -1 || minor == -1 || build == -1 || rev == -1)
             {
                 CorrectFormat = false;
                 return new Version(-1,-1,-1,-1);
@@ -90,7 +83,7 @@ namespace NHM.DeviceDetection.AMD
             else
             {
                 CorrectFormat = true;
-                return new Version(IntDriverVersion[0], IntDriverVersion[1], IntDriverVersion[2], IntDriverVersion[3]);
+                return new Version(major, minor, build, rev);
             }
         }
 

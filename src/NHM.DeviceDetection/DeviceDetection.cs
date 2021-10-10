@@ -96,7 +96,7 @@ namespace NHM.DeviceDetection
             if(amdVideoControllerData != null)
             {
                 var AmdVer = new AMD.AmdDriver(amdVideoControllerData.DriverVersion);
-                if (AmdVer.IsValid) DetectionResult.AmdDriver = AmdVer.ToVersion();
+                if (AmdVer.IsValid) DetectionResult.AmdDriver = AmdVer.VerDriverVersion;
                 DetectionResult.AMDDriverObsolete = AmdVer.IsCorrectVersion ? false : true;
             }
 
