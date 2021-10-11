@@ -116,10 +116,11 @@ namespace NHM.DeviceMonitoring
         public static bool IsMotherboardCompatible()
         {
             var isCompatible = true;
+            var computer = new Computer();
             try
             {
                 var updateVisitor = new UpdateVisitor();
-                var computer = new Computer();
+                
                 computer.Open();
                 computer.IsCpuEnabled = true;
                 computer.IsMotherboardEnabled = true;
@@ -144,11 +145,14 @@ namespace NHM.DeviceMonitoring
                     if (!sensor.Value.HasValue || sensor == null) isCompatible = false;
                 }
                 if (cpuSensor == null || !cpuSensor.Value.HasValue) isCompatible =  false;
-                computer.Close();
             }
             catch(Exception e)
             {
                 Logger.Error("DeviceMonitorManager", "Error when getting CPU fan speed and temperature: " + e.Message);
+            }
+            finally
+            {
+                computer.Close();
             }
 
             return isCompatible;

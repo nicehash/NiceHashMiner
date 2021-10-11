@@ -10,7 +10,7 @@ namespace NHM.DeviceMonitoring
     {
         private PerformanceCounter _cpuCounter { get; set; }
 
-        private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(0.5);
+        private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(5);
 
         internal DeviceMonitorCPU(string uuid)
         {
