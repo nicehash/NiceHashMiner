@@ -756,6 +756,7 @@ namespace NHMCore.Mining
                     foreach (var device in _miningDevices) device.Device.State = DeviceState.Gaming;
                     await PauseAllMiners();
                     ApplicationStateManager.CalcRigStatus();
+                    MiningState.Instance.CalculateDevicesStateChange();
                     AvailableNotifications.CreateGamingStatus();
                     return;
                 }

@@ -54,6 +54,12 @@ namespace NHMCore.ApplicationState
             private set => _boolProps.Set(nameof(AnyDeviceRunning), value);
         }
 
+        public bool AnyDeviceGaming
+        {
+            get => _boolProps.Get(nameof(AnyDeviceGaming));
+            private set => _boolProps.Set(nameof(AnyDeviceGaming), value);
+        }
+
         public bool IsNotBenchmarkingOrMining
         {
             get => _boolProps.Get(nameof(IsNotBenchmarkingOrMining));
@@ -122,7 +128,10 @@ namespace NHMCore.ApplicationState
             AllDeviceEnabled = AvailableDevices.Devices.All(dev => dev.Enabled);
             AnyDeviceEnabled = AvailableDevices.Devices.Any(dev => dev.Enabled);
             AnyDeviceStopped = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Stopped && (dev.State != DeviceState.Disabled));
-            AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
+            AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Gaming);
+            AnyDeviceGaming = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Gaming);
+            if (AnyDeviceGaming) AnyDeviceGaming = false;
+            else AnyDeviceGaming = true;
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;
             IsCurrentlyMining = AnyDeviceRunning;
             IsDemoMining = !CredentialsSettings.Instance.IsBitcoinAddressValid && IsCurrentlyMining;
