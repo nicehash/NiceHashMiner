@@ -7,7 +7,6 @@ using NHMCore.Notifications;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -360,6 +359,9 @@ namespace NHMCore.Mining
                 }
                 foreach (var startMining in startMiningCommands) startMining.device.State = DeviceState.Mining; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
 
+                //check if any CPU starts benchmarking/mining in not administrator mode
+                if (startMiningCommands.Any(dev => dev.device.DeviceType == DeviceType.CPU) && !Helpers.IsElevated) AvailableNotifications.CreateAdminRunRequired();
+                if (startBenchmarkingCommands.Any(dev => dev.device.DeviceType == DeviceType.CPU) && !Helpers.IsElevated) AvailableNotifications.CreateAdminRunRequired();
                 // start devices to benchmark or update existing benchmarks algorithms
                 var devicesToBenchmark = startBenchmarkingCommands.Select(c => c.device)
                     .Select(dev => (dev, benchmarkingDev: _benchmarkingDevices.FirstOrDefault(benchDev => benchDev.Device == dev)))
