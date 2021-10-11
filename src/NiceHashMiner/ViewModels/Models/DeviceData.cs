@@ -26,12 +26,18 @@ namespace NiceHashMiner.ViewModels.Models
 
         public List<ComputeDevice> CPUs
         {
-            get => AvailableDevices.GetAvailCPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
+            get => AvailableDevices.Devices
+                .Where(dev => dev.DeviceType == DeviceType.CPU)
+                .Where(dev => dev.Uuid != Dev.Uuid)
+                .ToList();
         }
 
         public List<ComputeDevice> GPUs
         {
-            get => AvailableDevices.GetAvailGPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
+            get => AvailableDevices.Devices
+                .Where(dev => dev.DeviceType != DeviceType.CPU)
+                .Where(dev => dev.Uuid != Dev.Uuid)
+                .ToList();
         }
 
         public List<ComputeDevice> DevicesOfSameType
