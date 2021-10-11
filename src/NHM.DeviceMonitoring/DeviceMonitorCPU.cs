@@ -9,6 +9,9 @@ namespace NHM.DeviceMonitoring
     internal class DeviceMonitorCPU : DeviceMonitor, ILoad, ITemp, IGetFanSpeedPercentage
     {
         private PerformanceCounter _cpuCounter { get; set; }
+
+        private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(0.5);
+
         internal DeviceMonitorCPU(string uuid)
         {
             UUID = uuid;
@@ -45,7 +48,7 @@ namespace NHM.DeviceMonitoring
                 }
                 catch (Exception e)
                 {
-                    Logger.ErrorDelayed("CPUDIAG", e.ToString(), TimeSpan.FromMinutes(5));
+                    Logger.ErrorDelayed("CPUDIAG", e.ToString(), _delayedLogging);
                 }
                 return -1;
             }
@@ -56,10 +59,10 @@ namespace NHM.DeviceMonitoring
             get
             {
                 var temperature = -1;
+                var computer = new Computer();
                 try
                 {
                     var updateVisitor = new UpdateVisitor();
-                    var computer = new Computer();
                     computer.Open();
                     computer.IsCpuEnabled = true;
                     computer.Accept(updateVisitor);
@@ -68,12 +71,15 @@ namespace NHM.DeviceMonitoring
                     var cpuSensor = cpuSensors.FirstOrDefault(s => s.Name == "CPU Package" || s.Name.Contains("(Tdie)"));
                     if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault(s => s.Name.Contains("(Tctl/Tdie)"));
                     if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault();
-                    computer.Close();
                     if (cpuSensor != null) temperature = Convert.ToInt32(cpuSensor.Value);
                 }
                 catch(Exception e)
                 {
-                    Logger.Error("DeviceMonitorCPU", "Error when getting CPU temperature: " + e.Message);
+                    Logger.ErrorDelayed("DeviceMonitorCPU", "Error when getting CPU temperature: " + e.Message, _delayedLogging);
+                }
+                finally
+                {
+                    computer.Close();
                 }
 
                 return temperature;
@@ -84,10 +90,11 @@ namespace NHM.DeviceMonitoring
         {
             var percentage = 0;
             var ok = 0;
+            var computer = new Computer();
             try
             {
                 var updateVisitor = new UpdateVisitor();
-                var computer = new Computer();
+                
                 computer.Open();
                 computer.IsMotherboardEnabled = true;
                 computer.Accept(updateVisitor);
@@ -106,12 +113,15 @@ namespace NHM.DeviceMonitoring
 
                     if (sensor != null) percentage = Convert.ToInt32(sensor.Value);
                 }
-                computer.Close();
             }
             catch(Exception e)
             {
-                Logger.Error("DeviceMonitorCPU", "Error when getting CPU fan speed: " + e.Message);
+                Logger.ErrorDelayed("DeviceMonitorCPU", "Error when getting CPU fan speed: " + e.Message, _delayedLogging);
                 ok = -1;
+            }
+            finally
+            {
+                computer.Close();
             }
 
             return (ok, percentage);
