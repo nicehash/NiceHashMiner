@@ -183,6 +183,40 @@ namespace LolMiner
                     ShortName = "--statsformat",
                 },
                 /// <summary>
+                /// --mode controls the loaded kernel and operation modes for Nvidia GPUs.
+                /// AMD cards will currently ignore this parameter completely. You can set one value for the whole rig or provide a comma separated list of values to get individual modes for each card.
+                /// Amd cards can use any value at the moment.
+                /// --mode a This is the often fastest kernel when you do not apply any power limit.
+                /// Gives better performance especially on RTX 3080 and 3090, but not so much on the lower tier GPUs. Use this one when power draw does not matter any ways.
+                /// --mode b This is a power saving kernel an the default. Good choice for all Non-LHR Nvidia GPUs and RTX 3060 LHR V1 on the known 470.05 beta Windows driver.
+                /// Also this mode will be used in glitch mode.
+                /// --mode LHR1 This is the default mode for RTX 3060 LHR v1 when the driver version is between 455.45.01 and 460.39.
+                /// Gives up to 80% of the potential unlocked raw card performance. In case other driver versions get used, the miner falls back to the LHR2 mode.
+                /// --mode LHR2 This mode is made for all other LHR (v2) Nvidia RTX 3000 cards. Performance is approximately 67-69% of the potential unlocked raw card performance.
+                /// Note that the mode was tested with a locked core clock of 1500 mhz on all cards.
+                /// Higher core clock may work, but could also cause the lock to trigger on your card, especially when the card is only power limit bound and has no fixed upper core bound!
+                /// --mode LHRLP With this low clocks the performance is generally lower, but the LHR semi-unlock parameters can get relaxed to give a higher share of the potential the GPU has.</summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "lolMiner_mode",
+                    ShortName = "--mode",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// The values we have chosen as parameters were taken after elaborate tests. Sadly the best config changed from rig to rig, so there is a parameter --lhrtune that takes a comma separated list of values.
+                /// Negatives will relax settings, so the GPU will more likely unlock, positives will make the lock more likely, but improve performance.
+                /// If you have a card not starting unlocked, try a value of -20 as a start, lower might be needed. This is true especially when you have your card in motherboard x16 slot.
+                /// If your cards are super stable try to increase in small steps of 5.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "lolMiner_lhrtune",
+                    ShortName = "--lhrtune",
+                    Delimiter = ","
+                },
+                /// <summary>
                 /// Use parameter --watchdog off/exit/script to turn off any action, exit the miner with a specific exit code or to run an external script.
                 ///--watchdog off
                 ///This will do nothing except for printing a message. If only a single card did crash and not the whole driver this means the other cards will continue mining.

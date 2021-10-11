@@ -141,6 +141,16 @@ namespace NiceHashMiner.Views.Settings
             ValidateWorkername();
         }
 
+        private void TextBoxElectricityCost_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (textBoxElectricityCost.Text == "") textBoxElectricityCost.Text = "0";
+        }
+
+        private void TextBoxMinimumProfit_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (MinProfitTB.Text == "") MinProfitTB.Text = "0";
+        }
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ConfigManager.GeneralConfigFileCommit();
@@ -164,8 +174,17 @@ namespace NiceHashMiner.Views.Settings
 
         private void CommitGeneralAndRestart()
         {
+            GUISettings.Instance.DisplayTheme = GUISettings.Instance.NextDisplayTheme;
             ConfigManager.GeneralConfigFileCommit();
             Task.Run(() => ApplicationStateManager.RestartProgram());
+        }
+
+        private void RevertTheme()
+        {
+            this.ThemeSelect.SelectionChanged -= new System.Windows.Controls.SelectionChangedEventHandler(this.ThemeComboBox_SelectionChanged);
+            GUISettings.Instance.RevertTheme();
+            ConfigManager.GeneralConfigFileCommit();
+            this.ThemeSelect.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler(this.ThemeComboBox_SelectionChanged);
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -244,6 +263,13 @@ namespace NiceHashMiner.Views.Settings
             Clipboard.SetText(_reportId);
         }
 
+        private void SelectTheme()
+        {
+            GUISettings.Instance.NextDisplayTheme = ThemeSelect.SelectedItem.ToString();//so we can commit on restart
+            GUISettings.Instance.DisplayTheme = ThemeSelect.SelectedItem.ToString();//for current show of theme
+            ConfigManager.GeneralConfigFileCommit();
+        }
+
         private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var nhmConfirmDialog = new CustomDialog()
@@ -254,8 +280,9 @@ namespace NiceHashMiner.Views.Settings
                 CancelVisible = Visibility.Collapsed,
                 AnimationVisible = Visibility.Collapsed
             };
+            SelectTheme();
             nhmConfirmDialog.OKClick += (s, e1) => CommitGeneralAndRestart();
-            nhmConfirmDialog.OnExit += (s, e1) => CommitGeneralAndRestart();
+            nhmConfirmDialog.OnExit += (s, e1) => RevertTheme();//reverts even when click ok because it exits...
 
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
         }
