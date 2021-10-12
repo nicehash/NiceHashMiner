@@ -208,7 +208,7 @@ namespace NHMCore.Mining
             set
             {
                 if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(ExtraLaunchParameters));
             }
         }
 

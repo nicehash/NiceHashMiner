@@ -10,7 +10,7 @@ namespace NHM.Common.Algorithm
         {
             MinerID = minerID;
             IDs = ids;
-            Speeds = ids.Select(id => 0d).ToList();
+            Speeds = ids.Select(id => 0d).ToArray();
             AlgorithmName = ids.GetNameFromAlgorithmTypes();
         }
         // Identity
