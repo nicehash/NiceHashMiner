@@ -133,8 +133,16 @@ namespace NHMCore
                     NoDeviceAction?.Invoke();
                     return;
                 }
-                //no compatible CPU
-                if (!DeviceMonitorManager.IsMotherboardCompatible()) AvailableNotifications.CreateMotherboardNotCompatible();
+                // no compatible CPU
+                if (!DeviceMonitorManager.IsMotherboardCompatible())
+                {
+                    AvailableNotifications.CreateMotherboardNotCompatible();
+                }
+                else if(!Helpers.IsElevated) // MOBO is supported but we lack admin privs
+                {
+                    AvailableNotifications.CreateAdminRunRequired();
+                }
+                
 
 
                 // STEP
