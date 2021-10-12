@@ -10,7 +10,7 @@
     "zh_cn": "简体中文 (Unofficial)",
     "ro": "Română (Unofficial)"
   },
-  "missing translations": {
+  "Translations": {
     " (current {0})": {
       "bg": " (актуален {0})",
       "es": " (actual {0})",
