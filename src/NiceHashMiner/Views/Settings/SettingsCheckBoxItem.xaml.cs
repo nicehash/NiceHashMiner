@@ -1,7 +1,5 @@
 ﻿using NHMCore.Configs;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -53,8 +51,7 @@ namespace NiceHashMiner.Views.Settings
 
         private void ToggleClickHandler(object sender, RoutedEventArgs e)
         {
-            var tb = e.Source as ToggleButton;
-            if (ToggleButtonHidden == tb)
+            if (e.Source is ToggleButton tb && ToggleButtonHidden == tb)
             {
                 Enabled = !Enabled;
             }
@@ -62,20 +59,6 @@ namespace NiceHashMiner.Views.Settings
             ToggleClick?.Invoke(sender, e);
             // we save on every change
             ConfigManager.GeneralConfigFileCommit();
-        }
-
-
-
-        public void TurnOffCondition()
-        {
-            if (Enabled.HasValue)
-            {
-                if (!Enabled.Value)
-                {
-                    Enabled = true;
-                }
-                ConfigManager.GeneralConfigFileCommit();
-            }
         }
     }
 }
