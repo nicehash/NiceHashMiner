@@ -54,6 +54,9 @@
                                         Enabled="{Binding GlobalDeviceSettings.RestartMachineOnLostGPU}"
                                         Label="Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)"
                                         Description="{StaticResource runOnGPUsLost}"/>
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.ResolveNiceHashDomainsToIPs}"
+                                        Label="Resolve NiceHash domains to IPs via Cloudflare"
+                                        Description="This will resolve NiceHash domains to IPs via cloudflare in case of DNS sinkholing."/>
             
         </WrapPanel>
         <!--Device Monitoring-->
