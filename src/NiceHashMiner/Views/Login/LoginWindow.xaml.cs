@@ -20,14 +20,16 @@ namespace NiceHashMiner.Views.Login
     public partial class LoginWindow : BaseDialogWindow
     {
         private LoginBrowser _loginBrowser;
-        private string _uuid = Guid.NewGuid().ToString();
+        private string _uuid;
+        private bool _gotQRCode = false;
+
         public LoginWindow()
         {
             InitializeComponent();
             Unloaded += LoginBrowser_Unloaded;
+            Loaded += LoginWindow_Loaded;
             HideIconAndTitle = true;
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
-            _ = ProcessQRCode();
         }
 
         private void LoginBrowser_Unloaded(object sender, RoutedEventArgs e)
@@ -44,18 +46,25 @@ namespace NiceHashMiner.Views.Login
 
         public bool? LoginSuccess { get; private set; } = null;
 
-        private void CheckBoxMode_Checked(object sender, RoutedEventArgs e)
+        private void SetTheme(bool isLight)
         {
-            GUISettings.Instance.DisplayTheme = "Dark";
-            ThemeSetterManager.SetTheme(false);
-            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, false);
+            var displayTheme = isLight ? "Light" : "Dark";
+            GUISettings.Instance.DisplayTheme = displayTheme;
+            ThemeSetterManager.SetTheme(isLight);
+            if (_gotQRCode)
+            {
+                rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, isLight);
+            }
         }
 
-        private void CheckBoxMode_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckBoxMode_Checked_Dark(object sender, RoutedEventArgs e)
         {
-            GUISettings.Instance.DisplayTheme = "Light";
-            ThemeSetterManager.SetTheme(true);
-            rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
+            SetTheme(false);
+        }
+
+        private void CheckBoxMode_Unchecked_Light(object sender, RoutedEventArgs e)
+        {
+            SetTheme(true);
         }
 
         private void Register_OnClick(object sender, RoutedEventArgs e)
@@ -91,14 +100,14 @@ namespace NiceHashMiner.Views.Login
         [Serializable]
         internal class BtcResponse
         {
-            internal string btc { get; set; }
+            public string btc { get; set; }
         }
 
         [Serializable]
         internal class RigUUIDRequest
         {
-            internal string qrId { get; set; } = "";
-            internal string rigId { get; set; } = "";
+            public string qrId { get; set; } = "";
+            public string rigId { get; set; } = "";
         }
 
         private static async Task<bool> RequestNew_QR_Code(string uuid, string rigId)
@@ -120,18 +129,24 @@ namespace NiceHashMiner.Views.Login
             }
         }
 
-        private async Task ProcessQRCode()
+        private async Task InitQRCode()
         {
-            var requestSuccess = await RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
-            if (requestSuccess)
+            // this is vaild for 10 minutes
+            _uuid = Guid.NewGuid().ToString();
+            _gotQRCode = await RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
+            if (_gotQRCode)
             {
                 // create qr code
                 rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
+                ScanLabel.Content = "Scan with official NiceHash mobile application";
+                ScanConfirmButton.Content = "Confirm scan";
             }
             else
             {
                 ScanLabel.Visibility = Visibility.Collapsed;
                 ScanConfirmButton.Visibility = Visibility.Collapsed;
+                //ScanLabel.Content = "Unable to get QR Code";
+                //ScanConfirmButton.Content = "Retry QR code";
             }
         }
 
@@ -165,6 +180,11 @@ namespace NiceHashMiner.Views.Login
 
         private async Task Confirm_Scan_ClickTask()
         {
+            if (!_gotQRCode)
+            {
+                await InitQRCode();
+                return;
+            }
             var btc = await GetBTCForUUID(_uuid);
             if (CredentialValidators.ValidateBitcoinAddress(btc))
             {
@@ -172,6 +192,11 @@ namespace NiceHashMiner.Views.Login
                 CredentialsSettings.Instance.SetBitcoinAddress(btc);
                 Close();
             }
+        }
+
+        private async void LoginWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            await InitQRCode();
         }
     }
 }
