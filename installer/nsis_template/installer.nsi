@@ -32,6 +32,7 @@ Var launchLink
 ;--------------------------------
 
 Function .onInit
+  SetSilent normal
   !insertmacro check64BitAndSetRegView
 
   ${IfNot} ${UAC_IsInnerInstance}
