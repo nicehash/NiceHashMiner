@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace NHM.DeviceMonitoring
@@ -15,6 +16,8 @@ namespace NHM.DeviceMonitoring
     {
         public static bool DisableDeviceStatusMonitoring { get; set; } = false;
         public static bool DisableDevicePowerModeSettings { get; set; } = true;
+
+        internal static readonly bool IsElevated;
 
         static DeviceMonitorManager()
         {
@@ -30,6 +33,19 @@ namespace NHM.DeviceMonitoring
             catch (Exception e)
             {
                 Logger.Error("DeviceMonitorManager", $"Constructor {e.Message}");
+            }
+
+            try
+            {
+                using (var identity = WindowsIdentity.GetCurrent())
+                {
+                    var principal = new WindowsPrincipal(identity);
+                    IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("DeviceMonitorManager", $"Constructor IsElevated {e.Message}");
             }
         }
 

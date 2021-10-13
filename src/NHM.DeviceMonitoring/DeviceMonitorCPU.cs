@@ -43,6 +43,7 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
+                if (!DeviceMonitorManager.IsElevated) return -1;
                 var temperature = -1;
                 var computer = new Computer();
                 try
@@ -73,7 +74,8 @@ namespace NHM.DeviceMonitoring
 
         (int status, int percentage) IGetFanSpeedPercentage.GetFanSpeedPercentage()
         {
-            var percentage = 0;
+            if (!DeviceMonitorManager.IsElevated) return (-1, -1);
+            var percentage = -1;
             var ok = 0;
             var computer = new Computer();
             try
