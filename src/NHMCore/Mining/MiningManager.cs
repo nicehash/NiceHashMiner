@@ -401,6 +401,7 @@ namespace NHMCore.Mining
             switchingManager = new AlgorithmSwitchingManager();
 
             var lastDeferredCommandTime = DateTime.UtcNow;
+            var steamWatcher = new SteamWatcher();
             Func<bool> handleDeferredCommands = () => (DateTime.UtcNow - lastDeferredCommandTime).TotalSeconds >= 0.5;
             var deferredCommands = new List<DeferredDeviceCommand>();
             try
@@ -410,6 +411,21 @@ namespace NHMCore.Mining
 
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Func<bool> isActive = () => !stop.IsCancellationRequested;
+                steamWatcher.OnSteamGameStartedChanged += async (s, isRunning) => {
+                    //RunningAppID will be 0 if no game is running.
+                    if (isRunning && GlobalDeviceSettings.Instance.EnableGamingMode)
+                    {
+                        await PauseAllMiners();
+                        ApplicationStateManager.CalcRigStatus();
+                        MiningState.Instance.CalculateDevicesStateChange();
+                        AvailableNotifications.CreateGamingStatus();
+                    }
+                    else
+                    {
+                        Logger.Info("TEST", "SteamGame closed");
+                        //TODO: Logic to enable game mode
+                    }
+                };
                 Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
                 while (isActive())
                 {
@@ -453,6 +469,7 @@ namespace NHMCore.Mining
                 }
                 _runningMiners.Clear();
                 _miningDevices.Clear();
+                steamWatcher.Dispose();
             }
         }
 
@@ -741,25 +758,6 @@ namespace NHMCore.Mining
                 }
                 await PauseAllMiners();
                 return;
-            }
-
-            //Pause mining when steam game is running
-            if (SteamRegistryValueExists() && GlobalDeviceSettings.Instance.EnableGamingMode)
-            {
-                var keyName = @"HKEY_USERS\" + WindowsIdentity.GetCurrent().User.Value + @"\SOFTWARE\Valve\Steam";
-                var valueName = "RunningAppID";
-                var RunningAppID = (int)Registry.GetValue(keyName, valueName, null);
-
-                //RunningAppID will be 0 if no game is running.
-                if (RunningAppID != 0)
-                {
-                    foreach (var device in _miningDevices) device.Device.State = DeviceState.Gaming;
-                    await PauseAllMiners();
-                    ApplicationStateManager.CalcRigStatus();
-                    MiningState.Instance.CalculateDevicesStateChange();
-                    AvailableNotifications.CreateGamingStatus();
-                    return;
-                }
             }
 
             // check profit threshold
