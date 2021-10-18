@@ -133,6 +133,18 @@ namespace NHMCore
                     NoDeviceAction?.Invoke();
                     return;
                 }
+#warning CPU monitoring detection not fully functional
+                //// no compatible CPU
+                //if (!DeviceMonitorManager.IsMotherboardCompatible())
+                //{
+                //    AvailableNotifications.CreateMotherboardNotCompatible();
+                //}
+                //else if(!Helpers.IsElevated) // MOBO is supported but we lack admin privs
+                //{
+                //    AvailableNotifications.CreateAdminRunRequired();
+                //}
+
+
 
                 // STEP
                 loader.PrimaryProgress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));

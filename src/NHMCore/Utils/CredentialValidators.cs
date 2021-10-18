@@ -13,6 +13,7 @@ namespace NHMCore.Utils
         {
             if (BuildOptions.BUILD_TAG != BuildTag.PRODUCTION) return !string.IsNullOrEmpty(address) && !string.IsNullOrWhiteSpace(address);
             // production
+            if (address == null) return false;
             try
             {
                 if (address.Length < 26 || address.Length > MAX_BTC_LENGTH) return false;
@@ -29,10 +30,11 @@ namespace NHMCore.Utils
 
         public static bool ValidateWorkerName(string workername)
         {
+            if (string.IsNullOrEmpty(workername) || string.IsNullOrWhiteSpace(workername)) return false;
             return workername.Length <= 15 && IsAlphaNumeric(workername) && !workername.Contains(" ");
         }
 
-        public static bool IsAlphaNumeric(string strToCheck)
+        private static bool IsAlphaNumeric(string strToCheck)
         {
             var rg = new Regex(@"^[a-zA-Z0-9\s,]*$");
             return rg.IsMatch(strToCheck);
@@ -62,8 +64,10 @@ namespace NHMCore.Utils
 
         private static byte[] Hash(byte[] bytes)
         {
-            var hasher = new SHA256Managed();
-            return hasher.ComputeHash(bytes);
+            using (var hasher = new SHA256Managed())
+            {
+                return hasher.ComputeHash(bytes);
+            }
         }
 
         private static byte[] SubArray(byte[] data, int index, int length)

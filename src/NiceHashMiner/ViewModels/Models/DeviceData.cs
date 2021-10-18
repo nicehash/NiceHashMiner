@@ -26,12 +26,18 @@ namespace NiceHashMiner.ViewModels.Models
 
         public List<ComputeDevice> CPUs
         {
-            get => AvailableDevices.GetAvailCPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
+            get => AvailableDevices.Devices
+                .Where(dev => dev.DeviceType == DeviceType.CPU)
+                .Where(dev => dev.Uuid != Dev.Uuid)
+                .ToList();
         }
 
         public List<ComputeDevice> GPUs
         {
-            get => AvailableDevices.GetAvailGPUs().Where(dev => dev.Uuid != Dev.Uuid).ToList();
+            get => AvailableDevices.Devices
+                .Where(dev => dev.DeviceType != DeviceType.CPU)
+                .Where(dev => dev.Uuid != Dev.Uuid)
+                .ToList();
         }
 
         public List<ComputeDevice> DevicesOfSameType
@@ -295,37 +301,20 @@ namespace NiceHashMiner.ViewModels.Models
             }
         }
 
-        public AlgorithmContainer ContainsSameAlgoAndPlugin(string AlgoName, string AlgoPlugin)
-        {
-            foreach (var item in Dev.AlgorithmSettings)
-            {
-                if (item.AlgorithmName == AlgoName && item.PluginName == AlgoPlugin)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
-
         public void CopySettingsFromAnotherDevice(ComputeDevice source)
         {
-            foreach (var item in source.AlgorithmSettings)
+            foreach (var algoSource in source.AlgorithmSettings)
             {
-                foreach (var algoDestination in Dev.AlgorithmSettings)
-                {
-                    if (algoDestination.AlgorithmStringID == item.AlgorithmStringID && algoDestination.PluginContainer.PluginUUID == item.PluginContainer.PluginUUID)
-                    {
-                        algoDestination.BenchmarkSpeed = item.BenchmarkSpeed;
-                        algoDestination.SecondaryBenchmarkSpeed = item.SecondaryBenchmarkSpeed;
-                        algoDestination.PowerUsage = item.PowerUsage;
-                        algoDestination.ExtraLaunchParameters = item.ExtraLaunchParameters;
-                    }
-                }
+                var algoDestination = Dev.AlgorithmSettings.FirstOrDefault(algo => algo.AlgorithmStringID == algoSource.AlgorithmStringID);
+                if (algoDestination == null) continue;
+                algoDestination.BenchmarkSpeed = algoSource.BenchmarkSpeed;
+                algoDestination.SecondaryBenchmarkSpeed = algoSource.SecondaryBenchmarkSpeed;
+                algoDestination.PowerUsage = algoSource.PowerUsage;
+                algoDestination.ExtraLaunchParameters = algoSource.ExtraLaunchParameters;
             }
         }
 
-        public void EnablebenchmarkedOnly()
+        public void EnableBenchmarkedOnly()
         {
             foreach (var a in Dev.AlgorithmSettings)
             {

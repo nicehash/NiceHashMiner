@@ -52,5 +52,7 @@ namespace NHMCore.Notifications
         NullChecksum,
         GamingStarted,
         GamingFinished,
+        AdminRunRequired,
+        MotherboardNotCompatible
     }
 }

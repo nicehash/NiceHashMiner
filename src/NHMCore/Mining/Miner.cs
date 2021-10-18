@@ -139,7 +139,7 @@ namespace NHMCore.Mining
             var hashDiffers = false;
             foreach (var (mp, speeds) in miningPairAndReportedSpeedsPairs)
             {
-                for(var i=0; i<speeds.Length; i++)
+                for (var i = 0; i < Math.Min(speeds.Length, mp.Algorithm.Speeds.Count); i++)
                 {
                     if (speeds[i] < (0.9 * mp.Algorithm.Speeds[i]) && speeds[i] != 0)
                     {

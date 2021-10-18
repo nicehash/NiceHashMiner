@@ -8,7 +8,6 @@ using NHMCore.Notifications;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -27,10 +26,7 @@ namespace NHMCore.Mining
         private static bool _isProfitable = true;
         // assume we have internet
         private static bool _isConnectedToInternet = true;
-
         private static bool _isGameRunning = false;
-
-        public static AlgorithmSwitchingManager switchingManager;
 
         public static bool IsMiningEnabled => _miningDevices.Any();
 
@@ -155,15 +151,8 @@ namespace NHMCore.Mining
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
-        private static Task MiningProfitSettingsChanged(string propName)
+        private static Task MiningProfitSettingsChanged()
         {
-            if (propName == nameof(MiningProfitSettings.Instance.MineRegardlessOfProfit) && 
-                ApplicationStateManager.CalcRigStatus() == RigStatus.Mining && 
-                MiningProfitSettings.Instance.MineRegardlessOfProfit)
-            {
-                ApplicationStateManager.StartMining();
-                SwichMostProfitableGroupUpMethodTask(_normalizedProfits, true, true);
-            }
             if (RunninLoops == null) return Task.CompletedTask;
             var command = new MiningProfitSettingsChangedCommand();
             _commandQueue.Enqueue(command);
@@ -244,7 +233,7 @@ namespace NHMCore.Mining
 
         private static void MiningProfitSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            _ = MiningProfitSettingsChanged(e.PropertyName);
+            _ = MiningProfitSettingsChanged();
         }
 
         private static async Task StopAndRemoveBenchmark(DeferredDeviceCommand c)
@@ -419,7 +408,7 @@ namespace NHMCore.Mining
 
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
-            switchingManager = new AlgorithmSwitchingManager();
+            var switchingManager = new AlgorithmSwitchingManager();
 
             var lastDeferredCommandTime = DateTime.UtcNow;
             var steamWatcher = new SteamWatcher();
@@ -621,19 +610,18 @@ namespace NHMCore.Mining
             else
             {
                 ApplicationStateManager.StartMining();
-                bool skipProfitsThreshold = checkIfShouldSkipProfitsThreshold(command);
-                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold, false);
+                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
+                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
 
             }
         }
 
 
-        private static bool checkIfShouldSkipProfitsThreshold(MainCommand command)
+        private static bool CheckIfShouldSkipProfitsThreshold(MainCommand command)
         {
-            if (MiningProfitSettings.Instance.MineRegardlessOfProfit ||
+            return MiningProfitSettings.Instance.MineRegardlessOfProfit ||
                 command is MiningProfitSettingsChangedCommand || 
-                command is MinerRestartLoopNotifyCommand) return true;
-            return false;
+                command is MinerRestartLoopNotifyCommand;
         }
 
         // full of state
@@ -719,7 +707,7 @@ namespace NHMCore.Mining
             return profitableAlgorithmContainers;
         }
 
-        private static async Task SwichMostProfitableGroupUpMethodTask(Dictionary<AlgorithmType, double> normalizedProfits, bool skipProfitsThreshold, bool forceSwitch)
+        private static async Task SwichMostProfitableGroupUpMethodTask(Dictionary<AlgorithmType, double> normalizedProfits, bool skipProfitsThreshold)
         {
             CalculateAndUpdateMiningDevicesProfits(normalizedProfits);
             var (currentProfit, prevStateProfit) = GetCurrentAndPreviousProfits();
@@ -794,11 +782,6 @@ namespace NHMCore.Mining
             else if (skipProfitsThreshold)
             {
                 Logger.Info(Tag, $"Will SWITCH. MiningProfitSettings have changed");
-            }
-
-            if (forceSwitch)
-            {
-                switchingManager.ForceUpdate();
             }
 
             // grouping starting and stopping

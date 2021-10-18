@@ -57,7 +57,10 @@
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.EnableGamingMode}"
                                         Label="Pause mining when Steam game is started"
                                         Description="{StaticResource steamGamingMode}"/>
-
+            <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.ResolveNiceHashDomainsToIPs}"
+                                        Label="Resolve NiceHash domains to IPs via Cloudflare"
+                                        Description="This will resolve NiceHash domains to IPs via cloudflare in case of DNS sinkholing."/>
+            
         </WrapPanel>
         <!--Device Monitoring-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">

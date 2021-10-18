@@ -314,15 +314,18 @@ namespace NHMCore.Notifications
         public static void CreateNotProfitableInfo(bool shouldClear)
         {
             // clear old state
-            var profitNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Profit);
-            foreach (var profitNotif in profitNotifications)
+            try
             {
-                NotificationsManager.Instance.RemoveNotificationFromList(profitNotif);
+                var profitNotification = NotificationsManager.Instance.Notifications.FirstOrDefault(notif => notif.Group == NotificationsGroup.Profit);
+                if(profitNotification != null) NotificationsManager.Instance.Notifications.Remove(profitNotification);
             }
-
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
             if (!shouldClear)
             {
-                var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Profit, Tr("Mining not profitable"), Tr("Currently mining is not profitable. Mining will be stopped."));
+                var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Profit, Tr("Mining not profitable"), Tr("Currently mining is not profitable. Mining will be resumed once it will be profitable again."));
                 NotificationsManager.Instance.AddNotificationToList(notification);
             }
         }
@@ -499,6 +502,23 @@ namespace NHMCore.Notifications
         public static void CreateGamingFinished()
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateAdminRunRequired()
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.AdminRunRequired, Tr("NiceHash Miner can't obtain CPU information"), Tr("Start NiceHash Miner with administrator rights."));
+            notification.Action = new NotificationAction
+            {
+                Info = Tr("Run As Administrator"),
+                Action = () => { RunAsAdmin.SelfElevate(); }
+            };
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateMotherboardNotCompatible()
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.MotherboardNotCompatible, Tr("NiceHash Miner can’t monitor CPU"), Tr("Your motherboard is not reporting fan speed, temperature, or the load of the CPU. Most likely your CPU is not compatible with the NHM CPU monitoring tool."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

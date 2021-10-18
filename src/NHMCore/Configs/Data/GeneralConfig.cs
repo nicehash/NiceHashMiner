@@ -304,6 +304,13 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.DisableVisualCRedistributableCheck;
             set => MiscSettings.Instance.DisableVisualCRedistributableCheck = value;
         }
+
+        public bool ResolveNiceHashDomainsToIPs
+        {
+            get => MiscSettings.Instance.ResolveNiceHashDomainsToIPs;
+            set => MiscSettings.Instance.ResolveNiceHashDomainsToIPs = value;
+        }
+
         #endregion MiscSettings
 
         #region Global Device settings
@@ -407,6 +414,8 @@ namespace NHMCore.Configs.Data
             DisplayTheme = "Light";
             ShowGPUPCIeBusIDs = false;
             ShowNotifications = new Dictionary<string, bool>();
+
+            ResolveNiceHashDomainsToIPs = true;
 
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;
