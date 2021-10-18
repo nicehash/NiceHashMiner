@@ -214,7 +214,8 @@ namespace LolMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "lolMiner_lhrtune",
                     ShortName = "--lhrtune",
-                    Delimiter = ","
+                    Delimiter = ",",
+                    DefaultValue = "auto"
                 },
                 /// <summary>
                 /// Use parameter --watchdog off/exit/script to turn off any action, exit the miner with a specific exit code or to run an external script.
