@@ -50,6 +50,7 @@ namespace NHMCore.Notifications
         WrongChecksumBinary,
         MinerRestart,
         NullChecksum,
-        GamingState
+        GamingStarted,
+        GamingFinished,
     }
 }

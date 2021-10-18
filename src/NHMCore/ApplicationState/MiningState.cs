@@ -96,12 +96,6 @@ namespace NHMCore.ApplicationState
             get => _intProps.Get(nameof(DisabledDeviceStateCount));
             private set => _intProps.Set(nameof(DisabledDeviceStateCount), value);
         }
-
-        public int GamingDeviceStateCount
-        {
-            get => _intProps.Get(nameof(GamingDeviceStateCount));
-            private set => _intProps.Set(nameof(GamingDeviceStateCount), value);
-        }
         #endregion DeviceState Counts
 
         public bool MiningManuallyStarted { get; set; }
@@ -116,7 +110,6 @@ namespace NHMCore.ApplicationState
             ErrorDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Error);
             PendingDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Pending);
             DisabledDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Disabled);
-            GamingDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Gaming);
             // Mining state
             AllDeviceEnabled = AvailableDevices.Devices.All(dev => dev.Enabled);
             AnyDeviceEnabled = AvailableDevices.Devices.Any(dev => dev.Enabled);

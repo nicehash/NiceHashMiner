@@ -491,9 +491,14 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
         
-        public static void CreateGamingStatus()
+        public static void CreateGamingStarted()
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingState, Tr("Game started, mining is paused"), Tr("NiceHash Miner detected game is running and paused the mining.Mining will resume after the game is closed"));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingStarted, Tr("Game started, mining is paused"), Tr("NiceHash Miner detected game is running and paused the mining. Mining will resume after the game is closed."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+        public static void CreateGamingFinished()
+        {
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

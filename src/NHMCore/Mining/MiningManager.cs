@@ -418,12 +418,11 @@ namespace NHMCore.Mining
                         await PauseAllMiners();
                         ApplicationStateManager.CalcRigStatus();
                         MiningState.Instance.CalculateDevicesStateChange();
-                        AvailableNotifications.CreateGamingStatus();
+                        AvailableNotifications.CreateGamingStarted();
                     }
-                    else
+                    else if (GlobalDeviceSettings.Instance.EnableGamingMode)
                     {
-                        Logger.Info("TEST", "SteamGame closed");
-                        //TODO: Logic to enable game mode
+                        AvailableNotifications.CreateGamingFinished();
                     }
                 };
                 Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
