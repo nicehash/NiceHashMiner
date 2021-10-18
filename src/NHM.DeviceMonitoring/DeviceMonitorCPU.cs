@@ -45,9 +45,9 @@ namespace NHM.DeviceMonitoring
             {
                 if (!DeviceMonitorManager.IsElevated) return -1;
                 var temperature = -1;
-                var computer = DeviceSensorsMonitor.Instance.computer;
                 try
                 {
+                    var computer = LibreHardwareMonitorManager.Instance.Computer;
                     var updateVisitor = new UpdateVisitor();
                     computer.Accept(updateVisitor);
                     var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
@@ -71,9 +71,9 @@ namespace NHM.DeviceMonitoring
             if (!DeviceMonitorManager.IsElevated) return (-1, -1);
             var percentage = -1;
             var ok = 0;
-            var computer = DeviceSensorsMonitor.Instance.computer;
             try
             {
+                var computer = LibreHardwareMonitorManager.Instance.Computer;
                 var updateVisitor = new UpdateVisitor();
                 computer.Accept(updateVisitor);
                 var mainboard = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);

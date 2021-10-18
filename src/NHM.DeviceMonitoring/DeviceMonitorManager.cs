@@ -117,9 +117,9 @@ namespace NHM.DeviceMonitoring
         public static bool IsMotherboardCompatible()
         {
             var isCompatible = true;
-            var computer = DeviceSensorsMonitor.Instance.computer;
             try
             {
+                var computer = LibreHardwareMonitorManager.Instance.Computer;
                 var updateVisitor = new UpdateVisitor();
                 computer.Accept(updateVisitor);
                 var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
