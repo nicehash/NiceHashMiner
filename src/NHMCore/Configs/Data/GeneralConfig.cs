@@ -332,6 +332,12 @@ namespace NHMCore.Configs.Data
             get => GlobalDeviceSettings.Instance.ShowGPUPCIeBusIDs;
             set => GlobalDeviceSettings.Instance.ShowGPUPCIeBusIDs = value;
         }
+
+        public bool PauseMiningWhenGamingMode
+        {
+            get => GlobalDeviceSettings.Instance.PauseMiningWhenGamingMode;
+            set => GlobalDeviceSettings.Instance.PauseMiningWhenGamingMode = value;
+        }
         #endregion Global Device settings
 
         #region UpdateSettings

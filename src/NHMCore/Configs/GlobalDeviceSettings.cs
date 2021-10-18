@@ -62,13 +62,13 @@ namespace NHMCore.Configs
         }
 
         private bool _enableGamingMode = false;
-        public bool EnableGamingMode
+        public bool PauseMiningWhenGamingMode
         {
             get => _enableGamingMode;
             set
             {
                 _enableGamingMode = value;
-                OnPropertyChanged(nameof(EnableGamingMode));
+                OnPropertyChanged(nameof(PauseMiningWhenGamingMode));
             }
         }
     }

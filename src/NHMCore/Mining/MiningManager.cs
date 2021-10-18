@@ -28,6 +28,8 @@ namespace NHMCore.Mining
         // assume we have internet
         private static bool _isConnectedToInternet = true;
 
+        private static bool _isGameRunning = false;
+
         public static AlgorithmSwitchingManager switchingManager;
 
         public static bool IsMiningEnabled => _miningDevices.Any();
@@ -396,6 +398,25 @@ namespace NHMCore.Mining
             // TODO finally on the deferred commands??
         }
 
+        private static async Task OnSteamRunningChanged(bool isGameRunning)
+        {
+            // TODO push to command queue
+            if (!GlobalDeviceSettings.Instance.PauseMiningWhenGamingMode) return;
+            // check if state changed
+
+
+            //RunningAppID will be 0 if no game is running.
+            if (isGameRunning)
+            {
+                await PauseAllMiners();
+                AvailableNotifications.CreateGamingStarted();
+            }
+            else
+            {
+                AvailableNotifications.CreateGamingFinished();
+            }
+        }
+
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
             switchingManager = new AlgorithmSwitchingManager();
@@ -411,18 +432,9 @@ namespace NHMCore.Mining
 
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Func<bool> isActive = () => !stop.IsCancellationRequested;
+                _isGameRunning = steamWatcher.IsSteamGameRunning();
                 steamWatcher.OnSteamGameStartedChanged += async (s, isRunning) => {
-                    //RunningAppID will be 0 if no game is running.
-                    if (isRunning && GlobalDeviceSettings.Instance.EnableGamingMode)
-                    {
-                        await PauseAllMiners();
-                        ApplicationStateManager.CalcRigStatus();
-                        AvailableNotifications.CreateGamingStarted();
-                    }
-                    else if (GlobalDeviceSettings.Instance.EnableGamingMode)
-                    {
-                        AvailableNotifications.CreateGamingFinished();
-                    }
+                    await OnSteamRunningChanged(isRunning);
                 };
                 Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
                 while (isActive())
