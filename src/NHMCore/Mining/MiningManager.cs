@@ -417,7 +417,6 @@ namespace NHMCore.Mining
                     {
                         await PauseAllMiners();
                         ApplicationStateManager.CalcRigStatus();
-                        MiningState.Instance.CalculateDevicesStateChange();
                         AvailableNotifications.CreateGamingStarted();
                     }
                     else if (GlobalDeviceSettings.Instance.EnableGamingMode)
@@ -858,16 +857,5 @@ namespace NHMCore.Mining
         //        _semaphore.Release();
         //    }
         //}
-
-        //function gets validKey if steam is installed
-        private static bool SteamRegistryValueExists()
-        {
-            var keyName = @"HKEY_USERS\" + WindowsIdentity.GetCurrent().User.Value + @"\SOFTWARE\Valve\Steam";
-            var valueName = "RunningAppID";
-
-            var invalidKey = Registry.GetValue(keyName, valueName, null) == null;
-            var validKey = !invalidKey;
-            return validKey;
-        }
     }
 }

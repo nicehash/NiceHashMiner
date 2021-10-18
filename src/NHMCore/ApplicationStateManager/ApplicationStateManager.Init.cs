@@ -246,6 +246,16 @@ namespace NHMCore
                     }
                 }
 
+
+                using (var steamWatcher = new SteamWatcher()) {
+                    if(steamWatcher.IsSteamGameRunning() && GlobalDeviceSettings.Instance.EnableGamingMode)
+                    {
+                        AvailableNotifications.CreateGamingStarted();
+                    } 
+                };
+                
+               
+
                 // fire up mining manager loop
                 var username = CredentialValidators.ValidateBitcoinAddress(btc) ? CreateUsername(btc, RigID()) : DemoUser.BTC;
                 MiningManager.StartLoops(ExitApplication.Token, username);
