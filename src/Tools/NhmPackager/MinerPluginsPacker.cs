@@ -101,11 +101,9 @@ namespace NhmPackager
             string binaryHash = null;
             if (minerPackageURL != null)
             {
-                var filename = plugin.PluginUUID + ".zip";
-                Logger.Info("MinerPluginsPacker", "Calculating hash for " + filename);
-                var filepath = Assembly.GetEntryAssembly().Location.Replace("NhmPackager.exe", filename);
-                using (var myWebClient = new WebClient())
-                    myWebClient.DownloadFile(minerPackageURL, filename);
+                var filepath = GetTemporaryWorkFolder($"{plugin.PluginUUID}.tmp");
+                Logger.Info("MinerPluginsPacker", $"Calculating hash for {plugin.Name}-{plugin.PluginUUID}");
+                using (var myWebClient = new WebClient()) myWebClient.DownloadFile(minerPackageURL, filepath);
                 using (var sha256Hash = SHA256.Create())
                 using (var stream = File.OpenRead(filepath))
                 {

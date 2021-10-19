@@ -86,6 +86,15 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateWarningNVIDIADCHInfo();
                 }
+                if (DeviceDetection.DetectionResult.AMDDriverObsolete)
+                {
+                    AvailableNotifications.CreateOutdatedAMDDriverWarning(DeviceDetectionResult.MinimumAMDDriver);
+                }
+                if (DeviceDetection.DetectionResult.NVIDIADriverObsolete)
+                {
+                    AvailableNotifications.CreateOutdatedNVIDIADriverWarning(DeviceDetectionResult.MinimumNVIDIADriver);
+                }
+
 
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
