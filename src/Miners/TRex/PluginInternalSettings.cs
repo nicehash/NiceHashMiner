@@ -388,6 +388,18 @@ namespace TRex
                     DefaultValue = "0"
                 },
                 /// <summary>
+                /// Sets GPU power limit (Windows - in percent, Linux - in Watts)
+                /// Requires running the miner with administrative privileges.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_pl",
+                    ShortName = null,
+                    LongName = "--pl",
+                    DefaultValue = "100"
+                },
+                /// <summary>
                 /// All options can be set to a comma separated list to apply different values to
                 ///     different cards. (default value for all options: 0 - not used)
                 /// Sets GPU fan speed in percent or target temperature (auto-fan).
