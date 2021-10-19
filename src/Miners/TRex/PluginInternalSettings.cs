@@ -296,6 +296,124 @@ namespace TRex
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "trex_scriptExit",
                     ShortName = "--script-exit"
+                },
+                /// <summary>
+                /// [Ethash, Autolykos2] LHR auto-tune mode (default: full). Valid values:
+                ///  off  - auto-tune is disabled. LHR tune value is fixed during mining, and will not change
+                ///         no matter how often LHR lock is detected
+                ///  down - LHR tune value will decrease if the miner detects LHR lock
+                ///  full - same as "down" but additionally miner will be trying to increase LHR tune
+                ///         value if it's stable on the current LHR tune level
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_lhrautotunelhr",
+                    ShortName = null,
+                    LongName = "--lhr-autotune-mode",
+                    DefaultValue = "off",
+                    Delimiter = null
+                },
+                /// <summary>
+                /// [Ethash, Autolykos2] Reduces power consumption in LHR mode at a cost of a slightly lower hashrate.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_lhrlowpower",
+                    ShortName = null,
+                    LongName = "--lhr-low-power",
+                    DefaultValue = null,
+                    Delimiter = null
+                },
+                /// <summary>
+                /// [Ethash, Autolykos2] LHR tuning value that indicates the percentage of the full speed the miner
+                ///         tries to achieve for LHR cards (default: -1). Range from 10 to 95.
+                ///    -1 - auto-mode (LHR tune is set to 71 (or 68 in low power mode) for LHR cards and 0 for non-LHR)
+                ///    0 - disabled (use for non-LHR cards)
+                ///    30 - recommended starting value for most LHR cards in LHR unlock dual mining mode (see --lhr-algo)
+                ///    68 - recommended starting value for most LHR cards in low power mode (see --lhr-low-power)
+                ///    71 - recommended starting value for most LHR cards
+                ///    Can be set for each GPU separately, e.g.
+                ///    "lhr-tune": "0,0,71.5,0" - this will set LHR tuning value to 71.5 for the third GPU.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "trex_lhr",
+                    ShortName = null,
+                    LongName = "--lhr-tune",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Specifies desired locked GPU core clock speed in MHz. (default: 0 - disabled).
+                /// Requires running the miner with administrative privileges.
+                /// Example: --lock-cclock 1000 (applies clock 1000Mhz to all cards that support this functionality)
+                ///          --lock-cclock 1000,1300,0 (applies clock 1000Mhz to GPU #0, 1300MHz to GPU #1, ignore GPU #2)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "trex_lock_cclock",
+                    ShortName = null,
+                    LongName = "--lock-cclock",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Sets GPU core clock offset in MHz.
+                /// Requires running the miner with administrative privileges.
+                /// Will be set to 0 on exit and during DAG rebuild.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_cclock",
+                    ShortName = null,
+                    LongName = "--cclock",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// Sets GPU memory clock offset in MHz.
+                /// Requires running the miner with administrative privileges.
+                /// Will be set to 0 on exit and during DAG rebuild.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_mclock",
+                    ShortName = null,
+                    LongName = "--mclock",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// All options can be set to a comma separated list to apply different values to
+                ///     different cards. (default value for all options: 0 - not used)
+                /// Sets GPU fan speed in percent or target temperature (auto-fan).
+                /// Valid formats:
+                ///      --fan N           (where N is the fan speed)
+                ///      --fan t:N         (where N is the target core temperature)
+                ///      --fan t:N[F1-F2]  (same as above, but with the fan speed constrained by [F1%, F2%] range)
+                ///      --fan tm:N        (where N is the target memory temperature)
+                ///      --fan tm:N[F1-F2] (same as above, but with the fan speed constrained by [F1%, F2%] range)
+                /// Example: --fan 45,t:67,tm:95,t:69[45-100],tm:90[50-95] which translates to
+                ///       GPU #0: set fan speed to 45%
+                ///       GPU #1: maintain GPU core temperature at 67C
+                ///       GPU #2: maintain GPU memory temperature at 90C
+                ///       GPU #3: maintain GPU core temperature at 69C
+                ///               with the fan speed limited to [45%, 100%] range
+                ///       GPU #4: maintain GPU memory temperature at 90C
+                ///               with the fan speed limited to [50%, 95%] range
+                /// Note: fan speeds are limited to [0%, 100%] range in auto-fan mode by default.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_fan",
+                    ShortName = null,
+                    LongName = "--fan",
+                    DefaultValue = "0"
                 }
             },
             TemperatureOptions = new List<MinerOption>
