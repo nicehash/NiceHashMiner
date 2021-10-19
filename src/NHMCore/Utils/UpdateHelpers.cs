@@ -45,6 +45,7 @@ namespace NHMCore.Utils
             });
         }
 
+
         private static async Task NhmAutoUpdateCheckLoop(CancellationToken stop)
         {
             try
