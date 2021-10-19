@@ -1,4 +1,4 @@
-﻿using NHM.Common.Algorithm;
+using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1;
@@ -23,11 +23,11 @@ namespace TRex
             // https://github.com/trexminer/T-Rex/releases 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "0.19.12",
+                BinVersion = "0.24.2",
                 ExePath = new List<string> { "t-rex.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/trexminer/T-Rex/releases/download/0.19.12/t-rex-0.19.12-win-cuda11.1.zip", // original
+                    "https://github.com/trexminer/T-Rex/releases/download/0.24.2/t-rex-0.24.2-win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace TRex
 
         public override string PluginUUID => "03f80500-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 0);
+        public override Version Version => new Version(16, 1);
 
         public override string Name => "TRex";
 
