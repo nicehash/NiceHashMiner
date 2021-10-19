@@ -25,11 +25,11 @@ namespace LolMiner
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.33",
-                ExePath = new List<string> { "1.33", "lolMiner.exe" },
+                BinVersion = "1.34",
+                ExePath = new List<string> { "1.34", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.33/lolMiner_v1.33_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.34/lolMiner_v1.34_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -55,6 +55,11 @@ namespace LolMiner
 
             var minDrivers = new Version(470, 5);
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+
+            if (!isDriverSupported)
+            {
+                Logger.Error("LolMinerPlugin", $"GetSupportedAlgorithms installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
+            }
 
             var gpus = devices
                 .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported))
@@ -130,6 +135,8 @@ namespace LolMiner
             if (ids.Count() != 0)
             {
                 if (ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5 && device.Name.ToLower().Contains("r9 390")) return true;
+                // LHR re-benchmark
+                if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion < Version) return true;
             }
             return false;
         }
