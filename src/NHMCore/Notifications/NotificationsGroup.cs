@@ -51,8 +51,8 @@ namespace NHMCore.Notifications
         MinerRestart,
         NullChecksum,
         DriverNVIDIAObsolete,
-        DriverAMDObsolete
+        DriverAMDObsolete,
         AdminRunRequired,
-        MotherboardNotCompatible
+        MotherboardNotCompatible,
     }
 }
