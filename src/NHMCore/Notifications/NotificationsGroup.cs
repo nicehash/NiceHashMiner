@@ -52,5 +52,7 @@ namespace NHMCore.Notifications
         NullChecksum,
         DriverNVIDIAObsolete,
         DriverAMDObsolete
+        AdminRunRequired,
+        MotherboardNotCompatible
     }
 }

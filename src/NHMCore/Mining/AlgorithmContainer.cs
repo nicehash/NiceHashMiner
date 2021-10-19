@@ -208,7 +208,7 @@ namespace NHMCore.Mining
             set
             {
                 if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(ExtraLaunchParameters));
             }
         }
 
@@ -365,15 +365,15 @@ namespace NHMCore.Mining
         /// <summary>
         /// Power consumption of this algorithm, in Watts
         /// </summary>
-        private double powerUsage = 0;
+        private double _powerUsage = 0;
         public virtual double PowerUsage {
             get
             {
-                return powerUsage;
+                return _powerUsage;
             }
             set
             {
-                powerUsage = value;
+                _powerUsage = value;
                 OnPropertyChanged(nameof(PowerUsage));
             }
         }

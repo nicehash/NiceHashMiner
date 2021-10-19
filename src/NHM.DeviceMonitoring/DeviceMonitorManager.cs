@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using LibreHardwareMonitor.Hardware;
+using NHM.Common;
 using NHM.Common.Device;
 using NHM.DeviceMonitoring.AMD;
 using NHM.DeviceMonitoring.NVIDIA;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace NHM.DeviceMonitoring
@@ -14,6 +16,8 @@ namespace NHM.DeviceMonitoring
     {
         public static bool DisableDeviceStatusMonitoring { get; set; } = false;
         public static bool DisableDevicePowerModeSettings { get; set; } = true;
+
+        internal static readonly bool IsElevated;
 
         static DeviceMonitorManager()
         {
@@ -29,6 +33,19 @@ namespace NHM.DeviceMonitoring
             catch (Exception e)
             {
                 Logger.Error("DeviceMonitorManager", $"Constructor {e.Message}");
+            }
+
+            try
+            {
+                using (var identity = WindowsIdentity.GetCurrent())
+                {
+                    var principal = new WindowsPrincipal(identity);
+                    IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("DeviceMonitorManager", $"Constructor IsElevated {e.Message}");
             }
         }
 
@@ -95,6 +112,43 @@ namespace NHM.DeviceMonitoring
 
                 return ret;
             });
+        }
+
+        public static bool IsMotherboardCompatible()
+        {
+            var isCompatible = true;
+            try
+            {
+                var computer = LibreHardwareMonitorManager.Instance.Computer;
+                var updateVisitor = new UpdateVisitor();
+                computer.Accept(updateVisitor);
+                var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
+                var mainboard = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);
+                var cpuSensors = cpu.Sensors.Where(s => s.SensorType == SensorType.Temperature);
+                var cpuSensor = cpuSensors.FirstOrDefault(s => s.Name == "CPU Package" || s.Name.Contains("(Tdie)"));
+                if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault(s => s.Name.Contains("(Tctl/Tdie)"));
+                if (cpuSensor == null) cpuSensor = cpuSensors.FirstOrDefault();
+                foreach (var subHW in mainboard.SubHardware)
+                {
+                    var groupedSensors = subHW.Sensors
+                        .Where(s => (s.SensorType == SensorType.Fan || s.SensorType == SensorType.Control) && s.Value != 0).OrderBy(s => s.Name)
+                        .Select(s => new { id = s.Identifier.ToString().Replace("fan", "*").Replace("control", "*"), s })
+                        .GroupBy(p => p.id)
+                        .Select(g => g.ToArray().Select(p => p.s).OrderBy(s => s.SensorType))
+                        .ToArray();
+
+                    ISensor sensor = null;
+                    if (groupedSensors.Any(sg => sg.Count() == 2)) sensor = groupedSensors.FirstOrDefault(sg => sg.Count() == 2).FirstOrDefault(s => s.SensorType == SensorType.Control);
+                    if (!sensor.Value.HasValue || sensor == null) isCompatible = false;
+                }
+                if (cpuSensor == null || !cpuSensor.Value.HasValue) isCompatible =  false;
+            }
+            catch(Exception e)
+            {
+                Logger.Error("DeviceMonitorManager", "Error when getting CPU fan speed and temperature: " + e.Message);
+            }
+
+            return isCompatible;
         }
     }
 }

@@ -60,6 +60,7 @@ namespace NHM.DeviceDetection
                 stringBuilder.AppendLine($"\tThreadsPerCPU: {cpu.ThreadsPerCPU}");
                 stringBuilder.AppendLine($"\tSupportsHyperThreading: {cpu.SupportsHyperThreading}");
                 Logger.Info(Tag, stringBuilder.ToString());
+
             }
             Logger.Info(Tag, $"DetectCPU END");
         }

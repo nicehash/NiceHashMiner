@@ -88,5 +88,15 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(DisableVisualCRedistributableCheck));
             }
         }
+
+        public bool ResolveNiceHashDomainsToIPs
+        {
+            get => StratumServiceHelpers.UseDNSQ;
+            set
+            {
+                StratumServiceHelpers.UseDNSQ = value;
+                OnPropertyChanged(nameof(ResolveNiceHashDomainsToIPs));
+            }
+        }
     }
 }

@@ -98,12 +98,42 @@ namespace NHMCore.Configs
         //    }
         //}
 
+        public void RevertTheme()
+        {
+            DisplayTheme = LastDisplayTheme;
+        }
+
+
+        private string _lastDisplayTheme = "Light";
+        public string LastDisplayTheme
+        {
+            get => _lastDisplayTheme;
+            set
+            {
+                _lastDisplayTheme = value;
+                OnPropertyChanged(nameof(LastDisplayTheme));
+            }
+        }
+
+        private string _nextDisplayTheme = "Light";
+        public string NextDisplayTheme
+        {
+            get => _nextDisplayTheme;
+            set
+            {
+                _nextDisplayTheme = value;
+                OnPropertyChanged(nameof(NextDisplayTheme));
+            }
+        }
+
+
         private string _displayTheme = "Light";
         public string DisplayTheme
         {
             get => _displayTheme;
             set
             {
+                LastDisplayTheme = _displayTheme;
                 _displayTheme = value;
                 OnPropertyChanged(nameof(DisplayTheme));
             }

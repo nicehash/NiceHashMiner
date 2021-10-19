@@ -36,7 +36,7 @@ namespace NHM.Common
             _client.DefaultRequestHeaders.Add("Accept", "application/dns-json");
         }
 
-        private static string URL = "https://{DESTINATION}/dns-query?name={REQUEST}&type=A";
+        const string URL = "https://{DESTINATION}/dns-query?name={REQUEST}&type=A";
         const string DESTINATION_TEMPLATE = "{DESTINATION}";
         const string REQUEST_TEMPLATE = "{REQUEST}";
 

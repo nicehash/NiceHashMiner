@@ -10,7 +10,7 @@
     "zh_cn": "简体中文 (Unofficial)",
     "ro": "Română (Unofficial)"
   },
-  "missing translations": {
+  "Translations": {
     " (current {0})": {
       "bg": " (актуален {0})",
       "es": " (actual {0})",
@@ -4145,6 +4145,21 @@
 
     },
     "No available algorithms": {
+
+    },
+    "NiceHash Miner can't obtain CPU information": {
+
+    },
+    "Start NiceHash Miner with administrator rights.": {
+
+    },
+    "NiceHash Miner can’t monitor CPU": {
+
+    },
+    "Your motherboard is not reporting fan speed, temperature, or the load of the CPU. Most likely your CPU is not compatible with the NHM CPU monitoring tool.": {
+
+    },
+    "Currently mining is not profitable. Mining will be resumed once it will be profitable again.": {
 
     }
   }

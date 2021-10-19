@@ -48,8 +48,8 @@
         </Canvas>
         <!--</Border>-->
 
-        <Label Content="Scan with official NiceHash mobile application" HorizontalAlignment="Center"  Style="{StaticResource FontsTypography.SmallRegular2}" Padding="0" Margin="0,4,0,2" />
-        <Button Content="Confirm scan" HorizontalAlignment="Center" Style="{StaticResource BigButtonPrimaryNotifications}" Padding="8,4,8,4" Click="Button_Click"/>
+        <Label Name="ScanLabel" Content="Scan with official NiceHash mobile application" HorizontalAlignment="Center"  Style="{StaticResource FontsTypography.SmallRegular2}" Padding="0" Margin="0,4,0,2" />
+        <Button Name="ScanConfirmButton" Content="Confirm scan" HorizontalAlignment="Center" Style="{StaticResource BigButtonPrimaryNotifications}" Padding="8,4,8,4" Click="Confirm_Scan_Click"/>
 
         <Button Style="{StaticResource OKButton}" Margin="0,8,0,0" Content="LOGIN" Click="Login_OnClick" />
 
@@ -58,6 +58,6 @@
         <Button Style="{StaticResource local.TextButton}" Margin="0,12,0,0" HorizontalAlignment="Center" Content="Enter Bitcoin Address Manually" Click="ManuallyEnterBtc_OnClick" />
 
 
-        <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{StaticResource NHMSwitchTheme}" Margin="0,0,24,0" Checked="CheckBoxMode_Checked" Unchecked="CheckBoxMode_Unchecked" />
+        <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{StaticResource NHMSwitchTheme}" Margin="0,0,24,0" Checked="CheckBoxMode_Checked_Dark" Unchecked="CheckBoxMode_Unchecked_Light" />
     </StackPanel>
 </nhb:BaseDialogWindow>

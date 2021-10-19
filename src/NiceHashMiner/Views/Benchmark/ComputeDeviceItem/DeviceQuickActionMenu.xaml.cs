@@ -78,7 +78,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)
         {
-            _deviceData.EnablebenchmarkedOnly();
+            _deviceData.EnableBenchmarkedOnly();
         }
 
         private void Copy_Button_Click(object sender, RoutedEventArgs e)
