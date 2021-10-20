@@ -125,7 +125,7 @@ namespace NanoMiner
                 if (ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto 
                     && benchmarkedPluginVersion < Version 
                     && device is CUDADevice cuda
-                    && (cuda.SM_major == 6 || cuda.SM_major == 7 || cuda.SM_major == 8)) 
+                    && (cuda.SM_major == 6 || cuda.SM_major == 7 || cuda.SM_major == 8))
                     return true;
             }
             return false;
