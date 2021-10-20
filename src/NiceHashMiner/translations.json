@@ -16,14 +16,17 @@
       "es": " (actual {0})",
       "it": " (attuale {0})",
       "pl": " (obecny {0})",
+      "pt": " (actual {0})",
       "ro": " (curent {0})",
       "ru": " (текущий {0})",
       "zh_cn": "(当前 {0})"
     },
     "_(Don't have an account? Register here)": {
+      "pt": "_(Não tens uma conta? Regista-te aqui)",
       "ru": "_(Нет аккаунта? Зарегистрируйтесь здесь)"
     },
     "_(or enter Bitcoin address manually)": {
+      "pt": "_(ou insere o endereço Bitcoin manualmente)",
       "ru": "_(или введите Биткоин-адрес вручную)"
     },
     "_Benchmark": {
@@ -35,6 +38,7 @@
       "bg": "Отка_з",
       "it": "_Annulla",
       "pl": "_Anuluj",
+      "pt": "_Cancelar",
       "ro": "_Anulare",
       "ru": "О_тмена",
       "zh_cn": "取消 (_C)"
@@ -54,7 +58,7 @@
       "es": "_Cerrar sin guardar",
       "it": "_Esci senza salvare",
       "pl": "_Anuluj",
-      "pt": "_Fechar sem Salvar",
+      "pt": "_Fechar sem Gravar",
       "ro": "În_chide fără Salvare",
       "ru": "_Выйти без сохранения",
       "zh_cn": "关闭，不保存 (_C)"
@@ -84,7 +88,7 @@
       "es": "_No volver a mostrar esta ventana",
       "it": "_Non mostrare più questo avviso",
       "pl": "_Nie pokazuj tego więcej",
-      "pt": "_Não mostre esse aviso novamente",
+      "pt": "_Não mostrar este aviso novamente",
       "ro": "_Nu arăta această avertizare din nou",
       "ru": "_Не показывать это предупреждение снова",
       "zh_cn": "不再显示此警告 (_D)"
@@ -94,9 +98,9 @@
       "es": "_Ayuda",
       "it": "_Aiuto",
       "pl": "_Pomoc",
-      "pt": "_Socorro",
+      "pt": "_Ajuda",
       "ro": "_Ajutor",
-      "ru": "С_правка",
+      "ru": "_Справка",
       "zh_cn": "帮助 (_H)"
     },
     "_Link to Driver Download Page": {
@@ -104,12 +108,13 @@
       "es": "_Enlace a la página de descargas del driver",
       "it": "_Link alla Pagina di Download del Driver",
       "pl": "_Pobierz sterownik ze strony",
-      "pt": "_Link para a página de Download",
+      "pt": "_Link para a página de Download do Driver",
       "ro": "_Link la Pagina de Descărcare Driver",
       "ru": "_Ссылка на страницу загрузки драйвера",
       "zh_cn": "驱动下载页面链接 (_L)"
     },
     "_Login with NiceHash": {
+      "pt": "_Entrar com o NiceHash",
       "ru": "_Войти с помощью NiceHash"
     },
     "_No": {
@@ -137,7 +142,7 @@
     },
     "_Quick (can be inaccurate)": {
       "bg": "_Бърз (може да бъде неточен)",
-      "es": "Rá_pido (puede ser impreciso)",
+      "es": "_Rápido (puede ser impreciso)",
       "it": "_Veloce (può essere inaccurato)",
       "pl": "_Szybki (moze być niedokładny)",
       "pt": "_Rápido (pode ser impreciso)",
@@ -148,15 +153,16 @@
     "_Reset": {
       "bg": "_Ресет",
       "es": "_Resetear",
-      "pt": "_Resetar",
+      "pt": "_Repor",
       "ro": "_Resetează",
-      "ru": "Сбр_осить",
+      "ru": "_Сбросить",
       "zh_cn": "重置 (_R)"
     },
     "_Retry": {
       "bg": "_Опитай отново",
       "it": "_Riprova",
       "pl": "_Ponów",
+      "pt": "_Tentar novamente",
       "ro": "_Reîncearcă",
       "ru": "_Повторить",
       "zh_cn": "重试 (_R)"
@@ -166,7 +172,7 @@
       "es": "_Guardar y cerrar",
       "it": "_Salva ed esci",
       "pl": "_Zapisz i zamknij",
-      "pt": "_Salvar e Fechar",
+      "pt": "_Gravaref e Fechar",
       "ro": "_Salvează și Închide",
       "ru": "_Сохранить и выйти",
       "zh_cn": "保存并关闭 (_S)"
@@ -208,21 +214,27 @@
       "zh_cn": "停止 "
     },
     "_Start All": {
+      "pt": "_Iniciar Todos",
       "ru": "_Запустить все"
     },
     "_Stop All": {
+      "pt": "_Parar Todos",
       "ru": "_Остановить все"
     },
     "Stopped": {
+      "pt": "Parado",
       "ru": "Остановлено"
     },
     "Mining": {
+      "pt": "A Minerar",
       "ru": "Майнинг"
     },
     "Starting": {
+      "pt": "A iniciar",
       "ru": "Запуск"
     },
     "Stopping": {
+      "pt": "A parar",
       "ru": "Остановка"
     },
     "_Yes": {
@@ -255,6 +267,7 @@
       "es": "Periodo de gracia de la API del minero(AMD)[s]",
       "it": "Abbuono API Miner AMD [s]",
       "pl": "Opóźnienie API górnika AMD [s]",
+      "pt": "Período de graça do minerador AMD [s]",
       "ro": "Grație AMD Miner API [s]",
       "ru": "AMD ожидание API [с]",
       "zh_cn": "AMD矿工API宽限 [秒]"
@@ -263,6 +276,7 @@
       "bg": "Порт за връзка с API",
       "es": "Puerto de API",
       "it": "Porta Bind API",
+      "pt": "Porta da API",
       "ru": "Порт связи API",
       "zh_cn": "API绑定端口"
     },
@@ -271,6 +285,7 @@
       "es": "Puertos disponibles para la API:",
       "it": "Numero porta bind API per pool:",
       "pl": "Numer portu API:",
+      "pt": "Portas disponiveis para a API:",
       "ro": "Poer API Bind start pool:",
       "ru": "Начальный порт связи API:",
       "zh_cn": "API绑定端口池下限:"
@@ -280,6 +295,7 @@
       "es": "Puerto de la API que será usado por ethminer para {0} GPUs.",
       "it": "La porta API che verrà usata da ethminer per le GPU {0}.",
       "pl": "Port API górnika ethminer dla kart {0}.",
+      "pt": "Porta API que será utlizada pelo ethminer para {0} GPUs.",
       "ro": "Port API care va fi utilizat de ethminer pentru GPUuri {0}.",
       "ru": "Порт API, который будет использоваться ethminer для {0} GPU.",
       "zh_cn": "ethminer在{0} GPU上运行时使用的API端口。"
@@ -289,6 +305,7 @@
       "es": "Puerto de la API que será usado por este grupo.",
       "it": "La porta API che verrà usata da questo gruppo.",
       "pl": "Port API używany przez tę grupę.",
+      "pt": "Porta API que será utilizada por este grupo.",
       "ro": "Port API care va fi folosit de acest grup.",
       "ru": "Порт API, который будет использоваться этой группой.",
       "zh_cn": "此组用户使用的API端口。"
@@ -353,9 +370,11 @@
       "zh_cn": "用于 {0} 的算法配置:"
     },
     "Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {
+      "pt": "O Algoritmo {0} estava a correr com o hashrate de {1}, mas o benchmark marca {2}. Queres actualizar para o novo valor?",
       "ru": "Алгоритм {0} работал с хэшрейтом {1}, но результат бенчмарка был {2}. Хотите принять новое значение?"
     },
     "Algorithms/Enabled/Benchmarked": {
+      "pt": "Algoritmos/Activados/Testados",
       "ru": "Алгоритмы/Включённые/Протестированные"
     },
     "All benchmarks have been successful": {
@@ -403,7 +422,7 @@
       "es": "¿Está seguro que quiere copiar la configuración de {0} a {1}?",
       "it": "Sei sicuro di voler copiare le impostazioni da {0} a {1}?",
       "pl": "Na pewno skopiować ustawienia z {0} do {1}?",
-      "pt": "Tem certeza de que deseja copiar as configurações de {0} para {1}?",
+      "pt": "Tens a certeza que queres copiar as configurações de {0} para {1}?",
       "ro": "Sunteți siguri că doriți copierea setărilor de la {0} la {1}?",
       "ru": "Вы уверены, что хотите скопировать настройки из {0} в {1}?",
       "zh_cn": "是否确认从{0}复制配置至{1}?"
@@ -413,7 +432,7 @@
       "es": "¿Está seguro de que quiere establecer la configuración predeterminada? {0} se reiniciará automáticamente.",
       "it": "Sei sicuro di voler tornare alle impostazioni di default? Questo riavvierà {0} in automatico.",
       "pl": "Jeśteś pewny, że chcesz zresetować wszystkie ustawienia? To spowoduje automatyczny restart {0}",
-      "pt": "Tem certeza de que deseja configurar tudo de volta aos padrões? Isso irá reiniciar o {0} automaticamente.",
+      "pt": "Tens a certeza que queres repor tudo de volta aos padrões? Isto irá reiniciar o {0} automaticamente.",
       "ro": "Sunteți sigur că doriți revenirea la setările implicite? Acest lucru o să repornească {0} automat.",
       "ru": "Вы уверены, что хотите вернуть все настройки по умолчанию? Это перезапустит {0}.",
       "zh_cn": "您确定要恢复所有设置为默认吗？{0}将会自动重启。"
@@ -423,7 +442,7 @@
       "es": "Empezar a minar cuando el ordenador está inactivo y parar de minar cuando está en uso.",
       "it": "Inizia in automatico a minare quando il computer è in idle e smetti quando il computer viene usato.",
       "pl": "Automatycznie kop kiedy komputer jest w stanie bezczynności i przestawaj kiedy zaczynasz coś na nim robić.",
-      "pt": "Inicie automaticamente a mineração quando o computador estiver ocioso e pare de minerar quando o computador estiver sendo usado.",
+      "pt": "Iniciar automaticamente a mineração quando o computador estiver inactivo e pare de minerar quando o computador estiver em utilização.",
       "ro": "Pornește minarea automat atunci când calculatorul nu este folosit și oprește minarea atunci când caclulatorul este folosit.",
       "ru": "Автоматически запускать майнинг, когда компьютер простаивает,\nи останавливать майнинг, когда компьютер используется.",
       "zh_cn": "在计算机空闲时自动开启挖矿，并在其被占用时停止挖矿。"
@@ -672,6 +691,7 @@
       "es": "Márcalo si quieres saltar y desactivar un algoritmo en particular.\nEl minado y el benchmark serán desactivados para este algoritmo en particular.\nEl cambio automático de algoritmo también ignorará este algoritmo.",
       "it": "Spuntalo se vuoi saltare e disattivare un particolare algoritmo.\nIl benchmarking così come il mining verrà disabilitato per questo particolare algoritmo.\nDetto questo, durante il mining l'algoritmo verrà saltato in automatico.",
       "pl": "Zaznacz jeśli chcesz pominąć i wyłączyć określony algorytm.\nWyłączy równiez bechmarki dla tych algorytmów.\nSkutkiem tego automatyczne przełączanie pominie te algorytmy.",
+      "pt": "Seleciona se quiseres saltar e desactivar um algoritmo específico. \nO benchmark e a mineração serão desactivadas para este algoritmo especificamente,\nOu seja, a alteração automática de algoritmos irá ignorar este algoritmo.",
       "ro": "Bifați dacă doriți să săriți și să dezactivați un anume algoritm.\nBenchmark și minarea vor fi dezactivate pentru acest algoritm.\nAstfel, auto-comutarea o să sară peste acest algoritm când rulează minarea.",
       "ru": "Отметьте, если вы хотели бы пропустить/отключить определённый алгоритм. \nБенчмарк, а также фактический майнинг будут отключены для этого конкретного алгоритма. \nЭто означает, что автоматическое переключение будет пропускать этот алгоритм во время майнинга.",
       "zh_cn": "禁用被选中的算法。\n被禁用的算法在基准测试和实际挖矿中都将不可用。\n挖矿过程中切换算法时，这些算法也会被忽略。"
@@ -681,6 +701,7 @@
       "es": "Márcalo si quieres desactivar el control de temperatura predeterminado\npara las GPUs de AMD (excepto para el algoritmo daggerhashimoto).",
       "it": "Spuntalo, se vuoi disattivare il controllo della temperatura integrato\nper le GPU AMD (tranne che per l'algoritmo daggerhashimoto).",
       "pl": "Zaznacz, jeśli chcesz wyłączyć kontrolę temperatury \ndla kart AMD (nie działa dla daggerhashimoto).",
+      "pt": "Seleciona se quiseres desactivar o controlo de temperatura incorporado \npara AMD GPUs (excepto para o algoritmo daggerhashimoto).",
       "ro": "Bifați dacă doriți să dezactivați controlul intern al temperaturii\npentru GPUuri AMD (în afară de algoritmul daggerhashimoto).",
       "ru": "Отметьте, если вы хотите отключить встроенный контроль температуры\nдля AMD GPU (за исключением алгоритма daggerhashimoto).",
       "zh_cn": "选择此处禁用AMD图形处理器内置的温控\n机制（Dagger Hashimoto算法除外）。"
@@ -690,7 +711,7 @@
       "es": "Marcalo si quieres ver los valores de BTC autoescalar a la escala apropiada.",
       "it": "Spuntalo, se vuoi vedere i valori in BTC scalati automaticamente alla scala corretta.",
       "pl": "Zaznacz, jeśli chcesz widzieć wartości BTC we właściwej skali.",
-      "pt": "Marque se você gostaria de ver os valores BTC na escala apropriada.",
+      "pt": "Selecionar se você gostarias de ver os valores BTC na escala apropriada.",
       "ro": "Bifați, dacă doriți să vedeți valorile BTC autoscalate la cea mai apropiată scară.",
       "ru": "Отметьте, если хотите видеть значения BTC в подходящем масштабе.",
       "zh_cn": "选择此处来自动调整BTC金额的显示单位。"
@@ -700,7 +721,7 @@
       "es": "Marcalo si quieres saltar la detección de GPUs de {0}",
       "it": "Spuntalo, se vuoi saltare il riconoscimento delle GPU {0}.",
       "pl": "Zaznacz, jeśli chcesz pomijać wykrywanie GPU {0}",
-      "pt": "Marque se você quiser pular a detecção de {0} GPUs.",
+      "pt": "Selecionar se quiseres saltar a detecção de {0} GPUs.",
       "ro": "Bifați dacă doriți să săriți peste detecția GPU-urilor {0}.",
       "ru": "Отметьте, если хотите пропускать определение {0} GPU.",
       "zh_cn": "选择此处来跳过对 {0} 图形处理器的检测。"
@@ -710,7 +731,7 @@
       "es": "Márcalo para registrar la salida de la consola en un archivo.",
       "it": "Spuntalo, per registrare l'output della console in un file di log.",
       "pl": "Zaznacz, aby zapisywać okna konsol do plików.",
-      "pt": "Marque para registrar a saída do console no arquivo.",
+      "pt": "Selecionar, para registar a saída da consola para um ficheiro.",
       "ro": "Bifați, pentru a înregistra ieșirea consolei în fișier.",
       "ru": "Отметьте для записи выводов консоли в файл.",
       "zh_cn": "选择此处保存控制台输出至日志文件。"
@@ -740,7 +761,7 @@
       "es": "Buscando la última versión...",
       "it": "Controllando l'ultima versione...",
       "pl": "Sprawdzanie aktualizacji...",
-      "pt": "Checando a ultima versão...",
+      "pt": "A procurar pela última versão...",
       "ro": "Verifică ultima versiune...",
       "ru": "Проверка последней версии…",
       "zh_cn": "正在检查更新..."
@@ -750,6 +771,7 @@
       "zh_cn": "中国 - 香港"
     },
     "Choose how to check if computer is idle when start mining on idle is enabled. Session Lock will start when the computer is locked (generally when the screen has turned off). Input Timeout will start when there has been no system input for the idle time seconds.": {
+      "pt": "Escolhe como é que queres verificar se o computador está inactivo quando, Iniciar Mineração Quando Inativo, está activo. Sessão Bloqueada, inicia assim que o computador for bloqueado(Normalmente quando ecrã se desligou). Tempo limite de inactividade, inicia assim que atingir os segundos definidos de inactividade ",
       "ru": "Выберите как проверять простаивает ли компьютер, когда включён запуск майнинга при простое. Блокирование сессии начнётся, когда компьютер заблокирован (как правило, когда отключается экран). Тайм-аут ввода начнётся, когда системный ввод отсутствовал в течение секунд простоя."
     },
     "Choose what Currency to Display mining profit.": {
@@ -757,7 +779,7 @@
       "es": "Elija qué divisa mostrar",
       "it": "Scegli in quale valuta mostrare i profitti.",
       "pl": "Wybierz jaka waluta ma być pokazywana w programie.",
-      "pt": "Escolha em qual Moeda exibir lucro de mineração.",
+      "pt": "Escolhe em que Moeda queres mostrar o lucro da mineração.",
       "ro": "Alegeți în ce Monedă se Afișează profitul minat.",
       "ru": "Выберите валюту для отображения прибыльности майнинга.",
       "zh_cn": "选择用于显示挖矿收益的法定货币。"
@@ -767,11 +789,13 @@
       "es": "Elige que GPU creará el archivo DAG.\nElije la GPU más rápida posible.",
       "it": "Scegli quale GPU creerà un file DAG.\nCome regola, scegli la GPU più veloce disponibile.",
       "pl": "Wybierz na którym GPU będzie utworzony plik DAG.\nNajlepiej wybrać najszybszą.",
+      "pt": "Escolhe que GPU criará o ficheiro DAG.\nSe possível, escolhe o GPU mais rápido que esteja disponível.",
       "ro": "Alegeți care GPU o să creeze fișierul DAG.\nCa regulă, alegeți cel mai rapid GPU care este disponibil.",
       "ru": "Выберите какая GPU будет создавать DAG-файл.\nСоветуем выбрать самую быструю из доступных.",
       "zh_cn": "选择负责生成DAG文件的图形处理器。\n一般情况下应选择最快的图形处理器承担此任务。"
     },
     "ClaymoreDual Tuning": {
+      "ru": "Afinação ClaymoreDual",
       "ru": "Тюнинг ClaymoreDual"
     },
     "Clear Algorithm Speed": {
@@ -789,7 +813,7 @@
       "es": "¡Completado!",
       "it": "Completato!",
       "pl": "Zakończone!",
-      "pt": "Completado!",
+      "pt": "Terminado!",
       "ro": "Complet!",
       "ru": "Завершено!",
       "zh_cn": "完成！"
@@ -815,6 +839,7 @@
       "zh_cn": "从（基准测试，算法参数）复制配置"
     },
     "Copy tuning settings only": {
+      "pt": "Copiar apenas as configurações de afinação",
       "ru": "Скопировать только настройки тюнинга"
     },
     "Current benchmark settings are already executed. There is nothing to do.": {
@@ -832,6 +857,7 @@
       "es": "Modo de carga del DAG:",
       "it": "Modalità Caricamento DAG:",
       "pl": "Tryb ładowania DAG:",
+      "pt": "Modo de carregamento do DAG:",
       "ro": "Mod Încărcare Dag:",
       "ru": "Режим загрузки Dag:",
       "zh_cn": "DAG加载模式:"
@@ -840,6 +866,7 @@
       "es": "Dispositivo que generará el DAG",
       "it": "Genera dispositivo Dagger Hashimoto",
       "pl": "Urządzenie dla Dagger Hashimoto",
+      "pt": "Dispositivo genera Dagger Hashimoto",
       "ru": "Устройство генерации DaggerHashimoto",
       "zh_cn": "Dagger Hashimoto生成设备"
     },
@@ -864,6 +891,7 @@
       "zh_cn": "调试控制台"
     },
     "Deviant Algorithm": {
+      "pt": "Algoritmo Diferente",
       "ru": "Девиантный алгоритм"
     },
     "Device": {
@@ -891,7 +919,7 @@
       "es": "Desactivar control de temperatura de AMD",
       "it": "Disabilita controllo temperatura AMD",
       "pl": "Wyłącz kontrolę temperatury dla AMD",
-      "pt": "Não Controlar Temperatura da AMD",
+      "pt": "Desactivar Controlo de Temperatura da AMD",
       "ro": "Dezactivează Control Temperatură AMD",
       "ru": "Откл. контроль температуры AMD",
       "zh_cn": "禁用AMD温度控制"
@@ -937,9 +965,11 @@
       "zh_cn": "禁用设备"
     },
     "Disable Device Status Monitoring": {
+      "pt": "Desactivar a Monitorização do Estado do Dispositivo",
       "ru": "Отключить мониторинг статуса устройства"
     },
     "Disable Device Power Mode Settings": {
+      "pt": "Desactivar as definições do modo de energia do Dispositivo",
       "ru": "Отключить настройку режима энергопотребления устройства"
     },
     "Disable Windows Error Reporting": {
@@ -953,6 +983,7 @@
       "zh_cn": "禁用Windows错误报告"
     },
     "Disabled": {
+      "pt": "Desactivar",
       "ru": "Отключено"
     },
     "Disabled Devices": {
@@ -1006,6 +1037,7 @@
       "zh_cn": "编辑进阶设置适用于资深用户。\r\n\r如遇 {0} 因配置不当而奔溃，您可以通过删除“config.json”文件来恢复正确的配置。是否继续编辑进阶设置？"
     },
     "Electricity Cost (/KWh):": {
+      "pt": "Custo da Electricidade (/KWh):",
       "ru": "Стоимость э/э (/кВт⋅ч):"
     },
     "Enable 3rd Party Miners": {
@@ -1013,7 +1045,7 @@
       "es": "Usar mineros de terceros",
       "it": "Abilita miners di terze parti",
       "pl": "Włącz górników zewnętrznych",
-      "pt": "Habilitar Mineradores de Terceiros",
+      "pt": "Activar Mineradores de Terceiros",
       "ro": "Activează Minerii 3rd Party",
       "ru": "Включить сторонние майнеры",
       "zh_cn": "使用第三方挖矿程序"
@@ -1033,7 +1065,7 @@
       "es": "Habilitar Benchmarked Only",
       "it": "Abilita solo con benchmark",
       "pl": "Włącz tylko test porównawczy",
-      "pt": "Ativar apenas o benchmarking",
+      "pt": "Ativar apenas os testados",
       "ro": "Activează doar Benchmarked",
       "ru": "Включить прошедшие бенчмарк",
       "zh_cn": "仅启用基准测试"
@@ -1053,7 +1085,7 @@
       "es": "Habilitar esto solo",
       "it": "Abilita questo solo",
       "pl": "Włącz tylko to",
-      "pt": "Ativar isso somente",
+      "pt": "Ativar apenas este",
       "ro": "Activați numai acest lucru",
       "ru": "Включить только этот",
       "zh_cn": "仅启用此功能"
@@ -1132,6 +1164,7 @@
       "es": "Puerto API de ethminer AMD",
       "it": "Porta API Ethminer AMD",
       "pl": "Ethminer - Port API AMD",
+      "pt": "Porta do API Ethminer AMD",
       "ro": "Port Ethminer API AMD",
       "ru": "Ethminer API порт AMD",
       "zh_cn": "Ethminer API端口 (AMD)"
@@ -1140,6 +1173,7 @@
       "es": "Puerto API de ethminer NVIDIA",
       "it": "Porta API Ethminer NVIDIA",
       "pl": "Ethminer - Port API NVIDIA",
+      "pt": "Porta do API Ethminer NVIDIA",
       "ro": "Port Ethminer API NVIDIA",
       "ru": "Ethminer API порт NVIDIA",
       "zh_cn": "Ethminer API端口 (NVIDIA)"
@@ -1149,12 +1183,13 @@
       "es": "Bloque de Ethminer:",
       "it": "Altezza Default Blocco Eth:",
       "pl": "Domyślny rozmiar bloku Ethminer:",
-      "pt": "Ethminer Default Block Height:",
+      "pt": "Ethminer altura padrão do bloco:",
       "ro": "Înălțime Bloc Implicită Ethminer:",
       "ru": "Высота блока ethminer:",
       "zh_cn": "Ethminer默认区块高度:"
     },
     "Europe - Amsterdam": {
+      "pt": "Europa - Amesterdão",
       "ru": "Европа - Амстердам",
       "zh_cn": "欧洲 - 阿姆斯特丹"
     },
@@ -1182,7 +1217,7 @@
       "es": "¡Archivo no encontrado!",
       "it": "File non trovato!",
       "pl": "Plik nie odnaleziony!",
-      "pt": "Arquivo não encontrado!",
+      "pt": "Ficheiro não encontrado!",
       "ro": "Fișierul nu a fost găsit!",
       "ru": "Файл не найден!",
       "zh_cn": "文件未找到！"
