@@ -120,14 +120,6 @@ namespace NanoMiner
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            if (ids.Count() != 0)
-            {
-                if (ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto 
-                    && benchmarkedPluginVersion < Version 
-                    && device is CUDADevice cuda
-                    && (cuda.SM_major == 6 || cuda.SM_major == 7 || cuda.SM_major == 8))
-                    return true;
-            }
             return false;
         }
     }
