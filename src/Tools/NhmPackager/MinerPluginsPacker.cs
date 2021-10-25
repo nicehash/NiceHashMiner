@@ -36,6 +36,25 @@ namespace NhmPackager
         internal class PluginPackageInfoForJson : PluginPackageInfo
         {
             public new MajorMinorVersion PluginVersion { get; set; }
+
+
+            public PluginPackageInfo ToPluginPackageInfo()
+            {
+                return new PluginPackageInfo
+                {
+                    PluginUUID = this.PluginUUID,
+                    PluginVersion = new Version(this.PluginVersion.major, this.PluginVersion.minor, 0, 0),
+                    BinaryPackageHash = this.BinaryPackageHash,
+                    PackagePassword = this.PackagePassword,
+                    PluginAuthor = this.PluginAuthor,
+                    MinerPackageURL = this.MinerPackageURL,
+                    PluginDescription = this.PluginDescription,
+                    PluginName = this.PluginName,
+                    PluginPackageHash = this.PluginPackageHash,
+                    PluginPackageURL = this.PluginPackageURL,
+                    SupportedDevicesAlgorithms = this.SupportedDevicesAlgorithms
+                };
+            }
         }
 
         private static Dictionary<string, List<string>> TransformToPluginPackageInfoSupportedDevicesAlgorithms(Dictionary<DeviceType, List<AlgorithmType>> supportedDevicesAlgorithms)
@@ -52,13 +71,9 @@ namespace NhmPackager
 
         private static string GetPluginPackageName(IMinerPlugin plugin)
         {
-            // TODO workaround to check if it is built with the Toolkit
-            var isToolkitMiner = plugin is IInitInternals;
             var versionStr = $"v{plugin.Version.Major}.{plugin.Version.Minor}";
-            if (isToolkitMiner)
-            {
-                versionStr = $"{versionStr}_mptoolkitV1";
-            }
+            // TODO workaround to check if it is built with the Toolkit
+            if (plugin is IInitInternals) versionStr = $"{versionStr}_mptoolkitV1";
             var pluginZipFileName = $"{plugin.Name}_{versionStr}_{plugin.PluginUUID}.zip";
             return pluginZipFileName;
         }
@@ -101,11 +116,9 @@ namespace NhmPackager
             string binaryHash = null;
             if (minerPackageURL != null)
             {
-                var filename = plugin.PluginUUID + ".zip";
-                Logger.Info("MinerPluginsPacker", "Calculating hash for " + filename);
-                var filepath = Assembly.GetEntryAssembly().Location.Replace("NhmPackager.exe", filename);
-                using (var myWebClient = new WebClient())
-                    myWebClient.DownloadFile(minerPackageURL, filename);
+                var filepath = GetTemporaryWorkFolder($"{plugin.PluginUUID}.tmp");
+                Logger.Info("MinerPluginsPacker", $"Calculating hash for {plugin.Name}-{plugin.PluginUUID}");
+                using (var myWebClient = new WebClient()) myWebClient.DownloadFile(minerPackageURL, filepath);
                 using (var sha256Hash = SHA256.Create())
                 using (var stream = File.OpenRead(filepath))
                 {
@@ -163,7 +176,7 @@ namespace NhmPackager
             };
         private static bool PathMustContain(string path) => _pathMustContain.All(subDir => path.Contains(subDir));
 
-        private static readonly List<string> _pathMustNOTContain = new List<string>
+        private static readonly string[] _pathMustNOTContain = new string[]
             {
                 "MinerPlugin",
                 "bin",
@@ -172,10 +185,11 @@ namespace NhmPackager
                 "Ethminer",
                 "ExamplePlugin",
                 "FakePlugin",
+                "CryptoDredge",
             };
         private static bool PathMustNOTContain(string path) => _pathMustNOTContain.All(subDir => !path.Contains(subDir));
 
-        public static readonly IReadOnlyList<string> PreInstalledPlugins = new List<string>
+        public static readonly IReadOnlyList<string> PreInstalledPlugins = new string[]
             {
                 //"e294f620-94eb-11ea-a64d-17be303ea466", // CryptoDredge
                 //"e7a58030-94eb-11ea-a64d-17be303ea466", // GMinerPlugin
@@ -253,7 +267,95 @@ namespace NhmPackager
                 .Select(pair => ToPluginToPluginPackageInfos(pair.plugin))
                 .ToList();
             File.WriteAllText(GetPluginsPackagesPath("update.json"), JsonConvert.SerializeObject(pluginPackageInfos, Formatting.Indented));
+            var onlinePlugins = GetOnlineMinerPlugins();
+            if (onlinePlugins != null)
+            {
+                var pairs = onlinePlugins
+                    .Select(online => (online, local: pluginPackageInfos.FirstOrDefault(l => online.PluginUUID == l.PluginUUID)))
+                    .ToArray();
+                var different = pairs
+                    .Where(IsDifferentPluginPackageInfoForJson)
+                    .Select(p => new { local = p.local.ToPluginPackageInfo(), p.online })
+                    .ToArray();
+                File.WriteAllText(GetPluginsPackagesPath("update_diff.json"), JsonConvert.SerializeObject(different, Formatting.Indented));
+            }
         }
+
+        private static bool IsDifferentPluginPackageInfoForJson((PluginPackageInfo online, PluginPackageInfoForJson local) pair)
+        {
+            var (o, l) = pair;
+            if (o == null || l == null) return false;
+            var allSame = o.PluginUUID == l.PluginUUID
+                //&& o.PluginPackageHash == l.PluginPackageHash  // TODO this is always different for some reason
+                && o.BinaryPackageHash == l.BinaryPackageHash
+                && o.PluginName == l.PluginName
+                && o.PluginVersion.Major == l.PluginVersion.major
+                && o.PluginVersion.Minor == l.PluginVersion.minor
+                && o.PluginPackageURL == l.PluginPackageURL
+                && o.MinerPackageURL == l.MinerPackageURL
+                // SupportedDevicesAlgorithms CHECK below
+                && o.PluginAuthor == l.PluginAuthor
+                && o.PluginDescription == l.PluginDescription
+                && o.PackagePassword == l.PackagePassword
+                ;
+            if (!allSame) return true;
+
+            // SupportedDevicesAlgorithms check
+            var mergedDeviceKeys = new HashSet<string>(o.SupportedDevicesAlgorithms.Keys);
+            mergedDeviceKeys.UnionWith(l.SupportedDevicesAlgorithms.Keys);
+            foreach (var deviceType in mergedDeviceKeys)
+            {
+                if (!o.SupportedDevicesAlgorithms.ContainsKey(deviceType)) return true;
+                if (!l.SupportedDevicesAlgorithms.ContainsKey(deviceType)) return true;
+
+                var o_Algos = o.SupportedDevicesAlgorithms[deviceType];
+                var l_Algos = l.SupportedDevicesAlgorithms[deviceType];
+                var o_AlgosExceptCount = o_Algos.Except(l_Algos).Count();
+                var l_AlgosExceptCount = l_Algos.Except(o_Algos).Count();
+                var sameZeroDiffCount = o_AlgosExceptCount == l_AlgosExceptCount && l_AlgosExceptCount == 0;
+                if (!sameZeroDiffCount) return true; 
+            }
+
+            return false;
+        }
+
+        private class NoKeepAlivesWebClient : WebClient
+        {
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                var request = base.GetWebRequest(address);
+                if (request is HttpWebRequest)
+                {
+                    ((HttpWebRequest)request).KeepAlive = false;
+                }
+
+                return request;
+            }
+        }
+
+
+        private static List<PluginPackageInfo> GetOnlineMinerPlugins()
+        {
+            try
+            {
+                using (var client = new NoKeepAlivesWebClient())
+                {
+                    string s = client.DownloadString("https://miner-plugins.nicehash.com/api/plugins");
+                    return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        Culture = CultureInfo.InvariantCulture
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("MinerPluginsPacker", $"Error occured while getting online miner plugins: {e.Message}");
+            }
+            return null;
+        }        
+
         public static string GetGitCommitHash(string pluginProjectPath)
         {
             var startInfo = new ProcessStartInfo

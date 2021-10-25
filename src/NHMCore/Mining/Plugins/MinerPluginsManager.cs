@@ -551,7 +551,7 @@ namespace NHMCore.Mining.Plugins
             EulaConfirm = RankedPlugins.Where(pcr => nonAcceptedluginsUUIDs.Contains(pcr.PluginUUID)).ToList();
             EulaConfirm.ForEach(el =>
             {
-                Logger.Info("MinerPluginsManager", $"Plugin is not accepted {el.PluginUUID}-{el.PluginName}. Skipping...");
+                Logger.Info("MinerPluginsManager", $"Plugin EULA is not accepted {el.PluginUUID}-{el.PluginName}. Skipping...");
                 el.IsUserActionRequired = true;
             });
             var nonAcceptedPluginsWithMissingBinaries = nonAcceptedlugins
