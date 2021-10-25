@@ -9,7 +9,6 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,7 +29,7 @@ namespace NHMCore.Mining
         //assume steam game status was not changed mid miner running
         private static bool _isSteamGameStatusChangedWhileNHMRunning = false;
 
-        private static bool _isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
+        private static bool _isPauseMiningWhenGamingEnabled;
         public static bool IsMiningEnabled => _miningDevices.Any();
 
 
@@ -233,6 +232,8 @@ namespace NHMCore.Mining
 
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
+
+            _isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
             MiningSettings.Instance.PropertyChanged += PauseMiningWhenGamingModeInstance_PropertyChanged;
         }
 
@@ -270,7 +271,7 @@ namespace NHMCore.Mining
 
         private static void PauseMiningWhenGamingModeInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(MiningSettings.PauseMiningWhenGamingMode))
+            if (e.PropertyName == nameof(MiningSettings.PauseMiningWhenGamingMode))
             {
                 _ = PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode);
             }

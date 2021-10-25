@@ -8,7 +8,7 @@ namespace NHM.Common.Enums
         Benchmarking,
         Error,
         Pending,
-        Disabled
+        Disabled,
         // TODO Extra states, NotProfitable
     }
 }

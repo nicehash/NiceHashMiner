@@ -10,6 +10,6 @@ namespace NHM.Common.Enums
         Error,
         Pending,
         Disabled,
-        Gaming
+        Gaming,
     }
 }

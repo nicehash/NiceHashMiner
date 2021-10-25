@@ -53,6 +53,7 @@ namespace NHMCore.ApplicationState
             get => _boolProps.Get(nameof(AnyDeviceRunning));
             private set => _boolProps.Set(nameof(AnyDeviceRunning), value);
         }
+
         public bool IsNotBenchmarkingOrMining
         {
             get => _boolProps.Get(nameof(IsNotBenchmarkingOrMining));
