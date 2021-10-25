@@ -25,8 +25,12 @@ namespace NHMCore.Mining
         private static bool _isProfitable = true;
         // assume we have internet
         private static bool _isConnectedToInternet = true;
-        private static bool _isGameRunning = false;
+        //assume steam game is not running
+        private static bool _isGameRunning;
+        //assume steam game status was not changed mid miner running
+        private static bool _isSteamGameStatusChangedWhileNHMRunning = false;
 
+        private static bool _isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
         public static bool IsMiningEnabled => _miningDevices.Any();
 
 
@@ -439,10 +443,9 @@ namespace NHMCore.Mining
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Func<bool> isActive = () => !stop.IsCancellationRequested;
                 _isGameRunning = steamWatcher.IsSteamGameRunning();
-                await IsSteamGameRunningStatusChanged(_isGameRunning);
                 steamWatcher.OnSteamGameStartedChanged += async (s, isRunning) => {
-                    _isGameRunning = isRunning;
-                    await IsSteamGameRunningStatusChanged(_isGameRunning);
+                    _isSteamGameStatusChangedWhileNHMRunning = true;
+                    await IsSteamGameRunningStatusChanged(isRunning);
                 };
                 Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
                 while (isActive())
@@ -601,9 +604,13 @@ namespace NHMCore.Mining
             {
                 _username = usernameChangedCommand.username;
             }
-            else if (command is PauseMiningWhenGamingModeSettingsChangedCommand pauseMiningWhenGamingModeSettingsChangedCommand || command is IsSteamGameRunningChangedCommand isSteamGameRunningChangedCommand)
+            else if (command is PauseMiningWhenGamingModeSettingsChangedCommand pauseMiningWhenGamingModeSettingsChangedCommand)
             {
-                
+                _isPauseMiningWhenGamingEnabled = pauseMiningWhenGamingModeSettingsChangedCommand.isPauseMiningWhenGamingModeSettingEnabled;
+            }
+            else if (command is IsSteamGameRunningChangedCommand isSteamGameRunningChangedCommand)
+            {
+                _isGameRunning = isSteamGameRunningChangedCommand.isSteamGameRunning;
             }
 
             // here we do the deciding
@@ -628,6 +635,19 @@ namespace NHMCore.Mining
             {
                 await StopAllMinersTask();
                 ApplicationStateManager.StopMining();
+            }
+            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled)
+            {
+                AvailableNotifications.CreateGamingStarted();
+                await PauseAllMiners();
+            }
+            else if(!_isGameRunning && _isPauseMiningWhenGamingEnabled && _isSteamGameStatusChangedWhileNHMRunning)
+            {
+                _isSteamGameStatusChangedWhileNHMRunning = false;
+                AvailableNotifications.CreateGamingFinished();
+                ApplicationStateManager.StartMining();
+                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
+                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
             else
             {
