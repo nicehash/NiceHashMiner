@@ -54,7 +54,7 @@
                                         Enabled="{Binding GlobalDeviceSettings.RestartMachineOnLostGPU}"
                                         Label="Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)"
                                         Description="{StaticResource runOnGPUsLost}"/>
-            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.EnableGamingMode}"
+            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.PauseMiningWhenGamingMode}"
                                         Label="Pause mining when Steam game is started"
                                         Description="{StaticResource steamGamingMode}"/>
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.ResolveNiceHashDomainsToIPs}"

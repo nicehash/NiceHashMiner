@@ -81,6 +81,20 @@ namespace NHMCore.Mining
         private class RunEthlargementChangedCommand : MainCommand
         { }
 
+        private class PauseMiningWhenGamingModeSettingsChangedCommand : MainCommand
+        {
+            public PauseMiningWhenGamingModeSettingsChangedCommand(bool isPauseMiningWhenGamingModeSettingEnabled) { this.isPauseMiningWhenGamingModeSettingEnabled = isPauseMiningWhenGamingModeSettingEnabled; }
+
+            public bool isPauseMiningWhenGamingModeSettingEnabled { get; private set; }
+        }
+
+        private class IsSteamGameRunningChangedCommand : MainCommand
+        {
+            public IsSteamGameRunningChangedCommand(bool isSteamGameRunning) { this.isSteamGameRunning = isSteamGameRunning; }
+
+            public bool isSteamGameRunning { get; private set; }
+        }
+
         #region Deferred Device Commands
 
         private class DeferredDeviceCommand : Command
@@ -159,7 +173,21 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
+        private static Task PauseMiningWhenGamingModeSettingsChanged(bool isPauseMiningWhenGamingModeEnabled)
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new PauseMiningWhenGamingModeSettingsChangedCommand(isPauseMiningWhenGamingModeEnabled);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
 
+        private static Task IsSteamGameRunningStatusChanged(bool isSteamGameRunning)
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new IsSteamGameRunningChangedCommand(isSteamGameRunning);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
 
         public static Task MinerRestartLoopNotify()
         {
@@ -202,6 +230,7 @@ namespace NHMCore.Mining
 
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
+            MiningSettings.Instance.PropertyChanged += PauseMiningWhenGamingModeInstance_PropertyChanged;
         }
 
         public static void StartLoops(CancellationToken stop, string username)
@@ -234,6 +263,14 @@ namespace NHMCore.Mining
         private static void MiningProfitSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             _ = MiningProfitSettingsChanged();
+        }
+
+        private static void PauseMiningWhenGamingModeInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == nameof(MiningSettings.PauseMiningWhenGamingMode))
+            {
+                _ = PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode);
+            }
         }
 
         private static async Task StopAndRemoveBenchmark(DeferredDeviceCommand c)
@@ -389,21 +426,8 @@ namespace NHMCore.Mining
 
         private static async Task OnSteamRunningChanged(bool isGameRunning)
         {
-            // TODO push to command queue
-            if (!GlobalDeviceSettings.Instance.PauseMiningWhenGamingMode) return;
-            // check if state changed
-
-
-            //RunningAppID will be 0 if no game is running.
-            if (isGameRunning)
-            {
-                await PauseAllMiners();
-                AvailableNotifications.CreateGamingStarted();
-            }
-            else
-            {
-                AvailableNotifications.CreateGamingFinished();
-            }
+            _isGameRunning = isGameRunning;
+            await IsSteamGameRunningStatusChanged(_isGameRunning);
         }
 
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
@@ -422,6 +446,7 @@ namespace NHMCore.Mining
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Func<bool> isActive = () => !stop.IsCancellationRequested;
                 _isGameRunning = steamWatcher.IsSteamGameRunning();
+                await IsSteamGameRunningStatusChanged(_isGameRunning);
                 steamWatcher.OnSteamGameStartedChanged += async (s, isRunning) => {
                     await OnSteamRunningChanged(isRunning);
                 };
@@ -582,7 +607,10 @@ namespace NHMCore.Mining
             {
                 _username = usernameChangedCommand.username;
             }
-            
+            else if (command is PauseMiningWhenGamingModeSettingsChangedCommand pauseMiningWhenGamingModeSettingsChangedCommand || command is IsSteamGameRunningChangedCommand isSteamGameRunningChangedCommand)
+            {
+                
+            }
 
             // here we do the deciding
             // to mine we need to have the username mining location set and ofc device to mine with

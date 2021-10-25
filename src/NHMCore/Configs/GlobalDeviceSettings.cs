@@ -60,16 +60,5 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(ShowGPUPCIeBusIDs));
             }
         }
-
-        private bool _enableGamingMode = false;
-        public bool PauseMiningWhenGamingMode
-        {
-            get => _enableGamingMode;
-            set
-            {
-                _enableGamingMode = value;
-                OnPropertyChanged(nameof(PauseMiningWhenGamingMode));
-            }
-        }
     }
 }
