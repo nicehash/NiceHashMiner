@@ -8,6 +8,7 @@ using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -256,7 +257,7 @@ namespace NHMCore.Mining
             _ = MiningLocationChanged(miningLocation);
         }
 
-        private static void MiscSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private static void MiscSettingsInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MiscSettings.UseEthlargement))
             {
@@ -264,12 +265,12 @@ namespace NHMCore.Mining
             }
         }
 
-        private static void MiningProfitSettingsInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private static void MiningProfitSettingsInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             _ = MiningProfitSettingsChanged();
         }
 
-        private static void PauseMiningWhenGamingModeInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private static void PauseMiningWhenGamingModeInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MiningSettings.PauseMiningWhenGamingMode))
             {
