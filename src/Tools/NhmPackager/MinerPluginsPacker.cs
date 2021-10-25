@@ -270,9 +270,13 @@ namespace NhmPackager
             var onlinePlugins = GetOnlineMinerPlugins();
             if (onlinePlugins != null)
             {
-                var pairs = onlinePlugins.Select(online => (online, local: pluginPackageInfos.FirstOrDefault(l => online.PluginUUID == l.PluginUUID))).ToArray();
-                var missing_pairs = pairs.Where(pair => pair.local == null);
-                var different = pairs.Where(IsDifferentPluginPackageInfoForJson).Select(p => new { local = p.local.ToPluginPackageInfo(), p.online }).ToArray();
+                var pairs = onlinePlugins
+                    .Select(online => (online, local: pluginPackageInfos.FirstOrDefault(l => online.PluginUUID == l.PluginUUID)))
+                    .ToArray();
+                var different = pairs
+                    .Where(IsDifferentPluginPackageInfoForJson)
+                    .Select(p => new { local = p.local.ToPluginPackageInfo(), p.online })
+                    .ToArray();
                 File.WriteAllText(GetPluginsPackagesPath("update_diff.json"), JsonConvert.SerializeObject(different, Formatting.Indented));
             }
         }
@@ -280,7 +284,7 @@ namespace NhmPackager
         private static bool IsDifferentPluginPackageInfoForJson((PluginPackageInfo online, PluginPackageInfoForJson local) pair)
         {
             var (o, l) = pair;
-            if (o == null || l == null) return true;
+            if (o == null || l == null) return false;
             var allSame = o.PluginUUID == l.PluginUUID
                 //&& o.PluginPackageHash == l.PluginPackageHash  // TODO this is always different for some reason
                 && o.BinaryPackageHash == l.BinaryPackageHash
