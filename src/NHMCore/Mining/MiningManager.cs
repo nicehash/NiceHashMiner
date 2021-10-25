@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
@@ -424,12 +423,6 @@ namespace NHMCore.Mining
             // TODO finally on the deferred commands??
         }
 
-        private static async Task OnSteamRunningChanged(bool isGameRunning)
-        {
-            _isGameRunning = isGameRunning;
-            await IsSteamGameRunningStatusChanged(_isGameRunning);
-        }
-
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
             var switchingManager = new AlgorithmSwitchingManager();
@@ -448,7 +441,8 @@ namespace NHMCore.Mining
                 _isGameRunning = steamWatcher.IsSteamGameRunning();
                 await IsSteamGameRunningStatusChanged(_isGameRunning);
                 steamWatcher.OnSteamGameStartedChanged += async (s, isRunning) => {
-                    await OnSteamRunningChanged(isRunning);
+                    _isGameRunning = isRunning;
+                    await IsSteamGameRunningStatusChanged(_isGameRunning);
                 };
                 Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
                 while (isActive())
