@@ -27,8 +27,6 @@ namespace NHMCore.Mining
         private static bool _isConnectedToInternet = true;
         // assume steam game is not running
         private static bool _isGameRunning;
-        // assume steam game status was not changed mid miner running
-        private static bool _isSteamGameStatusChangedWhileNHMRunning = false;
 
         private static bool _isPauseMiningWhenGamingEnabled;
         public static bool IsMiningEnabled => _miningDevices.Any();
@@ -446,7 +444,6 @@ namespace NHMCore.Mining
                 Func<bool> isActive = () => !stop.IsCancellationRequested;
                 _isGameRunning = steamWatcher.IsSteamGameRunning();
                 steamWatcher.OnSteamGameStartedChanged += async (s, isRunning) => {
-                    _isSteamGameStatusChangedWhileNHMRunning = true;
                     await IsSteamGameRunningStatusChanged(isRunning);
                 };
                 Logger.Info(Tag, "Starting MiningManagerCommandQueueLoop");
@@ -643,9 +640,8 @@ namespace NHMCore.Mining
                 AvailableNotifications.CreateGamingStarted();
                 await PauseAllMiners();
             }
-            else if(!_isGameRunning && _isPauseMiningWhenGamingEnabled && _isSteamGameStatusChangedWhileNHMRunning)
+            else if(!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand)
             {
-                _isSteamGameStatusChangedWhileNHMRunning = false;
                 AvailableNotifications.CreateGamingFinished();
                 ApplicationStateManager.StartMining();
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
