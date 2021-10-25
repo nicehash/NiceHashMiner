@@ -25,9 +25,9 @@ namespace NHMCore.Mining
         private static bool _isProfitable = true;
         // assume we have internet
         private static bool _isConnectedToInternet = true;
-        //assume steam game is not running
+        // assume steam game is not running
         private static bool _isGameRunning;
-        //assume steam game status was not changed mid miner running
+        // assume steam game status was not changed mid miner running
         private static bool _isSteamGameStatusChangedWhileNHMRunning = false;
 
         private static bool _isPauseMiningWhenGamingEnabled;

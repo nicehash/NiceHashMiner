@@ -8,6 +8,7 @@ namespace NHMCore.Utils
 {
     public class SteamWatcher : IDisposable
     {
+        // thanks to https://github.com/Microbolt for sharing code to detect if steam game is running
         private WindowsIdentity _currentUser = WindowsIdentity.GetCurrent();
 
         private string _query;
