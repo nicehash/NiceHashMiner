@@ -170,7 +170,7 @@ namespace NBMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "nbminer_lhr",
                     LongName = "-lhr",
-                    DefaultValue = "-1",
+                    DefaultValue = "0",
                     Delimiter = ","
                 },
                 /// <summary>
@@ -186,6 +186,7 @@ namespace NBMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_lhrMode",
                     LongName = "-lhr-mode",
+                    DefaultValue = "2"
                 }
             },
             TemperatureOptions = new List<MinerOption>
