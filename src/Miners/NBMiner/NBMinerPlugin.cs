@@ -72,10 +72,15 @@ namespace NBMiner
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-
+            var minDrivers = new Version(377, 0);
+            var supportedNVIDIA_Driver = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+            if (!supportedNVIDIA_Driver)
+            {
+                Logger.Error("NBMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
+            }
             var gpus = devices
                 .Where(dev => dev is IGpuDevice)
-                .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNvidiaDevice(dev))
+                .Where(dev => IsSupportedAMDDevice(dev) || (supportedNVIDIA_Driver && IsSupportedNvidiaDevice(dev)))
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID)
                 .Cast<BaseDevice>()
@@ -96,17 +101,7 @@ namespace NBMiner
 
         private static bool IsSupportedNvidiaDevice(BaseDevice dev)
         {
-            var minDrivers = new Version(377, 0);
-            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
-            if (!isDriverSupported)
-            {
-                Logger.Error("NBMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
-            }
-            else
-            {
-                if (dev is CUDADevice cudaDev) return isSupportedVersion(cudaDev.SM_major, cudaDev.SM_minor);
-            }
-            return false;
+            return dev is CUDADevice cudaDev && isSupportedVersion(cudaDev.SM_major, cudaDev.SM_minor);
         }
 
         private static bool IsSupportedAMDDevice(BaseDevice dev)
