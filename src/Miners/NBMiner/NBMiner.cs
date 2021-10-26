@@ -314,21 +314,5 @@ namespace NBMiner
         {
             _http.Dispose();
         }
-
-        private static readonly string[] LHRSupportedDevices = {//check via IsDeviceLHR!
-            "rtx 3070 ti", "rtx 3080 ti"
-        };
-
-        private bool IsDeviceLHR(string devName)
-        {
-            foreach(var lhrDev in LHRSupportedDevices)
-            {
-                if (devName.ToLower().Contains(lhrDev))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }
