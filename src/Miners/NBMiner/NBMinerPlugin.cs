@@ -27,11 +27,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v39.4",
+                BinVersion = "v39.5",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v39.4/NBMiner_39.4_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v39.5/NBMiner_39.5_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -43,7 +43,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 3);
+        public override Version Version => new Version(16, 4);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -98,7 +98,14 @@ namespace NBMiner
         {
             var minDrivers = new Version(377, 0);
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
-            if (isDriverSupported && dev is CUDADevice cudaDev) return isSupportedVersion(cudaDev.SM_major, cudaDev.SM_minor);
+            if (!isDriverSupported)
+            {
+                Logger.Error("NBMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
+            }
+            else
+            {
+                if (dev is CUDADevice cudaDev) return isSupportedVersion(cudaDev.SM_major, cudaDev.SM_minor);
+            }
             return false;
         }
 
@@ -155,6 +162,8 @@ namespace NBMiner
                 if (ids.Count() == 0) return false;
                 if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 3 && device.DeviceType == DeviceType.NVIDIA && ids.Contains(AlgorithmType.DaggerHashimoto)) return true;
                 if ((benchmarkedPluginVersion.Major < 16 || (benchmarkedPluginVersion.Major == 16 && benchmarkedPluginVersion.Minor < 2)) && device.DeviceType == DeviceType.AMD && ids.Contains(AlgorithmType.DaggerHashimoto)) return true;
+                // LHR re-benchmark
+                if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion < Version) return true;
             }
             catch (Exception e)
             {
