@@ -30,10 +30,5 @@ namespace NBMiner
                 .ToDictionary(p => p.gpu.UUID, p => p.minerDevice.device_id);
             return mappedDevices;
         }
-
-        public static readonly string[] LHRDevices =
-        {
-            "GeForce RTX 3070 Ti", "GeForce RTX 3080 Ti"
-        };
     }
 }

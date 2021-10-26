@@ -51,7 +51,7 @@ namespace NBMiner
             return CreateCommandLine(_username);
         }
 
-        private string CreateCommandLine(string username)//todo -lhr here
+        private string CreateCommandLine(string username)
         {
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
@@ -108,7 +108,6 @@ namespace NBMiner
                 var miningPairsList = _miningPairs.ToList();
                 var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
 
-                //if device is in list of supported devices, if algo is dagger, enable -lhr 0 as above
                 var firstPair = miningPairsList.FirstOrDefault();
                 var optionsWithoutLHR = MinerOptionsPackage.GeneralOptions.Where(opt => !opt.ID.Contains("lhr")).ToList();
                 var optionsWithLHR = MinerOptionsPackage.GeneralOptions.Where(opt => opt.ID.Contains("lhr")).ToList();
