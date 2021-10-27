@@ -1,4 +1,5 @@
 ﻿//#define DELETE_NON_CURRENT_APPS
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -201,6 +202,50 @@ namespace NiceHashMiner
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var isUpdater = Environment.GetCommandLineArgs().Contains("-update");
             var isUpdated = Environment.GetCommandLineArgs().Contains("-updated");
+
+#warning TRANSITIONAL CODE, REMOVE IN FUTURE VERSIONS (registry integration)
+            if (isUpdated)
+            {
+                const string GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
+                string generalSettingsFile = "configs/General.json";
+                try
+                {
+
+                    var generalSettingsText = System.IO.File.ReadAllLines(generalSettingsFile);
+                    var agreeTOS = generalSettingsText.Where(line => line.Contains("AgreedWithTOS"))
+                        .FirstOrDefault()
+                        .Split(':')
+                        .Last()
+                        .Replace(",", "")
+                        .Trim();
+                    if(Int32.TryParse(agreeTOS, out int valTOS) && valTOS == 4)
+                    {
+                        using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
+                        {
+                            key.SetValue("AgreedWithTOS", 4);
+                        }
+                    }
+
+                    var agreeTOSMiner = generalSettingsText.Where(line => line.Contains("Use3rdPartyMinersTOS"))
+                        .FirstOrDefault()
+                        .Split(':')
+                        .Last()
+                        .Replace(",", "")
+                        .Trim();
+                    if (Int32.TryParse(agreeTOS, out int valTOSMiner) && valTOSMiner == 4)
+                    {
+                        using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
+                        {
+                            key.SetValue("Use3rdPartyMinersTOS", 4);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Logger.Error("NHMLauncher", ex.Message);
+                }
+            }
+
             var afterUpdate = false;
             if (isUpdater)
             {

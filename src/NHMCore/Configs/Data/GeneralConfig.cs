@@ -165,20 +165,10 @@ namespace NHMCore.Configs.Data
         #endregion IFTTTSettings
 
         #region ToS 'Settings'
-        public int Use3rdPartyMinersTOS
-        {
-            get => ToSSetings.Instance.Use3rdPartyMinersTOS;
-            set => ToSSetings.Instance.Use3rdPartyMinersTOS = value;
-        }
         public string Hwid
         {
             get => ApplicationStateManager.RigID();
             set => ToSSetings.Instance.Hwid = value;
-        }
-        public int AgreedWithTOS
-        {
-            get => ToSSetings.Instance.AgreedWithTOS;
-            set => ToSSetings.Instance.AgreedWithTOS = value;
         }
         #endregion ToS 'Settings'
 
@@ -400,9 +390,7 @@ namespace NHMCore.Configs.Data
             ShowPowerColumns = false;
             ShowDiagColumns = true;
             UseEthlargement = false;
-            Use3rdPartyMinersTOS = 0;
             Hwid = "";
-            AgreedWithTOS = 0;
             KwhPrice = 0;
             DisplayPureProfit = false;
             DisplayTheme = "Light";

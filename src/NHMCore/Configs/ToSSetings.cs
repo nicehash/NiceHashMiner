@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using Microsoft.Win32;
+using NHM.Common;
 
 namespace NHMCore.Configs
 {
@@ -19,24 +20,47 @@ namespace NHMCore.Configs
             }
         }
 
-        private int _agreedWithTOS = 0;
         public int AgreedWithTOS
         {
-            get => _agreedWithTOS;
+            get {
+                using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, false))
+                {
+                    if (key != null && key.GetValue("AgreedWithTOS") is int TOSVersion)
+                    {
+                        return TOSVersion;
+                    }
+                    return -1;
+                }
+            }
             set
             {
-                _agreedWithTOS = value;
+                using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
+                {
+                    key.SetValue("AgreedWithTOS", value);
+                }
                 OnPropertyChanged(nameof(AgreedWithTOS));
             }
         }
 
-        private int _use3rdPartyMinersTOS = 0;
         public int Use3rdPartyMinersTOS
         {
-            get => _use3rdPartyMinersTOS;
+            get
+            {
+                using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, false))
+                {
+                    if (key != null && key.GetValue("Use3rdPartyMinersTOS") is int TOS3rdPartyVersion)
+                    {
+                        return TOS3rdPartyVersion;
+                    }
+                    return -1;
+                }
+            }
             set
             {
-                _use3rdPartyMinersTOS = value;
+                using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
+                {
+                    key.SetValue("Use3rdPartyMinersTOS", value);
+                }
                 OnPropertyChanged(nameof(Use3rdPartyMinersTOS));
             }
         }
