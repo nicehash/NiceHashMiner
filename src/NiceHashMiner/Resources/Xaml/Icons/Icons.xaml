@@ -14,5 +14,6 @@
         <ResourceDictionary Source="QrIconDefault.xaml"/>
         <ResourceDictionary Source="QRIcon.xaml"/>
         <ResourceDictionary Source="NHMLogoBigLight.xaml"/>
+        <ResourceDictionary Source="NHMLogoBigDark.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

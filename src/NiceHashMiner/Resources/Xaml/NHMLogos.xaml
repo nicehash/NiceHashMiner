@@ -9,6 +9,9 @@
     <DrawingBrush x:Key="NHMLogoLightBrush" Drawing="{StaticResource NHMLogoLight}" />
     <DrawingBrush x:Key="NHMLogoDarkBrush" Drawing="{StaticResource NHMLogoDark}" />
 
+    <DrawingBrush x:Key="NHMBigLogoLightBrush" Drawing="{DynamicResource NHMLogoBigLight}" />
+    <DrawingBrush x:Key="NHMBigLogoDarkBrush" Drawing="{DynamicResource NHMLogoBigDark}" />
+
     <DrawingBrush x:Key="LoginCircleLogoLightBrush" Drawing="{StaticResource LoginCircleLogoLight}" />
     <DrawingBrush x:Key="LoginCircleLogoDarkBrush" Drawing="{StaticResource LoginCircleLogoDark}" />
     <DrawingBrush x:Key="LoginQRCircleLightBrush" Drawing="{StaticResource LoginQRCircleLight}" />
