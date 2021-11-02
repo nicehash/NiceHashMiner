@@ -207,10 +207,9 @@ namespace NiceHashMiner
             if (isUpdated)
             {
                 const string GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
-                string generalSettingsFile = "configs/General.json";
+                string generalSettingsFile = GetRootPath("configs/General.json");
                 try
                 {
-
                     var generalSettingsText = System.IO.File.ReadAllLines(generalSettingsFile);
                     var agreeTOS = generalSettingsText.Where(line => line.Contains("AgreedWithTOS"))
                         .FirstOrDefault()
