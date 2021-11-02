@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace NHM.DeviceMonitoring
@@ -15,6 +16,8 @@ namespace NHM.DeviceMonitoring
     {
         public static bool DisableDeviceStatusMonitoring { get; set; } = false;
         public static bool DisableDevicePowerModeSettings { get; set; } = true;
+
+        internal static readonly bool IsElevated;
 
         static DeviceMonitorManager()
         {
@@ -30,6 +33,19 @@ namespace NHM.DeviceMonitoring
             catch (Exception e)
             {
                 Logger.Error("DeviceMonitorManager", $"Constructor {e.Message}");
+            }
+
+            try
+            {
+                using (var identity = WindowsIdentity.GetCurrent())
+                {
+                    var principal = new WindowsPrincipal(identity);
+                    IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("DeviceMonitorManager", $"Constructor IsElevated {e.Message}");
             }
         }
 
@@ -101,14 +117,10 @@ namespace NHM.DeviceMonitoring
         public static bool IsMotherboardCompatible()
         {
             var isCompatible = true;
-            var computer = new Computer();
             try
             {
+                var computer = LibreHardwareMonitorManager.Instance.Computer;
                 var updateVisitor = new UpdateVisitor();
-                
-                computer.Open();
-                computer.IsCpuEnabled = true;
-                computer.IsMotherboardEnabled = true;
                 computer.Accept(updateVisitor);
                 var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
                 var mainboard = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);
@@ -134,10 +146,6 @@ namespace NHM.DeviceMonitoring
             catch(Exception e)
             {
                 Logger.Error("DeviceMonitorManager", "Error when getting CPU fan speed and temperature: " + e.Message);
-            }
-            finally
-            {
-                computer.Close();
             }
 
             return isCompatible;

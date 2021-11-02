@@ -50,7 +50,11 @@ namespace NHMCore.Notifications
         WrongChecksumBinary,
         MinerRestart,
         NullChecksum,
+        GamingStarted,
+        GamingFinished,
+        DriverNVIDIAObsolete,
+        DriverAMDObsolete,
         AdminRunRequired,
-        MotherboardNotCompatible
+        MotherboardNotCompatible,
     }
 }

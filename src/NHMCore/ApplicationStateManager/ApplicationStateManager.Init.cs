@@ -86,6 +86,15 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateWarningNVIDIADCHInfo();
                 }
+                if (DeviceDetection.DetectionResult.AMDDriverObsolete)
+                {
+                    AvailableNotifications.CreateOutdatedAMDDriverWarning(DeviceDetectionResult.MinimumAMDDriver);
+                }
+                if (DeviceDetection.DetectionResult.NVIDIADriverObsolete)
+                {
+                    AvailableNotifications.CreateOutdatedNVIDIADriverWarning(DeviceDetectionResult.MinimumNVIDIADriver);
+                }
+
 
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
@@ -133,16 +142,17 @@ namespace NHMCore
                     NoDeviceAction?.Invoke();
                     return;
                 }
-                // no compatible CPU
-                if (!DeviceMonitorManager.IsMotherboardCompatible())
-                {
-                    AvailableNotifications.CreateMotherboardNotCompatible();
-                }
-                else if(!Helpers.IsElevated) // MOBO is supported but we lack admin privs
-                {
-                    AvailableNotifications.CreateAdminRunRequired();
-                }
-                
+#warning CPU monitoring detection not fully functional
+                //// no compatible CPU
+                //if (!DeviceMonitorManager.IsMotherboardCompatible())
+                //{
+                //    AvailableNotifications.CreateMotherboardNotCompatible();
+                //}
+                //else if(!Helpers.IsElevated) // MOBO is supported but we lack admin privs
+                //{
+                //    AvailableNotifications.CreateAdminRunRequired();
+                //}
+
 
 
                 // STEP

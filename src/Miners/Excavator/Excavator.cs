@@ -251,6 +251,12 @@ _DEVICES_
                 { }
             };
             _ = MinerSpeedsLoop(ct);
+            _miningProcess.Exited += _miningProcess_Exited;
+        }
+
+        private void _miningProcess_Exited(object sender, EventArgs e)
+        {
+            _lastApiData = null;
         }
 
         private static bool IsSpeedOk(ApiData ad)

@@ -13,7 +13,7 @@ namespace NHM.DeviceDetection
 {
     public static class DeviceDetection
     {
-        private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
+        // NvidiaMinDetectionDriver 362.61 => CUDA 8.0
         private static string Tag => "DeviceDetection";
         private static bool _initCalled = false;
 
@@ -90,12 +90,23 @@ namespace NHM.DeviceDetection
             if (nvidiaVideoControllerData != null)
             {
                 var wmiNvidiaVer = WMI.WmiNvidiaDriverParser.ParseNvSmiDriver(nvidiaVideoControllerData.DriverVersion);
-                if (wmiNvidiaVer.IsValid()) DetectionResult.NvidiaDriverWMI = wmiNvidiaVer.ToVersion();
+                if (wmiNvidiaVer.IsValid) DetectionResult.NvidiaDriverWMI = wmiNvidiaVer.Version;
+                DetectionResult.NVIDIADriverObsolete = wmiNvidiaVer.IsCorrectVersion ? false : true;
             }
+            var amdVideoControllerData = vidControllers.Where(vidC => vidC.IsAmd).FirstOrDefault();
+            if(amdVideoControllerData != null)
+            {
+                var AmdVer = new AMD.AmdDriver(amdVideoControllerData.DriverVersion);
+                if (AmdVer.IsValid) DetectionResult.AmdDriver = AmdVer.VerDriverVersion;
+                DetectionResult.AMDDriverObsolete = AmdVer.IsCorrectVersion ? false : true;
+            }
+
             // log result
             var stringBuilder = new StringBuilder();
-            var driverWmiString = DetectionResult.NvidiaDriverWMI == null ? "N/A" : $"{DetectionResult.NvidiaDriverWMI.Major}.{DetectionResult.NvidiaDriverWMI.Minor}";
-            stringBuilder.AppendLine($"NVIDIA driver version: {driverWmiString}");
+            var driverWmiStringNVIDIA = DetectionResult.NvidiaDriverWMI == null ? "N/A" : $"{DetectionResult.NvidiaDriverWMI.Major}.{DetectionResult.NvidiaDriverWMI.Minor}";
+            var driverWDSStringAMD = DetectionResult.AmdDriver == null ? "N/A" : $"{DetectionResult.AmdDriver.Major}.{DetectionResult.AmdDriver.Minor}.{DetectionResult.AmdDriver.Build}.{DetectionResult.AmdDriver.Revision}";
+            stringBuilder.AppendLine($"NVIDIA driver version: {driverWmiStringNVIDIA}");
+            stringBuilder.AppendLine($"AMD driver version: {driverWDSStringAMD}");
             stringBuilder.AppendLine("QueryVideoControllers: ");
             foreach (var vidController in vidControllers)
             {
@@ -129,11 +140,8 @@ namespace NHM.DeviceDetection
                 DetectionResult.IsDCHDriver = nvmlLoaded == 1;
                 DetectionResult.IsNvidiaNVMLLoadedError = nvmlLoaded == -1;
                 DetectionResult.IsNvidiaNVMLInitializedError = result?.NvmlInitialized != 0;
-                if (nvmlLoaded == 1 && result.DriverVersion.Contains('.'))
-                {
-                    var driverVer = result.DriverVersion.Split('.').Select(s => int.Parse(s)).ToArray();
-                    if (driverVer.Count() >= 2) DetectionResult.NvidiaDriver = new Version(driverVer[0], driverVer[1]);
-                }
+                var smiVersion = NvidiaSmiDriver.ToNvidiaSmiDriver(result.DriverVersion);
+                if (smiVersion.IsValid) DetectionResult.NvidiaDriver = smiVersion.Version;
             }
 
             // set NVIDIA driver version here

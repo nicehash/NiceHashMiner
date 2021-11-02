@@ -76,6 +76,11 @@ namespace NHMCore.Configs.Data
             get => MiningSettings.Instance.NVIDIAP0State;
             set => MiningSettings.Instance.NVIDIAP0State = value;
         }
+        public bool PauseMiningWhenGamingMode
+        {
+            get => MiningSettings.Instance.PauseMiningWhenGamingMode;
+            set => MiningSettings.Instance.PauseMiningWhenGamingMode = value;
+        }
         #endregion MiningSettings
 
         #region IdleMiningSettings
@@ -368,6 +373,7 @@ namespace NHMCore.Configs.Data
             DisableWindowsErrorReporting = true;
             ShowInternetConnectionWarning = true;
             NVIDIAP0State = false;
+            PauseMiningWhenGamingMode = false;
             MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;
             SwitchProfitabilityThreshold = 0.02; // percent

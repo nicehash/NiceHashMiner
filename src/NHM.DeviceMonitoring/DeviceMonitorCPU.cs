@@ -43,13 +43,12 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
+                if (!DeviceMonitorManager.IsElevated) return -1;
                 var temperature = -1;
-                var computer = new Computer();
                 try
                 {
+                    var computer = LibreHardwareMonitorManager.Instance.Computer;
                     var updateVisitor = new UpdateVisitor();
-                    computer.Open();
-                    computer.IsCpuEnabled = true;
                     computer.Accept(updateVisitor);
                     var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
                     var cpuSensors = cpu.Sensors.Where(s => s.SensorType == SensorType.Temperature);
@@ -62,10 +61,6 @@ namespace NHM.DeviceMonitoring
                 {
                     Logger.ErrorDelayed("DeviceMonitorCPU", "Error when getting CPU temperature: " + e.Message, _delayedLogging);
                 }
-                finally
-                {
-                    computer.Close();
-                }
 
                 return temperature;
             }
@@ -73,15 +68,13 @@ namespace NHM.DeviceMonitoring
 
         (int status, int percentage) IGetFanSpeedPercentage.GetFanSpeedPercentage()
         {
-            var percentage = 0;
+            if (!DeviceMonitorManager.IsElevated) return (-1, -1);
+            var percentage = -1;
             var ok = 0;
-            var computer = new Computer();
             try
             {
+                var computer = LibreHardwareMonitorManager.Instance.Computer;
                 var updateVisitor = new UpdateVisitor();
-                
-                computer.Open();
-                computer.IsMotherboardEnabled = true;
                 computer.Accept(updateVisitor);
                 var mainboard = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);
                 foreach (var subHW in mainboard.SubHardware)
@@ -103,10 +96,6 @@ namespace NHM.DeviceMonitoring
             {
                 Logger.ErrorDelayed("DeviceMonitorCPU", "Error when getting CPU fan speed: " + e.Message, _delayedLogging);
                 ok = -1;
-            }
-            finally
-            {
-                computer.Close();
             }
 
             return (ok, percentage);

@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AMD\AMDDetector.cs" />
+    <Compile Include="AMD\AmdDriver.cs" />
     <Compile Include="CPU\CPUDetectionResult.cs" />
     <Compile Include="CPU\CPUDetector.cs" />
     <Compile Include="CPU\CpuInfo.cs" />
