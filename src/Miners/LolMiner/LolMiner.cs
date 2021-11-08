@@ -120,8 +120,8 @@ namespace LolMiner
             var commandLine = $"--pool {urlWithPort} --user {_username} --tls 0 --apiport {_apiPort} {_disableWatchdogParam} --devices {_devices} {_extraLaunchParameters}";
 
             if (_algorithmType == AlgorithmType.ZHash) commandLine += " --coin AUTO144_5";
-            if (_algorithmType == AlgorithmType.DaggerHashimoto) commandLine += " --ethstratum ETHV1";
             else commandLine += $" --algo {algo}";
+            if (_algorithmType == AlgorithmType.DaggerHashimoto) commandLine += " --ethstratum ETHV1";
             //--disablewatchdog 1
             return commandLine;
         }
