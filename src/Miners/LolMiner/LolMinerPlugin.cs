@@ -56,6 +56,11 @@ namespace LolMiner
             var minDrivers = new Version(470, 5);
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
 
+            if (!isDriverSupported)
+            {
+                Logger.Error("LolMinerPlugin", $"GetSupportedAlgorithms installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
+            }
+
             var gpus = devices
                 .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported))
                 .Where(dev => dev is IGpuDevice)
@@ -130,6 +135,8 @@ namespace LolMiner
             if (ids.Count() != 0)
             {
                 if (ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5 && device.Name.ToLower().Contains("r9 390")) return true;
+                // LHR re-benchmark
+                if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion < Version) return true;
             }
             return false;
         }

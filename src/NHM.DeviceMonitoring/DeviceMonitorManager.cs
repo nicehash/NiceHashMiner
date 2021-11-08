@@ -117,14 +117,10 @@ namespace NHM.DeviceMonitoring
         public static bool IsMotherboardCompatible()
         {
             var isCompatible = true;
-            var computer = new Computer();
             try
             {
+                var computer = LibreHardwareMonitorManager.Instance.Computer;
                 var updateVisitor = new UpdateVisitor();
-                
-                computer.Open();
-                computer.IsCpuEnabled = true;
-                computer.IsMotherboardEnabled = true;
                 computer.Accept(updateVisitor);
                 var cpu = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
                 var mainboard = computer.Hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);
@@ -150,10 +146,6 @@ namespace NHM.DeviceMonitoring
             catch(Exception e)
             {
                 Logger.Error("DeviceMonitorManager", "Error when getting CPU fan speed and temperature: " + e.Message);
-            }
-            finally
-            {
-                computer.Close();
             }
 
             return isCompatible;
