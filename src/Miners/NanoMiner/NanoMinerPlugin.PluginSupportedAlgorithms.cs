@@ -24,7 +24,7 @@ namespace NanoMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
+                        new SAS(AlgorithmType.KAWPOW){ NonDefaultRAMLimit = (2UL << 30) + (2UL << 29) + (2UL << 28)},
                         new SAS(AlgorithmType.Octopus),
                         new SAS(AlgorithmType.DaggerHashimoto)
                     }

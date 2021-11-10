@@ -26,7 +26,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
+                        new SAS(AlgorithmType.KAWPOW){ NonDefaultRAMLimit = (2UL << 30) + (2UL << 29) + (2UL << 28)},
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
