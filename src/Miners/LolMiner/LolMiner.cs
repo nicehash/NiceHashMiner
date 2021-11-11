@@ -213,18 +213,26 @@ namespace LolMiner
                         var sameCountApiDatas = nonZeroSpeeds.Where(adCount => adCount.Count == maxAlgoPiarsCount).Select(adCount => adCount.ad).ToList();
                         var firstPair = sameCountApiDatas.FirstOrDefault();
                         var speedSums = firstPair.AlgorithmSpeedsTotal().Select(pair => new KeyValuePair<AlgorithmType, double>(pair.type, 0.0)).ToDictionary(x => x.Key, x => x.Value);
+                        var counter = 0;
+                        var counterForAverage = 0;
                         // sum 
                         foreach (var ad in sameCountApiDatas)
                         {
                             foreach (var pair in ad.AlgorithmSpeedsTotal())
                             {
-                                speedSums[pair.type] += pair.speed;
+                                if (counter > sameCountApiDatas.Count - 11)
+                                {
+                                    counter++;
+                                    counterForAverage++;
+                                    speedSums[pair.type] += pair.speed;
+                                }
+                                else counter++;
                             }
                         }
                         // average
                         foreach (var algoId in speedSums.Keys.ToArray())
                         {
-                            speedSums[algoId] /= sameCountApiDatas.Count;
+                            speedSums[algoId] /= counterForAverage;
                         }
                         result = new BenchmarkResult
                         {
