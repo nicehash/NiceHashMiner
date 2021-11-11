@@ -128,29 +128,22 @@ namespace LolMiner
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
+            var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
+            if (!isDaggerNvidia) return await base.StartBenchmark(stop, benchmarkType);
+
             using (var tickCancelSource = new CancellationTokenSource())
             {
                 // determine benchmark time 
                 // settup times
-                int benchmarkTime;
-                var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
-                if (isDaggerNvidia)
-                {
-                    benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
-                }
-                else
-                {
-                    benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 40, 60, 140 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
-                }
+                
+                int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); ;
                 var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
-                var maxTicksEnabled = MinerBenchmarkTimeSettings.MaxTicksEnabled && !isDaggerNvidia;
 
                 //// use demo user and disable the watchdog
                 var commandLine = MiningCreateCommandLine();
                 var (binPath, binCwd) = GetBinAndCwdPaths();
                 Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-                Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
-                Logger.Info(_logGroup, $"Benchmarking is Dagger NVIDIA {isDaggerNvidia}");
+                Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks}");
                 var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
                 // disable line readings and read speeds from API
                 bp.CheckData = null;
@@ -164,7 +157,7 @@ namespace LolMiner
                 var ticks = benchmarkTime / 10; // on each 10 seconds tick
                 var result = new BenchmarkResult();
                 var benchmarkApiData = new List<ApiData>();
-                int delay = maxTicksEnabled ? (benchmarkTime / maxTicks) * 1000 : 10 * 1000;
+                var delay = (benchmarkTime / maxTicks) * 1000;
 
 
                 for (var tick = 0; tick < ticks; tick++)
@@ -178,7 +171,7 @@ namespace LolMiner
                     var isTickValid = adTotal.Count > 0 && adTotal.All(pair => pair.speed > 0);
                     benchmarkApiData.Add(ad);
                     if (isTickValid) ++validTicks;
-                    if (maxTicksEnabled && validTicks >= maxTicks)
+                    if (validTicks >= maxTicks)
                     {
                         stoppedAfterTicks = true;
                         break;
@@ -212,31 +205,12 @@ namespace LolMiner
                         var maxAlgoPiarsCount = nonZeroSpeeds.Select(adCount => adCount.Count).Max();
                         var sameCountApiDatas = nonZeroSpeeds.Where(adCount => adCount.Count == maxAlgoPiarsCount).Select(adCount => adCount.ad).ToList();
                         var firstPair = sameCountApiDatas.FirstOrDefault();
-                        var speedSums = firstPair.AlgorithmSpeedsTotal().Select(pair => new KeyValuePair<AlgorithmType, double>(pair.type, 0.0)).ToDictionary(x => x.Key, x => x.Value);
-                        var counter = 0;
-                        var counterForAverage = 0;
                         // sum 
-                        foreach (var ad in sameCountApiDatas)
-                        {
-                            foreach (var pair in ad.AlgorithmSpeedsTotal())
-                            {
-                                if (counter > sameCountApiDatas.Count - 11)
-                                {
-                                    counter++;
-                                    counterForAverage++;
-                                    speedSums[pair.type] += pair.speed;
-                                }
-                                else counter++;
-                            }
-                        }
-                        // average
-                        foreach (var algoId in speedSums.Keys.ToArray())
-                        {
-                            speedSums[algoId] /= counterForAverage;
-                        }
+                        var values = sameCountApiDatas.SelectMany(x => x.AlgorithmSpeedsTotal()).Select(pair => pair.speed).Reverse().Take(10).ToArray();
+                        var value = values.Sum() / values.Length;
                         result = new BenchmarkResult
                         {
-                            AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, speedSums[pair.type])).ToList(),
+                            AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, value/*speedSums[pair.type]*/)).ToList(),
                             Success = true
                         };
                     }
