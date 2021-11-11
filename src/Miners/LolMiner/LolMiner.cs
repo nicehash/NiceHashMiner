@@ -210,7 +210,7 @@ namespace LolMiner
                         var value = values.Sum() / values.Length;
                         result = new BenchmarkResult
                         {
-                            AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, value/*speedSums[pair.type]*/)).ToList(),
+                            AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, value)).ToList(),
                             Success = true
                         };
                     }
