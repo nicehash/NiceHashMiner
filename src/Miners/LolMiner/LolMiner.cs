@@ -159,7 +159,6 @@ namespace LolMiner
                 var benchmarkApiData = new List<ApiData>();
                 var delay = (benchmarkTime / maxTicks) * 1000;
 
-
                 for (var tick = 0; tick < ticks; tick++)
                 {
                     if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
