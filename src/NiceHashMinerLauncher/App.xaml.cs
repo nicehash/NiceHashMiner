@@ -207,35 +207,45 @@ namespace NiceHashMiner
             if (isUpdated)
             {
                 const string GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
+                const string TOSMain = "4";
+                const string TOS3rdParty = "4";
+#if DEBUG
+                string generalSettingsFile = GetRootPath("app/configs/General.json");
+#else 
                 string generalSettingsFile = GetRootPath("configs/General.json");
+#endif
                 try
                 {
                     var generalSettingsText = System.IO.File.ReadAllLines(generalSettingsFile);
-                    var agreeTOS = generalSettingsText.Where(line => line.Contains("AgreedWithTOS"))
-                        .FirstOrDefault()
-                        .Split(':')
-                        .Last()
-                        .Replace(",", "")
-                        .Trim();
-                    if(Int32.TryParse(agreeTOS, out int valTOS) && valTOS == 4)
+                    var agreeTOS = generalSettingsText.Where(line => line.Contains("AgreedWithTOS")).FirstOrDefault();
+                    if(agreeTOS != null)
                     {
-                        using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
+                        agreeTOS = agreeTOS.Split(':')
+                                            .Last()
+                                            .Replace(",", "")
+                                            .Trim();
+                        if(agreeTOS == TOSMain)
                         {
-                            key.SetValue("AgreedWithTOS", 4);
+                            using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
+                            {
+                                key.SetValue("AgreedWithTOS", TOSMain);
+                            }
                         }
                     }
 
-                    var agreeTOSMiner = generalSettingsText.Where(line => line.Contains("Use3rdPartyMinersTOS"))
-                        .FirstOrDefault()
-                        .Split(':')
-                        .Last()
-                        .Replace(",", "")
-                        .Trim();
-                    if (Int32.TryParse(agreeTOS, out int valTOSMiner) && valTOSMiner == 4)
+                    var agreeTOSMiner = generalSettingsText.Where(line => line.Contains("Use3rdPartyMinersTOS")).FirstOrDefault();
+                    if(agreeTOSMiner != null)
                     {
-                        using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
+                        agreeTOSMiner = agreeTOSMiner.Split(':')
+                                                .Last()
+                                                .Replace(",", "")
+                                                .Trim();
+                        if(agreeTOSMiner == TOS3rdParty)
                         {
-                            key.SetValue("Use3rdPartyMinersTOS", 4);
+                            using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
+                            {
+                                key.SetValue("Use3rdPartyMinersTOS", TOS3rdParty);
+                            }
                         }
                     }
                 }

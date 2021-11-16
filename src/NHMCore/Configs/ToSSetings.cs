@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
+using System;
 
 namespace NHMCore.Configs
 {
@@ -25,10 +26,12 @@ namespace NHMCore.Configs
             get {
                 using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, false))
                 {
-                    if (key != null && key.GetValue("AgreedWithTOS") is int TOSVersion)
+                    if (key != null && key.GetValue("AgreedWithTOS") is string TOSVersion && 
+                        Int32.TryParse(TOSVersion, out int TOSver))
                     {
-                        return TOSVersion;
+                        return TOSver;
                     }
+                    Logger.Warn("TOSSETTINGS", "AgreedWithTOS was not read, defaulting to -1.");
                     return -1;
                 }
             }
@@ -36,7 +39,7 @@ namespace NHMCore.Configs
             {
                 using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
                 {
-                    key.SetValue("AgreedWithTOS", value);
+                    key.SetValue("AgreedWithTOS", value.ToString());
                 }
                 OnPropertyChanged(nameof(AgreedWithTOS));
             }
@@ -48,10 +51,12 @@ namespace NHMCore.Configs
             {
                 using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, false))
                 {
-                    if (key != null && key.GetValue("Use3rdPartyMinersTOS") is int TOS3rdPartyVersion)
+                    if (key != null && key.GetValue("Use3rdPartyMinersTOS") is string TOS3rdPartyVersion && 
+                        Int32.TryParse(TOS3rdPartyVersion, out int TOSver))
                     {
-                        return TOS3rdPartyVersion;
+                        return TOSver;
                     }
+                    Logger.Warn("TOSSETTINGS", "Use3rdPartyMinersTOS was not read, defaulting to -1.");
                     return -1;
                 }
             }
@@ -59,7 +64,7 @@ namespace NHMCore.Configs
             {
                 using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
                 {
-                    key.SetValue("Use3rdPartyMinersTOS", value);
+                    key.SetValue("Use3rdPartyMinersTOS", value.ToString());
                 }
                 OnPropertyChanged(nameof(Use3rdPartyMinersTOS));
             }
