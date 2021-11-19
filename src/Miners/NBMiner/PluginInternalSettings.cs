@@ -169,7 +169,7 @@ namespace NBMiner
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "nbminer_lhr",
-                    LongName = "-lhr",
+                    LongName = "--lhr",
                     DefaultValue = "0",
                     Delimiter = ","
                 },
@@ -185,7 +185,56 @@ namespace NBMiner
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_lhrMode",
-                    LongName = "-lhr-mode",
+                    LongName = "--lhr-mode",
+                    DefaultValue = "2"
+                },
+                /// <summary>
+                /// -lhr-reduce-value: the amount to reduce -lhr value on a single -lhr tuning. defaults to 0.5.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lhr_reduceValue",
+                    LongName = "--lhr-reduce-value",
+                    DefaultValue = "0.5",
+                },
+                /// <summary>
+                /// -lhr-reduce-time: When LHR lock is detected, and the time since the last lock exceeds this value, the -lhr reduce will not perform. defaults to 15, which means 15 minutes.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lhr_reduceTime",
+                    LongName = "--lhr-reduce-time",
+                    DefaultValue = "15",
+                },
+                /// <summary>
+                /// -lhr-reduce-limit: the maximum number of times to reduce -lhr value, defaults to 6
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lhr_reduceLimit",
+                    LongName = "--lhr-reduce-limit",
+                    DefaultValue = "6",
+                },
+                /// <summary>
+                /// feature: disable SNI extension for ssl connections by default, can be enabled with -enable-sni option
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "enable_sni",
+                    LongName = "--enable-sni"
+                },
+                /// <summary>
+                /// feature: add -cmd-output option to specify command line outpu to stdout or stderr, 1=stdout, 2=stderr, defaults to 2.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "cmdOutput",
+                    LongName = "--cmd-output",
                     DefaultValue = "2"
                 }
             },
