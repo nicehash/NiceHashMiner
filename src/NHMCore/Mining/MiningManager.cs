@@ -864,6 +864,18 @@ namespace NHMCore.Mining
             }
         }
 
+
+        public static void CheckIfAlgosAreOnPenging()
+        {
+
+            foreach (var md in _miningDevices) {
+
+                var algo = md.Algorithms.FirstOrDefault(a => a.IgnoreUntil > DateTime.UtcNow && a.IsCurrentlyMining);
+
+                if (algo != null)
+                    md.Device.State = DeviceState.Pending;
+            }
+        }
         // TODO check the stats calculation
         //public static async Task MinerStatsCheck()
         //{
