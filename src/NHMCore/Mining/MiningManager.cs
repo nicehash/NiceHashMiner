@@ -872,8 +872,7 @@ namespace NHMCore.Mining
 
                 var algo = md.Algorithms.FirstOrDefault(a => a.IgnoreUntil > DateTime.UtcNow && a.IsCurrentlyMining);
 
-                if (algo != null)
-                    md.Device.State = DeviceState.Pending;
+                if (algo != null) md.Device.State = DeviceState.Pending;
             }
         }
         // TODO check the stats calculation
