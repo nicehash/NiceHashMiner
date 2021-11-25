@@ -875,6 +875,7 @@ namespace NHMCore.Mining
                 if (algo != null) md.Device.State = DeviceState.Pending;
             }
 
+            // TODO add new devicestatus unstable, when nhmws4 is released 
             foreach (var md in _miningDevices)
             {
                 var unstableAlgoCount = md.Algorithms.Where(a => a.Status == AlgorithmStatus.Unstable);
