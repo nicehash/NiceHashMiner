@@ -32,7 +32,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                         return Application.Current.FindResource("Gray1ColorBrush");
                     case AlgorithmStatus.Disabled:
                         return Application.Current.FindResource("Gray2ColorBrush");
-
                 }
             }
             return Application.Current.FindResource("Gray1ColorBrush");
