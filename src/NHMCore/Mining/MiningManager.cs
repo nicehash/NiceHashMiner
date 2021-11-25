@@ -865,7 +865,7 @@ namespace NHMCore.Mining
         }
 
 
-        public static void CheckIfAlgosAreOnPenging()
+        public static void CheckIfAlgosAreUnstable()
         {
 
             foreach (var md in _miningDevices) {
