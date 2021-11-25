@@ -874,6 +874,12 @@ namespace NHMCore.Mining
 
                 if (algo != null) md.Device.State = DeviceState.Pending;
             }
+
+            foreach (var md in _miningDevices)
+            {
+                var unstableAlgoCount = md.Algorithms.Where(a => a.Status == AlgorithmStatus.Unstable);
+                if (md.Algorithms.Count == unstableAlgoCount.Count() + 1) md.Device.State = DeviceState.Error;
+            }
         }
         // TODO check the stats calculation
         //public static async Task MinerStatsCheck()
