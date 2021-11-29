@@ -1,8 +1,6 @@
-﻿using ManagedCuda.Nvml;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.DeviceMonitoring.NVIDIA;
 using NHM.DeviceMonitoring.TDP;
-using NVIDIA.NVAPI;
 using System;
 using System.Linq;
 
