@@ -94,6 +94,10 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateOutdatedNVIDIADriverWarning(DeviceDetectionResult.MinimumNVIDIADriver);
                 }
+                if(!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
+                {
+                    AvailableNotifications.CreateMotherboardNotCompatible();
+                }
 
 
                 // add devices
