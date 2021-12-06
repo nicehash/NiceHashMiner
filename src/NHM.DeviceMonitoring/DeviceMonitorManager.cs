@@ -150,15 +150,5 @@ namespace NHM.DeviceMonitoring
 
             return isCompatible;
         }
-
-        public static void CloseComputer()
-        {
-            LibreHardwareMonitorManager.Instance.Computer.Close();
-        }
-
-        public static void OpenComputer()
-        {
-            LibreHardwareMonitorManager.Instance.Computer.Open();
-        }
     }
 }
