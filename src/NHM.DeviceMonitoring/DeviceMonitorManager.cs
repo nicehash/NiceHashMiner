@@ -100,10 +100,9 @@ namespace NHM.DeviceMonitoring
                 if (nvidias.Count > 0)
                 {
                     var initialNvmlRestartTimeWait = Math.Min(500 * nvidias.Count, 5000); // 500ms per GPU or initial MAX of 5seconds
-                    //var firstMaxTimeoutAfterNvmlRestart = TimeSpan.FromMilliseconds(initialNvmlRestartTimeWait);
                     var nvidiaUUIDAndBusIds = nvidias.ToDictionary(nvidia => nvidia.UUID, nvidia => nvidia.PCIeBusID);
-                    //NvidiaMonitorManager.Init(nvidiaUUIDAndBusIds);
                     var nvidiaInit = NVIDIA_ODN.nhm_nvidia_init();
+                    DeviceMonitorNVIDIA.Init();
                     if (nvidiaInit == 0)
                     {
                         foreach (var nvidia in nvidias)

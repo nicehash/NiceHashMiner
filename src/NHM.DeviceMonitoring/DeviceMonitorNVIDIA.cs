@@ -3,22 +3,22 @@ using NHM.DeviceMonitoring.NVIDIA;
 using NHM.DeviceMonitoring.TDP;
 using System;
 using System.Linq;
+using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
     internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP
     {
-        private object _lock = new object();
+        public static object _lock = new object();
 
         public int BusID { get; private set; }
 
         private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(0.5);
-        private static readonly int SecondsUntilDriverRestart = 10;
-        private int LastSuccessfullDriverInteraction = 0;
-
         private string LogTag => $"DeviceMonitorNVIDIA-uuid({UUID})-busid({BusID})";
 
-        bool tempPass = false;
+        private static Timer DriverAliveCheckTimer;
+        private static int FailCounter = 0;
+        private static int CurrentTimeout = 10000;
 
         internal DeviceMonitorNVIDIA(string uuid, int busID)
         {
@@ -26,40 +26,58 @@ namespace NHM.DeviceMonitoring
             BusID = busID;
         }
 
-        private bool DriverWorkingOrRestart()
+        public static void Init()
         {
-            //if (!tempPass)
-            //{
-            //    tempPass = true;
-            //    NVIDIA_ODN.nhm_nvidia_deinit();
-            //}
-            if (LastSuccessfullDriverInteraction == 0) return false;
-            var now = (int)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            var timeToLastSuccess = now - LastSuccessfullDriverInteraction;
-            if(timeToLastSuccess > SecondsUntilDriverRestart)
+            using (var tryLock = new TryLock(_lock))
             {
-                Logger.InfoDelayed(LogTag, $"Restarting NVIDIA drivers due to detected crash", _delayedLogging);
-                //NVIDIA_ODN.nhm_nvidia_restart_driver();
-                return true;
+                DriverAliveCheckTimer = new Timer(CheckDriverLife, null, 10000, 10000);
             }
-            return false;
         }
 
-        private void LogSuccessfullInteraction()
+        private static void RestartDrivers()
         {
-            LastSuccessfullDriverInteraction = (int)(DateTime.Now.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            NVIDIA_ODN.nhm_nvidia_deinit();
+            NVIDIA_ODN.nhm_nvidia_init();
+        }
+
+        private static void CheckDriverLife(object objectInfo)
+        {
+            using (var tryLock = new TryLock(_lock))
+            {
+                if (!NVIDIA_ODN.nhm_nvidia_is_nvapi_alive() || !NVIDIA_ODN.nhm_nvidia_is_nvml_alive())
+                {
+                    FailCounter++;
+                    RestartDrivers();
+                    if (FailCounter == 20)
+                    {
+                        DriverAliveCheckTimer.Change(0, 60000);
+                        CurrentTimeout = 60000;
+                    }
+                    else if (FailCounter == 30)
+                    {
+                        DriverAliveCheckTimer.Change(0, 3600000);
+                        CurrentTimeout = 3600000;
+                    }
+                }
+                else
+                {
+                    FailCounter = 0;
+                    if(CurrentTimeout != 10000)
+                    {
+                        DriverAliveCheckTimer.Change(0, 10000);
+                    }
+                }
+            }
         }
 
         public float Load
         {
             get
             {
-                var crashed = DriverWorkingOrRestart();
                 int load_perc = 0;
                 int ok = NVIDIA_ODN.nhm_nvidia_device_get_load_percentage(BusID, ref load_perc);
-                if (ok == 0 && !crashed)
+                if (ok == 0)
                 {
-                    LogSuccessfullInteraction();
                     return load_perc;
                 }
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_load_percentage failed with error code {ok}", _delayedLogging);
@@ -71,12 +89,10 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var crashed = DriverWorkingOrRestart();
                 ulong temperature = 0;
                 int ok = NVIDIA_ODN.nhm_nvidia_device_get_temperature(BusID, ref temperature);
-                if (ok == 0 && !crashed)
+                if (ok == 0)
                 {
-                    LogSuccessfullInteraction();
                     return temperature;
                 }
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_temperature failed with error code {ok}", _delayedLogging);
@@ -86,14 +102,12 @@ namespace NHM.DeviceMonitoring
 
         (int status, int percentage) IGetFanSpeedPercentage.GetFanSpeedPercentage()
         {
-            var crashed = DriverWorkingOrRestart();
             int percentage = 0;
             int ok = NVIDIA_ODN.nhm_nvidia_device_get_fan_speed_percentage(BusID, ref percentage);
-            if (ok != 0 || crashed)
+            if (ok != 0)
             {
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
             }
-            else LogSuccessfullInteraction();
             return (ok, percentage);
         }
 
@@ -101,12 +115,10 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var crashed = DriverWorkingOrRestart();
                 int rpm = 0;
                 int ok = NVIDIA_ODN.nhm_nvidia_device_get_fan_speed_rpm(BusID, ref rpm);
-                if (ok == 0 && !crashed)
+                if (ok == 0)
                 {
-                    LogSuccessfullInteraction();
                     return rpm;
                 }
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
@@ -118,12 +130,10 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var crashed = DriverWorkingOrRestart();
                 int power_usage = 0;
                 int ok = NVIDIA_ODN.nhm_nvidia_device_get_power_usage(BusID, ref power_usage);
-                if (ok == 0 && !crashed)
+                if (ok == 0)
                 {
-                    LogSuccessfullInteraction();
                     return power_usage;
                 }
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_power_usage failed with error code {ok}", _delayedLogging);
@@ -134,14 +144,12 @@ namespace NHM.DeviceMonitoring
 
         public bool SetFanSpeedPercentage(int percentage)
         {
-            var crashed = DriverWorkingOrRestart();
             int ok = NVIDIA_ODN.nhm_nvidia_device_set_fan_speed_percentage(BusID, percentage);
-            if (ok != 0 || crashed)
+            if (ok != 0)
             {
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_set_fan_speed_rpm failed with error code {ok}", _delayedLogging);
                 return false;
             }
-            LogSuccessfullInteraction();
             return true;
         }
 
@@ -155,24 +163,22 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var crashed = DriverWorkingOrRestart();
                 int tdpRaw = 0;
                 int ok = NVIDIA_ODN.nhm_nvidia_device_get_tdp(BusID, ref tdpRaw);
-                if (ok != 0 || crashed)
+                if (ok != 0)
                 {
                     Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp failed with error code {ok}", _delayedLogging);
                     return -1;
                 }
                 uint min = 0, max = 0, defaultValue = 0;
                 int ok2 = NVIDIA_ODN.nhm_nvidia_device_get_tdp_min_max_default(BusID, ref min, ref max, ref defaultValue);
-                if (ok2 != 0 || crashed)
+                if (ok2 != 0)
                 {
                     Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp_ranges failed with error code {ok}", _delayedLogging);
                     return -1;
                 }
                 // We limit 100% to the default as max
                 var tdpPerc = RangeCalculator.CalculatePercentage(tdpRaw, min, defaultValue);
-                LogSuccessfullInteraction();
                 return tdpPerc; // 0.0d - 1.0d
             }
         }
@@ -202,8 +208,6 @@ namespace NHM.DeviceMonitoring
                 percentage = PowerLevelToTDPPercentage(level);
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
-            var crashed = DriverWorkingOrRestart();
-            if (crashed) return false;
             var execRet = NVIDIA_ODN.nhm_nvidia_device_set_tdp(BusID, (int)percentage);
             if (execRet < 0) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
@@ -224,8 +228,6 @@ namespace NHM.DeviceMonitoring
             }
 
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
-            var crashed = DriverWorkingOrRestart();
-            if (crashed) return false;
             var execRet = NVIDIA_ODN.nhm_nvidia_device_set_tdp(BusID, (int)percentage);
             Logger.Info(LogTag, $"SetTDPPercentage {execRet}.");
             return execRet < 0;
