@@ -170,15 +170,7 @@ namespace NHM.DeviceMonitoring
                     Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp failed with error code {ok}", _delayedLogging);
                     return -1;
                 }
-                uint min = 0, max = 0, defaultValue = 0;
-                int ok2 = NVIDIA_ODN.nhm_nvidia_device_get_tdp_min_max_default(BusID, ref min, ref max, ref defaultValue);
-                if (ok2 != 0)
-                {
-                    Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp_ranges failed with error code {ok}", _delayedLogging);
-                    return -1;
-                }
-                // We limit 100% to the default as max
-                var tdpPerc = RangeCalculator.CalculatePercentage(tdpRaw, min, defaultValue);
+                var tdpPerc = (double)tdpRaw / 100;
                 return tdpPerc; // 0.0d - 1.0d
             }
         }
