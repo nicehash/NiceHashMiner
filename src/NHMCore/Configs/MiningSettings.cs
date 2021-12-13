@@ -1,4 +1,6 @@
 ﻿using NHM.Common;
+using NHMCore.Mining;
+using System.Collections.Generic;
 
 namespace NHMCore.Configs
 {
@@ -100,6 +102,35 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(PauseMiningWhenGamingMode));
             }
         }
+
+        public IEnumerable<ComputeDevice> GPUs => AvailableDevices.Devices;
+
+        private ComputeDevice _device;
+        public ComputeDevice Device
+        {
+            get => _device;
+            set
+            {
+                _device = value;
+                OnPropertyChanged(nameof(Device));
+            }
+        }
+        /*
+        public int LanguageIndex
+        {
+            get => Translations.GetLanguageIndexFromCode(Language);
+            set
+            {
+                var newLang = Translations.GetLanguageCodeFromIndex(value);
+                if (Language != newLang)
+                {
+                    Language = newLang;
+
+                    Translations.SelectedLanguage = Language;
+                }
+                OnPropertyChanged(nameof(LanguageIndex));
+            }
+        }*/
 
         public bool HideMiningWindowsAlertVisible => MinimizeMiningWindows && HideMiningWindows;
     }

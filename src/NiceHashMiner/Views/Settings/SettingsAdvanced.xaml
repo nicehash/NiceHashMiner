@@ -57,6 +57,27 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.PauseMiningWhenGamingMode}"
                                         Label="Pause mining when Steam game is started"
                                         Description="{StaticResource steamGamingMode}"/>
+            <ComboBox Name="cBoxGPUs" Margin="0,0,24,0" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding MiningSettings.GPUs}">
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding MiningSettings.PauseMiningWhenGamingMode}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding MiningSettings.PauseMiningWhenGamingMode}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.ResolveNiceHashDomainsToIPs}"
                                         Label="Resolve NiceHash domains to IPs via Cloudflare"
                                         Description="This will resolve NiceHash domains to IPs via cloudflare in case of DNS sinkholing."/>
