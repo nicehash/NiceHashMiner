@@ -108,6 +108,8 @@ namespace NHM.DeviceDetection.AMD
                         var setName = vramPart != null ? $"{name} {vramPart}" : name;
                         var bd = new BaseDevice(DeviceType.AMD, uuid, setName, (int)oclDev.DeviceID);
                         var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
+                        var thisDeviceDriverVersion = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID).AdrenalinVersion;
+                        if(thisDeviceDriverVersion != "") amdDevice.DEVICE_AMD_DRIVER = new Version(thisDeviceDriverVersion);
                         amdDevices.Add(amdDevice);
                     }
                 }

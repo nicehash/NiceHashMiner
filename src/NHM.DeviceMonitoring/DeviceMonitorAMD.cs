@@ -34,6 +34,18 @@ namespace NHM.DeviceMonitoring
             }
         }
 
+        (bool ok, string driverVer, string catalystVersion, string crimsonVersion, string catalystWebLink) GetAMDVersions()
+        {
+            AMD_ODN.ADLVersionsInfoX2 versions = new AMD_ODN.ADLVersionsInfoX2(new char[256], new char[256], new char[256], new char[256]);
+            int ok = AMD_ODN.nhm_amd_device_get_driver_version(BusID,ref versions);
+            if(ok != 0)
+            {
+                return (false, "", "", "", "");
+            }
+            return (true, new string(versions.StrDriverVer).Trim('\0'), new string(versions.StrCatalystVersion).Trim('\0'), 
+                new string(versions.StrCrimsonVersion).Trim('\0'), new string(versions.StrCatalystWebLink).Trim('\0'));
+        }
+
         (int status, int percentage) IGetFanSpeedPercentage.GetFanSpeedPercentage()
         {
             int percentage = 0;

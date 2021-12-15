@@ -380,7 +380,7 @@ REM OpenCL.dll inside a separate folder
 If NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\app\OpenCL\"
 if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll"
 if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\README.md" "$(SolutionDir)$(Configuration)\app\OpenCL\README.md"
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection_opencl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection_opencl.dll" "$(SolutionDir)$(Configuration)\app\device_detection_opencl.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection_opencl_adl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection_opencl_adl.dll" "$(SolutionDir)$(Configuration)\app\device_detection_opencl_adl.dll"
 
 REM commons dll's for downloaded miners. Copy only if files don't exist. Remove this after plugin system fully replaces integrated miners
 REM create directory
