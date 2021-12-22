@@ -556,6 +556,7 @@ namespace NHMCore.Notifications
             }
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriversObsolete, Tr(name), Tr(content));
             NotificationsManager.Instance.AddNotificationToList(notification);
+            Logger.Warn(plugin, content);
         }
 
         public static void CreateAdminRunRequired()
