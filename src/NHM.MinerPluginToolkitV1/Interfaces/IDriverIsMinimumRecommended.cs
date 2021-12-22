@@ -1,10 +1,12 @@
-﻿using System;
+﻿using NHM.Common.Device;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace NHM.MinerPluginToolkitV1.Interfaces
 {
-    interface IDriverIsMinimumRecommended
+    public interface IDriverIsMinimumRecommended
     {
+        (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device);
     }
 }

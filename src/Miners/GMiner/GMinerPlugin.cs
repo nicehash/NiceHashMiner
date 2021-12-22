@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GMinerPlugin
 {
-    public partial class GMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class GMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended
     {
         public GMinerPlugin()
         {
@@ -160,6 +160,23 @@ namespace GMinerPlugin
                 Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
             }
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            var minAMD = new Version(20, 11, 2);
+            var minNVIDIA = new Version(411, 0);
+            if (device is AMDDevice amd)
+            {
+                if (amd.DEVICE_AMD_DRIVER < minAMD) return (-2, minAMD);
+                return (0, minAMD);
+            }
+            else if (device is CUDADevice nvidia)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minNVIDIA) return (-2, minNVIDIA);
+                return (0, minNVIDIA);
+            }
+            return (-1, new Version(0, 0));
         }
     }
 }

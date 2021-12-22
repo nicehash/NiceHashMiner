@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LolMiner
 {
-    public partial class LolMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class LolMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public LolMinerPlugin()
         {
@@ -139,6 +139,34 @@ namespace LolMiner
                 if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion < Version) return true;
             }
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            var minAMD = new Version(20, 11, 2);
+            var minNVIDIA = new Version(411, 0);
+            if (device is AMDDevice amd)
+            {
+                if (amd.DEVICE_AMD_DRIVER < minAMD) return (-2, minAMD);
+                return (0, minAMD);
+            }
+            else if (device is CUDADevice nvidia)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minNVIDIA) return (-2, minNVIDIA);
+                return (0, minNVIDIA);
+            }
+            return (-1, new Version(0, 0));
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        {
+            var minNVIDIA = new Version(411, 31);
+            if (device is CUDADevice nvidia)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minNVIDIA) return (-2, minNVIDIA);
+                return (0, minNVIDIA);
+            }
+            return (-1, new Version(0, 0));
         }
     }
 }
