@@ -104,7 +104,7 @@ namespace ZEnemy
 
         public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-            Version min = new Version(411, 0);
+            Version min = new Version(411, 31);
             if (device is CUDADevice)
             {
                 if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);

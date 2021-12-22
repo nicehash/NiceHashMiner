@@ -105,7 +105,7 @@ namespace WildRig
 
         public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            Version min = new Version(20, 9, 1);
+            Version min = new Version(21, 5, 2);
             if (device is AMDDevice amd)
             {
                 if (amd.DEVICE_AMD_DRIVER < min) return (-2, min);
