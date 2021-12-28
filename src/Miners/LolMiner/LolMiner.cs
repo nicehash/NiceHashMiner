@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using NHM.MinerPluginToolkitV1.Configs;
 
 namespace LolMiner
 {
@@ -119,8 +121,108 @@ namespace LolMiner
 
             if (_algorithmType == AlgorithmType.ZHash) commandLine += " --coin AUTO144_5";
             else commandLine += $" --algo {algo}";
+            if (_algorithmType == AlgorithmType.DaggerHashimoto) commandLine += " --ethstratum ETHV1";
             //--disablewatchdog 1
             return commandLine;
         }
+
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        {
+            var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
+            if (!isDaggerNvidia) return await base.StartBenchmark(stop, benchmarkType);
+
+            using (var tickCancelSource = new CancellationTokenSource())
+            {
+                // determine benchmark time 
+                // settup times
+                
+                int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); ;
+                var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
+
+                //// use demo user and disable the watchdog
+                var commandLine = MiningCreateCommandLine();
+                var (binPath, binCwd) = GetBinAndCwdPaths();
+                Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+                Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks}");
+                var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+                // disable line readings and read speeds from API
+                bp.CheckData = null;
+
+                var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
+                var benchmarkWait = TimeSpan.FromMilliseconds(500);
+                var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop, tickCancelSource.Token);
+
+                var stoppedAfterTicks = false;
+                var validTicks = 0;
+                var ticks = benchmarkTime / 10; // on each 10 seconds tick
+                var result = new BenchmarkResult();
+                var benchmarkApiData = new List<ApiData>();
+                var delay = (benchmarkTime / maxTicks) * 1000;
+
+                for (var tick = 0; tick < ticks; tick++)
+                {
+                    if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+                    await Task.Delay(delay, stop); // 10 seconds delay
+                    if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+
+                    var ad = await GetMinerStatsDataAsync();
+                    var adTotal = ad.AlgorithmSpeedsTotal();
+                    var isTickValid = adTotal.Count > 0 && adTotal.All(pair => pair.speed > 0);
+                    benchmarkApiData.Add(ad);
+                    if (isTickValid) ++validTicks;
+                    if (validTicks >= maxTicks)
+                    {
+                        stoppedAfterTicks = true;
+                        break;
+                    }
+                }
+                // await benchmark task
+                if (stoppedAfterTicks)
+                {
+                    try
+                    {
+                        tickCancelSource.Cancel();
+                    }
+                    catch
+                    { }
+                }
+                await t;
+                if (stop.IsCancellationRequested)
+                {
+                    return t.Result;
+                }
+
+                // calc speeds
+                // TODO calc std deviaton to reduce invalid benches
+                try
+                {
+                    var nonZeroSpeeds = benchmarkApiData.Where(ad => ad.AlgorithmSpeedsTotal().Count > 0 && ad.AlgorithmSpeedsTotal().All(pair => pair.speed > 0))
+                                                        .Select(ad => (ad, ad.AlgorithmSpeedsTotal().Count)).ToList();
+                    var speedsFromTotals = new List<(AlgorithmType type, double speed)>();
+                    if (nonZeroSpeeds.Count > 0)
+                    {
+                        var maxAlgoPiarsCount = nonZeroSpeeds.Select(adCount => adCount.Count).Max();
+                        var sameCountApiDatas = nonZeroSpeeds.Where(adCount => adCount.Count == maxAlgoPiarsCount).Select(adCount => adCount.ad).ToList();
+                        var firstPair = sameCountApiDatas.FirstOrDefault();
+                        // sum 
+                        var values = sameCountApiDatas.SelectMany(x => x.AlgorithmSpeedsTotal()).Select(pair => pair.speed).Reverse().Take(10).ToArray();
+                        var value = values.Sum() / values.Length;
+                        result = new BenchmarkResult
+                        {
+                            AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, value)).ToList(),
+                            Success = true
+                        };
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
+                }
+
+                // return API result
+                return result;
+            }
+        }
+
     }
 }

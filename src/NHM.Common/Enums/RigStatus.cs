@@ -9,6 +9,7 @@ namespace NHM.Common.Enums
         Benchmarking,
         Error,
         Pending,
-        Disabled
+        Disabled,
+        Gaming,
     }
 }

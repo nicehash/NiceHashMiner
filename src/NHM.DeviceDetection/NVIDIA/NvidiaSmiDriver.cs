@@ -3,95 +3,30 @@
 namespace NHM.DeviceDetection.NVIDIA
 {
     // format 372.54;
-    internal struct NvidiaSmiDriver : IComparable<NvidiaSmiDriver>
+    internal class NvidiaSmiDriver
     {
         public static readonly Version MinimumVersion = new Version(461, 33);
 
-        public bool IsCorrectVersion;
-        public int LeftPart { get; }
+        public bool IsCorrectVersion { get; }
+        public bool IsValid { get; }
+        public Version Version { get; } = null;
 
-        private readonly int _rightPart;
-        public int RightPart
+        public static NvidiaSmiDriver ToNvidiaSmiDriver(string strVersion)
         {
-            get
-            {
-                if (_rightPart >= 10)
-                {
-                    return _rightPart;
-                }
-
-                return _rightPart * 10;
-            }
+            if (Version.TryParse(strVersion, out var v)) return new NvidiaSmiDriver(v.Major, v.Minor);
+            return new NvidiaSmiDriver(-1, -1);
         }
 
         public NvidiaSmiDriver(int left, int right)
         {
-            LeftPart = left;
-            _rightPart = right;
-            //IsCorrectVersion = false;
-            IsCorrectVersion = false;
-            IsVersionGreater();
-        }
-
-        private void IsVersionGreater()
-        {
-            if (LeftPart < MinimumVersion.Major)
-            {
-                IsCorrectVersion = false;
-                return;
-            }
-            else if (RightPart < MinimumVersion.Minor)
-            {
-                IsCorrectVersion = false;
-                return;
-            }
-            this.IsCorrectVersion = true;
+            IsValid = left > -1 && right > -1;
+            if (IsValid) Version = new Version(left, right >= 10 ? right : (right * 10));
+            IsCorrectVersion = IsValid && Version >= MinimumVersion;
         }
 
         public override string ToString()
         {
-            return $"{LeftPart}.{RightPart}";
+            return IsValid ? $"{Version.Major}.{Version.Minor}" : "N/A";
         }
-
-        public bool IsValid()
-        {
-            return RightPart != -1 && LeftPart != -1;
-        }
-
-        public Version ToVersion()
-        {
-            return new Version(LeftPart, RightPart);
-        }
-
-        #region IComparable implementation
-
-        public int CompareTo(NvidiaSmiDriver other)
-        {
-            var leftPartComparison = LeftPart.CompareTo(other.LeftPart);
-            if (leftPartComparison != 0) return leftPartComparison;
-            return RightPart.CompareTo(other.RightPart);
-        }
-
-        public static bool operator <(NvidiaSmiDriver left, NvidiaSmiDriver right)
-        {
-            return left.CompareTo(right) < 0;
-        }
-
-        public static bool operator >(NvidiaSmiDriver left, NvidiaSmiDriver right)
-        {
-            return left.CompareTo(right) > 0;
-        }
-
-        public static bool operator <=(NvidiaSmiDriver left, NvidiaSmiDriver right)
-        {
-            return left.CompareTo(right) <= 0;
-        }
-
-        public static bool operator >=(NvidiaSmiDriver left, NvidiaSmiDriver right)
-        {
-            return left.CompareTo(right) >= 0;
-        }
-
-        #endregion
     }
 }

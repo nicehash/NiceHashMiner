@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NHM.DeviceMonitoring;
 
 namespace NHMCore.Mining
 {
@@ -324,6 +325,7 @@ namespace NHMCore.Mining
                             if (result is bool ok && ok)
                             {
                                 var runningMinerTask = _miner.MinerProcessTask;
+                                if (_algos.Any(a => a.AlgorithmName == "RandomXmonero")) _ = XMRingStartedWaitTime(runningMinerTask, linkedEndMiner.Token);
                                 _ = MinerStatsLoop(runningMinerTask, linkedEndMiner.Token);
                                 await runningMinerTask;
                                 // TODO log something here
@@ -414,6 +416,36 @@ namespace NHMCore.Mining
             finally
             {
                 Logger.Info(MinerTag(), $"MinerStatsLoop END");
+            }
+        }
+
+        private async Task XMRingStartedWaitTime(Task runningTask, CancellationToken stop)
+        {
+            try
+            {
+                var checkWaitTime = TimeSpan.FromMilliseconds(60000);
+                Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
+                Logger.Info(MinerTag(), $"XMRingStartedWaitTime START");
+                try
+                {
+                    DeviceMonitorManager.CloseComputer();
+                    if (isOk()) await TaskHelpers.TryDelay(checkWaitTime, stop);
+                    DeviceMonitorManager.OpenComputer();
+                    return;
+                }
+                catch (TaskCanceledException e)
+                {
+                    Logger.Debug(MinerTag(), $"XMRingStartedWaitTime TaskCanceledException: {e.Message}");
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(MinerTag(), $"Exception {e.Message}");
+                }
+            }
+            finally
+            {
+                Logger.Info(MinerTag(), $"XMRingStartedWaitTime END");
             }
         }
 

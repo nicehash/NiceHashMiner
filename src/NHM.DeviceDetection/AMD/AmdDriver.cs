@@ -18,29 +18,9 @@ namespace NHM.DeviceDetection.AMD
 
         public AmdDriver(string windowsDriverStoreVersion)
         {
-            (IsValid, VerDriverVersion) = ToVersion(windowsDriverStoreVersion);
+            IsValid = Version.TryParse(windowsDriverStoreVersion, out var version);
+            VerDriverVersion = IsValid ? version : null;
             IsCorrectVersion = IsValid && VerDriverVersion >= MinimumVersion.DriveStoreFormat;
         }
-
-        private static bool IsValidWindowsVersion(string windowsDriverStoreVersion)
-        {
-            string[] splitVerCurrent = windowsDriverStoreVersion.Split('.');
-            return splitVerCurrent.Length == 4 && splitVerCurrent.All(s => int.TryParse(s, out var _));
-        }
-
-        private static (bool isValid, Version version) ToVersion(string windowsDriverStoreVersion)
-        {
-            if (!IsValidWindowsVersion(windowsDriverStoreVersion)) return (false, null);
-            try
-            {
-                return (true, new Version(windowsDriverStoreVersion));
-            }
-            catch (Exception)
-            {
-                return (false, null);
-            }
-            
-        }
-
     }
 }

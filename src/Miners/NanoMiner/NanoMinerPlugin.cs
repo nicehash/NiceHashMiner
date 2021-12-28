@@ -1,4 +1,5 @@
 ﻿using NHM.Common.Algorithm;
+using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1;
@@ -23,11 +24,11 @@ namespace NanoMiner
             // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.3.4",
-                ExePath = new List<string> { "nanominer-windows-3.3.4-cuda11", "nanominer.exe" },
+                BinVersion = "v3.3.14",
+                ExePath = new List<string> { "nanominer-windows-3.3.14-cuda11", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/3.3.4/nanominer-windows-3.3.4-cuda11.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v3.3.14/nanominer-windows-3.3.14-cuda11.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +40,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "f25fee20-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 0);
+        public override Version Version => new Version(16, 2);
 
         public override string Name => "NanoMiner";
 
@@ -60,9 +61,13 @@ namespace NanoMiner
             {
                 _mappedIDs[gpu.UUID] = ++pcieId;
             }
-
+            var minDrivers = new Version(455, 23);
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(455, 23);
+            if (!isDriverSupported)
+            {
+                Logger.Error("NanoMinerPlugin", $"GetSupportedAlgorithms installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
+            }
             var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
 
             foreach (var gpu in supportedGpus)

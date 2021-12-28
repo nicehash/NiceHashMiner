@@ -90,6 +90,16 @@ namespace NHMCore.Configs
             }
         }
 
+        private bool _pauseMiningWhenGamingMode = false;
+        public bool PauseMiningWhenGamingMode
+        {
+            get => _pauseMiningWhenGamingMode;
+            set
+            {
+                _pauseMiningWhenGamingMode = value;
+                OnPropertyChanged(nameof(PauseMiningWhenGamingMode));
+            }
+        }
 
         public bool HideMiningWindowsAlertVisible => MinimizeMiningWindows && HideMiningWindows;
     }
