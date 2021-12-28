@@ -116,25 +116,6 @@ namespace GMinerPlugin
                     LongName = "--electricity_cost"
                 },
                 /// <summary>
-                /// space-separated list of OC modes for each device
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_oc",
-                    LongName = "--oc",
-                    Delimiter = " "
-                },
-                /// <summary>
-                /// enable OC1 for all devices
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "gminer_oc1",
-                    LongName = "--oc1"
-                },
-                /// <summary>
                 /// control hashrate report interval
                 /// </summary>
                 new MinerOption
@@ -200,6 +181,187 @@ namespace GMinerPlugin
                     ID = "gminer_--log_stratum",
                     LongName = "--log_stratum",
                 },
+                /// <summary>
+                /// space-separated list of fan speed for each device in percents (range from 0 to 100, 0 - ignore), only Windows is supported (for example: '60 0 90')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_fan",
+                    LongName = "--fan",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of power limits for each device in percents (range from 0 to 100 for Nvidia GPUs and -50 - 50 for AMD GPUs, 0 - ignore), only Windows is supported (for example: '30 0 50')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_pl",
+                    LongName = "--pl",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of core clock offsets (for Nvidia GPUs) or absolute core clocks (for AMD GPUs) for each device in MHz (0 - ignore),
+                /// only Windows is supported, requires running miner with admin privileges (for example: '100 0 -90')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_cclock",
+                    LongName = "--cclock",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of memory clock offsets (for Nvidia GPUs) or absolute memory clocks (for AMD GPUs) for each device in MHz (0 - ignore),
+                /// only Windows is supported, requires running miner with admin privileges (for example: '100 0 -90')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_mclock",
+                    LongName = "--mclock",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of core voltage offsets in % (for Nvidia GPUs) or absolute core voltages (for AMD GPUs) for each device in mV (0 - ignore),
+                /// only Windows is supported, requires running miner with admin privileges (for example: '900 0 1100')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_cvddc",
+                    LongName = "--cvddc",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of locked voltage points for each device in mV (0 - ignore),
+                /// only Windows and Nvidia GPUs are supported. Requires running miner with admin privileges (for example: '900 0 1000')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_lock_voltage",
+                    LongName = "--lock_voltage",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of locked core clock point for each device in MHz (0 - ignore), only Nvidia GPUs are supported. 
+                /// Requires running miner with admin privileges (for example: '1200 0 1500')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_lock_cclock",
+                    LongName = "--lock_cclock",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// enable/disable P2 state, only Windows and Nvidia GPUs are supported. Requires running miner with admin privileges
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_p2state",
+                    LongName = "--p2state",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of target temperatures for fan (0 - ignore), only Windows is supported (for example: '65 0 70')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_tfan",
+                    LongName = "--tfan",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of minimal fan speed (0 - ignore) for tfan option, only Windows is supported (for example: '30 0 35')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_tfan_min",
+                    LongName = "--tfan_min",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of maximal fan speed (0 - ignore) for tfan option, only Windows is supported (for example: '90 0 80')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_tfan_max",
+                    LongName = "--tfan_max",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of LHR modes (0 - auto, 1 - on, 2 - off), only Nvidia GPUs are supported
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_lhr",
+                    LongName = "--lhr",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of LHR tune values, meaning GPU unlock percentage (0 - auto), only Nvidia GPUs are supported, default value is '0' (for example: '72 71 73')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_lhr_tune",
+                    LongName = "--lhr_tune",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// space-separated list of LHR auto-tune, 0 - off, 1 - on, only Nvidia GPUs are supported (for example: '1 0 1')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_lhr_autotune",
+                    LongName = "--lhr_autotune",
+                    Delimiter = " ",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// LHR auto-tune step size, only Nvidia GPUs are supported, default value is '0.5' (for example: '0.2')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_lhr_autotune_step",
+                    LongName = "--lhr_autotune_step",
+                    Delimiter = " ",
+                    DefaultValue = "0.5"
+                },
+                /// <summary>
+                /// space-separated list of LHR mode (0 - power save mode, 1 - maximal performance mode), only Nvidia GPUs are supported, default value is '1' (for example: '1 0 1')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_lhr_mode",
+                    LongName = "--lhr_mode",
+                    Delimiter = " ",
+                    DefaultValue = "1"
+                },
             },
             TemperatureOptions = new List<MinerOption>{
                 /// <summary>
@@ -213,50 +375,6 @@ namespace GMinerPlugin
                     LongName = "--templimit",
                     DefaultValue = "90",
                     Delimiter = " "
-                },
-                /// <summary>
-                /// improved DAG generation, now miner generates valid DAG in extremal OC modes.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_memory_tweaks",
-                    LongName = "--tfan",
-                    Delimiter = " ",
-                },
-                /// <summary>
-                /// space-separated list of core clock offsets (for Nvidia GPUs) or absolute core clocks (for AMD GPUs) for each device in MHz (0 - ignore),
-                /// only Windows is supported, requires running miner with admin privileges (for example: '100 0 -90')
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_cclock",
-                    LongName = "--cclock",
-                    Delimiter = " ",
-                },
-                /// <summary>
-                /// space-separated list of memory clock offsets (for Nvidia GPUs) or absolute memory clocks (for AMD GPUs) for each device in MHz (0 - ignore),
-                /// only Windows is supported, requires running miner with admin privileges (for example: '100 0 -90')
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_mclock",
-                    LongName = "--mclock",
-                    Delimiter = " ",
-
-                },
-                /// <summary>
-                /// space-separated list of core voltage offsets in % (for Nvidia GPUs) or absolute core voltages (for AMD GPUs) for each device in mV (0 - ignore),
-                /// only Windows is supported, requires running miner with admin privileges (for example: '900 0 1100')
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_cvddc",
-                    LongName = "--cvddc",
-                    Delimiter = " ",
                 },
             }
         };
