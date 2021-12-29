@@ -57,23 +57,11 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.PauseMiningWhenGamingMode}"
                                         Label="Pause mining when Steam game is started"
                                         Description="{StaticResource steamGamingMode}"/>
-            <ComboBox Name="cBoxGPUs" Margin="0,0,24,0" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding MiningSettings.GPUs}">
-                <ComboBox.Style>
-                    <Style TargetType="ComboBox">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding MiningSettings.PauseMiningWhenGamingMode}" Value="True">
-                                <Setter Property="Visibility" Value="Visible"></Setter>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding MiningSettings.PauseMiningWhenGamingMode}" Value="False">
-                                <Setter Property="Visibility" Value="Collapsed"></Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ComboBox.Style>
+            <ComboBox x:Name="cBoxGPUs" Style="{StaticResource smallComboBoxSteam}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding MiningSettings.GPUs}" SelectedIndex="{Binding MiningSettings.DeviceIndex, Mode=TwoWay}" Margin="0,0,24,0" SelectionChanged="GPUComboBox_SelectionChanged" HorizontalAlignment="Left">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" />
+                            <TextBlock Text="{Binding FullName}" Width="300" TextWrapping="Wrap"/>
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>

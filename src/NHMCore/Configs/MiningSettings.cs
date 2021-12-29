@@ -103,35 +103,33 @@ namespace NHMCore.Configs
             }
         }
 
-        public IEnumerable<ComputeDevice> GPUs => AvailableDevices.Devices;
+        public IEnumerable<ComputeDevice> GPUs => AvailableDevices.GPUs;
 
-        private ComputeDevice _device;
-        public ComputeDevice Device
+        private string _deviceToPauseUuid = "";
+
+        public string DeviceToPauseUuid
         {
-            get => _device;
+            get => _deviceToPauseUuid;
             set
             {
-                _device = value;
-                OnPropertyChanged(nameof(Device));
+                _deviceToPauseUuid = value;
+                OnPropertyChanged(nameof(DeviceToPauseUuid));
             }
         }
-        /*
-        public int LanguageIndex
+
+        public int DeviceIndex
         {
-            get => Translations.GetLanguageIndexFromCode(Language);
+            get => AvailableDevices.GetDeviceIndexFromUuid(DeviceToPauseUuid);
             set
             {
-                var newLang = Translations.GetLanguageCodeFromIndex(value);
-                if (Language != newLang)
+                var newDevice = AvailableDevices.GetDeviceUuidFromIndex(value);
+                if (DeviceToPauseUuid != newDevice)
                 {
-                    Language = newLang;
-
-                    Translations.SelectedLanguage = Language;
+                    DeviceToPauseUuid = newDevice;
                 }
-                OnPropertyChanged(nameof(LanguageIndex));
+                OnPropertyChanged(nameof(DeviceIndex));
             }
-        }*/
-
+        }
         public bool HideMiningWindowsAlertVisible => MinimizeMiningWindows && HideMiningWindows;
     }
 }

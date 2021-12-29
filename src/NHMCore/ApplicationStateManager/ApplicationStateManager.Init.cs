@@ -122,6 +122,7 @@ namespace NHMCore
                     }
                     AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
                 }
+                MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(MiningSettings.Instance.DeviceToPauseUuid);
                 AvailableDevices.UncheckCpuIfGpu();
                 var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
                 if (!ramCheckOK)
