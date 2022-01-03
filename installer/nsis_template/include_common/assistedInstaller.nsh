@@ -17,7 +17,11 @@
     !define MUI_FINISHPAGE_TEXT "${APP_FILENAME} has been installed on your computer.$\r$\nClick Finish to close Setup.$\r$\nWARNING: Miner software is recognized as malicious by Anti-Virus software, use it at your own risk.$\r$\nWhite-list '$INSTDIR' to ensure binaries don't get deleted."
     !define MUI_FINISHPAGE_RUN
     !define MUI_FINISHPAGE_RUN_FUNCTION "StartApp"
+    !define MUI_LICENSEPAGE_CHECKBOX
+    !define MUI_LICENSEPAGE_CHECKBOX_TEXT "I accept the terms of the license agreement and confirm that i am at least 18 years old"
+
     !insertmacro MUI_PAGE_LICENSE "assets\license.rtf"
+
     !insertmacro PAGE_INSTALL_MODE
   !endif
   

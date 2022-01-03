@@ -1,4 +1,5 @@
 ﻿//#define DELETE_NON_CURRENT_APPS
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -201,6 +202,59 @@ namespace NiceHashMiner
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var isUpdater = Environment.GetCommandLineArgs().Contains("-update");
             var isUpdated = Environment.GetCommandLineArgs().Contains("-updated");
+
+#warning TRANSITIONAL CODE, REMOVE IN FUTURE VERSIONS (registry integration)
+            if (isUpdated)
+            {
+                const string GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
+                const string TOSMain = "4";
+                const string TOS3rdParty = "4";
+#if DEBUG
+                string generalSettingsFile = GetRootPath("app/configs/General.json");
+#else 
+                string generalSettingsFile = GetRootPath("configs/General.json");
+#endif
+                try
+                {
+                    var generalSettingsText = System.IO.File.ReadAllLines(generalSettingsFile);
+                    var agreeTOS = generalSettingsText.Where(line => line.Contains("AgreedWithTOS")).FirstOrDefault();
+                    if(agreeTOS != null)
+                    {
+                        agreeTOS = agreeTOS.Split(':')
+                                            .Last()
+                                            .Replace(",", "")
+                                            .Trim();
+                        if(agreeTOS == TOSMain)
+                        {
+                            using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
+                            {
+                                key.SetValue("AgreedWithTOS", TOSMain);
+                            }
+                        }
+                    }
+
+                    var agreeTOSMiner = generalSettingsText.Where(line => line.Contains("Use3rdPartyMinersTOS")).FirstOrDefault();
+                    if(agreeTOSMiner != null)
+                    {
+                        agreeTOSMiner = agreeTOSMiner.Split(':')
+                                                .Last()
+                                                .Replace(",", "")
+                                                .Trim();
+                        if(agreeTOSMiner == TOS3rdParty)
+                        {
+                            using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
+                            {
+                                key.SetValue("Use3rdPartyMinersTOS", TOS3rdParty);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Logger.Error("NHMLauncher", ex.Message);
+                }
+            }
+
             var afterUpdate = false;
             if (isUpdater)
             {

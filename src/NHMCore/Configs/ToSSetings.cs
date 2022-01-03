@@ -1,4 +1,6 @@
-﻿using NHM.Common;
+﻿using Microsoft.Win32;
+using NHM.Common;
+using System;
 
 namespace NHMCore.Configs
 {
@@ -19,24 +21,51 @@ namespace NHMCore.Configs
             }
         }
 
-        private int _agreedWithTOS = 0;
         public int AgreedWithTOS
         {
-            get => _agreedWithTOS;
+            get {
+                using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, false))
+                {
+                    if (key != null && key.GetValue("AgreedWithTOS") is string TOSVersion && 
+                        Int32.TryParse(TOSVersion, out int TOSver))
+                    {
+                        return TOSver;
+                    }
+                    Logger.Warn("TOSSETTINGS", "AgreedWithTOS was not read, defaulting to -1.");
+                    return -1;
+                }
+            }
             set
             {
-                _agreedWithTOS = value;
+                using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
+                {
+                    key.SetValue("AgreedWithTOS", value.ToString());
+                }
                 OnPropertyChanged(nameof(AgreedWithTOS));
             }
         }
 
-        private int _use3rdPartyMinersTOS = 0;
         public int Use3rdPartyMinersTOS
         {
-            get => _use3rdPartyMinersTOS;
+            get
+            {
+                using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, false))
+                {
+                    if (key != null && key.GetValue("Use3rdPartyMinersTOS") is string TOS3rdPartyVersion && 
+                        Int32.TryParse(TOS3rdPartyVersion, out int TOSver))
+                    {
+                        return TOSver;
+                    }
+                    Logger.Warn("TOSSETTINGS", "Use3rdPartyMinersTOS was not read, defaulting to -1.");
+                    return -1;
+                }
+            }
             set
             {
-                _use3rdPartyMinersTOS = value;
+                using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
+                {
+                    key.SetValue("Use3rdPartyMinersTOS", value.ToString());
+                }
                 OnPropertyChanged(nameof(Use3rdPartyMinersTOS));
             }
         }
