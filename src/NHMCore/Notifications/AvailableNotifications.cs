@@ -5,6 +5,7 @@ using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms;
 using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
@@ -351,6 +352,11 @@ namespace NHMCore.Notifications
             var sentence = Tr("was uploaded.");
             if (!success) sentence = Tr("was not uploaded. Please contact our support team for help.");
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.LogArchiveUpload, Tr("Log archive upload result"), Tr("The log archive with the following ID: {0}", uuid) + " " + sentence);
+            notification.Action = new NotificationAction
+            {
+                Info = Tr("Copy to clipboard"),
+                Action = () => { Clipboard.SetText(uuid); }
+            };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
