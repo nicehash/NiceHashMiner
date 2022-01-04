@@ -634,6 +634,11 @@ namespace NHMCore.Mining
             else if (command is PauseMiningWhenGamingModeSettingsChangedCommand pauseMiningWhenGamingModeSettingsChangedCommand)
             {
                 _isPauseMiningWhenGamingEnabled = pauseMiningWhenGamingModeSettingsChangedCommand.isPauseMiningWhenGamingModeSettingEnabled;
+                if (!_isPauseMiningWhenGamingEnabled)
+                {
+                    var dev = AvailableDevices.Devices.FirstOrDefault(d => d.IsGaming == true);
+                    if (dev != null) dev.IsGaming = false;
+                }
             }
             else if (command is IsSteamGameRunningChangedCommand isSteamGameRunningChangedCommand)
             {
@@ -642,6 +647,8 @@ namespace NHMCore.Mining
             else if (command is GPUToPauseChangedCommand gpuToPauseChangedCommand)
             {
                 _deviceToPauseUuid = gpuToPauseChangedCommand.gpuUuid;
+                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
+                if (dev != null) dev.IsGaming = false;
             }
 
             // here we do the deciding
@@ -667,7 +674,7 @@ namespace NHMCore.Mining
                 await StopAllMinersTask();
                 ApplicationStateManager.StopMining();
             }
-            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled)
+            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled && _deviceToPauseUuid != null)
             {
                 AvailableNotifications.CreateGamingStarted();
                 var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
@@ -675,7 +682,7 @@ namespace NHMCore.Mining
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
-            else if(!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand && _deviceToPauseUuid != null)
+            else if(!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand)
             {
                 AvailableNotifications.CreateGamingFinished();
                 var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
