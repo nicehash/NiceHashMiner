@@ -361,7 +361,6 @@ namespace NHMCore.Mining
                                 var firstAlgo = _algos.FirstOrDefault();
                                 Random randWait = new Random();
                                 firstAlgo.IgnoreUntil = DateTime.UtcNow.AddMinutes(randWait.Next(20, 30));
-                                MiningManager.CheckIfAlgosAreUnstable();
                                 await MiningManager.MinerRestartLoopNotify();
                             }
                         }
