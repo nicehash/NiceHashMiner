@@ -33,7 +33,16 @@ namespace NHM.DeviceDetection.AMD
                     size /= mod;
                     i++;
                 }
-                return Math.Round(size, 1) + units[i];
+                var GBResult = Math.Round(size, 0);
+                // if number is odd we can assume that free memory was presented and we can return the upper even...
+                if(GBResult > 5.0)//1,3,5gb gpus exist
+                {
+                    if (GBResult % 2 != 0)
+                    {
+                        GBResult += 1;
+                    }
+                }
+                return GBResult + units[i];
             }
             catch
             {
@@ -89,7 +98,7 @@ namespace NHM.DeviceDetection.AMD
                         var name = oclDev._CL_DEVICE_BOARD_NAME_AMD;
                         var codename = oclDev._CL_DEVICE_NAME;
                         var gpuRAM = oclDev._CL_DEVICE_GLOBAL_MEM_SIZE;
-                        var infoToHashed = $"{oclDev.DeviceID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
+                        var infoToHashed = $"{oclDev.DeviceID}--{oclDev.BUS_ID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
                         // cross ref info from vid controllers with bus id
                         var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.BUS_ID).FirstOrDefault() ?? null;
                         if (vidCtrl != null)
