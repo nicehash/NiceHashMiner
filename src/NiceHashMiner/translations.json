@@ -4104,7 +4104,63 @@
     },
     "Return and enter Bitcoin address manually": {
       "ru": "Вернитесь и введите Биткоин-адрес вручную"
-    }
+    },
+    "Miner speed fluctuations noticed": {
+      "ru": "Замечено колебание скорости майнера"
 
+    },
+    "We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\nTo solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.": {
+
+    },
+    "Miner \"{0}\" was restarted at {1}": {
+      "ru": "Майнер \"{0}\" был перезапущен {1}"
+
+    },
+    "Miner restarted": {
+      "ru": "Майнер перезапущен"
+
+    },
+    "lower": {
+      "ru": "ниже"
+
+    },
+    "higher": {
+      "ru": "выше"
+
+    },
+    "Miner extreme speed detected": {
+      "ru": "Замечена экстремальная скорость майнера"
+
+    },
+    "Miner was restarted due to big difference between benchmarked speed and miner speed. Please re-benchmark GPU #{0} {1} with {2}. Otherwise, please reinstall the GPU drivers by following this guide.": {
+
+    },
+    "Checksum validation failed": {
+
+    },
+    "The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.": {
+
+    },
+    "There are no available algorithms to mine with GPU #{0} {1}. Please check you rig stability and stability of installed plugins.": {
+
+    },
+    "No available algorithms": {
+
+    },
+    "NiceHash Miner can't obtain CPU information": {
+
+    },
+    "Start NiceHash Miner with administrator rights.": {
+
+    },
+    "NiceHash Miner can’t monitor CPU": {
+
+    },
+    "Your motherboard is not reporting fan speed, temperature, or the load of the CPU. Most likely your CPU is not compatible with the NHM CPU monitoring tool.": {
+
+    },
+    "Currently mining is not profitable. Mining will be resumed once it will be profitable again.": {
+
+    }
   }
-}
+} 

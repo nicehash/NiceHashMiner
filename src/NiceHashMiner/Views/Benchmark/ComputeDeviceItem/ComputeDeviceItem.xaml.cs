@@ -1,7 +1,11 @@
-﻿using NHMCore;
+﻿using NHM.Common;
+using NHMCore;
 using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.Views.Common;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -20,10 +24,12 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         {
             InitializeComponent();
 
+ 
             DataContextChanged += ComputeDeviceItem_DataContextChanged;
             AlgorithmsGrid.Visibility = Visibility.Collapsed;
             WindowUtils.Translate(this);
         }
+
 
         private void ComputeDeviceItem_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -31,10 +37,12 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             {
                 _deviceData = dd;
                 DeviceActionsButtonContext.DataContext = dd;
+
                 return;
             }
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
         }
+
 
         private void Collapse()
         {
@@ -49,7 +57,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             AlgorithmsGridToggleButton.IsChecked = true;
             AlgorithmsGridToggleButtonHidden.IsChecked = true;
         }
-
+         
         private void DropDownAlgorithms_Button_Click(object sender, RoutedEventArgs e)
         {
             var tb = e.Source as ToggleButton;
@@ -68,6 +76,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         private readonly HashSet<ToggleButton> _toggleButtonsGuard = new HashSet<ToggleButton>();
         private void Action_Button_Click(object sender, RoutedEventArgs e)
         {
+
             if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
             {
                 _toggleButtonsGuard.Add(tButton);
@@ -82,6 +91,8 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 DeviceActionsButtonContext.Closed += closedHandler;
             }
         }
+
+
 
         #region Algorithm sorting
         private void SortAlgorithmButtonClick(object sender, RoutedEventArgs e)
@@ -115,43 +126,16 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         }
         #endregion Algorithm sorting
 
-        private void Button_Click_ClearAllSpeeds(object sender, RoutedEventArgs e)
-        {
-            var nhmConfirmDialog = new CustomDialog()
-            {
-                Title = Tr("Set default settings?"),
-                Description = Tr("Are you sure you would like to clear all speeds for {0}?", _deviceData.Dev.FullName),
-                OkText = Tr("Yes"),
-                CancelText = Tr("No"),
-                AnimationVisible = Visibility.Collapsed
-            };
-            DeviceActionsButtonContext.IsOpen = false;
-            nhmConfirmDialog.OKClick += (s, e1) => { _deviceData.ClearAllSpeeds(); };
-            CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
-        }
-
-        private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)
-        {
-            DeviceActionsButtonContext.IsOpen = false;
-            await ApplicationStateManager.StopSingleDevicePublic(_deviceData.Dev);
-        }
-
-        private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
-        {
-            DeviceActionsButtonContext.IsOpen = false;
-            await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
-        }
-
-        private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)
-        {
-            DeviceActionsButtonContext.IsOpen = false;
-            _deviceData.EnablebenchmarkedOnly();
-        }
 
         private void DeviceActionsButtonContext_Loaded(object sender, RoutedEventArgs e)
         {
-            var myControl = (Grid)DeviceActionsButtonContext.Template.FindName("deviceActionsGrid", DeviceActionsButtonContext);
-            WindowUtils.Translate(myControl);
+            if (DeviceActionsButtonContext.Template.FindName("ActionMenu", DeviceActionsButtonContext) is DeviceQuickActionMenu ActionsMenu)
+            {
+                var myControl = ActionsMenu.deviceActionsGrid;
+                WindowUtils.Translate(myControl);
+            }    
+
         }
+
     }
 }

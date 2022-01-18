@@ -17,6 +17,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -553,7 +554,7 @@ namespace NHMCore.Mining.Plugins
             EulaConfirm = RankedPlugins.Where(pcr => nonAcceptedluginsUUIDs.Contains(pcr.PluginUUID)).ToList();
             EulaConfirm.ForEach(el =>
             {
-                Logger.Info("MinerPluginsManager", $"Plugin is not accepted {el.PluginUUID}-{el.PluginName}. Skipping...");
+                Logger.Info("MinerPluginsManager", $"Plugin EULA is not accepted {el.PluginUUID}-{el.PluginName}. Skipping...");
                 el.IsUserActionRequired = true;
             });
             var nonAcceptedPluginsWithMissingBinaries = nonAcceptedlugins
@@ -961,6 +962,7 @@ namespace NHMCore.Mining.Plugins
 
             var addSuccess = false;
             var installSuccess = false;
+            var installResult = PluginInstallProgressState.Canceled;
             using (var minerInstall = new MinerPluginInstallTask())
             using (var tcs = CancellationTokenSource.CreateLinkedTokenSource(stop, minerInstall.CancelInstallToken))
             {
@@ -974,7 +976,6 @@ namespace NHMCore.Mining.Plugins
                         progress?.Report(Tuple.Create(PluginInstallProgressState.Pending, 0));
                         minerInstall.AddProgress(progress);
                     }
-                    var installResult = PluginInstallProgressState.Canceled;
                     if (pluginPackageInfo.PluginUUID == EthlargementIntegratedPlugin.Instance.PluginUUID)
                     {
                         installResult = await DownloadAndInstallEthlargementIntegratedPlugin(pluginPackageInfo, minerInstall, tcs.Token);
@@ -987,6 +988,7 @@ namespace NHMCore.Mining.Plugins
                 }
                 finally
                 {
+                    Logger.Info("MinerPluginsManager", $"DownloadAndInstall {pluginUUID} result: {installResult}");
                     PluginInstaller.InstalledPluginStatus(pluginUUID, installSuccess);
                     MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
                     if (addSuccess) BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
@@ -1025,6 +1027,17 @@ namespace NHMCore.Mining.Plugins
                 var downloadPluginResult = await MinersDownloadManager.DownloadFileAsync(plugin.PluginPackageURL, installDllPath, "plugin", downloadPluginProgressChangedEventHandler, stop);
                 var pluginPackageDownloaded = downloadPluginResult.downloadedFilePath;
                 var downloadPluginOK = downloadPluginResult.success;
+                if (!FilePathHashEqualsToDatabaseHash(downloadPluginResult.downloadedFilePath, plugin.PluginPackageHash, plugin.PluginName))
+                {
+                    //uninstall plugin dll
+                    if (File.Exists(downloadPluginResult.downloadedFilePath))
+                    {
+                        File.Delete(downloadPluginResult.downloadedFilePath);
+                    }
+                    AvailableNotifications.CreateFailedDownloadWrongHashBinary(plugin.PluginName);
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedWrongHashPlugin;
+                    return finalState;
+                }
                 if (!downloadPluginOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedDownloadingPlugin;
@@ -1045,6 +1058,17 @@ namespace NHMCore.Mining.Plugins
                 var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(plugin.MinerPackageURL, installBinsPath, "miner_bins", downloadMinerProgressChangedEventHandler, stop);
                 var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
                 var downloadMinerBinsOK = downloadMinerBinsResult.success;
+                if (!FilePathHashEqualsToDatabaseHash(downloadMinerBinsResult.downloadedFilePath, plugin.BinaryPackageHash, plugin.PluginName))
+                {
+                    //uninstall plugin binary
+                    if (File.Exists(downloadMinerBinsResult.downloadedFilePath))
+                    {
+                        File.Delete(downloadMinerBinsResult.downloadedFilePath);
+                    }
+                    AvailableNotifications.CreateFailedDownloadWrongHashBinary(plugin.PluginName);
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedWrongHashMiner;
+                    return finalState;
+                }
                 if (!downloadMinerBinsOK || stop.IsCancellationRequested)
                 {
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedDownloadingMiner;
@@ -1231,5 +1255,23 @@ namespace NHMCore.Mining.Plugins
             }
         }
         #endregion DownloadingInstalling
+
+        private static bool FilePathHashEqualsToDatabaseHash(string filepath, string databaseHash, string pluginName)
+        {
+            //make hash from file stream and compare to database hash
+            using (var sha256Hash = SHA256.Create())
+            using (var stream = File.OpenRead(filepath))
+            {
+                var hash = sha256Hash.ComputeHash(stream);
+                var hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                if (hashString == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+                {
+                    AvailableNotifications.CreateNullChecksumError(pluginName);
+                    Logger.Error("MinerPluginsManager", "Downloaded file is empty");
+                }
+
+                return hashString == databaseHash;
+            }
+        }
     }
 }

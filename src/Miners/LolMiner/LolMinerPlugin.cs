@@ -25,21 +25,21 @@ namespace LolMiner
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.31",
-                ExePath = new List<string> { "1.31", "lolMiner.exe" },
+                BinVersion = "1.35",
+                ExePath = new List<string> { "1.35", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.31/lolMiner_v1.31_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.35/lolMiner_v1.35_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "Miner for AMD gpus.",
+                PluginDescription = "Miner for AMD and Nvidia gpus.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
-        public override Version Version => new Version(16, 1);
+        public override Version Version => new Version(16, 3);
 
         public override string Name => "lolMiner";
 
@@ -56,6 +56,11 @@ namespace LolMiner
             var minDrivers = new Version(470, 5);
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
 
+            if (!isDriverSupported)
+            {
+                Logger.Error("LolMinerPlugin", $"GetSupportedAlgorithms installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
+            }
+
             var gpus = devices
                 .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported))
                 .Where(dev => dev is IGpuDevice)
@@ -70,8 +75,8 @@ namespace LolMiner
                 _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
                 var algorithms = GetSupportedAlgorithmsForDevice(gpu);
-                // add only AMD
-                if (algorithms.Count > 0 && gpu is AMDDevice) supported.Add(gpu, algorithms);
+                // add AMD and Nvidia
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
@@ -130,6 +135,8 @@ namespace LolMiner
             if (ids.Count() != 0)
             {
                 if (ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5 && device.Name.ToLower().Contains("r9 390")) return true;
+                // LHR re-benchmark
+                if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion < Version) return true;
             }
             return false;
         }

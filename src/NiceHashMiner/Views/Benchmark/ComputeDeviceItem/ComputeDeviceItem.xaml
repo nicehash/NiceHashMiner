@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
              xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels.Models"
              xmlns:converters="clr-namespace:NiceHashMiner.Converters"
+             xmlns:localComputeDeviceItem="clr-namespace:NiceHashMiner.Views.Benchmark.ComputeDeviceItem"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=viewModels:DeviceData}">
@@ -113,7 +114,7 @@
         </Style>
 
     </UserControl.Resources>
-    <Grid Background="Transparent">
+    <Grid Background="Transparent" x:Name="RootGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -164,22 +165,14 @@
                             <ToggleButton Style="{StaticResource MenuDropdownButton}"
                                           DataContext="{Binding .}"
                                           x:Name="ToggleButtonActions"
-                                          Click="Action_Button_Click"
+                                          Click="Action_Button_Click"                                          
                                           Margin="8,0,16,0" >
+
                                 <ToggleButton.ContextMenu>
                                     <ContextMenu x:Name="DeviceActionsButtonContext" Loaded="DeviceActionsButtonContext_Loaded" Unloaded="DeviceActionsButtonContext_Loaded">
                                         <ContextMenu.Template>
                                             <ControlTemplate>
-                                                <Grid DataContext="{Binding .}" x:Name="deviceActionsGrid">
-                                                    <Border Background="{DynamicResource BackgroundColor}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="4" />
-                                                    <StackPanel>
-                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StopBenchmarking" />
-                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStart, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Start Benchmark" Click="Button_Click_StartBenchmarking" />
-                                                        <!--<Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanStop, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Stop Benchmark" Click="Button_Click_StartBenchmarking" />-->
-                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanClearAllSpeeds, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Clear all speeds" Click="Button_Click_ClearAllSpeeds" />
-                                                        <Button Padding="16,7,16,7" Style="{StaticResource ContextMenuButton}" Visibility="{Binding CanClearAllSpeeds, Converter={StaticResource NulBoolToVisibilityConverter}}" Content="Enable Benchmarked Only" Click="Button_Click_EnablebenchmarkedOnly" />
-                                                    </StackPanel>
-                                                </Grid>
+                                                <local:DeviceQuickActionMenu x:Name="ActionMenu" DataContext="{Binding .}" />
                                             </ControlTemplate>
                                         </ContextMenu.Template>
                                     </ContextMenu>

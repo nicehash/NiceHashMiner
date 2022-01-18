@@ -2,10 +2,14 @@
 using NHM.Common.Configs;
 using NHM.Common.Enums;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NHM.Common
 {
@@ -46,6 +50,7 @@ namespace NHM.Common
         const string LOCATION_TEMPLATE = "{LOCATION}";
         const string PREFIX_TEMPLATE = "{PREFIX://}";
         const string PORT_TEMPLATE = "{:PORT}";
+
         //const string NAME_TEMPLATE = "NAME";
         internal static string NhmSocketAddress => _serviceCustomSettings.NhmSocketAddress;
         private static ServiceCustomSettings _serviceCustomSettings;
@@ -55,6 +60,9 @@ namespace NHM.Common
             (_serviceCustomSettings, _) = InternalConfigs.GetDefaultOrFileSettings(Paths.RootPath("custom_endpoints_settings.json"), ServiceCustomSettings.Defaults());
         }
         #endregion CUSTOM_ENDPOINTS
+
+        // TODO add option to disable DNSQ
+        public static bool UseDNSQ { get; set; } = true;
 
         private static (string name, bool ok) GetAlgorithmUrlName(AlgorithmType algorithmType)
         {
@@ -137,23 +145,27 @@ namespace NHM.Common
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
             {
                 return prefix
-                   + "algo-test." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
+                    + "algo-test." + miningLocation
+                    + ".nicehash.com:"
+                    + port;
             }
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
             {
                 return prefix
-                   + "stratum-dev." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
+                    + "stratum-dev." + miningLocation
+                    + ".nicehash.com:"
+                    + port;
             }
             //BuildTag.PRODUCTION
-            return prefix
-                   + name
-                   + "." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
+            var url = name + "." + miningLocation + ".nicehash.com";
+            if (UseDNSQ)
+            {
+                var urlT = Task.Run(async () => await DNSQuery.QueryOrDefault(url));
+                urlT.Wait();
+                var (IP, gotIP) = urlT.Result;
+                if (gotIP) url = IP;
+            }
+            return prefix + url + $":{port}";
         }
     }
 }

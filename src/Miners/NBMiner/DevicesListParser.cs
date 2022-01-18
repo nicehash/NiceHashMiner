@@ -21,7 +21,7 @@ namespace NBMiner
 
         public static Dictionary<string, int> ParseNBMinerOutput(string minerListDevicesJSON, IEnumerable<BaseDevice> nhmDevices)
         {
-            var minerDevices = JsonConvert.DeserializeObject<NbMinerDevices>(minerListDevicesJSON)?.devices ?? null;
+            var minerDevices = JsonConvert.DeserializeObject<NbMinerDevices>(minerListDevicesJSON)?.devices ?? Enumerable.Empty<Device>();
             var mappedDevices = nhmDevices
                 .Where(dev => dev is IGpuDevice)
                 .Cast<IGpuDevice>()

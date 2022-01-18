@@ -70,8 +70,8 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\netstandard2.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpCompress, Version=0.28.3.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SharpCompress.0.28.3\lib\netstandard2.0\SharpCompress.dll</HintPath>
+    <Reference Include="SharpCompress, Version=0.29.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpCompress.0.29.0\lib\netstandard2.0\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
@@ -199,6 +199,7 @@
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
     <Compile Include="Utils\PInvokeHelpers.cs" />
     <Compile Include="Utils\RunAsAdmin.cs" />
+    <Compile Include="Utils\SteamWatcher.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
@@ -254,14 +255,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj">
-      <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
-      <Name>MyDownloader.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj">
-      <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
-      <Name>MyDownloader.Extension</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\CryptoDredge\MP.CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>MP.CryptoDredge</Name>

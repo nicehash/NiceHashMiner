@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHMCore.Utils;
 using System;
@@ -186,7 +187,7 @@ namespace NHMCore.Notifications
             var sentence = "was updated";
             if (!success) sentence = "was not updated";
 
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmWasUpdated, Tr("NiceHash Miner was Updated"), Tr($"NiceHash Miner {sentence} to the latest version."));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmWasUpdated, Tr("NiceHash Miner was updated"), Tr($"NiceHash Miner {sentence} to the latest version."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -313,15 +314,18 @@ namespace NHMCore.Notifications
         public static void CreateNotProfitableInfo(bool shouldClear)
         {
             // clear old state
-            var profitNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Profit);
-            foreach (var profitNotif in profitNotifications)
+            try
             {
-                NotificationsManager.Instance.RemoveNotificationFromList(profitNotif);
+                var profitNotification = NotificationsManager.Instance.Notifications.FirstOrDefault(notif => notif.Group == NotificationsGroup.Profit);
+                if(profitNotification != null) NotificationsManager.Instance.Notifications.Remove(profitNotification);
             }
-
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
             if (!shouldClear)
             {
-                var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Profit, Tr("Mining not profitable"), Tr("Currently mining is not profitable. Mining will be stopped."));
+                var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Profit, Tr("Mining not profitable"), Tr("Currently mining is not profitable. Mining will be resumed once it will be profitable again."));
                 NotificationsManager.Instance.AddNotificationToList(notification);
             }
         }
@@ -332,9 +336,9 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateNoAvailableAlgorithmsInfo()
+        public static void CreateNoAvailableAlgorithmsInfo(int deviceId, string deviceName)
         {
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NoAvailableAlgorithms, Tr("No available algorithms"), Tr("There are no available algorithms to mine. Please check you rig stability and stability of installed plugins."));
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NoAvailableAlgorithms, Tr("No available algorithms"), Tr("There are no available algorithms to mine with GPU #{0} {1}. Please check you rig stability and stability of installed plugins.", deviceId.ToString(), deviceName));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -365,6 +369,175 @@ namespace NHMCore.Notifications
         public static void CreateWarningNVIDIADCHInfo()
         {
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NvidiaDCH, Tr("Nvidia DCH drivers detected"), Tr("Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateWarningHashrateDiffers(MiningPair mp, string s)
+        {
+            var comparison = Tr(s);
+
+            var content = Tr("We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\n" +
+                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
+            try
+            {
+                var hashrateNofitication = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.HashrateDeviatesFromBenchmark).FirstOrDefault();
+                if (hashrateNofitication != null)
+                {
+                    if (hashrateNofitication.NotificationNew == true)
+                    {
+                        //check if the same sentence was already written to notification
+                        var newSentence = Tr("We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\n" +
+                            "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
+                        if (hashrateNofitication.NotificationContent.Contains(newSentence))
+                        {
+                            return;
+                        }
+
+                        //add new content to prev content
+                        content = hashrateNofitication.NotificationContent + "\n\n" + newSentence;
+                    }
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(hashrateNofitication);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.HashrateDeviatesFromBenchmark, Tr("Miner speed fluctuations detected"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateFailedDownloadWrongHashBinary(string pluginName)
+        {
+            var content = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
+            try
+            {
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumBinary).FirstOrDefault();
+                if (pluginNotification != null)
+                {
+                    var newSentence = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
+                    if (pluginNotification.NotificationNew == true)
+                    {
+                        //add new content to prev content
+                        content = pluginNotification.NotificationContent + "\n" + newSentence;
+                    }
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.WrongChecksumBinary, Tr("Checksum validation failed"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);    
+        }
+
+        public static void CreateErrorExtremeHashrate(MiningPair mp)
+        {
+            var url = @"https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers";
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.ExtremeHashrate, Tr("Miner extreme speed detected"), Tr("Miner was restarted due to big difference between benchmarked speed and miner speed." +
+                " Please re-benchmark GPU #{0} {1} with {2}. Otherwise, please reinstall the GPU drivers by following this guide.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName), url);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateRestartedMinerInfo(DateTime dateTime, string minerName)
+        {
+            var content = Tr("Miner \"{0}\" was restarted at {1}", minerName, dateTime.ToString("HH:mm:ss MM/dd/yyyy"));
+            try
+            {
+                var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart).FirstOrDefault();
+                if (restartNotification != null)
+                {
+                    //add new content to prev content
+                    content = restartNotification.NotificationContent + "\n" + content;
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(restartNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.MinerRestart, Tr("Miner restarted"), Tr(content));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateNullChecksumError(string pluginName)
+        {
+            var content = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
+            try
+            {
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NullChecksum).FirstOrDefault();
+                if (pluginNotification != null)
+                {
+                    var newSentence = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
+                    if (pluginNotification.NotificationNew == true)
+                    {
+                        //add new content to prev content
+                        content = pluginNotification.NotificationContent + "\n" + newSentence;
+                    }
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NullChecksum, Tr("Checksum validation null"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+        
+        public static void CreateGamingStarted()
+        {
+            var gamingFinishedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingFinished).FirstOrDefault();
+            if (gamingFinishedNotification != null) gamingFinishedNotification.RemoveNotification();
+
+
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingStarted, Tr("Game started, mining is paused"), Tr("NiceHash Miner detected game is running and paused the mining. Mining will resume after the game is closed."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+        public static void CreateGamingFinished()
+        {
+            var gamingStartedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingStarted).FirstOrDefault();
+            if (gamingStartedNotification != null) gamingStartedNotification.RemoveNotification();
+
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateOutdatedNVIDIADriverWarning(Version minimum)
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverNVIDIAObsolete, Tr("Older NVIDIA driver version detected"), Tr("Older NVIDIA driver version was detected. Minimum is {0}. Please install latest NVIDIA drivers.", minimum.ToString()));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateOutdatedAMDDriverWarning(Version minimum)
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverAMDObsolete, Tr("Older AMD driver version detected"), Tr("Older AMD driver version was detected. Minimum is Adrenalin {0}. Please install latest AMD drivers.", minimum.ToString()));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateAdminRunRequired()
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.AdminRunRequired, Tr("NiceHash Miner can't obtain CPU information"), Tr("Start NiceHash Miner with administrator rights."));
+            notification.Action = new NotificationAction
+            {
+                Info = Tr("Run As Administrator"),
+                Action = () => { RunAsAdmin.SelfElevate(); }
+            };
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateMotherboardNotCompatible()
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.MotherboardNotCompatible, Tr("NiceHash Miner can’t monitor CPU"), Tr("Your motherboard is not reporting fan speed, temperature, or the load of the CPU. Most likely your CPU is not compatible with the NHM CPU monitoring tool."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

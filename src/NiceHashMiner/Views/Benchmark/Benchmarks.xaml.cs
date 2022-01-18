@@ -19,6 +19,8 @@ namespace NiceHashMiner.Views.Benchmark
             DataContextChanged += Benchmarks_DataContextChanged;
         }
 
+
+
         private void Benchmarks_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is MainVM mainVM)

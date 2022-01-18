@@ -6,8 +6,6 @@ namespace NHMCore.Utils
     public static class Links
     {
         public static string AddWDExclusionHelp_PRODUCTION => "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%3F?utm_source=NHM&utm_medium=Guide";
-
-
         public static string VisitUrl
         {
             get

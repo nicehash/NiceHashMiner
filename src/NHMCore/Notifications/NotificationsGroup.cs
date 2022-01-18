@@ -44,6 +44,17 @@ namespace NHMCore.Notifications
         LogArchiveUpload,
         MissingGPUs,
         NVMLInitFail,
-        NVMLLoadFail
+        NVMLLoadFail,
+        HashrateDeviatesFromBenchmark,
+        ExtremeHashrate,
+        WrongChecksumBinary,
+        MinerRestart,
+        NullChecksum,
+        GamingStarted,
+        GamingFinished,
+        DriverNVIDIAObsolete,
+        DriverAMDObsolete,
+        AdminRunRequired,
+        MotherboardNotCompatible,
     }
 }

@@ -23,6 +23,7 @@ namespace NiceHashMiner.Views.Settings
         public static readonly DependencyProperty DescriptionProperty =
             DependencyProperty.Register(nameof(Description), typeof(string), typeof(SettingsCheckBoxItem));
 
+
         public SettingsCheckBoxItem()
         {
             InitializeComponent();
@@ -50,8 +51,7 @@ namespace NiceHashMiner.Views.Settings
 
         private void ToggleClickHandler(object sender, RoutedEventArgs e)
         {
-            var tb = e.Source as ToggleButton;
-            if (ToggleButtonHidden == tb)
+            if (e.Source is ToggleButton tb && ToggleButtonHidden == tb)
             {
                 Enabled = !Enabled;
             }

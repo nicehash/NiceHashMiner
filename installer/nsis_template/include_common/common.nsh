@@ -29,6 +29,12 @@ Name "${PRODUCT_NAME}"
   !endif
 !macroend
 
+#AgreedWithTOS Use3rdPartyMinersTOS
+!macro readTOSVariables
+  ReadRegStr $GlobalTOS SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" AgreedWithTOS
+  ReadRegStr $PluginTOS SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" Use3rdPartyMinersTOS
+!macroend
+
 # avoid exit code 2
 !macro quitSuccess
   SetErrorLevel 0

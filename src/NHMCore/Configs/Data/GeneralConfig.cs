@@ -76,6 +76,11 @@ namespace NHMCore.Configs.Data
             get => MiningSettings.Instance.NVIDIAP0State;
             set => MiningSettings.Instance.NVIDIAP0State = value;
         }
+        public bool PauseMiningWhenGamingMode
+        {
+            get => MiningSettings.Instance.PauseMiningWhenGamingMode;
+            set => MiningSettings.Instance.PauseMiningWhenGamingMode = value;
+        }
         #endregion MiningSettings
 
         #region IdleMiningSettings
@@ -165,20 +170,10 @@ namespace NHMCore.Configs.Data
         #endregion IFTTTSettings
 
         #region ToS 'Settings'
-        public int Use3rdPartyMinersTOS
-        {
-            get => ToSSetings.Instance.Use3rdPartyMinersTOS;
-            set => ToSSetings.Instance.Use3rdPartyMinersTOS = value;
-        }
         public string Hwid
         {
             get => ApplicationStateManager.RigID();
             set => ToSSetings.Instance.Hwid = value;
-        }
-        public int AgreedWithTOS
-        {
-            get => ToSSetings.Instance.AgreedWithTOS;
-            set => ToSSetings.Instance.AgreedWithTOS = value;
         }
         #endregion ToS 'Settings'
 
@@ -304,6 +299,13 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.DisableVisualCRedistributableCheck;
             set => MiscSettings.Instance.DisableVisualCRedistributableCheck = value;
         }
+
+        public bool ResolveNiceHashDomainsToIPs
+        {
+            get => MiscSettings.Instance.ResolveNiceHashDomainsToIPs;
+            set => MiscSettings.Instance.ResolveNiceHashDomainsToIPs = value;
+        }
+
         #endregion MiscSettings
 
         #region Global Device settings
@@ -371,6 +373,7 @@ namespace NHMCore.Configs.Data
             DisableWindowsErrorReporting = true;
             ShowInternetConnectionWarning = true;
             NVIDIAP0State = false;
+            PauseMiningWhenGamingMode = false;
             MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;
             SwitchProfitabilityThreshold = 0.02; // percent
@@ -393,14 +396,14 @@ namespace NHMCore.Configs.Data
             ShowPowerColumns = false;
             ShowDiagColumns = true;
             UseEthlargement = false;
-            Use3rdPartyMinersTOS = 0;
             Hwid = "";
-            AgreedWithTOS = 0;
             KwhPrice = 0;
             DisplayPureProfit = false;
             DisplayTheme = "Light";
             ShowGPUPCIeBusIDs = false;
             ShowNotifications = new Dictionary<string, bool>();
+
+            ResolveNiceHashDomainsToIPs = true;
 
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;

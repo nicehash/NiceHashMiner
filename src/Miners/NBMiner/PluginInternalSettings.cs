@@ -169,8 +169,222 @@ namespace NBMiner
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "nbminer_lhr",
-                    LongName = "-lhr",
-                    DefaultValue = "-1",
+                    LongName = "--lhr",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// ethash new low power LHR mode, add -lhr-mode option.
+                /// -lhr-mode 2 is the default LHR mode, which is the new lower power mode.
+                /// -lhr-mode 1 changes LHR mode to old version, which is the same as v39.2
+                /// -lhr-mode 1 is suitable for only power limit bounded GPU, can achieve higher hashrate than mode 2
+                /// -lhr-mode 2 is able to achieve lower average power and temperature. espacially suitable for GPUs with gddr6x e.g.3070ti, 3080, 3080ti.
+                /// Power consumtion is fluctuating in this mode, better be used with locked core clock.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_lhrMode",
+                    LongName = "--lhr-mode",
+                    DefaultValue = "2"
+                },
+                /// <summary>
+                /// -lhr-reduce-value: the amount to reduce -lhr value on a single -lhr tuning. defaults to 0.5.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lhr_reduceValue",
+                    LongName = "--lhr-reduce-value",
+                    DefaultValue = "0.5",
+                },
+                /// <summary>
+                /// -lhr-reduce-time: When LHR lock is detected, and the time since the last lock exceeds this value, the -lhr reduce will not perform. defaults to 15, which means 15 minutes.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lhr_reduceTime",
+                    LongName = "--lhr-reduce-time",
+                    DefaultValue = "15",
+                },
+                /// <summary>
+                /// -lhr-reduce-limit: the maximum number of times to reduce -lhr value, defaults to 6
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lhr_reduceLimit",
+                    LongName = "--lhr-reduce-limit",
+                    DefaultValue = "6",
+                },
+                /// <summary>
+                /// feature: disable SNI extension for ssl connections by default, can be enabled with -enable-sni option
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "enable_sni",
+                    LongName = "--enable-sni"
+                },
+                /// <summary>
+                /// feature: add -cmd-output option to specify command line outpu to stdout or stderr, 1=stdout, 2=stderr, defaults to 2.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "cmdOutput",
+                    LongName = "--cmd-output",
+                    DefaultValue = "2"
+                },
+                /// <summary>
+                /// Set power limitation of GPU.
+                /// Set PL in watts: -pl 200
+                /// Set PL in percentage of default PowerLimit: -pl 75% (in Windows bat file, need dual % , -pl 75%%)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "powerLimit",
+                    LongName = "-power-limit",
+                    ShortName = "-pl",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set core clock in MHz.
+                /// Set clock offsets: -cclock 100 (Windows only)
+                /// Set locked clocks: -cclock @1500
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "coreClock",
+                    LongName = "-cclock",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set memory clock offsets in MHz (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "memoryClock",
+                    LongName = "-mclock",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set locked core voltage of GPU in mV, support Turing and newer GPUs. (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "lockedVoltage",
+                    LongName = "-lock-cv",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set fan speed in percentage of GPU. (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "fanSpeed",
+                    LongName = "-fan",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Turn off the New job line in console.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "logNoJob",
+                    LongName = "-log-no-job",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set to change the cycle of Summary table show in console and log, in seconds, defaults to 30.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "logCycle",
+                    LongName = "-log-cycle",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set power limitation of GPU.
+                /// Set PL in watts: -pl 200
+                /// Set PL in percentage of default PowerLimit: -pl 75% (in Windows bat file, need dual % , -pl 75%%)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "powerLimitLong",
+                    LongName = "--power-limit",
+                    ShortName = "--pl",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set core clock in MHz.
+                /// Set clock offsets: -cclock 100 (Windows only)
+                /// Set locked clocks: -cclock @1500
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "coreClockLong",
+                    LongName = "--cclock",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set memory clock offsets in MHz (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "memoryClockLong",
+                    LongName = "--mclock",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set locked core voltage of GPU in mV, support Turing and newer GPUs. (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "lockedVoltageLong",
+                    LongName = "--lock-cv",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set fan speed in percentage of GPU. (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "fanSpeedLong",
+                    LongName = "--fan",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Turn off the New job line in console.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "logNoJobLong",
+                    LongName = "--log-no-job",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set to change the cycle of Summary table show in console and log, in seconds, defaults to 30.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "logCycleLong",
+                    LongName = "--log-cycle",
                     Delimiter = ","
                 },
             },

@@ -91,6 +91,12 @@
     <Compile Include="Converters\TemperatureValueToText.cs" />
     <Compile Include="CustomDialogManager.cs" />
     <Compile Include="IThemeSetter.cs" />
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceDataCopy.xaml.cs">
+      <DependentUpon>DeviceDataCopy.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceQuickActionMenu.xaml.cs">
+      <DependentUpon>DeviceQuickActionMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ManuallyEnterBTCTutorial.xaml.cs">
       <DependentUpon>ManuallyEnterBTCTutorial.xaml</DependentUpon>
     </Compile>
@@ -270,6 +276,18 @@
     <Compile Include="_DESIGN_DEVELOP\__DESIGN_DEVELOP.xaml.cs">
       <DependentUpon>__DESIGN_DEVELOP.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\Xaml\Icons\NHMLogoBigDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Benchmark\ComputeDeviceItem\DeviceDataCopy.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Benchmark\ComputeDeviceItem\DeviceQuickActionMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ManuallyEnterBTCTutorial.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

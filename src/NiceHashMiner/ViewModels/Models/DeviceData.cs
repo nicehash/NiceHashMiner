@@ -24,6 +24,31 @@ namespace NiceHashMiner.ViewModels.Models
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
 
+        public List<ComputeDevice> CPUs
+        {
+            get => AvailableDevices.Devices
+                .Where(dev => dev.DeviceType == DeviceType.CPU)
+                .Where(dev => dev.Uuid != Dev.Uuid)
+                .ToList();
+        }
+
+        public List<ComputeDevice> GPUs
+        {
+            get => AvailableDevices.Devices
+                .Where(dev => dev.DeviceType != DeviceType.CPU)
+                .Where(dev => dev.Uuid != Dev.Uuid)
+                .ToList();
+        }
+
+        public List<ComputeDevice> DevicesOfSameType
+        {
+            get
+            {
+                return Dev.DeviceType == DeviceType.CPU ? CPUs : GPUs;
+            }
+        }
+
+
         public DeviceMiningStats DeviceMiningStats { get; private set; } = null;
         public string DeviceMiningStatsProfitability { get; private set; } = MISSING_INFO;
         public string DeviceMiningStatsPluginAlgo { get; private set; } = MISSING_INFO;
@@ -59,6 +84,10 @@ namespace NiceHashMiner.ViewModels.Models
 
         public bool CanClearAllSpeeds => !(Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining);
         public bool CanStopBenchmark => Dev.State == DeviceState.Benchmarking;
+
+
+        public bool IsOnlyDeviceOfType => AvailableDevices.Devices.Count(dev => dev.DeviceType == Dev.DeviceType) > 1;
+
 
         public List<string> AlgoNames { get; private set; }
 
@@ -128,7 +157,9 @@ namespace NiceHashMiner.ViewModels.Models
 
             MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
             RefreshDiag();
+
         }
+
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -223,6 +254,7 @@ namespace NiceHashMiner.ViewModels.Models
             }
         }
 
+
         public float Load { get; private set; } = -1;
 
         public float Temp { get; private set; } = -1;
@@ -269,7 +301,20 @@ namespace NiceHashMiner.ViewModels.Models
             }
         }
 
-        public void EnablebenchmarkedOnly()
+        public void CopySettingsFromAnotherDevice(ComputeDevice source)
+        {
+            foreach (var algoSource in source.AlgorithmSettings)
+            {
+                var algoDestination = Dev.AlgorithmSettings.FirstOrDefault(algo => algo.AlgorithmStringID == algoSource.AlgorithmStringID);
+                if (algoDestination == null) continue;
+                algoDestination.BenchmarkSpeed = algoSource.BenchmarkSpeed;
+                algoDestination.SecondaryBenchmarkSpeed = algoSource.SecondaryBenchmarkSpeed;
+                algoDestination.PowerUsage = algoSource.PowerUsage;
+                algoDestination.ExtraLaunchParameters = algoSource.ExtraLaunchParameters;
+            }
+        }
+
+        public void EnableBenchmarkedOnly()
         {
             foreach (var a in Dev.AlgorithmSettings)
             {

@@ -1,5 +1,6 @@
 ﻿using NHM.DeviceDetection.NVIDIA;
 using System;
+using System.Linq;
 
 namespace NHM.DeviceDetection.WMI
 {
@@ -7,16 +8,14 @@ namespace NHM.DeviceDetection.WMI
     {
         public static NvidiaSmiDriver ParseNvSmiDriver(string windowsDriverVersion)
         {
-            var winVerArray = windowsDriverVersion.Split('.');
-            //we must parse windows driver format (ie. 25.21.14.1634) into nvidia driver format (ie. 416.34)
-            //nvidia format driver is inside last two elements of splited windows driver string (ie. 14 + 1634)
-            if (winVerArray.Length >= 2)
+            // We must parse windows driver format (ie. 25.21.14.1634) into nvidia driver format (ie. 416.34)
+            // NVIDIA format driver is inside last two elements of splited windows driver string (ie. 14 + 1634) we transform that string into NVIDIA version (ie. 416.34)
+            var mergedReversedVersionsString = string.Join("", windowsDriverVersion.Replace(".", "").Reverse());
+            if (mergedReversedVersionsString.Length >= 5)
             {
-                var firstPartOfVersion = winVerArray[winVerArray.Length - 2];
-                var secondPartOfVersion = winVerArray[winVerArray.Length - 1];
-                var shortVerArray = firstPartOfVersion + secondPartOfVersion;
-                var driverFull = shortVerArray.Remove(0, 1).Insert(3, ".").Split('.'); // we transform that string into "nvidia" version (ie. 416.83)
-                var driver = new NvidiaSmiDriver(Convert.ToInt32(driverFull[0]), Convert.ToInt32(driverFull[1])); //we create driver object from string version
+                var left = string.Join("", mergedReversedVersionsString.Skip(2).Take(3).Reverse());
+                var right = string.Join("", mergedReversedVersionsString.Take(2).Reverse());
+                var driver = new NvidiaSmiDriver(Convert.ToInt32(left), Convert.ToInt32(right));
 
                 return driver;
             }
