@@ -40,16 +40,6 @@ namespace NHMCore.Mining.Grouping
 
         public BenchmarkPerformanceType PerformanceType { get; set; } = BenchmarkPerformanceType.Standard; // TODO TEMP
 
-        //public BenchmarkPerformanceType GetSuitablePerformanceType(AlgorithmContainer algo)
-        //{
-        //    if (algo.ExtraLaunchParameters.Contains("-LHR"))
-        //    {
-        //        return BenchmarkPerformanceType.Precise;
-        //    }
-        //    return BenchmarkPerformanceType.Standard;
-        //}
-
-
         private async Task<object> BenchmarkAlgorithm(AlgorithmContainer algo, CancellationToken stop)
         {
             if (algo == null)
