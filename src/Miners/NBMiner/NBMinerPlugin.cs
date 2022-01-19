@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NBMiner
 {
-    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
         public NBMinerPlugin()
         {
@@ -43,7 +43,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 6);
+        public override Version Version => new Version(17, 0);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -165,6 +165,28 @@ namespace NBMiner
                 Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
             }
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        {
+            var minNVIDIA = new Version(411, 31);
+            if (device is CUDADevice nvidia)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minNVIDIA) return (-2, minNVIDIA);
+                return (0, minNVIDIA);
+            }
+            return (-1, new Version(0, 0));
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            var minAMD = new Version(21, 5, 2);
+            if (device is AMDDevice amd)
+            {
+                if (amd.DEVICE_AMD_DRIVER < minAMD) return (-2, minAMD);
+                return (0, minAMD);
+            }
+            return (-1, new Version(0, 0));
         }
     }
 }

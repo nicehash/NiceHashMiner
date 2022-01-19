@@ -8,10 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NHM.MinerPluginToolkitV1.Interfaces;
 
 namespace Excavator
 {
-    public partial class ExcavatorPlugin : PluginBase
+    public partial class ExcavatorPlugin : PluginBase, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public ExcavatorPlugin()
         {
@@ -39,7 +40,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(16, 1);
+        public override Version Version => new Version(17, 0);
 
         public override string Name => "Excavator";
 
@@ -99,6 +100,28 @@ namespace Excavator
                 Logger.Error("ExcavatorPlugin", $"ShouldReBenchmarkAlgorithmOnDevice {e}");
             }
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            Version min = new Version(461, 33);
+            if(device is CUDADevice)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+            }
+            else return (-1, new Version(0, 0));
+            return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        {
+            Version min = new Version(411, 31);
+            if (device is CUDADevice)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+            }
+            else return (-1, new Version(0,0));
+            return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
         }
     }
 }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace WildRig
 {
-    public partial class WildRigPlugin : PluginBase, IDevicesCrossReference
+    public partial class WildRigPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended
     {
         public WildRigPlugin()
         {
@@ -39,7 +39,7 @@ namespace WildRig
 
         public override string PluginUUID => "0a07d6a0-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 0);
+        public override Version Version => new Version(17, 0);
 
         public override string Name => "WildRig";
 
@@ -101,6 +101,17 @@ namespace WildRig
             { }
             // nothing new
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            Version min = new Version(21, 5, 2);
+            if (device is AMDDevice amd)
+            {
+                if (amd.DEVICE_AMD_DRIVER < min) return (-2, min);
+                else return (0, amd.DEVICE_AMD_DRIVER);
+            }
+            return (-1, new Version(0, 0));
         }
     }
 }

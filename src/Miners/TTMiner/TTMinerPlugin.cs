@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace TTMiner
 {
-    public partial class TTMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class TTMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
         public TTMinerPlugin()
         {
@@ -41,7 +41,7 @@ namespace TTMiner
 
         public override string PluginUUID => "074d4a80-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 1);
+        public override Version Version => new Version(17, 0);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 
@@ -135,6 +135,28 @@ namespace TTMiner
                 if (ids.Contains(AlgorithmType.KAWPOW) && benchmarkedPluginVersion.Major == 10 && benchmarkedPluginVersion.Minor < 1) return true;
             }
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            Version min = new Version(461, 33);
+            if (device is CUDADevice)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+            }
+            else return (-1, new Version(0, 0));
+            return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        {
+            Version min = new Version(411, 31);
+            if (device is CUDADevice)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+            }
+            else return (-1, new Version(0, 0));
+            return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
         }
     }
 }
