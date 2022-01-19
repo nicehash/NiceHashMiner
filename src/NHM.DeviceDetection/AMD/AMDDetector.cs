@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 namespace NHM.DeviceDetection.AMD
 {
     using NHM.UUID;
+    using System.IO;
+
     internal static class AMDDetector
     {
         private const string Tag = "AMDDetector";
@@ -98,24 +100,47 @@ namespace NHM.DeviceDetection.AMD
                         var name = oclDev._CL_DEVICE_BOARD_NAME_AMD;
                         var codename = oclDev._CL_DEVICE_NAME;
                         var gpuRAM = oclDev._CL_DEVICE_GLOBAL_MEM_SIZE;
-                        var infoToHashed = $"{oclDev.DeviceID}--{oclDev.BUS_ID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
+                        var infoToHashedNew = $"{oclDev.DeviceID}--{oclDev.BUS_ID}--{DeviceType.AMD}--{codename}--{name}";
+                        var infoToHashedOld = $"{oclDev.DeviceID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
                         // cross ref info from vid controllers with bus id
                         var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.BUS_ID).FirstOrDefault() ?? null;
                         if (vidCtrl != null)
                         {
                             infSection = vidCtrl.InfSection;
-                            infoToHashed += vidCtrl.PnpDeviceID;
+                            infoToHashedOld += vidCtrl.PnpDeviceID;
+                            infoToHashedNew += vidCtrl.PnpDeviceID;
                         }
                         else
                         {
                             Logger.Info(Tag, $"TryQueryAMDDevicesAsync cannot find VideoControllerData with bus ID {oclDev.BUS_ID}");
                         }
-                        var uuidHEX = UUID.GetHexUUID(infoToHashed);
-                        var uuid = $"AMD-{uuidHEX}";
+                        var uuidHEXOld = UUID.GetHexUUID(infoToHashedOld);
+                        var uuidHEXNew = UUID.GetHexUUID(infoToHashedNew);
+                        var uuidOld = $"AMD-{uuidHEXOld}";
+                        var uuidNew = $"AMD-{uuidHEXNew}";
                         // append VRAM to distinguish AMD GPUs
+
+                        //transition from old uuid's to new
+                        try
+                        {
+                            var cfgPathOld = System.Environment.CurrentDirectory + "\\configs\\device_settings_" + uuidOld+ ".json";
+                            var cfgPathNew = System.Environment.CurrentDirectory + "\\configs\\device_settings_" + uuidNew + ".json";
+                            if (File.Exists(cfgPathOld) && !File.Exists(cfgPathNew))//rename file and rename first line
+                            {
+                                string configText = System.IO.File.ReadAllText(cfgPathOld);
+                                configText = configText.Replace(uuidOld, uuidNew);
+                                File.WriteAllText(cfgPathNew, configText);
+                                File.Delete(cfgPathOld);
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            Logger.Info(Tag, $"Error when transitioning from old to new AMD GPU config file. " + e.Message);
+                        }
+
                         var vramPart = convertSize(gpuRAM);
                         var setName = vramPart != null ? $"{name} {vramPart}" : name;
-                        var bd = new BaseDevice(DeviceType.AMD, uuid, setName, (int)oclDev.DeviceID);
+                        var bd = new BaseDevice(DeviceType.AMD, uuidNew, setName, (int)oclDev.DeviceID);
                         var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
                         amdDevices.Add(amdDevice);
                     }

@@ -12,6 +12,15 @@ namespace Excavator
 
         internal static MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig { get; set; } = new MinerApiMaxTimeoutSetting { GeneralTimeout = DefaultTimeout };
 
+        internal static MinerBenchmarkTimeSettings BenchmarkTimeSettings = new MinerBenchmarkTimeSettings
+        {
+            PerAlgorithm = new Dictionary<BenchmarkPerformanceType, Dictionary<string, int>>(){
+                { BenchmarkPerformanceType.Quick, new Dictionary<string, int>(){ { "KAWPOW", 160 } } },
+                { BenchmarkPerformanceType.Standard, new Dictionary<string, int>(){ { "KAWPOW", 180 } } },
+                { BenchmarkPerformanceType.Precise, new Dictionary<string, int>(){ { "KAWPOW", 260 } } }
+            }
+        };
+
         internal static MinerOptionsPackage MinerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption>
