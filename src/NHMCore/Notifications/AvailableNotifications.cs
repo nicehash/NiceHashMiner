@@ -442,6 +442,33 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);    
         }
 
+        public static void CreateFailedDownloadWrongHashDll(string pluginName)
+        {
+            var content = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
+            try
+            {
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumDll).FirstOrDefault();
+                if (pluginNotification != null)
+                {
+                    var newSentence = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
+                    if (pluginNotification.NotificationNew == true)
+                    {
+                        //add new content to prev content
+                        content = pluginNotification.NotificationContent + "\n" + newSentence;
+                    }
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.WrongChecksumDll, Tr("Checksum validation failed dll"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
         public static void CreateErrorExtremeHashrate(MiningPair mp)
         {
             var url = @"https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers";
