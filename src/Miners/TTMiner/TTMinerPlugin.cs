@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace TTMiner
 {
-    public partial class TTMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
+    public partial class TTMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
         public TTMinerPlugin()
         {
@@ -41,7 +41,7 @@ namespace TTMiner
 
         public override string PluginUUID => "074d4a80-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(16, 1);
         public override string Name => "TTMiner";
         public override string Author => "info@nicehash.com";
 

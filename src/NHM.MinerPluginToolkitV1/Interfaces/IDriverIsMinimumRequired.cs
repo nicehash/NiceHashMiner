@@ -5,8 +5,8 @@ using System.Text;
 
 namespace NHM.MinerPluginToolkitV1.Interfaces
 {
-    public interface IDriverIsMinimumRequired
-    {
-        (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device);
-    }
+    //public interface IDriverIsMinimumRequired
+    //{
+    //    (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device);
+    //}
 }

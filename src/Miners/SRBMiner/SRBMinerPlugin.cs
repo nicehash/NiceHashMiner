@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SRBMiner
 {
-    public partial class SRBMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended
+    public partial class SRBMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRecommended
     {
         public SRBMinerPlugin()
         {
@@ -37,7 +37,7 @@ namespace SRBMiner
             };
         }
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(16, 0);
 
         public override string Name => "SRBMiner";
 

@@ -326,31 +326,31 @@ namespace NHMCore.Mining.Plugins
         #region DriverRequirement
         void CheckDevicesDriverVersionsAndNotify(IEnumerable<BaseDevice> devices)
         {
-            List<(int, BaseDevice, Version)> listOfOldDrivers = new List<(int, BaseDevice, Version)>();
-            foreach(BaseDevice dev in devices)
-            {
-                if (_plugin is IDriverIsMinimumRequired minReq)
-                {
-                    (int ok, Version ver) = minReq.IsDriverMinimumRequired(dev);
-                    if (ok == -2)
-                    {
-                        listOfOldDrivers.Add((0, dev, ver));//0 == required
-                        continue;//dont need recommended in this case
-                    }
-                }
-                if (_plugin is IDriverIsMinimumRecommended minRec)
-                {
-                    (int ok, Version ver) = minRec.IsDriverMinimumRecommended(dev);
-                    if (ok == -2)
-                    {
-                        listOfOldDrivers.Add((1, dev, ver));//1 == recommended
-                    }
-                }
-            }
-            if (listOfOldDrivers.Any())
-            {
-                AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, listOfOldDrivers);
-            }
+            //List<(int, BaseDevice, Version)> listOfOldDrivers = new List<(int, BaseDevice, Version)>();
+            //foreach(BaseDevice dev in devices)
+            //{
+            //    if (_plugin is IDriverIsMinimumRequired minReq)
+            //    {
+            //        (int ok, Version ver) = minReq.IsDriverMinimumRequired(dev);
+            //        if (ok == -2)
+            //        {
+            //            listOfOldDrivers.Add((0, dev, ver));//0 == required
+            //            continue;//dont need recommended in this case
+            //        }
+            //    }
+            //    if (_plugin is IDriverIsMinimumRecommended minRec)
+            //    {
+            //        (int ok, Version ver) = minRec.IsDriverMinimumRecommended(dev);
+            //        if (ok == -2)
+            //        {
+            //            listOfOldDrivers.Add((1, dev, ver));//1 == recommended
+            //        }
+            //    }
+            //}
+            //if (listOfOldDrivers.Any())
+            //{
+            //    AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, listOfOldDrivers);
+            //}
         }
 
         #endregion

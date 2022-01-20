@@ -12,7 +12,7 @@ using NHM.MinerPluginToolkitV1.Interfaces;
 
 namespace Excavator
 {
-    public partial class ExcavatorPlugin : PluginBase, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+    public partial class ExcavatorPlugin : PluginBase //, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public ExcavatorPlugin()
         {
@@ -40,7 +40,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(16, 1);
 
         public override string Name => "Excavator";
 

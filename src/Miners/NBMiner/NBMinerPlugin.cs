@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NBMiner
 {
-    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
+    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
         public NBMinerPlugin()
         {
@@ -43,7 +43,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(16, 6);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";

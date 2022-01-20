@@ -122,12 +122,12 @@ namespace NHM.DeviceDetection.AMD
 
                         //transition from old uuid's to new
                         try
-                        {
-                            var cfgPathOld = System.Environment.CurrentDirectory + "\\configs\\device_settings_" + uuidOld+ ".json";
-                            var cfgPathNew = System.Environment.CurrentDirectory + "\\configs\\device_settings_" + uuidNew + ".json";
+                        {                                
+                            var cfgPathOld = Paths.ConfigsPath($"device_settings_{uuidOld}.json");
+                            var cfgPathNew = Paths.ConfigsPath($"device_settings_{uuidNew}.json");
                             if (File.Exists(cfgPathOld) && !File.Exists(cfgPathNew))//rename file and rename first line
                             {
-                                string configText = System.IO.File.ReadAllText(cfgPathOld);
+                                string configText = File.ReadAllText(cfgPathOld);
                                 configText = configText.Replace(uuidOld, uuidNew);
                                 File.WriteAllText(cfgPathNew, configText);
                                 File.Delete(cfgPathOld);
@@ -142,8 +142,9 @@ namespace NHM.DeviceDetection.AMD
                         var setName = vramPart != null ? $"{name} {vramPart}" : name;
                         var bd = new BaseDevice(DeviceType.AMD, uuidNew, setName, (int)oclDev.DeviceID);
                         var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
-                        var thisDeviceDriverVersion = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID).AdrenalinVersion;
-                        if(thisDeviceDriverVersion != "") amdDevice.DEVICE_AMD_DRIVER = new Version(thisDeviceDriverVersion);
+                        //// BUM HERE!!!!
+                        //var thisDeviceDriverVersion = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID).AdrenalinVersion;
+                        //if(thisDeviceDriverVersion != "") amdDevice.DEVICE_AMD_DRIVER = new Version(thisDeviceDriverVersion);
                         amdDevices.Add(amdDevice);
                     }
                 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace LolMiner
 {
-    public partial class LolMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+    public partial class LolMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public LolMinerPlugin()
         {
@@ -39,7 +39,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(16, 3);
 
         public override string Name => "lolMiner";
 

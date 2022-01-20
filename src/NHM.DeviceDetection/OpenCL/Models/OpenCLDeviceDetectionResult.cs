@@ -10,6 +10,6 @@ namespace NHM.DeviceDetection.OpenCL.Models
         public string ErrorString { get; set; }
         public List<OpenCLPlatform> Platforms { get; set; }
         public string Status { get; set; }
-        public List<AMDBusIDVersionPair> AMDBusIDVersionPairs { get; set; }
+        //public List<AMDBusIDVersionPair> AMDBusIDVersionPairs { get; set; } // this is broken
     }
 }

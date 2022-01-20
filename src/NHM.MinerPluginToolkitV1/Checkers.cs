@@ -100,7 +100,7 @@ namespace NHM.MinerPluginToolkitV1
             return false;
         }
 
-        private static int[] _supportedMajorVersions = new int[] { 16 };
+        private static int[] _supportedMajorVersions = new int[] { 16 /*, 17 add 17 version when IDriverIsMinimumRecommended and IDriverIsMinimumRequired is fixed*/ };
         public static IEnumerable<int> SupportedMajorVersions => _supportedMajorVersions;
         public static bool IsMajorVersionSupported(int major)
         {

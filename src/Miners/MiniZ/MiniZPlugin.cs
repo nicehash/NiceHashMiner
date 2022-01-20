@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MiniZ
 {
-    public partial class MiniZPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
+    public partial class MiniZPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
         public MiniZPlugin()
         {
@@ -39,7 +39,7 @@ namespace MiniZ
         }
         public override string PluginUUID => "eda6abd0-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(16, 0);
 
         public override string Name => "MiniZ";
 

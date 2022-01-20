@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace ZEnemy
 {
-    public partial class ZEnemyPlugin : PluginBase, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+    public partial class ZEnemyPlugin : PluginBase //, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public ZEnemyPlugin()
         {
@@ -41,7 +41,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(16, 1);
 
         public override string Name => "ZEnemy";
 

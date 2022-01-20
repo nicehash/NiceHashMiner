@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GMinerPlugin
 {
-    public partial class GMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+    public partial class GMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public GMinerPlugin()
         {
@@ -42,7 +42,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "e7a58030-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(16, 2);
 
         public override string Name => "GMinerCuda9.0+";
 
