@@ -1,4 +1,6 @@
-﻿namespace NHM.Common.Device
+﻿using System;
+
+namespace NHM.Common.Device
 {
     public class AMDDevice : BaseDevice, IGpuDevice
     {
@@ -11,8 +13,7 @@
             OpenCLPlatformID = openCLPlatformID;
         }
 
-        // TODO does it make sense to set static AMD driver version
-
+        public Version DEVICE_AMD_DRIVER = new Version(0, 0);
         public int OpenCLPlatformID { get; }
 
         public int PCIeBusID { get; }

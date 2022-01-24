@@ -1,10 +1,13 @@
 ﻿using NHM.Common;
+using NHM.Common.Device;
 using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHMCore.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Forms;
 using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
@@ -351,6 +354,11 @@ namespace NHMCore.Notifications
             var sentence = Tr("was uploaded.");
             if (!success) sentence = Tr("was not uploaded. Please contact our support team for help.");
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.LogArchiveUpload, Tr("Log archive upload result"), Tr("The log archive with the following ID: {0}", uuid) + " " + sentence);
+            notification.Action = new NotificationAction
+            {
+                Info = Tr("Copy to clipboard"),
+                Action = () => { Clipboard.SetText(uuid); }
+            };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -436,6 +444,33 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);    
         }
 
+        public static void CreateFailedDownloadWrongHashDll(string pluginName)
+        {
+            var content = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
+            try
+            {
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumDll).FirstOrDefault();
+                if (pluginNotification != null)
+                {
+                    var newSentence = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
+                    if (pluginNotification.NotificationNew == true)
+                    {
+                        //add new content to prev content
+                        content = pluginNotification.NotificationContent + "\n" + newSentence;
+                    }
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.WrongChecksumDll, Tr("Checksum validation failed dll"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
         public static void CreateErrorExtremeHashrate(MiningPair mp)
         {
             var url = @"https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers";
@@ -511,17 +546,50 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
-
-        public static void CreateOutdatedNVIDIADriverWarning(Version minimum)
+        public static void CreateOutdatedDriverWarningForPlugin(string plugin, List<(int, BaseDevice, Version)> listOfOldDrivers)
         {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverNVIDIAObsolete, Tr("Older NVIDIA driver version detected"), Tr("Older NVIDIA driver version was detected. Minimum is {0}. Please install latest NVIDIA drivers.", minimum.ToString()));
+            string name = "Detected older driver versions (" + plugin + ")";
+            string content = "Older driver versions have been detected on this system, and they may cause problems with " + plugin + ". Please update them.\n";
+            var recommends = listOfOldDrivers.Where(dev => dev.Item1 == 0);
+            var criticals = listOfOldDrivers.Where(dev => dev.Item1 == 1);
+            if (recommends.Any())
+            {
+                content += "Lower than recommended:\n";
+                var nvidias = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
+                var amds = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
+                if (nvidias.Any()) {
+                    content += "\tNvidia: at least "+nvidias.FirstOrDefault().Item3+"\n";
+                }
+                if (amds.Any())
+                {
+                    content += "\tAMD: (adrenalin)\n";
+                    foreach(var amd in amds)
+                    {
+                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.Item3 + "\n";
+                    }
+                }
+            }
+            if (criticals.Any())
+            {
+                content += "Lower than required:\n";
+                var nvidias = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
+                var amds = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
+                if (nvidias.Any())
+                {
+                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().Item3 + "\n";
+                }
+                if (amds.Any())
+                {
+                    content += "\tAMD: (adrenalin)\n";
+                    foreach (var amd in amds)
+                    {
+                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.Item3 + "\n";
+                    }
+                }
+            }
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriversObsolete, Tr(name), Tr(content));
             NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
-        public static void CreateOutdatedAMDDriverWarning(Version minimum)
-        {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverAMDObsolete, Tr("Older AMD driver version detected"), Tr("Older AMD driver version was detected. Minimum is Adrenalin {0}. Please install latest AMD drivers.", minimum.ToString()));
-            NotificationsManager.Instance.AddNotificationToList(notification);
+            Logger.Warn(plugin, content);
         }
 
         public static void CreateAdminRunRequired()

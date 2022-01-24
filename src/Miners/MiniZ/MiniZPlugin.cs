@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MiniZ
 {
-    public partial class MiniZPlugin : PluginBase, IDevicesCrossReference
+    public partial class MiniZPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
         public MiniZPlugin()
         {
@@ -109,6 +109,28 @@ namespace MiniZ
                 Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
             }
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            Version min = new Version(461, 33);
+            if (device is CUDADevice)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+            }
+            else return (-1, new Version(0, 0));
+            return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        {
+            Version min = new Version(411, 31);
+            if (device is CUDADevice)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+            }
+            else return (-1, new Version(0, 0));
+            return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
         }
     }
 }

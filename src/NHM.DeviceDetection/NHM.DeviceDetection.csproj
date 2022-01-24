@@ -49,7 +49,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AMD\AMDDetector.cs" />
-    <Compile Include="AMD\AmdDriver.cs" />
     <Compile Include="CPU\CPUDetectionResult.cs" />
     <Compile Include="CPU\CPUDetector.cs" />
     <Compile Include="CPU\CpuInfo.cs" />
@@ -58,6 +57,7 @@
     <Compile Include="DeviceDetectionPrinter.cs" />
     <Compile Include="DeviceDetectionResult.cs" />
     <Compile Include="DeviceDetectionStep.cs" />
+    <Compile Include="Models\AMDBusIDVersionPair.cs" />
     <Compile Include="NVIDIA\Models\CudaDevice.cs" />
     <Compile Include="NVIDIA\Models\CudaDeviceDetectionResult.cs" />
     <Compile Include="NVIDIA\CUDADetector.cs" />
