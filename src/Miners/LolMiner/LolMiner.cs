@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace LolMiner
 {
@@ -124,6 +125,79 @@ namespace LolMiner
             if (_algorithmType == AlgorithmType.DaggerHashimoto) commandLine += " --ethstratum ETHV1";
             //--disablewatchdog 1
             return commandLine;
+        }
+
+        public override void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            // now should be ordered
+            _miningPairs = GetSortedMiningPairs(miningPairs);
+            //// update log group
+            try
+            {
+                var devs = _miningPairs.Select(pair => $"{pair.Device.DeviceType}:{pair.Device.ID}");
+                var devsTag = $"devs({string.Join(",", devs)})";
+                var algo = _miningPairs.First().Algorithm.AlgorithmName;
+                var algoTag = $"algo({algo})";
+                _logGroup = $"{_baseTag}-{algoTag}-{devsTag}";
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logGroup, $"Error while setting _logGroup: {e.Message}");
+            }
+
+            // init algo, ELP and finally miner specific init
+            // init algo
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
+            // init ELP, _miningPairs are ordered and ELP parsing keeps ordering
+            if (MinerOptionsPackage != null)
+            {
+                var miningPairsList = _miningPairs.ToList();
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var firstPair = miningPairsList.FirstOrDefault();
+                var optionsWithoutLHR = MinerOptionsPackage.GeneralOptions.Where(opt => !opt.ID.Contains("lolMiner_mode")).ToList();
+                var optionsWithLHR = MinerOptionsPackage.GeneralOptions.Where(opt => opt.ID.Contains("lolMiner_mode")).ToList();
+                var generalParamsWithoutLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithoutLHR, ignoreDefaults);
+                var isDagger = firstPair.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto;
+                var generalParamsWithLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithLHR, !isDagger);
+                var modeOptions = ResolveDeviceMode(miningPairsList);
+                var generalParams = generalParamsWithoutLHR + " " + generalParamsWithLHR + " " + modeOptions;
+                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
+            // miner specific init
+            Init();
+        }
+
+        string[] LHRV2Viable = { "RTX 3060 Ti", "RTX 3070", "RTX 3080", "RTX 3090" };
+
+        public string ResolveDeviceMode(List<MiningPair> pairs)
+        {
+            var ret = "";
+            foreach(var pair in pairs)
+            {
+                if (ret != "") ret += ",";
+                if (pair.Device.Name.Contains("RTX 3060") && !pair.Device.Name.Contains("RTX 3060 Ti"))//LHR V1 for RTX 3060
+                {
+                    ret += "LHR1";
+                }
+                else if (LHRV2Viable.Any(dev => pair.Device.Name.Contains(dev)))
+                {
+                    ret += "LHR2";
+                }
+                else
+                {
+                    ret += "b";
+                }
+            }
+            ret = ret.Trim();
+            return ret;
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
