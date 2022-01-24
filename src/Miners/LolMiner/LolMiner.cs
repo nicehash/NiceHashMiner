@@ -167,7 +167,7 @@ namespace LolMiner
                 var isDagger = firstPair.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto;
                 var generalParamsWithLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithLHR, !isDagger);
                 var modeOptions = ResolveDeviceMode(miningPairsList);
-                var generalParams = generalParamsWithoutLHR + " " + generalParamsWithLHR + " " + modeOptions;
+                var generalParams = generalParamsWithoutLHR + " " + generalParamsWithLHR + modeOptions;
                 var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
