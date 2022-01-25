@@ -201,7 +201,8 @@ namespace LolMiner
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "lolMiner_mode",
                     ShortName = "--mode",
-                    Delimiter = ","
+                    Delimiter = ",",
+                    DefaultValue = "missing"
                 },
                 /// <summary>
                 /// The values we have chosen as parameters were taken after elaborate tests. Sadly the best config changed from rig to rig, so there is a parameter --lhrtune that takes a comma separated list of values.
