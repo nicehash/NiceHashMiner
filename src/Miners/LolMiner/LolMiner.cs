@@ -175,7 +175,7 @@ namespace LolMiner
             Init();
         }
 
-        string[] LHRV2Viable = { "RTX 3060 Ti", "RTX 3070", "RTX 3080", "RTX 3090" };
+        string[] LHRV2Viable = { "RTX 3060 Ti", "RTX 3070", "RTX 3080" };
 
         public string ResolveDeviceMode(List<MiningPair> pairs)
         {
@@ -183,7 +183,7 @@ namespace LolMiner
             foreach(var pair in pairs)
             {
                 if (ret != "") ret += ",";
-                if (pair.Device.Name.Contains("RTX 3060") && !pair.Device.Name.Contains("RTX 3060 Ti"))//LHR V1 for RTX 3060
+                if (pair.Device.Name.Contains("RTX 3060") && !pair.Device.Name.Contains("3060 Ti"))//LHR V1 for RTX 3060
                 {
                     ret += "LHR1";
                 }
