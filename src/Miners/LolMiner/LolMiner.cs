@@ -166,8 +166,8 @@ namespace LolMiner
                 var generalParamsWithoutLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithoutLHR, ignoreDefaults);
                 var isDagger = firstPair.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto;
                 var generalParamsWithLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithLHR, !isDagger);
-                var modeOptions = ResolveDeviceMode(miningPairsList);
-                var generalParams = generalParamsWithoutLHR + " " + generalParamsWithLHR + modeOptions;
+                var modeOptions = ResolveDeviceMode(miningPairsList, generalParamsWithLHR);
+                var generalParams = generalParamsWithoutLHR + modeOptions;
                 var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
@@ -177,27 +177,19 @@ namespace LolMiner
 
         string[] LHRV2Viable = { "RTX 3060 Ti", "RTX 3070", "RTX 3080" };
 
-        public string ResolveDeviceMode(List<MiningPair> pairs)
+        public string ResolveDeviceMode(List<MiningPair> pairs, string lhrMode)
         {
+            if (lhrMode != " --mode ") return lhrMode;//already have defaults
             var ret = "";
             foreach(var pair in pairs)
             {
                 if (ret != "") ret += ",";
-                if (pair.Device.Name.Contains("RTX 3060") && !pair.Device.Name.Contains("3060 Ti"))//LHR V1 for RTX 3060
-                {
-                    ret += "LHR1";
-                }
-                else if (LHRV2Viable.Any(dev => pair.Device.Name.Contains(dev)))
-                {
-                    ret += "LHR2";
-                }
-                else
-                {
-                    ret += "b";
-                }
+                if (pair.Device.Name.Contains("RTX 3060") && !pair.Device.Name.Contains("3060 Ti")) ret += "LHR1";
+                else if (LHRV2Viable.Any(dev => pair.Device.Name.Contains(dev))) ret += "LHR2";
+                else ret += "b";
             }
-            ret = ret.Trim();
-            return ret;
+            ret = ret + " ";
+            return " --mode " + ret;
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
