@@ -167,29 +167,33 @@ namespace LolMiner
                 var isDagger = firstPair.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto;
                 var generalParamsWithLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithLHR, !isDagger);
                 var modeOptions = ResolveDeviceMode(miningPairsList, generalParamsWithLHR);
-                var generalParams = generalParamsWithoutLHR + modeOptions;
+                var generalParams = generalParamsWithoutLHR + (isDagger ? modeOptions : "");
                 var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
             // miner specific init
             Init();
         }
+        static string[] modeLHRV2 = { "RTX 3060 Ti", "RTX 3070" };
+        static string[] modeLHRV1 = { "RTX 3060" };
+        static string[] modeLHRLP = { "RTX 3080" };
+        static string[] modeA = { "RTX 3090" };
 
-        string[] LHRV2Viable = { "RTX 3060 Ti", "RTX 3070", "RTX 3080" };
-
-        public string ResolveDeviceMode(List<MiningPair> pairs, string lhrMode)
+        private static string ModeForName(string deviceName)
         {
-            if (lhrMode != " --mode ") return lhrMode;//already have defaults
-            var ret = "";
-            foreach(var pair in pairs)
-            {
-                if (ret != "") ret += ",";
-                if (pair.Device.Name.Contains("RTX 3060") && !pair.Device.Name.Contains("3060 Ti")) ret += "LHR1";
-                else if (LHRV2Viable.Any(dev => pair.Device.Name.Contains(dev))) ret += "LHR2";
-                else ret += "b";
-            }
-            ret = ret + " ";
-            return " --mode " + ret;
+            if (modeLHRV2.Any(dev => deviceName.Contains(dev))) return "LHR2";
+            if (modeLHRV1.Any(dev => deviceName.Contains(dev))) return "LHR1";
+            if (modeLHRLP.Any(dev => deviceName.Contains(dev))) return "LHRLP";
+            if (modeA.Any(dev => deviceName.Contains(dev))) return "a";
+            return "b";
+        }
+
+        public string ResolveDeviceMode(List<MiningPair> pairs, string lhrMode)//parse , if missing replace, else leave
+        {
+            var existingOptions = lhrMode.Replace("--mode", "").Trim().Split(',');
+            var newOptions = pairs.Select(pair => pair.Device.Name).Select(ModeForName).ToArray();
+            existingOptions = existingOptions.Select((opt, index) => opt == "missing" ? opt = newOptions[index] : opt).ToArray();
+            return " --mode " + String.Join(",", existingOptions) + " ";
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
@@ -201,7 +205,7 @@ namespace LolMiner
             {
                 // determine benchmark time 
                 // settup times
-                
+
                 int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); ;
                 var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
 
