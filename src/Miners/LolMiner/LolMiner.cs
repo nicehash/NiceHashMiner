@@ -188,11 +188,11 @@ namespace LolMiner
             return "b";
         }
 
-        public string ResolveDeviceMode(List<MiningPair> pairs, string lhrMode)
+        public static string ResolveDeviceMode(List<MiningPair> pairs, string lhrMode)
         {
             var existingOptions = lhrMode.Replace("--mode", "").Trim().Split(',');
             var newOptions = pairs.Select(pair => pair.Device.Name).Select(ModeForName).ToArray();
-            existingOptions = existingOptions.Select((opt, index) => opt == "missing" ? opt = newOptions[index] : opt).ToArray();
+            existingOptions = existingOptions.Select((opt, index) => opt == "missing" ? newOptions[index] : opt).ToArray();
             return " --mode " + String.Join(",", existingOptions) + " ";
         }
 
