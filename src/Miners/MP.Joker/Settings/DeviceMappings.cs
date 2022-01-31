@@ -7,6 +7,12 @@ namespace MP.Joker.Settings
 {
     class DeviceMappings
     {
+        [JsonProperty("compatible")]
+        public bool Compatible { get; set; } = false;
+
+        [JsonProperty("device_name")]
+        public string DeviceName { get; set; } = null;
+
         [JsonProperty("device_uuid")]
         public string DeviceUUID { get; set; } = null;
         

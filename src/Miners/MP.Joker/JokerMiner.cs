@@ -5,6 +5,7 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Configs;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -30,19 +31,22 @@ namespace MP.Joker
 
         private readonly HttpClient _httpClient = new HttpClient();
 
-        private double DevFee = 1d; // TODO this shit is wrong
+        private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         // the order of intializing devices is the order how the API responds
         protected Dictionary<string, int> _mappedDeviceIds;
 
+        private int _openClAmdPlatformNum;
+
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
 
-        internal JokerMiner(string uuid, Dictionary<string, int> mappedDeviceIds, MinerSettings minerSettings, PluginEngine pluginEngine) : base(uuid)
+        internal JokerMiner(string uuid, Dictionary<string, int> mappedDeviceIds, MinerSettings minerSettings, PluginEngine pluginEngine, int openClAmdPlatformNum) : base(uuid)
         {
             _mappedDeviceIds = mappedDeviceIds;
             _minerSettings = minerSettings;
             _pluginEngine = pluginEngine;
+            _openClAmdPlatformNum = openClAmdPlatformNum;
         }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
@@ -1597,6 +1601,12 @@ namespace MP.Joker
             return (url, port, int.TryParse(port, out var _)); 
         }
 
+        private static string GetCommandLineTemplate(MinerSettings minerSettings, AlgorithmType algo)
+        {
+            if (minerSettings.AlgorithmCommandLine?.ContainsKey(algo) ?? false) return minerSettings.AlgorithmCommandLine[algo];
+            return minerSettings.DefaultCommandLine;
+        }
+
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
@@ -1605,14 +1615,14 @@ namespace MP.Joker
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, _minerSettings.NhmConectionType);
             var (url, port, _) = SplitUrlWithPort(urlWithPort);
             var algo = AlgorithmName(_algorithmType);
-            var commandLineOLD = $"--pool {urlWithPort} --user {_username} --algo {algo} --tls 0 --apiport {_apiPort} --devices {_devices} {_extraLaunchParameters}";
-            var commandLine = _minerSettings.DefaultCommandLine
+            var commandLine = GetCommandLineTemplate(_minerSettings, _algorithmType)
                 .Replace(MinerSettings.USERNAME_TEMPLATE, _username)
+                .Replace(MinerSettings.API_PORT_TEMPLATE, $"{_apiPort}")
                 .Replace(MinerSettings.POOL_URL_TEMPLATE, url)
                 .Replace(MinerSettings.POOL_PORT_TEMPLATE, port)
                 .Replace(MinerSettings.ALGORITHM_TEMPLATE, algo)
-                .Replace(MinerSettings.API_PORT_TEMPLATE, $"{_apiPort}")
                 .Replace(MinerSettings.DEVICES_TEMPLATE, _devices)
+                .Replace(MinerSettings.OPEN_CL_AMD_PLATFORM_NUM, $"{_openClAmdPlatformNum}")
                 .Replace(MinerSettings.EXTRA_LAUNCH_PARAMETERS_TEMPLATE, _extraLaunchParameters);
 
             return commandLine;

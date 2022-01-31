@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
+using NHM.Common.Configs;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginLoader;
@@ -85,9 +86,6 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_MiniZ_PLUGIN
                 new MiniZ.MiniZPlugin(),
 #endif
-#if INTEGRATE_Joker_PLUGIN
-                new MP.Joker.JokerPlugin(),
-#endif
 
 #if INTEGRATE_ALL_PLUGINS
                 new GMinerPlugin.GMinerPlugin(),
@@ -112,6 +110,11 @@ namespace NHMCore.Mining.Plugins
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
+
+#if INTEGRATE_Joker_PLUGIN
+            var (user_plugins, _) = InternalConfigs.GetDefaultOrFileSettings(Paths.InternalsPath("UserMinerPlugins.json"), new List<string>());
+            _integratedPlugins.AddRange(user_plugins.Select(name => new MP.Joker.JokerPlugin(name)));
+#endif
 
             (_initOnlinePlugins, OnlinePlugins) = ReadCachedOnlinePlugins();
         }
@@ -1034,7 +1037,7 @@ namespace NHMCore.Mining.Plugins
                     {
                         File.Delete(downloadPluginResult.downloadedFilePath);
                     }
-                    AvailableNotifications.CreateFailedDownloadWrongHashDll(plugin.PluginName);
+                    AvailableNotifications.CreateFailedDownloadWrongHashBinary(plugin.PluginName);
                     finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedWrongHashPlugin;
                     return finalState;
                 }

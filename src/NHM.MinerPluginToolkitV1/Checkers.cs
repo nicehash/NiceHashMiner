@@ -128,18 +128,6 @@ namespace NHM.MinerPluginToolkitV1
             "3d4e56b0-7238-11e9-b20c-f9f12eb6d835",
             "4aec5ec0-10f8-11ea-bad3-8dea21141bbb",
             "5532d300-7238-11e9-b20c-f9f12eb6d835",
-            "CCMinerMTP",
-            "CCMinerTpruvot",
-            "ClaymoreDual",
-            "GMiner",
-            "NBMiner",
-            "Phoenix",
-            "SGminerAvemore",
-            "SGminerGM",
-            "TeamRedMiner",
-            "TRex",
-            "XmrStak",
-            "VC_REDIST_x64_2015",
         };
     }
 }

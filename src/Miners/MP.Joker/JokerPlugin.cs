@@ -16,10 +16,11 @@ using InternalConfigsCommon = NHM.Common.Configs.InternalConfigs;
 
 namespace MP.Joker
 {
-    public partial class JokerPlugin : PluginBase, IDevicesCrossReference
+    public partial class JokerPlugin : PluginBase // , IDevicesCrossReference
     {
-        public JokerPlugin()
+        public JokerPlugin(string name = "UserPlugin01")
         {
+            _name = name;
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
@@ -37,27 +38,17 @@ namespace MP.Joker
                 PluginDescription = "Unknown",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
-            // TODO here add read binary path and 
-            (Devices, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "Devices.json"), new List<DeviceMappings> {
-                new DeviceMappings
-                {
-                    DeviceUUID = "FAMD-7c779e99-4b58-47e1-825c-0a4d6c01a70d",
-                    Pcie = -1,
-                    MinerDeviceId = 0,
-                }
-            });
             (MinerSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "MinerSettings.json"), new MinerSettings {});
-            (_, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "Test.json"), new List<string> { "1", "2", "3" });
         }
 
-        private IReadOnlyList<DeviceMappings> Devices;
-
+        private int _openClAmdPlatformNum = 0;
         private MinerSettings MinerSettings;
         PluginEngine PluginEngine;
 
         public override Version Version => new Version(16, 0);
 
-        public override string Name => "UserPlugin01";
+        private readonly string _name;
+        public override string Name => _name;
 
         public override string Author => "info@nicehash.com";
 
@@ -73,66 +64,102 @@ namespace MP.Joker
             Logger.Info(Name, $"PluginEngine {PluginEngine}");
         }
 
-        private static bool IsDeviceSupported(IEnumerable<DeviceMappings> userDevices, BaseDevice nhmDevice)
-        {
-            if (userDevices == null || nhmDevice == null) return false;
-            if (nhmDevice is IGpuDevice gpu && userDevices.Any(d => d.Pcie == gpu.PCIeBusID)) return true;
-            return userDevices.Any(d => d.DeviceUUID == nhmDevice.UUID);
-        }
-
         private static int GetMinerDeviceID(IEnumerable<DeviceMappings> userDevices, string deviceUUID)
         {
             var targetDevice = userDevices?.FirstOrDefault(d => d.DeviceUUID == deviceUUID);
             return targetDevice?.MinerDeviceId ?? -1;
         }
 
+        private static DeviceMappings BaseDeviceToDeviceMappings(BaseDevice baseDevice)
+        {
+            return new DeviceMappings
+            {
+                Compatible = false,
+                DeviceName = baseDevice.Name,
+                DeviceUUID = baseDevice.UUID,
+                Pcie = baseDevice is IGpuDevice gpu ? gpu.PCIeBusID : -1,
+                MinerDeviceId = baseDevice.ID
+            };
+        }
+
+        private static IReadOnlyList<DeviceMappings> DefaultDeviceMappings(IEnumerable<BaseDevice> devices)
+        {
+            return devices.Select(BaseDeviceToDeviceMappings).ToArray();
+        }
+
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
+            var (devicesSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "Devices.json"), DefaultDeviceMappings(devices));
+            var compatibleDevices = devicesSettings.Where(d => d.Compatible).ToArray();
             var supported = devices
-                .Where(d => IsDeviceSupported(Devices, d))
-                .Where(d => GetMinerDeviceID(Devices, d.UUID) != -1)
+                .Where(d => compatibleDevices.Any(cd => cd.DeviceUUID == d.UUID))
+                .Where(d => GetMinerDeviceID(devicesSettings, d.UUID) != -1)
                 .Select(d => (device: d, algorithms: GetSupportedAlgorithmsForDevice(d)))
                 .Where(p => p.algorithms.Count > 0)
                 .ToDictionary(p => p.device, p => p.algorithms);
 
             foreach (var deviceUUID in supported.Keys.Select(d => d.UUID))
             {
-                _mappedDeviceIds[deviceUUID] = GetMinerDeviceID(Devices, deviceUUID);
+                _mappedDeviceIds[deviceUUID] = GetMinerDeviceID(devicesSettings, deviceUUID);
             }
+
+            _openClAmdPlatformNum = devices
+                .Where(d => d is AMDDevice)
+                .Where(d => _mappedDeviceIds.ContainsKey(d.UUID))
+                .Cast<AMDDevice>()
+                .Select(d => d.OpenCLPlatformID)
+                .FirstOrDefault();
 
             return supported;
         }
 
         protected override MinerBase CreateMinerBase()
         {
-            return new JokerMiner(PluginUUID, _mappedDeviceIds, MinerSettings, PluginEngine);
+            return new JokerMiner(PluginUUID, _mappedDeviceIds, MinerSettings, PluginEngine, _openClAmdPlatformNum);
         }
 
-#warning thinks about this one here... we might get away without using it
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        #region IBinAndCwdPathsGettter
+        public override (string binPath, string cwdPath) GetBinAndCwdPaths()
         {
-            //if (_mappedDeviceIds.Count == 0) return;
-
-            //var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
-            //var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list-devices --nocolor=on");
-            //var ts = DateTime.UtcNow.Ticks;
-            //var dumpFile = $"d{ts}.txt";
-            //try
-            //{
-            //    File.WriteAllText(Path.Combine(minerCwdPath, dumpFile), output);
-            //}
-            //catch (Exception e)
-            //{
-            //    Logger.Error("LolMinerPlugin", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
-            //}
-            //var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices);
-
-            //foreach (var (uuid, minerGpuId) in mappedDevs)
-            //{
-            //    Logger.Info("LolMinerPlugin", $"DevicesCrossReference '{uuid}' => {minerGpuId}");
-            //    _mappedDeviceIds[uuid] = minerGpuId;
-            //}
+            if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.ExePath == null || MinersBinsUrlsSettings.ExePath.Count == 0)
+            {
+                throw new Exception("Unable to return cwd and exe paths MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Path == null || MinersBinsUrlsSettings.Path.Count == 0");
+            }
+            var paths = new List<string> { Paths.MinerPluginsPath(PluginUUID, "bins") };
+            paths.AddRange(MinersBinsUrlsSettings.ExePath);
+            var binCwd = Path.Combine(paths.GetRange(0, paths.Count - 1).ToArray());
+            var binPath = Path.Combine(paths.ToArray());
+            return (binPath, binCwd);
         }
+        #endregion IBinAndCwdPathsGettter
+
+
+
+//#warning thinks about this one here... we might get away without using it
+//        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+//        {
+//            //if (_mappedDeviceIds.Count == 0) return;
+
+//            //var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
+//            //var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list-devices --nocolor=on");
+//            //var ts = DateTime.UtcNow.Ticks;
+//            //var dumpFile = $"d{ts}.txt";
+//            //try
+//            //{
+//            //    File.WriteAllText(Path.Combine(minerCwdPath, dumpFile), output);
+//            //}
+//            //catch (Exception e)
+//            //{
+//            //    Logger.Error("LolMinerPlugin", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
+//            //}
+//            //var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices);
+
+//            //foreach (var (uuid, minerGpuId) in mappedDevs)
+//            //{
+//            //    Logger.Info("LolMinerPlugin", $"DevicesCrossReference '{uuid}' => {minerGpuId}");
+//            //    _mappedDeviceIds[uuid] = minerGpuId;
+//            //}
+//        }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
