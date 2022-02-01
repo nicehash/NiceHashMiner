@@ -91,15 +91,15 @@ namespace TeamRedMiner
             return false;
         }
 
-        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
             if (device is AMDDevice amd)
             {
                 Version min = new Version(21, 5, 2);
-                if (amd.DEVICE_AMD_DRIVER < min) return (-1, min);
-                else return (0, amd.DEVICE_AMD_DRIVER);
+                if (amd.DEVICE_AMD_DRIVER < min) return (DriverVersionCheckType.DriverVersionObsolete, min);
+                else return (DriverVersionCheckType.DriverVersionOK, amd.DEVICE_AMD_DRIVER);
             }
-            return (1, new Version(0, 0));
+            return (DriverVersionCheckType.DriverCheckNotImplementedForThisDeviceType, new Version(0, 0));
         }
     }
 }

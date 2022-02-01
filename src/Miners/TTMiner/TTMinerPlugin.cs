@@ -137,26 +137,26 @@ namespace TTMiner
             return false;
         }
 
-        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
             if (device is CUDADevice)
             {
                 Version min = new Version(461, 33);
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-1, min);
-                return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (DriverVersionCheckType.DriverVersionObsolete, min);
+                return (DriverVersionCheckType.DriverVersionOK, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             }
-            return (1, new Version(0, 0));
+            return (DriverVersionCheckType.DriverCheckNotImplementedForThisDeviceType, new Version(0, 0));
         }
 
-        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
             if (device is CUDADevice)
             {
                 Version min = new Version(411, 31);
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-1, min);
-                return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (DriverVersionCheckType.DriverVersionObsolete, min);
+                return (DriverVersionCheckType.DriverVersionOK, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             }
-            return (1, new Version(0, 0));
+            return (DriverVersionCheckType.DriverCheckNotImplementedForThisDeviceType, new Version(0, 0));
         }
     }
 }

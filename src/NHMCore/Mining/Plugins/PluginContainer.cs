@@ -326,19 +326,19 @@ namespace NHMCore.Mining.Plugins
         #region DriverRequirement
         void CheckDevicesDriverVersionsAndNotify(IEnumerable<BaseDevice> devices)
         {
-            List<(int, BaseDevice, Version)> listOfOldDrivers = new List<(int, BaseDevice, Version)>();
+            var listOfOldDrivers = new List<(int, BaseDevice, Version)>();
             foreach (BaseDevice dev in devices)
             {
                 if (dev is AMDDevice amdDev && !ResolveAMDDriverVersionAndCheckIfValid(amdDev)) continue;
                 if (_plugin is IDriverIsMinimumRequired minRequired)
                 {
-                    (int ok, Version ver) = minRequired.IsDriverMinimumRequired(dev);
-                    if (ok < 0) listOfOldDrivers.Add((0, dev, ver)); 
+                    (DriverVersionCheckType ok, Version ver) = minRequired.IsDriverMinimumRequired(dev);
+                    if (ok == DriverVersionCheckType.DriverVersionObsolete) listOfOldDrivers.Add((0, dev, ver)); 
                 }
                 if (_plugin is IDriverIsMinimumRecommended minRecommended)
                 {
-                    (int ok, Version ver) = minRecommended.IsDriverMinimumRecommended(dev);
-                    if (ok < 0) listOfOldDrivers.Add((1, dev, ver));
+                    (DriverVersionCheckType ok, Version ver) = minRecommended.IsDriverMinimumRecommended(dev);
+                    if (ok == DriverVersionCheckType.DriverVersionObsolete) listOfOldDrivers.Add((1, dev, ver));
                 }
             }
             if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.GetType().Name, listOfOldDrivers);

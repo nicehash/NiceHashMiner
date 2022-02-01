@@ -143,7 +143,7 @@ namespace NHM.DeviceDetection.AMD
                         var bd = new BaseDevice(DeviceType.AMD, uuidNew, setName, (int)oclDev.DeviceID);
                         var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
                         var thisDeviceExtraADLResult = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID);
-                        if(thisDeviceExtraADLResult.BUS_ID == oclDev.BUS_ID)
+                        if(thisDeviceExtraADLResult != null && thisDeviceExtraADLResult.BUS_ID == oclDev.BUS_ID)
                         {
                             amdDevice.ADLFunctionCall = thisDeviceExtraADLResult.FunctionCall;
                             amdDevice.ADLReturnCode = thisDeviceExtraADLResult.ADLRetCode;
