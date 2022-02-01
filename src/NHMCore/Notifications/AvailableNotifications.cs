@@ -546,10 +546,10 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
-        public static void CreateOutdatedDriverWarningForPlugin(string plugin, List<(int, BaseDevice, Version)> listOfOldDrivers)
+        public static void CreateOutdatedDriverWarningForPlugin(string pluginName, List<(int, BaseDevice, Version)> listOfOldDrivers)
         {
-            string name = Tr("Detected older driver versions") + " (" + plugin.Replace("Plugin", "") + ")";
-            string content = Tr("Older driver versions have been detected on this system, and they may cause problems with {0}. Please update them.", plugin) + "\n";
+            string name = Tr("Detected older driver versions") + " (" + pluginName.Replace("Plugin", "") + ")";
+            string content = Tr("Older driver versions have been detected on this system, and they may cause problems with {0}. Please update them.", pluginName) + "\n";
             var criticals = listOfOldDrivers.Where(dev => dev.Item1 == 1);
             var recommends = listOfOldDrivers.Where(dev => dev.Item1 == 0 && !criticals.Any(dev1 => dev1.Item2 == dev.Item2));
 
@@ -588,18 +588,18 @@ namespace NHMCore.Notifications
                     }
                 }
             }
-            bool gotEnum = NotificationsGroup.TryParse(plugin, out NotificationsGroup groupForMiner);
+            bool gotEnum = NotificationsGroup.TryParse(pluginName, out NotificationsGroup groupForMiner);
             if (gotEnum)
             {
                 var notification = new Notification(NotificationsType.Warning, groupForMiner, Tr(name), Tr(content));
                 NotificationsManager.Instance.AddNotificationToList(notification);
             }
-            Logger.Warn(plugin, content);
+            Logger.Warn(pluginName, content);
         }
 
         public static void CreateADLVersionWarning(AMDDevice amdDev)
         {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverVersionProblem, Tr("ADL driver version retrieval warning ({0})", amdDev.ADLReturnCode), Tr("Driver string could not be correctly retrieved from the system - version may be incorrect (\"{0}\"). Last function called: ADL2_Graphics_VersionsX{1}_Get", amdDev.RawDriverVersion, amdDev.ADLFunctionCall));
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverVersionProblem, Tr("ADL driver version retrieval warning ({0})", amdDev.ADLReturnCode), Tr("Driver string could not be correctly retrieved from the system - version may be incorrect (\"{0}\")", amdDev.RawDriverVersion));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
