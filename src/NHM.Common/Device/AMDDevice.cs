@@ -12,8 +12,10 @@ namespace NHM.Common.Device
             InfSection = infSection;
             OpenCLPlatformID = openCLPlatformID;
         }
-
         public Version DEVICE_AMD_DRIVER = new Version(0, 0);
+        public string RawDriverVersion { get; set; }
+        public int ADLReturnCode { get; set; }
+        public int ADLFunctionCall { get; set; }
         public int OpenCLPlatformID { get; }
 
         public int PCIeBusID { get; }

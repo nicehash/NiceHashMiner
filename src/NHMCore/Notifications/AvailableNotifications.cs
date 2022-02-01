@@ -548,13 +548,14 @@ namespace NHMCore.Notifications
         }
         public static void CreateOutdatedDriverWarningForPlugin(string plugin, List<(int, BaseDevice, Version)> listOfOldDrivers)
         {
-            string name = "Detected older driver versions (" + plugin + ")";
-            string content = "Older driver versions have been detected on this system, and they may cause problems with " + plugin + ". Please update them.\n";
-            var recommends = listOfOldDrivers.Where(dev => dev.Item1 == 0);
+            string name = Tr("Detected older driver versions") + " (" + plugin.Replace("Plugin", "") + ")";
+            string content = Tr("Older driver versions have been detected on this system, and they may cause problems with {0}. Please update them.", plugin) + "\n";
             var criticals = listOfOldDrivers.Where(dev => dev.Item1 == 1);
+            var recommends = listOfOldDrivers.Where(dev => dev.Item1 == 0 && !criticals.Any(dev1 => dev1.Item2 == dev.Item2));
+
             if (recommends.Any())
             {
-                content += "Lower than recommended:\n";
+                content += Tr("Lower than recommended") + ":\n";
                 var nvidias = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
                 if (nvidias.Any()) {
@@ -571,7 +572,7 @@ namespace NHMCore.Notifications
             }
             if (criticals.Any())
             {
-                content += "Lower than required:\n";
+                content += Tr("Lower than required") + ":\n";
                 var nvidias = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
                 if (nvidias.Any())
@@ -587,9 +588,25 @@ namespace NHMCore.Notifications
                     }
                 }
             }
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriversObsolete, Tr(name), Tr(content));
-            NotificationsManager.Instance.AddNotificationToList(notification);
+            bool gotEnum = NotificationsGroup.TryParse(plugin, out NotificationsGroup groupForMiner);
+            if (gotEnum)
+            {
+                var notification = new Notification(NotificationsType.Warning, groupForMiner, Tr(name), Tr(content));
+                NotificationsManager.Instance.AddNotificationToList(notification);
+            }
             Logger.Warn(plugin, content);
+        }
+
+        public static void CreateADLVersionWarning(AMDDevice amdDev)
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverVersionProblem, Tr("ADL driver version retrieval warning ({0})", amdDev.ADLReturnCode), Tr("Driver string could not be correctly retrieved from the system - version may be incorrect (\"{0}\"). Last function called: ADL2_Graphics_VersionsX{1}_Get", amdDev.RawDriverVersion, amdDev.ADLFunctionCall));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateADLVersionError(AMDDevice amdDev)
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.DriverVersionProblem, Tr("ADL driver version retrieval failed ({0})", amdDev.ADLReturnCode), Tr("ADL failed to retrieve the driver version. Please update your AMD drivers."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateAdminRunRequired()

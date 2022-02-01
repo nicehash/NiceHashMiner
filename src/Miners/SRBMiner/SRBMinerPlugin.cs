@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SRBMiner
 {
-    public partial class SRBMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRecommended
+    public partial class SRBMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended
     {
         public SRBMinerPlugin()
         {
@@ -110,13 +110,13 @@ namespace SRBMiner
 
         public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            Version min = new Version(21, 5, 2);
             if (device is AMDDevice amd)
             {
-                if (amd.DEVICE_AMD_DRIVER < min) return (-2, min);
+                Version min = new Version(21, 5, 2);
+                if (amd.DEVICE_AMD_DRIVER < min) return (-1, min);
                 else return (0, amd.DEVICE_AMD_DRIVER);
             }
-            return (-1, new Version(0, 0));
+            return (1, new Version(0, 0));
         }
 
     }

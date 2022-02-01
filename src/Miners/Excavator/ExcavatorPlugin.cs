@@ -12,7 +12,7 @@ using NHM.MinerPluginToolkitV1.Interfaces;
 
 namespace Excavator
 {
-    public partial class ExcavatorPlugin : PluginBase //, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+    public partial class ExcavatorPlugin : PluginBase, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public ExcavatorPlugin()
         {
@@ -104,24 +104,24 @@ namespace Excavator
 
         public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            Version min = new Version(461, 33);
-            if(device is CUDADevice)
+            if (device is CUDADevice)
             {
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+                Version min = new Version(461, 33);
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-1, min);
+                return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             }
-            else return (-1, new Version(0, 0));
-            return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            return (1, new Version(0, 0));
         }
 
         public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-            Version min = new Version(411, 31);
             if (device is CUDADevice)
             {
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+                Version min = new Version(411, 31);
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-1, min);
+                return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             }
-            else return (-1, new Version(0,0));
-            return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            return (1, new Version(0, 0));
         }
     }
 }
