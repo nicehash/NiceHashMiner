@@ -344,7 +344,7 @@ namespace NHMCore.Mining.Plugins
             if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.GetType().Name, listOfOldDrivers);
         }
 
-        private bool ResolveAMDDriverVersionAndCheckIfValid(string plugin, AMDDevice amdDev)
+        private bool ResolveAMDDriverVersionAndCheckIfValid(AMDDevice amdDev)
         {
             var validCrimson = IsAMDCrimsonVersionValid(amdDev.RawDriverVersion);
             if (validCrimson && (amdDev.ADLReturnCode == 0 || amdDev.ADLReturnCode == 1)) return true;
