@@ -145,7 +145,7 @@ namespace NHM.Common
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
             {
                 return prefix
-                    + "algo-test." + miningLocation
+                    + "stratum-test." + miningLocation
                     + ".nicehash.com:"
                     + port;
             }
