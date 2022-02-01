@@ -96,10 +96,10 @@ namespace ZEnemy
             if (device is CUDADevice)
             {
                 Version min = new Version(461, 33);
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-2, min);
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (-1, min);
                 return (0, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             }
-            return (-1, new Version(0, 0));
+            return (1, new Version(0, 0));
         }
 
         public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)

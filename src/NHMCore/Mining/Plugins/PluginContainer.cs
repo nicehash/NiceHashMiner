@@ -355,8 +355,7 @@ namespace NHMCore.Mining.Plugins
         private bool IsAMDCrimsonVersionValid(string version)
         {
             if (version.Split('.').Length != 3) return false;
-            if (Version.TryParse(version, out var temp)) return true;
-            return false;
+            return Version.TryParse(version, out var temp);
         }
         #endregion
 
