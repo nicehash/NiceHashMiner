@@ -329,7 +329,7 @@ namespace NHMCore.Mining.Plugins
             List<(int, BaseDevice, Version)> listOfOldDrivers = new List<(int, BaseDevice, Version)>();
             foreach (BaseDevice dev in devices)
             {
-                if (dev is AMDDevice amdDev && !ResolveAMDDriverVersionAndCheckIfValid(_plugin.Name, amdDev)) continue;
+                if (dev is AMDDevice amdDev && !ResolveAMDDriverVersionAndCheckIfValid(amdDev)) continue;
                 if (_plugin is IDriverIsMinimumRequired minRequired)
                 {
                     (int ok, Version ver) = minRequired.IsDriverMinimumRequired(dev);
