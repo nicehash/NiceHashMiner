@@ -56,7 +56,7 @@
   <ItemGroup>
     <Compile Include="AMD\AMD_ODN.cs" />
     <Compile Include="LibreHardwareMonitorManager.cs" />
-    <Compile Include="NVIDIA\NVIDIA_ODN.cs" />
+    <Compile Include="NVIDIA\NVIDIA_MON.cs" />
     <Compile Include="UpdateVisitor.cs" />
     <Compile Include="DeviceMonitorAMD.cs" />
     <Compile Include="DeviceMonitorCPU.cs" />

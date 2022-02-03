@@ -36,15 +36,15 @@ namespace NHM.DeviceMonitoring
 
         private static void RestartDrivers()
         {
-            NVIDIA_ODN.nhm_nvidia_deinit();
-            NVIDIA_ODN.nhm_nvidia_init();
+            NVIDIA_MON.nhm_nvidia_deinit();
+            NVIDIA_MON.nhm_nvidia_init();
         }
 
         private static void CheckDriverLife(object objectInfo)
         {
             using (var tryLock = new TryLock(_lock))
             {
-                if (!NVIDIA_ODN.nhm_nvidia_is_nvapi_alive() || !NVIDIA_ODN.nhm_nvidia_is_nvml_alive())
+                if (!NVIDIA_MON.nhm_nvidia_is_nvapi_alive() || !NVIDIA_MON.nhm_nvidia_is_nvml_alive())
                 {
                     FailCounter++;
                     RestartDrivers();
@@ -75,7 +75,7 @@ namespace NHM.DeviceMonitoring
             get
             {
                 int load_perc = 0;
-                int ok = NVIDIA_ODN.nhm_nvidia_device_get_load_percentage(BusID, ref load_perc);
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_load_percentage(BusID, ref load_perc);
                 if (ok == 0)
                 {
                     return load_perc;
@@ -90,7 +90,7 @@ namespace NHM.DeviceMonitoring
             get
             {
                 ulong temperature = 0;
-                int ok = NVIDIA_ODN.nhm_nvidia_device_get_temperature(BusID, ref temperature);
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_temperature(BusID, ref temperature);
                 if (ok == 0)
                 {
                     return temperature;
@@ -103,7 +103,7 @@ namespace NHM.DeviceMonitoring
         (int status, int percentage) IGetFanSpeedPercentage.GetFanSpeedPercentage()
         {
             int percentage = 0;
-            int ok = NVIDIA_ODN.nhm_nvidia_device_get_fan_speed_percentage(BusID, ref percentage);
+            int ok = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_percentage(BusID, ref percentage);
             if (ok != 0)
             {
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
@@ -116,7 +116,7 @@ namespace NHM.DeviceMonitoring
             get
             {
                 int rpm = 0;
-                int ok = NVIDIA_ODN.nhm_nvidia_device_get_fan_speed_rpm(BusID, ref rpm);
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_rpm(BusID, ref rpm);
                 if (ok == 0)
                 {
                     return rpm;
@@ -131,7 +131,7 @@ namespace NHM.DeviceMonitoring
             get
             {
                 int power_usage = 0;
-                int ok = NVIDIA_ODN.nhm_nvidia_device_get_power_usage(BusID, ref power_usage);
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_power_usage(BusID, ref power_usage);
                 if (ok == 0)
                 {
                     return power_usage;
@@ -144,7 +144,7 @@ namespace NHM.DeviceMonitoring
 
         public bool SetFanSpeedPercentage(int percentage)
         {
-            int ok = NVIDIA_ODN.nhm_nvidia_device_set_fan_speed_percentage(BusID, percentage);
+            int ok = NVIDIA_MON.nhm_nvidia_device_set_fan_speed_percentage(BusID, percentage);
             if (ok != 0)
             {
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_set_fan_speed_rpm failed with error code {ok}", _delayedLogging);
@@ -164,7 +164,7 @@ namespace NHM.DeviceMonitoring
             get
             {
                 int tdpRaw = 0;
-                int ok = NVIDIA_ODN.nhm_nvidia_device_get_tdp(BusID, ref tdpRaw);
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_tdp(BusID, ref tdpRaw);
                 if (ok != 0)
                 {
                     Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp failed with error code {ok}", _delayedLogging);
@@ -200,7 +200,7 @@ namespace NHM.DeviceMonitoring
                 percentage = PowerLevelToTDPPercentage(level);
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
-            var execRet = NVIDIA_ODN.nhm_nvidia_device_set_tdp(BusID, (int)(percentage*100));
+            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)(percentage*100));
             if (execRet < 0) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet < 0;
@@ -220,7 +220,7 @@ namespace NHM.DeviceMonitoring
             }
 
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
-            var execRet = NVIDIA_ODN.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
+            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
             Logger.Info(LogTag, $"SetTDPPercentage {execRet}.");
             return execRet < 0;
         }

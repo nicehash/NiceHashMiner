@@ -2,7 +2,7 @@
 
 namespace NHM.DeviceMonitoring.NVIDIA
 {
-    internal static class NVIDIA_ODN
+    internal static class NVIDIA_MON
     {
         const string dll = "device_monitoring_nvidia.dll";
 

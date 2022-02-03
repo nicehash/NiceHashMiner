@@ -255,6 +255,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\NHM.CredentialValidators\NHM.CredentialValidators.csproj">
+      <Project>{7733d0d8-72a7-4656-a5b3-54fc764e0507}</Project>
+      <Name>NHM.CredentialValidators</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\CryptoDredge\MP.CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>MP.CryptoDredge</Name>

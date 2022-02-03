@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace LolMiner
 {
@@ -126,6 +127,75 @@ namespace LolMiner
             return commandLine;
         }
 
+        public override void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            // now should be ordered
+            _miningPairs = GetSortedMiningPairs(miningPairs);
+            //// update log group
+            try
+            {
+                var devs = _miningPairs.Select(pair => $"{pair.Device.DeviceType}:{pair.Device.ID}");
+                var devsTag = $"devs({string.Join(",", devs)})";
+                var algo = _miningPairs.First().Algorithm.AlgorithmName;
+                var algoTag = $"algo({algo})";
+                _logGroup = $"{_baseTag}-{algoTag}-{devsTag}";
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logGroup, $"Error while setting _logGroup: {e.Message}");
+            }
+
+            // init algo, ELP and finally miner specific init
+            // init algo
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
+            // init ELP, _miningPairs are ordered and ELP parsing keeps ordering
+            if (MinerOptionsPackage != null)
+            {
+                var miningPairsList = _miningPairs.ToList();
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var firstPair = miningPairsList.FirstOrDefault();
+                var optionsWithoutLHR = MinerOptionsPackage.GeneralOptions.Where(opt => !opt.ID.Contains("lolMiner_mode")).ToList();
+                var optionsWithLHR = MinerOptionsPackage.GeneralOptions.Where(opt => opt.ID.Contains("lolMiner_mode")).ToList();
+                var generalParamsWithoutLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithoutLHR, ignoreDefaults);
+                var isDagger = firstPair.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto;
+                var generalParamsWithLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithLHR, !isDagger);
+                var modeOptions = ResolveDeviceMode(miningPairsList, generalParamsWithLHR);
+                var generalParams = generalParamsWithoutLHR + (isDagger ? modeOptions : "");
+                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
+            // miner specific init
+            Init();
+        }
+        static string[] modeLHRV2 = { "RTX 3060 Ti", "RTX 3070" };
+        static string[] modeLHRV1 = { "RTX 3060" };
+        static string[] modeLHRLP = { "RTX 3080" };
+        static string[] modeA = { "RTX 3090" };
+
+        private static string ModeForName(string deviceName)
+        {
+            if (modeLHRV2.Any(dev => deviceName.Contains(dev))) return "LHR2";
+            if (modeLHRV1.Any(dev => deviceName.Contains(dev))) return "LHR1";
+            if (modeLHRLP.Any(dev => deviceName.Contains(dev))) return "LHRLP";
+            if (modeA.Any(dev => deviceName.Contains(dev))) return "a";
+            return "b";
+        }
+
+        public static string ResolveDeviceMode(List<MiningPair> pairs, string lhrMode)
+        {
+            var existingOptions = lhrMode.Replace("--mode", "").Trim().Split(',');
+            var newOptions = pairs.Select(pair => pair.Device.Name).Select(ModeForName).ToArray();
+            existingOptions = existingOptions.Select((opt, index) => opt == "missing" ? newOptions[index] : opt).ToArray();
+            return " --mode " + String.Join(",", existingOptions) + " ";
+        }
+
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
@@ -135,7 +205,7 @@ namespace LolMiner
             {
                 // determine benchmark time 
                 // settup times
-                
+
                 int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); ;
                 var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
 
