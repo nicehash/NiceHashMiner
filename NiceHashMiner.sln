@@ -84,7 +84,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.Excavator", "src\Miners\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoMiner", "src\Tools\DemoMiner\DemoMiner.csproj", "{FC2DF88E-4D80-4FCC-A4AB-88E764DB035B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CredentialValidators", "NHM.CredentialValidators\NHM.CredentialValidators.csproj", "{7733D0D8-72A7-4656-A5B3-54FC764E0507}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CredentialValidators", "src\NHM.CredentialValidators\NHM.CredentialValidators.csproj", "{7733D0D8-72A7-4656-A5B3-54FC764E0507}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FFB721FA-CA35-4B5D-859E-EB744ED01138}"
 EndProject

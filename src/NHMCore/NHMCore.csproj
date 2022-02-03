@@ -255,7 +255,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NHM.CredentialValidators\NHM.CredentialValidators.csproj">
+    <ProjectReference Include="..\..\src\NHM.CredentialValidators\NHM.CredentialValidators.csproj">
       <Project>{7733d0d8-72a7-4656-a5b3-54fc764e0507}</Project>
       <Name>NHM.CredentialValidators</Name>
     </ProjectReference>
