@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Device;
+using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHMCore.Utils;
@@ -546,12 +547,14 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
-        public static void CreateOutdatedDriverWarningForPlugin(string pluginName, List<(int, BaseDevice, Version)> listOfOldDrivers)
+        public static void CreateOutdatedDriverWarningForPlugin(string pluginName, string pluginUUID, List<(DriverVersionLimitType outDatedType, BaseDevice dev, (DriverVersionCheckType checkReturnCode, Version minVersion) driverCheckReturn)> listOfOldDrivers)
         {
-            string name = Tr("Detected older driver versions") + " (" + pluginName.Replace("Plugin", "") + ")";
+            string name = Tr("Detected older driver versions") + " (" + pluginName + ")";
             string content = Tr("Older driver versions have been detected on this system, and they may cause problems with {0}. Please update them.", pluginName) + "\n";
-            var criticals = listOfOldDrivers.Where(dev => dev.Item1 == 1);
-            var recommends = listOfOldDrivers.Where(dev => dev.Item1 == 0 && !criticals.Any(dev1 => dev1.Item2 == dev.Item2));
+
+            var criticals = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRequired);
+            var recommends = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRecommended);
+            //var recommends = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRecommended && !criticals.Any(dev1 => dev1.Item2 == dev.Item2));
 
             if (recommends.Any())
             {
@@ -560,14 +563,14 @@ namespace NHMCore.Notifications
                 var amds = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
                 if (nvidias.Any())
                 {
-                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().Item3 + "\n";
+                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
                 }
                 if (amds.Any())
                 {
                     content += "\tAMD: (adrenalin)\n";
                     foreach (var amd in amds)
                     {
-                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.Item3 + "\n";
+                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.driverCheckReturn.minVersion + "\n";
                     }
                 }
             }
@@ -578,18 +581,18 @@ namespace NHMCore.Notifications
                 var amds = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
                 if (nvidias.Any())
                 {
-                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().Item3 + "\n";
+                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
                 }
                 if (amds.Any())
                 {
                     content += "\tAMD: (adrenalin)\n";
                     foreach (var amd in amds)
                     {
-                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.Item3 + "\n";
+                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.driverCheckReturn.minVersion + "\n";
                     }
                 }
             }
-            var notification = new Notification(NotificationsType.Warning, pluginName + "OldDriversWarning", Tr(name), Tr(content));
+            var notification = new Notification(NotificationsType.Warning, pluginName + pluginUUID, Tr(name), Tr(content));
             NotificationsManager.Instance.AddNotificationToList(notification);
 
             Logger.Warn(pluginName, content);

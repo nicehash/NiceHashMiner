@@ -190,7 +190,7 @@ namespace NHMCore.Mining.Plugins
                 {
                     IsCompatible = EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevices;
                 }
-                CheckDevicesDriverVersionsAndNotify(baseDevices);
+                CheckDevicesDriverVersionsAndNotifyIfOutdated(baseDevices);
             }
             catch (Exception e)
             {
@@ -324,35 +324,41 @@ namespace NHMCore.Mining.Plugins
         #endregion IDevicesCrossReference
 
         #region DriverRequirement
-        void CheckDevicesDriverVersionsAndNotify(IEnumerable<BaseDevice> devices)
+        void CheckDevicesDriverVersionsAndNotifyIfOutdated(IEnumerable<BaseDevice> devices)
         {
-            var listOfOldDrivers = new List<(int, BaseDevice, Version)>();
-            foreach (BaseDevice dev in devices)
-            {
-                if (dev is AMDDevice amdDev && !ResolveAMDDriverVersionAndCheckIfValid(amdDev)) continue;
-                if (_plugin is IDriverIsMinimumRequired minRequired)
-                {
-                    (DriverVersionCheckType ok, Version ver) = minRequired.IsDriverMinimumRequired(dev);
-                    if (ok == DriverVersionCheckType.DriverVersionObsolete) listOfOldDrivers.Add((0, dev, ver)); 
-                }
-                if (_plugin is IDriverIsMinimumRecommended minRecommended)
-                {
-                    (DriverVersionCheckType ok, Version ver) = minRecommended.IsDriverMinimumRecommended(dev);
-                    if (ok == DriverVersionCheckType.DriverVersionObsolete) listOfOldDrivers.Add((1, dev, ver));
-                }
-            }
-            if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.GetType().Name, listOfOldDrivers);
+            var listOfOldDrivers = new List<(DriverVersionLimitType outDatedType, BaseDevice dev, (DriverVersionCheckType checkReturnCode, Version minVersion))>();
+            devices.ToList().ForEach(dev => listOfOldDrivers.AddRange(CheckDeviceVersionLimits(dev)));
+            if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
         }
 
-        private bool ResolveAMDDriverVersionAndCheckIfValid(AMDDevice amdDev)
+        private List<(DriverVersionLimitType outDatedType, BaseDevice dev, (DriverVersionCheckType checkReturnCode, Version minVersion))> CheckDeviceVersionLimits(BaseDevice device)
+        {
+            var oldDriversForDevice = new List<(DriverVersionLimitType outDatedType, BaseDevice dev,(DriverVersionCheckType checkReturnCode, Version minVersion) driverVersionCheckReturn)>();
+            if (device is AMDDevice dev && !IsAMDDriverVersionValidFormat(dev))
+            {
+                AMDNonOKCodeNotification(dev);
+                return oldDriversForDevice;
+            }
+            if (_plugin is IDriverIsMinimumRequired minRequired) oldDriversForDevice.Add((DriverVersionLimitType.MinRequired, device, minRequired.IsDriverMinimumRequired(device)));
+            else if (_plugin is IDriverIsMinimumRecommended minRecommended) oldDriversForDevice.Add((DriverVersionLimitType.MinRecommended, device, minRecommended.IsDriverMinimumRecommended(device)));
+            if (oldDriversForDevice.Count == 0) return oldDriversForDevice;
+            oldDriversForDevice = oldDriversForDevice.Where(item => item.driverVersionCheckReturn.checkReturnCode == DriverVersionCheckType.DriverVersionObsolete).ToList();
+            return oldDriversForDevice;
+        }
+
+        private static void AMDNonOKCodeNotification(AMDDevice amd)
+        {
+            if (amd.ADLReturnCode == 1) AvailableNotifications.CreateADLVersionWarning(amd);
+            else AvailableNotifications.CreateADLVersionError(amd);
+        }
+
+        private static bool IsAMDDriverVersionValidFormat(AMDDevice amdDev)
         {
             var validCrimson = IsAMDCrimsonVersionValid(amdDev.RawDriverVersion);
             if (validCrimson && (amdDev.ADLReturnCode == 0 || amdDev.ADLReturnCode == 1)) return true;
-            else if (amdDev.ADLReturnCode == 1) AvailableNotifications.CreateADLVersionWarning(amdDev);
-            else AvailableNotifications.CreateADLVersionError(amdDev);
             return false;
         }
-        private bool IsAMDCrimsonVersionValid(string version)
+        private static bool IsAMDCrimsonVersionValid(string version)
         {
             if (version.Split('.').Length != 3) return false;
             return Version.TryParse(version, out var temp);
