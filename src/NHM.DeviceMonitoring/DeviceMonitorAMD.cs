@@ -184,8 +184,8 @@ namespace NHM.DeviceMonitoring
                 case TDPSimpleType.LOW: return 0.6d; // 60%
                 case TDPSimpleType.MEDIUM: return 0.8d; // 80%
                 case TDPSimpleType.HIGH: return 1.0d; // 100%
+                default: return null;
             }
-            return null;
         }
         public bool SetTDPSimple(TDPSimpleType level)
         {

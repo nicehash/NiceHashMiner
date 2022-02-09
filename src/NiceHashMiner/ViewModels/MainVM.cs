@@ -359,6 +359,9 @@ namespace NiceHashMiner.ViewModels
                     }
 
                     break;
+
+                default:
+                    break;
             }
 
             OnPropertyChanged(nameof(GlobalRate));

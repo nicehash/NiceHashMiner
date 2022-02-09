@@ -235,8 +235,8 @@ namespace NHMCore
                 case RigStatus.Error: return "ERROR";
                 case RigStatus.Pending: return "PENDING";
                 case RigStatus.Disabled: return "DISABLED";
+                default: return "UNKNOWN";
             }
-            return "UNKNOWN";
         }
 
 

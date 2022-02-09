@@ -98,6 +98,25 @@ namespace NiceHashMiner.ViewModels.Plugins
             MinerPluginsManager.InstallRemoveProgress(Plugin.PluginUUID, Progress);
         }
 
+        private static string GetStateProgressText(PluginInstallProgressState state, int progress)
+        {
+            switch (state)
+            {
+                case PluginInstallProgressState.Pending:
+                    return Tr("Pending Install");
+                case PluginInstallProgressState.DownloadingMiner:
+                    return Tr("Downloading Miner: {0}%", progress);
+                case PluginInstallProgressState.DownloadingPlugin:
+                    return Tr("Downloading Plugin: {0}%", progress);
+                case PluginInstallProgressState.ExtractingMiner:
+                    return Tr("Extracting Miner: {0}%", progress);
+                case PluginInstallProgressState.ExtractingPlugin:
+                    return Tr("Extracting Plugin: {0}%", progress);
+                default:
+                    return Tr("Pending Install");
+            }
+        }
+
         protected PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
         {
             Plugin = plugin;
@@ -117,30 +136,7 @@ namespace NiceHashMiner.ViewModels.Plugins
             Progress = new Progress<Tuple<PluginInstallProgressState, int>>(status =>
             {
                 var (state, progress) = status;
-
-                string statusText;
-
-                switch (state)
-                {
-                    case PluginInstallProgressState.Pending:
-                        statusText = Tr("Pending Install");
-                        break;
-                    case PluginInstallProgressState.DownloadingMiner:
-                        statusText = Tr("Downloading Miner: {0}%", progress);
-                        break;
-                    case PluginInstallProgressState.DownloadingPlugin:
-                        statusText = Tr("Downloading Plugin: {0}%", progress);
-                        break;
-                    case PluginInstallProgressState.ExtractingMiner:
-                        statusText = Tr("Extracting Miner: {0}%", progress);
-                        break;
-                    case PluginInstallProgressState.ExtractingPlugin:
-                        statusText = Tr("Extracting Plugin: {0}%", progress);
-                        break;
-                    default:
-                        statusText = Tr("Pending Install");
-                        break;
-                }
+                string statusText = GetStateProgressText(state, progress);
 
                 Load.IsInstalling = state < PluginInstallProgressState.FailedDownloadingPlugin;
                 Load.Report((statusText, progress));

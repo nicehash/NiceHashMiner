@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace NHM.Common.Enums
 {
@@ -174,6 +175,20 @@ namespace NHM.Common.Enums
                 names[i] = name;
             }
             return string.Join("+", names);
+        }
+
+        public static bool IsObsolete(this Enum value)
+        {
+            try
+            {
+                FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
+                ObsoleteAttribute[] attributes = (ObsoleteAttribute[])fieldInfo.GetCustomAttributes(typeof(ObsoleteAttribute), false);
+                return (attributes != null && attributes.Length > 0);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

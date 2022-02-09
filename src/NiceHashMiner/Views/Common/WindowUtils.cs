@@ -227,6 +227,8 @@ namespace NiceHashMiner.Views.Common
                 case TextBlock tb:
                     Translate(tb);
                     break;
+                default:
+                    break;
             }
         }
 
@@ -247,9 +249,11 @@ namespace NiceHashMiner.Views.Common
                 case UIElement u:
                     Translate(u);
                     break;
-                    //case SettingsBaseVM sb:
-                    //    Translate(sb);
-                    //    break;
+                //case SettingsBaseVM sb:
+                //    Translate(sb);
+                //    break;
+                default:
+                    break;
             }
         }
 

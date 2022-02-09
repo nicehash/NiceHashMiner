@@ -35,6 +35,16 @@ namespace LolMiner
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
+        private static int GetMultiplier(string speedUnit)
+        {
+            switch (speedUnit)
+            {
+                case "mh/s": return 1000000; //1M
+                case "kh/s": return 1000; //1k
+                default: return 1;
+            }
+        }
+
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var ad = new ApiData();
@@ -44,19 +54,7 @@ namespace LolMiner
                 ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var speedUnit = summary.Session.Performance_Unit;
-                var multiplier = 1;
-                switch (speedUnit)
-                {
-                    case "mh/s":
-                        multiplier = 1000000; //1M
-                        break;
-                    case "kh/s":
-                        multiplier = 1000; //1k
-                        break;
-                    default:
-                        break;
-                }
+                var multiplier = GetMultiplier(summary.Session.Performance_Unit);
                 var totalSpeed = summary.Session.Performance_Summary * multiplier;
 
                 var totalPowerUsage = 0;

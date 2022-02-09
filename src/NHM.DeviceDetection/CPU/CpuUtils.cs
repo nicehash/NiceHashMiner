@@ -32,10 +32,8 @@ namespace NHM.DeviceDetection.CPU
                 case CpuExtensionType.AVX: return cpuID.SupportsAVX;
                 case CpuExtensionType.AES: return cpuID.SupportsAES_SSE42;
                 case CpuExtensionType.SSE2: return cpuID.SupportsSSE2;
-                default: // CPUExtensionType.Automatic
-                    break;
+                default: return false;
             }
-            return false;
         }
 
         public static List<CpuExtensionType> SupportedExtensions(CpuID cpuID)
