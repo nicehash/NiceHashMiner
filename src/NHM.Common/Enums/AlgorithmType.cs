@@ -126,6 +126,10 @@ namespace NHM.Common.Enums
         CuckaRooz29 = 55,
         //[Obsolete("UNUSED Algorithm")]
         Octopus = 56,
+        //[Obsolete("UNUSED Algorithm")]
+        Autolykos = 57,
+        //[Obsolete("UNUSED Algorithm")]
+        ZelHash = 58,
         #endregion // NiceHashAPI
     }
 
@@ -183,9 +187,9 @@ namespace NHM.Common.Enums
             {
                 FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
                 ObsoleteAttribute[] attributes = (ObsoleteAttribute[])fieldInfo.GetCustomAttributes(typeof(ObsoleteAttribute), false);
-                return (attributes != null && attributes.Length > 0);
+                return attributes != null && attributes.Length > 0;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
