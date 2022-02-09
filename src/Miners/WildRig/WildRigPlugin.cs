@@ -105,13 +105,7 @@ namespace WildRig
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            if (device is AMDDevice amd)
-            {
-                Version min = new Version(21, 5, 2);
-                if (amd.DEVICE_AMD_DRIVER < min) return (DriverVersionCheckType.DriverVersionObsolete, min);
-                else return (DriverVersionCheckType.DriverVersionOK, amd.DEVICE_AMD_DRIVER);
-            }
-            return (DriverVersionCheckType.DriverCheckNotImplementedForThisDeviceType, new Version(0, 0));
+            return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }
     }
 }

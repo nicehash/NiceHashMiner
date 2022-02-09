@@ -181,7 +181,7 @@ namespace NHMCore.Notifications
                 Action = () => { Process.Start(Links.VisitReleasesUrl); }
             };
             NotificationsManager.Instance.AddNotificationToList(notificationIfUnsuccessfull);
-            var notification = NotificationsManager.Instance.Notifications.FirstOrDefault(n => n.Group == NotificationsGroup.NhmUpdate);
+            var notification = NotificationsManager.Instance.Notifications.FirstOrDefault(n => n.Group == NotificationsGroup.NhmUpdate.ToString());
             if (notification != null) NotificationsManager.Instance.RemoveNotificationFromList(notification);
         }
 
@@ -203,7 +203,7 @@ namespace NHMCore.Notifications
 
             try
             {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.PluginUpdate).FirstOrDefault();
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.PluginUpdate.ToString()).FirstOrDefault();
                 if (pluginNotification != null)
                 {
                     if (pluginNotification.NotificationNew == true)
@@ -291,7 +291,7 @@ namespace NHMCore.Notifications
         public static void CreateUnavailablePrimaryMarketLocationInfo()
         {
             //clear "market notifications"
-            var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market);
+            var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market.ToString());
             foreach (var marketNotif in marketNotifications)
             {
                 NotificationsManager.Instance.RemoveNotificationFromList(marketNotif);
@@ -304,7 +304,7 @@ namespace NHMCore.Notifications
         public static void CreateUnavailableAllMarketsLocationInfo()
         {
             //clear "market notifications"
-            var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market);
+            var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market.ToString());
             foreach (var marketNotif in marketNotifications)
             {
                 NotificationsManager.Instance.RemoveNotificationFromList(marketNotif);
@@ -319,8 +319,8 @@ namespace NHMCore.Notifications
             // clear old state
             try
             {
-                var profitNotification = NotificationsManager.Instance.Notifications.FirstOrDefault(notif => notif.Group == NotificationsGroup.Profit);
-                if(profitNotification != null) NotificationsManager.Instance.Notifications.Remove(profitNotification);
+                var profitNotification = NotificationsManager.Instance.Notifications.FirstOrDefault(notif => notif.Group == NotificationsGroup.Profit.ToString());
+                if (profitNotification != null) NotificationsManager.Instance.Notifications.Remove(profitNotification);
             }
             catch (Exception ex)
             {
@@ -348,7 +348,7 @@ namespace NHMCore.Notifications
         public static void CreateLogUploadResultInfo(bool success, string uuid)
         {
             //clean previous
-            var logUploadNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.LogArchiveUpload).FirstOrDefault();
+            var logUploadNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.LogArchiveUpload.ToString()).FirstOrDefault();
             if (logUploadNotifications != null) logUploadNotifications.RemoveNotification();
 
             var sentence = Tr("was uploaded.");
@@ -388,7 +388,7 @@ namespace NHMCore.Notifications
                 "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
             try
             {
-                var hashrateNofitication = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.HashrateDeviatesFromBenchmark).FirstOrDefault();
+                var hashrateNofitication = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.HashrateDeviatesFromBenchmark.ToString()).FirstOrDefault();
                 if (hashrateNofitication != null)
                 {
                     if (hashrateNofitication.NotificationNew == true)
@@ -422,7 +422,7 @@ namespace NHMCore.Notifications
             var content = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
             try
             {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumBinary).FirstOrDefault();
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumBinary.ToString()).FirstOrDefault();
                 if (pluginNotification != null)
                 {
                     var newSentence = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
@@ -441,7 +441,7 @@ namespace NHMCore.Notifications
             }
 
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.WrongChecksumBinary, Tr("Checksum validation failed"), content);
-            NotificationsManager.Instance.AddNotificationToList(notification);    
+            NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateFailedDownloadWrongHashDll(string pluginName)
@@ -449,7 +449,7 @@ namespace NHMCore.Notifications
             var content = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
             try
             {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumDll).FirstOrDefault();
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumDll.ToString()).FirstOrDefault();
                 if (pluginNotification != null)
                 {
                     var newSentence = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
@@ -484,7 +484,7 @@ namespace NHMCore.Notifications
             var content = Tr("Miner \"{0}\" was restarted at {1}", minerName, dateTime.ToString("HH:mm:ss MM/dd/yyyy"));
             try
             {
-                var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart).FirstOrDefault();
+                var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart.ToString()).FirstOrDefault();
                 if (restartNotification != null)
                 {
                     //add new content to prev content
@@ -507,7 +507,7 @@ namespace NHMCore.Notifications
             var content = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
             try
             {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NullChecksum).FirstOrDefault();
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NullChecksum.ToString()).FirstOrDefault();
                 if (pluginNotification != null)
                 {
                     var newSentence = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
@@ -528,10 +528,10 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.NullChecksum, Tr("Checksum validation null"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
-        
+
         public static void CreateGamingStarted()
         {
-            var gamingFinishedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingFinished).FirstOrDefault();
+            var gamingFinishedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingFinished.ToString()).FirstOrDefault();
             if (gamingFinishedNotification != null) gamingFinishedNotification.RemoveNotification();
 
 
@@ -540,7 +540,7 @@ namespace NHMCore.Notifications
         }
         public static void CreateGamingFinished()
         {
-            var gamingStartedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingStarted).FirstOrDefault();
+            var gamingStartedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingStarted.ToString()).FirstOrDefault();
             if (gamingStartedNotification != null) gamingStartedNotification.RemoveNotification();
 
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
@@ -558,13 +558,14 @@ namespace NHMCore.Notifications
                 content += Tr("Lower than recommended") + ":\n";
                 var nvidias = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
-                if (nvidias.Any()) {
-                    content += "\tNvidia: at least "+nvidias.FirstOrDefault().Item3+"\n";
+                if (nvidias.Any())
+                {
+                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().Item3 + "\n";
                 }
                 if (amds.Any())
                 {
                     content += "\tAMD: (adrenalin)\n";
-                    foreach(var amd in amds)
+                    foreach (var amd in amds)
                     {
                         content += "\t\t" + amd.Item2.Name + ": at least " + amd.Item3 + "\n";
                     }
@@ -588,12 +589,9 @@ namespace NHMCore.Notifications
                     }
                 }
             }
-            bool gotEnum = NotificationsGroup.TryParse(pluginName, out NotificationsGroup groupForMiner);
-            if (gotEnum)
-            {
-                var notification = new Notification(NotificationsType.Warning, groupForMiner, Tr(name), Tr(content));
-                NotificationsManager.Instance.AddNotificationToList(notification);
-            }
+            var notification = new Notification(NotificationsType.Warning, pluginName + "OldDriversWarning", Tr(name), Tr(content));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+
             Logger.Warn(pluginName, content);
         }
 

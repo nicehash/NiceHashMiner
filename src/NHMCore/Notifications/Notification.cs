@@ -6,7 +6,8 @@ namespace NHMCore.Notifications
     public class Notification : NotifyChangedBase
     {
         public NotificationsType Type { get; } = NotificationsType.Info;
-        public NotificationsGroup Group { get; } = NotificationsGroup.Misc;
+        //public NotificationsGroup Group { get; } = NotificationsGroup.Misc;
+        public string Group { get; } = NotificationsGroup.Misc.ToString();
 
         public Notification(string name, string content)
         {
@@ -28,7 +29,7 @@ namespace NHMCore.Notifications
         public Notification(NotificationsType type, NotificationsGroup group, string name, string content)
         {
             Type = type;
-            Group = group;
+            Group = group.ToString();
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
@@ -38,12 +39,21 @@ namespace NHMCore.Notifications
         public Notification(NotificationsType type, NotificationsGroup group, string name, string content, string url)
         {
             Type = type;
-            Group = group;
+            Group = group.ToString();
             Name = name;
             NotificationContent = content;
             NotificationUrl = url;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
+        }
+
+        public Notification(NotificationsType type, string dynamicGroup, string name, string content)
+        {
+            Type = type;
+            Group = dynamicGroup;
+            Name = name;
+            NotificationContent = content;
+            NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
         public NotificationAction Action { get; internal set; } = null;

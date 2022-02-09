@@ -164,24 +164,12 @@ namespace GMinerPlugin
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            if (device is AMDDevice amd)
-            {
-                var min = new Version(21, 5, 2);
-                if (amd.DEVICE_AMD_DRIVER < min) return (DriverVersionCheckType.DriverVersionObsolete, min);
-                return (DriverVersionCheckType.DriverVersionOK, amd.DEVICE_AMD_DRIVER);
-            }
-            return (DriverVersionCheckType.DriverCheckNotImplementedForThisDeviceType, new Version(0, 0));
+            return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-            if (device is CUDADevice nvidia)
-            {
-                var min = new Version(411, 31);
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (DriverVersionCheckType.DriverVersionObsolete, min);
-                return (DriverVersionCheckType.DriverVersionOK, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
-            }
-            return (DriverVersionCheckType.DriverCheckNotImplementedForThisDeviceType, new Version(0, 0));
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
     }
 }

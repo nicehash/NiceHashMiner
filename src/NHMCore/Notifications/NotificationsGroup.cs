@@ -55,25 +55,6 @@ namespace NHMCore.Notifications
         GamingFinished,
         AdminRunRequired,
         MotherboardNotCompatible,
-        DriverVersionProblem,
-
-        BrokenMinerPlugin,
-        ExamplePlugin,
-        FakePlugin,
-        CryptoDredgePlugin,
-        ExcavatorPlugin,
-        GMinerPlugin,
-        LolMinerPlugin,
-        MiniZPlugin,
-        NanoMinerPlugin,
-        NBMinerPlugin,
-        PhoenixPlugin,
-        SRBMinerPlugin,
-        TeamRedMinerPlugin,
-        TRexPlugin,
-        TTMinerPlugin,
-        WildRigPlugin,
-        XMRigPlugin,
-        ZEnemyPlugin
+        DriverVersionProblem
     }
 }

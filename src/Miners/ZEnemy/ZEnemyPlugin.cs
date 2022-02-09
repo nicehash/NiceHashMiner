@@ -93,24 +93,12 @@ namespace ZEnemy
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            if (device is CUDADevice)
-            {
-                Version min = new Version(461, 33);
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (DriverVersionCheckType.DriverVersionObsolete, min);
-                return (DriverVersionCheckType.DriverVersionOK, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
-            }
-            return (DriverVersionCheckType.DriverCheckNotImplementedForThisDeviceType, new Version(0, 0));
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(461, 33));
         }
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-            if (device is CUDADevice)
-            {
-                Version min = new Version(411, 31);
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < min) return (DriverVersionCheckType.DriverVersionObsolete, min);
-                return (DriverVersionCheckType.DriverVersionOK, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
-            }
-            return (DriverVersionCheckType.DriverCheckNotImplementedForThisDeviceType, new Version(0, 0));
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
     }
 }
