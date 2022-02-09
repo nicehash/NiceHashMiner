@@ -17,7 +17,7 @@ namespace NHMCore
         public static string RigID() => UUID.GetDeviceB64UUID();
         public static DispatcherObject App { get; set; }
         // change this if TOS changes
-        public static int CurrentTosVer => 4;
+        public static int CurrentTosVer => 5;
 
         #region Credentials methods
         // execute after 5seconds. Finish execution on last event after 5seconds

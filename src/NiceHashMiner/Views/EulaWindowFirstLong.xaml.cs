@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace NiceHashMiner.Views
@@ -48,7 +49,7 @@ namespace NiceHashMiner.Views
             Close();
         }
 
-        private void Hyperlink_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Hyperlink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var hyperlink = (Hyperlink)sender;
             Process.Start(hyperlink.NavigateUri.ToString());
