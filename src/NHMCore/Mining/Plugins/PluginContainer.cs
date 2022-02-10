@@ -326,12 +326,12 @@ namespace NHMCore.Mining.Plugins
         #region DriverRequirement
         void CheckDevicesDriverVersionsAndNotifyIfOutdated(IEnumerable<BaseDevice> devices)
         {
-            var listOfOldDrivers = new List<(DriverVersionLimitType outDatedType, BaseDevice dev, (DriverVersionCheckType checkReturnCode, Version minVersion))>();
+            var listOfOldDrivers = new List<(DriverVersionLimitType, BaseDevice, (DriverVersionCheckType, Version))>();
             devices.ToList().ForEach(dev => listOfOldDrivers.AddRange(CheckDeviceVersionLimits(dev)));
             if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
         }
 
-        private List<(DriverVersionLimitType outDatedType, BaseDevice dev, (DriverVersionCheckType checkReturnCode, Version minVersion))> CheckDeviceVersionLimits(BaseDevice device)
+        private List<(DriverVersionLimitType, BaseDevice, (DriverVersionCheckType, Version))> CheckDeviceVersionLimits(BaseDevice device)
         {
             var oldDriversForDevice = new List<(DriverVersionLimitType outDatedType, BaseDevice dev,(DriverVersionCheckType checkReturnCode, Version minVersion) driverVersionCheckReturn)>();
             if (device is AMDDevice dev && !IsAMDDriverVersionValidFormat(dev))
@@ -340,7 +340,7 @@ namespace NHMCore.Mining.Plugins
                 return oldDriversForDevice;
             }
             if (_plugin is IDriverIsMinimumRequired minRequired) oldDriversForDevice.Add((DriverVersionLimitType.MinRequired, device, minRequired.IsDriverMinimumRequired(device)));
-            else if (_plugin is IDriverIsMinimumRecommended minRecommended) oldDriversForDevice.Add((DriverVersionLimitType.MinRecommended, device, minRecommended.IsDriverMinimumRecommended(device)));
+            if (_plugin is IDriverIsMinimumRecommended minRecommended) oldDriversForDevice.Add((DriverVersionLimitType.MinRecommended, device, minRecommended.IsDriverMinimumRecommended(device)));
             if (oldDriversForDevice.Count == 0) return oldDriversForDevice;
             oldDriversForDevice = oldDriversForDevice.Where(item => item.driverVersionCheckReturn.checkReturnCode == DriverVersionCheckType.DriverVersionObsolete).ToList();
             return oldDriversForDevice;

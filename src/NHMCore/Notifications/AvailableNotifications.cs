@@ -553,25 +553,18 @@ namespace NHMCore.Notifications
             string content = Tr("Older driver versions have been detected on this system, and they may cause problems with {0}. Please update them.", pluginName) + "\n";
 
             var criticals = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRequired);
-            var recommends = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRecommended);
-            //var recommends = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRecommended && !criticals.Any(dev1 => dev1.Item2 == dev.Item2));
+            var recommends = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRecommended && !criticals.Any(dev1 => dev1.Item2 == dev.Item2));
 
             if (recommends.Any())
             {
                 content += Tr("Lower than recommended") + ":\n";
                 var nvidias = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
-                if (nvidias.Any())
-                {
-                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
-                }
+                if (nvidias.Any()) content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
                 if (amds.Any())
                 {
                     content += "\tAMD: (adrenalin)\n";
-                    foreach (var amd in amds)
-                    {
-                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.driverCheckReturn.minVersion + "\n";
-                    }
+                    foreach (var amd in amds) content += "\t\t" + amd.Item2.Name + ": at least " + amd.driverCheckReturn.minVersion + "\n";
                 }
             }
             if (criticals.Any())
@@ -579,22 +572,15 @@ namespace NHMCore.Notifications
                 content += Tr("Lower than required") + ":\n";
                 var nvidias = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
-                if (nvidias.Any())
-                {
-                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
-                }
+                if (nvidias.Any()) content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
                 if (amds.Any())
                 {
                     content += "\tAMD: (adrenalin)\n";
-                    foreach (var amd in amds)
-                    {
-                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.driverCheckReturn.minVersion + "\n";
-                    }
+                    foreach (var amd in amds) content += "\t\t" + amd.Item2.Name + ": at least " + amd.driverCheckReturn.minVersion + "\n";
                 }
             }
             var notification = new Notification(NotificationsType.Warning, pluginName + pluginUUID, Tr(name), Tr(content));
             NotificationsManager.Instance.AddNotificationToList(notification);
-
             Logger.Warn(pluginName, content);
         }
 
