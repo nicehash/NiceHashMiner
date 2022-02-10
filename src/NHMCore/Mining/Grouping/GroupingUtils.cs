@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace NHMCore.Mining.Grouping
@@ -22,8 +21,6 @@ namespace NHMCore.Mining.Grouping
             return a.PluginContainer.CanGroupAlgorithmContainer(a, b);
         }
 
-        private static bool IsCurrentWithinGroup(AlgorithmContainer current, List<AlgorithmContainer> group) => group.Any(p => p.ComputeDevice.Uuid == current.ComputeDevice.Uuid);
-
         public static Dictionary<string, List<AlgorithmContainer>> GetGroupedAlgorithmContainers(List<AlgorithmContainer> profitableAlgorithmContainers)
         {
             // Group compatible mining pairs into miners.
@@ -31,7 +28,8 @@ namespace NHMCore.Mining.Grouping
             // #2 after that we check the plugins CanGroup (most often the case is different devices same algorithm but this is dependant on the plugin)
             // The less miner instances we have the better.
             var groupedAlgorithms = new Dictionary<string, List<AlgorithmContainer>>();
-            Func<AlgorithmContainer, bool> isAlreadyGrouped = (AlgorithmContainer current) => groupedAlgorithms.Values.Any(group => IsCurrentWithinGroup(current, group));
+            bool isCurrentWithinGroup(AlgorithmContainer current, List<AlgorithmContainer> group) => group.Any(p => p.ComputeDevice.Uuid == current.ComputeDevice.Uuid);
+            bool isAlreadyGrouped(AlgorithmContainer current) => groupedAlgorithms.Values.Any(group => isCurrentWithinGroup(current, group));
 
             foreach (var current in profitableAlgorithmContainers)
             {

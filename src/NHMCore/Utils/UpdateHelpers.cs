@@ -53,7 +53,7 @@ namespace NHMCore.Utils
                 // check for updates every 30s
                 //var checkWaitTime = TimeSpan.FromSeconds(30);
                 var checkWaitTime = TimeSpan.FromSeconds(60); // TODO DEBUG
-                Func<bool> isActive = () => !stop.IsCancellationRequested;
+                bool isActive() => !stop.IsCancellationRequested;
 
                 while (isActive())
                 {

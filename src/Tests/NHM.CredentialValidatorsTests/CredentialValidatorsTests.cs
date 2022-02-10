@@ -25,7 +25,7 @@ namespace NHM.CredentialValidatorsTests
         public void TestValidateBitcoinAddressBase58()
         {
             var tl = new TestLabel { };
-            Func<string, bool, bool> isValid = ValidateBitcoinAddressBase58;
+            bool isValid(string btc, bool isProduction) => ValidateBitcoinAddressBase58(btc, isProduction);
             Assert.AreEqual(true,  isValid("17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem", true), tl.label());
             Assert.AreEqual(true,  isValid("33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW", true), tl.label());
             Assert.AreEqual(false, isValid("2N6ibfrTwUSSvzAz1esPe1gYULG82asTHiS", true), tl.label());
@@ -45,7 +45,7 @@ namespace NHM.CredentialValidatorsTests
         public void TestValidateBitcoinAddressBech32()
         {
             var tl = new TestLabel { };
-            Func<string, bool, bool> isValid = ValidateBitcoinAddressBech32;
+            bool isValid(string btc, bool isProduction) => ValidateBitcoinAddressBech32(btc, isProduction);
             Assert.AreEqual(false, isValid("17VZNX1SN5NtKa8UQFxwQbFeFc3iqRYhem", true), tl.label());
             Assert.AreEqual(false, isValid("33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW", true), tl.label());
             Assert.AreEqual(false, isValid("2N6ibfrTwUSSvzAz1esPe1gYULG82asTHiS", true), tl.label());
@@ -65,7 +65,7 @@ namespace NHM.CredentialValidatorsTests
         public void TestValidateBitcoinAddress()
         {
             var tl = new TestLabel{ };
-            Func<string, bool, bool> isValid = ValidateBitcoinAddress;
+            bool isValid(string btc, bool isProduction) => ValidateBitcoinAddress(btc, isProduction);
             Assert.AreEqual(true,  isValid("33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW", true), tl.label());
             Assert.AreEqual(false, isValid("2N6ibfrTwUSSvzAz1esPe1gYULG82asTHiS", true), tl.label());
             Assert.AreEqual(true,  isValid("2N6ibfrTwUSSvzAz1esPe1gYULG82asTHiS", false), tl.label());

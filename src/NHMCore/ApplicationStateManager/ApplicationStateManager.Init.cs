@@ -41,13 +41,13 @@ namespace NHMCore
             {
                 var allSteps = 14;
                 var currentStep = 0;
-                var nextProgPerc = new Func<int>(() =>
+                int nextProgPerc()
                 {
                     ++currentStep;
                     var perc = (int)(((double)currentStep / allSteps) * 100);
                     if (perc > 100) return 100;
                     return perc;
-                });
+                };
                 // STEP
                 // Checking System Memory
                 loader.PrimaryProgress?.Report((Tr("Checking System Specs"), nextProgPerc()));
@@ -58,7 +58,7 @@ namespace NHMCore
                 #region Device Detection
 
                 // STEP +3
-                Func<DeviceDetectionStep, string> detectionStepMessage = (DeviceDetectionStep step) =>
+                string detectionStepMessage(DeviceDetectionStep step)
                 {
                     switch (step)
                     {

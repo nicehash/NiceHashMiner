@@ -288,7 +288,7 @@ _DEVICES_
             {
                 var workers = string.Join(",", _miningPairs.Select((_, i) => $@"""{i}"""));
                 var workersReset = @"{""id"":1,""method"":""workers.reset"",""params"":[__WORKERS__]}".Replace("__WORKERS__", workers);
-                Func<bool> isActive = () => !ct.Token.IsCancellationRequested;
+                bool isActive() => !ct.Token.IsCancellationRequested;
                 var lastSuccessfulSpeeds = DateTime.UtcNow;
                 while (isActive())
                 {

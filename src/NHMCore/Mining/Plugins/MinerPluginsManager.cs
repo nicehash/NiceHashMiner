@@ -239,57 +239,50 @@ namespace NHMCore.Mining.Plugins
         {
             try
             {
-                var checkWaitTime = TimeSpan.FromMilliseconds(50);
-                Func<bool> isActive = () => !stop.IsCancellationRequested;
+                bool isActive() => !stop.IsCancellationRequested;
 
-
-                // TODO set this interval somwhere
-                // periodically update the plugin list
                 var getOnlineMinerPluginsElapsedTimeChecker = new ElapsedTimeChecker(MinerPluginsUpdaterSettings.CheckPluginsInterval, false);
+                async Task<bool> updateOnlineMinerPluginsList() {
+                    var check = getOnlineMinerPluginsElapsedTimeChecker.CheckAndMarkElapsedTime();
+                    if (!check) return false;
+                    Logger.Debug("MinerPluginsManager", $"Checking for plugin updates");
+                    var success = await GetOnlineMinerPlugins();
+                    if (success) CrossReferenceInstalledWithOnline();
+                    var logValue = success ? "SUCCESS" : "FAIL";
+                    Logger.Debug("MinerPluginsManager", $"Checking for plugin updates returned {logValue}");
+                    return success;
+                };
 
+                void updateMinerPlugins() {
+                    Logger.Debug("MinerPluginsManager", $"Checking plugins to Install/Update");
+                    var pluginsThatCanAutoUpdate = PluginsPackagesInfosCRs.Values
+                        .Where(p => p.Installed)
+                        .Where(p => p.IsAutoUpdateEnabled)
+                        .Where(p => p.HasNewerVersion)
+                        .Where(p => p.CompatibleNHPluginVersion)
+                        .Where(p => p.Supported)
+                        .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
+                        .Where(p => MinerPluginInstallTasks.ContainsKey(p.PluginUUID) == false) // skip if update is already in progress
+                        .Select(p => p.PluginUUID)
+                        .ToArray();
+                    foreach (var pluginUUID in pluginsThatCanAutoUpdate)
+                    {
+                        Logger.Debug("MinerPluginsManager", $"Main loop Install/Update {pluginUUID}");
+                        _ = _minerPluginInstallTasksProgress.TryGetValue(pluginUUID, out var progress);
+                        _ = DownloadAndInstall(pluginUUID, progress, stop);
+                    }
+                };
 
-                // TODO for now every minute check
-                // TODO debug only we should check plugin updates after we update the miner plugin API
-                //var pluginsUpdateElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromSeconds(30), false);
-
+                var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 Logger.Debug("MinerPluginsManager", $"STARTING MAIN LOOP");
                 while (isActive())
                 {
                     try
                     {
                         if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
-
-                        var execAutoUpdate = false;
-                        if (getOnlineMinerPluginsElapsedTimeChecker.CheckAndMarkElapsedTime())
-                        {
-                            Logger.Debug("MinerPluginsManager", $"Checking for plugin updates");
-                            var success = await GetOnlineMinerPlugins();
-                            if (success) CrossReferenceInstalledWithOnline();
-                            var logValue = success ? "SUCCESS" : "FAIL";
-                            Logger.Debug("MinerPluginsManager", $"Checking for plugin updates returned {logValue}");
-                            execAutoUpdate = success && UpdateSettings.Instance.AutoUpdateMinerPlugins;
-                        }
-
-                        if (isActive() && execAutoUpdate)
-                        {
-                            Logger.Debug("MinerPluginsManager", $"Checking plugins to Install/Update");
-                            var pluginsThatCanAutoUpdate = PluginsPackagesInfosCRs.Values
-                                .Where(p => p.Installed)
-                                .Where(p => p.IsAutoUpdateEnabled)
-                                .Where(p => p.HasNewerVersion)
-                                .Where(p => p.CompatibleNHPluginVersion)
-                                .Where(p => p.Supported)
-                                .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
-                                .Where(p => MinerPluginInstallTasks.ContainsKey(p.PluginUUID) == false) // skip if update is already in progress
-                                .Select(p => p.PluginUUID)
-                                .ToArray();
-                            foreach (var pluginUUID in pluginsThatCanAutoUpdate)
-                            {
-                                Logger.Debug("MinerPluginsManager", $"Main loop Install/Update {pluginUUID}");
-                                _ = _minerPluginInstallTasksProgress.TryGetValue(pluginUUID, out var progress);
-                                _ = DownloadAndInstall(pluginUUID, progress, stop);
-                            }
-                        }
+                        var isPluginsListUpdated = await updateOnlineMinerPluginsList();
+                        var executeMinerPluginsUpdate = UpdateSettings.Instance.AutoUpdateMinerPlugins && isPluginsListUpdated;
+                        if (isActive() && executeMinerPluginsUpdate) updateMinerPlugins();
                     }
                     catch (TaskCanceledException e)
                     {
@@ -348,13 +341,13 @@ namespace NHMCore.Mining.Plugins
             public static async Task RestartDevicesStateLoop(CancellationToken stop)
             {
                 var lastCommandTime = DateTime.UtcNow;
-                Func<bool> checkCommandsForRestart = () => (DateTime.UtcNow - lastCommandTime).TotalSeconds >= 0.5;
+                bool checkCommandsForRestart() => (DateTime.UtcNow - lastCommandTime).TotalSeconds >= 0.5;
                 var pairedCommands = new Dictionary<string, List<IPluginInstallerCommand>>();
                 var pluginsToDelete = new List<string>();
                 try
                 {
                     var checkWaitTime = TimeSpan.FromMilliseconds(50);
-                    Func<bool> isActive = () => !stop.IsCancellationRequested;
+                    bool isActive() => !stop.IsCancellationRequested;
                     Logger.Info("PluginInstaller", "Starting RestartDevicesStateLoop");
                     while (isActive())
                     {
@@ -377,15 +370,12 @@ namespace NHMCore.Mining.Plugins
 
                             foreach (var (pluginUUID, removal, installation) in partitionedCommands)
                             {
-                                if (removal.Any() && installation.Any())
-                                {
+                                var installAndRemoveAtSameTime = removal.Any() && installation.Any();
+                                var moreThanOneCommand = removal.Count() > 1 || installation.Count() > 1;
+                                var removeCommand = installAndRemoveAtSameTime || moreThanOneCommand;
+                                if (installAndRemoveAtSameTime)
                                     Logger.Error("PluginInstaller", $"Plugin {pluginUUID} has installation and removal commands at same time!!!");
-                                    pairedCommands.Remove(pluginUUID);
-                                }
-                                else if (removal.Count() > 1 || installation.Count() > 1)
-                                {
-                                    pairedCommands.Remove(pluginUUID);
-                                }
+                                if (removeCommand) pairedCommands.Remove(pluginUUID);
                             }
                             // when we have no commands pending restart devices
                             if (!pairedCommands.Any())
@@ -402,11 +392,8 @@ namespace NHMCore.Mining.Plugins
 
                         // command handling
                         var (command, hasTimedout, exceptionString) = await Channel.ReadAsync(checkWaitTime, stop);
-                        if (command == null)
-                        {
-                            if (exceptionString != null) Logger.Error("PluginInstaller", $"Channel.ReadAsync error: {exceptionString}");
-                            continue;
-                        }
+                        if (exceptionString != null) Logger.Error("PluginInstaller", $"Channel.ReadAsync error: {exceptionString}");
+                        if (command == null) continue;
                         // handle commands
                         if (!pairedCommands.ContainsKey(command.PluginUUID)) pairedCommands[command.PluginUUID] = new List<IPluginInstallerCommand>() { };
                         pairedCommands[command.PluginUUID].Add(command);
@@ -504,10 +491,8 @@ namespace NHMCore.Mining.Plugins
 
         public static async Task UpdateMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
-            Func<PluginContainer, bool> hasUpdate = (p) =>
-            {
-                return PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr) && pcr.HasNewerVersion;
-            };
+            bool hasUpdate(PluginContainer p) => PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr) && pcr.HasNewerVersion;
+
             var pluginsToUpdate = PluginContainer.PluginContainers
                 .Where(p => p.Enabled)
                 .Where(hasUpdate)

@@ -384,7 +384,7 @@ namespace NHMCore.Mining
                     () => TimeSpan.FromSeconds(MiningSettings.Instance.MinerAPIQueryInterval),
                     true);
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
-                Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
+                bool isOk() => !runningTask.IsCompleted && !stop.IsCancellationRequested;
                 Logger.Info(MinerTag(), $"MinerStatsLoop START");
                 while (isOk())
                 {
@@ -424,7 +424,7 @@ namespace NHMCore.Mining
             try
             {
                 var checkWaitTime = TimeSpan.FromMilliseconds(60000);
-                Func<bool> isOk = () => !runningTask.IsCompleted && !stop.IsCancellationRequested;
+                bool isOk() => !runningTask.IsCompleted && !stop.IsCancellationRequested;
                 Logger.Info(MinerTag(), $"XMRingStartedWaitTime START");
                 try
                 {

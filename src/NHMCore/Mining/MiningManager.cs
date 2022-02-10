@@ -360,7 +360,7 @@ namespace NHMCore.Mining
                 var devicesToMineChange = startMiningCommands
                     .Select(c => _miningDevices.FirstOrDefault(miningDev => miningDev.Device == c.device))
                     .Any(MiningDevice.ShouldUpdate);
-                Func<ComputeDevice, bool> isValidMiningDevice = (ComputeDevice dev) => nonMiningCommands.All(c => c.device != dev);
+                bool isValidMiningDevice(ComputeDevice dev) => nonMiningCommands.All(c => c.device != dev);
                 var devicesToMine = _miningDevices
                     .Select(md => md.Device)
                     .Concat(startMiningCommands.Select(c => c.device))
@@ -433,7 +433,7 @@ namespace NHMCore.Mining
 
             var lastDeferredCommandTime = DateTime.UtcNow;
             var steamWatcher = new SteamWatcher();
-            Func<bool> handleDeferredCommands = () => (DateTime.UtcNow - lastDeferredCommandTime).TotalSeconds >= 0.5;
+            bool handleDeferredCommands() => (DateTime.UtcNow - lastDeferredCommandTime).TotalSeconds >= 0.5;
             var deferredCommands = new List<DeferredDeviceCommand>();
             try
             {
@@ -441,7 +441,7 @@ namespace NHMCore.Mining
                 switchingManager.ForceUpdate();
 
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
-                Func<bool> isActive = () => !stop.IsCancellationRequested;
+                bool isActive() => !stop.IsCancellationRequested;
                 _isGameRunning = steamWatcher.IsSteamGameRunning();
                 steamWatcher.OnSteamGameStartedChanged += async (s, isRunning) => {
                     await IsSteamGameRunningStatusChanged(isRunning);
@@ -498,7 +498,7 @@ namespace NHMCore.Mining
             try
             {
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
-                Func<bool> isActive = () => !stop.IsCancellationRequested;
+                bool isActive() => !stop.IsCancellationRequested;
 
                 // sleep time setting is minimal 1 minute, 19-20s interval
                 var preventSleepIntervalElapsedTimeChecker = new ElapsedTimeChecker(TimeSpan.FromSeconds(19), true);
