@@ -111,7 +111,7 @@ namespace NHMCore.Utils
             try
             {
                 // Let user know that something is happening after update process started
-                var updateNotification = NotificationsManager.Instance.Notifications.Find(notif => notif.Group == NotificationsGroup.NhmUpdate.ToString());
+                var updateNotification = NotificationsManager.Instance.Notifications.Find(notif => notif.Group == NotificationsGroup.NhmUpdate);
                 if (updateNotification != null) updateNotification.NotificationContent = Translations.Tr("Download in progress...");
 
                 // determine what how to update

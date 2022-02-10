@@ -79,7 +79,7 @@ namespace NHMCore
             if (isSelected && serviceLocationCode != null)
             {
                 var marketNotificationsRemoved = NotificationsManager.Instance.Notifications
-                    .Where(notif => notif.Group == NotificationsGroup.Market.ToString())
+                    .Where(notif => notif.Group == NotificationsGroup.Market)
                     .Select(NotificationsManager.Instance.RemoveNotificationFromList)
                     .ToArray()
                     .All(removed => removed);
