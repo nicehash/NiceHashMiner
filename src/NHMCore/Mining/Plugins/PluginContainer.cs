@@ -327,7 +327,10 @@ namespace NHMCore.Mining.Plugins
         void CheckDevicesDriverVersionsAndNotifyIfOutdated(IEnumerable<BaseDevice> devices)
         {
             var listOfOldDrivers = new List<(DriverVersionLimitType, BaseDevice, (DriverVersionCheckType, Version))>();
-            devices.ToList().ForEach(dev => listOfOldDrivers.AddRange(CheckDeviceVersionLimits(dev)));
+            foreach(var dev in devices)
+            {
+                listOfOldDrivers.AddRange(CheckDeviceVersionLimits(dev));
+            }
             if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
         }
 
