@@ -52,6 +52,7 @@ namespace NiceHashMiner
             designWindow.ShowDialog();
             return;
 #endif
+            BuildOptions.Init();
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             ApplicationStateManager.App = this;
             ApplicationStateManager.ApplicationExit = () =>
@@ -137,7 +138,6 @@ namespace NiceHashMiner
 
             // Init logger
             Logger.ConfigureWithFile(LoggingDebugConsoleSettings.Instance.LogToFile, Level.Info, LoggingDebugConsoleSettings.Instance.LogMaxFileSize);
-            BuildOptions.Init();
             Logger.Info(Tag, $"Build {BuildOptions.BUILD_TAG}");
 
             if (LoggingDebugConsoleSettings.Instance.DebugConsole)
