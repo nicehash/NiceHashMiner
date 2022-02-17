@@ -193,6 +193,39 @@ namespace NiceHashMiner
             return sb.ToString();
         }
 
+        private static string NHM_SUBKEY => @"SOFTWARE\" + "8abad8e2-b957-48ed-92ba-4339c2a40e78";
+        private static bool EnsureNHMSubKeyCalled = false;
+        private static void EnsureNHMSubKey()
+        {
+            if (EnsureNHMSubKeyCalled) return;
+            EnsureNHMSubKeyCalled = true;
+            try
+            {
+                using (var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, false))
+                {
+                    if (key == null) Registry.CurrentUser.CreateSubKey(NHM_SUBKEY);
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        private static void SetSubKey(string subKey, int value)
+        {
+            EnsureNHMSubKey();
+            try
+            {
+                using (var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, true))
+                {
+                    key.SetValue(subKey, value.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
         private async void App_OnStartup(object sender, StartupEventArgs e)
         {
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
@@ -226,10 +259,7 @@ namespace NiceHashMiner
                                             .Trim();
                         if(agreeTOS == TOSMain)
                         {
-                            using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
-                            {
-                                key.SetValue("AgreedWithTOS", TOSMain);
-                            }
+                            SetSubKey("AgreedWithTOS", 4);
                         }
                     }
 
@@ -242,10 +272,7 @@ namespace NiceHashMiner
                                                 .Trim();
                         if(agreeTOSMiner == TOS3rdParty)
                         {
-                            using (var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + GUID, true))
-                            {
-                                key.SetValue("Use3rdPartyMinersTOS", TOS3rdParty);
-                            }
+                            SetSubKey("Use3rdPartyMinersTOS", 4);
                         }
                     }
                 }
