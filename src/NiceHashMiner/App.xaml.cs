@@ -155,7 +155,7 @@ namespace NiceHashMiner
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             Logger.Info(Tag, $"Starting up {ApplicationStateManager.Title}");
-            if (ToSSetings.Instance.AgreedWithTOS != ApplicationStateManager.CurrentTosVer)
+            if (ToSSetings.Instance.AgreedWithTOS == -1)
             {
                 Logger.Info(Tag, $"TOS differs! agreed: {ToSSetings.Instance.AgreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}");
 
@@ -174,7 +174,7 @@ namespace NiceHashMiner
             }
 
             // Check 3rd party miners TOS
-            if (ToSSetings.Instance.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer)
+            if (ToSSetings.Instance.Use3rdPartyMinersTOS == -1)
             {
                 var thirdPty = new EulaWindowSecondShort { };
                 thirdPty.ShowDialog();

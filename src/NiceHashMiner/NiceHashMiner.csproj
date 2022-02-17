@@ -97,6 +97,12 @@
     <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceQuickActionMenu.xaml.cs">
       <DependentUpon>DeviceQuickActionMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EULA\EULA.xaml.cs">
+      <DependentUpon>EULA.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EULA\EULA3rdParty.xaml.cs">
+      <DependentUpon>EULA3rdParty.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ManuallyEnterBTCTutorial.xaml.cs">
       <DependentUpon>ManuallyEnterBTCTutorial.xaml</DependentUpon>
     </Compile>
@@ -285,6 +291,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Benchmark\ComputeDeviceItem\DeviceQuickActionMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EULA\EULA.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EULA\EULA3rdParty.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
