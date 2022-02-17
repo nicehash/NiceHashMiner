@@ -186,6 +186,15 @@ namespace NhmPackager
                 "ExamplePlugin",
                 "FakePlugin",
                 "CryptoDredge",
+                "ZEnemy",
+                "WildRig",
+                "TTMiner",
+                "TRex",
+                "TeamRedMiner",
+                "SRBMiner",
+                "Phoenix",
+                "MiniZ",
+                "GMiner",
             };
         private static bool PathMustNOTContain(string path) => _pathMustNOTContain.All(subDir => !path.Contains(subDir));
 
