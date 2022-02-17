@@ -203,7 +203,7 @@ namespace NHM.DeviceMonitoring
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)(percentage*100));
             if (execRet < 0) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
-            return execRet < 0;
+            return execRet == 0;
         }
 
         public bool SetTDPPercentage(double percentage)
@@ -222,7 +222,7 @@ namespace NHM.DeviceMonitoring
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
             Logger.Info(LogTag, $"SetTDPPercentage {execRet}.");
-            return execRet < 0;
+            return execRet == 0;
         }
 
         #endregion ITDP
