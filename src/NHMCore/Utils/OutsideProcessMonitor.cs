@@ -10,33 +10,89 @@ using System.Diagnostics;
 
 namespace NHMCore.Utils
 {
-    public class OutsideProcessMonitor : IDisposable
+    public static class OutsideProcessMonitor
     {
-        private Timer MonitorTimer;
-        private bool _isDisposed = false;
+        private static bool _isDisposed = false;
+        private static int CheckIntervalInSeconds = 5;
+        private static ManagementEventWatcher StartProcessWatch { get; set; } = null;
+        private static Task CheckProcessTask { get; set; } = null;
 
-        public OutsideProcessMonitor()
+
+
+        public static void Init()
         {
-            var startTimeSpan = TimeSpan.FromSeconds(1);
-            var periodTimeSpan = TimeSpan.FromSeconds(5);
-            MonitorTimer = new System.Threading.Timer((e) =>
+            if (Helpers.IsElevated)
             {
-                MonitorIteration();
-            }, null, startTimeSpan, periodTimeSpan);
+
+            }
+            else
+            {
+                CheckProcessTask = Task.Run(async () =>
+                {
+                    await ProcessMonitorLoop();
+                });
+            }
         }
-        private Task MonitorIteration()
+
+        private static void Deinit()
         {
-            var processlist = Process.GetProcesses()
-                .Where(proc => proc.ProcessName.ToLower().Contains("nhm_windows")//installer
-                    || proc.ProcessName.ToLower().Contains("un_a"))//uninstaller
-                .Where(proc => (proc.MainWindowTitle.ToLower().Contains("setup") 
-                    || proc.MainWindowTitle.ToLower().Contains("uninstall")));
-            if (processlist.Any())
+            if (!_isDisposed)
+            {
+                _isDisposed = true;
+                CheckProcessTask.Dispose();
+            }
+        }
+
+        static void InitProcessWatch()
+        {
+            ManagementEventWatcher startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
+            startWatch.EventArrived += new EventArrivedEventHandler(ProcessWatchEventArrived);
+            startWatch.Start();
+        }
+
+        static void ProcessWatchEventArrived(object sender, EventArrivedEventArgs e)
+        {
+            Console.WriteLine("Process started: {0}", e.NewEvent.Properties["ProcessName"].Value);
+            //if (this is the process I'm interested in)
+            //{
+            //    startWatch.Stop();
+            //}
+        }
+
+        private static async Task ProcessMonitorLoop()
+        {
+            while (!_isDisposed)
+            {
+                await MonitorIteration();
+                Task.Delay(CheckIntervalInSeconds * 1000).Wait();
+            }
+        }
+
+        private static async Task MonitorIteration()
+        {
+            var processes = Process.GetProcesses();
+            bool hasInstallerOrUpdaterRunning () 
+            {
+                var processListInstallUpdate = processes
+                    .Where(proc => proc.ProcessName.ToLower().Contains("nhm_windows"))
+                    .Where(proc => proc.MainWindowTitle.ToLower().Contains("setup"));
+                return processListInstallUpdate.Any();
+            }
+
+            bool hasUninstallerRunning()
+            {
+                var processListUninstall = processes
+                    .Where(proc => proc.ProcessName.ToLower().Contains("un_a"))
+                    .Where(proc => proc.MainWindowTitle.ToLower().Contains("uninstall"));
+                return processListUninstall.Any();
+            }
+
+            if (hasInstallerOrUpdaterRunning() || hasUninstallerRunning())
             {
                 try
                 {
                     Logger.Info("OutsideProcessMonitor", "Installer/uninstaller is running, attempting NHM shutdown");
-                    _ = ApplicationStateManager.BeforeExit();
+                    await ApplicationStateManager.BeforeExit();
                     ApplicationStateManager.ExecuteApplicationExit();
                     Logger.Info("OutsideProcessMonitor", "NHM closed successfully due to installer/uninstaller.");
                 }
@@ -44,16 +100,10 @@ namespace NHMCore.Utils
                 {
                     Logger.Error("OutsideProcessMonitor", ex.Message);
                 }
-            }
-            return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            if (!_isDisposed)
-            {
-                _isDisposed = true;
-                MonitorTimer.Dispose();
+                finally
+                {
+                    Deinit();
+                }
             }
         }
     }

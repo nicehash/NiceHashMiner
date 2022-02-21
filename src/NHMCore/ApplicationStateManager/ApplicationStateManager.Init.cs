@@ -19,7 +19,6 @@ namespace NHMCore
     static partial class ApplicationStateManager
     {
         private static bool isInitFinished = false;
-        private static OutsideProcessMonitor outsideProcessMonitor;
 
         private class LoaderConverter : IStartupLoader
         {
@@ -91,8 +90,7 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
-                outsideProcessMonitor = new OutsideProcessMonitor();
-
+                OutsideProcessMonitor.Init();
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
                 var index = 0;
