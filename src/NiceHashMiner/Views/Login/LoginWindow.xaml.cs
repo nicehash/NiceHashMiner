@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -53,7 +54,8 @@ namespace NiceHashMiner.Views.Login
             ThemeSetterManager.SetTheme(isLight);
             if (_gotQRCode)
             {
-                rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, isLight);
+                var qrImage = QrCodeImageGenerator.GetQRCodeImage(_uuid, isLight);
+                if (qrImage.Item2) rect_qrCode.Fill = qrImage.Item1;
             }
         }
 
@@ -103,43 +105,26 @@ namespace NiceHashMiner.Views.Login
             public string btc { get; set; }
         }
 
-        [Serializable]
-        internal class RigUUIDRequest
-        {
-            public string qrId { get; set; } = "";
-            public string rigId { get; set; } = "";
-        }
-
-        private static async Task<bool> RequestNew_QR_Code(string uuid, string rigId)
-        {
-            try
-            {
-                var requestBody = JsonConvert.SerializeObject(new RigUUIDRequest { qrId = uuid, rigId = rigId });
-                using (var content = new StringContent(requestBody, Encoding.UTF8, "application/json"))
-                using (var client = new HttpClient())
-                {
-                    var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
-                    return response.IsSuccessStatusCode;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error("Login.RequestNew_QR_Code", $"Got Exception: {e.Message}");
-                return false;
-            }
-        }
-
         private async Task InitQRCode()
         {
             // this is vaild for 10 minutes
             _uuid = Guid.NewGuid().ToString();
-            _gotQRCode = await RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
+            _gotQRCode = await QrCodeGenerator.RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
             if (_gotQRCode)
             {
                 // create qr code
-                rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid);
-                ScanLabel.Content = "Scan with official NiceHash mobile application";
-                ScanConfirmButton.Content = "Confirm scan";
+                var qrImage = QrCodeImageGenerator.GetQRCodeImage(_uuid);
+                if (qrImage.Item2)
+                {
+                    rect_qrCode.Fill = qrImage.Item1;
+                    ScanLabel.Content = "Scan with official NiceHash mobile application";
+                    ScanConfirmButton.Content = "Confirm scan";
+                }
+                else
+                {
+                    ScanLabel.Content = "QR Code generation failed";
+                    ScanConfirmButton.Visibility = Visibility.Collapsed;
+                }
             }
             else
             {

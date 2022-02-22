@@ -107,7 +107,7 @@
       <DependentUpon>ManuallyEnterBTCTutorial.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="QrCodeHelpers.cs" />
+    <Compile Include="QrCodeImageGenerator.cs" />
     <Compile Include="ThemeSetterManager.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
