@@ -37,11 +37,11 @@ namespace NiceHashMiner.Views.Settings
 
             if (!res) return;
 
-            var qrImage = QrCodeImageGenerator.GetQRCodeImage(_uuid, GUISettings.Instance.DisplayTheme == "Light");
+            var (image, ok) = QrCodeImageGenerator.GetQRCodeImage(_uuid, GUISettings.Instance.DisplayTheme == "Light");
 
-            if (!qrImage.Item2) return;
+            if (!ok) return;
 
-            rect_qrCode.Fill = qrImage.Item1;
+            rect_qrCode.Fill = image;
             while (true)
             {
                 await Task.Delay(5000);

@@ -54,8 +54,8 @@ namespace NiceHashMiner.Views.Login
             ThemeSetterManager.SetTheme(isLight);
             if (_gotQRCode)
             {
-                var qrImage = QrCodeImageGenerator.GetQRCodeImage(_uuid, isLight);
-                if (qrImage.Item2) rect_qrCode.Fill = qrImage.Item1;
+                var (image, ok) = QrCodeImageGenerator.GetQRCodeImage(_uuid, isLight);
+                if (ok) rect_qrCode.Fill = image;
             }
         }
 
@@ -113,16 +113,16 @@ namespace NiceHashMiner.Views.Login
             if (_gotQRCode)
             {
                 // create qr code
-                var qrImage = QrCodeImageGenerator.GetQRCodeImage(_uuid);
-                if (qrImage.Item2)
+                var (image, ok) = QrCodeImageGenerator.GetQRCodeImage(_uuid);
+                if (ok)
                 {
-                    rect_qrCode.Fill = qrImage.Item1;
+                    rect_qrCode.Fill = image;
                     ScanLabel.Content = "Scan with official NiceHash mobile application";
                     ScanConfirmButton.Content = "Confirm scan";
                 }
                 else
                 {
-                    ScanLabel.Content = "QR Code generation failed";
+                    ScanLabel.Content = "QR Code image generation failed";
                     ScanConfirmButton.Visibility = Visibility.Collapsed;
                 }
             }
