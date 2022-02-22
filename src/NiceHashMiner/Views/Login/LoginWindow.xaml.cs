@@ -128,9 +128,8 @@ namespace NiceHashMiner.Views.Login
             }
             else
             {
-                ScanLabel.Visibility = Visibility.Collapsed;
                 ScanConfirmButton.Visibility = Visibility.Collapsed;
-                //ScanLabel.Content = "Unable to get QR Code";
+                ScanLabel.Content = "Unable to retreive QR Code";
                 //ScanConfirmButton.Content = "Retry QR code";
             }
         }
