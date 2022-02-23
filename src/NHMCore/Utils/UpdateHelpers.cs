@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
+using NHM.CommonWin32;
 using NHM.MinersDownloader;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
@@ -188,10 +189,8 @@ namespace NHMCore.Utils
         public static bool IsNHMInstalled()
         {
             var isInstalled = false;
-            using (var key = Registry.CurrentUser.OpenSubKey(@"Software\" + APP_GUID.GUID, false))
-            {
-                isInstalled = key != null;
-            }
+            var key = NHMRegistry.GetSubKey(@"Software\" + APP_GUID.GUID, false);
+            isInstalled = key != null;
             return isInstalled;
         }
 

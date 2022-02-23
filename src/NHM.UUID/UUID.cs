@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
+using NHM.CommonWin32;
 using System;
 using System.IO;
 using System.Management;
@@ -86,28 +87,26 @@ namespace NHM.UUID
             try
             {
                 const string valueFallback = "MachineGuidNhmGen";
-                using (var rkFallback = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + APP_GUID.GUID, true))
+                var rkFallback = NHMRegistry.GetSubKey(@"SOFTWARE\" + APP_GUID.GUID, true);
+                var fallbackUUIDValue = rkFallback?.GetValue(valueFallback, null);
+                if (fallbackUUIDValue == null)
                 {
-                    var fallbackUUIDValue = rkFallback?.GetValue(valueFallback, null);
-                    if (fallbackUUIDValue == null)
+                    try
                     {
-                        try
-                        {
-                            var genUUID = System.Guid.NewGuid().ToString();
-                            rkFallback?.SetValue(valueFallback, genUUID);
-                            return (true, genUUID);
-                        }
-                        catch (Exception e)
-                        {
-                            //if registry fails do fallback to files
-                            Logger.Error("NHM.UUID", $"Fallback SetValue: {e.Message}");
-                            return (false, "");
-                        }
+                        var genUUID = System.Guid.NewGuid().ToString();
+                        rkFallback?.SetValue(valueFallback, genUUID);
+                        return (true, genUUID);
                     }
-                    else if (fallbackUUIDValue is string regUUID)
+                    catch (Exception e)
                     {
-                        return (true, regUUID);
+                        //if registry fails do fallback to files
+                        Logger.Error("NHM.UUID", $"Fallback SetValue: {e.Message}");
+                        return (false, "");
                     }
+                }
+                else if (fallbackUUIDValue is string regUUID)
+                {
+                    return (true, regUUID);
                 }
             }
             catch (Exception e)
