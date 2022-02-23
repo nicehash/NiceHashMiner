@@ -24,15 +24,15 @@ namespace NHM.CommonWin32
             }
         }
 
-        public static int GetSubKey(string subKey)
+        public static int GetSubKeyName(string keyName)
         {
             EnsureNHMSubKey();
             try
             {
                 using var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, false);
-                var value = key?.GetValue(subKey) as string;
+                var value = key?.GetValue(keyName) as string;
                 if (Int32.TryParse(value, out int TOSver)) return TOSver;
-                Logger.Warn("NHMRegistry", $"{subKey} was not read, defaulting to -1.");
+                Logger.Warn("NHMRegistry", $"{keyName} was not read, defaulting to -1.");
                 return -1;
             }
             catch (Exception e)
@@ -45,11 +45,11 @@ namespace NHM.CommonWin32
         public static RegistryKey GetSubKey(bool writable)
         {
             EnsureNHMSubKey();
-            using var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, writable);
+            var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, writable);
             return key;
         }
 
-        public static void SetSubKey(string keyName, int value)
+        public static void SetSubKeyName(string keyName, int value)
         {
             EnsureNHMSubKey();
             try

@@ -22,20 +22,20 @@ namespace NHMCore.Configs
         }
         public int AgreedWithTOS
         {
-            get { return NHMRegistry.GetSubKey(nameof(AgreedWithTOS)); }
+            get { return NHMRegistry.GetSubKeyName(nameof(AgreedWithTOS)); }
             set
             {
-                NHMRegistry.SetSubKey(nameof(AgreedWithTOS), value);
+                NHMRegistry.SetSubKeyName(nameof(AgreedWithTOS), value);
                 OnPropertyChanged(nameof(AgreedWithTOS));
             }
         }
 
         public int Use3rdPartyMinersTOS
         {
-            get { return NHMRegistry.GetSubKey(nameof(Use3rdPartyMinersTOS)); }
+            get { return NHMRegistry.GetSubKeyName(nameof(Use3rdPartyMinersTOS)); }
             set
             {
-                NHMRegistry.SetSubKey(nameof(Use3rdPartyMinersTOS), value);
+                NHMRegistry.SetSubKeyName(nameof(Use3rdPartyMinersTOS), value);
                 OnPropertyChanged(nameof(Use3rdPartyMinersTOS));
             }
         }
