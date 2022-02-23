@@ -188,7 +188,7 @@ namespace NHMCore.Utils
 
         public static bool IsNHMInstalled()
         {
-            var key = NHMRegistry.GetSubKey(@"Software\" + APP_GUID.GUID, false);
+            var key = NHMRegistry.GetSubKey(false);
             var isInstalled = key != null;
             return isInstalled;
         }

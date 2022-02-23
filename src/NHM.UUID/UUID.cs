@@ -86,28 +86,9 @@ namespace NHM.UUID
             // fallback deterministic
             try
             {
-                const string valueFallback = "MachineGuidNhmGen";
-                var rkFallback = NHMRegistry.GetSubKey(@"SOFTWARE\" + APP_GUID.GUID, true);
-                var fallbackUUIDValue = rkFallback?.GetValue(valueFallback, null);
-                if (fallbackUUIDValue == null)
-                {
-                    try
-                    {
-                        var genUUID = System.Guid.NewGuid().ToString();
-                        rkFallback?.SetValue(valueFallback, genUUID);
-                        return (true, genUUID);
-                    }
-                    catch (Exception e)
-                    {
-                        //if registry fails do fallback to files
-                        Logger.Error("NHM.UUID", $"Fallback SetValue: {e.Message}");
-                        return (false, "");
-                    }
-                }
-                else if (fallbackUUIDValue is string regUUID)
-                {
-                    return (true, regUUID);
-                }
+                var uuid = NHMRegistry.MachineGuidNhmGenGet();
+
+                if(uuid != "") return (true, uuid);
             }
             catch (Exception e)
             {
