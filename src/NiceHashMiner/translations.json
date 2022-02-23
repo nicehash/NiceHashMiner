@@ -8,7 +8,8 @@
     "it": "Italiano (Unofficial)",
     "pl": "Polski (Unofficial)",
     "zh_cn": "简体中文 (Unofficial)",
-    "ro": "Română (Unofficial)"
+    "ro": "Română (Unofficial)",
+    "zh_TW": "繁體中文 (Unofficial)"
   },
   "Translations": {
     " (current {0})": {
@@ -18,18 +19,22 @@
       "pl": " (obecny {0})",
       "ro": " (curent {0})",
       "ru": " (текущий {0})",
-      "zh_cn": "(当前 {0})"
+      "zh_cn": "(当前 {0})",
+      "zh_TW": "(當前 {0})"
     },
     "_(Don't have an account? Register here)": {
-      "ru": "_(Нет аккаунта? Зарегистрируйтесь здесь)"
+      "ru": "_(Нет аккаунта? Зарегистрируйтесь здесь)",
+      "zh_TW": "沒有帳戶？ 在這裡註冊"
     },
     "_(or enter Bitcoin address manually)": {
-      "ru": "_(или введите Биткоин-адрес вручную)"
+      "ru": "_(или введите Биткоин-адрес вручную)",
+      "zh_TW": "或手動輸入比特幣地址"
     },
     "_Benchmark": {
       "bg": "_Тест скорост",
       "ru": "_Бенчмарк",
-      "zh_cn": "基准测试 (_B)"
+      "zh_cn": "基准测试 (_B)",
+      "zh_TW": "基準測試"
     },
     "_Cancel": {
       "bg": "Отка_з",
@@ -37,7 +42,8 @@
       "pl": "_Anuluj",
       "ro": "_Anulare",
       "ru": "О_тмена",
-      "zh_cn": "取消 (_C)"
+      "zh_cn": "取消 (_C)",
+      "zh_TW": "取消"
     },
     "_Close": {
       "bg": "_Изход",
@@ -47,7 +53,8 @@
       "pt": "_Fechar",
       "ro": "În_chide",
       "ru": "_Закрыть",
-      "zh_cn": "关闭 (_C)"
+      "zh_cn": "关闭 (_C)",
+      "zh_TW": "關閉"
     },
     "_Close without Saving": {
       "bg": "_Изход",
@@ -57,7 +64,8 @@
       "pt": "_Fechar sem Salvar",
       "ro": "În_chide fără Salvare",
       "ru": "_Выйти без сохранения",
-      "zh_cn": "关闭，不保存 (_C)"
+      "zh_cn": "关闭，不保存 (_C)",
+      "zh_TW": "關閉而不保存"
     },
     "_Defaults": {
       "bg": "_Нулиране",
@@ -67,7 +75,8 @@
       "pt": "_Padrão",
       "ro": "_Implicite",
       "ru": "С_брос",
-      "zh_cn": "默认设置 (_D)"
+      "zh_cn": "默认设置 (_D)",
+      "zh_TW": "默認設定"
     },
     "_Disable detection of this device": {
       "bg": "_Деактивиране на разпознаването за това устройство",
@@ -77,7 +86,8 @@
       "pt": "_Desativar a detecção deste dispositivo",
       "ro": "_Dezactivați detecția acestui dispozitiv",
       "ru": "_Отключить определение этого устройства",
-      "zh_cn": "停止检测此设备 (_D)"
+      "zh_cn": "停止检测此设备 (_D)",
+      "zh_TW": "取消檢測此設備"
     },
     "_Do not show this warning again": {
       "bg": "_Не показвай това повече",
@@ -87,7 +97,8 @@
       "pt": "_Não mostre esse aviso novamente",
       "ro": "_Nu arăta această avertizare din nou",
       "ru": "_Не показывать это предупреждение снова",
-      "zh_cn": "不再显示此警告 (_D)"
+      "zh_cn": "不再显示此警告 (_D)",
+      "zh_TW": "不再顯示這個警告"
     },
     "_Help": {
       "bg": "П_омощ",
@@ -97,7 +108,8 @@
       "pt": "_Socorro",
       "ro": "_Ajutor",
       "ru": "С_правка",
-      "zh_cn": "帮助 (_H)"
+      "zh_cn": "帮助 (_H)",
+      "zh_TW": "幫助"
     },
     "_Link to Driver Download Page": {
       "bg": "_Връзка към страницата за сваляне",
@@ -107,7 +119,8 @@
       "pt": "_Link para a página de Download",
       "ro": "_Link la Pagina de Descărcare Driver",
       "ru": "_Ссылка на страницу загрузки драйвера",
-      "zh_cn": "驱动下载页面链接 (_L)"
+      "zh_cn": "驱动下载页面链接 (_L)",
+      "zh_TW": "驅動程序下載頁面的鏈接"
     },
     "_Login with NiceHash": {
       "ru": "_Войти с помощью NiceHash"
@@ -120,10 +133,12 @@
       "pt": "_Não",
       "ro": "_Nu",
       "ru": "_Нет",
-      "zh_cn": "否 (_N)"
+      "zh_cn": "否 (_N)",
+      "zh_TW": "否"
     },
     "_OK": {
-      "zh_cn": "确认 (_O)"
+      "zh_cn": "确认 (_O)",
+      "zh_TW": "確定"
     },
     "_Precise (will take longer)": {
       "bg": "_Прецизен (отнема повече време)",
@@ -169,7 +184,8 @@
       "pt": "_Salvar e Fechar",
       "ro": "_Salvează și Închide",
       "ru": "_Сохранить и выйти",
-      "zh_cn": "保存并关闭 (_S)"
+      "zh_cn": "保存并关闭 (_S)",
+      "zh_TW": "保存並關閉"
     },
     "_Standard": {
       "bg": "_Стандартен",
@@ -180,6 +196,7 @@
       "zh_cn": "普通 (_S)"
     },
     "Start": {
+      "zh_TW": "開始",
       "bg": "Тест",
       "es": "Empezar",
       "pt": "Iniciar",
@@ -187,6 +204,7 @@
       "zh_cn": "开始"
     },
     "Stop": {
+      "zh_TW": "停止",
       "bg": "Стоп",
       "es": "Detener",
       "pt": "Parar",
@@ -198,9 +216,11 @@
       "es": "Empezar ",
       "pt": "Iniciar ",
       "ru": "Старт ",
-      "zh_cn": "开始 "
+      "zh_cn": "开始 ",
+      "zh_TW": "開始 "
     },
     "Stop ": {
+      "zh_TW": "停止 ",
       "bg": "Стоп ",
       "es": "Detener ",
       "pt": "Parar ",
@@ -208,24 +228,31 @@
       "zh_cn": "停止 "
     },
     "_Start All": {
-      "ru": "_Запустить все"
+      "ru": "_Запустить все",
+      "zh_TW": "全部開始"
     },
     "_Stop All": {
-      "ru": "_Остановить все"
+      "ru": "_Остановить все",
+      "zh_TW": "全部停止"
     },
     "Stopped": {
-      "ru": "Остановлено"
+      "ru": "Остановлено",
+      "zh_TW": "已停止"
     },
     "Mining": {
+      "zh_TW": "正在挖礦",
       "ru": "Майнинг"
     },
     "Starting": {
+      "zh_TW": "正在開始",
       "ru": "Запуск"
     },
     "Stopping": {
-      "ru": "Остановка"
+      "ru": "Остановка",
+      "zh_TW": "正在停止"
     },
     "_Yes": {
+      "zh_TW": "是",
       "bg": "_Да",
       "es": "_Sí",
       "it": "_Si",
@@ -264,9 +291,11 @@
       "es": "Puerto de API",
       "it": "Porta Bind API",
       "ru": "Порт связи API",
-      "zh_cn": "API绑定端口"
+      "zh_cn": "API绑定端口",
+      "zh_TW": "API 綁定端口"
     },
     "API Bind port pool start:": {
+      "zh_TW": "API 綁定端口池下限",
       "bg": "Начален порт за API връзка:",
       "es": "Puertos disponibles para la API:",
       "it": "Numero porta bind API per pool:",
@@ -330,7 +359,8 @@
       "pt": "Avançado",
       "ro": "Avansat",
       "ru": "Расширенные",
-      "zh_cn": "高级"
+      "zh_cn": "高级",
+      "zh_TW": "高級"
     },
     "Algorithm": {
       "bg": "Алгоритъм",
@@ -359,6 +389,7 @@
       "ru": "Алгоритмы/Включённые/Протестированные"
     },
     "All benchmarks have been successful": {
+      "zh_TW": "所有基準測試均已成功",
       "bg": "Всички тестове за скорост приключиха успешно.",
       "es": "Todos los benchmark se han realizado correctamente",
       "it": "Tutti i benchmark sono stati eseguiti con successo",
@@ -369,6 +400,7 @@
       "zh_cn": "基准测试完毕。"
     },
     "Allow Multiple Instances": {
+      "zh_TW": "允許多個實例",
       "bg": "Множество копия на програмата",
       "es": "Habilitar múltiples instancias",
       "it": "Consenti istanze multiple",
@@ -409,6 +441,7 @@
       "zh_cn": "是否确认从{0}复制配置至{1}?"
     },
     "Are you sure you would like to set everything back to defaults? This will restart {0} automatically.": {
+      "zh_TW": "您確定要將所有設置內容恢復到默認值嗎？ {0} 將自動重新啟動。",
       "bg": "Сигурни ли сте, че искате да върнете всички настройки към стойностите по подразбиране? Това ще рестартира автоматично {0}.",
       "es": "¿Está seguro de que quiere establecer la configuración predeterminada? {0} se reiniciará automáticamente.",
       "it": "Sei sicuro di voler tornare alle impostazioni di default? Questo riavvierà {0} in automatico.",
@@ -426,9 +459,11 @@
       "pt": "Inicie automaticamente a mineração quando o computador estiver ocioso e pare de minerar quando o computador estiver sendo usado.",
       "ro": "Pornește minarea automat atunci când calculatorul nu este folosit și oprește minarea atunci când caclulatorul este folosit.",
       "ru": "Автоматически запускать майнинг, когда компьютер простаивает,\nи останавливать майнинг, когда компьютер используется.",
-      "zh_cn": "在计算机空闲时自动开启挖矿，并在其被占用时停止挖矿。"
+      "zh_cn": "在计算机空闲时自动开启挖矿，并在其被占用时停止挖矿。",
+      "zh_TW": "電腦空閒時自動開始挖礦，使用電腦時自動停止挖礦"
     },
     "Autoscale BTC Values": {
+      "zh_TW": "自動選擇比特幣單位",
       "bg": "Авто-скалиране на BTC стойностите",
       "es": "Escalar valores de BTC automáticamente",
       "it": "Scala in automatico i valori BTC",
@@ -439,6 +474,7 @@
       "zh_cn": "自动选择比特币金额单位"
     },
     "Autostart Mining": {
+      "zh_TW": "自動開始挖礦",
       "bg": "Автоматичен старт на изчисленията",
       "es": "Empezar a minar",
       "it": "Inizia a minare automaticamente",
@@ -447,6 +483,7 @@
       "ro": "Autostart Minare",
       "ru": "Автозапуск майнинга",
       "zh_cn": "自动开启挖矿"
+
     },
     "BTC/Day": {
       "bg": "Приход BTC/ден",
@@ -456,7 +493,8 @@
       "pt": "BTC/Dia",
       "ro": "BTC/Zi",
       "ru": "BTC/сут",
-      "zh_cn": "BTC/天"
+      "zh_cn": "BTC/天",
+      "zh_TW": "BTC/天"
     },
     "Balance": {
       "bg": "Баланс",
@@ -471,9 +509,11 @@
     "Benchmark": {
       "bg": "Тестове за скорост",
       "ru": "Бенчмарк",
-      "zh_cn": "基准测试"
+      "zh_cn": "基准测试",
+      "zh_TW": "基準測試"
     },
     "Benchmark All Selected Algorithms": {
+      "zh_TW": "測試所有選定的算法",
       "bg": "Тестване на всички избрани алгоритми",
       "es": "Correr benchamark a todos los algoritmos seleccionados",
       "it": "Benchmark a tutti gli algoritmi selezionati",
@@ -484,6 +524,7 @@
       "zh_cn": "测试所有启用算法"
     },
     "Benchmark Selected Unbenchmarked Algorithms": {
+      "zh_TW": "僅測試未測試的算法",
       "bg": "Тестване на избраните алгоритми, които не са измервани досега",
       "es": "Correr benchmark para los algoritmos seleccionados que no tengan un benchmark hecho",
       "it": "Benchmark a tutti gli algoritmi selezionati senza benchmark",
@@ -501,7 +542,8 @@
       "pt": "Velocidade de Benchmark",
       "ro": "Viteză Benchmark",
       "ru": "Скорость бенчмарка",
-      "zh_cn": "测得速率"
+      "zh_cn": "测得速率",
+      "zh_TW": "测试速度"
     },
     "Benchmark Time Limits": {
       "bg": "Лимити на времената за тестване",
@@ -511,7 +553,8 @@
       "pt": "Tempo limite para Benchmark",
       "ro": "Limite Timp Benchmark",
       "ru": "Лимит времени бенчмарка",
-      "zh_cn": "基准测试时限"
+      "zh_cn": "基准测试时限",
+      "zh_TW": "基準測試時限"
     },
     "Benchmark Time Limits:": {
       "bg": "Лимити на време за тестовете:",
@@ -521,7 +564,8 @@
       "pt": "Tempo limite de Benchmark:",
       "ro": "Limite Timp Benchmark:",
       "ru": "Лимит времени бенчмарка:",
-      "zh_cn": "基准测试时限:"
+      "zh_cn": "基准测试时限:",
+      "zh_TW": "基準測試時限"
     },
     "Benchmark Type:": {
       "bg": "Тип тестване:",
@@ -531,7 +575,8 @@
       "pt": "Tipo de Benchmark:",
       "ro": "Tip Benchmark:",
       "ru": "Тип бенчмарка:",
-      "zh_cn": "基准测试策略:"
+      "zh_cn": "基准测试策略:",
+      "zh_TW": "基準測試類型"
     },
     "Benchmark finished report": {
       "bg": "Приключване на тестовете за скорост",
@@ -571,7 +616,8 @@
       "pt": "Fazendo o Benchmark (2-4 minutos)...",
       "ro": "Benchmarking (2-4 minute)...",
       "ru": "Бенчмарк (2-4 минуты)…",
-      "zh_cn": "正在测试（大约需2-4分钟）..."
+      "zh_cn": "正在测试（大约需2-4分钟）...",
+      "zh_TW": "正在進行基準測試（可能長達2-4分鐘）"
     },
     "Bitcoin Address:": {
       "bg": "Bitcoin адрес:",
@@ -581,7 +627,8 @@
       "pt": "Endereço Bitcoin:",
       "ro": "Adresă Bitcoin:",
       "ru": "Биткоин-адрес:",
-      "zh_cn": "比特币提现地址:"
+      "zh_cn": "比特币提现地址:",
+      "zh_TW": "比特幣地址"
     },
     "Brazil - Sao Paulo": {
       "ru": "Бразилия - Сан-Паулу",
@@ -595,7 +642,8 @@
       "pt": "A MINERAÇÃO NÃO É RENTAVEL AGORA.",
       "ro": "ACUM MINAREA NU ESTE PROFITABILĂ.",
       "ru": "МАЙНИНГ НЕ ПРИБЫЛЬНЫЙ НА ДАННЫЙ МОМЕНТ.",
-      "zh_cn": "警告：当前挖矿无收益。"
+      "zh_cn": "警告：当前挖矿无收益。",
+      "zh_TW": "警告：當前挖礦不盈利。"
     },
     "CURRENTLY NOT MINING. NO INTERNET CONNECTION.": {
       "bg": "В МОМЕНТА РАБОТАТА Е СПРЯНА. НЯМА ВРЪЗКА С ИНТЕРНЕТ.",
@@ -605,7 +653,8 @@
       "pt": "NÃO MINERANDO ATUALMENTE. SEM CONEXÃO INTERNET.",
       "ro": "ACUM NU SE MINEAZĂ. LIPSĂ CONEXIUNE INTERNET.",
       "ru": "МАЙНИНГ СЕЙЧАС НЕ РАБОТАЕТ. НЕТ ПОДКЛЮЧЕНИЯ К ИНТЕРНЕТУ.",
-      "zh_cn": "警告：挖矿已停止。未连接至互联网。"
+      "zh_cn": "警告：挖矿已停止。未连接至互联网。",
+      "zh_TW": "警告：沒有網絡連接，挖礦已停止。"
     },
     "Changes the default language for {0}.": {
       "bg": "Смяна на езика на интерфейса на {0}.",
@@ -625,7 +674,8 @@
       "pt": "Alterando todas as GPUs NVIDIA suportadas para o estado P0...",
       "ro": "Schimbă toate NVIDIA GPU suportate la starea P0...",
       "ru": "Изменение всех поддерживаемых NVIDIA GPU в статус P0…",
-      "zh_cn": "正在调整所有已知NVIDIA图形处理器至 P0 状态..."
+      "zh_cn": "正在调整所有已知NVIDIA图形处理器至 P0 状态...",
+      "zh_TW": "正在將所有受支持的 NVIDIA GPU 更改為 P0 狀態..."
     },
     "Check _profitability": {
       "bg": "Проверка за _доходност",
@@ -665,7 +715,8 @@
       "pt": "Verifique sua conexão com a internet",
       "ro": "Verificați conexiunea internet",
       "ru": "Проверьте интернет-соединение",
-      "zh_cn": "请检查互联网连接"
+      "zh_cn": "请检查互联网连接",
+      "zh_TW": "請檢查互聯網連接"
     },
     "Check it if you would like to skip _ disable a particular algorithm.\nBenchmarking as well as actual mining will be disabled for this particular algorithm.\nThat said, auto-switching will skip this algorithm when mining will be running.": {
       "bg": "Маркирайте тази опция, ако искате да прескочите и деактивирате конкретен алгоритъм.\nТестовете за скорост и използването за реални изчисления на този алгоритъм ще бъдат забранени.\nДокато има изчислителна дейност, автоматичното превключване между алгоритмите ще го прескача.",
@@ -874,7 +925,8 @@
       "pt": "Dispositivo",
       "ro": "Dispozitiv",
       "ru": "Устройство",
-      "zh_cn": "设备"
+      "zh_cn": "设备",
+      "zh_TW": "裝置"
     },
     "Devices/Algorithms": {
       "bg": "Устройства/Алгоритми",
@@ -894,7 +946,8 @@
       "pt": "Não Controlar Temperatura da AMD",
       "ro": "Dezactivează Control Temperatură AMD",
       "ru": "Откл. контроль температуры AMD",
-      "zh_cn": "禁用AMD温度控制"
+      "zh_cn": "禁用AMD温度控制",
+      "zh_TW": "禁用 AMD 溫度控制"
     },
     "Disable All Algorithms": {
       "bg": "Деактивиране на всички алгоритми",
@@ -904,7 +957,8 @@
       "pt": "Desativar Todos os Algoritimos",
       "ro": "Dezactivează Toți Algoritmii",
       "ru": "Отключить все алгоритмы",
-      "zh_cn": "禁用所有算法"
+      "zh_cn": "禁用所有算法",
+      "zh_TW": "禁用所有算法"
     },
     "Disable Default Optimizations": {
       "bg": "Без стандартни оптимизации",
@@ -934,15 +988,19 @@
       "pt": "Desativar Dispositivo",
       "ro": "Dezactivează Dispozitiv",
       "ru": "Отключить устройство",
-      "zh_cn": "禁用设备"
+      "zh_cn": "禁用设备",
+      "zh_TW": "禁用裝置"
     },
     "Disable Device Status Monitoring": {
+      "zh_TW": "禁用裝置狀態監控",
       "ru": "Отключить мониторинг статуса устройства"
     },
     "Disable Device Power Mode Settings": {
+      "zh_TW": "禁用設備電源模式設定",
       "ru": "Отключить настройку режима энергопотребления устройства"
     },
     "Disable Windows Error Reporting": {
+      "zh_TW": "禁用 Windows 錯誤報告",
       "bg": "Изкл. журнала за грешки на Windows",
       "es": "Desactivar reportes de errores de Windows",
       "it": "Disattiva segnalazione errori di Windows",
@@ -953,7 +1011,8 @@
       "zh_cn": "禁用Windows错误报告"
     },
     "Disabled": {
-      "ru": "Отключено"
+      "ru": "Отключено",
+      "zh_TW": "已禁用"
     },
     "Disabled Devices": {
       "bg": "Деактивирани устройства",
@@ -963,7 +1022,8 @@
       "pt": "Dispositivos Desativados",
       "ro": "Dispozitive Dezactivate",
       "ru": "Отключённые устройства",
-      "zh_cn": "已禁用设备"
+      "zh_cn": "已禁用设备",
+      "zh_TW": "已禁用裝置"
     },
     "Disclaimer on usage of 3rd party software": {
       "bg": "Отказ от отговорност при употреба на софтуер, разработен от трети лица",
@@ -1242,7 +1302,8 @@
       "pl": "Ogólne",
       "pt": "Geral",
       "ru": "Общие",
-      "zh_cn": "通用"
+      "zh_cn": "通用",
+      "zh_TW": "一般"
     },
     "Getting Bitcoin exchange rate...": {
       "bg": "Извличане на обменния курс за Bitcoin...",
@@ -1324,6 +1385,7 @@
       "bg": "Скриване на изчисл. програма",
       "es": "Ocultar ventanas de minado",
       "it": "Nascondi la finestra di mining",
+      "zh_TW": "隱藏挖礦視窗",
       "pl": "Ukryj konsole górników",
       "pt": "Ocultar Janela de Mineração",
       "ro": "Ascunde Ferestre Mineri",
@@ -1506,6 +1568,7 @@
       "zh_cn": "LessThreads数值无效！"
     },
     "Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long).": {
+      "zh_TW": "無效的礦工名！\n\n請輸入有效的礦工名（Aa-Zz，0-9，最多 15 個字符）。",
       "bg": "Невалидно име на машината!\n\nМоля въведете валидно име (Aa-Zz, 0-9, дължина до 15 символа).",
       "es": "¡Nombre inválido!\n\nPor favor introduzca un nombre válido (Aa-Zz, 0-9, de hasta 15 carácteres).",
       "it": "Nome lavoratore invalido!\n\nPer favore inserisci un nome lavoratore valido (Aa-Zz, 0-9, lungo fino a 15 caratteri).",
@@ -1517,7 +1580,8 @@
     },
     "Japan - Tokyo": {
       "ru": "Япония - Токио",
-      "zh_cn": "日本 - 东京"
+      "zh_cn": "日本 - 东京",
+      "zh_TW": "日本 - 東京"
     },
     "Language:": {
       "bg": "Език:",
@@ -1527,7 +1591,8 @@
       "pt": "Idioma:",
       "ro": "Limba:",
       "ru": "Язык:",
-      "zh_cn": "语言:"
+      "zh_cn": "语言:",
+      "zh_TW": "語言"
     },
     "Less Threads": {
       "bg": "Свободни нишки",
@@ -1563,7 +1628,8 @@
       "pt": "Carregando, por favor aguarde...",
       "ro": "Încărcare, vă rugăm așteptați...",
       "ru": "Загрузка, пожалуйста, подождите…",
-      "zh_cn": "加载中，请稍后..."
+      "zh_cn": "加载中，请稍后...",
+      "zh_TW": "載入中，請稍後..."
     },
     "Localization:": {
       "bg": "Локализация на интерфейса:",
@@ -1573,7 +1639,8 @@
       "pt": "Preferências Regionais:",
       "ro": "Localizare:",
       "ru": "Локализация:",
-      "zh_cn": "本土化:"
+      "zh_cn": "本土化:",
+      "zh_cn": "在地化:"
     },
     "Log Max File Size [bytes]:": {
       "bg": "Лимит [байтове]:",
@@ -1583,7 +1650,8 @@
       "pt": "Tamanho Maximo [bytes]:",
       "ro": "Dimensiune Fișier Log Maximă [bytes]:",
       "ru": "Размер лог-файла [байты]:",
-      "zh_cn": "最大日志文件大小 [字节]:"
+      "zh_cn": "最大日志文件大小 [字节]:",
+      "zh_TW": "日志檔最大大小 (bytes):"
     },
     "Log To File": {
       "bg": "Запис на журнала във файл",
@@ -1593,7 +1661,8 @@
       "pt": "Salvar Log",
       "ro": "Log În Fișier",
       "ru": "Запись в файл",
-      "zh_cn": "保存日志文件"
+      "zh_cn": "保存日志文件",
+      "zh_TW": "日誌保存為檔案"
     },
     "Logging:": {
       "bg": "Журнал:",
@@ -1602,7 +1671,8 @@
       "pt": "Configurações de Log:",
       "ro": "Înregistrare:",
       "ru": "Логирование:",
-      "zh_cn": "日志:"
+      "zh_cn": "日志:",
+      "zh_TW": "日誌:"
     },
     "Lower bound for the randomly chosen profit check interval.\nDo not set too low.": {
       "ru": "Нижняя граница случайно выбранного интервала проверки прибыли.\nНе указывайте слишком низкое значение."
@@ -1629,6 +1699,7 @@
       "zh_cn": "矿工API宽限 [秒]"
     },
     "Miner API Query Interval [s]:": {
+      "zh_TW": "礦工 API 查詢間隔 (秒):",
       "es": "Intervalo API del minero [s]:",
       "it": "Intervallo richiesta API Miner [s]:",
       "pl": "Interwał API górnika [s]:",
@@ -1637,13 +1708,14 @@
       "zh_cn": "矿工API请求间隔 [秒]:"
     },
     "Miner Restart Delay [ms]:": {
+      "zh_TW": "礦工重啟延遲 [毫秒]:",
       "es": "Retraso reinicio de minero[ms]:",
       "it": "Ritardo riavvio del miner [ms]:",
       "pl": "Opóźnienie startu kopania [ms]:",
       "pt": "Delay Minimo pra Reiniciar [ms]:",
       "ro": "Întârziere Repornire Miner [ms]:",
       "ru": "Перезапуск майнера [мс]:",
-      "zh_cn": "矿工重启延迟 [毫秒]:"
+      "zh_cn": "矿工重启延迟 (毫秒):"
     },
     "Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]": {
       "bg": "Програмата няма да превключи, ако печалбата е под прага на рентабилност. Стойността е в проценти [0 - 1]",
@@ -1671,9 +1743,11 @@
       "pt": "Minimizar Windows Mineração",
       "ro": "Minimizează Ferestrele Minerilor",
       "ru": "Минимизировать окна майнинга",
-      "zh_cn": "最小化挖矿窗口"
+      "zh_cn": "最小化挖矿窗口",
+      "zh_TW": "最小化挖礦窗口"
     },
     "Minimize To Tray": {
+      "zh_TW": "最小化到系統托盤",
       "bg": "Минимизиране в статус лентата",
       "es": "Minimizar a la bandeja",
       "it": "Riduci a icona",
@@ -1688,6 +1762,7 @@
       "it": "Tempo minimo di Idle [s]:",
       "pl": "Min. czas bezczynności [s]:",
       "pt": "Tempo Minimo Ocioso [s]:",
+      "zh_TW": "最小空閒時間 (秒):",
       "ro": "Inactiv Minim [s]:",
       "ru": "Минимальный простой [с]:",
       "zh_cn": "最小空闲时间 [秒]:"
@@ -1711,6 +1786,7 @@
       "ro": "Dispozitive Minare {0}:",
       "ru": "Устройства {0}:",
       "zh_cn": "挖矿设备{0}:"
+
     },
     "Misc:": {
       "bg": "Разни:",
@@ -1836,7 +1912,8 @@
       "pt": "Não há Dispositivos Suportados",
       "ro": "Nici un Dispozitiv Suportat",
       "ru": "Нет поддерживаемых устройств",
-      "zh_cn": "无设备"
+      "zh_cn": "无设备",
+      "zh_TW": "沒有支援的設備"
     },
     "No device found..": {
       "bg": "Не е открито устройство..",
@@ -1876,7 +1953,8 @@
       "pt": "Nenhum dispositivo suportado é encontrado. Selecione o botão OK para obter ajuda ou cancele para continuar.",
       "ro": "Nu am găsit nici un dispozitiv suportat. Selectați butonul OK pentru ajutor sau anulare pentru a continua.",
       "ru": "Поддерживаемые устройства не найдены. Нажмите кнопку «ОК» для получения справки или «Отмена» для продолжения.",
-      "zh_cn": "未找到支持的设备。选择“确认”查看帮助或单击“取消”。"
+      "zh_cn": "未找到支持的设备。选择“确认”查看帮助或单击“取消”。",
+      "zh_TW": "未找到支援的裝置。 選擇『確定』按鈕以獲取幫助或『取消』以繼續。"
     },
     "Not all benchmarks finished successfully.": {
       "bg": "Не всички тестове за скорост приключиха успешно.",
@@ -2005,7 +2083,8 @@
       "pt": "Procurando GPUs AMD OpenCL...",
       "ro": "Interogare dispozitive AMD OpenCL...",
       "ru": "Проверка устройств AMD OpenCL…",
-      "zh_cn": "正在检测AMD OpenCL设备..."
+      "zh_cn": "正在检测AMD OpenCL设备...",
+      "zh_TW": "正在檢查 AMD OpenCL 裝置..."
     },
     "Querying CPU devices...": {
       "bg": "Проверка на процесорите (CPU)...",
@@ -2015,7 +2094,8 @@
       "pt": "Procurando CPUs...",
       "ro": "Interogare dispozitive CPU...",
       "ru": "Проверка устройств CPU…",
-      "zh_cn": "正在检测中央处理器..."
+      "zh_cn": "正在检测中央处理器...",
+      "zh_TW": "正在檢查 CPU..."
     },
     "Querying CUDA devices": {
       "bg": "Проверка на CUDA устройства",
@@ -2025,7 +2105,8 @@
       "pt": "Consultando dispositivos CUDA",
       "ro": "Interogare dispozitive CUDA",
       "ru": "Проверка устройств CUDA",
-      "zh_cn": "正在检测CUDA设备"
+      "zh_cn": "正在检测CUDA设备",
+      "zh_TW": "正在檢查 CUDA 裝置..."
     },
     "Querying NVIDIA2.1 devices...": {
       "bg": "Проверка на NVIDIA2.1 устройства...",
@@ -2035,7 +2116,8 @@
       "pt": "Procurando GPUs NVIDIA2.1...",
       "ro": "Interogare dispozitive NVIDIA2.1...",
       "ru": "Проверка устройств NVIDIA2.1…",
-      "zh_cn": "正在检测NVIDIA2.1设备..."
+      "zh_cn": "正在检测NVIDIA2.1设备...",
+      "zh_TW": "正在檢查 NVIDIA2.1 裝置..."
     },
     "Querying NVIDIA3.x devices...": {
       "bg": "Проверка на NVIDIA3.x устройства...",
@@ -2045,7 +2127,8 @@
       "pt": "Procurando GPUs NVIDIA3.x...",
       "ro": "Interogare dispozitive NVIDIA3.x...",
       "ru": "Проверка устройств NVIDIA3.x…",
-      "zh_cn": "正在检测NVIDIA3.x设备..."
+      "zh_cn": "正在检测NVIDIA3.x设备...",
+      "zh_TW": "正在檢查 NVIDIA3.x 裝置..."
     },
     "Querying NVIDIA5.x and NVIDIA6.x devices...": {
       "bg": "Проверка на NVIDIA5.x и NVIDIA6.x устройства...",
@@ -2055,7 +2138,8 @@
       "pt": "Procurando GPUs NVIDIA5.x e NVIDIA6.x...",
       "ro": "Interogare dispozitive NVIDIA5.x și NVIDIA6.x...",
       "ru": "Проверка устройств NVIDIA5.x и NVIDIA6.x…",
-      "zh_cn": "正在检测NVIDIA5.x及NVIDIA6.x设备..."
+      "zh_cn": "正在检测NVIDIA5.x及NVIDIA6.x设备...",
+      "zh_TW": "正在檢查 NVIDIA5.x 與 NVIDIA6.x 裝置..."
     },
     "Querying OpenCL devices": {
       "bg": "Проверка на OpenCL устройства",
@@ -2065,7 +2149,8 @@
       "pt": "Consultando dispositivos OpenCL",
       "ro": "Interogare dispozitive OpenCL",
       "ru": "Проверка устройств OpenCL",
-      "zh_cn": "正在检测OpenCL设备"
+      "zh_cn": "正在检测OpenCL设备",
+      "zh_TW": "正在檢查 OpenCL 裝置..."
     },
     "Quick:": {
       "bg": "бърз:",
@@ -2078,10 +2163,12 @@
       "zh_cn": "快速:"
     },
     "RPM": {
-      "ru": "об/мин"
+      "ru": "об/мин",
+      "zh_TW": "RPM"
     },
     "Fan Speed": {
-      "ru": "Скорость вентилятора"
+      "ru": "Скорость вентилятора",
+      "zh_TW": "風扇轉速"
     },
     "Rate:": {
       "bg": "Доход:",
@@ -2231,6 +2318,7 @@
       "ru": "Блокировка сессии"
     },
     "Set default settings?": {
+      "zh_TW": "要恢復默認設定嗎？",
       "bg": "Установяване на стойности по подразбиране?",
       "es": "¿Poner configuración predeterminada?",
       "it": "Caricare le impostazioni di default?",
@@ -2367,7 +2455,8 @@
       "pt": "Configurações Salvas!",
       "ro": "Setări salvate!",
       "ru": "Настройки сохранены!",
-      "zh_cn": "设置已保存！"
+      "zh_cn": "设置已保存！",
+      "zh_TW": "設定已保存！"
     },
     "Show Driver Version Warning": {
       "bg": "Проверка за версия на драйвера",
@@ -2377,7 +2466,8 @@
       "pt": "Mostrar Aviso da Versão do Driver",
       "ro": "Afișează Avertizare Versiune Driver",
       "ru": "Предупреждать о версии драйвера",
-      "zh_cn": "显示驱动版本警告"
+      "zh_cn": "显示驱动版本警告",
+      "zh_TW": "顯示驅動程序版本警告"
     },
     "Show Internet Connection Warning": {
       "bg": "Проверка за липсваща интернет връзка",
@@ -2385,6 +2475,7 @@
       "pl": "Ostrzegaj o połączeniu internetowym",
       "ro": "Afișează Avertizare Conexiune Internet",
       "ru": "Уведомлять об интернет-соединении",
+      "zh_TW": "顯示 Internet 連接警告",
       "zh_cn": "显示互联网连接警告"
     },
     "Skip": {
@@ -2474,6 +2565,7 @@
     "Start Mining When Idle": {
       "bg": "Използване само в idle режим",
       "es": "Empezar a minar si no se usa el PC",
+      "zh_TW": "空閒時自動開始挖礦",
       "it": "Inizia a minare quando in Idle",
       "pl": "Kop podczas bezczynności",
       "pt": "Iniciar Mineração Quando Inativo",
@@ -2592,7 +2684,8 @@
       "zh_cn": "切换收益阈值:"
     },
     "Temp (°C)": {
-      "ru": "Температура (°C)"
+      "ru": "Температура (°C)",
+      "zh_TW": "溫度 (°C)"
     },
     "Terminated": {
       "bg": "Прекратен",
@@ -3229,7 +3322,8 @@
       "ru": "NiceHash Miner запрашивает интернет-соединение для работы. Убедитесь, что вы подключены к интернету перед запуском NiceHash Miner."
     },
     "No enabled devices": {
-      "ru": "Включенные устройства отсутствуют"
+      "ru": "Включенные устройства отсутствуют",
+      "zh_TW": "沒有啟用的設備"
     },
     "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {
       "ru": "NiceHash Miner не может начать майнинг. Убедитесь, что хотя бы одно устройство включено с хотя бы одним включённым и прошедшим бенчмарк алгоритмом."
@@ -3244,7 +3338,8 @@
       "ru": "Невозможно получить данные прибыльности"
     },
     "No supported devices are found.": {
-      "ru": "Поддерживаемые устройства не найдены."
+      "ru": "Поддерживаемые устройства не найдены.",
+      "zh_TW": "未找到支援的裝置。"
     },
     "Help": {
       "ru": "Справка"
@@ -3370,93 +3465,123 @@
       "ru": "Пожалуйста, убедитесь, что драйверы AMD установлены правильно. Если это так, пожалуйста, удалите драйвер Intel."
     },
     "Wallet": {
-      "ru": "Кошелек"
+      "ru": "Кошелек",
+      "zh_TW": "錢包"
     },
     "Wallet Address": {
-      "ru": "Адрес кошелька"
+      "ru": "Адрес кошелька",
+      "zh_TW": "錢包地址"
     },
     "Worker": {
-      "ru": "Воркер"
+      "ru": "Воркер",
+      "zh_TW": "礦工"
     },
     "Worker Name": {
-      "ru": "Имя воркера"
+      "ru": "Имя воркера",
+      "zh_TW": "礦工名稱"
     },
     "Main": {
-      "ru": "Основные"
+      "ru": "Основные",
+      "zh_TW": "主要"
     },
     "Time Unit": {
-      "ru": "Единица времени"
+      "ru": "Единица времени",
+      "zh_TW": "時間單位"
     },
     "Mine Regardless Of Profit": {
-      "ru": "Майнить независимо от дохода"
+      "ru": "Майнить независимо от дохода",
+      "zh_TW": "不論利潤地挖礦"
     },
     "Electricity Cost (/KWh)": {
+      "zh_TW": "電費 (/KWh)",
       "ru": "Стоимость электроэнергии (/кВт.ч)"
     },
     "Service Location": {
-      "ru": "Локация сервиса"
+      "ru": "Локация сервиса",
+      "zh_TW": "伺服器地點"
     },
     "Select Your Service Location": {
-      "ru": "Выберите вашу локацию сервиса"
+      "ru": "Выберите вашу локацию сервиса",
+      "zh_TW": "選擇您的伺服器地點"
     },
     "Localization": {
-      "ru": "Локализация"
+      "ru": "Локализация",
+      "zh_TW": "在地化"
     },
     "Language": {
-      "ru": "Язык"
+      "ru": "Язык",
+      "zh_TW": "語言"
     },
     "Currency": {
-      "ru": "Валюта"
+      "ru": "Валюта",
+      "zh_TW": "貨幣"
     },
     "Appearance": {
-      "ru": "Вид"
+      "ru": "Вид",
+      "zh_TW": "外觀"
     },
     "Theme": {
-      "ru": "Тема"
+      "ru": "Тема",
+      "zh_TW": "主題"
     },
     "NiceHash Miner and Plugins Update": {
-      "ru": "Обновление NiceHash Miner и плагинов"
+      "ru": "Обновление NiceHash Miner и плагинов",
+      "zh_TW": "NiceHash 和插件更新"
     },
     "Auto update NiceHash Miner": {
+      "zh_TW": "自動更新 NiceHash Miner",
       "ru": "Автоматическое обновление NiceHash Miner"
     },
     "Auto update installed plugins": {
+      "zh_TW": "自動更新已安裝的插件",
       "ru": "Автоматическое обновление установленных плагинов"
     },
     "Report a bug": {
-      "ru": "Отчет об ошибке"
+      "ru": "Отчет об ошибке",
+      "zh_TW": "匯報BUG"
     },
     "Create a log report": {
-      "ru": "Создать отчет"
+      "ru": "Создать отчет",
+      "zh_TW": "創建日誌報告"
     },
     "Miscellaneous": {
-      "ru": "Разные"
+      "ru": "Разные",
+      "zh_TW": "雜項"
     },
     "Run On Startup": {
-      "ru": "Запуск при загрузке системы"
+      "ru": "Запуск при загрузке системы",
+      "zh_TW": "開機自動啟動"
     },
     "NiceHash Miner Window Always on Top": {
+      "zh_TW": "NiceHash Miner 窗口始終位於頂部",
       "ru": "Окна NiceHash Miner всегда сверху"
     },
     "Disable Visual C++ Redistributable Check": {
-      "ru": "Отключить проверку Visual C++ Redistributable"
+      "ru": "Отключить проверку Visual C++ Redistributable",
+      "zh_TW": "禁用 Visual C++ 可再發行檢查"
     },
     "Device Monitoring": {
-      "ru": "Мониторинг устройств"
+      "ru": "Мониторинг устройств",
+      "zh_TW": "裝置監控"
     },
     "Logging": {
-      "ru": "Логирование"
+      "ru": "Логирование",
+      "zh_TW": "日誌"
     },
     "Enable Debug Console": {
+      "zh_TW": "啟用調試控制台",
       "ru": "Включить консоль отладки"
     },
     "Log Max File Size (bytes)": {
-      "ru": "Макс. размер лог-файла (байты)"
+      "ru": "Макс. размер лог-файла (байты)",
+      "zh_TW": "日志檔最大大小 (bytes)"
     },
     "Idle Mining": {
-      "ru": "Простой майнинга"
+      "ru": "Простой майнинга",
+      "zh_TW": "閒置挖礦"
     },
     "Idle Check Method": {
+      "zh_TW": "閒置檢查方法",
       "ru": "Метод проверки простоя"
     },
     "Minimum Idle [s]": {
@@ -3478,13 +3603,12 @@
       "ru": "NVIDIA/CUDA"
     },
     "Miners": {
-      "ru": "Майнеры"
-    },
-    "Hide Mining Widnows": {
-      "ru": "Спрятать окна майнинга"
+      "ru": "Майнеры",
+      "zh_TW": "礦工"
     },
     "When checked, NiceHash Miner will mine regardless of profit.": {
-      "ru": "Если отмечено, NiceHash Miner будет майнить независимо от дохода."
+      "ru": "Если отмечено, NiceHash Miner будет майнить независимо от дохода.",
+      "zh_TW": "勾選後，NiceHash Miner 將不顧盈利情況進行挖礦"
     },
     "If 'MineRegardlessOfProfit' is unchecked, NiceHash Miner will stop mining if the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {
       "ru": "Если 'Майнить независимо от дохода' не отмечено, NiceHash Miner остановит майнинг, когда приблизительный доход будет ниже указанной суммы (в выбранной валюте). Отрицательные значения допускаются."
@@ -3496,48 +3620,63 @@
       "ru": "Выберите в какой теме вы хотели бы видеть NiceHash Miner."
     },
     "When checked, NiceHash Miner will get automatically updated.": {
+      "zh_TW": "選中後，NiceHash Miner 將自動更新。",
       "ru": "Если отмечено, NiceHash Miner будет обновляться автоматически."
     },
     "When checked, miner plugins will get automatically updated.": {
+      "zh_TW": "選中後，礦工插件將自動更新。",
       "ru": "Если отмечено, плагины майнера будут обновляться автоматически."
     },
     "When checked, NiceHash Miner will automatically start mining when launched.": {
+      "zh_TW": "勾選後，NiceHash Miner 將在啟動時自動開始挖礦。",
       "ru": "Если отмечено, NiceHash Miner будет автоматически начинать майнинг при запуске."
     },
     "When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).": {
-      "ru": "Если не отмечено, NiceHash Miner разрешит работу только одного экземпляра (он закроет новый запущенный экземпляр, если один экземпляр уже работает)."
+      "ru": "Если не отмечено, NiceHash Miner разрешит работу только одного экземпляра (он закроет новый запущенный экземпляр, если один экземпляр уже работает).",
+      "zh_TW": "當未選中時，NiceHash Miner 將只允許一個實例運行（如果有一個打開的實例正在運行，它將關閉一個新啟動的實例）。"
     },
     "When checked, NiceHash Miner will run on login.": {
+      "zh_TW": "選中後，NiceHash Miner 將在登錄時運行。",
       "ru": "Если отмечено, NiceHash Miner будет запущен при входе в систему."
     },
     "When checked, NiceHash Miner will minimize to tray.": {
+      "zh_TW": "勾選後，NiceHash Miner 將最小化到托盤。",
       "ru": "Если отмечено, NiceHash Miner будет сворачиваться в трей."
     },
     "When checked, NiceHash Miner would issue a warning if a less optimal version of a driver is installed.": {
+      "zh_TW": "選中後，如果安裝了不太理想的驅動程序版本，NiceHash Miner 會發出警告。",
       "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение, если установлена не самая оптимальная версия драйвера."
     },
     "When checked, in the event of a miner crash, NiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message. It is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
-      "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner перезапустит майнер без блокирования сообщением об ошибке Windows. Рекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны."
+      "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner перезапустит майнер без блокирования сообщением об ошибке Windows. Рекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
+      "zh_TW": "選中後，如果發生礦機崩潰，NiceHash Miner 仍然能夠再次重新啟動礦機，因為它沒有被 Windows 錯誤消息阻止。建議檢查此設置以確保不間斷的挖礦過程，因為挖礦程序沒有100% 穩定。"
     },
     "When checked, NiceHash Miner would issue a warning if the internet connection is not available.": {
+      "zh_TW": "勾選後，如果 Internet 連接不可用，NiceHash Miner 會發出警告。",
       "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение, когда соединение с интернетом недоступно."
     },
     "When checked, NiceHash Miner will be set as Top Most and will be covered only by other Top Most Windows.": {
+      "zh_TW": "勾選後，NiceHash Miner 將被設置為置頂，並且只會被其他置頂視窗覆蓋。",
       "ru": "Если отмечено, NiceHash Miner будет отображаться поверх других окон и будет покрыт только другими окнами с таким же свойством."
     },
     "When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {
+      "zh_TW": "選中後，NiceHash Miner 將不會檢索 CPU、AMD 和 NVIDIA 裝置的狀態（溫度、負載、風扇速度和電源使用情況）。",
       "ru": "Если отмечено, NiceHash Miner не будет возвращать статус устройств AMD, NVIDIA и процессоров (температуру, нагрузку, скорость вращения вентиляторов и потребление мощности)."
     },
     "When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only).": {
+      "zh_TW": "選中後，NiceHash Miner 將不會嘗試更改設備電源模式設定（當前僅限 NVIDIA）。",
       "ru": "Если отмечено, NiceHash Miner не будет пытаться настроить режим энергопотребления (на данный момент только для NVIDIA)."
     },
     "When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost, by default script should restart whole system.": {
+      "zh_TW": "選中後，NiceHash Miner 將運行 OnGPUsLost.bat，以防至少有一個 CUDA GPU 丟失，默認情況下腳本應該重新啟動整個系統。",
       "ru": "Если отмечено, NiceHash Miner запустит OnGPUsLost.bat  при потере хотя бы одного устройства CUDA GPU, по умолчанию скрипт должен перезапускать всю систему."
     },
     "When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state. This will slightly increase performance on certain algorithms. This feature needs administrator privileges to be activated.": {
-      "ru": "Если отмечено, NiceHash Miner изменит все поддерживаемые NVidia GPU в статус P0. Это немного увеличит производительность на некоторых алгоритмах. Требуются права администратора."
+      "ru": "Если отмечено, NiceHash Miner изменит все поддерживаемые NVidia GPU в статус P0. Это немного увеличит производительность на некоторых алгоритмах. Требуются права администратора.",
+      "zh_TW": "選中後，NiceHash Miner 會將所有支持的 NVIDIA GPU 更改為 P0 狀態。這將略微提高某些算法的性能。此功能需要管理員權限才能激活。"
     },
     "When checked, NiceHash Miner will run Ethlargement for Dagger algorithms when supported GPUs are present. Requires running NHML as admin and enabling 3rd-party miners.": {
+      "zh_TW": "選中後，如果存在受支持的 GPU，NiceHash Miner 將為 Dagger 算法運行 Ethlargement。需要以管理員身份運行 NHML 並啟用第 3 方礦工。",
       "ru": "Если отмечено, NiceHash Miner запустит Ethlargement для алгоритмов Dagger, если есть поддерживаемые видеокарты. Требуются права администратора и включение сторонних майнеров."
     },
     "Fixed part of minimal time (in seconds) before miner switches algorithm.": {
@@ -3547,16 +3686,19 @@
       "ru": "Фиксированная часть максимального времени в секундах перед переключением алгоритма майнером."
     },
     "When checked, mining windows will start hidden.": {
+      "zh_TW": "選中後，採礦窗口將開始隱藏。",
       "ru": "Если отмечено, окна майнинга будут запускаться скрытыми."
     },
     "Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.": {
       "ru": "Количество времени в миллисекундах, которое NiceHash Miner будет ждать перед перезапуском майнера."
     },
     "Number of gpu devices in your system.": {
-      "ru": "Количество видеокарт в вашей системе."
+      "ru": "Количество видеокарт в вашей системе.",
+      "zh_TW": "系統中的 GPU 數量。"
     },
     "Number of cpu devices in your system.": {
-      "ru": "Количество процессоров в вашей системе."
+      "ru": "Количество процессоров в вашей системе.",
+      "zh_TW": "系統中的 CPU 數量。"
     },
     "Amount of BTC not yet paid to you.": {
       "ru": "Количество BTC, которое еще не было выплачено вам."
@@ -3643,70 +3785,91 @@
       "ru": "Описание"
     },
     "DEVICES MINING": {
-      "ru": "УСТРОЙСТВА МАЙНЯТ"
+      "ru": "УСТРОЙСТВА МАЙНЯТ",
+      "zh_TW": "正在挖礦的裝置"
     },
     "CURRENT PROFITABILITY": {
-      "ru": "ТЕКУЩАЯ ПРИБЫЛЬНОСТЬ"
+      "ru": "ТЕКУЩАЯ ПРИБЫЛЬНОСТЬ",
+      "zh_TW": "目前的盈利能力"
     },
     "ENABLE ALL": {
-      "ru": "ВКЛЮЧИТЬ ВСЕ"
+      "ru": "ВКЛЮЧИТЬ ВСЕ",
+      "zh_TW": "全部啟用"
     },
     "START ALL": {
-      "ru": "ЗАПУСТИТЬ ВСЕ"
+      "ru": "ЗАПУСТИТЬ ВСЕ",
+      "zh_TW": "全部開始"
     },
     "STOP ALL": {
-      "ru": "ОСТАНОВИТЬ ВСЕ"
+      "ru": "ОСТАНОВИТЬ ВСЕ",
+      "zh_TW": "全部停止"
     },
     "View Stats Online": {
-      "ru": "Просмотр статистики онлайн"
+      "ru": "Просмотр статистики онлайн",
+      "zh_TW": "線上查看統計數據"
     },
     "Start Mining": {
-      "ru": "Запустить майнинг"
+      "ru": "Запустить майнинг",
+      "zh_TW": "開始挖礦"
     },
     "Mining / Benchmarking": {
-      "ru": "Майнинг / Бенчмарк"
+      "ru": "Майнинг / Бенчмарк",
+      "zh_TW": "挖礦/基準測試"
     },
     "Complete your mining setup": {
-      "ru": "Завершите вашу настройку майнинга"
+      "ru": "Завершите вашу настройку майнинга",
+      "zh_TW": "完成您的挖礦設置"
     },
     "+ Add Wallet Address": {
-      "ru": "+ Добавить адрес кошелька"
+      "ru": "+ Добавить адрес кошелька",
+      "zh_TW": "+ 添加錢包地址"
     },
     "GPU’S": {
       "ru": "GPU’S"
     },
     "How to create a Wallet Address?": {
-      "ru": "Как создать адрес кошелька?"
+      "ru": "Как создать адрес кошелька?",
+      "zh_TW": "如何創建錢包地址？"
     },
     "RESET TO DEFAULT": {
-      "ru": "СБРОСИТЬ НАСТРОЙКИ"
+      "ru": "СБРОСИТЬ НАСТРОЙКИ",
+      "zh_TW": "重置為默認設定"
     },
     "Restart": {
-      "ru": "Перезапустить"
+      "ru": "Перезапустить",
+      "zh_TW": "重新開始"
     },
     "Dashboard": {
-      "ru": "Кабинет"
+      "ru": "Кабинет",
+      "zh_TW": "儀表板"
     },
     "Devices": {
-      "ru": "Устройства"
+      "ru": "Устройства",
+      "zh_TW": "裝置"
     },
     "Benchmarks": {
-      "ru": "Бенчмарк"
+      "ru": "Бенчмарк",
+      "zh_TW": "基準測試"
     },
     "Plugins": {
-      "ru": "Плагины"
+      "ru": "Плагины",
+      "zh_TW": "插件"
     },
     "UNPAID BALANCE": {
-      "ru": "НЕВЫПЛАЧЕННЫЙ БАЛАНС"
+      "ru": "НЕВЫПЛАЧЕННЫЙ БАЛАНС",
+      "zh_TW": "未付餘額"
     },
     "Worker name:": {
-      "ru": "Имя воркера:"
+      "ru": "Имя воркера:",
+      "zh_TW": "礦工名稱"
     },
     "Remove": {
-      "ru": "Удалить"
+      "ru": "Удалить",
+      "zh_TW": "移除"
     },
     "More Info": {
-      "ru": "Развернуть"
+      "ru": "Развернуть",
+      "zh_TW": "更多資訊"
     },
     "Less Info": {
       "ru": "Свернуть"
@@ -3715,10 +3878,12 @@
       "ru": "Новое"
     },
     "Do not show again": {
-      "ru": "Не показывать снова"
+      "ru": "Не показывать снова",
+      "zh_TW": "不再顯示"
     },
     "Notifications": {
-      "ru": "Уведомления"
+      "ru": "Уведомления",
+      "zh_TW": "通知"
     },
     "Running local version: ": {
       "ru": "Запущенная локальная версия: "
@@ -3730,28 +3895,35 @@
       "ru": "Свернуть"
     },
     "ENABLED": {
-      "ru": "ВКЛЮЧЕНО"
+      "ru": "ВКЛЮЧЕНО",
+      "zh_TW": "已啟用"
     },
     "BENCHED": {
-      "ru": "ПРОТЕСТИРОВАНО"
+      "ru": "ПРОТЕСТИРОВАНО",
+      "zh_TW": "已測試"
     },
     "ALGORITHM": {
-      "ru": "АЛГОРИТМ"
+      "ru": "АЛГОРИТМ",
+      "zh_TW": "算法"
     },
     "MINER": {
-      "ru": "МАЙНЕР"
+      "ru": "МАЙНЕР",
+      "zh_TW": "礦工"
     },
     "SPEED": {
-      "ru": "СКОРОСТЬ"
+      "ru": "СКОРОСТЬ",
+      "zh_TW": "速度"
     },
     "BTC / 24H": {
       "ru": "BTC / 24ч"
     },
     "STATUS": {
-      "ru": "СТАТУС"
+      "ru": "СТАТУС",
+      "zh_TW": "狀態"
     },
     "SELECT ALL": {
-      "ru": "ВЫБРАТЬ ВСЕ"
+      "ru": "ВЫБРАТЬ ВСЕ",
+      "zh_TW": "選取全部"
     },
     "Pending Benchmarks: {0}": {
       "ru": "Ждущие тестирования: {0}"
@@ -3766,7 +3938,8 @@
       "ru": "Стоп бенчмарк"
     },
     "Clear all speeds": {
-      "ru": "Очистить все скорости"
+      "ru": "Очистить все скорости",
+      "zh_TW": "刪除所有速度"
     },
     "Custom Algorithm Settings": {
       "ru": "Настройки алгоритма"
@@ -3775,10 +3948,12 @@
       "ru": "Скорость бенчмарка (H/s)"
     },
     "Temp": {
-      "ru": "Температура"
+      "ru": "Температура",
+      "zh_TW": "溫度"
     },
     "Load": {
-      "ru": "Нагрузка"
+      "ru": "Нагрузка",
+      "zh_TW": "負載"
     },
     "Profitability / 24h": {
       "ru": "Прибыльность / 24ч"
@@ -3787,7 +3962,8 @@
       "ru": "Как создать адрес кошелька"
     },
     "SAVE": {
-      "ru": "СОХРАНИТЬ"
+      "ru": "СОХРАНИТЬ",
+      "zh_TW": "保存"
     },
     "Power Usage (W)": {
       "ru": "Потребление мощности (Вт)"
@@ -3815,19 +3991,24 @@
       "ru": "Повторный бенчмарк"
     },
     "Are you sure you would like to clear all speeds for {0}?": {
+      "zh_TW": "您確定要清除 {0} 的所有速度嗎？",
       "ru": "Вы уверены, что хотите сбросить все скорости для {0}?"
     },
     "Yes": {
-      "ru": "Да"
+      "ru": "Да",
+      "zh_TW": "是"
     },
     "No": {
-      "ru": "нет"
+      "ru": "нет",
+      "zh_TW": "否"
     },
     "Stop Benchmarking": {
-      "ru": "Остановить бенчмарк"
+      "ru": "Остановить бенчмарк",
+      "zh_TW": "停止測試"
     },
     "Stop Mining": {
-      "ru": "Остановить майнинг"
+      "ru": "Остановить майнинг",
+      "zh_TW": "停止挖礦"
     },
     "Cross Reference {0}": {
       "ru": "Перекрёстная ссылка {0}"
@@ -3899,7 +4080,8 @@
       "ru": "Это перезапустит вашу программу и создаст zip-файл на рабочем столе."
     },
     "Cancel": {
-      "ru": "Отмена"
+      "ru": "Отмена",
+      "zh_TW": "取消"
     },
     "Ok": {
       "ru": "OK"
@@ -3908,13 +4090,16 @@
       "ru": "Недостаточно разрешений"
     },
     "NiceHash Miner folder doesn't have write access. This can prevent some features from working.": {
-      "ru": "Для папки NiceHash Miner отсутствуют права на запись. Это может помешать работе некоторых функций."
+      "ru": "Для папки NiceHash Miner отсутствуют права на запись. Это может помешать работе некоторых функций.",
+      "zh_TW": "NiceHash Miner 文件夾沒有寫入權限。 這可能會導致某些功能異常。"
     },
     "Display Net Profit": {
-      "ru": "Отображать чистый доход"
+      "ru": "Отображать чистый доход",
+      "zh_TW": "顯示淨利潤"
     },
     "When checked, NiceHash Miner will show you net profit (gross profit minus electricity costs).": {
-      "ru": "Если отмечено, NiceHash Miner будет показывать вам чистый доход (валовой доход минус расходы на электроэнергию)."
+      "ru": "Если отмечено, NiceHash Miner будет показывать вам чистый доход (валовой доход минус расходы на электроэнергию).",
+      "zh_TW": "選中後，NiceHash Miner 將顯示淨利潤（毛利潤減去電費）。"
     },
     "Start updater": {
       "ru": "Запуск обновления"
@@ -3929,7 +4114,8 @@
       "ru": "Запуская NiceHash Miner или сокращенно NHM, вы подключаете ваш ПК или риг для майнинга к рынку мощности NiceHash. NiceHash Miner позволяет вам сдавать в аренду вычислительную мощность вашего оборудования и взамен зарабатывать биткоины. Чтобы узнать больше о том, как работает NiceHash, "
     },
     "About": {
-      "ru": "О нас"
+      "ru": "О нас",
+      "zh_TW": "關於"
     },
     "Use NiceHash Mobile app and scan this QR code to add this rig to your Rig Manager automatically.": {
       "ru": "Используйте мобильное приложение NiceHash и сканируйте QR-код, чтобы добавить этот риг в менеджер ригов автоматически."
@@ -3950,6 +4136,7 @@
       "ru": "Поддержка: "
     },
     "Status: ": {
+      "zh_TW": "狀態",
       "ru": "Статус: "
     },
     "Social": {
@@ -3977,28 +4164,36 @@
       "ru": "Ваша программа будет перезапущена для полного изменения темы NiceHash Miner."
     },
     "Scan with official NiceHash mobile application": {
-      "ru": "Сканируйте с помощью официального мобильного приложения NiceHash"
+      "ru": "Сканируйте с помощью официального мобильного приложения NiceHash",
+      "zh_TW": "使用 NiceHash 官方APP掃描"
     },
     "Confirm scan": {
-      "ru": "Подтвердить сканирование"
+      "ru": "Подтвердить сканирование",
+      "zh_TW": "確認掃描"
     },
     "LOGIN": {
-      "ru": "ВХОД"
+      "ru": "ВХОД",
+      "zh_TW": "登錄"
     },
     "Register a New Account": {
-      "ru": "Регистрация нового аккаунта"
+      "ru": "Регистрация нового аккаунта",
+      "zh_TW": "註冊一個新帳戶"
     },
     "Enter Bitcoin Address Manually": {
-      "ru": "Ввод Биткоин-адреса вручную"
+      "ru": "Ввод Биткоин-адреса вручную",
+      "zh_TW": "手動輸入比特幣地址"
     },
     "Generate new QR Code": {
-      "ru": "Генерация нового QR-кода"
+      "ru": "Генерация нового QR-кода",
+      "zh_TW": "生成新的QR碼"
     },
     "Language change": {
-      "ru": "Изменение языка"
+      "ru": "Изменение языка",
+      "zh_TW": "語言變更"
     },
     "Theme change": {
-      "ru": "Изменение темы"
+      "ru": "Изменение темы",
+      "zh_TW": "主題變更"
     },
     "Demo Mode": {
       "ru": "Режим Демо"
@@ -4028,10 +4223,12 @@
       "ru": "Биткоин-адрес был изменен — этот код уже используется."
     },
     "NHMWS not connected": {
-      "ru": "NHMWS не подключен"
+      "ru": "NHMWS не подключен",
+      "zh_TW": "NHMWS 未連接"
     },
     "Not connected to NHMWS. Please check your internet connection.": {
-      "ru": "Нет подключения к NHMWS. Пожалуйста, проверьте ваше подключение к интернету."
+      "ru": "Нет подключения к NHMWS. Пожалуйста, проверьте ваше подключение к интернету.",
+      "zh_TW": "未連接到 NHMWS。 請檢查您的互聯網連接。"
     },
     "Unable to retrieve plugins info. Please check your internet connection and try to restart NiceHash Miner.": {
       "ru": "Не удалось получить информацию о плагинах. Пожалуйста, проверьте ваше подключение к интернету и попробуйте перезапустить NiceHash Miner."
