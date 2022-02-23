@@ -12,9 +12,9 @@ using ZXing.Rendering;
 
 namespace NiceHashMiner
 {
-    class QrCodeHelpers
+    static class QrCodeImageGenerator
     {
-        public static ImageBrush GetQRCode(string uuid, bool LightTheme = true)
+        public static (ImageBrush, bool) GetQRCodeImage(string uuid, bool LightTheme = true)
         {
             var encOptions = new EncodingOptions
             {
@@ -66,15 +66,15 @@ namespace NiceHashMiner
                     bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                     bitmapImage.EndInit();
                 }
-                // end of bmp to bmpimg       
+                // end of bmp to bmpimg
 
                 var brush = new ImageBrush(bitmapImage);
-                return brush;
+                return (brush, true);
             }
             catch (Exception ex)
             {
-                Logger.Error("QRCode", ex.Message);
-                return new ImageBrush();
+                Logger.Error("QRCodeImageGenerator", ex.Message);
+                return (new ImageBrush(), false);
             }
         }
     }
