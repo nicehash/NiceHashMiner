@@ -35,11 +35,21 @@ namespace NiceHashMiner.Views.Settings
             var rigID = ApplicationStateManager.RigID();
             var res = await QrCodeGenerator.RequestNew_QR_Code(_uuid, rigID);
 
-            if (!res) return;
+            if (!res)
+            {
+                lbl_qr_status.Visibility = Visibility.Visible;
+                lbl_qr_status.Content = "Unable to retreive QR Code";
+                return;
+            }
 
             var (image, ok) = QrCodeImageGenerator.GetQRCodeImage(_uuid, GUISettings.Instance.DisplayTheme == "Light");
 
-            if (!ok) return;
+            if (!ok)
+            {
+                lbl_qr_status.Visibility = Visibility.Visible;
+                lbl_qr_status.Content = "QR Code image generation failed";
+                return;
+            }
 
             rect_qrCode.Fill = image;
             while (true)
