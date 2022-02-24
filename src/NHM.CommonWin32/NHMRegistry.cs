@@ -23,7 +23,7 @@ namespace NHM.CommonWin32
             }
         }
 
-        public static int GetValueForeKeyName(string keyName)
+        public static int GetValueForKeyName(string keyName)
         {
             EnsureNHMSubKey();
             try

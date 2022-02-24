@@ -22,7 +22,7 @@ namespace NHMCore.Configs
         }
         public int AgreedWithTOS
         {
-            get { return NHMRegistry.GetValueForeKeyName(nameof(AgreedWithTOS)); }
+            get { return NHMRegistry.GetValueForKeyName(nameof(AgreedWithTOS)); }
             set
             {
                 NHMRegistry.SetValueForKeyName(nameof(AgreedWithTOS), value);
@@ -32,7 +32,7 @@ namespace NHMCore.Configs
 
         public int Use3rdPartyMinersTOS
         {
-            get { return NHMRegistry.GetValueForeKeyName(nameof(Use3rdPartyMinersTOS)); }
+            get { return NHMRegistry.GetValueForKeyName(nameof(Use3rdPartyMinersTOS)); }
             set
             {
                 NHMRegistry.SetValueForKeyName(nameof(Use3rdPartyMinersTOS), value);
