@@ -41,13 +41,6 @@ namespace NHM.CommonWin32
             }
         }
 
-        public static RegistryKey GetSubKey(bool writable)
-        {
-            EnsureNHMSubKey();
-            var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, writable);
-            return key;
-        }
-
         public static void SetValueForKeyName(string keyName, int value)
         {
             EnsureNHMSubKey();
