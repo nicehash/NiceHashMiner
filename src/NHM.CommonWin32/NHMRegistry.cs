@@ -60,7 +60,6 @@ namespace NHM.CommonWin32
             const string machineGuidFallbackKeyName = "MachineGuidNhmGen";
             using var rkFallback = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, true);
             var fallbackUUIDValue = rkFallback?.GetValue(machineGuidFallbackKeyName, null);
-            // #1 tukaj imava vrednost shranjeno v registru in samo bereva
             if (fallbackUUIDValue is string regUUID) return regUUID;
 
             try
