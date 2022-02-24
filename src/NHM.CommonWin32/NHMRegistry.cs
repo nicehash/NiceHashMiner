@@ -7,7 +7,6 @@ namespace NHM.CommonWin32
     public static class NHMRegistry
     {
         private static string NHM_SUBKEY => @"SOFTWARE\" + APP_GUID.GUID;
-        private const string ValueFallback = "MachineGuidNhmGen";
         private static bool EnsureNHMSubKeyCalled = false;
         private static void EnsureNHMSubKey()
         {
@@ -24,7 +23,7 @@ namespace NHM.CommonWin32
             }
         }
 
-        public static int GetSubKeyName(string keyName)
+        public static int GetValueForeKeyName(string keyName)
         {
             EnsureNHMSubKey();
             try
@@ -49,7 +48,7 @@ namespace NHM.CommonWin32
             return key;
         }
 
-        public static void SetSubKeyName(string keyName, int value)
+        public static void SetValueForKeyName(string keyName, int value)
         {
             EnsureNHMSubKey();
             try
@@ -62,38 +61,27 @@ namespace NHM.CommonWin32
                 Logger.Error("NHMRegistry", $"SetSubKey {keyName} {e}");
             }
         }
-
         public static string MachineGuidNhmGenGet()
         {
+            EnsureNHMSubKey();
+            const string machineGuidFallbackKeyName = "MachineGuidNhmGen";
             using var rkFallback = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, true);
-            var fallbackUUIDValue = rkFallback?.GetValue(ValueFallback, null);
-            if (fallbackUUIDValue == null)
-            {
-                try
-                {
-                    var genUUID = MachineGuidNhmGenSet(rkFallback);
-                    return genUUID;
-                }
-                catch (Exception e)
-                {
-                    //if registry fails do fallback to files
-                    Logger.Error("NHMRegistry", $"Fallback SetValue: {e.Message}");
-                    return "";
-                }
-            }
-            else if (fallbackUUIDValue is string regUUID)
-            {
-                return regUUID;
-            }
-            return "";
-        }
+            var fallbackUUIDValue = rkFallback?.GetValue(machineGuidFallbackKeyName, null);
+            // #1 tukaj imava vrednost shranjeno v registru in samo bereva
+            if (fallbackUUIDValue is string regUUID) return regUUID;
 
-        public static string MachineGuidNhmGenSet(RegistryKey rkFallback)
-        {
-            var genUUID = Guid.NewGuid().ToString();
-            rkFallback?.SetValue(ValueFallback, genUUID);
-
-            return genUUID;
+            try
+            {
+                var genUUID = Guid.NewGuid().ToString();
+                rkFallback?.SetValue(machineGuidFallbackKeyName, genUUID);
+                return genUUID;
+            }
+            catch (Exception e)
+            {
+                //if registry fails do fallback to files
+                Logger.Error("NHMRegistry", $"Fallback SetValue: {e.Message}");
+                return "";
+            }
         }
     }
 }
