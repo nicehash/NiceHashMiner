@@ -16,7 +16,6 @@ namespace NHMCore.Utils
         private static int CheckIntervalInSeconds = 5;
         private static string Tag = "OutsideProcessMonitor";
         private static ManagementEventWatcher ProcessInitWatch { get; set; } = null;
-        private static Task CheckProcessTask { get; set; } = null;
         private static MonitorState RunState { get; set; } = MonitorState.None;
         private enum MonitorState
         {
@@ -26,15 +25,16 @@ namespace NHMCore.Utils
         }
         public static async Task Init(CancellationToken stop)
         {
-            await ExecuteGracefulShutdownIfNeeded(); // initial check if installer running before NHM
-            if (Helpers.IsElevated && InitAndStartProcessWatcher())
-            {
-                RunState = MonitorState.ElevatedMode;
-            }
-            else
+            if(IsNHMShutdownNeeded()) await GracefulShutdown(); // initial check if installer running before NHM
+            //if (Helpers.IsElevated && InitAndStartProcessWatcher())
+            //{
+            //    Logger.Info(Tag, "Running with elevated rights");
+            //    RunState = MonitorState.ElevatedMode;
+            //}
+            //else
             {
                 Logger.Info(Tag, "Running with normal rights");
-                CheckProcessTask = Task.Run(async () =>
+                _ = Task.Run(async () =>
                 {
                     await ProcessMonitorLoop(stop);
                 });
@@ -42,7 +42,7 @@ namespace NHMCore.Utils
             }
             stop.Register(Deinit);
         }
-        private static void Deinit()
+        private static void Deinit()//deinit is called from inside of checker, therefore it waits for itself...
         {
             if (!_isDisposed)
             {
@@ -50,12 +50,7 @@ namespace NHMCore.Utils
                 if (RunState == MonitorState.ElevatedMode && ProcessInitWatch != null)
                 {
                     ProcessInitWatch.Stop();
-                    ProcessInitWatch.Dispose();
-                }
-                if (CheckProcessTask != null)
-                {
-                    CheckProcessTask.Wait();
-                    CheckProcessTask.Dispose();
+                    //ProcessInitWatch.Dispose();
                 }
             }
         }
@@ -64,7 +59,11 @@ namespace NHMCore.Utils
             try
             {
                 ProcessInitWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
-                ProcessInitWatch.EventArrived += async (s, e) => await ExecuteGracefulShutdownIfNeeded();
+                ProcessInitWatch.EventArrived += async (s, e) =>
+                {
+                    Logger.Info(Tag, "Received event: " + e.NewEvent.Properties["ProcessName"].Value);
+                    await CheckNewEventAndShutdownIfNeeded();
+                };
                 ProcessInitWatch.Start();
                 return true;
             }
@@ -78,23 +77,19 @@ namespace NHMCore.Utils
         {
             try
             {
-                while (!stop.IsCancellationRequested)
+                while (!IsNHMShutdownNeeded())
                 {
-                    await ExecuteGracefulShutdownIfNeeded();
                     await Task.Delay(CheckIntervalInSeconds * 1000, stop);
                 }
+                await GracefulShutdown();
             }
             catch {}
         }
-        private static async Task ExecuteGracefulShutdownIfNeeded()
+        private static async Task CheckNewEventAndShutdownIfNeeded()
         {
-            try
+            if (IsNHMShutdownNeeded())
             {
-                if (IsNHMShutdownNeeded()) await GracefulShutdown();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(Tag, $"ExecuteGracefulShutdownIfNeeded {ex.Message}");
+                await GracefulShutdown();
             }
         }
         private static async Task GracefulShutdown()
@@ -110,28 +105,45 @@ namespace NHMCore.Utils
             {
                 Logger.Error(Tag, ex.Message);
             }
-            finally
-            {
-                Deinit();
-            }
         }
+        private static bool IsNHMShutdownNeeded_2()
+        {
+            try
+            {
+                var processes = Process.GetProcesses();
+                return HasInstallerOrUpdaterRunning(processes) || HasUninstallerRunning(processes);
+            }
+            catch (Exception ex) 
+            {
+                Logger.Error(Tag, $"IsNHMShutdownNeeded {ex.Message}");
+            }
+            return false;
+        }
+
         private static bool IsNHMShutdownNeeded()
         {
-            var processes = Process.GetProcesses();
-            return HasInstallerOrUpdaterRunning(processes) || HasUninstallerRunning(processes);
+            //Mutex.TryOpenExisting(string name, MutexRights rights, out Mutex result)
+            var ok = Mutex.TryOpenExisting(APP_GUID.GUID, System.Security.AccessControl.MutexRights.ReadPermissions, out Mutex res);
+            Logger.Info(Tag, $"TryOpenExisting(mutex) result: {ok}");
+            return ok;
+            //check if mutex is locked
+            //if yes then shutdown
         }
-        private static bool HasInstallerOrUpdaterRunning(Process[] processes)
+
+        private static bool HasInstallerOrUpdaterRunning(params Process[] processes)
         {
             var processListInstallUpdate = processes
                 .Where(proc => proc.ProcessName.ToLower().Contains("nhm_windows"))
                 .Where(proc => proc.MainWindowTitle.ToLower().Contains("setup"));
+            Logger.Info(Tag, $"HasInstallerOrUpdaterRunning found number of processes: {processListInstallUpdate.Count()}");
             return processListInstallUpdate.Any();
         }
-        private static bool HasUninstallerRunning(Process[] processes)
+        private static bool HasUninstallerRunning(params Process[] processes)
         {
             var processListUninstall = processes
                 .Where(proc => proc.ProcessName.ToLower().Contains("un_a"))
                 .Where(proc => proc.MainWindowTitle.ToLower().Contains("uninstall"));
+            Logger.Info(Tag, $"HasUninstallerRunning found number of processes: {processListUninstall.Count()}");
             return processListUninstall.Any();
         }
     }
