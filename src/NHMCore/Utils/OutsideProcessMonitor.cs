@@ -47,7 +47,7 @@ namespace NHMCore.Utils
             }
             catch (Exception ex)
             {
-                Logger.Error(Tag, ex.Message);
+                Logger.Error(Tag, $"GracefulShutdown: {ex.Message}");
             }
         }
         private static bool IsNHMShutdownNeeded()
