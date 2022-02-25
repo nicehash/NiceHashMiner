@@ -52,7 +52,15 @@ namespace NHMCore.Utils
         }
         private static bool IsNHMShutdownNeeded()
         {
-            return Mutex.TryOpenExisting(APP_GUID.GUID, System.Security.AccessControl.MutexRights.ReadPermissions, out Mutex res);
+            try
+            {
+                return Mutex.TryOpenExisting(APP_GUID.GUID, System.Security.AccessControl.MutexRights.ReadPermissions, out Mutex res);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(Tag, $"IsNHMShutdownNeeded: {ex.Message}");
+            }
+            return false;
         }
     }
 }
