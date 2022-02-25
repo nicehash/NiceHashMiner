@@ -7,6 +7,7 @@ using System.Management;
 using NHM.Common;
 using System.Threading;
 using System.Diagnostics;
+using System.Security.AccessControl;
 
 namespace NHMCore.Utils
 {
@@ -54,7 +55,7 @@ namespace NHMCore.Utils
         {
             try
             {
-                return Mutex.TryOpenExisting(APP_GUID.GUID, System.Security.AccessControl.MutexRights.ReadPermissions, out Mutex res);
+                return Mutex.TryOpenExisting(APP_GUID.GUID, MutexRights.ReadPermissions, out var _);
             }
             catch (Exception ex)
             {
