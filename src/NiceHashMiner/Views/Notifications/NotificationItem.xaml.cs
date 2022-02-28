@@ -83,7 +83,6 @@ namespace NiceHashMiner.Views.Notifications
 
         private void Collapse()
         {
-            //notificationsDetailsGrid.Visibility = Visibility.Collapsed;
             _notification.IsVisible = false;
             InfoToggleButton.IsChecked = false;
             InfoToggleButtonText.Text = "More Info";
@@ -91,7 +90,6 @@ namespace NiceHashMiner.Views.Notifications
 
         private void Expand()
         {
-            //notificationsDetailsGrid.Visibility = Visibility.Visible
             _notification.IsVisible = true;
             InfoToggleButton.IsChecked = true;
             InfoToggleButtonText.Text = "Less Info";
