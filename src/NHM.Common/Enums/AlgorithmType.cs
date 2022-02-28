@@ -142,6 +142,7 @@ namespace NHM.Common.Enums
             {
                 case AlgorithmType.ZHash:
                 case AlgorithmType.BeamV3:
+                case AlgorithmType.ZelHash:
                     return "Sol/s";
                 case AlgorithmType.GrinCuckatoo31:
                 case AlgorithmType.GrinCuckatoo32:
