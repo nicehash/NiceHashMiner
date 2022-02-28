@@ -64,7 +64,7 @@ namespace NHMCore.Utils
                     var hasNewVersion = VersionState.Instance.IsNewVersionAvailable;
                     // prevent sleep check
 
-                    bool isUpdater = IsNHMRunningFromInstallerPath() && IsRunningInstalledApp();
+                    bool isUpdater = IsNHMRunningFromInstallerPath();
                     if (hasNewVersion)
                     {
                         AvailableNotifications.CreateNhmUpdateInfoDownload(isUpdater);
@@ -187,11 +187,6 @@ namespace NHMCore.Utils
         }
 
         public static bool IsNHMRunningFromInstallerPath()
-        {
-            return Path.GetDirectoryName(Assembly.GetEntryAssembly().Location).Contains("AppData\\Local\\Programs");
-        }
-
-        public static bool IsRunningInstalledApp()
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);

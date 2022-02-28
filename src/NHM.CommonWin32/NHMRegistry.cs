@@ -58,12 +58,11 @@ namespace NHM.CommonWin32
         {
             EnsureNHMSubKey();
             const string machineGuidFallbackKeyName = "MachineGuidNhmGen";
-            using var rkFallback = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, true);
-            var fallbackUUIDValue = rkFallback?.GetValue(machineGuidFallbackKeyName, null);
-            if (fallbackUUIDValue is string regUUID) return regUUID;
-
             try
             {
+                using var rkFallback = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, true);
+                var fallbackUUIDValue = rkFallback?.GetValue(machineGuidFallbackKeyName, null);
+                if (fallbackUUIDValue is string regUUID) return regUUID;
                 var genUUID = Guid.NewGuid().ToString();
                 rkFallback?.SetValue(machineGuidFallbackKeyName, genUUID);
                 return genUUID;
