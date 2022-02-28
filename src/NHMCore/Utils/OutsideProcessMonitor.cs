@@ -15,27 +15,27 @@ namespace NHMCore.Utils
     {
         private static int CheckIntervalInSeconds = 2;
         private static string Tag = "OutsideProcessMonitor";
-        public static async Task Init(CancellationToken stop)
+        public static Task Init(CancellationToken stop)
         {
-            if (IsNHMShutdownNeeded()) await GracefulShutdown(); // initial check if installer running before NHM
             Logger.Info(Tag, "Initializing");
             _ = Task.Run(async () =>
             {
                 await ProcessMonitorLoop(stop);
             });
             Logger.Info(Tag, "Closed outside process monitor loop");
+            return Task.CompletedTask;
         }
         private static async Task ProcessMonitorLoop(CancellationToken stop)
         {
             try
             {
-                while (!IsNHMShutdownNeeded())
-                {
-                    await Task.Delay(CheckIntervalInSeconds * 1000, stop);
-                }
-                await GracefulShutdown();
+                while (!IsNHMShutdownNeeded()) await Task.Delay(CheckIntervalInSeconds * 1000, stop);
             }
             catch { }
+            finally
+            {
+                if (IsNHMShutdownNeeded()) await GracefulShutdown();
+            }
         }
         private static async Task GracefulShutdown()
         {
