@@ -86,11 +86,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoMiner", "src\Tools\Demo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.Joker", "src\Miners\MP.Joker\MP.Joker.csproj", "{A23E8384-0C0B-4CF2-A2B9-46F34E32D0FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CredentialValidators", "src\NHM.CredentialValidators\NHM.CredentialValidators.csproj", "{7733D0D8-72A7-4656-A5B3-54FC764E0507}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.CredentialValidators", "src\NHM.CredentialValidators\NHM.CredentialValidators.csproj", "{7733D0D8-72A7-4656-A5B3-54FC764E0507}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FFB721FA-CA35-4B5D-859E-EB744ED01138}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CredentialValidatorsTests", "src\Tests\NHM.CredentialValidatorsTests\NHM.CredentialValidatorsTests.csproj", "{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CommonWin32", "src\NHM.CommonWin32\NHM.CommonWin32.csproj", "{FF5822A1-6311-4431-9281-261A8DE0CB43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -412,6 +414,14 @@ Global
 		{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B}.Release|x64.ActiveCfg = Release|Any CPU
 		{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B}.Release|x64.Build.0 = Release|Any CPU
+		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Debug|x64.Build.0 = Debug|Any CPU
+		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|x64.ActiveCfg = Release|Any CPU
+		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

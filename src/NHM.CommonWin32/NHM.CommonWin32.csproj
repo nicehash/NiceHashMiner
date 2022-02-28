@@ -4,18 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EE6160CC-8C19-4AD8-BB1E-C295347203EE}</ProjectGuid>
+    <ProjectGuid>{FF5822A1-6311-4431-9281-261A8DE0CB43}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NHM.UUID</RootNamespace>
-    <AssemblyName>NHM.UUID</AssemblyName>
+    <RootNamespace>NHM.CommonWin32</RootNamespace>
+    <AssemblyName>NHM.CommonWin32</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,12 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>..\..\packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,26 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3rdParty\Guid\Constants.cs" />
-    <Compile Include="3rdParty\Guid\Providers\HashProvider.cs" />
-    <Compile Include="3rdParty\Guid\Providers\RandomNumberProvider.cs" />
-    <Compile Include="3rdParty\Guid\UUID.cs" />
-    <Compile Include="UUID.cs" />
+    <Compile Include="NHMRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WindowsMacUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NHM.CommonWin32\NHM.CommonWin32.csproj">
-      <Project>{ff5822a1-6311-4431-9281-261a8de0cb43}</Project>
-      <Name>NHM.CommonWin32</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

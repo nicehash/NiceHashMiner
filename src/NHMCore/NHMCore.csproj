@@ -333,6 +333,10 @@
       <Project>{e7f9794d-e2d2-41ef-8166-8029b6b5c035}</Project>
       <Name>MP.__DEV__FakePlugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NHM.CommonWin32\NHM.CommonWin32.csproj">
+      <Project>{ff5822a1-6311-4431-9281-261a8de0cb43}</Project>
+      <Name>NHM.CommonWin32</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
       <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
       <Name>NHM.DeviceDetection</Name>
