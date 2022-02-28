@@ -36,7 +36,7 @@ namespace NHM.CommonWin32
             }
             catch (Exception e)
             {
-                Logger.Error("NHMRegistry", $"GetSubKey {e}");
+                Logger.Error("NHMRegistry", $"GetSubKey {keyName} {e}");
                 return -1;
             }
         }
