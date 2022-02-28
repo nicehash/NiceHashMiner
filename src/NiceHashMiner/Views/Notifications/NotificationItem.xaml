@@ -47,11 +47,8 @@
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}"/>
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
             <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
-                </Trigger>
                 <DataTrigger Binding="{Binding IsVisible}" Value="True">
                     <Setter Property="IsChecked" Value="True"></Setter>
                 </DataTrigger>
