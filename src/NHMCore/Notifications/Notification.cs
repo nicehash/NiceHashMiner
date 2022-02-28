@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using System;
+using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
 {
@@ -121,13 +122,14 @@ namespace NHMCore.Notifications
             DateTime dateTimeOfNotification = dateTimeOffSet.UtcDateTime;
             var now = DateTime.UtcNow;
             var secondsDiff = (now - dateTimeOfNotification).TotalSeconds;
-            if (secondsDiff < 60) returnTime = "Under a minute ago";
-            else if (secondsDiff < 120) returnTime = "A minute ago";
-            else if (secondsDiff < 3600) returnTime = Math.Floor(secondsDiff / 60) + " minutes ago";
-            else if (secondsDiff < 86400) returnTime = Math.Floor(secondsDiff / 60 / 60) + " hours ago";
-            else if (secondsDiff < 172800) returnTime = "Yesterday at " + dateTimeOfNotification.TimeOfDay;
-            else if (secondsDiff < 604800) returnTime = dateTimeOfNotification.DayOfWeek + " at " + dateTimeOfNotification.TimeOfDay;
-            else returnTime = dateTimeOfNotification.Date + " at " + dateTimeOfNotification.TimeOfDay;
+            if (secondsDiff < 60) returnTime = Tr("Under a minute ago");
+            else if (secondsDiff < 120) returnTime = Tr("A minute ago");
+            else if (secondsDiff < 3600) returnTime = Tr("{0} minutes ago", Math.Floor(secondsDiff / 60));
+            else if (secondsDiff < 7200) returnTime = Tr("1 hour ago");
+            else if (secondsDiff < 86400) returnTime = Tr("{0} hours ago", Math.Floor(secondsDiff / 60 / 60));
+            else if (secondsDiff < 172800) returnTime = Tr("Yesterday at {0}", dateTimeOfNotification.TimeOfDay);
+            else if (secondsDiff < 604800) returnTime = Tr("{0} at {1}", dateTimeOfNotification.DayOfWeek, dateTimeOfNotification.TimeOfDay);
+            else returnTime = Tr("{0} at {1}", dateTimeOfNotification.Date.ToString("dd-MM-yyyy"), dateTimeOfNotification.TimeOfDay);
             NotificationTime = returnTime;
         }
 

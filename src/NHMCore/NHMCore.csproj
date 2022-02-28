@@ -198,6 +198,7 @@
     <Compile Include="Utils\FilterOSSpecific.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
     <Compile Include="Utils\PInvokeHelpers.cs" />
+    <Compile Include="Utils\QrCodeGenerator.cs" />
     <Compile Include="Utils\RunAsAdmin.cs" />
     <Compile Include="Utils\SteamWatcher.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />
