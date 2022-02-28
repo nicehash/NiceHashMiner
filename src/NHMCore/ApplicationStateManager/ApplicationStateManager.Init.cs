@@ -90,7 +90,7 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
-                await OutsideProcessMonitor.Init(ExitApplication.Token);
+                OutsideProcessMonitor.Init(ExitApplication.Token);
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
                 var index = 0;

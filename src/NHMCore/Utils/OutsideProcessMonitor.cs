@@ -15,7 +15,7 @@ namespace NHMCore.Utils
     {
         private static int CheckIntervalInSeconds = 2;
         private static string Tag = "OutsideProcessMonitor";
-        public static Task Init(CancellationToken stop)
+        public static void Init(CancellationToken stop)
         {
             Logger.Info(Tag, "Initializing");
             _ = Task.Run(async () =>
@@ -23,7 +23,6 @@ namespace NHMCore.Utils
                 await ProcessMonitorLoop(stop);
             });
             Logger.Info(Tag, "Closed outside process monitor loop");
-            return Task.CompletedTask;
         }
         private static async Task ProcessMonitorLoop(CancellationToken stop)
         {
