@@ -52,6 +52,12 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
                 </Trigger>
+                <DataTrigger Binding="{Binding IsVisible}" Value="True">
+                    <Setter Property="IsChecked" Value="True"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                    <Setter Property="IsChecked" Value="False"></Setter>
+                </DataTrigger>
             </Style.Triggers>
             <Style.Resources>
                 <Style TargetType="{x:Type TextBlock}">
@@ -90,11 +96,24 @@
                               Margin="0,0,16,0"
                               Click="InfoToggleButton_Click"
                               HorizontalAlignment="Left"
-                              VerticalAlignment="Center" >
+                              VerticalAlignment="Center">
                         <TextBlock x:Name="InfoToggleButtonText"
-                                   Text="More Info"
                                    TextWrapping="Wrap"
-                                   TextAlignment="Left"/>
+                                   TextAlignment="Left">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="More Info"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsVisible}" Value="True">
+                                            <Setter Property="Text" Value="Less Info"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                                            <Setter Property="Text" Value="More Info"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </ToggleButton>
                     <Button Style="{StaticResource BigButtonWhiteNotifications}"
                         MinWidth="88"
@@ -117,7 +136,19 @@
                 <ProgressBar Width="Auto" Style="{StaticResource progressStyle}" Height="15" x:Name="ActionProgressBar" />
                 <TextBlock Width="Auto" HorizontalAlignment="Center" Text="" />
             </Grid>
-            <Grid x:Name="notificationsDetailsGrid" Grid.Row="2" Visibility="Collapsed" Margin="0,0,0,16">
+            <Grid x:Name="notificationsDetailsGrid" Grid.Row="2" Margin="0,0,0,16">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVisible}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsVisible}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
                 <WrapPanel Orientation="Vertical">
                     <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource CheckBoxNormal}" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
                     <TextBlock Text="{Binding NotificationTime, Mode=TwoWay}" />
