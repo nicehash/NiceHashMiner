@@ -45,6 +45,23 @@ namespace NiceHashMiner
             return -1;
         }
 
+        private static (bool ok, string rootPath, string appRootPath) GetPaths(bool isLauncher, bool isDevelop)
+        {
+            try
+            {
+                var appRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var ok = (isLauncher || isDevelop) && !string.IsNullOrEmpty(appRootPath);
+                if (!ok) return (false, "", "");
+                //if (isDevelop) return (true, appRootPath, appRootPath);
+                var rootPath = new Uri(Path.Combine(appRootPath, @"..\")).LocalPath;
+                return (true, rootPath, appRootPath);
+            }
+            catch
+            {
+                return (false, "", "");
+            }
+        }
+
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
 #if __DESIGN_DEVELOP
@@ -52,7 +69,7 @@ namespace NiceHashMiner
             designWindow.ShowDialog();
             return;
 #endif
-            BuildOptions.Init();
+
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             ApplicationStateManager.App = this;
             ApplicationStateManager.ApplicationExit = () =>
@@ -68,41 +85,26 @@ namespace NiceHashMiner
             Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
             Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
             Launcher.SetIsLauncher(isLauncher);
-            // Set working directory to exe
-            var pathSet = false;
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (path != null)
+            
+            var (ok, rootPath, appRootPath) = GetPaths(isLauncher, isDevelop);
+            if (!ok)
             {
-                if (isLauncher)
-                {
-                    var oneUpPath = new Uri(Path.Combine(path, @"..\")).LocalPath;
-                    Paths.SetRoot(oneUpPath);
-                    Paths.SetAppRoot(path);
-                    // TODO this might be problematic
-                    Environment.CurrentDirectory = oneUpPath;
-                }
-                else if (isDevelop)
-                {
-                    Paths.SetRoot(path);
-                    Paths.SetAppRoot(path);
-                    Environment.CurrentDirectory = path;
-                }
-                else
-                {
-                    MessageBox.Show("You must run the application via 'NiceHashMiner.exe' launcher", "Direct run disabled!", MessageBoxButton.YesNo);
-                    Application.Current.Shutdown();
-                    return;
-                }
-                pathSet = true;
+                MessageBox.Show("You must run the application via 'NiceHashMiner.exe' launcher", "Direct run disabled!", MessageBoxButton.OK);
+                Application.Current.Shutdown();
+                return;
             }
+            Paths.SetRoot(rootPath);
+            Paths.SetAppRoot(appRootPath);
+            Environment.CurrentDirectory = rootPath;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            BuildOptions.Init();
 
             // Add common folder to path for launched processes
             const string pathKey = "PATH";
             var pathVar = Environment.GetEnvironmentVariable(pathKey);
             pathVar += $";{Path.Combine(Paths.AppRoot, "common")}";
             Environment.SetEnvironmentVariable(pathKey, pathVar);
-
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            
 
             // Set security protocols
             ServicePointManager.Expect100Continue = true;
@@ -144,11 +146,6 @@ namespace NiceHashMiner
             {
                 PInvokeHelpers.AllocConsole();
                 Logger.ConfigureConsoleLogging(Level.Info);
-            }
-
-            if (!pathSet)
-            {
-                Logger.Warn(Tag, "Path not set to executable");
             }
 
             // Set to explicit shutdown or else these intro windows will cause shutdown
