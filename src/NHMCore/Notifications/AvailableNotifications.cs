@@ -548,13 +548,13 @@ namespace NHMCore.Notifications
         }
         public static void CreateOutdatedDriverWarningForPlugin(string plugin, List<(int, BaseDevice, Version)> listOfOldDrivers)
         {
-            string name = "Detected older driver versions (" + plugin + ")";
-            string content = "Older driver versions have been detected on this system, and they may cause problems with " + plugin + ". Please update them.\n";
+            string name = Tr("Detected older driver versions") + " (" + plugin + ")";
+            string content = Tr($"Older driver versions have been detected on this system, and they may cause problems with {0}. Please update them.", plugin) + "\n";
             var recommends = listOfOldDrivers.Where(dev => dev.Item1 == 0);
             var criticals = listOfOldDrivers.Where(dev => dev.Item1 == 1);
             if (recommends.Any())
             {
-                content += "Lower than recommended:\n";
+                content += Tr("Lower than recommended") + ":\n";
                 var nvidias = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
                 if (nvidias.Any()) {
@@ -571,7 +571,7 @@ namespace NHMCore.Notifications
             }
             if (criticals.Any())
             {
-                content += "Lower than required:\n";
+                content += Tr("Lower than required") + ":\n";
                 var nvidias = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
                 if (nvidias.Any())
