@@ -118,10 +118,7 @@ namespace NHMCore.Utils
                 // #1 download updater.exe or zip depending on bin type
                 var url = isUpdater ? VersionState.Instance.GetNewVersionUpdaterUrl() : VersionState.Instance.GetNewVersionZipUrl();
                 var downloadRootPath = Path.Combine(Paths.Root, "updaters");
-                if (!Directory.Exists(downloadRootPath))
-                {
-                    Directory.CreateDirectory(downloadRootPath);
-                }
+                Paths.EnsureDirectoryPath(downloadRootPath);
                 var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_{VersionState.Instance.OnlineVersionStr}";
                 var downloadProgress = updateNotification?.Action?.Progress ?? null;
                 var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, downloadProgress, ApplicationStateManager.ExitApplication.Token);

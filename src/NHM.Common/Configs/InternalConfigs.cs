@@ -51,16 +51,9 @@ namespace NHM.Common.Configs
         public static bool WriteFileSettings<T>(string filePath, T settingsValue) where T : class
         {
             if (settingsValue == null) return false;
-
             try
             {
-                var dirPath = Path.GetDirectoryName(filePath);
-                if (Directory.Exists(dirPath) == false)
-                {
-                    Directory.CreateDirectory(dirPath);
-                }
-                File.WriteAllText(filePath, JsonConvert.SerializeObject(settingsValue, Formatting.Indented));
-                return true;
+                return WriteFileSettings(filePath, JsonConvert.SerializeObject(settingsValue, Formatting.Indented));
             }
             catch (Exception e)
             {
@@ -81,10 +74,7 @@ namespace NHM.Common.Configs
             try
             {
                 var dirPath = Path.GetDirectoryName(filePath);
-                if (Directory.Exists(dirPath) == false)
-                {
-                    Directory.CreateDirectory(dirPath);
-                }
+                Paths.EnsureDirectoryPath(dirPath);
                 File.WriteAllText(filePath, settingsText);
                 return true;
             }

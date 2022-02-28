@@ -283,7 +283,7 @@ namespace NHMCore.Mining.Plugins
                 var oldPath = EthlargementOldBinPath();
                 if (File.Exists(oldPath) && !File.Exists(_ethlargementBinPath))
                 {
-                    if (!Directory.Exists(_ethlargementCwdPath)) Directory.CreateDirectory(_ethlargementCwdPath);
+                    Paths.EnsureDirectoryPath(_ethlargementCwdPath);
                     File.Copy(oldPath, _ethlargementBinPath);
                 }
             }

@@ -36,10 +36,7 @@ namespace NHMCore.Configs
             {
                 var backupZipPath = Paths.RootPath("backups", $"configs_{backupVersion.ToString()}.zip");
                 var dirPath = Path.GetDirectoryName(backupZipPath);
-                if (Directory.Exists(dirPath) == false)
-                {
-                    Directory.CreateDirectory(dirPath);
-                }
+                Paths.EnsureDirectoryPath(dirPath);
                 ZipFile.CreateFromDirectory(Paths.ConfigsPath(), backupZipPath);
             }
             catch (Exception e)

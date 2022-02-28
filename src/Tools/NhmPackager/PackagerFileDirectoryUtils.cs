@@ -19,10 +19,7 @@ namespace NhmPackager
                 Logger.Info("RecreateDirectoryIfExists", $"Deleting '{dirPath}'");
                 Directory.Delete(dirPath, true);
             }
-            if (!Directory.Exists(dirPath))
-            {
-                Directory.CreateDirectory(dirPath);
-            }
+            Paths.EnsureDirectoryPath(dirPath);
         }
 
         public static bool ExecXCopy(string copyFrom, string copyTo)
