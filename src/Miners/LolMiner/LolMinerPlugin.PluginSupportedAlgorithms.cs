@@ -15,10 +15,12 @@ namespace LolMiner
             return new List<SAS>
                     {
                         new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory, Enabled = false},
-                        new SAS(AlgorithmType.GrinCuckatoo32){Enabled = false},
-                        new SAS(AlgorithmType.ZHash){Enabled = false},
+                        new SAS(AlgorithmType.GrinCuckatoo32) {Enabled = false},
+                        new SAS(AlgorithmType.ZHash) {Enabled = false},
                         new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
-                        new SAS(AlgorithmType.DaggerHashimoto)
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.ZelHash),
                     };
         }
 
@@ -28,6 +30,8 @@ namespace LolMiner
             return new List<SAS>
                     {
                         new SAS(AlgorithmType.GrinCuckatoo31) {Enabled = enabled },
+                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.ZelHash),
                     };
         }
 
@@ -54,7 +58,9 @@ namespace LolMiner
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.BeamV3),
-                        new SAS(AlgorithmType.DaggerHashimoto)
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.ZelHash),
                     }
                 },
                 {
@@ -69,7 +75,9 @@ namespace LolMiner
                 { AlgorithmType.GrinCuckatoo32, "C32" },
                 { AlgorithmType.ZHash, "EQUI144_5" },
                 { AlgorithmType.BeamV3, "BEAM-III" },
-                { AlgorithmType.DaggerHashimoto, "ETHASH" }
+                { AlgorithmType.DaggerHashimoto, "ETHASH" },
+                { AlgorithmType.Autolykos, "AUTOLYKOS2" },
+                { AlgorithmType.ZelHash, "ZEL" },
             }
         };
     }
