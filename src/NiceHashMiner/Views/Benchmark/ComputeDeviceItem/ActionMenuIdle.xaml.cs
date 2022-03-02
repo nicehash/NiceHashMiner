@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHMCore;
+using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.Views.Common;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -16,8 +18,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static NHMCore.Translations;
-using System.Windows.Controls.Primitives;
-using NiceHashMiner.ViewModels.Models;
 
 
 namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
@@ -27,24 +27,29 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
     /// </summary>
     public partial class ActionMenuIdle : UserControl
     {
-
         private DeviceData _deviceData;
         private readonly HashSet<ToggleButton> _toggleButtonsGuard = new HashSet<ToggleButton>();
+
         public ActionMenuIdle()
         {
             InitializeComponent();
+            DataContextChanged += QuickActionMenu_DataContextChanged;
+            WindowUtils.Translate(this);
         }
 
-        private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
+        private void QuickActionMenu_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            TryCloseParentContextMenu();
-            await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
-        }
-
-        private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)
-        {
-            TryCloseParentContextMenu();
-            _deviceData.EnableBenchmarkedOnly();
+            if (e.NewValue is DeviceData dd)
+            {
+                _deviceData = dd;
+                DataContext = dd;
+                if (GetSubContextMenu(out ContextMenu subContext))
+                {
+                    subContext.DataContext = dd;
+                }
+                return;
+            }
+            //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
         }
 
         private void Button_Click_ClearAllSpeeds(object sender, RoutedEventArgs e)
@@ -62,6 +67,18 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
             nhmConfirmDialog.OKClick += (s, e1) => { _deviceData.ClearAllSpeeds(); };
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+        }
+
+        private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
+        {
+            TryCloseParentContextMenu();
+            await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
+        }
+
+        private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)
+        {
+            TryCloseParentContextMenu();
+            _deviceData.EnableBenchmarkedOnly();
         }
 
         private void Copy_Button_Click(object sender, RoutedEventArgs e)
@@ -98,7 +115,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 Logger.Error("DeviceQuickActionsMenu", $"{ex.Message}");
             }
         }
-
         private bool GetSubContextMenu(out ContextMenu subcontextBtn)
         {
             subcontextBtn = null;
@@ -120,7 +136,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 WindowUtils.Translate(myControl);
             }
         }
-
 
     }
 }
