@@ -243,6 +243,8 @@ namespace NiceHashMiner.ViewModels.Models
                 OnPropertyChanged(nameof(CanStop));
                 OnPropertyChanged(nameof(CanClearAllSpeeds));
                 OnPropertyChanged(nameof(CanStopBenchmark));
+                OnPropertyChanged(nameof(CanStopMining));
+                OnPropertyChanged(nameof(IsOnlyDeviceOfType));
             }
             else if (e.PropertyName == nameof(Dev.Enabled))
             {

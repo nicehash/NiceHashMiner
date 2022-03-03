@@ -91,15 +91,6 @@
     <Compile Include="Converters\TemperatureValueToText.cs" />
     <Compile Include="CustomDialogManager.cs" />
     <Compile Include="IThemeSetter.cs" />
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\ActionMenuBenchmarking.xaml.cs">
-      <DependentUpon>ActionMenuBenchmarking.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\ActionMenuIdle.xaml.cs">
-      <DependentUpon>ActionMenuIdle.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Benchmark\ComputeDeviceItem\ActionMenuMining.xaml.cs">
-      <DependentUpon>ActionMenuMining.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceDataCopy.xaml.cs">
       <DependentUpon>DeviceDataCopy.xaml</DependentUpon>
     </Compile>
@@ -294,18 +285,6 @@
     <Page Include="Resources\Xaml\Icons\NHMLogoBigDark.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Benchmark\ComputeDeviceItem\ActionMenuBenchmarking.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\ComputeDeviceItem\ActionMenuIdle.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Benchmark\ComputeDeviceItem\ActionMenuMining.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Benchmark\ComputeDeviceItem\DeviceDataCopy.xaml">
       <SubType>Designer</SubType>
