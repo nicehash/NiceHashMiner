@@ -113,7 +113,7 @@ namespace NHMCore
                     if (cDev.DeviceType == DeviceType.NVIDIA)
                     {
                         cudaCount++;
-                        nameCount = $"GPU#{cudaCount}";
+                        nameCount = $"NVIDIA#{cudaCount}";
                     }
                     AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
                 }
