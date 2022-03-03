@@ -85,7 +85,7 @@ namespace NiceHashMiner.ViewModels.Models
         public bool CanClearAllSpeeds => !(Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining);
         public bool CanStopBenchmark => Dev.Enabled && Dev.State == DeviceState.Benchmarking;
         public bool CanStopMining => Dev.Enabled && Dev.State == DeviceState.Mining;
-        public bool CanCopyFromOtherDevices => AvailableDevices.Devices.Any(dev => dev.DeviceType == Dev.DeviceType) && CanClearAllSpeeds;
+        public bool CanCopyFromOtherDevices => AvailableDevices.Devices.Count(dev => dev.DeviceType == Dev.DeviceType) > 1 && CanClearAllSpeeds;
 
 
         public List<string> AlgoNames { get; private set; }
