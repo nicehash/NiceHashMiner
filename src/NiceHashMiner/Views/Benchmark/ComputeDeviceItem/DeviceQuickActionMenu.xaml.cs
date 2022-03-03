@@ -43,10 +43,8 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             {
                 _deviceData = dd;
                 DataContext = dd;
-                if(GetSubContextMenu(out ContextMenu subContext))
-                {
-                    subContext.DataContext = dd;
-                }
+                subContext.DataContext = dd;
+
                 return;
             }
             //throw new Exception("ComputeDeviceItem_DataContextChanged e.NewValue must be of type DeviceData");
@@ -89,9 +87,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void Copy_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is ToggleButton tButton &&
-                !_toggleButtonsGuard.Contains(tButton) &&
-                GetSubContextMenu(out ContextMenu subContext))
+            if (sender is ToggleButton tButton && !_toggleButtonsGuard.Contains(tButton))
             {
                 _toggleButtonsGuard.Add(tButton);
                 subContext.PlacementTarget = tButton;
@@ -112,26 +108,12 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void subContext_Loaded(object sender, RoutedEventArgs e)
         {
-            if (GetSubContextMenu(out ContextMenu subContext) &&
-                subContext.Template.FindName("CopyMenu", subContext) is DeviceDataCopy ActionsMenu)
+            if (subContext.Template.FindName("CopyMenu", subContext) is DeviceDataCopy ActionsMenu)
             {
                 var myControl = ActionsMenu.DeviceSelection;
                 WindowUtils.Translate(myControl);
             }
         }
-
-        private bool GetSubContextMenu(out ContextMenu subcontextBtn)
-        {
-            subcontextBtn = null;
-            var subContext = Application.Current.TryFindResource("subContext") as ContextMenu;
-            if (subContext != null)
-            {
-                subcontextBtn = subContext;
-                return true;
-            }
-            return false;
-        }
-
         private void TryCloseParentContextMenu()
         {
             try
