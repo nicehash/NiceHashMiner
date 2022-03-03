@@ -44,7 +44,7 @@ namespace NiceHashMiner.ViewModels.Models
         {
             get
             {
-                return Dev.DeviceType == DeviceType.CPU ? CPUs : GPUs;
+                return Dev.DeviceType == DeviceType.CPU ? CPUs : GPUs.Where(dev => dev.DeviceType == Dev.DeviceType).ToList();
             }
         }
 
@@ -243,6 +243,7 @@ namespace NiceHashMiner.ViewModels.Models
                 OnPropertyChanged(nameof(CanStopBenchmark));
                 OnPropertyChanged(nameof(CanStopMining));
                 OnPropertyChanged(nameof(CanCopyFromOtherDevices));
+                OnPropertyChanged(nameof(DevicesOfSameType));
             }
             else if (e.PropertyName == nameof(Dev.Enabled))
             {
