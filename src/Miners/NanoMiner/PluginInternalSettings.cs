@@ -72,7 +72,20 @@ namespace NanoMiner
                     ShortName = "memTweak=",
                     DefaultValue = "1",
                     Delimiter = ","
-                }
+                },
+                /// <summary>
+                /// Configuration parameter lhr for manual unlock percentage selection.
+                /// Example. Set LHR unlock percentage on device 0 to 71.5%, switch off LHR unlock on device 1 and automatic selection on device 2:
+                /// lhr=71.5,-1,0
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "nanominer_lhr",
+                    ShortName = "lhr",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
             },
             TemperatureOptions = new List<MinerOption>
             {
