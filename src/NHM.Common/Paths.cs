@@ -55,5 +55,20 @@ namespace NHM.Common
             var path = Path.Combine(combine.ToArray());
             return path;
         }
+
+        public static bool EnsureDirectoryPath(string directoryPath)
+        {
+            try
+            {
+                if (Directory.Exists(directoryPath)) return true;
+                Directory.CreateDirectory(directoryPath);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Info("NHM.Common.Paths", $"EnsureDirectoryPath Error occured for directoryPath '{directoryPath}': {e.Message}");
+                return false;
+            }
+        }
     }
 }

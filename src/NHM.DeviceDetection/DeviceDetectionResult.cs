@@ -31,29 +31,7 @@ namespace NHM.DeviceDetection
         public bool AMDDriverObsolete { get; internal set; }
         public bool NVIDIADriverObsolete { get; internal set; }
 
-        public static Version MinimumAMDDriver
-        {
-            get
-            {
-                return NHM.DeviceDetection.AMD.AmdDriver.MinimumVersion.AdrenalinFormat;
-            }
-        }
 
-        public static Version MinimumAMDDriverWDS
-        {
-            get
-            {
-                return NHM.DeviceDetection.AMD.AmdDriver.MinimumVersion.DriveStoreFormat;
-            }
-        }
-
-        public static Version MinimumNVIDIADriver
-        {
-            get
-            {
-                return NHM.DeviceDetection.NVIDIA.NvidiaSmiDriver.MinimumVersion;
-            }
-        }
 
         // FAKE
         public IReadOnlyList<FakeDevice> FAKEDevices { get; internal set; }

@@ -15,14 +15,14 @@ namespace NanoMiner
     public class NanoMiner : MinerBase
     {
 
-        private readonly HttpClient _http = new HttpClient();
+        private readonly HttpClient _httpClient = new HttpClient();
         private int _apiPort;
 
-        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
-        public NanoMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        public NanoMiner(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
         {
-            _mappedIDs = mappedIDs;
+            _mappedDeviceIds = mappedDeviceIds;
         }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
@@ -32,7 +32,7 @@ namespace NanoMiner
         {
             var pairsList = miningPairs.ToList();
             // sort by mapped ids
-            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
             return pairsList;
         }
 
@@ -46,10 +46,10 @@ namespace NanoMiner
             var api = new ApiData();
             try
             {
-                var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/stats");
+                var result = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/stats");
                 api.ApiResponse = result;
                 var apiResponse = JsonConvert.DeserializeObject<JsonApiResponse>(result);
-                var parsedApiResponse = JsonApiHelpers.ParseJsonApiResponse(apiResponse, _mappedIDs);
+                var parsedApiResponse = JsonApiHelpers.ParseJsonApiResponse(apiResponse, _mappedDeviceIds);
 
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
@@ -112,7 +112,7 @@ namespace NanoMiner
                 }
             }
 
-            var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
+            var devs = string.Join(",", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
 
             configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\nrigName=\r\ndevices={devs}\r\npool1={url}";
             try

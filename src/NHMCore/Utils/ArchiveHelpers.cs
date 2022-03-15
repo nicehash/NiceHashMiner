@@ -47,10 +47,7 @@ namespace NHMCore.Utils
                         {
                             var extractPath = Path.Combine(extractLocation, reader.Entry.Key);
                             var dirPath = Path.GetDirectoryName(extractPath);
-                            if (!Directory.Exists(dirPath))
-                            {
-                                Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
-                            }
+                            Paths.EnsureDirectoryPath(dirPath);
                             using (var entryStream = reader.OpenEntryStream())
                             using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
                             {
@@ -93,10 +90,7 @@ namespace NHMCore.Utils
                         {
                             var extractPath = Path.Combine(extractLocation, reader.Entry.Key);
                             var dirPath = Path.GetDirectoryName(extractPath);
-                            if (!Directory.Exists(dirPath))
-                            {
-                                Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
-                            }
+                            Paths.EnsureDirectoryPath(dirPath);
                             using (var entryStream = reader.OpenEntryStream())
                             using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
                             {

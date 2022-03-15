@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace LolMiner
 {
@@ -23,39 +24,37 @@ namespace LolMiner
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
-        protected Dictionary<string, int> _mappedIDs;
+        protected Dictionary<string, int> _mappedDeviceIds;
 
-        private readonly HttpClient _http = new HttpClient();
+        private readonly HttpClient _httpClient = new HttpClient();
 
-        public LolMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        public LolMiner(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
         {
-            _mappedIDs = mappedIDs;
+            _mappedDeviceIds = mappedDeviceIds;
         }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
+
+        private static int GetMultiplier(string speedUnit)
+        {
+            switch (speedUnit)
+            {
+                case "mh/s": return 1000000; //1M
+                case "kh/s": return 1000; //1k
+                default: return 1;
+            }
+        }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var ad = new ApiData();
             try
             {
-                var summaryApiResult = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
+                var summaryApiResult = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
                 ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var speedUnit = summary.Session.Performance_Unit;
-                var multiplier = 1;
-                switch (speedUnit)
-                {
-                    case "mh/s":
-                        multiplier = 1000000; //1M
-                        break;
-                    case "kh/s":
-                        multiplier = 1000; //1k
-                        break;
-                    default:
-                        break;
-                }
+                var multiplier = GetMultiplier(summary.Session.Performance_Unit);
                 var totalSpeed = summary.Session.Performance_Summary * multiplier;
 
                 var totalPowerUsage = 0;
@@ -66,7 +65,7 @@ namespace LolMiner
                 foreach (var pair in _miningPairs)
                 {
                     var gpuUUID = pair.Device.UUID;
-                    var gpuID = _mappedIDs[gpuUUID];
+                    var gpuID = _mappedDeviceIds[gpuUUID];
                     var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault();
                     if (currentStats == null) continue;
                     perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.Performance * multiplier * (1 - DevFee * 0.01)) });
@@ -88,13 +87,13 @@ namespace LolMiner
         {
             var pairsList = miningPairs.ToList();
             // sort by mapped ids
-            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
             return pairsList;
         }
 
         protected override void Init()
         {
-            _devices = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
+            _devices = string.Join(",", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
 
             // ???????? GetSortedMiningPairs is now sorted so this thing probably makes no sense anymore
             var miningPairs = _miningPairs.ToList();
@@ -120,10 +119,80 @@ namespace LolMiner
             var commandLine = $"--pool {urlWithPort} --user {_username} --tls 0 --apiport {_apiPort} {_disableWatchdogParam} --devices {_devices} {_extraLaunchParameters}";
 
             if (_algorithmType == AlgorithmType.ZHash) commandLine += " --coin AUTO144_5";
+            else if (_algorithmType == AlgorithmType.ZelHash) commandLine += " --coin ZEL";
             else commandLine += $" --algo {algo}";
             if (_algorithmType == AlgorithmType.DaggerHashimoto) commandLine += " --ethstratum ETHV1";
             //--disablewatchdog 1
             return commandLine;
+        }
+
+        public override void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            // now should be ordered
+            _miningPairs = GetSortedMiningPairs(miningPairs);
+            //// update log group
+            try
+            {
+                var devs = _miningPairs.Select(pair => $"{pair.Device.DeviceType}:{pair.Device.ID}");
+                var devsTag = $"devs({string.Join(",", devs)})";
+                var algo = _miningPairs.First().Algorithm.AlgorithmName;
+                var algoTag = $"algo({algo})";
+                _logGroup = $"{_baseTag}-{algoTag}-{devsTag}";
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logGroup, $"Error while setting _logGroup: {e.Message}");
+            }
+
+            // init algo, ELP and finally miner specific init
+            // init algo
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
+            // init ELP, _miningPairs are ordered and ELP parsing keeps ordering
+            if (MinerOptionsPackage != null)
+            {
+                var miningPairsList = _miningPairs.ToList();
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var firstPair = miningPairsList.FirstOrDefault();
+                var optionsWithoutLHR = MinerOptionsPackage.GeneralOptions.Where(opt => !opt.ID.Contains("lolMiner_mode")).ToList();
+                var optionsWithLHR = MinerOptionsPackage.GeneralOptions.Where(opt => opt.ID.Contains("lolMiner_mode")).ToList();
+                var generalParamsWithoutLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithoutLHR, ignoreDefaults);
+                var isDagger = firstPair.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto;
+                var generalParamsWithLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithLHR, !isDagger);
+                var modeOptions = ResolveDeviceMode(miningPairsList, generalParamsWithLHR);
+                var generalParams = generalParamsWithoutLHR + (isDagger ? modeOptions : "");
+                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
+            // miner specific init
+            Init();
+        }
+        static string[] modeLHRV2 = { "RTX 3060 Ti", "RTX 3070" };
+        static string[] modeLHRV1 = { "RTX 3060" };
+        static string[] modeLHRLP = { "RTX 3080" };
+        static string[] modeA = { "RTX 3090" };
+
+        private static string ModeForName(string deviceName)
+        {
+            if (modeLHRV2.Any(dev => deviceName.Contains(dev))) return "LHR2";
+            if (modeLHRV1.Any(dev => deviceName.Contains(dev))) return "LHR1";
+            if (modeLHRLP.Any(dev => deviceName.Contains(dev))) return "LHRLP";
+            if (modeA.Any(dev => deviceName.Contains(dev))) return "a";
+            return "b";
+        }
+
+        public static string ResolveDeviceMode(List<MiningPair> pairs, string lhrMode)
+        {
+            var existingOptions = lhrMode.Replace("--mode", "").Trim().Split(',');
+            var newOptions = pairs.Select(pair => pair.Device.Name).Select(ModeForName).ToArray();
+            existingOptions = existingOptions.Select((opt, index) => opt == "missing" ? newOptions[index] : opt).ToArray();
+            return " --mode " + String.Join(",", existingOptions) + " ";
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
@@ -135,7 +204,7 @@ namespace LolMiner
             {
                 // determine benchmark time 
                 // settup times
-                
+
                 int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); ;
                 var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
 

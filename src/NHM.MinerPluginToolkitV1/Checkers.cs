@@ -100,7 +100,7 @@ namespace NHM.MinerPluginToolkitV1
             return false;
         }
 
-        private static int[] _supportedMajorVersions = new int[] { 16 };
+        private static int[] _supportedMajorVersions = new int[] { 16 /*, 17 add 17 version when IDriverIsMinimumRecommended and IDriverIsMinimumRequired is fixed*/ };
         public static IEnumerable<int> SupportedMajorVersions => _supportedMajorVersions;
         public static bool IsMajorVersionSupported(int major)
         {
@@ -128,18 +128,6 @@ namespace NHM.MinerPluginToolkitV1
             "3d4e56b0-7238-11e9-b20c-f9f12eb6d835",
             "4aec5ec0-10f8-11ea-bad3-8dea21141bbb",
             "5532d300-7238-11e9-b20c-f9f12eb6d835",
-            "CCMinerMTP",
-            "CCMinerTpruvot",
-            "ClaymoreDual",
-            "GMiner",
-            "NBMiner",
-            "Phoenix",
-            "SGminerAvemore",
-            "SGminerGM",
-            "TeamRedMiner",
-            "TRex",
-            "XmrStak",
-            "VC_REDIST_x64_2015",
         };
     }
 }

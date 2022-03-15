@@ -2,7 +2,6 @@
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -58,45 +57,45 @@ namespace NiceHashMiner.Views.Settings
             e.Handled = true;
         }
 
+        private static (string, bool) UrlForButtonName(string name)
+        {
+            switch (name)
+            {
+                case "btn_facebook":
+                    return ("https://www.facebook.com/NiceHash/", true);
+                case "btn_instagram":
+                    return ("https://www.instagram.com/nicehashmining/", true);
+                case "btn_twitter":
+                    return ("https://twitter.com/NiceHashMining/", true);
+                case "btn_youtube":
+                    return ("https://www.youtube.com/c/NiceHashmining", true);
+                case "btn_vk":
+                    return ("https://vk.com/nicehashmining", true);
+                case "btn_github":
+                    return ("https://github.com/nicehash", true);
+                case "btn_reddit":
+                    return ("https://www.reddit.com/r/NiceHash/", true);
+                case "btn_discord":
+                    return ("https://discord.gg/BQae9ag", true);
+                default:
+                    return ("", false);
+            }
+        }
+
         private void btn_social_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 var senderBtn = sender as Button;
-                switch (senderBtn.Name)
+                var (url, ok) = UrlForButtonName(senderBtn.Name);
+                if (ok)
                 {
-                    case "btn_facebook":
-                        Process.Start("https://www.facebook.com/NiceHash/");
-                        e.Handled = true;
-                        break;
-                    case "btn_instagram":
-                        Process.Start("https://www.instagram.com/nicehashmining/");
-                        e.Handled = true;
-                        break;
-                    case "btn_twitter":
-                        Process.Start("https://twitter.com/NiceHashMining/");
-                        e.Handled = true;
-                        break;
-                    case "btn_youtube":
-                        Process.Start("https://www.youtube.com/c/NiceHashmining");
-                        e.Handled = true;
-                        break;
-                    case "btn_vk":
-                        Process.Start("https://vk.com/nicehashmining");
-                        e.Handled = true;
-                        break;
-                    case "btn_github":
-                        Process.Start("https://github.com/nicehash");
-                        e.Handled = true;
-                        break;
-                    case "btn_reddit":
-                        Process.Start("https://www.reddit.com/r/NiceHash/");
-                        e.Handled = true;
-                        break;
-                    case "btn_discord":
-                        Process.Start("https://discord.gg/BQae9ag");
-                        e.Handled = true;
-                        break;
+                    Process.Start(url);
+                    e.Handled = true;
+                }
+                else
+                {
+                    Logger.Error("Social", $"No URL for '{senderBtn.Name}'");
                 }
             }
             catch (Exception ex)

@@ -91,14 +91,6 @@ namespace NHM.DeviceDetection
             {
                 var wmiNvidiaVer = WMI.WmiNvidiaDriverParser.ParseNvSmiDriver(nvidiaVideoControllerData.DriverVersion);
                 if (wmiNvidiaVer.IsValid) DetectionResult.NvidiaDriverWMI = wmiNvidiaVer.Version;
-                DetectionResult.NVIDIADriverObsolete = wmiNvidiaVer.IsCorrectVersion ? false : true;
-            }
-            var amdVideoControllerData = vidControllers.Where(vidC => vidC.IsAmd).FirstOrDefault();
-            if(amdVideoControllerData != null)
-            {
-                var AmdVer = new AMD.AmdDriver(amdVideoControllerData.DriverVersion);
-                if (AmdVer.IsValid) DetectionResult.AmdDriver = AmdVer.VerDriverVersion;
-                DetectionResult.AMDDriverObsolete = AmdVer.IsCorrectVersion ? false : true;
             }
 
             // log result

@@ -21,8 +21,8 @@
 ; MUI Icons and bitmaps
 !define MUI_WELCOMEFINISHPAGE_BITMAP "assets\installerSidebar.bmp"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "assets\uninstallerSidebar.bmp"
-!define MUI_ICON "assets\installerIcon.ico"
-!define MUI_UNICON "assets\installerIcon.ico"
+!define MUI_ICON "assets\installerHeaderIcon.ico"
+!define MUI_UNICON "assets\installerHeaderIcon.ico"
 
 ; installer settings unicode
 Unicode true

@@ -134,10 +134,7 @@ namespace NHM.Common
             Enabled = enableFileLogging;
             try
             {
-                if (!Directory.Exists(_logsRootPath))
-                {
-                    Directory.CreateDirectory(_logsRootPath);
-                }
+                Paths.EnsureDirectoryPath(_logsRootPath);
                 var logFilePath = Path.Combine(_logsRootPath, "log.txt");
 
                 var h = (Hierarchy)LogManager.GetRepository(Assembly.GetEntryAssembly());

@@ -17,17 +17,17 @@ namespace NiceHashMiner.Views.Settings
     /// </summary>
     public partial class Settings : UserControl
     {
-        private int _tabIndex = 0;
+        //private int _tabIndex = 0;
 
         public Settings()
         {
             InitializeComponent();
-            OnScreenChange(_tabIndex);
+            OnScreenChange(0);
 
             ConfigManager.ShowRestartRequired += ShowRestartRequired;
         }
 
-        protected void OnScreenChange(int tabIndex)
+        private void OnScreenChange(int tabIndex)
         {
             switch (tabIndex)
             {
@@ -59,29 +59,19 @@ namespace NiceHashMiner.Views.Settings
                     QrButton.IsChecked = true;
                     QrTab.IsSelected = true;
                     break;
+                default:
+                    throw new Exception($"OnScreenChange unknown tab index {tabIndex}");
             }
         }
 
+        private static string[] ButtonNameToTabIndex = { "GeneralButton", "AdvancedButton", "AboutButton", "QrButton" };
         private void Btn_Settings_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 var btnSender = sender as ToggleButton;
-                switch (btnSender.Name)
-                {
-                    case "GeneralButton":
-                        OnScreenChange(0);
-                        break;
-                    case "AdvancedButton":
-                        OnScreenChange(1);
-                        break;
-                    case "AboutButton":
-                        OnScreenChange(2);
-                        break;
-                    case "QrButton":
-                        OnScreenChange(3);
-                        break;
-                }
+                var tabIndex = Array.IndexOf(ButtonNameToTabIndex, btnSender.Name);
+                OnScreenChange(tabIndex);
             }
             catch (Exception ex)
             {

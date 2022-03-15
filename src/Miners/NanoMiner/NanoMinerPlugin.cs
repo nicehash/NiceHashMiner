@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace NanoMiner
 {
-    public partial class NanoMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class NanoMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public NanoMinerPlugin()
         {
@@ -40,7 +40,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "f25fee20-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 2);
+        public override Version Version => new Version(16, 3);
 
         public override string Name => "NanoMiner";
 
@@ -121,6 +121,29 @@ namespace NanoMiner
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            var minAMD = new Version(21, 5, 2);
+            if (device is AMDDevice amd)
+            {
+                if (amd.DEVICE_AMD_DRIVER < minAMD) return (-2, minAMD);
+                return (0, minAMD);
+            }
+            return (-1, new Version(0, 0));
+        }
+
+
+        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        {
+            var minNVIDIA = new Version(411, 31);
+            if (device is CUDADevice nvidia)
+            {
+                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minNVIDIA) return (-2, minNVIDIA);
+                return (0, minNVIDIA);
+            }
+            return (-1, new Version(0, 0));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿//#define DELETE_NON_CURRENT_APPS
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -192,6 +193,39 @@ namespace NiceHashMiner
             return sb.ToString();
         }
 
+        private static string NHM_SUBKEY => @"SOFTWARE\" + "8abad8e2-b957-48ed-92ba-4339c2a40e78";
+        private static bool EnsureNHMSubKeyCalled = false;
+        private static void EnsureNHMSubKey()
+        {
+            if (EnsureNHMSubKeyCalled) return;
+            EnsureNHMSubKeyCalled = true;
+            try
+            {
+                using (var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, false))
+                {
+                    if (key == null) Registry.CurrentUser.CreateSubKey(NHM_SUBKEY);
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        private static void SetSubKey(string subKey, int value)
+        {
+            EnsureNHMSubKey();
+            try
+            {
+                using (var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, true))
+                {
+                    key.SetValue(subKey, value.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
         private async void App_OnStartup(object sender, StartupEventArgs e)
         {
             RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
@@ -201,6 +235,53 @@ namespace NiceHashMiner
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var isUpdater = Environment.GetCommandLineArgs().Contains("-update");
             var isUpdated = Environment.GetCommandLineArgs().Contains("-updated");
+
+#warning TRANSITIONAL CODE, REMOVE IN FUTURE VERSIONS (registry integration)
+            if (isUpdated)
+            {
+                const string GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
+                const string TOSMain = "4";
+                const string TOS3rdParty = "4";
+#if DEBUG
+                string generalSettingsFile = GetRootPath("app/configs/General.json");
+#else 
+                string generalSettingsFile = GetRootPath("configs/General.json");
+#endif
+                try
+                {
+                    var generalSettingsText = System.IO.File.ReadAllLines(generalSettingsFile);
+                    var agreeTOS = generalSettingsText.Where(line => line.Contains("AgreedWithTOS")).FirstOrDefault();
+                    if(agreeTOS != null)
+                    {
+                        agreeTOS = agreeTOS.Split(':')
+                                            .Last()
+                                            .Replace(",", "")
+                                            .Trim();
+                        if(agreeTOS == TOSMain)
+                        {
+                            SetSubKey("AgreedWithTOS", 4);
+                        }
+                    }
+
+                    var agreeTOSMiner = generalSettingsText.Where(line => line.Contains("Use3rdPartyMinersTOS")).FirstOrDefault();
+                    if(agreeTOSMiner != null)
+                    {
+                        agreeTOSMiner = agreeTOSMiner.Split(':')
+                                                .Last()
+                                                .Replace(",", "")
+                                                .Trim();
+                        if(agreeTOSMiner == TOS3rdParty)
+                        {
+                            SetSubKey("Use3rdPartyMinersTOS", 4);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //Logger.Error("NHMLauncher", ex.Message);
+                }
+            }
+
             var afterUpdate = false;
             if (isUpdater)
             {

@@ -97,11 +97,17 @@
     <Compile Include="Views\Benchmark\ComputeDeviceItem\DeviceQuickActionMenu.xaml.cs">
       <DependentUpon>DeviceQuickActionMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\EULA\EULA.xaml.cs">
+      <DependentUpon>EULA.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EULA\EULA3rdParty.xaml.cs">
+      <DependentUpon>EULA3rdParty.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ManuallyEnterBTCTutorial.xaml.cs">
       <DependentUpon>ManuallyEnterBTCTutorial.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="QrCodeHelpers.cs" />
+    <Compile Include="QrCodeImageGenerator.cs" />
     <Compile Include="ThemeSetterManager.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
@@ -285,6 +291,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Benchmark\ComputeDeviceItem\DeviceQuickActionMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EULA\EULA.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EULA\EULA3rdParty.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

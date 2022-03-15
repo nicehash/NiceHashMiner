@@ -38,7 +38,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Debug\app\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;INTEGRATE_Joker_PLUGIN</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -47,7 +47,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\Release\app\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;INTEGRATE_Joker_PLUGIN</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -197,7 +197,9 @@
     <Compile Include="Utils\ElapsedTimeChecker.cs" />
     <Compile Include="Utils\FilterOSSpecific.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
+    <Compile Include="Utils\OutsideProcessMonitor.cs" />
     <Compile Include="Utils\PInvokeHelpers.cs" />
+    <Compile Include="Utils\QrCodeGenerator.cs" />
     <Compile Include="Utils\RunAsAdmin.cs" />
     <Compile Include="Utils\SteamWatcher.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />
@@ -255,6 +257,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\NHM.CredentialValidators\NHM.CredentialValidators.csproj">
+      <Project>{7733d0d8-72a7-4656-a5b3-54fc764e0507}</Project>
+      <Name>NHM.CredentialValidators</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\CryptoDredge\MP.CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>MP.CryptoDredge</Name>
@@ -270,6 +276,10 @@
     <ProjectReference Include="..\Miners\MiniZ\MP.MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
       <Project>{EB73427B-90E0-4E5B-85D8-C33E810E970A}</Project>
       <Name>MP.MiniZ</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MP.Joker\MP.Joker.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Joker_PLUGIN'))">
+      <Project>{a23e8384-0c0b-4cf2-a2b9-46f34e32d0fb}</Project>
+      <Name>MP.Joker</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\NanoMiner\MP.NanoMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NanoMiner_PLUGIN'))">
       <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
@@ -322,6 +332,10 @@
     <ProjectReference Include="..\Miners\__DEV__FakePlugin\MP.__DEV__FakePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_FakePlugin_PLUGIN'))">
       <Project>{e7f9794d-e2d2-41ef-8166-8029b6b5c035}</Project>
       <Name>MP.__DEV__FakePlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.CommonWin32\NHM.CommonWin32.csproj">
+      <Project>{ff5822a1-6311-4431-9281-261a8de0cb43}</Project>
+      <Name>NHM.CommonWin32</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
       <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
@@ -380,7 +394,7 @@ REM OpenCL.dll inside a separate folder
 If NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\app\OpenCL\"
 if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\app\OpenCL\OpenCL.dll"
 if NOT exist "$(SolutionDir)$(Configuration)\app\OpenCL\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\README.md" "$(SolutionDir)$(Configuration)\app\OpenCL\README.md"
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection_opencl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection_opencl.dll" "$(SolutionDir)$(Configuration)\app\device_detection_opencl.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\device_detection_opencl_adl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\device_detection_opencl_adl.dll" "$(SolutionDir)$(Configuration)\app\device_detection_opencl_adl.dll"
 
 REM commons dll's for downloaded miners. Copy only if files don't exist. Remove this after plugin system fully replaces integrated miners
 REM create directory
@@ -396,7 +410,8 @@ If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcr110.dll" copy /Y "$
 If NOT exist "$(SolutionDir)$(Configuration)\app\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\app\common\msvcr120.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\app\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\app\common\vcruntime140.dll"
 
-If NOT exist "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_monitoring_x64\device_monitoring_amd.dll" "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll"</PostBuildEvent>
+If NOT exist "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_monitoring_x64\device_monitoring_amd.dll" "$(SolutionDir)$(Configuration)\app\device_monitoring_amd.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\app\device_monitoring_nvidia.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_monitoring_x64\device_monitoring_nvidia.dll" "$(SolutionDir)$(Configuration)\app\device_monitoring_nvidia.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

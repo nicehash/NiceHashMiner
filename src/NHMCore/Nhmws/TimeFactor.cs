@@ -9,31 +9,26 @@ namespace NHMCore.Nhmws
 
         private static TimeUnitType _unitType = TimeUnitType.Day;
 
+        private static double GetTimeUnit(TimeUnitType type)
+        {
+            switch (type)
+            {
+                case TimeUnitType.Hour: return 1.0 / 24.0;
+                case TimeUnitType.Day: return 1;
+                case TimeUnitType.Week: return 7;
+                case TimeUnitType.Month: return 30;
+                case TimeUnitType.Year: return 365;
+                default: return 1; // Day
+            }
+        }
+
         public static TimeUnitType UnitType
         {
             get => _unitType;
             set
             {
                 _unitType = value;
-                switch (value)
-                {
-                    case TimeUnitType.Hour:
-                        TimeUnit = 1.0 / 24.0;
-                        break;
-                    case TimeUnitType.Day:
-                        TimeUnit = 1;
-                        break;
-                    case TimeUnitType.Week:
-                        TimeUnit = 7;
-                        break;
-                    case TimeUnitType.Month:
-                        TimeUnit = 30;
-                        break;
-                    case TimeUnitType.Year:
-                        TimeUnit = 365;
-                        break;
-                }
-
+                TimeUnit = GetTimeUnit(value);
                 OnUnitTypeChanged?.Invoke(null, value);
             }
         }

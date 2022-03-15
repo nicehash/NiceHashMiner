@@ -20,8 +20,8 @@ namespace NBMiner
         protected AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
         private int _apiPort;
         private string _devices = "";
-        private readonly HttpClient _http = new HttpClient();
-        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
+        private readonly HttpClient _httpClient = new HttpClient();
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         private string AlgoName
         {
@@ -43,7 +43,7 @@ namespace NBMiner
 
         public NBMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
-            _mappedIDs = mappedIDs;
+            _mappedDeviceIds = mappedIDs;
         }
 
         protected override string MiningCreateCommandLine()
@@ -244,7 +244,7 @@ namespace NBMiner
             var api = new ApiData();
             try
             {
-                var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api/v1/status");
+                var result = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/api/v1/status");
                 api.ApiResponse = result;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
@@ -259,7 +259,7 @@ namespace NBMiner
                 foreach (var miningPair in _miningPairs)
                 {
                     var deviceUUID = miningPair.Device.UUID;
-                    var minerID = _mappedIDs[deviceUUID];
+                    var minerID = _mappedDeviceIds[deviceUUID];
                     var apiDevice = apiDevices.Find(apiDev => apiDev.id == minerID);
                     if (apiDevice == null) continue;
 
@@ -295,13 +295,13 @@ namespace NBMiner
         {
             var pairsList = miningPairs.ToList();
             // sort by mapped ids
-            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
             return pairsList;
         }
 
         protected override void Init()
         {
-            var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
+            var devs = string.Join(",", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
             _devices = $"-d {devs}";
 
             var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
@@ -312,7 +312,7 @@ namespace NBMiner
 
         public void Dispose()
         {
-            _http.Dispose();
+            _httpClient.Dispose();
         }
     }
 }

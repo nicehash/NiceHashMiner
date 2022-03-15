@@ -15,8 +15,9 @@ namespace NHMCore.Nhmws
                     return "10";
                 case DeviceType.AMD:
                     return "11";
+                default:
+                    return "00"; // error
             }
-            return "00"; // error
         }
 
         private static string deviceStateSuffixPart(DeviceState state)
@@ -35,8 +36,9 @@ namespace NHMCore.Nhmws
                     return "100";
                 case DeviceState.Pending: // recovering or initializing
                     return "101";
+                default:
+                    return "111"; // error
             }
-            return "111"; // error
         }
 
         public static int DeviceReportStatus(DeviceType type, DeviceState state)

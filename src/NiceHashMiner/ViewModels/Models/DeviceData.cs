@@ -221,26 +221,21 @@ namespace NiceHashMiner.ViewModels.Models
 
         private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
+            if (e.PropertyName == nameof(ComputeDevice.AlgorithmSettings))
             {
-                case nameof(ComputeDevice.AlgorithmSettings):
-                    AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
-                    OrderAlgorithms();
-                    OnPropertyChanged(nameof(AlgoOptions));
-                    OnPropertyChanged(nameof(AlgosEnabled));
-                    OnPropertyChanged(nameof(AlgosBenchmarked));
-                    // update algorithms event handlers here
-                    foreach (var algo in Dev.AlgorithmSettings)
-                    {
-                        algo.PropertyChanged -= AlgoOnPropertyChanged;
-                        algo.PropertyChanged += AlgoOnPropertyChanged;
-                    }
-
-                    return;
-                default:
-                    break;
+                AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
+                OrderAlgorithms();
+                OnPropertyChanged(nameof(AlgoOptions));
+                OnPropertyChanged(nameof(AlgosEnabled));
+                OnPropertyChanged(nameof(AlgosBenchmarked));
+                // update algorithms event handlers here
+                foreach (var algo in Dev.AlgorithmSettings)
+                {
+                    algo.PropertyChanged -= AlgoOnPropertyChanged;
+                    algo.PropertyChanged += AlgoOnPropertyChanged;
+                }
             }
-            if (e.PropertyName == nameof(Dev.State))
+            else if (e.PropertyName == nameof(Dev.State))
             {
                 OnPropertyChanged(nameof(ButtonLabel));
                 OnPropertyChanged(nameof(CanStart));
@@ -289,6 +284,8 @@ namespace NiceHashMiner.ViewModels.Models
                 case DeviceState.Mining:
                 case DeviceState.Benchmarking:
                     await ApplicationStateManager.StopSingleDevicePublic(Dev);
+                    break;
+                default:
                     break;
             }
         }

@@ -310,6 +310,11 @@ namespace NiceHashMiner.ViewModels
             {
                 dev.RefreshDiag();
             }
+
+            foreach (var notification in HelpNotificationList)
+            {
+                notification.UpdateNotificationTimeString();
+            }
         }
 
         public async Task InitializeNhm(IStartupLoader sl)
@@ -353,6 +358,9 @@ namespace NiceHashMiner.ViewModels
                         if (miningDev != null) miningDev.Stats = stat;
                     }
 
+                    break;
+
+                default:
                     break;
             }
 

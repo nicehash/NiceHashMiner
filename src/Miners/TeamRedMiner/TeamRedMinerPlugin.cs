@@ -4,13 +4,14 @@ using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace TeamRedMiner
 {
-    public partial class TeamRedMinerPlugin : PluginBase
+    public partial class TeamRedMinerPlugin : PluginBase //, IDriverIsMinimumRecommended
     {
         public TeamRedMinerPlugin()
         {
@@ -88,6 +89,17 @@ namespace TeamRedMiner
                 if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 5) return true;
             }
             return false;
+        }
+
+        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            Version min = new Version(21, 5, 2);
+            if (device is AMDDevice amd)
+            {
+                if (amd.DEVICE_AMD_DRIVER < min) return (-2, min);
+                else return (0, amd.DEVICE_AMD_DRIVER);
+            }
+            return (-1, new Version(0, 0));
         }
     }
 }

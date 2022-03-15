@@ -126,18 +126,8 @@ namespace NHM.MinerPluginToolkitV1.ExtraLaunchParameters
                         .FirstOrDefault();
 
                     if (deviceParsedOption == null) continue;
-
-                    switch (deviceParsedOption.Option.Type)
-                    {
-                        case MinerOptionType.OptionIsParameter:
-                            deviceParsedOption.Value = param;
-                            break;
-                        case MinerOptionType.OptionWithSingleParameter:
-                        case MinerOptionType.OptionWithMultipleParameters:
-                        case MinerOptionType.OptionWithDuplicateMultipleParameters:
-                            deviceParsedOption.Value = value;
-                            break;
-                    }
+                    var valueIsParameter = deviceParsedOption.Option.Type == MinerOptionType.OptionIsParameter;
+                    deviceParsedOption.Value = valueIsParameter ? param : value;
                 }
             }
 
@@ -192,20 +182,11 @@ namespace NHM.MinerPluginToolkitV1.ExtraLaunchParameters
                     case MinerOptionType.OptionWithSingleParameter:
                         {
                             // get the first non default value
-                            var firstNonDefaultValue = values
+                            var setValue = values
                                 .Where(value => !IsOptionDefaultValue(option, value))
                                 .FirstOrDefault();
-
-                            var setValue = option.DefaultValue;
-                            if (firstNonDefaultValue != null)
-                            {
-                                setValue = firstNonDefaultValue;
-                            }
-                            var mask = " {0} {1}";
-                            if (optionName.Contains("="))
-                            {
-                                mask = " {0}{1}";
-                            }
+                            if (setValue == null) setValue = option.DefaultValue;
+                            var mask = optionName.Contains("=") ? " {0}{1}" : " {0} {1}";
                             retVal += string.Format(mask, optionName, setValue);
                             break;
                         }
@@ -213,27 +194,20 @@ namespace NHM.MinerPluginToolkitV1.ExtraLaunchParameters
                         {
                             var setValues = values
                                 .Select(value => value != null ? value : option.DefaultValue);
-                            var mask = " {0} {1}";
-                            if (optionName.Contains("="))
-                            {
-                                mask = " {0}{1}";
-                            }
+                            var mask = optionName.Contains("=") ? " {0}{1}" : " {0} {1}";
                             retVal += string.Format(mask, optionName, string.Join(option.Delimiter, setValues));
                             break;
                         }
                     case MinerOptionType.OptionWithDuplicateMultipleParameters:
                         {
-                            var mask = "{0} {1}";
-                            if (optionName.Contains("="))
-                            {
-                                mask = "{0}{1}";
-                            }
+                            var mask = optionName.Contains("=") ? " {0}{1}" : " {0} {1}";
                             var setValues = values
                                 .Select(value => value != null ? value : option.DefaultValue)
                                 .Select(value => string.Format(mask, optionName, value));
                             retVal += " " + string.Join(" ", setValues);
                             break;
                         }
+                    default: throw new Exception($"UNKNOWN MinerOptionType {(int)option.Type}");
                 }
             }
             Logger.Debug("ELPParser", $"Successfully parsed {retVal} elp");

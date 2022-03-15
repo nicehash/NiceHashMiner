@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace NHM.Common.Enums
 {
@@ -125,6 +126,10 @@ namespace NHM.Common.Enums
         CuckaRooz29 = 55,
         //[Obsolete("UNUSED Algorithm")]
         Octopus = 56,
+        //[Obsolete("UNUSED Algorithm")]
+        Autolykos = 57,
+        //[Obsolete("UNUSED Algorithm")]
+        ZelHash = 58,
         #endregion // NiceHashAPI
     }
 
@@ -137,6 +142,7 @@ namespace NHM.Common.Enums
             {
                 case AlgorithmType.ZHash:
                 case AlgorithmType.BeamV3:
+                case AlgorithmType.ZelHash:
                     return "Sol/s";
                 case AlgorithmType.GrinCuckatoo31:
                 case AlgorithmType.GrinCuckatoo32:
@@ -174,6 +180,20 @@ namespace NHM.Common.Enums
                 names[i] = name;
             }
             return string.Join("+", names);
+        }
+
+        public static bool IsObsolete(this Enum value)
+        {
+            try
+            {
+                FieldInfo fieldInfo = value.GetType().GetField(value.ToString());
+                ObsoleteAttribute[] attributes = (ObsoleteAttribute[])fieldInfo.GetCustomAttributes(typeof(ObsoleteAttribute), false);
+                return attributes != null && attributes.Length > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

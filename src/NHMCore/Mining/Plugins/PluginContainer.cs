@@ -5,6 +5,7 @@ using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.MinerPluginToolkitV1.Interfaces;
+using NHMCore.Notifications;
 using NHMCore.Switching;
 using System;
 using System.Collections.Generic;
@@ -189,6 +190,7 @@ namespace NHMCore.Mining.Plugins
                 {
                     IsCompatible = EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevices;
                 }
+                CheckDevicesDriverVersionsAndNotify(baseDevices);
             }
             catch (Exception e)
             {
@@ -320,6 +322,38 @@ namespace NHMCore.Mining.Plugins
             return Task.CompletedTask;
         }
         #endregion IDevicesCrossReference
+
+        #region DriverRequirement
+        void CheckDevicesDriverVersionsAndNotify(IEnumerable<BaseDevice> devices)
+        {
+            //List<(int, BaseDevice, Version)> listOfOldDrivers = new List<(int, BaseDevice, Version)>();
+            //foreach(BaseDevice dev in devices)
+            //{
+            //    if (_plugin is IDriverIsMinimumRequired minReq)
+            //    {
+            //        (int ok, Version ver) = minReq.IsDriverMinimumRequired(dev);
+            //        if (ok == -2)
+            //        {
+            //            listOfOldDrivers.Add((0, dev, ver));//0 == required
+            //            continue;//dont need recommended in this case
+            //        }
+            //    }
+            //    if (_plugin is IDriverIsMinimumRecommended minRec)
+            //    {
+            //        (int ok, Version ver) = minRec.IsDriverMinimumRecommended(dev);
+            //        if (ok == -2)
+            //        {
+            //            listOfOldDrivers.Add((1, dev, ver));//1 == recommended
+            //        }
+            //    }
+            //}
+            //if (listOfOldDrivers.Any())
+            //{
+            //    AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, listOfOldDrivers);
+            //}
+        }
+
+        #endregion
 
         #region IGetApiMaxTimeout/IGetApiMaxTimeoutV2
         public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
