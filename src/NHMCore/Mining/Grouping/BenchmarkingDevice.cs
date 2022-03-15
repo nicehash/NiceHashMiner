@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Benchmarking;
 using NHMCore.Mining.Plugins;
@@ -72,7 +73,7 @@ namespace NHMCore.Mining.Grouping
                     miner.InitMiningLocationAndUsername(miningLocation, DemoUser.BTC);
                     powerHelper.Start();
                     algo.ComputeDevice.State = DeviceState.Benchmarking;
-                    var result = await miner.StartBenchmark(stop, PerformanceType);
+                    var result = await miner.StartBenchmark(stop, BenchmarkManagerState.Instance.SelectedBenchmarkType);
                     EthlargementIntegratedPlugin.Instance.Stop(miningPairs);
                     if (stop.IsCancellationRequested) return false;
 

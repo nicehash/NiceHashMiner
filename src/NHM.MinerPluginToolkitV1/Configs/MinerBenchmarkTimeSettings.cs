@@ -59,21 +59,17 @@ namespace NHM.MinerPluginToolkitV1.Configs
         {
             try
             {
-                if (timeSetting?.UseUserSettings ?? false)
+                // TimePerAlgorithm has #1 priority
+                if (timeSetting.PerAlgorithm != null && timeSetting.PerAlgorithm.ContainsKey(benchmarkType))
                 {
-                    // TimePerAlgorithm has #1 priority
-                    if (timeSetting.PerAlgorithm != null && timeSetting.PerAlgorithm.ContainsKey(benchmarkType))
+                    var pairTypeTimeout = timeSetting.PerAlgorithm[benchmarkType];
+                    var algorithmName = miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmName ?? "";
+                    if (pairTypeTimeout != null && !string.IsNullOrEmpty(algorithmName) && pairTypeTimeout.ContainsKey(algorithmName))
                     {
-                        var pairTypeTimeout = timeSetting.PerAlgorithm[benchmarkType];
-                        var algorithmName = miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmName ?? "";
-                        if (pairTypeTimeout != null && !string.IsNullOrEmpty(algorithmName) && pairTypeTimeout.ContainsKey(algorithmName))
-                        {
-                            return pairTypeTimeout[algorithmName];
-                        }
+                        return pairTypeTimeout[algorithmName];
                     }
-                    // TimePerType has #2 priority
-                    return timeSetting.General[benchmarkType];
-                }
+                } // TimePerType has #2 priority
+                else if (timeSetting.General != null && timeSetting.General.ContainsKey(benchmarkType)) return timeSetting.General[benchmarkType];
             }
             catch (Exception e)
             {
@@ -97,21 +93,17 @@ namespace NHM.MinerPluginToolkitV1.Configs
         {
             try
             {
-                if (timeSetting?.UseUserSettings ?? false)
+                // TimePerAlgorithm has #1 priority
+                if (timeSetting.PerAlgorithmTicks != null && timeSetting.PerAlgorithmTicks.ContainsKey(benchmarkType))
                 {
-                    // TimePerAlgorithm has #1 priority
-                    if (timeSetting.PerAlgorithmTicks != null && timeSetting.PerAlgorithmTicks.ContainsKey(benchmarkType))
+                    var pairTypeTimeout = timeSetting.PerAlgorithmTicks[benchmarkType];
+                    var algorithmName = miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmName ?? "";
+                    if (pairTypeTimeout != null && !string.IsNullOrEmpty(algorithmName) && pairTypeTimeout.ContainsKey(algorithmName))
                     {
-                        var pairTypeTimeout = timeSetting.PerAlgorithmTicks[benchmarkType];
-                        var algorithmName = miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmName ?? "";
-                        if (pairTypeTimeout != null && !string.IsNullOrEmpty(algorithmName) && pairTypeTimeout.ContainsKey(algorithmName))
-                        {
-                            return pairTypeTimeout[algorithmName];
-                        }
+                        return pairTypeTimeout[algorithmName];
                     }
-                    // TimePerType has #2 priority
-                    return timeSetting.GeneralTicks[benchmarkType];
-                }
+                } // TimePerType has #2 priority
+                else if (timeSetting.GeneralTicks != null && timeSetting.GeneralTicks.ContainsKey(benchmarkType)) return timeSetting.GeneralTicks[benchmarkType];
             }
             catch (Exception e)
             {

@@ -137,13 +137,13 @@ namespace NanoMiner
                 // settup times
                 int benchmarkTime;
                 var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
-                if (isDaggerNvidia)
+                if (isDaggerNvidia || _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.KAWPOW))
                 {
                     benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
                 }
                 else
                 {
-                    benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 40, 60, 140 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
+                    benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 120, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
                 }
                 var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
                 var maxTicksEnabled = MinerBenchmarkTimeSettings.MaxTicksEnabled && !isDaggerNvidia;
