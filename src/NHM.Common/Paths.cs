@@ -66,7 +66,7 @@ namespace NHM.Common
             }
             catch (Exception e)
             {
-                Logger.Info("NHM.Common.Paths", $"EnsureDirectoryPath Error occured for directoryPath '{directoryPath}': {e.Message}");
+                Logger.Error("NHM.Common.Paths", $"EnsureDirectoryPath Error occured for directoryPath '{directoryPath}': {e.Message}");
                 return false;
             }
         }
