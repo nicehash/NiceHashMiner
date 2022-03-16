@@ -32,14 +32,6 @@ namespace NHMCore.Configs.Data
         }
         #endregion CredentialsSettings
 
-        #region ServiceLocationSettings
-        public int ServiceLocation
-        {
-            get => StratumService.Instance.ServiceLocation;
-            set => StratumService.Instance.ServiceLocation = value;
-        }
-        #endregion ServiceLocationSettings
-
         #region MiningSettings
         public bool AutoStartMining
         {
@@ -358,7 +350,6 @@ namespace NHMCore.Configs.Data
             RigGroup = "";
             Language = "";
             TimeUnit = TimeUnitType.Day;
-            ServiceLocation = 0;
             AutoStartMining = false;
             //LessThreads = 0;
             DebugConsole = false;

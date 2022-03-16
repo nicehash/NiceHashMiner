@@ -288,32 +288,6 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateUnavailablePrimaryMarketLocationInfo()
-        {
-            //clear "market notifications"
-            var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market);
-            foreach (var marketNotif in marketNotifications)
-            {
-                NotificationsManager.Instance.RemoveNotificationFromList(marketNotif);
-            }
-
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Market, Tr("Primary mining location unavailable"), Tr("Primary mining location is unavailable. Switching to fallback location."));
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
-        public static void CreateUnavailableAllMarketsLocationInfo()
-        {
-            //clear "market notifications"
-            var marketNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.Market);
-            foreach (var marketNotif in marketNotifications)
-            {
-                NotificationsManager.Instance.RemoveNotificationFromList(marketNotif);
-            }
-
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Market, Tr("All mining locations unavailable"), Tr("All mining locations are unavailable. Mining will be stopped."));
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         public static void CreateNotProfitableInfo(bool shouldClear)
         {
             // clear old state
