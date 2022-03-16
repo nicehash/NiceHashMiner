@@ -7,7 +7,7 @@ namespace NHM.Common.Enums
         NONE,
         STRATUM_TCP,
         STRATUM_SSL,
-        [Obsolete("UNUSED", false)]
+        [Obsolete("UNUSED", true)]
         LOCKED, // inhouse miners that are locked on NH (our eqm)
         [Obsolete("UNUSED", true)]
         SSL

@@ -461,47 +461,11 @@ namespace NHMCore.Nhmws
         }
         #endregion SMA
         #region MARKETS
-#if DEBUG_MARKETS
-        private static bool debugEU = false;
-        private static bool debugUSA = false;
-        private static int index = 0;
-        private static void changeDebugMarkets()
-        {
-            if (index == 0)
-            {
-                debugEU = true;
-                debugUSA = true;
-            }
-            if (index == 1)
-            {
-                debugEU = false;
-                debugUSA = true;
-            }
-            if (index == 2)
-            {
-                debugEU = true;
-                debugUSA = false;
-            }
-            if (index == 3)
-            {
-                debugEU = false;
-                debugUSA = false;
-            }
-            index = (index + 1) % 4;
-        }
-#endif
 
         private static Task HandleMarkets(string data)
         {
             try
             {
-                var markets = JsonConvert.DeserializeObject<MarketsMessage>(data);
-#if !DEBUG_MARKETS
-                StratumService.Instance.SetEnabledMarkets(markets.data);
-#else
-                changeDebugMarkets();
-                StratumService.Instance.SetEnabledMarkets(debugEU, debugUSA);
-#endif
             }
             catch (Exception e)
             {

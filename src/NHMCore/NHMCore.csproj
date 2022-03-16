@@ -191,7 +191,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="StratumService.cs" />
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\DelayedSingleExecActionTask.cs" />
     <Compile Include="Utils\ElapsedTimeChecker.cs" />
