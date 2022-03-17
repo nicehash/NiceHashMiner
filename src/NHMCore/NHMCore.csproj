@@ -57,7 +57,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="$(DefineConstants.Contains('INTEGRATE_ALL_PLUGINS'))">
-    <DefineConstants>INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_Phoenix_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_WildRig_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_ZEnemy_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;INTEGRATE_MiniZ_PLUGIN;$(DefineConstants)</DefineConstants>
+    <DefineConstants>INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_WildRig_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_ZEnemy_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;INTEGRATE_MiniZ_PLUGIN;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -287,10 +287,6 @@
     <ProjectReference Include="..\Miners\NBMiner\MP.NBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NBMiner_PLUGIN'))">
       <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>
       <Name>MP.NBMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\Phoenix\MP.Phoenix.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Phoenix_PLUGIN'))">
-      <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
-      <Name>MP.Phoenix</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\SRBMiner\MP.SRBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_SRBMiner_PLUGIN'))">
       <Project>{eaf3b1d7-a8b1-4bb0-a325-50422fe39dd2}</Project>

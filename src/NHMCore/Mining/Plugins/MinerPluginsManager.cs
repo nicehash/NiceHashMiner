@@ -50,9 +50,6 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_NBMiner_PLUGIN
                 new NBMiner.NBMinerPlugin(),
 #endif
-#if INTEGRATE_Phoenix_PLUGIN
-                new Phoenix.PhoenixPlugin(),
-#endif
 #if INTEGRATE_TeamRedMiner_PLUGIN
                 new TeamRedMiner.TeamRedMinerPlugin(),
 #endif
@@ -90,7 +87,6 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_ALL_PLUGINS
                 new GMinerPlugin.GMinerPlugin(),
                 new NBMiner.NBMinerPlugin(),
-                new Phoenix.PhoenixPlugin(),
                 new TeamRedMiner.TeamRedMinerPlugin(),
                 new TRex.TRexPlugin(),
                 new TTMiner.TTMinerPlugin(),

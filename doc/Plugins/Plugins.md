@@ -44,7 +44,6 @@
 * BMiner
 * ClaymoreDual
 * GMiner
-* Phoenix
 * LolMiner
 * NanoMiner
 
