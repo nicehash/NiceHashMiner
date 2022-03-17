@@ -57,7 +57,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="$(DefineConstants.Contains('INTEGRATE_ALL_PLUGINS'))">
-    <DefineConstants>INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;$(DefineConstants)</DefineConstants>
+    <DefineConstants>INTEGRATE_NBMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -260,14 +260,6 @@
       <Project>{7733d0d8-72a7-4656-a5b3-54fc764e0507}</Project>
       <Name>NHM.CredentialValidators</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\CryptoDredge\MP.CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
-      <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
-      <Name>MP.CryptoDredge</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\GMiner\MP.GMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_GMiner_PLUGIN'))">
-      <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
-      <Name>MP.GMiner</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\LolMiner\MP.LolMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_LolMiner_PLUGIN'))">
       <Project>{fbb69b33-8a14-4087-909c-f33791384d35}</Project>
       <Name>MP.LolMiner</Name>
@@ -283,22 +275,6 @@
     <ProjectReference Include="..\Miners\NBMiner\MP.NBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NBMiner_PLUGIN'))">
       <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>
       <Name>MP.NBMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\SRBMiner\MP.SRBMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_SRBMiner_PLUGIN'))">
-      <Project>{eaf3b1d7-a8b1-4bb0-a325-50422fe39dd2}</Project>
-      <Name>MP.SRBMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\TeamRedMiner\MP.TeamRedMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TeamRedMiner_PLUGIN'))">
-      <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>
-      <Name>MP.TeamRedMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\TRex\MP.TRex.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TRex_PLUGIN'))">
-      <Project>{1b00711a-2ca2-49c0-a9fd-8bf9e478e3b0}</Project>
-      <Name>MP.TRex</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\TTMiner\MP.TTMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TTMiner_PLUGIN'))">
-      <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
-      <Name>MP.TTMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\XMRig\MP.XMRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XMRig_PLUGIN'))">
       <Project>{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}</Project>
