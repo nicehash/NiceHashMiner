@@ -57,7 +57,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="$(DefineConstants.Contains('INTEGRATE_ALL_PLUGINS'))">
-    <DefineConstants>INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_WildRig_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;INTEGRATE_MiniZ_PLUGIN;$(DefineConstants)</DefineConstants>
+    <DefineConstants>INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -272,10 +272,6 @@
       <Project>{fbb69b33-8a14-4087-909c-f33791384d35}</Project>
       <Name>MP.LolMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\MiniZ\MP.MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
-      <Project>{EB73427B-90E0-4E5B-85D8-C33E810E970A}</Project>
-      <Name>MP.MiniZ</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Miners\MP.Joker\MP.Joker.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Joker_PLUGIN'))">
       <Project>{a23e8384-0c0b-4cf2-a2b9-46f34e32d0fb}</Project>
       <Name>MP.Joker</Name>
@@ -303,10 +299,6 @@
     <ProjectReference Include="..\Miners\TTMiner\MP.TTMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TTMiner_PLUGIN'))">
       <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
       <Name>MP.TTMiner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\WildRig\MP.WildRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_WildRig_PLUGIN'))">
-      <Project>{fa68227d-27a2-4058-8d36-005fadafecc0}</Project>
-      <Name>MP.WildRig</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\XMRig\MP.XMRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XMRig_PLUGIN'))">
       <Project>{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}</Project>

@@ -28,8 +28,6 @@ Allow external plugin to become integrated for testing purposes (useful when wri
 - `INTEGRATE_CryptoDredge_PLUGIN`
 - `INTEGRATE_ExamplePlugin_PLUGIN`
 - `INTEGRATE_LolMinerBeam_PLUGIN`
-- `INTEGRATE_MiniZ_PLUGIN`
 - `INTEGRATE_NanoMiner_PLUGIN`
 - `INTEGRATE_SRBMiner_PLUGIN`
-- `INTEGRATE_WildRig_PLUGIN`
 - `INTEGRATE_XMRig_PLUGIN`

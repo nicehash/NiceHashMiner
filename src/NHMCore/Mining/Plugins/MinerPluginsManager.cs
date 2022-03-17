@@ -62,9 +62,6 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_NanoMiner_PLUGIN
                 new NanoMiner.NanoMinerPlugin(),
 #endif
-#if INTEGRATE_WildRig_PLUGIN
-                new WildRig.WildRigPlugin(),
-#endif
 #if INTEGRATE_CryptoDredge_PLUGIN
                 new CryptoDredge.CryptoDredgePlugin(),
 #endif
@@ -77,9 +74,6 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_XMRig_PLUGIN
                 new XMRig.XMRigPlugin(),
 #endif
-#if INTEGRATE_MiniZ_PLUGIN
-                new MiniZ.MiniZPlugin(),
-#endif
 
 #if INTEGRATE_ALL_PLUGINS
                 new GMinerPlugin.GMinerPlugin(),
@@ -88,11 +82,9 @@ namespace NHMCore.Mining.Plugins
                 new TRex.TRexPlugin(),
                 new TTMiner.TTMinerPlugin(),
                 new NanoMiner.NanoMinerPlugin(),
-                new WildRig.WildRigPlugin(),
                 new CryptoDredge.CryptoDredgePlugin(),
                 new LolMiner.LolMinerPlugin(),
                 new SRBMiner.SRBMinerPlugin(),
-                new MiniZ.MiniZPlugin(),
 #endif
 
 
