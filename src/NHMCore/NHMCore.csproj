@@ -57,7 +57,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="$(DefineConstants.Contains('INTEGRATE_ALL_PLUGINS'))">
-    <DefineConstants>INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_WildRig_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_ZEnemy_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;INTEGRATE_MiniZ_PLUGIN;$(DefineConstants)</DefineConstants>
+    <DefineConstants>INTEGRATE_GMiner_PLUGIN;INTEGRATE_NBMiner_PLUGIN;INTEGRATE_TeamRedMiner_PLUGIN;INTEGRATE_TRex_PLUGIN;INTEGRATE_TTMiner_PLUGIN;INTEGRATE_NanoMiner_PLUGIN;INTEGRATE_WildRig_PLUGIN;INTEGRATE_CryptoDredge_PLUGIN;INTEGRATE_LolMiner_PLUGIN;INTEGRATE_SRBMiner_PLUGIN;INTEGRATE_XMRig_PLUGIN;INTEGRATE_MiniZ_PLUGIN;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -311,10 +311,6 @@
     <ProjectReference Include="..\Miners\XMRig\MP.XMRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_XMRig_PLUGIN'))">
       <Project>{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}</Project>
       <Name>MP.XMRig</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\ZEnemy\MP.ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
-      <Project>{059e2ca2-85c5-453e-a48c-ada45a3c5879}</Project>
-      <Name>MP.ZEnemy</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\__DEV__BrokenMiner\MP.__DEV__BrokenMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_BrokenMiner_PLUGIN'))">
       <Project>{e9a55ce7-37b9-462f-92e8-ae929c5adcca}</Project>

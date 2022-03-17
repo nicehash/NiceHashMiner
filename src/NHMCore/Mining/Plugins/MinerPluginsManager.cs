@@ -68,9 +68,6 @@ namespace NHMCore.Mining.Plugins
 #if INTEGRATE_CryptoDredge_PLUGIN
                 new CryptoDredge.CryptoDredgePlugin(),
 #endif
-#if INTEGRATE_ZEnemy_PLUGIN
-                new ZEnemy.ZEnemyPlugin(),
-#endif
 #if INTEGRATE_LolMiner_PLUGIN
                 new LolMiner.LolMinerPlugin(),
 #endif
@@ -93,7 +90,6 @@ namespace NHMCore.Mining.Plugins
                 new NanoMiner.NanoMinerPlugin(),
                 new WildRig.WildRigPlugin(),
                 new CryptoDredge.CryptoDredgePlugin(),
-                new ZEnemy.ZEnemyPlugin(),
                 new LolMiner.LolMinerPlugin(),
                 new SRBMiner.SRBMinerPlugin(),
                 new MiniZ.MiniZPlugin(),
