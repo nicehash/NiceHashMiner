@@ -284,8 +284,6 @@ namespace NHMCore
             }
             finally
             {
-                var a = AvailableDevices.Devices[1].TrySetMemoryTimings("REF=30");
-                var b = AvailableDevices.Devices[1].TryResetMemoryTimings();
                 isInitFinished = true;
                 NHWebSocket.NotifyStateChanged();
 
