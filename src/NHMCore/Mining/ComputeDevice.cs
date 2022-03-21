@@ -8,9 +8,11 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Nhmws;
+using NHMCore.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace NHMCore.Mining
 {
@@ -501,5 +503,35 @@ namespace NHMCore.Mining
         }
 
         #endregion Checker
+        public int TrySetMemoryTimings(int profileNum)
+        {
+            if (!GPUProfileManager.CanUseProfiles) return -1;
+            if (!GPUProfileManager.ExistingProfiles.Contains(profileNum)) return -1;
+            var editedGPUName = Regex.Replace(Name, @"[0-9]+GB", "").Trim();
+            if (GPUProfileManager.GetProfileForSelectedGPUIfExists(editedGPUName, profileNum, out var prof) && DeviceMonitor is IMemoryTimings mp)
+            {
+                var memoryTimings = GPUProfileManager.BuildMTString(prof);
+                return mp.SetMemoryTimings(memoryTimings);
+            }
+            return -1;
+        }
+
+        public int TrySetMemoryTimings(string customMT)
+        {
+            if(DeviceMonitor is IMemoryTimings mp)
+            {
+                return mp.SetMemoryTimings(customMT);
+            }
+            return -1;
+        }
+
+        public int TryResetMemoryTimings()
+        {
+            if(DeviceMonitor is IMemoryTimings mp)
+            {
+                return mp.ResetMemoryTimings();
+            }
+            return -1;
+        }
     }
 }

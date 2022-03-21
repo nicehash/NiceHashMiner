@@ -58,6 +58,12 @@ namespace NHM.DeviceMonitoring
             Logger.InfoDelayed("AMD_ODN", logStr, TimeSpan.FromSeconds(10));
         }
 
+        private static readonly NVIDIA_MON.log_cb _nvidiaLog = new NVIDIA_MON.log_cb(LogNvidia_MON);
+        private static void LogNvidia_MON(string logStr)
+        {
+            Logger.InfoDelayed("NVIDIA_MON", logStr, TimeSpan.FromSeconds(10));
+        }
+
         public static Task<List<DeviceMonitor>> GetDeviceMonitors(IEnumerable<BaseDevice> devices)
         {
             return Task.Run(() =>
@@ -102,6 +108,7 @@ namespace NHM.DeviceMonitoring
                     var initialNvmlRestartTimeWait = Math.Min(500 * nvidias.Count, 5000); // 500ms per GPU or initial MAX of 5seconds
                     var nvidiaUUIDAndBusIds = nvidias.ToDictionary(nvidia => nvidia.UUID, nvidia => nvidia.PCIeBusID);
                     var nvidiaInit = NVIDIA_MON.nhm_nvidia_init();
+                    NVIDIA_MON.nhm_nvidia_reg_log_cb(_nvidiaLog);
                     DeviceMonitorNVIDIA.Init();
                     if (nvidiaInit == 0)
                     {
