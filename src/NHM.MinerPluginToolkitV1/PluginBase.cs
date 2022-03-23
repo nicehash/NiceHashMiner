@@ -240,12 +240,12 @@ namespace NHM.MinerPluginToolkitV1
             if (PluginSupportedAlgorithmsSettings.Algorithms?.ContainsKey(deviceType) ?? false)
             {
                 var sass = PluginSupportedAlgorithmsSettings.Algorithms[deviceType];
-                var customRAMLimits = sass.Where(sas => sas.NonDefaultRAMLimit.HasValue);
-                foreach (var el in customRAMLimits)
-                {
-                    var (algo, ok) = el.ToAlgorithmV2("");
-                    ret[algo.IDs.First()] = el.NonDefaultRAMLimit.Value;
-                }
+                var customRAMLimits = sass.Where(sas => sas.NonDefaultRAMLimit.HasValue)
+                                          .Select(sas => (pair: sas.ToAlgorithmV2(""), ramLimit: sas.NonDefaultRAMLimit.Value))
+                                          .Where(a => a.pair.ok)
+                                          .Select(a => (id: a.pair.algorithm.IDs.First(), a.ramLimit))
+                                          .ToArray();
+                foreach (var (id, ramLimit) in customRAMLimits) ret[id] = ramLimit;
             }
             return ret;
         }
