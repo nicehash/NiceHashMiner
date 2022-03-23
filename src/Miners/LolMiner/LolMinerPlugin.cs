@@ -19,6 +19,7 @@ namespace LolMiner
         {
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
+            MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
@@ -39,7 +40,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(16, 5);
+        public override Version Version => new Version(17, 0);
 
         public override string Name => "lolMiner";
 
@@ -126,7 +127,7 @@ namespace LolMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
+            var (_, pluginRootBinsPath) = GetBinAndCwdPaths();
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "lolMiner.exe" });
         }
 

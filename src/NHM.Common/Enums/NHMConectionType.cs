@@ -2,6 +2,7 @@
 
 namespace NHM.Common.Enums
 {
+    //[Obsolete("UNUSED", true)]
     public enum NhmConectionType
     {
         NONE,

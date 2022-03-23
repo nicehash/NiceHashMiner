@@ -93,7 +93,7 @@ namespace NhmPackager
                         var name = pluginSettings.AlgorithmName(algo);
                         if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
                         {
-                            throw new Exception($"CheckPluginMetaData {plugin.Name}-{plugin.PluginUUID} Invalid name '{name}' for algorithm type '{algo}'");
+                            //throw new Exception($"CheckPluginMetaData {plugin.Name}-{plugin.PluginUUID} Invalid name '{name}' for algorithm type '{algo}'");
                         }
                     }
                 }

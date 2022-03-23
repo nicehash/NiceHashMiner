@@ -39,9 +39,9 @@ namespace LolMiner
         {
             // fixed fee
             DefaultFee = 1.0,
-            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            AlgorithmFeesV2 = new Dictionary<string, double>
             {
-                { AlgorithmType.DaggerHashimoto, 0.7 }
+                { $"{AlgorithmType.DaggerHashimoto}", 0.7 }
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -67,17 +67,6 @@ namespace LolMiner
                     DeviceType.AMD,
                     SupportedAMDAlgos()
                 }
-            },
-            AlgorithmNames = new Dictionary<AlgorithmType, string>
-            {
-                //{ AlgorithmType.GrinCuckarood29, "C29D" },
-                { AlgorithmType.GrinCuckatoo31, "C31" },
-                { AlgorithmType.GrinCuckatoo32, "C32" },
-                { AlgorithmType.ZHash, "EQUI144_5" },
-                { AlgorithmType.BeamV3, "BEAM-III" },
-                { AlgorithmType.DaggerHashimoto, "ETHASH" },
-                { AlgorithmType.Autolykos, "AUTOLYKOS2" },
-                { AlgorithmType.ZelHash, "ZEL" },
             }
         };
     }

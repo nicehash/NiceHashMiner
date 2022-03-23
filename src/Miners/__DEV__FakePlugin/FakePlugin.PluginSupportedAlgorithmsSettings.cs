@@ -12,9 +12,9 @@ namespace FakePlugin
         {
             // fee fixed
             DefaultFee = 2.0,
-            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            AlgorithmFeesV2 = new Dictionary<string, double>
             {
-                { AlgorithmType.KAWPOW, 3.0 },
+                { $"{AlgorithmType.KAWPOW}", 3.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -25,7 +25,6 @@ namespace FakePlugin
                         new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false },
-                        new SAS(AlgorithmType.GrinCuckarood29),
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.KAWPOW),
                         new SAS(AlgorithmType.DaggerHashimoto, AlgorithmType.ZHash),
@@ -50,19 +49,6 @@ namespace FakePlugin
                         new SAS(AlgorithmType.KAWPOW),
                     }
                 },
-            },
-            AlgorithmNames = new Dictionary<AlgorithmType, string>
-            {
-                { AlgorithmType.ZHash, "ZHash" },
-                { AlgorithmType.GrinCuckatoo31, "GrinCuckatoo31" },
-                { AlgorithmType.CuckooCycle, "CuckooCycle" },
-                { AlgorithmType.GrinCuckarood29, "GrinCuckarood29" },
-                { AlgorithmType.BeamV3, "BeamV3" },
-                { AlgorithmType.KAWPOW, "KAWPOW" },
-                { AlgorithmType.DaggerHashimoto, "DaggerHashimoto" },
-                { AlgorithmType.GrinCuckatoo32, "GrinCuckatoo32" },
-                { AlgorithmType.RandomXmonero, "RandomXmonero" },
-                { AlgorithmType.Lyra2REv3, "Lyra2REv3" },
             }
         };
     }

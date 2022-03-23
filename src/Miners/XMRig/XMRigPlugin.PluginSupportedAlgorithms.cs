@@ -20,10 +20,6 @@ namespace XMRig
                         new SAS(AlgorithmType.RandomXmonero) { ExtraLaunchParameters = "--cpu-priority 0" },
                     }
                 }
-            },
-            AlgorithmNames = new Dictionary<AlgorithmType, string>
-            {
-                { AlgorithmType.RandomXmonero, "rx/0" },
             }
         };
     }

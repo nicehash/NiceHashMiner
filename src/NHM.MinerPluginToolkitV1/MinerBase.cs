@@ -46,9 +46,13 @@ namespace NHM.MinerPluginToolkitV1
         protected string _miningLocation;
         protected string _username;
         protected string _password;
+        protected int _apiPort;
+        protected string _devices = "";
 
         // most miners mine on a single algo and most have extra launch params
-        protected AlgorithmType _algorithmType;
+        protected AlgorithmType _algorithmType = AlgorithmType.NONE;
+        protected AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
+        protected string _algorithmSettingsKey = "";
         protected string _extraLaunchParameters = "";
 
         public MinerBase(string uuid)
@@ -64,6 +68,7 @@ namespace NHM.MinerPluginToolkitV1
         private class StopMinerWatchdogException : Exception
         { }
 
+        public MinerCommandLineSettings MinerCommandLineSettings { get; set; }
         public MinerOptionsPackage MinerOptionsPackage { get; set; }
         public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
 
@@ -77,6 +82,15 @@ namespace NHM.MinerPluginToolkitV1
         abstract public Task<ApiData> GetMinerStatsDataAsync();
 
         abstract protected void Init();
+
+        protected virtual double DevFee
+        {
+            get
+            {
+                if (_algorithmSecondType != AlgorithmType.NONE) return PluginSupportedAlgorithms.DevFee(_algorithmType, _algorithmSecondType);
+                return PluginSupportedAlgorithms.DevFee(_algorithmType);
+            }
+        }
 
         // override this on plugins with mapped ids or special mining pairs sorting
         protected virtual IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
@@ -107,9 +121,9 @@ namespace NHM.MinerPluginToolkitV1
 
             // init algo, ELP and finally miner specific init
             // init algo
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
+            var (first, second, ok) = MinerToolkit.GetFirstAndSecondAlgorithmType(_miningPairs);
+            _algorithmType = first;
+            _algorithmSecondType = second;
             if (!ok)
             {
                 Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
@@ -143,21 +157,52 @@ namespace NHM.MinerPluginToolkitV1
             return BinAndCwdPathsGettter.GetBinAndCwdPaths();
         }
 
-        abstract protected string MiningCreateCommandLine();
+        private static (string url, string port, bool ok) SplitUrlWithPort(string urlWithPort)
+        {
+            var port = string.Join("", urlWithPort
+                .Reverse()
+                .TakeWhile(char.IsDigit)
+                .Reverse());
+            var url = urlWithPort.Replace($":{port}", "");
+            return (url, port, int.TryParse(port, out var _));
+        }
+
+        protected virtual string MiningCreateCommandLine()
+        {
+            var (oclPlatform, oclPlatformOk) = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
+            _apiPort = GetAvaliablePort();
+            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
+            var (url1, port1, _) = SplitUrlWithPort(urlWithPort);
+            var url2WithPort = StratumServiceHelpers.GetLocationUrl(_algorithmSecondType, _miningLocation, NhmConectionType.NONE);
+            var (url2, port2, _) = SplitUrlWithPort(url2WithPort);
+            var name = string.Join("+", _miningPairs.First().Algorithm.IDs.Select(a => $"{a}"));
+            var template = MinerCommandLineSettings.AlgorithmCommandLine[name];
+            var args = new MinerCommandLineSettings.CommandLineParams
+            {
+                Username = _username,
+                ApiPort = $"{_apiPort}",
+                Url = url1,
+                Port = port1,
+                Url2 = url2,
+                Port2 = port2,
+                Devices = _devices,
+                OpenClAmdPlatformNum = $"{oclPlatform}",
+                ExtraLaunchParameters = _extraLaunchParameters,
+            };
+            return MinerCommandLineSettings.MiningCreateCommandLine(template, args);
+        }
 
         protected virtual Dictionary<string, string> GetEnvironmentVariables()
         {
-            if (MinerSystemEnvironmentVariables != null)
-            {
-                var customSettingKey = MinerToolkit.GetAlgorithmCustomSettingKey(_miningPairs);
-                if (MinerSystemEnvironmentVariables.CustomSystemEnvironmentVariables != null && MinerSystemEnvironmentVariables.CustomSystemEnvironmentVariables.ContainsKey(customSettingKey))
-                {
-                    return MinerSystemEnvironmentVariables.CustomSystemEnvironmentVariables[customSettingKey];
-                }
+            if (MinerSystemEnvironmentVariables == null) return null;
 
-                return MinerSystemEnvironmentVariables.DefaultSystemEnvironmentVariables;
+            var (customSettingKey, ok) = MinerToolkit.GetAlgorithmSettingsKey(_miningPairs);
+            if (ok && (MinerSystemEnvironmentVariables.CustomSystemEnvironmentVariables?.ContainsKey(customSettingKey) ?? false))
+            {
+                return MinerSystemEnvironmentVariables.CustomSystemEnvironmentVariables[customSettingKey];
             }
-            return null;
+
+            return MinerSystemEnvironmentVariables.DefaultSystemEnvironmentVariables;
         }
 
         /// <summary>
@@ -170,8 +215,8 @@ namespace NHM.MinerPluginToolkitV1
             {
                 reservedPorts = MinerReservedApiPorts.AlgorithmReservedPorts;
             }
-            var reservedPortsKey = MinerToolkit.GetAlgorithmPortsKey(_miningPairs);
-            if (reservedPorts != null && reservedPorts.ContainsKey(reservedPortsKey) && reservedPorts[reservedPortsKey] != null)
+            var (reservedPortsKey, ok) = MinerToolkit.GetAlgorithmSettingsKey(_miningPairs);
+            if (ok && reservedPorts != null && reservedPorts.ContainsKey(reservedPortsKey) && reservedPorts[reservedPortsKey] != null)
             {
                 var reservedPortsRange = reservedPorts[reservedPortsKey];
                 var port = FreePortsCheckerManager.GetAvaliablePortInRange(reservedPortsRange); // retrive custom user port
@@ -188,7 +233,8 @@ namespace NHM.MinerPluginToolkitV1
 
             try
             {
-                var actionScriptsKey = MinerToolkit.GetAlgorithmPortsKey(_miningPairs);
+                var (actionScriptsKey, ok) = MinerToolkit.GetAlgorithmSettingsKey(_miningPairs);
+                if (!ok) return;
                 if (MinerCustomActionSettings.AlgorithmCustomActions.ContainsKey(actionScriptsKey) == false) return;
                 var actionsEntry = MinerCustomActionSettings.AlgorithmCustomActions[actionScriptsKey];
                 if (actionsEntry == null) return;
@@ -205,13 +251,11 @@ namespace NHM.MinerPluginToolkitV1
                     WindowStyle = ProcessWindowStyle.Minimized
                     //UseShellExecute = false
                 };
-                using (var action = Process.Start(startInfo))
+                using var action = Process.Start(startInfo);
+                if (exePathWait)
                 {
-                    if (exePathWait)
-                    {
-                        // blocking
-                        action.WaitForExit();
-                    }
+                    // blocking
+                    action.WaitForExit();
                 }
             }
             catch (Exception e)
@@ -276,80 +320,81 @@ namespace NHM.MinerPluginToolkitV1
             var stopActionExec = false;
             _miningProcessTask = Task.Run(() =>
             {
-                using (_stopMinerTaskSource = new CancellationTokenSource())
-                using (var stopMinerTask = CancellationTokenSource.CreateLinkedTokenSource(stop, _stopMinerTaskSource.Token))
-                using (var miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables))
-                using (var quitMiningProcess = stopMinerTask.Token.Register(() => ExitMiningProcess(miningProcess)))
+                using var stopMinerTaskSource = new CancellationTokenSource();
+                using var stopMinerTask = CancellationTokenSource.CreateLinkedTokenSource(stop, stopMinerTaskSource.Token);
+                using var miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);
+                using var quitMiningProcess = stopMinerTask.Token.Register(() => ExitMiningProcess(miningProcess));
+                void throwIfStopped() { if (stopMinerTask.IsCancellationRequested) throw new StopMinerWatchdogException(); }
+
+                lock (_lock)
                 {
-                    lock (_lock)
+                    _stopMinerTaskSource = stopMinerTaskSource;
+                    _miningProcess = miningProcess;
+                }
+                try
+                {
+                    // BEFORE
+                    throwIfStopped();
+                    if (this is IBeforeStartMining bsm)
                     {
-                        _miningProcess = miningProcess;
+                        bsm.BeforeStartMining();
                     }
-                    try
+                    throwIfStopped();
+
+                    // Logging
+                    Logger.Info(_logGroup, $"Starting miner binPath='{binPath}'");
+                    Logger.Info(_logGroup, $"Starting miner binCwd='{binCwd}'");
+                    Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
+                    var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
+                    Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'");
+                    throwIfStopped();
+
+                    // exec START custom scripts if any, must be here if blocking
+                    ExecMinerCustomActionSettings(true);
+
+                    if (!miningProcess.Start())
                     {
-                        // BEFORE
-                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
-                        if (this is IBeforeStartMining bsm)
-                        {
-                            bsm.BeforeStartMining();
-                        }
-                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
+                        Logger.Info(_logGroup, $"Error occured while starting a new process: {miningProcess.ToString()}");
+                        startProcessTaskCompletionSource.SetResult(new InvalidOperationException("Could not start process: " + miningProcess));
+                        return;
+                    }
 
-                        // Logging
-                        Logger.Info(_logGroup, $"Starting miner binPath='{binPath}'");
-                        Logger.Info(_logGroup, $"Starting miner binCwd='{binCwd}'");
-                        Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
-                        var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
-                        Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'");
-                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
+                    startProcessTaskCompletionSource.SetResult(true);
 
-                        // exec START custom scripts if any, must be here if blocking
-                        ExecMinerCustomActionSettings(true);
-
-                        if (!miningProcess.Start())
-                        {
-                            Logger.Info(_logGroup, $"Error occured while starting a new process: {miningProcess.ToString()}");
-                            startProcessTaskCompletionSource.SetResult(new InvalidOperationException("Could not start process: " + miningProcess));
-                            return;
-                        }
-
-                        startProcessTaskCompletionSource.SetResult(true);
-
-                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
-                        if (this is IAfterStartMining asm)
-                        {
-                            asm.AfterStartMining();
-                        }
-                        ThrowIfIsStop(stopMinerTask.IsCancellationRequested);
-                        // block while process is running
-                        miningProcess.WaitForExit();
-                        // exec STOP custom scripts if any, must be here if blocking
-                        stopActionExec = true;
+                    throwIfStopped();
+                    if (this is IAfterStartMining asm)
+                    {
+                        asm.AfterStartMining();
+                    }
+                    throwIfStopped();
+                    // block while process is running
+                    miningProcess.WaitForExit();
+                    // exec STOP custom scripts if any, must be here if blocking
+                    stopActionExec = true;
+                    ExecMinerCustomActionSettings(false);
+                }
+                //catch (Win32Exception ex2)
+                //{
+                //    ////if (ex2.NativeErrorCode == ERROR_FILE_NOT_FOUND) throw ex2;
+                //    //Logger.Info(_logGroup, $"Win32Exception Error occured in StartMining : {ex2.ToString()}");
+                //    //Task.Delay(MinerToolkit.MinerRestartDelayMS, _stopMiner.Token).Wait();
+                //}
+                catch (StopMinerWatchdogException)
+                {
+                    Logger.Info(_logGroup, $"Watchdog stopped in StartMining");
+                    startProcessTaskCompletionSource.SetResult(false);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(_logGroup, $"Error occured in StartMining : {e.Message}");
+                    startProcessTaskCompletionSource.SetResult(e);
+                }
+                finally
+                {
+                    if (!stopActionExec)
+                    {
+                        // exec STOP custom scripts if any, last resort it will not block but it is a fallback option
                         ExecMinerCustomActionSettings(false);
-                    }
-                    //catch (Win32Exception ex2)
-                    //{
-                    //    ////if (ex2.NativeErrorCode == ERROR_FILE_NOT_FOUND) throw ex2;
-                    //    //Logger.Info(_logGroup, $"Win32Exception Error occured in StartMining : {ex2.ToString()}");
-                    //    //Task.Delay(MinerToolkit.MinerRestartDelayMS, _stopMiner.Token).Wait();
-                    //}
-                    catch (StopMinerWatchdogException)
-                    {
-                        Logger.Info(_logGroup, $"Watchdog stopped in StartMining");
-                        startProcessTaskCompletionSource.SetResult(false);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(_logGroup, $"Error occured in StartMining : {e.Message}");
-                        startProcessTaskCompletionSource.SetResult(e);
-                    }
-                    finally
-                    {
-                        if (!stopActionExec)
-                        {
-                            // exec STOP custom scripts if any, last resort it will not block but it is a fallback option
-                            ExecMinerCustomActionSettings(false);
-                        }
                     }
                 }
             });
@@ -371,117 +416,103 @@ namespace NHM.MinerPluginToolkitV1
             }
         }
 
-        /// <summary>
-        /// Checks if <see cref="DesiredRunningState"/> is Stop and if so throw <see cref="StopMinerWatchdogException"/>, also throw that exception if param "<paramref name="isTokenCanceled"/>" equals true
-        /// </summary>
-        private void ThrowIfIsStop(bool isTokenCanceled)
-        {
-            if (isTokenCanceled) throw new StopMinerWatchdogException();
-        }
-
         public virtual async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            using (var tickCancelSource = new CancellationTokenSource())
+            using var tickCancelSource = new CancellationTokenSource();
+            // determine benchmark time 
+            // settup times
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 40, 60, 140 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+            var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
+            var maxTicksEnabled = MinerBenchmarkTimeSettings.MaxTicksEnabled;
+
+            //// use demo user and disable the watchdog
+            var commandLine = MiningCreateCommandLine();
+            var (binPath, binCwd) = GetBinAndCwdPaths();
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+            // disable line readings and read speeds from API
+            bp.CheckData = null;
+
+            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
+            var benchmarkWait = TimeSpan.FromMilliseconds(500);
+            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop, tickCancelSource.Token);
+
+            var stoppedAfterTicks = false;
+            var validTicks = 0;
+            var ticks = benchmarkTime / 10; // on each 10 seconds tick
+            var result = new BenchmarkResult();
+            var benchmarkApiData = new List<ApiData>();
+            for (var tick = 0; tick < ticks; tick++)
             {
-                // determine benchmark time 
-                // settup times
-                var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 40, 60, 140 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
-                var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
-                var maxTicksEnabled = MinerBenchmarkTimeSettings.MaxTicksEnabled;
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
+                await Task.Delay(10 * 1000, stop); // 10 seconds delay
+                if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
 
-                //// use demo user and disable the watchdog
-                var commandLine = MiningCreateCommandLine();
-                var (binPath, binCwd) = GetBinAndCwdPaths();
-                Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-                Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
-                var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-                // disable line readings and read speeds from API
-                bp.CheckData = null;
-
-                var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
-                var benchmarkWait = TimeSpan.FromMilliseconds(500);
-                var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop, tickCancelSource.Token);
-
-                var stoppedAfterTicks = false;
-                var validTicks = 0;
-                var ticks = benchmarkTime / 10; // on each 10 seconds tick
-                var result = new BenchmarkResult();
-                var benchmarkApiData = new List<ApiData>();
-                for (var tick = 0; tick < ticks; tick++)
+                var ad = await GetMinerStatsDataAsync();
+                var adTotal = ad.AlgorithmSpeedsTotal();
+                var isTickValid = adTotal.Count > 0 && adTotal.All(pair => pair.speed > 0);
+                benchmarkApiData.Add(ad);
+                if (isTickValid) ++validTicks;
+                if (maxTicksEnabled && validTicks >= maxTicks)
                 {
-                    if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
-                    await Task.Delay(10 * 1000, stop); // 10 seconds delay
-                    if (t.IsCompleted || t.IsCanceled || stop.IsCancellationRequested) break;
-
-                    var ad = await GetMinerStatsDataAsync();
-                    var adTotal = ad.AlgorithmSpeedsTotal();
-                    var isTickValid = adTotal.Count > 0 && adTotal.All(pair => pair.speed > 0);
-                    benchmarkApiData.Add(ad);
-                    if (isTickValid) ++validTicks;
-                    if (maxTicksEnabled && validTicks >= maxTicks)
-                    {
-                        stoppedAfterTicks = true;
-                        break;
-                    }
+                    stoppedAfterTicks = true;
+                    break;
                 }
-                // await benchmark task
-                if (stoppedAfterTicks)
-                {
-                    try
-                    {
-                        tickCancelSource.Cancel();
-                    }
-                    catch
-                    { }
-                }
-                await t;
-                if (stop.IsCancellationRequested)
-                {
-                    return t.Result;
-                }
-
-                // calc speeds
-                // TODO calc std deviaton to reduce invalid benches
+            }
+            // await benchmark task
+            if (stoppedAfterTicks)
+            {
                 try
                 {
-                    var nonZeroSpeeds = benchmarkApiData.Where(ad => ad.AlgorithmSpeedsTotal().Count > 0 && ad.AlgorithmSpeedsTotal().All(pair => pair.speed > 0))
-                                                        .Select(ad => (ad, ad.AlgorithmSpeedsTotal().Count)).ToList();
-                    var speedsFromTotals = new List<(AlgorithmType type, double speed)>();
-                    if (nonZeroSpeeds.Count > 0)
-                    {
-                        var maxAlgoPiarsCount = nonZeroSpeeds.Select(adCount => adCount.Count).Max();
-                        var sameCountApiDatas = nonZeroSpeeds.Where(adCount => adCount.Count == maxAlgoPiarsCount).Select(adCount => adCount.ad).ToList();
-                        var firstPair = sameCountApiDatas.FirstOrDefault();
-                        var speedSums = firstPair.AlgorithmSpeedsTotal().Select(pair => new KeyValuePair<AlgorithmType, double>(pair.type, 0.0)).ToDictionary(x => x.Key, x => x.Value);
-                        // sum 
-                        foreach (var ad in sameCountApiDatas)
-                        {
-                            foreach (var pair in ad.AlgorithmSpeedsTotal())
-                            {
-                                speedSums[pair.type] += pair.speed;
-                            }
-                        }
-                        // average
-                        foreach (var algoId in speedSums.Keys.ToArray())
-                        {
-                            speedSums[algoId] /= sameCountApiDatas.Count;
-                        }
-                        result = new BenchmarkResult
-                        {
-                            AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, speedSums[pair.type])).ToList(),
-                            Success = true
-                        };
-                    }
+                    tickCancelSource.Cancel();
                 }
-                catch (Exception e)
-                {
-                    Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
-                }
+                catch
+                { }
+            }
+            await t;
+            if (stop.IsCancellationRequested) return t.Result;
 
-                // return API result
-                return result;
+            // calc speeds
+            // TODO calc std deviaton to reduce invalid benches
+            try
+            {
+                var nonZeroSpeeds = benchmarkApiData.Where(ad => ad.AlgorithmSpeedsTotal().Count > 0 && ad.AlgorithmSpeedsTotal().All(pair => pair.speed > 0))
+                                                    .Select(ad => (ad, ad.AlgorithmSpeedsTotal().Count)).ToList();
+                var speedsFromTotals = new List<(AlgorithmType type, double speed)>();
+                if (nonZeroSpeeds.Count > 0)
+                {
+                    var maxAlgoPiarsCount = nonZeroSpeeds.Select(adCount => adCount.Count).Max();
+                    var sameCountApiDatas = nonZeroSpeeds.Where(adCount => adCount.Count == maxAlgoPiarsCount).Select(adCount => adCount.ad).ToList();
+                    var firstPair = sameCountApiDatas.FirstOrDefault();
+                    var speedSums = firstPair.AlgorithmSpeedsTotal().Select(pair => new KeyValuePair<AlgorithmType, double>(pair.type, 0.0)).ToDictionary(x => x.Key, x => x.Value);
+                    // sum 
+                    foreach (var ad in sameCountApiDatas)
+                    {
+                        foreach (var pair in ad.AlgorithmSpeedsTotal())
+                        {
+                            speedSums[pair.type] += pair.speed;
+                        }
+                    }
+                    // average
+                    foreach (var algoId in speedSums.Keys.ToArray())
+                    {
+                        speedSums[algoId] /= sameCountApiDatas.Count;
+                    }
+                    result = new BenchmarkResult
+                    {
+                        AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, speedSums[pair.type])).ToList(),
+                        Success = true
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
             }
 
+            // return API result
+            return result;
         }
 
 

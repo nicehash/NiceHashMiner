@@ -12,9 +12,9 @@ namespace MP.Joker
             UseUserSettings = true, // since we want the user to edit these files make it easier
             // fixed fee
             DefaultFee = 1.0,
-            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            AlgorithmFeesV2 = new Dictionary<string, double>
             {
-                { AlgorithmType.DaggerHashimoto, 1 }
+                { $"{AlgorithmType.DaggerHashimoto}", 1 }
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -39,11 +39,6 @@ namespace MP.Joker
                         new SAS(AlgorithmType.DaggerHashimoto),
                     }
                 },
-            },
-            AlgorithmNames = new Dictionary<AlgorithmType, string>
-            {
-                { AlgorithmType.DaggerHashimoto, "ethash" },
-                { AlgorithmType.RandomXmonero, "xmr" },
             }
         };
     }

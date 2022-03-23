@@ -8,6 +8,43 @@ namespace NBMiner
 {
     internal static class PluginInternalSettings
     {
+        static string _urlPort => $"{MinerCommandLineSettings.POOL_URL_TEMPLATE}:{MinerCommandLineSettings.POOL_PORT_TEMPLATE}";
+        static string _username => MinerCommandLineSettings.USERNAME_TEMPLATE;
+        static string _apiPort => MinerCommandLineSettings.API_PORT_TEMPLATE;
+        static string _devices => MinerCommandLineSettings.DEVICES_TEMPLATE;
+        static string _extraLaunchParameters => MinerCommandLineSettings.EXTRA_LAUNCH_PARAMETERS_TEMPLATE;
+
+        internal static MinerCommandLineSettings MinerCommandLineSettings = new MinerCommandLineSettings
+        {
+            AlgorithmCommandLine = new Dictionary<string, string>
+            {
+                {
+                    $"{AlgorithmType.DaggerHashimoto}",
+                    $"-a ethash -o nicehash+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.CuckooCycle}",
+                    $"-a cuckoo_ae -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KAWPOW}",
+                    $"-a kawpow -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.BeamV3}",
+                    $"-a beamv3 -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.Octopus}",
+                    $"-a octopus -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.Autolykos}",
+                    $"-a ergo -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                }
+            }
+        };
+
         internal static TimeSpan DefaultTimeout = new TimeSpan(0, 1, 0);
 
         internal static MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
