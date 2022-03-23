@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NBMiner
 {
-    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
+    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
         public NBMinerPlugin()
         {
@@ -168,26 +168,14 @@ namespace NBMiner
             return false;
         }
 
-        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-            var minNVIDIA = new Version(411, 31);
-            if (device is CUDADevice nvidia)
-            {
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minNVIDIA) return (-2, minNVIDIA);
-                return (0, minNVIDIA);
-            }
-            return (-1, new Version(0, 0));
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
 
-        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            var minAMD = new Version(21, 5, 2);
-            if (device is AMDDevice amd)
-            {
-                if (amd.DEVICE_AMD_DRIVER < minAMD) return (-2, minAMD);
-                return (0, minAMD);
-            }
-            return (-1, new Version(0, 0));
+            return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }
     }
 }

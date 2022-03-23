@@ -8,6 +8,7 @@ namespace NHMCore.Notifications
     {
         public NotificationsType Type { get; } = NotificationsType.Info;
         public NotificationsGroup Group { get; } = NotificationsGroup.Misc;
+        public string Domain { get; } = "";
 
         public Notification(string name, string content)
         {
@@ -45,6 +46,16 @@ namespace NHMCore.Notifications
             NotificationUrl = url;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
+        }
+
+        public Notification(NotificationsType type, string domain, NotificationsGroup group, string name, string content)
+        {
+            Type = type;
+            Group = group;
+            Domain = domain;
+            Name = name;
+            NotificationContent = content;
+            NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
         public NotificationAction Action { get; internal set; } = null;

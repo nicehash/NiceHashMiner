@@ -55,6 +55,6 @@ namespace NHMCore.Notifications
         GamingFinished,
         AdminRunRequired,
         MotherboardNotCompatible,
-        DriversObsolete,
+        DriverVersionProblem
     }
 }
