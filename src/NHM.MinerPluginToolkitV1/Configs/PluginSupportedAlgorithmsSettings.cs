@@ -19,7 +19,7 @@ namespace NHM.MinerPluginToolkitV1.Configs
         [JsonProperty("default_fee")]
         public double DefaultFee { get; set; } = 0.0;
 
-        [Obsolete("UNUSED. Use algorithm_fees_v2", true)]
+        [Obsolete("UNUSED. Use algorithm_fees_v2", false)]
         [JsonProperty("algorithm_fees")]
         public Dictionary<AlgorithmType, double> AlgorithmFees { get; set; } = null;
         [JsonProperty("algorithm_fees_v2")]

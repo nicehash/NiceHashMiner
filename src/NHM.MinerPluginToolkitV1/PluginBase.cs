@@ -223,6 +223,13 @@ namespace NHM.MinerPluginToolkitV1
             {
                 return PluginSupportedAlgorithmsSettings.AlgorithmFeesV2[idString];
             }
+#pragma warning disable CS0619
+            var id = algorithmTypes.First();
+            if (PluginSupportedAlgorithmsSettings.AlgorithmFees?.ContainsKey(id) ?? false)
+            {
+                return PluginSupportedAlgorithmsSettings.AlgorithmFees[id];
+            }
+#pragma warning restore CS0619
             return PluginSupportedAlgorithmsSettings.DefaultFee;
         }
         #endregion IPluginSupportedAlgorithmsSettings
