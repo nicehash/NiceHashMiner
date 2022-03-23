@@ -104,6 +104,17 @@ namespace NHMCore.Notifications
         //    }
         //}
 
+        private bool _isVisible { get; set; } = false;
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                _isVisible = value;
+                OnPropertyChanged(nameof(IsVisible));
+            }
+        }
+
         private int _notificationEpochTime { get; set; }
         public int NotificationEpochTime
         {
