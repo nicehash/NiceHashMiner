@@ -1,4 +1,6 @@
 ﻿using NHM.Common;
+using NHMCore.Mining;
+using System.Collections.Generic;
 
 namespace NHMCore.Configs
 {
@@ -101,6 +103,33 @@ namespace NHMCore.Configs
             }
         }
 
+        public IEnumerable<ComputeDevice> GPUs => AvailableDevices.GPUs;
+
+        private string _deviceToPauseUuid = "";
+
+        public string DeviceToPauseUuid
+        {
+            get => _deviceToPauseUuid;
+            set
+            {
+                _deviceToPauseUuid = value;
+                OnPropertyChanged(nameof(DeviceToPauseUuid));
+            }
+        }
+
+        public int DeviceIndex
+        {
+            get => AvailableDevices.GetDeviceIndexFromUuid(DeviceToPauseUuid);
+            set
+            {
+                var newDevice = AvailableDevices.GetDeviceUuidFromIndex(value);
+                if (DeviceToPauseUuid != newDevice)
+                {
+                    DeviceToPauseUuid = newDevice;
+                }
+                OnPropertyChanged(nameof(DeviceIndex));
+            }
+        }
         public bool HideMiningWindowsAlertVisible => MinimizeMiningWindows && HideMiningWindows;
     }
 }

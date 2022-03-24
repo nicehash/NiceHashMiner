@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.DeviceMonitoring;
 using NHM.MinerPlugin;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
@@ -10,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NHM.DeviceMonitoring;
 
 namespace NHMCore.Mining
 {

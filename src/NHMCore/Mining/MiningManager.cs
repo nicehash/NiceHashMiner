@@ -29,6 +29,8 @@ namespace NHMCore.Mining
         private static bool _isGameRunning;
 
         private static bool _isPauseMiningWhenGamingEnabled;
+
+        private static string _deviceToPauseUuid;
         public static bool IsMiningEnabled => _miningDevices.Any();
 
 
@@ -87,6 +89,13 @@ namespace NHMCore.Mining
             public IsSteamGameRunningChangedCommand(bool isSteamGameRunning) { this.isSteamGameRunning = isSteamGameRunning; }
 
             public bool isSteamGameRunning { get; private set; }
+        }
+
+        private class GPUToPauseChangedCommand : MainCommand
+        {
+            public GPUToPauseChangedCommand(string gpuUuid) { this.gpuUuid = gpuUuid; }
+
+            public string gpuUuid { get; private set; }
         }
 
         #region Deferred Device Commands
@@ -167,6 +176,14 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
+        private static Task SelectedGPUSettingsChanged(string selectedGPUUuid)
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new GPUToPauseChangedCommand(selectedGPUUuid);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
         private static Task IsSteamGameRunningStatusChanged(bool isSteamGameRunning)
         {
             if (RunninLoops == null) return Task.CompletedTask;
@@ -216,6 +233,9 @@ namespace NHMCore.Mining
 
             _isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
             MiningSettings.Instance.PropertyChanged += PauseMiningWhenGamingModeInstance_PropertyChanged;
+
+            _deviceToPauseUuid = MiningSettings.Instance.DeviceToPauseUuid;
+            MiningSettings.Instance.PropertyChanged += DeviceToPauseUuid_PropertyChanged;
         }
 
         public static void StartLoops(CancellationToken stop, string username)
@@ -250,6 +270,14 @@ namespace NHMCore.Mining
             if (e.PropertyName == nameof(MiningSettings.PauseMiningWhenGamingMode))
             {
                 _ = PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode);
+            }
+        }
+
+        private static void DeviceToPauseUuid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MiningSettings.DeviceToPauseUuid))
+            {
+                _ = SelectedGPUSettingsChanged(MiningSettings.Instance.DeviceToPauseUuid);
             }
         }
 
@@ -577,10 +605,21 @@ namespace NHMCore.Mining
             else if (command is PauseMiningWhenGamingModeSettingsChangedCommand pauseMiningWhenGamingModeSettingsChangedCommand)
             {
                 _isPauseMiningWhenGamingEnabled = pauseMiningWhenGamingModeSettingsChangedCommand.isPauseMiningWhenGamingModeSettingEnabled;
+                if (!_isPauseMiningWhenGamingEnabled)
+                {
+                    var dev = AvailableDevices.Devices.FirstOrDefault(d => d.IsGaming == true);
+                    if (dev != null) dev.IsGaming = false;
+                }
             }
             else if (command is IsSteamGameRunningChangedCommand isSteamGameRunningChangedCommand)
             {
                 _isGameRunning = isSteamGameRunningChangedCommand.isSteamGameRunning;
+            }
+            else if (command is GPUToPauseChangedCommand gpuToPauseChangedCommand)
+            {
+                _deviceToPauseUuid = gpuToPauseChangedCommand.gpuUuid;
+                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
+                if (dev != null) dev.IsGaming = false;
             }
 
             // here we do the deciding
@@ -604,15 +643,19 @@ namespace NHMCore.Mining
                 await StopAllMinersTask();
                 ApplicationStateManager.StopMining();
             }
-            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled)
+            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled && _deviceToPauseUuid != null)
             {
                 AvailableNotifications.CreateGamingStarted();
-                await PauseAllMiners();
+                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
+                dev.IsGaming = true;
+                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
+                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
             else if(!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand)
             {
                 AvailableNotifications.CreateGamingFinished();
-                ApplicationStateManager.StartMining();
+                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
+                dev.IsGaming = false;
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }

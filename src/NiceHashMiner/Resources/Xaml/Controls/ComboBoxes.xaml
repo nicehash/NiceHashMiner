@@ -225,4 +225,33 @@
             </Style>
         </Style.Resources>
     </Style>
+
+    <Style TargetType="ComboBox" x:Key="smallComboBoxSteam" BasedOn="{StaticResource ComboBoxStyle}">
+        <Setter Property="Width" Value="300" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="16,0,0,0" />
+        <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+
+        <Style.Resources>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+        </Style.Resources>
+        
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding MiningSettings.PauseMiningWhenGamingMode}" Value="True">
+                <Setter Property="Visibility" Value="Visible"></Setter>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding MiningSettings.PauseMiningWhenGamingMode}" Value="False">
+                <Setter Property="Visibility" Value="Collapsed"></Setter>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

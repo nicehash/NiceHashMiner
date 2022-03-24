@@ -12,6 +12,9 @@ namespace NHMCore.Mining
         private static readonly List<ComputeDevice> _devices = new List<ComputeDevice>();
         public static IReadOnlyList<ComputeDevice> Devices => _devices;
 
+        private static readonly List<ComputeDevice> _gpus = new List<ComputeDevice>();
+        public static IReadOnlyList<ComputeDevice> GPUs => _gpus;
+
         public static bool HasNvidia => Devices.Any(d => d.DeviceType == DeviceType.NVIDIA);
         public static bool HasAmd => Devices.Any(d => d.DeviceType == DeviceType.AMD);
         public static bool HasCpu => Devices.Any(d => d.DeviceType == DeviceType.CPU);
@@ -60,6 +63,7 @@ namespace NHMCore.Mining
         internal static void AddDevice(ComputeDevice dev)
         {
             _devices.Add(dev);
+            if (dev.DeviceType != DeviceType.CPU) _gpus.Add(dev);
         }
 
         internal static bool IsEnableAllDevicesRedundantOperation()
@@ -108,6 +112,27 @@ namespace NHMCore.Mining
             {
                 if (dev.BaseDevice is CPUDevice cpu && cpu.CpuID.IsZen == false) dev.Enabled = false;
             }
+        }
+
+        public static int GetDeviceIndexFromUuid(string uuid)
+        {
+            for (var i = 0; i < _gpus.Count; i++)
+            {
+                var gpu = _gpus[i];
+                if (gpu.Uuid == uuid) {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        public static string GetDeviceUuidFromIndex(int index)
+        {
+            if (index < _gpus.Count)
+            {
+                return _gpus[index].Uuid;
+            }
+            return "";
         }
     }
 }

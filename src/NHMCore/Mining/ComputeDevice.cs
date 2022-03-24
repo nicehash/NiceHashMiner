@@ -65,6 +65,18 @@ namespace NHMCore.Mining
             }
         }
 
+        private bool _isGaming = false;
+
+        public bool IsGaming
+        {
+            get => _isGaming;
+            internal set
+            {
+                if (_isGaming == value) return;
+                _isGaming = value;
+            }
+        }
+
         internal bool StartState { get; set; } = false;
 
         private readonly object _lock = new object();
