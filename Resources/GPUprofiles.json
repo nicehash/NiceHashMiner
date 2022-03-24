@@ -1,0 +1,278 @@
+{
+  "data_version": 8,
+  "iteration": 1,
+  "op_names": [
+    { "id": 1, "name": "Lite" }, 
+    { "id": 2, "name": "Medium" }, 
+    { "id": 3, "name": "High" }, 
+    { "id": 4, "name": "Extreme" }, 
+    { "id": 11, "name": "Efficient" }, 
+    { "id": 12, "name": "EfficientLow" },
+    { "id": 101, "name": "Enterprise" }
+  ],
+  "devices": [
+    { "name": "AMD Radeon RX 580 Series", "op": [
+        { "id": 1, "pt": 4, "mmc": 2100, "mcc": 1150, "mcv": 950, "fm": 3, "ftg" : 65,"mt":[["REF","30"]]}
+    ]},
+    { "name": "AMD Radeon (TM) RX 480 Graphics", "op": [
+        { "id": 1, "pt": 4, "mmc": 2050, "mcc": 1150, "mcv": 900, "fm": 3, "ftg" : 65,"mt":[["REF","30"]]}
+    ]},
+    { "name": "AMD Radeon RX Vega 64", "op": [
+      { "id": 3, "pt": 4, "mmc": 1050, "mcc": 1100, "mcv": 870, "fm": 3, "ftg" : 65,"rm":"Samsung","mt":[["CL","20"],["RAS","30"],["RCDRD","14"],["RCDWR","12"],["RC","44"],["RRDS","3"],["RRDL","6"],["RTP","5"],["FAW","12"],["CWL","8"],["WTRS","4"],["WTRL","9"],["WR","14"],["REF","17000"],["RFC","249"]]},
+      { "id": 3, "pt": 4, "mmc": 1050, "mcc": 1100, "mcv": 870, "fm": 3, "ftg" : 65},
+      { "id": 2, "pt": 4, "mmc": 1030, "mcc": 1100, "mcv": 900, "fm": 3, "ftg" : 65,"rm":"Samsung","mt":[["CL","20"],["RAS","30"],["RCDRD","14"],["RCDWR","12"],["RC","44"],["RRDS","3"],["RRDL","6"],["RTP","5"],["FAW","12"],["CWL","8"],["WTRS","4"],["WTRL","9"],["WR","14"],["REF","17000"],["RFC","249"]]},
+      { "id": 2, "pt": 4, "mmc": 1030, "mcc": 1100, "mcv": 900, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 4, "mmc": 1000, "mcc": 1100, "mcv": 900, "fm": 3, "ftg" : 65,"rm":"Samsung","mt":[["CL","20"],["RAS","30"],["RCDRD","14"],["RCDWR","12"],["RC","44"],["RRDS","3"],["RRDL","6"],["RTP","5"],["FAW","12"],["CWL","8"],["WTRS","4"],["WTRL","9"],["WR","14"],["REF","17000"],["RFC","249"]]}
+    ]},
+    {"name":"AMD Radeon RX Vega 56","op":[
+      {"id":2,"pt":5,"mmc":925,"mcc":900,"mcv":850,"pl":250,"fm":3,"ftg":55,"rm":"Hynix","mt":[["CL","18"],["RAS","23"],["RCDRD","22"],["RCDWR","11"],["RC","34"],["RP","13"],["RRDS","3"],["RRDL","4"],["RTP","6"],["FAW","12"],["CWL","7"],["WTRS","4"],["WTRL","4"],["WR","11"],["RFC","164"],["REF","15000"]]},     
+      {"id":2,"pt":5,"mmc":925,"mcc":900,"mcv":850,"pl":250,"fm":3,"ftg":55,"mt":[["CL","18"],["RAS","23"],["RCDRD","22"],["RCDWR","11"],["RC","34"],["RP","13"],["RRDS","3"],["RRDL","4"],["RTP","6"],["FAW","12"],["CWL","7"],["WTRS","4"],["WTRL","4"],["WR","11"],["RFC","164"],["REF","15000"]]},
+      {"id":1,"pt":5,"mmc":850,"mcc":1200,"mcv":1000,"pl":300,"fm":3,"ftg":55,"rm":"Hynix","mt":[["CL","18"],["RAS","23"],["RCDRD","22"],["RCDWR","11"],["RC","34"],["RP","13"],["RRDS","3"],["RRDL","4"],["RTP","6"],["FAW","12"],["CWL","7"],["WTRS","4"],["WTRL","4"],["WR","11"],["RFC","164"],["REF","15000"]]},
+      {"id":1,"pt":5,"mmc":850,"mcc":1200,"mcv":1000,"pl":300,"fm":3,"ftg":55,"mt":[["CL","18"],["RAS","23"],["RCDRD","22"],["RCDWR","11"],["RC","34"],["RP","13"],["RRDS","3"],["RRDL","4"],["RTP","6"],["FAW","12"],["CWL","7"],["WTRS","4"],["WTRL","4"],["WR","11"],["RFC","164"],["REF","15000"]]}
+    ]},
+    { "name": "AMD Radeon VII", "op": [
+      { "id": 3, "pt": 4, "mmc": 1190, "mcc": 1900, "mcv": 1020, "fm": 3, "ftg" : 65},
+      { "id": 2, "pt": 4, "mmc": 1190, "mcc": 1800, "mcv": 950, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 4, "mmc": 1100, "mcc": 1740, "mcv": 950, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "AMD Radeon RX 5700 XT", "op": [
+      { "id": 101, "pt": 5, "mmc": 1890, "mcc": 1300, "mcv": 800, "fm": 3, "ftg" : 65},
+      { "id": 12, "pt": 5, "mmc": 1850, "mcc": 1250, "mcv": 780, "fm": 3, "ftg" : 65},
+      { "id": 11, "pt": 5, "mmc": 1800, "mcc": 1300, "mcv": 780, "fm": 3, "ftg" : 65},
+      { "id": 3, "pt": 5, "mmc": 1870, "mcc": 1250, "mcv": 800, "fm": 3, "ftg" : 65},
+      { "id": 2, "pt": 5, "mmc": 1850, "mcc": 1300, "mcv": 800, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 5, "mmc": 1800, "mcc": 1300, "mcv": 850, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "AMD Radeon RX 5700", "op": [
+      { "id": 3, "pt": 4, "mmc": 1840, "mcc": 1300, "mcv": 910, "fm": 3, "ftg" : 65},
+      { "id": 2, "pt": 4, "mmc": 1825, "mcc": 1300, "mcv": 900, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 4, "mmc": 1790, "mcc": 1325, "mcv": 925, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "AMD Radeon RX 6900 XT", "op": [
+      { "id": 2, "pt": 5, "mmc": 2138, "mcc": 1450, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 5, "mmc": 2100, "mcc": 1400, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "AMD Radeon RX 6800 XT", "op": [
+      { "id": 3, "pt": 5, "mmc": 2138, "mcc": 1300, "fm": 3, "ftg" : 65},
+      { "id": 2, "pt": 5, "mmc": 2138, "mcc": 1400, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 5, "mmc": 2100, "mcc": 1500, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "AMD Radeon RX 6800", "op": [
+      { "id": 2, "pt": 5, "mmc": 2230, "mcc": 1250, "fm": 3, "ftg" : 65},
+      { "id": 2, "pt": 5, "mmc": 2200, "mcc": 1200, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 5, "mmc": 2100, "mcc": 1400, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "AMD Radeon RX 6700 XT", "op": [
+      { "id": 2, "pt": 5, "mmc": 2138, "mcc": 1200, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 5, "mmc": 2100, "mcc": 1300, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "AMD Radeon RX 6600 XT", "op": [
+      { "id": 2, "pt": 5, "mmc": 2230, "mcc": 950, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 5, "mmc": 2150, "mcc": 1100, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "AMD Radeon RX 6600", "op": [
+      { "id": 2, "pt": 5, "mmc": 1890, "mcc": 900, "fm": 3, "ftg" : 65},
+      { "id": 1, "pt": 5, "mmc": 1800, "mcc": 1300, "fm": 3, "ftg" : 65}
+    ]},
+    { "name": "CMP 90HX", "op": [
+      { "id": 12, "pt": 0, "dmc": 500, "mcc": 1305, "fm": 3, "ftg" : 58, "ftr": 90 },
+      { "id": 11, "pt": 0, "dmc": 900, "mcc": 1290, "fm": 3, "ftg" : 60, "ftr": 93 },
+      { "id": 3, "pt": 0, "dmc": 1100, "mcc": 1545, "fm": 3, "ftg" : 60, "ftr": 94 },
+      { "id": 2, "pt": 0, "dmc": 900, "mcc": 1515, "fm": 3, "ftg" : 60, "ftr": 94 },
+      { "id": 1, "pt": 0, "dmc": 500, "mcc": 1440, "fm": 3, "ftg" : 60, "ftr": 90 }
+    ]},
+    { "name": "GeForce RTX 3090", "op": [
+      { "id": 4, "pt": 0, "dmc": 1500, "mcc": 1200, "fm": 3, "ftg" : 50, "ftr": 74 },
+      { "id": 3, "pt": 0, "dmc": 1200, "mcc": 1140, "fm": 3, "ftg" : 56, "ftr": 90 },
+      { "id": 2, "pt": 0, "dmc": 800, "mcc": 1065, "fm": 3, "ftg" : 58, "ftr": 94 },
+      { "id": 1, "pt": 0, "dmc": -400, "mcc": 945, "fm": 3, "ftg" : 62, "ftr": 94 }
+    ]},
+    { "name": "GeForce RTX 3080 Ti", "op": [
+      { "id": 11, "pt": 0, "dmc": 1600, "mcc": 600, "fm": 3, "ftg" : 58, "ftr": 88, "lhr": [43, 72]},
+      { "id": 3, "pt": 0, "dmc": 1500, "mcc": 1600, "fm": 3, "ftg" : 64, "ftr": 90, "lhr": [43, 76]},
+      { "id": 2, "pt": 0, "dmc": 1300, "mcc": 1505, "fm": 3, "ftg" : 62, "ftr": 94, "lhr": [43, 75]},
+      { "id": 1, "pt": 0, "dmc": 1200, "mcc": 1530, "fm": 3, "ftg" : 62, "ftr": 94, "lhr": [40, 71]}
+    ]},
+    { "name": "GeForce RTX 3080", "op": [
+      { "id": 4, "pt": 0, "dmc": 1600, "mcc": 1290, "fm": 3, "ftg" : 50, "ftr": 74, "lhr": [45, 71]},
+      { "id": 3, "pt": 0, "dmc": 1300, "mcc": 1200, "fm": 3, "ftg" : 56, "ftr": 90, "lhr": [45, 72]},
+      { "id": 2, "pt": 0, "dmc": 900, "mcc": 1080, "fm": 3, "ftg" : 58, "ftr": 94, "lhr": [43, 71]},
+      { "id": 1, "pt": 0, "dmc": 300, "mcc": 975, "fm": 3, "ftg" : 62, "ftr": 94, "lhr": [42, 70]}
+    ]},
+    { "name": "GeForce RTX 3070 Ti", "op": [
+      { "id": 4, "pt": 0, "dmc": 2150, "mcc": 1550, "fm": 3, "ftg" : 62, "ftr": 88, "lhr": [45, 72.10] },
+      { "id": 3, "pt": 0, "dmc": 2000, "mcc": 1475, "fm": 3, "ftg" : 62, "ftr": 88, "lhr": [45, 72] },
+      { "id": 2, "pt": 0, "dmc": 1750, "mcc": 1450, "fm": 3, "ftg" : 64, "ftr": 88, "lhr": [45, 72.10] },
+      { "id": 1, "pt": 0, "dmc": 1000, "mcc": 1100, "fm": 3, "ftg" : 64, "ftr": 88, "lhr": [44, 71] }
+    ]},
+    { "name": "GeForce RTX 3070", "op": [
+      { "id": 3, "pt": 0, "dmc": 1370, "mcc": 1110, "fm": 3, "ftg" : 56, "ftr": 68, "lhr": [33, 72]},
+      { "id": 2, "pt": 0, "dmc": 1170, "mcc": 1065, "fm": 3, "ftg" : 58, "ftr": 70, "lhr": [33, 72]},
+      { "id": 1, "pt": 0, "dmc": 900, "mcc": 810, "fm": 3, "ftg" : 62, "ftr": 72, "lhr": [33, 72]}
+    ]},
+    { "name": "GeForce RTX 3060 Ti", "op": [
+      { "id": 3, "pt": 0, "dmc": 1320, "mcc": 1380, "fm": 3, "ftg" : 56, "ftr": 68, "lhr": [34, 74]},
+      { "id": 2, "pt": 0, "dmc": 1120, "mcc": 1350, "fm": 3, "ftg" : 58, "ftr": 70, "lhr": [34, 74]},
+      { "id": 1, "pt": 0, "dmc": 800, "mcc": 1320, "fm": 3, "ftg" : 62, "ftr": 72, "lhr": [34, 72]}
+    ]},
+    { "name": "GeForce RTX 3060", "op": [
+      { "id": 3, "pt": 0, "dmc": 1200, "mcc": 1560, "fm": 3, "ftg" : 56, "ftr": 68, "lhr": [34, 70]},
+      { "id": 2, "pt": 0, "dmc": 1000, "mcc": 1500, "fm": 3, "ftg" : 58, "ftr": 70, "lhr": [34, 72]},
+      { "id": 1, "pt": 0, "dmc": 700, "mcc": 1440, "fm": 3, "ftg" : 62, "ftr": 72, "lhr": [33, 70]}
+    ]},
+    { "name": "TITAN RTX", "op": [
+      { "id": 4, "pt": 0, "dmc": 1500, "mcc": 1065, "fm": 3, "ftg" : 50, "ftr": 64 },
+      { "id": 3, "pt": 0, "dmc": 1300, "mcc": 1050, "fm": 3, "ftg" : 56, "ftr": 68 },
+      { "id": 2, "pt": 0, "dmc": 1100, "mcc": 1020, "fm": 3, "ftg" : 58, "ftr": 70 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 960, "fm": 3, "ftg" : 62, "ftr": 72 }
+    ]},
+    { "name": "GeForce RTX 2080 Ti", "op": [
+      { "id": 4, "pt": 0, "dmc": 1400, "mcc": 1110, "fm": 3, "ftg" : 50, "ftr": 64 },
+      { "id": 3, "pt": 0, "dmc": 1100, "mcc": 1080, "fm": 3, "ftg" : 56, "ftr": 68 },
+      { "id": 2, "pt": 0, "dmc": 900, "mcc": 1050, "fm": 3, "ftg" : 58, "ftr": 70 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 990, "fm": 3, "ftg" : 62, "ftr": 72 }
+    ]},
+    { "name": "GeForce RTX 2080 SUPER", "op": [
+      { "id": 3, "pt": 0, "dmc": 1100, "mcc": 1200, "fm": 3, "ftg" : 56, "ftr": 68 },
+      { "id": 2, "pt": 0, "dmc": 900, "mcc": 1200, "fm": 3, "ftg" : 58, "ftr": 70 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 1080, "fm": 3, "ftg" : 62, "ftr": 72 }
+    ]},
+    { "name": "GeForce RTX 2080", "op": [
+      { "id": 3, "pt": 0, "dmc": 1100, "mcc": 1050, "fm": 3, "ftg" : 56, "ftr": 68 },
+      { "id": 2, "pt": 0, "dmc": 900, "mcc": 1020, "fm": 3, "ftg" : 58, "ftr": 70 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 990, "fm": 3, "ftg" : 62, "ftr": 72 }
+    ]},
+    { "name": "GeForce RTX 2070 SUPER", "op": [
+      { "id": 3, "pt": 0, "dmc": 1000, "mcc": 1020, "fm": 3, "ftg" : 56, "ftr": 68 },
+      { "id": 2, "pt": 0, "dmc": 800, "mcc": 990, "fm": 3, "ftg" : 58, "ftr": 70 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 960, "fm": 3, "ftg" : 62, "ftr": 72 }
+    ]},
+    { "name": "GeForce RTX 2070", "op": [
+      { "id": 3, "pt": 0, "dmc": 1000, "mcc": 1050, "fm": 3, "ftg" : 56, "ftr": 68 },
+      { "id": 2, "pt": 0, "dmc": 800, "mcc": 1020, "fm": 3, "ftg" : 58, "ftr": 70 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 930, "fm": 3, "ftg" : 62, "ftr": 72 }
+    ]},
+    { "name": "GeForce RTX 2060 SUPER", "op": [
+      { "id": 4, "pt": 0, "dmc": 1200, "mcc": 1050, "fm": 3, "ftg" : 50, "ftr": 64 },
+      { "id": 3, "pt": 0, "dmc": 1000, "mcc": 1290, "fm": 3, "ftg" : 56, "ftr": 68 },
+      { "id": 2, "pt": 0, "dmc": 800, "mcc": 1200, "fm": 3, "ftg" : 58, "ftr": 70 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 1080, "fm": 3, "ftg" : 62, "ftr": 72 }
+    ]},
+    { "name": "GeForce RTX 2060", "op": [
+      { "id": 3, "pt": 0, "dmc": 1000, "mcc": 1020, "fm": 3, "ftg" : 56, "ftr": 68 },
+      { "id": 2, "pt": 0, "dmc": 800, "mcc": 1020, "fm": 3, "ftg" : 58, "ftr": 70 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 990, "fm": 3, "ftg" : 62, "ftr": 72 }
+    ]},
+    { "name": "GeForce GTX 1660 Ti", "op": [
+      { "id": 3, "pt": 0, "dmc": 1000, "mcc": 930, "fm": 3, "ftg" : 56, "ftr": 70 },
+      { "id": 2, "pt": 0, "dmc": 800, "mcc": 810, "fm": 3, "ftg" : 58, "ftr": 74 },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 720, "fm": 3, "ftg" : 62, "ftr": 78 }
+    ]},
+    { "name": "GeForce GTX 1660 SUPER", "op": [
+      { "id": 11, "pt": 2, "dmc": -505, "mcc": 960, "mcv": 625, "fm": 3, "ftg" : 62, "ftr": 78, "mt": [], "rm": "Hynix" },
+      { "id": 11, "pt": 2, "dmc": 600, "mcc": 990, "mcv": 625, "fm": 3, "ftg" : 62, "ftr": 78, "mt": [], "rm": "Micron" },
+      { "id": 11, "pt": 2, "dmc": 900, "mcc": 960, "mcv": 625, "fm": 3, "ftg" : 62, "ftr": 78, "mt": [] },
+      { "id": 2, "pt": 0, "dmc": -505, "mcc": 960, "fm": 3, "ftg" : 58, "ftr": 74, "rm": "Hynix" },
+      { "id": 2, "pt": 0, "dmc": 400, "mcc": 870, "fm": 3, "ftg" : 58, "ftr": 74, "rm": "Micron" },
+      { "id": 2, "pt": 0, "dmc": 900, "mcc": 960, "fm": 3, "ftg" : 58, "ftr": 74 },
+      { "id": 1, "pt": 0, "dmc": -705, "mcc": 870, "fm": 3, "ftg" : 62, "ftr": 78, "rm": "Hynix" },
+      { "id": 1, "pt": 0, "dmc": -505, "mcc": 720, "fm": 3, "ftg" : 62, "ftr": 78, "rm": "Micron" },
+      { "id": 1, "pt": 0, "dmc": 600, "mcc": 870, "fm": 3, "ftg" : 62, "ftr": 78 }
+    ]},
+    { "name": "GeForce GTX 1660", "op": [
+      { "id": 12, "pt": 2, "dmc": 400, "mcc": 1200, "mcv": 625, "fm": 3, "ftg" : 62, "ftr": 78, "mt": [] },
+      { "id": 11, "pt": 2, "dmc": 600, "mcc": 1230, "mcv": 625, "fm": 3, "ftg" : 62, "ftr": 78, "mt": [] },
+      { "id": 3, "pt": 2, "dmc": 800, "mcc": 1260, "mcv": 625, "fm": 3, "ftg" : 58, "ftr": 74, "mt": [] },
+      { "id": 2, "pt": 0, "dmc": 600, "mcc": 1230, "fm": 3, "ftg" : 58, "ftr": 74 },
+      { "id": 1, "pt": 0, "dmc": 400, "mcc": 1200, "fm": 3, "ftg" : 62, "ftr": 78 }
+    ]},
+    { "name": "TITAN V", "op": [
+      { "id": 11, "pt": 0, "dmc": 0, "mcc": 900, "fm": 3, "ftg" : 62, "ftr": 78, "mt": [["FAW","12"],["RRD","3"],["REFRESH","10"],["REFRESH_LO","7"],["RD_RCD","10"],["RFC","251"],["RC","45"],["RAS","23"],["RP","22"]] },
+      { "id": 3, "pt": 0, "dmc": 45, "mcc": 960, "fm": 3, "ftg" : 56, "ftr": 70 },
+      { "id": 2, "pt": 0, "dmc": 15, "mcc": 930, "fm": 3, "ftg" : 58, "ftr": 74 },
+      { "id": 1, "pt": 0, "dmc": 0, "mcc": 930, "fm": 3, "ftg" : 62, "ftr": 78 }
+    ]},
+    { "name": "TITAN Xp COLLECTORS EDITION", "op": [
+      { "id": 12, "pt": 2, "dmc": -910, "mcc": 1560, "mcv": 800, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","8"],["REFRESH_LO","4"],["RD_RCD","23"],["RFC","128"]] },
+      { "id": 11, "pt": 2, "dmc": -400, "mcc": 1800, "mcv": 850, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 2, "pt": 1, "dmc": -50, "dcc": 30, "pl": 210, "fm": 2, "ftg" : 58, "mt": [["FAW","16"],["RRD","4"]] },
+      { "id": 1, "pt": 1, "dmc": -20, "dcc": 0, "pl": 160, "fm": 2, "ftg" : 62, "mt": [["FAW","20"],["RRD","5"]] }
+    ]},
+    { "name": "TITAN Xp", "op": [
+      { "id": 12, "pt": 2, "dmc": -910, "mcc": 1560, "mcv": 800, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","8"],["REFRESH_LO","4"],["RD_RCD","23"],["RFC","128"]] },
+      { "id": 11, "pt": 2, "dmc": -400, "mcc": 1800, "mcv": 850, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 2, "pt": 1, "dmc": -50, "dcc": 30, "pl": 210, "fm": 2, "ftg" : 58, "mt": [["FAW","16"],["RRD","4"]] },
+      { "id": 1, "pt": 1, "dmc": -20, "dcc": 0, "pl": 160, "fm": 2, "ftg" : 62, "mt": [["FAW","20"],["RRD","5"]] }
+    ]},
+    { "name": "TITAN X (Pascal)", "op": [
+      { "id": 12, "pt": 2, "dmc": -910, "mcc": 1560, "mcv": 800, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","8"],["REFRESH_LO","4"],["RD_RCD","23"],["RFC","128"]] },
+      { "id": 11, "pt": 2, "dmc": -400, "mcc": 1800, "mcv": 850, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 3, "pt": 2, "dmc": -1, "mcc": 2010, "mcv": 1000, "fm": 2, "ftg" : 58, "mt": [["FAW","16"],["RRD","4"],["RFC","110"],["REFRESH","7"]] },
+      { "id": 2, "pt": 1, "dmc": -50, "dcc": 30, "pl": 210, "fm": 2, "ftg" : 58, "mt": [["FAW","16"],["RRD","4"]] },
+      { "id": 1, "pt": 1, "dmc": -20, "dcc": 0, "pl": 160, "fm": 2, "ftg" : 62, "mt": [["FAW","20"],["RRD","5"]] }
+    ]},
+    { "name": "GeForce GTX 1080 Ti", "op": [
+      { "id": 12, "pt": 2, "dmc": -910, "mcc": 1560, "mcv": 800, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","8"],["REFRESH_LO","4"],["RD_RCD","23"],["RFC","128"]] },
+      { "id": 11, "pt": 2, "dmc": -400, "mcc": 1800, "mcv": 850, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 4, "pt": 2, "dmc": 200, "mcc": 2100, "mcv": 1000, "fm": 2, "ftg" : 52, "mt": [["FAW","16"],["RRD","4"],["RFC","120"],["REFRESH","7"]] },
+      { "id": 3, "pt": 2, "dmc": -17, "mcc": 2010, "mcv": 1000, "fm": 2, "ftg" : 58, "mt": [["FAW","16"],["RRD","4"],["RFC","120"]] },
+      { "id": 2, "pt": 1, "dmc": -50, "dcc": 30, "pl": 210, "fm": 2, "ftg" : 58, "mt": [["FAW","16"],["RRD","4"]] },
+      { "id": 1, "pt": 1, "dmc": -20, "dcc": 0, "pl": 160, "fm": 2, "ftg" : 62, "mt": [["FAW","20"],["RRD","5"]] }
+    ]},
+    { "name": "GeForce GTX 1080", "op": [
+      { "id": 12, "pt": 2, "dmc": -612, "mcc": 1470, "mcv": 750, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 11, "pt": 2, "dmc": 275, "mcc": 1800, "mcv": 850, "fm": 2, "ftg" : 62, "mt": [["FAW","16"],["RRD","4"]] },
+      { "id": 3, "pt": 2, "dmc": 275, "mcc": 1900, "mcv": 950, "fm": 2, "ftg" : 58, "mt": [["FAW","16"],["RRD","4"]] },
+      { "id": 2, "pt": 1, "dmc": -2, "dcc": 0, "pl": 130, "fm": 2, "ftg" : 58, "mt": [["FAW","16"],["RRD","4"]] },
+      { "id": 1, "pt": 1, "dmc": -1, "dcc": 0, "pl": 100, "fm": 2, "ftg" : 62, "mt": [["FAW","20"],["RRD","5"]] }
+    ]},
+    { "name": "GeForce GTX 1070 Ti", "op": [
+      { "id": 12, "pt": 2, "dmc": 200, "mcc": 1485, "mcv": 750, "fm": 2, "ftg" : 62, "mt": [["FAW","28"],["RRD","7"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 11, "pt": 2, "dmc": 300, "mcc": 1560, "mcv": 750, "fm": 2, "ftg" : 62, "mt": [["FAW","28"],["RRD","7"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 3, "pt": 2, "dmc": 800, "mcc": 1850, "mcv": 900, "fm": 2, "ftg" : 56, "mt": [["FAW","28"],["RRD","7"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 2, "pt": 1, "dmc": 500, "dcc": 45, "pl": 125, "fm": 2, "ftg" : 58, "mt": [["FAW","28"],["RRD","7"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 1, "pt": 1, "dmc": 300, "dcc": 0, "pl": 110, "fm": 2, "ftg" : 62, "mt": [] }
+    ]},
+    { "name": "GeForce GTX 1070", "op": [
+      { "id": 12, "pt": 2, "dmc": -200, "mcc": 1560, "mcv": 750, "fm": 2, "ftg" : 62, "mt": [] },
+      { "id": 11, "pt": 2, "dmc": 50, "mcc": 1800, "mcv": 850, "fm": 2, "ftg" : 62, "mt": [["FAW","28"],["RRD","7"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 3, "pt": 2, "dmc": 300, "mcc": 2010, "mcv": 1000, "fm": 2, "ftg" : 58, "mt": [] },
+      { "id": 2, "pt": 1, "dmc": 300, "dcc": 45, "pl": 140, "fm": 2, "ftg" : 58, "mt": [] },
+      { "id": 1, "pt": 1, "dmc": 0, "dcc": 0, "pl": 120, "fm": 2, "ftg" : 62, "mt": [] }
+    ]},
+    { "name": "GeForce GTX 1060 6GB", "op": [
+      { "id": 12, "pt": 2, "dmc": -25, "mcc": 1485, "mcv": 750, "fm": 2, "ftg" : 62, "mt": [["FAW","28"],["RRD","7"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 11, "pt": 2, "dmc": 600, "mcc": 1800, "mcv": 850, "fm": 2, "ftg" : 62, "mt": [["FAW","28"],["RRD","7"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 3, "pt": 2, "dmc": 775, "mcc": 1950, "mcv": 950, "fm": 2, "ftg" : 58, "mt": [["FAW","32"],["RRD","8"]] },
+      { "id": 2, "pt": 1, "dmc": 600, "dcc": 45, "pl": 90, "fm": 2, "ftg" : 58, "mt": [["FAW","28"],["RRD","7"],["REFRESH","7"],["REFRESH_LO","3"]] },
+      { "id": 1, "pt": 1, "dmc": 300, "dcc": 0, "pl": 80, "fm": 2, "ftg" : 62, "mt": [] }
+    ]},
+    { "pci_devs": ["20F1"], "op": [
+      { "id": 101, "pt": 3, "mcc": 960, "pl": 0, "mt": [] }
+    ]},
+    { "pci_devs": ["2235"], "op": [
+      { "id": 101, "pt": 3, "mcc": 810, "pl": 0, "mt": [] }
+    ]},
+    { "pci_devs": ["1EB8"], "op": [
+      { "id": 101, "pt": 3, "mcc": 420, "pl": 0, "mt": [] }
+    ]},
+    { "pci_devs": ["1B38"], "op": [
+      { "id": 101, "pt": 3, "mcc": 0, "pl": 160, "mt": [] }
+    ]},
+    { "pci_devs": ["1EB1"], "op": [
+      { "id": 101, "pt": 0, "dmc": 0, "mcc": 810, "fm": 3, "ftg" : 60, "ftr": 76 }
+    ]},
+    { "pci_devs": ["1E30"], "op": [
+      { "id": 101, "pt": 0, "dmc": 0, "mcc": 960, "fm": 3, "ftg" : 60, "ftr": 76 }
+    ]},
+    { "pci_devs": ["1C31"], "op": [
+      { "id": 101, "pt": 0, "dmc": 0, "mcc": 0, "fm": 3, "ftg" : 60, "ftr": 76, "mt": [["FAW","16"],["RRD","4"]] }
+    ]},
+    { "pci_devs": ["15F0"], "op": [
+      { "id": 101, "pt": 1, "dmc": 0, "mcc": 0, "pl": 150, "fm": 3, "ftg" : 60, "ftr": 76, "mt": [] }
+    ]},
+    { "pci_devs": ["2231"], "op": [
+      { "id": 101, "pt": 0, "dmc": 0, "mcc": 990, "fm": 3, "ftg" : 60, "ftr": 84 }
+    ]}
+  ]
+}

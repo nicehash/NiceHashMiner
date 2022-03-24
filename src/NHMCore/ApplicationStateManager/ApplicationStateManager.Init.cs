@@ -91,6 +91,7 @@ namespace NHMCore
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
                 OutsideProcessMonitor.Init(ExitApplication.Token);
+                GPUProfileManager.Init();
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
                 var index = 0;
@@ -273,7 +274,7 @@ namespace NHMCore
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
 
                 // STEP
-                // Cross reference plugin indexes
+                // Cross reference plugin indexes 
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
