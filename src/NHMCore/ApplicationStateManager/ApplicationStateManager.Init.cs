@@ -86,19 +86,11 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateWarningNVIDIADCHInfo();
                 }
-                if (DeviceDetection.DetectionResult.AMDDriverObsolete)
-                {
-                    AvailableNotifications.CreateOutdatedAMDDriverWarning(DeviceDetectionResult.MinimumAMDDriver);
-                }
-                if (DeviceDetection.DetectionResult.NVIDIADriverObsolete)
-                {
-                    AvailableNotifications.CreateOutdatedNVIDIADriverWarning(DeviceDetectionResult.MinimumNVIDIADriver);
-                }
-                if (!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
+                if(!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
-
+                OutsideProcessMonitor.Init(ExitApplication.Token);
                 // add devices
                 var detectionResult = DeviceDetection.DetectionResult;
                 var index = 0;

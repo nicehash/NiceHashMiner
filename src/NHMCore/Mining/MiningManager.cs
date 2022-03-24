@@ -34,10 +34,9 @@ namespace NHMCore.Mining
         public static bool IsMiningEnabled => _miningDevices.Any();
 
 
-        private static CancellationToken stopMiningManager = CancellationToken.None;
+        private static CancellationToken _stopMiningManager = CancellationToken.None;
         #region State for mining
         private static string _username = DemoUser.BTC;
-        private static string _miningLocation = null;
         private static Dictionary<AlgorithmType, double> _normalizedProfits = null;
 
         // TODO make sure _miningDevices and _runningMiners are in sync
@@ -61,12 +60,6 @@ namespace NHMCore.Mining
         {
             public NormalizedProfitsUpdateCommand(Dictionary<AlgorithmType, double> normalizedProfits) { this.normalizedProfits = normalizedProfits; }
             public Dictionary<AlgorithmType, double> normalizedProfits { get; private set; }
-        }
-
-        private class MiningLocationChangedCommand : MainCommand
-        {
-            public MiningLocationChangedCommand(string miningLocation) { this.miningLocation = miningLocation; }
-            public string miningLocation { get; private set; }
         }
 
         private class UsernameChangedCommand : MainCommand
@@ -160,14 +153,6 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
-        private static Task MiningLocationChanged(string miningLocation)
-        {
-            if (RunninLoops == null) return Task.CompletedTask;
-            var command = new MiningLocationChangedCommand(miningLocation);
-            _commandQueue.Enqueue(command);
-            return command.Tsc.Task;
-        }
-
         private static Task UseEthlargementChanged()
         {
             if (RunninLoops == null) return Task.CompletedTask;
@@ -243,9 +228,6 @@ namespace NHMCore.Mining
         {
             ApplicationStateManager.OnInternetCheck += OnInternetCheck;
 
-            _miningLocation = StratumService.Instance.SelectedOrFallbackServiceLocationCode().miningLocationCode;
-            StratumService.Instance.OnServiceLocationChanged += StratumServiceInstance_PropertyChanged;
-
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
 
@@ -259,7 +241,7 @@ namespace NHMCore.Mining
         public static void StartLoops(CancellationToken stop, string username)
         {
             _username = username;
-            stopMiningManager = stop;
+            _stopMiningManager = stop;
             RunninLoops = Task.Run(() => StartLoopsTask(stop));
         }
 
@@ -268,11 +250,6 @@ namespace NHMCore.Mining
             var loop1 = MiningManagerCommandQueueLoop(stop);
             var loop2 = MiningManagerMainLoop(stop);
             return Task.WhenAll(loop1, loop2);
-        }
-
-        private static void StratumServiceInstance_PropertyChanged(object sender, string miningLocation)
-        {
-            _ = MiningLocationChanged(miningLocation);
         }
 
         private static void MiscSettingsInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -607,7 +584,7 @@ namespace NHMCore.Mining
         //{
         //    foreach (var groupMiner in _runningMiners.Values)
         //    {
-        //        await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
+        //        await groupMiner.StartMinerTask(stopMiningManager, _username);
         //    }
         //    // TODO resume devices to Mining state
         //}
@@ -620,12 +597,6 @@ namespace NHMCore.Mining
             if (command is NormalizedProfitsUpdateCommand normalizedProfitsUpdateCommand)
             {
                 _normalizedProfits = normalizedProfitsUpdateCommand.normalizedProfits;
-            }
-            else if (command is MiningLocationChangedCommand miningLocationChangedCommand)
-            {
-                var oldLocation = _miningLocation;
-                _miningLocation = miningLocationChangedCommand.miningLocation;
-                if (_miningLocation == oldLocation) return;
             }
             else if (command is UsernameChangedCommand usernameChangedCommand)
             {
@@ -653,21 +624,19 @@ namespace NHMCore.Mining
 
             // here we do the deciding
             // to mine we need to have the username mining location set and ofc device to mine with
-            if (_username == null || _normalizedProfits == null || _miningLocation == null)
+            if (_username == null || _normalizedProfits == null)
             {
                 if (_username == null) Logger.Error(Tag, "_username is null");
                 if (_normalizedProfits == null) Logger.Error(Tag, "_normalizedProfits is null");
-                if (_miningLocation == null) Logger.Error(Tag, "_miningLocation is null");
                 await PauseAllMiners();
             }
-            else if (command is MiningLocationChangedCommand || command is UsernameChangedCommand || command is RunEthlargementChangedCommand)
+            else if (command is UsernameChangedCommand || command is RunEthlargementChangedCommand)
             {
-                // TODO this is miner restarts on mining location and username change, you should take into account the mining location changed for benchmarking
                 // RESTART-STOP-START
                 // STOP
                 foreach (var miner in _runningMiners.Values) await miner.StopTask();
                 // START
-                foreach (var miner in _runningMiners.Values) await miner.StartMinerTask(stopMiningManager, _miningLocation, _username);
+                foreach (var miner in _runningMiners.Values) await miner.StartMinerTask(_stopMiningManager, _username);
             }
             else if (_miningDevices.Count == 0)
             {
@@ -894,7 +863,7 @@ namespace NHMCore.Mining
                     continue;
                 }
                 _runningMiners[startKey] = toStart;
-                await toStart.StartMinerTask(stopMiningManager, _miningLocation, _username);
+                await toStart.StartMinerTask(_stopMiningManager, _username);
             }
             // log scope
             {

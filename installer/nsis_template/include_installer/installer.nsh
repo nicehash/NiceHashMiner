@@ -77,6 +77,18 @@
 	WriteRegStr SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" InstallLocation "$INSTDIR"
 	WriteRegStr SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" KeepShortcuts "true"
   WriteRegStr SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" ShortcutName "${SHORTCUT_NAME}"
+  ${if} $GlobalTOS == ""
+	  WriteRegStr SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" AgreedWithTOS "-1"
+  ${else}
+	  WriteRegStr SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" AgreedWithTOS "$GlobalTOS"
+  ${endif}
+
+  ${if} $PluginTOS == ""
+	  WriteRegStr SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" Use3rdPartyMinersTOS "-1"
+  ${else}
+	  WriteRegStr SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" Use3rdPartyMinersTOS "$PluginTOS"
+  ${endif}
+
   !ifdef MENU_FILENAME
     WriteRegStr SHELL_CONTEXT "${INSTALL_REGISTRY_KEY}" MenuDirectory "${MENU_FILENAME}"
   !endif

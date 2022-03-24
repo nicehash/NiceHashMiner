@@ -15,18 +15,7 @@ namespace XMRig
 {
     public class XMRig : MinerBase, IBeforeStartMining
     {
-        // TODO DevFee 
-        private double DevFee = 1.0;
-        private int _apiPort;
         protected readonly HttpClient _httpClient = new HttpClient();
-
-        private string AlgoName
-        {
-            get
-            {
-                return PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
-            }
-        }
 
         public XMRig(string uuid) : base(uuid) { }
 
@@ -67,53 +56,6 @@ namespace XMRig
 
         protected override void Init()
         {
-            if (_extraLaunchParameters.Contains("--donate-level="))
-            {
-                var splittedELP = _extraLaunchParameters.Split(' ');
-                try
-                {
-                    foreach (var elp in splittedELP)
-                    {
-                        if (elp.Contains("--donate-level="))
-                        {
-                            var parsedDevFee = elp.Split('=')[1];
-                            double.TryParse(parsedDevFee, out var devFee);
-                            DevFee = devFee;
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(_logGroup, $"Init failed: {e.Message}");
-                }
-            }
-            else
-            {
-                _extraLaunchParameters += " --donate-level=1";
-            }
-        }
-
-        private string CreateCommandLine(string username)
-        {
-            _apiPort = GetAvaliablePort();
-            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-            var cmd = "";
-            //if user wants to manually tweek with config file we let him do that - WARNING some functionalities might not work (benchmarking, api data)
-            if (_extraLaunchParameters.Contains("--config="))
-            {
-                cmd = _extraLaunchParameters;
-            }
-            else
-            {
-                cmd = $"-a {AlgoName} -o {urlWithPort} -u {username} --http-enabled --http-port={_apiPort} --nicehash {_extraLaunchParameters}";
-            }
-            Logger.Info("STARTED", $"command: {cmd}");
-            return cmd;
-        }
-
-        protected override string MiningCreateCommandLine()
-        {
-            return CreateCommandLine(_username);
         }
 
 
@@ -128,11 +70,6 @@ namespace XMRig
         }
         void IBeforeStartMining.BeforeStartMining()
         {
-            //if user wants to manually tweek with config file we let him do that - WARNING some functionalities might not work (benchmarking, api data)
-            if (_extraLaunchParameters.Contains("--config="))
-            {
-                return;
-            }
             var binCwd = GetBinAndCwdPaths().Item2;
             var txtFiles = Directory.GetFiles(binCwd, "*.json", SearchOption.AllDirectories)
                 .Where(file => IsDeleteConfigFile(file))

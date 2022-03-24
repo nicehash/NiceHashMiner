@@ -13,23 +13,24 @@ using System.Threading.Tasks;
 
 namespace LolMiner
 {
-    public partial class LolMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class LolMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public LolMinerPlugin()
         {
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
+            MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.35",
-                ExePath = new List<string> { "1.35", "lolMiner.exe" },
+                BinVersion = "1.42",
+                ExePath = new List<string> { "1.42", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.35/lolMiner_v1.35_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.42/lolMiner_v1.42_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +40,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(16, 3);
+        public override Version Version => new Version(17, 0);
 
         public override string Name => "lolMiner";
 
@@ -126,7 +127,7 @@ namespace LolMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
+            var (_, pluginRootBinsPath) = GetBinAndCwdPaths();
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "lolMiner.exe" });
         }
 
@@ -139,6 +140,16 @@ namespace LolMiner
                 if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion < Version) return true;
             }
             return false;
+        }
+
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
+        }
+
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        {
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
     }
 }

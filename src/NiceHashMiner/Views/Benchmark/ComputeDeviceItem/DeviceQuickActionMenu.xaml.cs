@@ -52,6 +52,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void Button_Click_ClearAllSpeeds(object sender, RoutedEventArgs e)
         {
+            TryCloseParentContextMenu();
             var nhmConfirmDialog = new CustomDialog()
             {
                 Title = Tr("Set default settings?"),
@@ -68,16 +69,19 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)
         {
+            TryCloseParentContextMenu();
             await ApplicationStateManager.StopSingleDevicePublic(_deviceData.Dev);
         }
 
         private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
         {
+            TryCloseParentContextMenu();
             await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
         }
 
         private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)
         {
+            TryCloseParentContextMenu();
             _deviceData.EnableBenchmarkedOnly();
         }
 
@@ -92,6 +96,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 RoutedEventHandler closedHandler = null;
                 closedHandler += (s, e2) =>
                 {
+                    TryCloseParentContextMenu();
                     _toggleButtonsGuard.Remove(tButton);
                     tButton.IsChecked = false;
                     subContext.Closed -= closedHandler;
@@ -103,10 +108,21 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void subContext_Loaded(object sender, RoutedEventArgs e)
         {
-            if(subContext.Template.FindName("CopyMenu", subContext) is DeviceDataCopy ActionsMenu)
+            if (subContext.Template.FindName("CopyMenu", subContext) is DeviceDataCopy ActionsMenu)
             {
                 var myControl = ActionsMenu.DeviceSelection;
                 WindowUtils.Translate(myControl);
+            }
+        }
+        private void TryCloseParentContextMenu()
+        {
+            try
+            {
+                ComputeDeviceItem.ClosedHandler.Invoke(this, new RoutedEventArgs());
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("DeviceQuickActionsMenu", $"{ex.Message}");
             }
         }
     }

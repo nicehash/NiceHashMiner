@@ -48,13 +48,13 @@ namespace NHMCore.Notifications
         HashrateDeviatesFromBenchmark,
         ExtremeHashrate,
         WrongChecksumBinary,
+        WrongChecksumDll,
         MinerRestart,
         NullChecksum,
         GamingStarted,
         GamingFinished,
-        DriverNVIDIAObsolete,
-        DriverAMDObsolete,
         AdminRunRequired,
         MotherboardNotCompatible,
+        DriverVersionProblem
     }
 }

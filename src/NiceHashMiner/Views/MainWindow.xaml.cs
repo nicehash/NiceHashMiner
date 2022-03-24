@@ -7,6 +7,7 @@ using NHMCore.Notifications;
 using NHMCore.Utils;
 using NiceHashMiner.ViewModels;
 using NiceHashMiner.Views.Common;
+using NiceHashMiner.Views.EULA;
 using NiceHashMiner.Views.Common.NHBase;
 using NiceHashMiner.Views.TDPSettings;
 using System;
@@ -199,69 +200,82 @@ namespace NiceHashMiner.Views
             finally
             {
                 LoadingBar.Visibility = Visibility.Collapsed;
-                // Re-enable managed controls
-                IsEnabled = true;
-                SetTabButtonsEnabled();
-                if (BuildOptions.SHOW_TDP_SETTINGS)
-                {
-                    var tdpWindow = new TDPSettingsWindow();
-                    tdpWindow.DataContext = _vm;
-                    tdpWindow.Show();
-                }
+                var showMainEULA = ToSSetings.Instance.AgreedWithTOS != ApplicationStateManager.CurrentTosVer;
+                var show3rdParty = ToSSetings.Instance.Use3rdPartyMinersTOS != ApplicationStateManager.CurrentTosVer;
+                EulaMain.Visibility = showMainEULA ? Visibility.Visible : Visibility.Collapsed;
+                Eula3rdParty.Visibility = show3rdParty ? Visibility.Visible : Visibility.Collapsed;
+                EulaMain.OKClick += (s, e) => AfterLoadFinishedAndEULA_Confirmed();
+                Eula3rdParty.OKClick += (s, e) => AfterLoadFinishedAndEULA_Confirmed();
+                AfterLoadFinishedAndEULA_Confirmed();
+            }
+        }
 
-                if (MinerPluginsManager.EulaConfirm.Any())
-                {
-                    var pluginsPopup = new Plugins.PluginsConfirmDialog();
-                    pluginsPopup.DataContext = new Plugins.PluginsConfirmDialog.VM
-                    {
-                        Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.EulaConfirm)
-                    };
-                    ShowContentAsModalDialog(pluginsPopup);
-                }
+        private void AfterLoadFinishedAndEULA_Confirmed()
+        {
+            if (EulaMain.Visibility == Visibility.Visible) return;
+            if (Eula3rdParty.Visibility == Visibility.Visible) return;
+            // Re-enable managed controls
+            IsEnabled = true;
+            SetTabButtonsEnabled();
+            if (BuildOptions.SHOW_TDP_SETTINGS)
+            {
+                var tdpWindow = new TDPSettingsWindow();
+                tdpWindow.DataContext = _vm;
+                tdpWindow.Show();
+            }
 
-                if (LoginSuccess.HasValue)
+            if (MinerPluginsManager.EulaConfirm.Any())
+            {
+                var pluginsPopup = new Plugins.PluginsConfirmDialog();
+                pluginsPopup.DataContext = new Plugins.PluginsConfirmDialog.VM
                 {
-                    var description = LoginSuccess.Value ? Translations.Tr("Login performed successfully.") : Translations.Tr("Unable to retreive BTC address. Please retreive it by yourself from web page.");
-                    var btcLoginDialog = new CustomDialog()
-                    {
-                        Title = Translations.Tr("Login"),
-                        OkText = Translations.Tr("Ok"),
-                        CancelVisible = Visibility.Collapsed,
-                        AnimationVisible = Visibility.Collapsed,
-                        Description = description
-                    };
-                    btcLoginDialog.OKClick += (s, e) =>
-                    {
-                        if (!LoginSuccess.Value) Process.Start(Links.Login);
-                    };
-                    CustomDialogManager.ShowModalDialog(btcLoginDialog);
-                }
+                    Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.EulaConfirm)
+                };
+                ShowContentAsModalDialog(pluginsPopup);
+            }
 
-                if (Launcher.IsUpdated)
+            if (LoginSuccess.HasValue)
+            {
+                var description = LoginSuccess.Value ? Translations.Tr("Login performed successfully.") : Translations.Tr("Unable to retreive BTC address. Please retreive it by yourself from web page.");
+                var btcLoginDialog = new CustomDialog()
                 {
-                    var nhmUpdatedDialog = new CustomDialog()
-                    {
-                        Title = Translations.Tr("NiceHash Miner Updated"),
-                        Description = Translations.Tr("Completed NiceHash Miner auto update."),
-                        OkText = Translations.Tr("OK"),
-                        CancelVisible = Visibility.Collapsed,
-                        AnimationVisible = Visibility.Collapsed
-                    };
-                    ShowContentAsModalDialog(nhmUpdatedDialog);
-                }
+                    Title = Translations.Tr("Login"),
+                    OkText = Translations.Tr("Ok"),
+                    CancelVisible = Visibility.Collapsed,
+                    AnimationVisible = Visibility.Collapsed,
+                    Description = description
+                };
+                btcLoginDialog.OKClick += (s, e) =>
+                {
+                    if (!LoginSuccess.Value) Process.Start(Links.Login);
+                };
+                CustomDialogManager.ShowModalDialog(btcLoginDialog);
+            }
 
-                if (Launcher.IsUpdatedFailed)
+            if (Launcher.IsUpdated)
+            {
+                var nhmUpdatedDialog = new CustomDialog()
                 {
-                    var nhmUpdatedDialog = new CustomDialog()
-                    {
-                        Title = Translations.Tr("NiceHash Miner Autoupdate Failed"),
-                        Description = Translations.Tr("NiceHash Miner auto update failed to complete. Autoupdates are disabled until next miner launch."),
-                        OkText = Translations.Tr("OK"),
-                        CancelVisible = Visibility.Collapsed,
-                        AnimationVisible = Visibility.Collapsed
-                    };
-                    ShowContentAsModalDialog(nhmUpdatedDialog);
-                }
+                    Title = Translations.Tr("NiceHash Miner Updated"),
+                    Description = Translations.Tr("Completed NiceHash Miner auto update."),
+                    OkText = Translations.Tr("OK"),
+                    CancelVisible = Visibility.Collapsed,
+                    AnimationVisible = Visibility.Collapsed
+                };
+                ShowContentAsModalDialog(nhmUpdatedDialog);
+            }
+
+            if (Launcher.IsUpdatedFailed)
+            {
+                var nhmUpdatedDialog = new CustomDialog()
+                {
+                    Title = Translations.Tr("NiceHash Miner Autoupdate Failed"),
+                    Description = Translations.Tr("NiceHash Miner auto update failed to complete. Autoupdates are disabled until next miner launch."),
+                    OkText = Translations.Tr("OK"),
+                    CancelVisible = Visibility.Collapsed,
+                    AnimationVisible = Visibility.Collapsed
+                };
+                ShowContentAsModalDialog(nhmUpdatedDialog);
             }
         }
 

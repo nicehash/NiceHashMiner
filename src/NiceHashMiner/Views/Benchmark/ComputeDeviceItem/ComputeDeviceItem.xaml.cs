@@ -19,6 +19,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
     public partial class ComputeDeviceItem : UserControl
     {
         private DeviceData _deviceData;
+        public static RoutedEventHandler ClosedHandler = null;
 
         public ComputeDeviceItem()
         {
@@ -81,14 +82,14 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
             {
                 _toggleButtonsGuard.Add(tButton);
                 DeviceActionsButtonContext.IsOpen = true;
-                RoutedEventHandler closedHandler = null;
-                closedHandler += (s, e2) =>
+                ClosedHandler += (s, e2) =>
                 {
                     _toggleButtonsGuard.Remove(tButton);
                     tButton.IsChecked = false;
-                    DeviceActionsButtonContext.Closed -= closedHandler;
+                    DeviceActionsButtonContext.IsOpen = false;
+                    DeviceActionsButtonContext.Closed -= ClosedHandler;
                 };
-                DeviceActionsButtonContext.Closed += closedHandler;
+                DeviceActionsButtonContext.Closed += ClosedHandler;
             }
         }
 
@@ -134,8 +135,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 var myControl = ActionsMenu.deviceActionsGrid;
                 WindowUtils.Translate(myControl);
             }    
-
         }
-
     }
 }

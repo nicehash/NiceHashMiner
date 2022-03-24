@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 namespace NHM.DeviceDetection.AMD
 {
     using NHM.UUID;
+    using System.IO;
+
     internal static class AMDDetector
     {
         private const string Tag = "AMDDetector";
@@ -33,7 +35,16 @@ namespace NHM.DeviceDetection.AMD
                     size /= mod;
                     i++;
                 }
-                return Math.Round(size, 1) + units[i];
+                var GBResult = Math.Round(size, 0);
+                // if number is odd we can assume that free memory was presented and we can return the upper even...
+                if(GBResult > 5.0)//1,3,5gb gpus exist
+                {
+                    if (GBResult % 2 != 0)
+                    {
+                        GBResult += 1;
+                    }
+                }
+                return GBResult + units[i];
             }
             catch
             {
@@ -89,25 +100,56 @@ namespace NHM.DeviceDetection.AMD
                         var name = oclDev._CL_DEVICE_BOARD_NAME_AMD;
                         var codename = oclDev._CL_DEVICE_NAME;
                         var gpuRAM = oclDev._CL_DEVICE_GLOBAL_MEM_SIZE;
-                        var infoToHashed = $"{oclDev.DeviceID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
+                        var infoToHashedNew = $"{oclDev.DeviceID}--{oclDev.BUS_ID}--{DeviceType.AMD}--{codename}--{name}";
+                        var infoToHashedOld = $"{oclDev.DeviceID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
                         // cross ref info from vid controllers with bus id
                         var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.BUS_ID).FirstOrDefault() ?? null;
                         if (vidCtrl != null)
                         {
                             infSection = vidCtrl.InfSection;
-                            infoToHashed += vidCtrl.PnpDeviceID;
+                            infoToHashedOld += vidCtrl.PnpDeviceID;
+                            infoToHashedNew += vidCtrl.PnpDeviceID;
                         }
                         else
                         {
                             Logger.Info(Tag, $"TryQueryAMDDevicesAsync cannot find VideoControllerData with bus ID {oclDev.BUS_ID}");
                         }
-                        var uuidHEX = UUID.GetHexUUID(infoToHashed);
-                        var uuid = $"AMD-{uuidHEX}";
+                        var uuidHEXOld = UUID.GetHexUUID(infoToHashedOld);
+                        var uuidHEXNew = UUID.GetHexUUID(infoToHashedNew);
+                        var uuidOld = $"AMD-{uuidHEXOld}";
+                        var uuidNew = $"AMD-{uuidHEXNew}";
                         // append VRAM to distinguish AMD GPUs
+
+                        //transition from old uuid's to new
+                        try
+                        {                                
+                            var cfgPathOld = Paths.ConfigsPath($"device_settings_{uuidOld}.json");
+                            var cfgPathNew = Paths.ConfigsPath($"device_settings_{uuidNew}.json");
+                            if (File.Exists(cfgPathOld) && !File.Exists(cfgPathNew))//rename file and rename first line
+                            {
+                                string configText = File.ReadAllText(cfgPathOld);
+                                configText = configText.Replace(uuidOld, uuidNew);
+                                File.WriteAllText(cfgPathNew, configText);
+                                File.Delete(cfgPathOld);
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            Logger.Info(Tag, $"Error when transitioning from old to new AMD GPU config file. " + e.Message);
+                        }
+
                         var vramPart = convertSize(gpuRAM);
                         var setName = vramPart != null ? $"{name} {vramPart}" : name;
-                        var bd = new BaseDevice(DeviceType.AMD, uuid, setName, (int)oclDev.DeviceID);
+                        var bd = new BaseDevice(DeviceType.AMD, uuidNew, setName, (int)oclDev.DeviceID);
                         var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
+                        var thisDeviceExtraADLResult = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID);
+                        if(thisDeviceExtraADLResult != null && thisDeviceExtraADLResult.BUS_ID == oclDev.BUS_ID)
+                        {
+                            amdDevice.ADLFunctionCall = thisDeviceExtraADLResult.FunctionCall;
+                            amdDevice.ADLReturnCode = thisDeviceExtraADLResult.ADLRetCode;
+                            amdDevice.RawDriverVersion = thisDeviceExtraADLResult.AdrenalinVersion;
+                            if (Version.TryParse(thisDeviceExtraADLResult.AdrenalinVersion, out var parsedVer)) amdDevice.DEVICE_AMD_DRIVER = parsedVer;
+                        }
                         amdDevices.Add(amdDevice);
                     }
                 }
@@ -117,9 +159,9 @@ namespace NHM.DeviceDetection.AMD
             return amdDevices;
         }
 
-
         private static bool IsAMDPlatform(OpenCLPlatform platform)
         {
+            if (platform == null) return false; 
             return platform.PlatformName == "AMD Accelerated Parallel Processing"
                 || platform.PlatformVendor == "Advanced Micro Devices, Inc."
                 || platform.PlatformName.Contains("AMD");
@@ -127,24 +169,14 @@ namespace NHM.DeviceDetection.AMD
 
         private static bool DuplicatedDevices(OpenCLDeviceDetectionResult data)
         {
-            if (data?.Platforms?.Count > 0)
-            {
-                var devicesWithBusID = new HashSet<int>();
-                var amdPlatforms = data.Platforms.Where(platform => IsAMDPlatform(platform)).ToList();
-                foreach (var platform in amdPlatforms)
-                {
-                    foreach (var oclDev in platform.Devices)
-                    {
-                        var id = oclDev.BUS_ID;
-                        if (devicesWithBusID.Contains(id))
-                        {
-                            return true;
-                        }
-                        devicesWithBusID.Add(id);
-                    }
-                }
-            }
-            return false;
+            var anyMultipleSameBusIDs = data?.Platforms?
+                    .Where(platform => IsAMDPlatform(platform))
+                    .SelectMany(platform => platform.Devices)
+                    .Where(dev => dev != null)
+                    .GroupBy(dev => dev.BUS_ID)
+                    .Select(group => group.Count() > 1)
+                    .Any(multipleSameBusIDs => multipleSameBusIDs);
+            return anyMultipleSameBusIDs ?? false;
         }
 
         // take lower platform

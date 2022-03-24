@@ -11,11 +11,8 @@ namespace DemoMiner
         static void Main(string[] args)
         {
             Console.WriteLine("args :");
-
-            foreach (var arg in args)
-            {
-                Console.Write(arg);
-            }
+            Console.WriteLine(string.Join(" ", args));
+            Console.WriteLine();
             _cancellationTokenSource = new CancellationTokenSource();
             AppDomain.CurrentDomain.ProcessExit += (s, e) =>
             {

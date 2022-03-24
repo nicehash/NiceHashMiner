@@ -51,6 +51,8 @@ namespace NHMCore.Mining
 
                 if (0 >= CurrentEstimatedProfit) return AlgorithmStatus.Unprofitable;
 
+                if (IgnoreUntil > DateTime.UtcNow) return AlgorithmStatus.Unstable;
+
                 return AlgorithmStatus.Benchmarked;
             }
         }

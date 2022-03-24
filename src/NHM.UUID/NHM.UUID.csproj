@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>9.0</LangVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -57,6 +58,10 @@
     <Compile Include="WindowsMacUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NHM.CommonWin32\NHM.CommonWin32.csproj">
+      <Project>{ff5822a1-6311-4431-9281-261a8de0cb43}</Project>
+      <Name>NHM.CommonWin32</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>

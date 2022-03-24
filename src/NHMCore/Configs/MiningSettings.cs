@@ -68,6 +68,7 @@ namespace NHMCore.Configs
             }
         }
 
+        // TODO make this per plugin
         private int _minerRestartDelayMS = 1000;
         public int MinerRestartDelayMS
         {
@@ -75,7 +76,6 @@ namespace NHMCore.Configs
             set
             {
                 _minerRestartDelayMS = value;
-                NHM.MinerPluginToolkitV1.MinerToolkit.MinerRestartDelayMS = value;
                 OnPropertyChanged(nameof(MinerRestartDelayMS));
             }
         }

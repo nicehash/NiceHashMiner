@@ -1,6 +1,5 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,56 +15,17 @@ namespace NHMCore.Mining.Grouping
             return algo != null && algo.Enabled && algo.BenchmarkSpeed > 0;
         }
 
-        public static Tuple<ComputeDevice, DeviceMiningStatus> GetDeviceMiningStatus(ComputeDevice device)
+        private static (ComputeDevice device, DeviceMiningStatus status) GetDeviceMiningStatus(ComputeDevice device)
         {
-            var status = DeviceMiningStatus.CanMine;
-            if (device == null)
-            {
-                // C# is null happy
-                status = DeviceMiningStatus.DeviceNull;
-            }
-            else if (device.IsDisabled)
-            {
-                status = DeviceMiningStatus.Disabled;
-            }
-            else
-            {
-                var hasEnabledAlgo = device.AlgorithmSettings.Any((algo) => IsAlgoMiningCapable(algo));
-                if (hasEnabledAlgo == false)
-                {
-                    status = DeviceMiningStatus.NoEnabledAlgorithms;
-                }
-            }
-
-            return new Tuple<ComputeDevice, DeviceMiningStatus>(device, status);
+            if (device == null) return (device, DeviceMiningStatus.DeviceNull);
+            if (device.IsDisabled) return (device, DeviceMiningStatus.Disabled);
+            var hasEnabledAlgo = device.AlgorithmSettings.Any(IsAlgoMiningCapable);
+            if (hasEnabledAlgo == false) return (device, DeviceMiningStatus.NoEnabledAlgorithms);
+            return (device, DeviceMiningStatus.CanMine);
         }
 
-        private static Tuple<List<MiningDevice>, List<Tuple<ComputeDevice, DeviceMiningStatus>>>
-            GetMiningAndNonMiningDevices(IEnumerable<ComputeDevice> devices)
+        private static string GetDisabledDeviceStatusString(ComputeDevice dev, DeviceMiningStatus status)
         {
-            var nonMiningDevStatuses = new List<Tuple<ComputeDevice, DeviceMiningStatus>>();
-            var miningDevices = new List<MiningDevice>();
-            foreach (var dev in devices)
-            {
-                var devStatus = GetDeviceMiningStatus(dev);
-                if (devStatus.Item2 == DeviceMiningStatus.CanMine)
-                {
-                    miningDevices.Add(new MiningDevice(dev));
-                }
-                else
-                {
-                    nonMiningDevStatuses.Add(devStatus);
-                }
-            }
-
-            return new Tuple<List<MiningDevice>, List<Tuple<ComputeDevice, DeviceMiningStatus>>>(miningDevices,
-                nonMiningDevStatuses);
-        }
-
-        private static string GetDisabledDeviceStatusString(Tuple<ComputeDevice, DeviceMiningStatus> devStatusTuple)
-        {
-            var dev = devStatusTuple.Item1;
-            var status = devStatusTuple.Item2;
             switch (status)
             {
                 case DeviceMiningStatus.DeviceNull:
@@ -74,64 +34,66 @@ namespace NHMCore.Mining.Grouping
                     return "DISABLED: " + dev.GetFullName();
                 case DeviceMiningStatus.NoEnabledAlgorithms:
                     return "No Enabled Algorithms: " + dev.GetFullName();
-            }
-
-            return "Invalid status Passed";
+                default: return "Invalid status Passed";
+            }            
         }
 
-        private static void LogMiningNonMiningStatuses(List<MiningDevice> enabledDevices,
-            List<Tuple<ComputeDevice, DeviceMiningStatus>> disabledDevicesStatuses)
+        private static void LogMiningNonMiningStatuses(IEnumerable<(ComputeDevice device, DeviceMiningStatus status)> devicesMiningStatusPairs)
         {
+            var nonMiningDevStatuses = devicesMiningStatusPairs
+                .Where((devStatus) => devStatus.status != DeviceMiningStatus.CanMine)
+                .ToArray();
+            var miningDevices = devicesMiningStatusPairs
+                .Where((devStatus) => devStatus.status == DeviceMiningStatus.CanMine)
+                .Select((devStatus) => new MiningDevice(devStatus.device))
+                .ToArray();
+
             // print statuses
-            if (disabledDevicesStatuses.Count > 0)
+            if (nonMiningDevStatuses.Length > 0)
             {
                 var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine("");
                 stringBuilder.AppendLine("Disabled Devices:");
-                foreach (var deviceStatus in disabledDevicesStatuses)
+                foreach (var (dev, status) in nonMiningDevStatuses)
                 {
-                    stringBuilder.AppendLine("\t" + GetDisabledDeviceStatusString(deviceStatus));
+                    stringBuilder.AppendLine("\t" + GetDisabledDeviceStatusString(dev, status));
                 }
-
                 Logger.Info(Tag, stringBuilder.ToString());
             }
 
-            if (enabledDevices.Count > 0)
+            if (miningDevices.Length > 0)
             {
                 // print enabled
                 var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine("");
                 stringBuilder.AppendLine("Enabled Devices for Mining session:");
-                foreach (var miningDevice in enabledDevices)
+                foreach (var miningDevice in miningDevices)
                 {
                     var device = miningDevice.Device;
                     stringBuilder.AppendLine($"\tENABLED ({device.GetFullName()})");
                     foreach (var algo in device.AlgorithmSettings)
                     {
                         var isEnabled = IsAlgoMiningCapable(algo);
-                        stringBuilder.AppendLine(
-                            $"\t\tALGORITHM {(isEnabled ? "ENABLED " : "DISABLED")} ({algo.AlgorithmStringID})");
+                        stringBuilder.AppendLine($"\t\tALGORITHM {(isEnabled ? "ENABLED " : "DISABLED")} ({algo.AlgorithmStringID})");
                     }
                 }
-
                 Logger.Info(Tag, stringBuilder.ToString());
             }
         }
 
         public static List<MiningDevice> GetMiningDevices(IEnumerable<ComputeDevice> devices, bool log)
         {
-            if (BuildOptions.FORCE_MINING)
-            {
-                return devices.Select(dev => new MiningDevice(dev)).ToList(); ;
-            }
+            if (BuildOptions.FORCE_MINING) return devices.Select(dev => new MiningDevice(dev)).ToList();
 
-            var miningNonMiningDevs = GetMiningAndNonMiningDevices(devices);
-            if (log)
-            {
-                LogMiningNonMiningStatuses(miningNonMiningDevs.Item1, miningNonMiningDevs.Item2);
-            }
+            var devicesMiningStatusPairs = devices.Select(GetDeviceMiningStatus).ToArray();
+            if (log) LogMiningNonMiningStatuses(devicesMiningStatusPairs);
 
-            return miningNonMiningDevs.Item1;
+            var miningDevices = devicesMiningStatusPairs
+                .Where((devStatus) => devStatus.status == DeviceMiningStatus.CanMine)
+                .Select((devStatus) => new MiningDevice(devStatus.device))
+                .ToList();
+
+            return miningDevices;
         }
 
         // TODO we can now add by device name device type or whatever avarage passed in benchmark values

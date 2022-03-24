@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>9.0</LangVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -49,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AMD\AMDDetector.cs" />
-    <Compile Include="AMD\AmdDriver.cs" />
     <Compile Include="CPU\CPUDetectionResult.cs" />
     <Compile Include="CPU\CPUDetector.cs" />
     <Compile Include="CPU\CpuInfo.cs" />
@@ -58,6 +58,7 @@
     <Compile Include="DeviceDetectionPrinter.cs" />
     <Compile Include="DeviceDetectionResult.cs" />
     <Compile Include="DeviceDetectionStep.cs" />
+    <Compile Include="Models\AMDBusIDVersionResult.cs" />
     <Compile Include="NVIDIA\Models\CudaDevice.cs" />
     <Compile Include="NVIDIA\Models\CudaDeviceDetectionResult.cs" />
     <Compile Include="NVIDIA\CUDADetector.cs" />

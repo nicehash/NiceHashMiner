@@ -34,36 +34,31 @@ namespace NHM.DeviceDetection
                     CreateNoWindow = true,
                     WorkingDirectory = Paths.AppRoot
                 };
-                using (var run = new Process() { StartInfo = startInfo, EnableRaisingEvents = true })
-                using (var ct = new CancellationTokenSource(milliseconds))
+                using var run = new Process() { StartInfo = startInfo, EnableRaisingEvents = true };
+                using var ct = new CancellationTokenSource(milliseconds);
+                if (!run.Start()) throw new InvalidOperationException("Could not start process: " + run);
+                void stopProcess(string stopFrom)
                 {
-                    if (!run.Start())
+                    try
                     {
-                        throw new InvalidOperationException("Could not start process: " + run);
+                        var isRunning = !run?.HasExited ?? false;
+                        if (!isRunning) return;
+                        run.CloseMainWindow();
+                        var hasExited = run?.WaitForExit(1000) ?? false;
+                        if (!hasExited) run.Kill();
                     }
-                    Action<string> stopProcess = (string stopFrom) =>
+                    catch (Exception)
                     {
-                        try
-                        {
-                            var isRunning = !run?.HasExited ?? false;
-                            if (!isRunning) return;
-                            run.CloseMainWindow();
-                            var hasExited = run?.WaitForExit(1000) ?? false;
-                            if (!hasExited) run.Kill();
-                        }
-                        catch (Exception)
-                        {
-                            // TODO log
-                        }
-                    };
-                    ct.Token.Register(() => stopProcess("from cancel token"));
-                    readData = await run.StandardOutput.ReadToEndAsync();
-                    stopProcess("after read end");
-                    result = JsonConvert.DeserializeObject<T>(readData, _jsonSettings);
-                    if (result == null && !string.IsNullOrEmpty(readData))
-                    {
-                        Logger.Debug("DeviceDetectionPrinter", $"result is NULL readData='{readData}'");
+                        // TODO log
                     }
+                };
+                ct.Token.Register(() => stopProcess("from cancel token"));
+                readData = await run.StandardOutput.ReadToEndAsync();
+                stopProcess("after read end");
+                result = JsonConvert.DeserializeObject<T>(readData, _jsonSettings);
+                if (result == null && !string.IsNullOrEmpty(readData))
+                {
+                    Logger.Debug("DeviceDetectionPrinter", $"result is NULL readData='{readData}'");
                 }
             }
             catch (Exception ex)

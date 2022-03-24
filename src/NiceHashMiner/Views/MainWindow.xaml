@@ -13,6 +13,7 @@
         xmlns:notifications="clr-namespace:NiceHashMiner.Views.Notifications"
         xmlns:help="clr-namespace:NiceHashMiner.Views.Help"
         xmlns:local="clr-namespace:NiceHashMiner.Views"
+        xmlns:eula="clr-namespace:NiceHashMiner.Views.EULA"
         xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
         mc:Ignorable="d"
         Title="MainWindowNew2" Height="600" Width="800"
@@ -40,7 +41,9 @@
     </nhb:BaseDialogWindow.Resources>
     <Grid Background="Transparent" Opacity="1.0" >
         <!--Get rid of this crap-->
-        <local:TemporaryStartupLoadingControl x:Name="LoadingBar" Visibility="Collapsed" Panel.ZIndex="1" Padding="0,88,0,0"/>
+        <local:TemporaryStartupLoadingControl x:Name="LoadingBar" Visibility="Collapsed" Panel.ZIndex="3" Padding="0,88,0,0"/>
+        <eula:EULA x:Name="EulaMain" Visibility="Collapsed" Panel.ZIndex="2" Padding="10,0,10,10"/>
+        <eula:EULA3rdParty x:Name="Eula3rdParty" Visibility="Collapsed" Panel.ZIndex="1" Padding="10,0,10,10"/>
 
         <!--Tab names mirror the NiceHashMiner.Views.Common.NHBase.ToggleButtonType enum names.-->
         <TabControl x:Name="MainTabs" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Panel.ZIndex="0">

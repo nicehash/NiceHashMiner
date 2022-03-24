@@ -1,8 +1,10 @@
 ﻿using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,7 @@ namespace XMRig
         {
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
+            MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://github.com/xmrig/xmrig
@@ -36,7 +39,7 @@ namespace XMRig
 
         public override string PluginUUID => "0e0a7320-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 0);
+        public override Version Version => new Version(17, 0);
 
         public override string Name => "XMRig";
 
@@ -60,7 +63,7 @@ namespace XMRig
         }
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
+            var (_, pluginRootBinsPath) = GetBinAndCwdPaths();
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "xmrig.exe" });
         }
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)

@@ -13,27 +13,18 @@ namespace NHM.MinerPluginToolkitV1
     public static class FreePortsCheckerManager
     {
         public static int ApiBindPortPoolStart { get; set; } = 4000;
-        private static int _portPlusRange => 2300;
+        private const int _portPlusRange = 2300;
 
-        private static object _lock = new object();
-        private static int _reserveTimeSeconds => 5;
-        private static Dictionary<int, DateTime> _reservedPortsAtTime { get; set; } = new Dictionary<int, DateTime>();
-
-        private static bool IsPortFree(int port, IPEndPoint[] tcpOrUdpPorts)
-        {
-            var isTaken = tcpOrUdpPorts.Any(tcp => tcp.Port == port);
-            return !isTaken;
-        }
+        private static readonly object _lock = new object();
+        private const int _reserveTimeSeconds = 5;
+        private static readonly Dictionary<int, DateTime> _reservedPortsAtTime = new Dictionary<int, DateTime>();
 
         private static bool CanReservePort(int port, DateTime currentTime)
         {
-            if (_reservedPortsAtTime.ContainsKey(port))
-            {
-                var reservedTime = _reservedPortsAtTime[port];
-                var secondsDiff = (currentTime - reservedTime).TotalSeconds;
-                return secondsDiff > _reserveTimeSeconds;
-            }
-            return true;
+            if (!_reservedPortsAtTime.ContainsKey(port)) return true;
+            var reservedTime = _reservedPortsAtTime[port];
+            var secondsDiff = (currentTime - reservedTime).TotalSeconds;
+            return secondsDiff > _reserveTimeSeconds;
         }
 
         public static int GetAvaliablePortFromSettings()
@@ -50,12 +41,12 @@ namespace NHM.MinerPluginToolkitV1
             var now = DateTime.UtcNow;
             foreach (var port in portsRange)
             {
-                var tcpFree = IsPortFree(port, tcpIpEndpoints);
-                var udpFree = IsPortFree(port, udpIpEndpoints);
+                var isTcpTaken = tcpIpEndpoints.Any(e => e.Port == port);
+                var isUdpTaken = udpIpEndpoints.Any(e => e.Port == port);
+                if (isTcpTaken || isUdpTaken) continue;
                 lock (_lock)
                 {
-                    var canReserve = CanReservePort(port, now);
-                    if (tcpFree && udpFree && canReserve)
+                    if (CanReservePort(port, now))
                     {
                         // reserve port and return
                         _reservedPortsAtTime[port] = now;

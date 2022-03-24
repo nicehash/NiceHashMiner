@@ -8,8 +8,7 @@ namespace NhmPackager
 {
     internal static class VersionInfoHelpers
     {
-
-        public static Tuple<string, string, string> GenerateVariableTemplate(string path)
+        internal static (string nsisFileTemplate, string version, string buildTag) GenerateVariableTemplate(string path)
         {
             byte[] assemblyBytes = File.ReadAllBytes(path);
             var assembly = Assembly.Load(assemblyBytes);
@@ -72,9 +71,7 @@ namespace NhmPackager
             ";--------------------------------\n" +
             "!macroend\n";
 
-            return Tuple.Create(NSIS_GENERATED_FILE_TEMPLATE, VERSION, BuildTag);
+            return (NSIS_GENERATED_FILE_TEMPLATE, VERSION, BuildTag);
         }
-
-
     }
 }

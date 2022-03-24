@@ -8,6 +8,43 @@ namespace NBMiner
 {
     internal static class PluginInternalSettings
     {
+        static string _urlPort => $"{MinerCommandLineSettings.POOL_URL_TEMPLATE}:{MinerCommandLineSettings.POOL_PORT_TEMPLATE}";
+        static string _username => MinerCommandLineSettings.USERNAME_TEMPLATE;
+        static string _apiPort => MinerCommandLineSettings.API_PORT_TEMPLATE;
+        static string _devices => MinerCommandLineSettings.DEVICES_TEMPLATE;
+        static string _extraLaunchParameters => MinerCommandLineSettings.EXTRA_LAUNCH_PARAMETERS_TEMPLATE;
+
+        internal static MinerCommandLineSettings MinerCommandLineSettings = new MinerCommandLineSettings
+        {
+            AlgorithmCommandLine = new Dictionary<string, string>
+            {
+                {
+                    $"{AlgorithmType.DaggerHashimoto}",
+                    $"-a ethash -o nicehash+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.CuckooCycle}",
+                    $"-a cuckoo_ae -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KAWPOW}",
+                    $"-a kawpow -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.BeamV3}",
+                    $"-a beamv3 -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.Octopus}",
+                    $"-a octopus -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.Autolykos}",
+                    $"-a ergo -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                }
+            }
+        };
+
         internal static TimeSpan DefaultTimeout = new TimeSpan(0, 1, 0);
 
         internal static MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
@@ -236,7 +273,157 @@ namespace NBMiner
                     ID = "cmdOutput",
                     LongName = "--cmd-output",
                     DefaultValue = "2"
-                }
+                },
+                /// <summary>
+                /// Set power limitation of GPU.
+                /// Set PL in watts: -pl 200
+                /// Set PL in percentage of default PowerLimit: -pl 75% (in Windows bat file, need dual % , -pl 75%%)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "powerLimit",
+                    LongName = "-power-limit",
+                    ShortName = "-pl",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set core clock in MHz.
+                /// Set clock offsets: -cclock 100 (Windows only)
+                /// Set locked clocks: -cclock @1500
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "coreClock",
+                    LongName = "-cclock",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set memory clock offsets in MHz (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "memoryClock",
+                    LongName = "-mclock",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set locked core voltage of GPU in mV, support Turing and newer GPUs. (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "lockedVoltage",
+                    LongName = "-lock-cv",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set fan speed in percentage of GPU. (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "fanSpeed",
+                    LongName = "-fan",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Turn off the New job line in console.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "logNoJob",
+                    LongName = "-log-no-job",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set to change the cycle of Summary table show in console and log, in seconds, defaults to 30.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "logCycle",
+                    LongName = "-log-cycle",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set power limitation of GPU.
+                /// Set PL in watts: -pl 200
+                /// Set PL in percentage of default PowerLimit: -pl 75% (in Windows bat file, need dual % , -pl 75%%)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "powerLimitLong",
+                    LongName = "--power-limit",
+                    ShortName = "--pl",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set core clock in MHz.
+                /// Set clock offsets: -cclock 100 (Windows only)
+                /// Set locked clocks: -cclock @1500
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "coreClockLong",
+                    LongName = "--cclock",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set memory clock offsets in MHz (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "memoryClockLong",
+                    LongName = "--mclock",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set locked core voltage of GPU in mV, support Turing and newer GPUs. (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "lockedVoltageLong",
+                    LongName = "--lock-cv",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set fan speed in percentage of GPU. (Windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "fanSpeedLong",
+                    LongName = "--fan",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Turn off the New job line in console.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "logNoJobLong",
+                    LongName = "--log-no-job",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set to change the cycle of Summary table show in console and log, in seconds, defaults to 30.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "logCycleLong",
+                    LongName = "--log-cycle",
+                    Delimiter = ","
+                },
             },
             TemperatureOptions = new List<MinerOption>
             {

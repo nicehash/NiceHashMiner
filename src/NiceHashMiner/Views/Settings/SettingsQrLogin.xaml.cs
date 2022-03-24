@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.Net.Http;
@@ -32,28 +33,35 @@ namespace NiceHashMiner.Views.Settings
             stopWatch.Start();
 
             var rigID = ApplicationStateManager.RigID();
+            var res = await QrCodeGenerator.RequestNew_QR_Code(_uuid, rigID);
 
-            var requestBody = "{\"qrId\":\"" + _uuid + "\", \"rigId\":\"" + rigID + "\"}";
-            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
-            using (var client = new HttpClient())
+            if (!res)
             {
-                var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
+                lbl_qr_status.Visibility = Visibility.Visible;
+                lbl_qr_status.Content = "Unable to retreive QR Code";
+                return;
+            }
 
-                // create qr code
-                rect_qrCode.Fill = QrCodeHelpers.GetQRCode(_uuid, GUISettings.Instance.DisplayTheme == "Light");
+            var (image, ok) = QrCodeImageGenerator.GetQRCodeImage(_uuid, GUISettings.Instance.DisplayTheme == "Light");
 
-                while (true)
+            if (!ok)
+            {
+                lbl_qr_status.Visibility = Visibility.Visible;
+                lbl_qr_status.Content = "QR Code image generation failed";
+                return;
+            }
+
+            rect_qrCode.Fill = image;
+            while (true)
+            {
+                await Task.Delay(5000);
+
+                if (stopWatch.ElapsedMilliseconds >= (1000 * 60 * 10))
                 {
-                    await Task.Delay(5000);
-
-                    if (stopWatch.ElapsedMilliseconds >= (1000 * 60 * 10))
-                    {
-                        lbl_qr_status.Visibility = Visibility.Visible;
-                        btn_gen_qr.Visibility = Visibility.Visible;
-                        lbl_qr_status.Content = Translations.Tr("QR Code timeout. Please generate new one.");
-                        return;
-                    }
+                    lbl_qr_status.Visibility = Visibility.Visible;
+                    btn_gen_qr.Visibility = Visibility.Visible;
+                    lbl_qr_status.Content = Translations.Tr("QR Code timeout. Please generate new one.");
+                    return;
                 }
             }
         }

@@ -1,4 +1,6 @@
 ﻿using NHM.Common;
+using NHM.CommonWin32;
+using System;
 
 namespace NHMCore.Configs
 {
@@ -18,28 +20,24 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(Hwid));
             }
         }
-
-        private int _agreedWithTOS = 0;
         public int AgreedWithTOS
         {
-            get => _agreedWithTOS;
+            get { return NHMRegistry.GetValueForKeyName(nameof(AgreedWithTOS)); }
             set
             {
-                _agreedWithTOS = value;
+                NHMRegistry.SetValueForKeyName(nameof(AgreedWithTOS), value);
                 OnPropertyChanged(nameof(AgreedWithTOS));
             }
         }
 
-        private int _use3rdPartyMinersTOS = 0;
         public int Use3rdPartyMinersTOS
         {
-            get => _use3rdPartyMinersTOS;
+            get { return NHMRegistry.GetValueForKeyName(nameof(Use3rdPartyMinersTOS)); }
             set
             {
-                _use3rdPartyMinersTOS = value;
+                NHMRegistry.SetValueForKeyName(nameof(Use3rdPartyMinersTOS), value);
                 OnPropertyChanged(nameof(Use3rdPartyMinersTOS));
             }
         }
-
     }
 }

@@ -5,6 +5,9 @@ Var oldDesktopLink
 Var oldShortcutName
 Var oldMenuDirectory
 
+Var GlobalTOS
+Var PluginTOS
+
 # INCLUDE DIRS
 !addincludedir "include_3rdparty"
 !addincludedir "include_common"
@@ -32,6 +35,8 @@ Var launchLink
 ;--------------------------------
 
 Function .onInit
+  SetSilent normal
+  !insertmacro readTOSVariables
   !insertmacro check64BitAndSetRegView
 
   ${IfNot} ${UAC_IsInnerInstance}

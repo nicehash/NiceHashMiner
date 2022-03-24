@@ -15,10 +15,12 @@ namespace LolMiner
             return new List<SAS>
                     {
                         new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory, Enabled = false},
-                        new SAS(AlgorithmType.GrinCuckatoo32){Enabled = false},
-                        new SAS(AlgorithmType.ZHash){Enabled = false},
+                        new SAS(AlgorithmType.GrinCuckatoo32) {Enabled = false},
+                        new SAS(AlgorithmType.ZHash) {Enabled = false},
                         new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
-                        new SAS(AlgorithmType.DaggerHashimoto)
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.ZelHash),
                     };
         }
 
@@ -28,6 +30,8 @@ namespace LolMiner
             return new List<SAS>
                     {
                         new SAS(AlgorithmType.GrinCuckatoo31) {Enabled = enabled },
+                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.ZelHash),
                     };
         }
 
@@ -35,9 +39,9 @@ namespace LolMiner
         {
             // fixed fee
             DefaultFee = 1.0,
-            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            AlgorithmFeesV2 = new Dictionary<string, double>
             {
-                { AlgorithmType.DaggerHashimoto, 0.7 }
+                { $"{AlgorithmType.DaggerHashimoto}", 0.7 }
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -54,22 +58,15 @@ namespace LolMiner
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.BeamV3),
-                        new SAS(AlgorithmType.DaggerHashimoto)
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.ZelHash),
                     }
                 },
                 {
                     DeviceType.AMD,
                     SupportedAMDAlgos()
                 }
-            },
-            AlgorithmNames = new Dictionary<AlgorithmType, string>
-            {
-                //{ AlgorithmType.GrinCuckarood29, "C29D" },
-                { AlgorithmType.GrinCuckatoo31, "C31" },
-                { AlgorithmType.GrinCuckatoo32, "C32" },
-                { AlgorithmType.ZHash, "EQUI144_5" },
-                { AlgorithmType.BeamV3, "BEAM-III" },
-                { AlgorithmType.DaggerHashimoto, "ETHASH" }
             }
         };
     }

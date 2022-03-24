@@ -8,6 +8,7 @@
         Benchmarked,
         ReBenchmark,
         Unprofitable,
+        Unstable,
         // pending states
         BenchmarkPending,
         Benchmarking,

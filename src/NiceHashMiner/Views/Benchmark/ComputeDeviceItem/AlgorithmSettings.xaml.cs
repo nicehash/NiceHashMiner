@@ -41,11 +41,9 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
         private void _algorithmContainer_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
+            if (e.PropertyName == nameof(AlgorithmContainer.HasBenchmark))
             {
-                case nameof(AlgorithmContainer.HasBenchmark):
-                    ToggleButtonHidden.Visibility = _algorithmContainer.HasBenchmark ? Visibility.Visible : Visibility.Collapsed;
-                    return;
+                ToggleButtonHidden.Visibility = _algorithmContainer.HasBenchmark ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 

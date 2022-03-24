@@ -98,7 +98,7 @@ namespace NhmPackager
 
                     // create cached plugins
                     var cachedPluginsPath = GetCachedPluginsPath();
-                    if (!Directory.Exists(cachedPluginsPath)) Directory.CreateDirectory(cachedPluginsPath);
+                    Paths.EnsureDirectoryPath(cachedPluginsPath);
 
                     var downloadPackages = parsedResponse
                         .Where(IsDownloadOrUpdate)

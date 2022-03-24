@@ -84,21 +84,13 @@ namespace NHM.DeviceDetection
                 }
             }
 
-            DetectionResult.AvailableVideoControllers = vidControllers;
+            DetectionResult.AvailableVideoControllers = vidControllers.ToList();
             // check NVIDIA drivers, we assume all NVIDIA devices are using the same driver version
             var nvidiaVideoControllerData = vidControllers.Where(vidC => vidC.IsNvidia).FirstOrDefault();
             if (nvidiaVideoControllerData != null)
             {
                 var wmiNvidiaVer = WMI.WmiNvidiaDriverParser.ParseNvSmiDriver(nvidiaVideoControllerData.DriverVersion);
                 if (wmiNvidiaVer.IsValid) DetectionResult.NvidiaDriverWMI = wmiNvidiaVer.Version;
-                DetectionResult.NVIDIADriverObsolete = wmiNvidiaVer.IsCorrectVersion ? false : true;
-            }
-            var amdVideoControllerData = vidControllers.Where(vidC => vidC.IsAmd).FirstOrDefault();
-            if(amdVideoControllerData != null)
-            {
-                var AmdVer = new AMD.AmdDriver(amdVideoControllerData.DriverVersion);
-                if (AmdVer.IsValid) DetectionResult.AmdDriver = AmdVer.VerDriverVersion;
-                DetectionResult.AMDDriverObsolete = AmdVer.IsCorrectVersion ? false : true;
             }
 
             // log result

@@ -237,31 +237,30 @@ namespace NHMCore.Nhmws
 
         static private void HandleSendMessage()
         {
-            if (_sendQueue.TryDequeue(out var sendMsgCommands))
+            var ok = _sendQueue.TryDequeue(out var sendMsgCommands);
+            if (!ok) return;
+            foreach (var msg in sendMsgCommands)
             {
-                foreach (var msg in sendMsgCommands)
-                {
-                    if (msg == null) continue;
+                if (msg == null) continue;
 
-                    var data = msg.Msg;
-                    switch (msg.Type)
-                    {
-                        case MessageType.CLOSE_WEBSOCKET:
-                            _webSocket?.Close(CloseStatusCode.Normal, data);
-                            _isNhmwsRestart = true;
-                            break;
-                        case MessageType.SEND_MESSAGE:
-                        case MessageType.SEND_MESSAGE_STATUS:
-                            Send(data);
-                            if (MessageType.SEND_MESSAGE_STATUS == msg.Type)
-                            {
-                                _lastSendMinerStatusTimestamp.Value = DateTime.UtcNow;
-                            }
-                            break;
-                        default:
-                            // TODO throw if we get here
-                            break;
-                    }
+                var data = msg.Msg;
+                switch (msg.Type)
+                {
+                    case MessageType.CLOSE_WEBSOCKET:
+                        _webSocket?.Close(CloseStatusCode.Normal, data);
+                        _isNhmwsRestart = true;
+                        break;
+                    case MessageType.SEND_MESSAGE:
+                    case MessageType.SEND_MESSAGE_STATUS:
+                        Send(data);
+                        if (MessageType.SEND_MESSAGE_STATUS == msg.Type)
+                        {
+                            _lastSendMinerStatusTimestamp.Value = DateTime.UtcNow;
+                        }
+                        break;
+                    default:
+                        // TODO throw if we get here
+                        break;
                 }
             }
         }
@@ -462,47 +461,11 @@ namespace NHMCore.Nhmws
         }
         #endregion SMA
         #region MARKETS
-#if DEBUG_MARKETS
-        private static bool debugEU = false;
-        private static bool debugUSA = false;
-        private static int index = 0;
-        private static void changeDebugMarkets()
-        {
-            if (index == 0)
-            {
-                debugEU = true;
-                debugUSA = true;
-            }
-            if (index == 1)
-            {
-                debugEU = false;
-                debugUSA = true;
-            }
-            if (index == 2)
-            {
-                debugEU = true;
-                debugUSA = false;
-            }
-            if (index == 3)
-            {
-                debugEU = false;
-                debugUSA = false;
-            }
-            index = (index + 1) % 4;
-        }
-#endif
 
         private static Task HandleMarkets(string data)
         {
             try
             {
-                var markets = JsonConvert.DeserializeObject<MarketsMessage>(data);
-#if !DEBUG_MARKETS
-                StratumService.Instance.SetEnabledMarkets(markets.data);
-#else
-                changeDebugMarkets();
-                StratumService.Instance.SetEnabledMarkets(debugEU, debugUSA);
-#endif
             }
             catch (Exception e)
             {
@@ -606,8 +569,9 @@ namespace NHMCore.Nhmws
                     return HandleBurn(data);
                 case "exchange_rates":
                     return SetExchangeRates(data);
+                default:
+                    throw new Exception($"NonRpcMessage operation not supported for method '{method}'");
             }
-            throw new Exception($"NonRpcMessage operation not supported for method '{method}'");
         }
 
         #region RpcMessages
@@ -653,11 +617,13 @@ namespace NHMCore.Nhmws
                     throw new RpcException("Bitcoin address invalid", ErrorCode.InvalidUsername);
                 case ApplicationStateManager.SetResult.CHANGED:
                     // we return executed
-                    break;
+                    return true;
                 case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
                     throw new RpcException($"Nothing to change btc \"{btc}\" already set", ErrorCode.RedundantRpc);
+                default:
+                    throw new RpcException($"", ErrorCode.InternalNhmError);
             }
-            return true;
+            
         }
 
         private static bool miningSetWorker(string worker)
@@ -669,11 +635,12 @@ namespace NHMCore.Nhmws
                     throw new RpcException("Worker name invalid", ErrorCode.InvalidWorker);
                 case ApplicationStateManager.SetResult.CHANGED:
                     // we return executed
-                    break;
+                    return true;
                 case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
                     throw new RpcException($"Nothing to change worker name \"{worker}\" already set", ErrorCode.RedundantRpc);
+                default:
+                    throw new RpcException($"", ErrorCode.InternalNhmError);
             }
-            return true;
         }
 
         private static bool miningSetGroup(string group)
@@ -686,11 +653,12 @@ namespace NHMCore.Nhmws
                     throw new RpcException("Group name invalid", ErrorCode.UnableToHandleRpc);
                 case ApplicationStateManager.SetResult.CHANGED:
                     // we return executed
-                    break;
+                    return true;
                 case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
                     throw new RpcException($"Nothing to change group \"{group}\" already set", ErrorCode.RedundantRpc);
+                default:
+                    throw new RpcException($"", ErrorCode.InternalNhmError);
             }
-            return true;
         }
         #endregion Credentials setters (btc/username, worker, group)
 
@@ -770,15 +738,8 @@ namespace NHMCore.Nhmws
 
         private static Task<bool> StartMining(string devs)
         {
-            bool allDevices = devs == "*";
-            if (allDevices)
-            {
-                return startMiningAllDevices();
-            }
-            else
-            {
-                return startMiningOnDeviceWithUuid(devs);
-            }
+            if (devs == "*") return startMiningAllDevices();
+            return startMiningOnDeviceWithUuid(devs);
         }
         #endregion Start
 
@@ -822,15 +783,8 @@ namespace NHMCore.Nhmws
 
         private static Task<bool> StopMining(string devs)
         {
-            bool allDevices = devs == "*";
-            if (allDevices)
-            {
-                return stopMiningAllDevices();
-            }
-            else
-            {
-                return stopMiningOnDeviceWithUuid(devs);
-            }
+            if (devs == "*") return stopMiningAllDevices();
+            return stopMiningOnDeviceWithUuid(devs);
         }
         #endregion Stop
 
@@ -930,8 +884,7 @@ namespace NHMCore.Nhmws
             {
                 _isInRPC.Value = true;
                 dynamic message = JsonConvert.DeserializeObject(data);
-                int? rpcIdOption = (int?)message.id;
-                rpcId = rpcIdOption ?? -1;
+                rpcId = (int?)message.id ?? -1;
 
                 ThrowIfWeCannotHanldeRPC();
                 switch (method)
@@ -973,14 +926,8 @@ namespace NHMCore.Nhmws
                     default:
                         throw new RpcException($"RpcMessage operation not supported for method '{method}'", ErrorCode.UnableToHandleRpc);
                 }
-                if (!string.IsNullOrEmpty(rpcAnswer))
-                {
-                    executedCall = new ExecutedCall(rpcId, 0, rpcAnswer);
-                }
-                else
-                {
-                    executedCall = new ExecutedCall(rpcId, 0, null);
-                }
+                var rpcAnswerReturn = !string.IsNullOrEmpty(rpcAnswer) ? rpcAnswer : null;
+                executedCall = new ExecutedCall(rpcId, 0, rpcAnswerReturn);
             }
             catch (RpcException rpcEx)
             {
@@ -1035,8 +982,9 @@ namespace NHMCore.Nhmws
                 case "mining.set.power_mode":
                 case "miner.reset":
                     return true;
+                default:
+                    return false;
             }
-            return false;
         }
         #endregion Message handling
 

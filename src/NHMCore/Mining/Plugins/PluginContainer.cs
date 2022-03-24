@@ -5,6 +5,7 @@ using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.MinerPluginToolkitV1.Interfaces;
+using NHMCore.Notifications;
 using NHMCore.Switching;
 using System;
 using System.Collections.Generic;
@@ -189,6 +190,7 @@ namespace NHMCore.Mining.Plugins
                 {
                     IsCompatible = EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevices;
                 }
+                CheckDevicesDriverVersionsAndNotifyIfOutdated(baseDevices);
             }
             catch (Exception e)
             {
@@ -320,6 +322,51 @@ namespace NHMCore.Mining.Plugins
             return Task.CompletedTask;
         }
         #endregion IDevicesCrossReference
+
+        #region DriverRequirement
+        void CheckDevicesDriverVersionsAndNotifyIfOutdated(IEnumerable<BaseDevice> devices)
+        {
+            var listOfOldDrivers = new List<(DriverVersionLimitType, BaseDevice, (DriverVersionCheckType, Version))>();
+            foreach(var dev in devices)
+            {
+                listOfOldDrivers.AddRange(CheckDeviceVersionLimits(dev));
+            }
+            if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
+        }
+
+        private List<(DriverVersionLimitType, BaseDevice, (DriverVersionCheckType, Version))> CheckDeviceVersionLimits(BaseDevice device)
+        {
+            var oldDriversForDevice = new List<(DriverVersionLimitType outDatedType, BaseDevice dev,(DriverVersionCheckType checkReturnCode, Version minVersion) driverVersionCheckReturn)>();
+            if (device is AMDDevice dev && !IsAMDDriverVersionValidFormat(dev))
+            {
+                AMDNonOKCodeNotification(dev);
+                return oldDriversForDevice;
+            }
+            if (_plugin is IDriverIsMinimumRequired minRequired) oldDriversForDevice.Add((DriverVersionLimitType.MinRequired, device, minRequired.IsDriverMinimumRequired(device)));
+            if (_plugin is IDriverIsMinimumRecommended minRecommended) oldDriversForDevice.Add((DriverVersionLimitType.MinRecommended, device, minRecommended.IsDriverMinimumRecommended(device)));
+            if (oldDriversForDevice.Count == 0) return oldDriversForDevice;
+            oldDriversForDevice = oldDriversForDevice.Where(item => item.driverVersionCheckReturn.checkReturnCode == DriverVersionCheckType.DriverVersionObsolete).ToList();
+            return oldDriversForDevice;
+        }
+
+        private static void AMDNonOKCodeNotification(AMDDevice amd)
+        {
+            if (amd.ADLReturnCode == 1) AvailableNotifications.CreateADLVersionWarning(amd);
+            else AvailableNotifications.CreateADLVersionError(amd);
+        }
+
+        private static bool IsAMDDriverVersionValidFormat(AMDDevice amdDev)
+        {
+            var validCrimson = IsAMDCrimsonVersionValid(amdDev.RawDriverVersion);
+            if (validCrimson && (amdDev.ADLReturnCode == 0 || amdDev.ADLReturnCode == 1)) return true;
+            return false;
+        }
+        private static bool IsAMDCrimsonVersionValid(string version)
+        {
+            if (version.Split('.').Length != 3) return false;
+            return Version.TryParse(version, out var temp);
+        }
+        #endregion
 
         #region IGetApiMaxTimeout/IGetApiMaxTimeoutV2
         public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)

@@ -1,6 +1,7 @@
 ﻿using NHM.Common.Device;
 using NHM.Common.Enums;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NHM.DeviceDetection.CPU
 {
@@ -32,23 +33,15 @@ namespace NHM.DeviceDetection.CPU
                 case CpuExtensionType.AVX: return cpuID.SupportsAVX;
                 case CpuExtensionType.AES: return cpuID.SupportsAES_SSE42;
                 case CpuExtensionType.SSE2: return cpuID.SupportsSSE2;
-                default: // CPUExtensionType.Automatic
-                    break;
+                default: return false;
             }
-            return false;
         }
 
         public static List<CpuExtensionType> SupportedExtensions(CpuID cpuID)
         {
-            var ret = new List<CpuExtensionType>();
-            foreach (var ext in _detectOrder)
-            {
-                if (HasExtensionSupport(ext, cpuID))
-                {
-                    ret.Add(ext);
-                }
-            }
-            return ret;
+            return _detectOrder
+                .Where(ext => HasExtensionSupport(ext, cpuID))
+                .ToList();
         }
 
         /// <summary>

@@ -13,12 +13,13 @@ using System.Threading.Tasks;
 
 namespace NBMiner
 {
-    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference
+    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
         public NBMinerPlugin()
         {
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
+            MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
@@ -27,11 +28,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v39.7",
+                BinVersion = "v40.1",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v39.7/NBMiner_39.7_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v40.1/NBMiner_40.1_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -43,7 +44,7 @@ namespace NBMiner
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 5);
+        public override Version Version => new Version(17, 0);
         public override string Name => "NBMiner";
 
         public override string Author => "info@nicehash.com";
@@ -165,6 +166,16 @@ namespace NBMiner
                 Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
             }
             return false;
+        }
+
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        {
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
+        }
+
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        {
+            return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }
     }
 }

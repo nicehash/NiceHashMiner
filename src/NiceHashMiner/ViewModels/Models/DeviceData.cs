@@ -44,7 +44,7 @@ namespace NiceHashMiner.ViewModels.Models
         {
             get
             {
-                return Dev.DeviceType == DeviceType.CPU ? CPUs : GPUs;
+                return Dev.DeviceType == DeviceType.CPU ? CPUs : GPUs.Where(dev => dev.DeviceType == Dev.DeviceType).ToList();
             }
         }
 
@@ -83,10 +83,9 @@ namespace NiceHashMiner.ViewModels.Models
         }
 
         public bool CanClearAllSpeeds => !(Dev.State == DeviceState.Benchmarking || Dev.State == DeviceState.Mining);
-        public bool CanStopBenchmark => Dev.State == DeviceState.Benchmarking;
-
-
-        public bool IsOnlyDeviceOfType => AvailableDevices.Devices.Count(dev => dev.DeviceType == Dev.DeviceType) > 1;
+        public bool CanStopBenchmark => Dev.Enabled && Dev.State == DeviceState.Benchmarking;
+        public bool CanStopMining => Dev.Enabled && Dev.State == DeviceState.Mining;
+        public bool CanCopyFromOtherDevices => AvailableDevices.Devices.Count(dev => dev.DeviceType == Dev.DeviceType) > 1 && CanClearAllSpeeds;
 
 
         public List<string> AlgoNames { get; private set; }
@@ -221,32 +220,30 @@ namespace NiceHashMiner.ViewModels.Models
 
         private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
+            if (e.PropertyName == nameof(ComputeDevice.AlgorithmSettings))
             {
-                case nameof(ComputeDevice.AlgorithmSettings):
-                    AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
-                    OrderAlgorithms();
-                    OnPropertyChanged(nameof(AlgoOptions));
-                    OnPropertyChanged(nameof(AlgosEnabled));
-                    OnPropertyChanged(nameof(AlgosBenchmarked));
-                    // update algorithms event handlers here
-                    foreach (var algo in Dev.AlgorithmSettings)
-                    {
-                        algo.PropertyChanged -= AlgoOnPropertyChanged;
-                        algo.PropertyChanged += AlgoOnPropertyChanged;
-                    }
-
-                    return;
-                default:
-                    break;
+                AlgorithmSettingsCollection = new ObservableCollection<AlgorithmContainer>(Dev.AlgorithmSettings);
+                OrderAlgorithms();
+                OnPropertyChanged(nameof(AlgoOptions));
+                OnPropertyChanged(nameof(AlgosEnabled));
+                OnPropertyChanged(nameof(AlgosBenchmarked));
+                // update algorithms event handlers here
+                foreach (var algo in Dev.AlgorithmSettings)
+                {
+                    algo.PropertyChanged -= AlgoOnPropertyChanged;
+                    algo.PropertyChanged += AlgoOnPropertyChanged;
+                }
             }
-            if (e.PropertyName == nameof(Dev.State))
+            else if (e.PropertyName == nameof(Dev.State))
             {
                 OnPropertyChanged(nameof(ButtonLabel));
                 OnPropertyChanged(nameof(CanStart));
                 OnPropertyChanged(nameof(CanStop));
                 OnPropertyChanged(nameof(CanClearAllSpeeds));
                 OnPropertyChanged(nameof(CanStopBenchmark));
+                OnPropertyChanged(nameof(CanStopMining));
+                OnPropertyChanged(nameof(CanCopyFromOtherDevices));
+                OnPropertyChanged(nameof(DevicesOfSameType));
             }
             else if (e.PropertyName == nameof(Dev.Enabled))
             {
@@ -289,6 +286,8 @@ namespace NiceHashMiner.ViewModels.Models
                 case DeviceState.Mining:
                 case DeviceState.Benchmarking:
                     await ApplicationStateManager.StopSingleDevicePublic(Dev);
+                    break;
+                default:
                     break;
             }
         }
