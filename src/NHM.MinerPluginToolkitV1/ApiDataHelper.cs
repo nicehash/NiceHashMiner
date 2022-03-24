@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace NHM.MinerPluginToolkitV1
 {
     // this is temporary since we know it alredy works, try not to use it or replace it later
-    public class ApiDataHelpers
+    public static class ApiDataHelpers
     {
         public static string GetHttpRequestNhmAgentString(string cmd)
         {
@@ -21,17 +21,15 @@ namespace NHM.MinerPluginToolkitV1
         {
             try
             {
-                using (var client = new TcpClient("127.0.0.1", port))
-                using (var nwStream = client.GetStream())
-                {
-                    var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
-                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                    var bytesToRead = new byte[client.ReceiveBufferSize];
-                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    client.Close();
-                    return respStr;
-                }
+                using var client = new TcpClient("127.0.0.1", port);
+                using var nwStream = client.GetStream();
+                var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
+                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+                var bytesToRead = new byte[client.ReceiveBufferSize];
+                var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
+                var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                client.Close();
+                return respStr;
             }
             catch (Exception e)
             {

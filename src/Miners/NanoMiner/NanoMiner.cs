@@ -19,7 +19,6 @@ namespace NanoMiner
     {
 
         private readonly HttpClient _httpClient = new HttpClient();
-        private int _apiPort;
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
@@ -27,9 +26,6 @@ namespace NanoMiner
         {
             _mappedDeviceIds = mappedDeviceIds;
         }
-
-        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
-        private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
@@ -100,7 +96,7 @@ namespace NanoMiner
         {
             _apiPort = GetAvaliablePort();
 
-            var algo = AlgorithmName(_algorithmType);
+            var algo = PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
 
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
             var paths = GetBinAndCwdPaths();

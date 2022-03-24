@@ -24,16 +24,8 @@ Allow user to enable debug features (more detailed logging, set benchmark speeds
 
 Allow external plugin to become integrated for testing purposes (useful when writing a plugin).
 
-- `INTEGRATE_BMiner_PLUGIN`
 - `INTEGRATE_BrokenMiner_PLUGIN`
-- `INTEGRATE_CpuMinerOpt_PLUGIN`
-- `INTEGRATE_CryptoDredge_PLUGIN`
-- `INTEGRATE_Ethminer_PLUGIN`
 - `INTEGRATE_ExamplePlugin_PLUGIN`
 - `INTEGRATE_LolMinerBeam_PLUGIN`
-- `INTEGRATE_MiniZ_PLUGIN`
 - `INTEGRATE_NanoMiner_PLUGIN`
-- `INTEGRATE_SRBMiner_PLUGIN`
-- `INTEGRATE_WildRig_PLUGIN`
 - `INTEGRATE_XMRig_PLUGIN`
-- `INTEGRATE_ZEnemy_PLUGIN`

@@ -7,15 +7,15 @@ namespace NBMiner
 {
     public partial class NBMinerPlugin
     {
+        const ulong KAWPOW_RamLimit = (2UL << 30) + (2UL << 29) + (2UL << 28);
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // TODO fees are not just 2%
             DefaultFee = 2.0,
-            AlgorithmFees = new Dictionary<AlgorithmType, double>
+            AlgorithmFeesV2 = new Dictionary<string, double>
             {
-                { AlgorithmType.DaggerHashimoto, 1.0 },
-                //{ AlgorithmType.Cuckaroo29BFC, 3.0 },
-                { AlgorithmType.Octopus, 3.0 },
+                { $"{AlgorithmType.DaggerHashimoto}", 1.0 },
+                { $"{AlgorithmType.Octopus}", 3.0 },
             },
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
@@ -25,7 +25,7 @@ namespace NBMiner
                     {
                         new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.KAWPOW){ NonDefaultRAMLimit = (2UL << 30) + (2UL << 29) + (2UL << 28)},
+                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit },
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                         new SAS(AlgorithmType.Autolykos),
@@ -35,23 +35,12 @@ namespace NBMiner
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
+                        new SAS(AlgorithmType.KAWPOW) {NonDefaultRAMLimit = KAWPOW_RamLimit },
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.Autolykos),
                         //new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                     }
                 }
-            },
-            AlgorithmNames = new Dictionary<AlgorithmType, string>
-            {
-                { AlgorithmType.CuckooCycle, "cuckoo_ae" },
-                //{ AlgorithmType.GrinCuckarood29, "cuckarood" },
-                { AlgorithmType.DaggerHashimoto, "ethash" },
-                { AlgorithmType.KAWPOW, "kawpow" },
-                //{ AlgorithmType.Cuckaroo29BFC, "bfc" },
-                { AlgorithmType.BeamV3, "beamv3" },
-                { AlgorithmType.Octopus, "octopus" },
-                { AlgorithmType.Autolykos, "ergo" },
             }
         };
     }

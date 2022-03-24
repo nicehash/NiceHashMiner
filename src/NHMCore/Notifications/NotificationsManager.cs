@@ -32,7 +32,8 @@ namespace NHMCore.Notifications
             if (shouldNotAdd) return;
 
             //only have 1 notification of same type
-            var groupNotifications = _notifications.Where(notif => notif.Group == notification.Group).ToList();
+            var groupNotifications = _notifications.Where(notif => notif.Group == notification.Group)
+                                                    .Where(notif => notif.Domain == notification.Domain).ToList();
             if (groupNotifications.Count != 0) return;
 
             lock (_lock)

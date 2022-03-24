@@ -19,9 +19,6 @@ namespace MP.Joker
 {
     public class JokerMiner : MinerBase
     {
-        protected AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
-        private string _devices;
-        private int _apiPort;
         PluginEngine _pluginEngine;
 
         private MinerSettings _minerSettings = null;
@@ -29,8 +26,6 @@ namespace MP.Joker
         private DateTime _started = DateTime.MinValue;
 
         private readonly HttpClient _httpClient = new HttpClient();
-
-        private double DevFee => PluginSupportedAlgorithms.DevFee(_algorithmType);
 
         // the order of intializing devices is the order how the API responds
         protected Dictionary<string, int> _mappedDeviceIds;
@@ -47,8 +42,6 @@ namespace MP.Joker
             _pluginEngine = pluginEngine;
             _openClAmdPlatformNum = openClAmdPlatformNum;
         }
-
-        protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
         #region GetMinerStatsDataAsync
 
@@ -395,18 +388,16 @@ namespace MP.Joker
             try
             {
                 MiniZ.JsonApiResponse resp = null;
-                using (var client = new TcpClient("127.0.0.1", _apiPort))
-                using (var nwStream = client.GetStream())
-                {
-                    var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":\"0\", \"method\":\"getstat\"}\\n");
-                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                    var bytesToRead = new byte[client.ReceiveBufferSize];
-                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    api.ApiResponse = respStr;
-                    resp = JsonConvert.DeserializeObject<MiniZ.JsonApiResponse>(respStr);
-                    client.Close();
-                }
+                using var client = new TcpClient("127.0.0.1", _apiPort);
+                using var nwStream = client.GetStream();
+                var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":\"0\", \"method\":\"getstat\"}\\n");
+                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+                var bytesToRead = new byte[client.ReceiveBufferSize];
+                var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
+                var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                api.ApiResponse = respStr;
+                resp = JsonConvert.DeserializeObject<MiniZ.JsonApiResponse>(respStr);
+                client.Close();
 
                 // return if we got nothing
                 var respOK = resp != null && resp.error == null;
@@ -755,16 +746,15 @@ namespace MP.Joker
                 try
                 {
                     var bytesToSend = Encoding.ASCII.GetBytes(_jsonStatsApiCall);
-                    using (var client = new TcpClient("127.0.0.1", apiPort))
-                    using (var nwStream = client.GetStream())
-                    {
-                        await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                        var bytesToRead = new byte[client.ReceiveBufferSize];
-                        var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                        var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                        ad.ApiResponse = respStr;
-                        resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
-                    }
+                    using var client = new TcpClient("127.0.0.1", apiPort);
+                    using var nwStream = client.GetStream();
+                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+                    var bytesToRead = new byte[client.ReceiveBufferSize];
+                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
+                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                    ad.ApiResponse = respStr;
+                    resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
+                    
                     if (resp != null && resp.error == null)
                     {
                         if (resp.result != null && resp.result.Count > 3)
@@ -1143,18 +1133,16 @@ namespace MP.Joker
                 {
                     try
                     {
-                        using (var client = new TcpClient("127.0.0.1", port))
-                        using (var nwStream = client.GetStream())
-                        {
-                            var bytesToSend = Encoding.ASCII.GetBytes(jsonDevsApiCall);
-                            await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                            var bytesToRead = new byte[client.ReceiveBufferSize];
-                            var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                            var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                            client.Close();
-                            var resp = JsonConvert.DeserializeObject<ApiDevsRoot>(respStr, _jsonSettings);
-                            return (resp, respStr);
-                        }
+                        using var client = new TcpClient("127.0.0.1", port);
+                        using var nwStream = client.GetStream();
+                        var bytesToSend = Encoding.ASCII.GetBytes(jsonDevsApiCall);
+                        await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+                        var bytesToRead = new byte[client.ReceiveBufferSize];
+                        var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
+                        var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                        client.Close();
+                        var resp = JsonConvert.DeserializeObject<ApiDevsRoot>(respStr, _jsonSettings);
+                        return (resp, respStr);
                     }
                     catch (Exception e)
                     {
@@ -1575,11 +1563,6 @@ namespace MP.Joker
         {
             _devices = string.Join(_minerSettings.DevicesSeparator, _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
 
-            var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
-            _algorithmSecondType = dualType.Item1;
-            var ok = dualType.Item2;
-            if (!ok) _algorithmSecondType = AlgorithmType.NONE;
-
             var miningPairsArray = _miningPairs.ToArray();
             for (int i = 0; i < miningPairsArray.Length; i++)
             {
@@ -1610,13 +1593,12 @@ namespace MP.Joker
             // instant non blocking
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, _minerSettings.NhmConectionType);
             var (url, port, _) = SplitUrlWithPort(urlWithPort);
-            var algo = AlgorithmName(_algorithmType);
             var commandLine = GetCommandLineTemplate(_minerSettings, _algorithmType)
                 .Replace(MinerSettings.USERNAME_TEMPLATE, _username)
                 .Replace(MinerSettings.API_PORT_TEMPLATE, $"{_apiPort}")
                 .Replace(MinerSettings.POOL_URL_TEMPLATE, url)
                 .Replace(MinerSettings.POOL_PORT_TEMPLATE, port)
-                .Replace(MinerSettings.ALGORITHM_TEMPLATE, algo)
+                //.Replace(MinerSettings.ALGORITHM_TEMPLATE, algo)
                 .Replace(MinerSettings.DEVICES_TEMPLATE, _devices)
                 .Replace(MinerSettings.OPEN_CL_AMD_PLATFORM_NUM, $"{_openClAmdPlatformNum}")
                 .Replace(MinerSettings.EXTRA_LAUNCH_PARAMETERS_TEMPLATE, _extraLaunchParameters);

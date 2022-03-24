@@ -17,69 +17,55 @@ namespace NHM.MinerPluginToolkitV1
 {
     public static class MinerToolkit
     {
-        /// <summary>
-        /// Use DemoUser if the miner requires a network benchmark, the plugin will blacklist users
-        /// </summary>
-        public static string DemoUserBTC => DemoUser.BTC;
-
         public static bool HideMiningWindows { set; get; } = false;
         public static bool MinimizeMiningWindows { set; get; } = false;
 
-        public static int MinerRestartDelayMS { set; get; } = 500;
-
-        /// <summary>
-        /// GetAlgorithmSingleType returns Tuple of single <see cref="AlgorithmType"/> and success status.
-        /// </summary>
-        public static Tuple<AlgorithmType, bool> GetAlgorithmSingleType(this IEnumerable<MiningPair> mps)
+        public static (AlgorithmType first, AlgorithmType second, bool ok) GetFirstAndSecondAlgorithmType(this IEnumerable<MiningPair> mps)
         {
-            var algorithmTypes = mps.Select(pair => pair.Algorithm.IDs.First());
-            var mustIncludeSingle = new HashSet<AlgorithmType>(algorithmTypes);
-            if (mustIncludeSingle.Count == 1)
-            {
-                return Tuple.Create(mustIncludeSingle.First(), true);
-            }
-            return Tuple.Create(AlgorithmType.NONE, false);
+            if (mps == null) return (AlgorithmType.NONE, AlgorithmType.NONE, false);
+
+            var firstSet = new HashSet<AlgorithmType>(mps.Select(pair => pair.Algorithm.IDs.First()));
+            var secondSet = new HashSet<AlgorithmType>(mps.Select(pair => pair.Algorithm.IDs.Last()));
+            var ok = firstSet.Count == 1 && secondSet.Count == 1;
+            if (!ok) return (AlgorithmType.NONE, AlgorithmType.NONE, false);
+
+            var first = firstSet.First();
+            var second = secondSet.First();
+            if (first == second) return (first, AlgorithmType.NONE, true);
+            return (first, second, true);
         }
 
-        /// <summary>
-        /// GetAlgorithmSingleType returns Tuple of dual <see cref="AlgorithmType"/> and success status.
-        /// </summary>
-        public static Tuple<AlgorithmType, bool> GetAlgorithmDualType(this IEnumerable<MiningPair> mps)
+        public static (string name, bool ok) GetAlgorithmSettingsKey(this IEnumerable<MiningPair> mps)
         {
-            if (mps.Select(pair => pair.Algorithm.IDs.Count).ToList()[0] == 1) return Tuple.Create(AlgorithmType.NONE, false);
-
-            var algorithmTypes = mps.Select(pair => pair.Algorithm.IDs.Last());
-            var mustIncludeDual = new HashSet<AlgorithmType>(algorithmTypes);
-            return Tuple.Create(mustIncludeDual.First(), true);
+            return AlgorithmIDsToString(mps?.First()?.Algorithm?.IDs?.ToArray() ?? null);
         }
 
-        /// <summary>
-        /// GetAlgorithmCustomSettingKey returns first Algorithm name from MiningPairs
-        /// </summary>
-        public static string GetAlgorithmCustomSettingKey(this IEnumerable<MiningPair> mps)
+        public static (string name, bool ok) AlgorithmIDsToString(this AlgorithmType[] ids)
         {
-            if (mps.Count() == 0) return "";
-            return mps.First().Algorithm.AlgorithmName;
+            if (ids == null) return ("", false);
+            var namesPairs = ids.Select(id => id.GetName());
+            var ok = namesPairs.All(p => p.ok);
+            var names = namesPairs.Where(p => p.ok).Select(p => p.name);
+            var name = string.Join("+", names);
+            return (name, ok);
         }
 
-        /// <summary>
-        /// GetAlgorithmPortsKey returns first Algorithm name from MiningPairs
-        /// </summary>
-        public static string GetAlgorithmPortsKey(this IEnumerable<MiningPair> mps)
+        public static (AlgorithmType[] ids, bool ok) StringToAlgorithmIDs(this string name)
         {
-            if (mps.Count() == 0) return "";
-            return mps.First().Algorithm.AlgorithmName;
+            (bool ok, AlgorithmType id) TryParse(string name) => (Enum.TryParse(name, out AlgorithmType id), id);
+            var idPairs = name.Split('+').Select(TryParse);
+            var ok = idPairs.All(p => p.ok);
+            var ids = idPairs.Where(p => p.ok).Select(p => p.id).ToArray();
+            return (ids, ok);
         }
 
         /// <summary>
         /// GetDevicesIDsInOrder returns ordered device IDs from <paramref name="mps"/>
         /// </summary>
-        public static Tuple<int, bool> GetOpenCLPlatformID(this IEnumerable<MiningPair> mps)
+        public static (int id, bool ok) GetOpenCLPlatformID(this IEnumerable<MiningPair> mps)
         {
-            if (mps == null || mps.Count() == 0)
-            {
-                return Tuple.Create(-1, false);
-            }
+            if (mps == null || mps.Count() == 0) return (-1, false);
+
             var openCLPlatformIDGroups = mps.Select(mp => mp.Device)
                 .Where(dev => dev is AMDDevice)
                 .Cast<AMDDevice>()
@@ -87,7 +73,7 @@ namespace NHM.MinerPluginToolkitV1
 
             var platformID = openCLPlatformIDGroups.Select(group => group.Key).OrderBy(key => key).FirstOrDefault();
             var isUnique = !(openCLPlatformIDGroups.Count() > 1);
-            return Tuple.Create(platformID, isUnique);
+            return (platformID, isUnique);
         }
 
         //shamelessly copied from StringsExt in extensions library/package
@@ -100,77 +86,12 @@ namespace NHM.MinerPluginToolkitV1
             return s.Substring(index + after.Length);
         }
 
-        private static int pow10(int power) => (int)Math.Pow(10, power);
-        private static readonly Dictionary<char, int> _postfixes = new Dictionary<char, int>
-        {
-            {'k', pow10(3)},
-            {'M', pow10(6)},
-            {'G', pow10(9)},
-            {'T', pow10(12)},
-            {'P', pow10(15)},
-            {'E', pow10(15)},
-            {'Z', pow10(21)},
-            {'Y', pow10(24)},
-        };
-
-        // TODO this will work on Sol-rates and G-rates but will skip prefixes
-        // Hashrate and found pair
-        /// <summary>
-        /// TryGetHashrateAfter gets -Hashrate and found- pair from string.
-        /// </summary>
-        /// <param name="s">Is the line of text we are searching hashrate in</param>
-        /// <param name="after">Is the token we are searching for - after that token there should be hashrate</param>
-        /// <returns>Hashrate and success boolean</returns>
-        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after)
-        {
-            if (!s.Contains(after))
-            {
-                return Tuple.Create(0d, false);
-            }
-
-            var afterString = s.GetStringAfter(after).ToLower();
-            var numString = new string(afterString
-                .ToCharArray()
-                .SkipWhile(c => !char.IsDigit(c))
-                .TakeWhile(c => char.IsDigit(c) || c == '.')
-                .ToArray());
-
-            if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
-            {
-                return Tuple.Create(0d, false);
-            }
-
-            var afterNumString = afterString.GetStringAfter(numString);
-            for (var i = 0; i < afterNumString.Length - 1; ++i)
-            {
-                var c = afterNumString[i];
-                if (!Char.IsLetter(c)) continue;
-                var c2 = afterNumString[i + 1];
-
-                foreach (var kvp in _postfixes)
-                {
-                    var postfix = Char.ToLower(kvp.Key);
-                    var mult = kvp.Value;
-                    if (postfix == c && 'h' == c2)
-                    {
-                        var hashrate = hash * mult;
-                        return Tuple.Create(hashrate, true);
-                    }
-                }
-            }
-            return Tuple.Create(hash, true);
-        }
-
         public static bool IsNeverHideMiningWindow(Dictionary<string, string> environmentVariables)
         {
-            if (environmentVariables == null) return false;
-            return environmentVariables.ContainsKey("NEVER_HIDE_MINING_WINDOW");
+            return environmentVariables?.ContainsKey("NEVER_HIDE_MINING_WINDOW") ?? false;
         }
 
-        public static bool IsUseShellExecute(Dictionary<string, string> environmentVariables)
-        {
-            return environmentVariables == null;
-        }
+        public static bool IsUseShellExecute(Dictionary<string, string> environmentVariables) => environmentVariables == null;
 
         /// <summary>
         /// CreateMiningProcess creates a new process used in mining
@@ -269,39 +190,36 @@ namespace NHM.MinerPluginToolkitV1
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var timeoutTimerTime = timeoutTime + delayTime;
 
-            using (var timeoutSource = new CancellationTokenSource(timeoutTimerTime))
+            using var timeoutSource = new CancellationTokenSource(timeoutTimerTime);
+            BenchmarkResult ret = null;
+            var timeout = timeoutSource.Token;
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeout, stop, stopAfterTicks);
+            try
             {
-                BenchmarkResult ret = null;
-                var timeout = timeoutSource.Token;
-                using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeout, stop, stopAfterTicks))
-                {
-                    try
-                    {
-                        await Task.Delay(delayTime, linkedCts.Token);
-                        ret = await benchmarkProcess.Execute(linkedCts.Token);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Info("MinerToolkit", $"Error occured while waiting for benchmark result: {e.Message}");
-                        return new BenchmarkResult { ErrorMessage = e.Message };
-                    }
-                }
-                // #1 if canceled return canceled
-                if (stop.IsCancellationRequested)
-                {
-                    Logger.Info("MinerToolkit", "Benchmark process was canceled by user");
-                    return new BenchmarkResult { ErrorMessage = "Cancelling per user request." };
-                }
-                if (ret == null) return new BenchmarkResult { ErrorMessage = "Benchmark result is null" };
-                if (ret.HasNonZeroSpeeds() || !string.IsNullOrEmpty(ret.ErrorMessage)) return ret;
-                if (timeout.IsCancellationRequested)
-                {
-                    Logger.Info("MinerToolkit", "Benchmark process timed out");
-                    return new BenchmarkResult { ErrorMessage = "Operation timed out." };
-                }
+                await Task.Delay(delayTime, linkedCts.Token);
+                ret = await benchmarkProcess.Execute(linkedCts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                Logger.Info("MinerToolkit", $"Error occured while waiting for benchmark result: {e.Message}");
+                return new BenchmarkResult { ErrorMessage = e.Message };
+            }
+
+            // #1 if canceled return canceled
+            if (stop.IsCancellationRequested)
+            {
+                Logger.Info("MinerToolkit", "Benchmark process was canceled by user");
+                return new BenchmarkResult { ErrorMessage = "Cancelling per user request." };
+            }
+            if (ret == null) return new BenchmarkResult { ErrorMessage = "Benchmark result is null" };
+            if (ret.HasNonZeroSpeeds() || !string.IsNullOrEmpty(ret.ErrorMessage)) return ret;
+            if (timeout.IsCancellationRequested)
+            {
+                Logger.Info("MinerToolkit", "Benchmark process timed out");
+                return new BenchmarkResult { ErrorMessage = "Operation timed out." };
             }
             return new BenchmarkResult();
         }
@@ -311,15 +229,56 @@ namespace NHM.MinerPluginToolkitV1
         /// </summary>
         public static bool IsSameAlgorithmType(Algorithm a, Algorithm b)
         {
-            if (a.IDs.Count != b.IDs.Count) return false;
-            if (a.MinerID != b.MinerID) return false;
-
-            for (int i = 0; i < a.IDs.Count; i++)
-            {
-                if (a.IDs[i] != b.IDs[i]) return false;
-            }
-
-            return true;
+            if (a == null || b == null) return false;
+            return a.AlgorithmStringID == b.AlgorithmStringID;
         }
+
+
+        #region Major version 16
+        /// <summary>
+        /// GetAlgorithmSingleType returns Tuple of single <see cref="AlgorithmType"/> and success status.
+        /// </summary>
+        public static Tuple<AlgorithmType, bool> GetAlgorithmSingleType(this IEnumerable<MiningPair> mps)
+        {
+            var algorithmTypes = mps.Select(pair => pair.Algorithm.IDs.First());
+            var mustIncludeSingle = new HashSet<AlgorithmType>(algorithmTypes);
+            if (mustIncludeSingle.Count == 1)
+            {
+                return Tuple.Create(mustIncludeSingle.First(), true);
+            }
+            return Tuple.Create(AlgorithmType.NONE, false);
+        }
+
+        /// <summary>
+        /// GetAlgorithmSingleType returns Tuple of dual <see cref="AlgorithmType"/> and success status.
+        /// </summary>
+        public static Tuple<AlgorithmType, bool> GetAlgorithmDualType(this IEnumerable<MiningPair> mps)
+        {
+            if (mps.Select(pair => pair.Algorithm.IDs.Count).ToList()[0] == 1) return Tuple.Create(AlgorithmType.NONE, false);
+
+            var algorithmTypes = mps.Select(pair => pair.Algorithm.IDs.Last());
+            var mustIncludeDual = new HashSet<AlgorithmType>(algorithmTypes);
+            return Tuple.Create(mustIncludeDual.First(), true);
+        }
+
+        /// <summary>
+        /// GetAlgorithmCustomSettingKey returns first Algorithm name from MiningPairs
+        /// </summary>
+        public static string GetAlgorithmCustomSettingKey(this IEnumerable<MiningPair> mps)
+        {
+            if (mps.Count() == 0) return "";
+            return mps.First().Algorithm.AlgorithmName;
+        }
+
+        /// <summary>
+        /// GetAlgorithmPortsKey returns first Algorithm name from MiningPairs
+        /// </summary>
+        public static string GetAlgorithmPortsKey(this IEnumerable<MiningPair> mps)
+        {
+            if (mps.Count() == 0) return "";
+            return mps.First().Algorithm.AlgorithmName;
+        }
+        #endregion Major version 16
+
     }
 }

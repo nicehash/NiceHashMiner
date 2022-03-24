@@ -44,63 +44,24 @@ namespace NHMCore.Mining.Plugins
 #endif
 
 // real miners
-#if INTEGRATE_GMiner_PLUGIN
-                new GMinerPlugin.GMinerPlugin(),
-#endif
 #if INTEGRATE_NBMiner_PLUGIN
                 new NBMiner.NBMinerPlugin(),
-#endif
-#if INTEGRATE_Phoenix_PLUGIN
-                new Phoenix.PhoenixPlugin(),
-#endif
-#if INTEGRATE_TeamRedMiner_PLUGIN
-                new TeamRedMiner.TeamRedMinerPlugin(),
-#endif
-#if INTEGRATE_TRex_PLUGIN
-                new TRex.TRexPlugin(),
-#endif
-#if INTEGRATE_TTMiner_PLUGIN
-                new TTMiner.TTMinerPlugin(),
 #endif
 #if INTEGRATE_NanoMiner_PLUGIN
                 new NanoMiner.NanoMinerPlugin(),
 #endif
-#if INTEGRATE_WildRig_PLUGIN
-                new WildRig.WildRigPlugin(),
-#endif
-#if INTEGRATE_CryptoDredge_PLUGIN
-                new CryptoDredge.CryptoDredgePlugin(),
-#endif
-#if INTEGRATE_ZEnemy_PLUGIN
-                new ZEnemy.ZEnemyPlugin(),
-#endif
 #if INTEGRATE_LolMiner_PLUGIN
                 new LolMiner.LolMinerPlugin(),
-#endif
-#if INTEGRATE_SRBMiner_PLUGIN
-                new SRBMiner.SRBMinerPlugin(),
 #endif
 #if INTEGRATE_XMRig_PLUGIN
                 new XMRig.XMRigPlugin(),
 #endif
-#if INTEGRATE_MiniZ_PLUGIN
-                new MiniZ.MiniZPlugin(),
-#endif
 
 #if INTEGRATE_ALL_PLUGINS
-                new GMinerPlugin.GMinerPlugin(),
                 new NBMiner.NBMinerPlugin(),
-                new Phoenix.PhoenixPlugin(),
-                new TeamRedMiner.TeamRedMinerPlugin(),
-                new TRex.TRexPlugin(),
-                new TTMiner.TTMinerPlugin(),
                 new NanoMiner.NanoMinerPlugin(),
-                new WildRig.WildRigPlugin(),
-                new CryptoDredge.CryptoDredgePlugin(),
-                new ZEnemy.ZEnemyPlugin(),
                 new LolMiner.LolMinerPlugin(),
-                new SRBMiner.SRBMinerPlugin(),
-                new MiniZ.MiniZPlugin(),
+                new XMRig.XMRigPlugin(),
 #endif
 
 

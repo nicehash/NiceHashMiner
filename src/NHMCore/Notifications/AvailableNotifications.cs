@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Device;
+using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHMCore.Utils;
@@ -294,7 +295,7 @@ namespace NHMCore.Notifications
             try
             {
                 var profitNotification = NotificationsManager.Instance.Notifications.FirstOrDefault(notif => notif.Group == NotificationsGroup.Profit);
-                if(profitNotification != null) NotificationsManager.Instance.Notifications.Remove(profitNotification);
+                if (profitNotification != null) NotificationsManager.Instance.Notifications.Remove(profitNotification);
             }
             catch (Exception ex)
             {
@@ -396,7 +397,9 @@ namespace NHMCore.Notifications
             var content = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
             try
             {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumBinary).FirstOrDefault();
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumBinary)
+                                                                                    .Where(notif => notif.Domain == pluginName)
+                                                                                    .FirstOrDefault();
                 if (pluginNotification != null)
                 {
                     var newSentence = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
@@ -414,8 +417,8 @@ namespace NHMCore.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
 
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.WrongChecksumBinary, Tr("Checksum validation failed"), content);
-            NotificationsManager.Instance.AddNotificationToList(notification);    
+            var notification = new Notification(NotificationsType.Error, pluginName, NotificationsGroup.WrongChecksumBinary, Tr("Checksum validation failed"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateFailedDownloadWrongHashDll(string pluginName)
@@ -423,7 +426,9 @@ namespace NHMCore.Notifications
             var content = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
             try
             {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumDll).FirstOrDefault();
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumDll)
+                                                                                    .Where(notif => notif.Domain == pluginName)
+                                                                                    .FirstOrDefault();
                 if (pluginNotification != null)
                 {
                     var newSentence = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
@@ -441,7 +446,7 @@ namespace NHMCore.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
 
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.WrongChecksumDll, Tr("Checksum validation failed dll"), content);
+            var notification = new Notification(NotificationsType.Error, pluginName, NotificationsGroup.WrongChecksumDll, Tr("Checksum validation failed dll"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -458,7 +463,9 @@ namespace NHMCore.Notifications
             var content = Tr("Miner \"{0}\" was restarted at {1}", minerName, dateTime.ToString("HH:mm:ss MM/dd/yyyy"));
             try
             {
-                var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart).FirstOrDefault();
+                var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart)
+                                                                                     .Where(notif => notif.Domain == minerName)
+                                                                                     .FirstOrDefault();
                 if (restartNotification != null)
                 {
                     //add new content to prev content
@@ -472,7 +479,7 @@ namespace NHMCore.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
 
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.MinerRestart, Tr("Miner restarted"), Tr(content));
+            var notification = new Notification(NotificationsType.Info, minerName, NotificationsGroup.MinerRestart, Tr("Miner restarted"), Tr(content));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -481,7 +488,9 @@ namespace NHMCore.Notifications
             var content = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
             try
             {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NullChecksum).FirstOrDefault();
+                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NullChecksum)
+                                                                                    .Where(notif => notif.Domain == pluginName)
+                                                                                    .FirstOrDefault();
                 if (pluginNotification != null)
                 {
                     var newSentence = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
@@ -499,10 +508,10 @@ namespace NHMCore.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
 
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.NullChecksum, Tr("Checksum validation null"), content);
+            var notification = new Notification(NotificationsType.Error, pluginName, NotificationsGroup.NullChecksum, Tr("Checksum validation null"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
-        
+
         public static void CreateGamingStarted()
         {
             var gamingFinishedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingFinished).FirstOrDefault();
@@ -520,27 +529,24 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
-        public static void CreateOutdatedDriverWarningForPlugin(string plugin, List<(int, BaseDevice, Version)> listOfOldDrivers)
+        public static void CreateOutdatedDriverWarningForPlugin(string pluginName, string pluginUUID, List<(DriverVersionLimitType outDatedType, BaseDevice dev, (DriverVersionCheckType checkReturnCode, Version minVersion) driverCheckReturn)> listOfOldDrivers)
         {
-            string name = Tr("Detected older driver versions") + " (" + plugin + ")";
-            string content = Tr($"Older driver versions have been detected on this system, and they may cause problems with {0}. Please update them.", plugin) + "\n";
-            var recommends = listOfOldDrivers.Where(dev => dev.Item1 == 0);
-            var criticals = listOfOldDrivers.Where(dev => dev.Item1 == 1);
+            string name = Tr("Detected older driver versions") + " (" + pluginName + ")";
+            string content = Tr("Older driver versions have been detected on this system, and they may cause problems with {0}. Please update them.", pluginName) + "\n";
+
+            var criticals = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRequired);
+            var recommends = listOfOldDrivers.Where(dev => dev.outDatedType == DriverVersionLimitType.MinRecommended && !criticals.Any(dev1 => dev1.Item2 == dev.Item2));
+
             if (recommends.Any())
             {
                 content += Tr("Lower than recommended") + ":\n";
                 var nvidias = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
-                if (nvidias.Any()) {
-                    content += "\tNvidia: at least "+nvidias.FirstOrDefault().Item3+"\n";
-                }
+                if (nvidias.Any()) content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
                 if (amds.Any())
                 {
                     content += "\tAMD: (adrenalin)\n";
-                    foreach(var amd in amds)
-                    {
-                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.Item3 + "\n";
-                    }
+                    foreach (var amd in amds) content += "\t\t" + amd.Item2.Name + ": at least " + amd.driverCheckReturn.minVersion + "\n";
                 }
             }
             if (criticals.Any())
@@ -548,22 +554,28 @@ namespace NHMCore.Notifications
                 content += Tr("Lower than required") + ":\n";
                 var nvidias = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
                 var amds = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
-                if (nvidias.Any())
-                {
-                    content += "\tNvidia: at least " + nvidias.FirstOrDefault().Item3 + "\n";
-                }
+                if (nvidias.Any()) content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
                 if (amds.Any())
                 {
                     content += "\tAMD: (adrenalin)\n";
-                    foreach (var amd in amds)
-                    {
-                        content += "\t\t" + amd.Item2.Name + ": at least " + amd.Item3 + "\n";
-                    }
+                    foreach (var amd in amds) content += "\t\t" + amd.Item2.Name + ": at least " + amd.driverCheckReturn.minVersion + "\n";
                 }
             }
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriversObsolete, Tr(name), Tr(content));
+            var notification = new Notification(NotificationsType.Warning, pluginName, NotificationsGroup.DriverVersionProblem, Tr(name), Tr(content));
             NotificationsManager.Instance.AddNotificationToList(notification);
-            Logger.Warn(plugin, content);
+            Logger.Warn(pluginName, content);
+        }
+
+        public static void CreateADLVersionWarning(AMDDevice amdDev)
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.DriverVersionProblem, Tr("ADL driver version retrieval warning ({0})", amdDev.ADLReturnCode), Tr("Driver string could not be correctly retrieved from the system - version may be incorrect (\"{0}\")", amdDev.RawDriverVersion));
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateADLVersionError(AMDDevice amdDev)
+        {
+            var notification = new Notification(NotificationsType.Error, NotificationsGroup.DriverVersionProblem, Tr("ADL driver version retrieval failed ({0})", amdDev.ADLReturnCode), Tr("ADL failed to retrieve the driver version. Please update your AMD drivers."));
+            NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateAdminRunRequired()

@@ -59,7 +59,7 @@ namespace NHM.Common
                 return "";
             }
 
-            internal (string url, int port) GetLocationUrlV2(AlgorithmType algorithmType, NhmConectionType conectionType)
+            internal (string url, int port) GetLocationUrlV2(AlgorithmType algorithmType)
             {
                 if (StratumEndpointTemplatesByAlgorithmType.ContainsKey(algorithmType))
                 {
@@ -146,7 +146,7 @@ namespace NHM.Common
 
         public static async Task<(string url, int port)> GetLocationUrlV2(AlgorithmType algorithmType, bool ssl = false)
         {
-            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrlV2(algorithmType, NhmConectionType.NONE);
+            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrlV2(algorithmType);
 
             var (name, okName) = GetAlgorithmUrlName(algorithmType);
             // if name is not ok return
