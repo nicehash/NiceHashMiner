@@ -20,8 +20,6 @@ namespace Excavator
 {
     public class Excavator : MinerBase, IAfterStartMining
     {
-        private int _apiPort;
-
         public Excavator(string uuid) : base(uuid)
         { }
 
