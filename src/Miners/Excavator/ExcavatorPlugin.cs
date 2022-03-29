@@ -26,11 +26,11 @@ namespace Excavator
             // TODO link
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.6.11f",
+                BinVersion = "v1.7.1d",
                 ExePath = new List<string> { "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/excavator/releases/download/v1.6.11f/excavator_v1.6.11f_build819_Win64_signed.zip"
+                    "https://github.com/nicehash/excavator/releases/download/v1.7.1d/excavator_v1.7.1d_build880_Win64.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,7 +40,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(17, 1);
 
         public override string Name => "Excavator";
 
