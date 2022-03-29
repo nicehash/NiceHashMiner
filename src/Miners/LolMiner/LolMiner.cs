@@ -33,6 +33,8 @@ namespace LolMiner
             {
                 case "mh/s": return 1000000; //1M
                 case "kh/s": return 1000; //1k
+                case "Mh/s": return 1000000; //1M
+                case "Kh/s": return 1000; //1k
                 default: return 1;
             }
         }
@@ -46,21 +48,21 @@ namespace LolMiner
                 ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var multiplier = GetMultiplier(summary.Session.Performance_Unit);
-                var totalSpeed = summary.Session.Performance_Summary * multiplier;
+                var multiplier = GetMultiplier(summary.Algorithms.FirstOrDefault().Performance_Unit);
+                var totalSpeed = summary.Algorithms.FirstOrDefault().Total_Performance * multiplier;
 
                 var totalPowerUsage = 0;
                 var perDevicePowerInfo = new Dictionary<string, int>();
 
-                var apiDevices = summary.GPUs;
+                var apiDevices = summary.Workers;
 
                 foreach (var pair in _miningPairs)
                 {
                     var gpuUUID = pair.Device.UUID;
                     var gpuID = _mappedDeviceIds[gpuUUID];
-                    var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault();
-                    if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats.Performance * multiplier * (1 - DevFee * 0.01)) });
+                    var index = summary.Workers.FindIndex(devStats => devStats.Index == gpuID);
+                    var currentStats = summary.Algorithms.FirstOrDefault().Worker_Performance[index];
+                    perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats * multiplier * (1 - DevFee * 0.01)) });
                 }
 
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
@@ -167,16 +169,18 @@ namespace LolMiner
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
+            int benchmarkTime;
             var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
-            if (!isDaggerNvidia) return await base.StartBenchmark(stop, benchmarkType);
+            if (!isDaggerNvidia) benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
+            else benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 90, 120, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
 
             using var tickCancelSource = new CancellationTokenSource();
             // determine benchmark time 
             // settup times
 
-            int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); ;
+           
             var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
-
+            
             //// use demo user and disable the watchdog
             var commandLine = MiningCreateCommandLine();
             var (binPath, binCwd) = GetBinAndCwdPaths();
