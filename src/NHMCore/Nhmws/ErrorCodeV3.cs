@@ -1,7 +1,7 @@
 ﻿
 namespace NHMCore.Nhmws
 {
-    enum ErrorCode : int
+    enum ErrorCodeV3 : int
     {
         NoError = 0,
         DisabledDevice = -7,

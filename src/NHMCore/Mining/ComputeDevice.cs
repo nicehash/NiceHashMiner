@@ -63,7 +63,7 @@ namespace NHMCore.Mining
                 _state = value;
                 MiningState.Instance.CalculateDevicesStateChange();
                 OnPropertyChanged();
-                NHWebSocket.NotifyStateChanged();
+                NHWebSocketV3.NotifyStateChanged();
             }
         }
 

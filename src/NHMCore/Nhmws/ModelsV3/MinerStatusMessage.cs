@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace NHMCore.Nhmws.Models
+namespace NHMCore.Nhmws.ModelsV3
 {
 #pragma warning disable 649, IDE1006
     class MinerStatusMessage

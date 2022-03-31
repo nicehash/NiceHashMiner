@@ -199,8 +199,8 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
                 // Init ws connection
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
-                NHWebSocket.SetCredentials(btc, worker, group);
-                NHWebSocket.StartLoop(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token);
+                NHWebSocketV3.SetCredentials(btc, worker, group);
+                NHWebSocketV3.StartLoop(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token);
 
 
                 // STEP
@@ -286,7 +286,7 @@ namespace NHMCore
             finally
             {
                 isInitFinished = true;
-                NHWebSocket.NotifyStateChanged();
+                NHWebSocketV3.NotifyStateChanged();
 
                 // start update checker
                 // updater loops after we finish

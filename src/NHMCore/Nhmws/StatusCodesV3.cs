@@ -3,7 +3,7 @@ using System;
 
 namespace NHMCore.Nhmws
 {
-    internal static class StatusCodes
+    internal static class StatusCodesV3
     {
         private static string deviceTypePrefixPart(DeviceType type)
         {
