@@ -22,7 +22,7 @@ namespace Excavator
             public List<string> Params { get; set; }
         }
 
-        class Cmd
+        class CommandList
         {
             [JsonProperty("time", NullValueHandling = NullValueHandling.Ignore)]
             public uint? Time { get; set; } = null;
@@ -44,7 +44,7 @@ namespace Excavator
 
         public static string CreateTemplate(IEnumerable<string> gpuUuids)
         {
-            return CreateCommandString("__SUBSCRIBE_PARAM_LOCATION__", "__SUBSCRIBE_PARAM_USERNAME__", gpuUuids);
+            return CreateDefaultTemplateAndCreateCMD("__SUBSCRIBE_PARAM_LOCATION__", "__SUBSCRIBE_PARAM_USERNAME__", gpuUuids);
         }
 
         public static string CommandFileTemplatePath(string pluginUUID)
@@ -52,30 +52,35 @@ namespace Excavator
             return Paths.MinerPluginsPath(pluginUUID, "internals", "CommandLineTemplate.json");
         }
 
-        private static string CreateCommandString(string subscribeLocation, string subscribeUsername, IEnumerable<string> gpuUuids)
+        private static List<Command> CreateInitialCommands(string subscribeLocation, string subscribeUsername, IEnumerable<string> gpuUuids)
         {
-            try
-            {
-                var initialCommands = new List<Command>
+            var initialCommands = new List<Command>
                 {
                     new Command { Id = 1, Method = "subscribe", Params = new List<string>{ subscribeLocation, subscribeUsername } },
                     new Command { Id = 2, Method = "algorithm.add", Params = new List<string>{ "daggerhashimoto" } },
                 };
-                initialCommands.AddRange(gpuUuids.Select((gpu, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { "daggerhashimoto", gpu } }));
-                var TEMPLATE = new List<Cmd>
+            initialCommands.AddRange(gpuUuids.Select((gpu, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { "daggerhashimoto", gpu } }));
+            return initialCommands;
+        }
+
+        private static string CreateDefaultTemplateAndCreateCMD(string subscribeLocation, string subscribeUsername, IEnumerable<string> gpuUuids)
+        {
+            try
+            {
+                var commandListTemplate = new List<CommandList>
                 {
-                    new Cmd
+                    new CommandList
                     {
                         Time = 0,
-                        Commands = initialCommands,
+                        Commands = CreateInitialCommands(subscribeLocation, subscribeUsername, gpuUuids),
                     },
-                    new Cmd
+                    new CommandList
                     {
                         Event = "on_quit",
                         Commands = new List<Command>{ },
                     }
                 };
-                return JsonConvert.SerializeObject(TEMPLATE, Formatting.Indented);
+                return JsonConvert.SerializeObject(commandListTemplate, Formatting.Indented);
             }
             catch (Exception e)
             {
@@ -83,13 +88,33 @@ namespace Excavator
                 return null;
             }
         }
-
-        private static List<Cmd> ParseTemplateFile(string templateFilePath)
+        private static string[] _invalidTemplateMethods = new string[] { "subscribe", "algorithm.add", "worker.add" };
+        private static string ParseTemplateFileAndCreateCMD(string templateFilePath, IEnumerable<string> gpuUuids, string subscribeLocation, string subscribeUsername)
         {
             if (!File.Exists(templateFilePath)) return null;
             try
             {
-                return JsonConvert.DeserializeObject<List<Cmd>>(File.ReadAllText(templateFilePath), _jsonSettings);
+                var template = JsonConvert.DeserializeObject<List<CommandList>>(File.ReadAllText(templateFilePath), _jsonSettings);
+                var validCmds = template
+                    .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)))
+                    .Select(cmd => (cmd, commands: cmd.Commands.Where(c => IsValidSessionCommand(c, gpuUuids)).ToList()))
+                    .Where(p => p.commands.Any())
+                    .ToArray();
+                Logger.Warn("Excavator.CmdConfig", "Valid additional commands: " + validCmds.Length);
+                foreach (var (cmd, commands) in validCmds)
+                {
+                    cmd.Commands = commands;
+                }
+                var commandListTemplate = new List<CommandList>
+                {
+                    new CommandList
+                    {
+                        Time = 0,
+                        Commands = CreateInitialCommands(subscribeLocation, subscribeUsername, gpuUuids),
+                    },
+                };
+                if (validCmds.Any()) commandListTemplate.AddRange(validCmds.Select(p => p.cmd));
+                return JsonConvert.SerializeObject(commandListTemplate, Formatting.Indented, _jsonSettings);
             }
             catch (Exception e)
             {
@@ -106,92 +131,15 @@ namespace Excavator
             return !anyMissingGpuUuidParams;
         }
 
-        private static string CreateSafeFallbackCMD(string subscribeLocation, string subscribeUsername, IEnumerable<string> gpuUuids)
-        {
-            string TEMPLATE = "";
-            TEMPLATE += "[\n";
-            TEMPLATE += "  {\n";
-            TEMPLATE += "    \"time\": 0,\n";
-            TEMPLATE += "    \"commands\": [\n";
-            TEMPLATE += "      {\n";
-            TEMPLATE += "        \"id\": 1,\n";
-            TEMPLATE += "        \"method\": \"subscribe\",\n";
-            TEMPLATE += "        \"params\": [\n";
-            TEMPLATE += "          \"" + subscribeLocation + "\",\n";
-            TEMPLATE += "          \"" + subscribeUsername + "\"\n";
-            TEMPLATE += "        ]\n";
-            TEMPLATE += "      },\n";
-            TEMPLATE += "      {\n";
-            TEMPLATE += "        \"id\": 2,\n";
-            TEMPLATE += "        \"method\": \"algorithm.add\"\n";
-            TEMPLATE += "        \"params\": [\n";
-            TEMPLATE += "          \"daggerhashimoto\"\n";
-            TEMPLATE += "        ]\n";
-            TEMPLATE += "      },\n";
-            TEMPLATE += "_WORKERS_";
-            TEMPLATE += "    ]\n";
-            TEMPLATE += "  }\n";
-            TEMPLATE += "]\n";
-
-            string WORKERTEMPLATE = "";
-            int currentIndex = 0;
-            gpuUuids.ToList().ForEach(uuid =>
-            {
-                WORKERTEMPLATE += "      {\n";
-                WORKERTEMPLATE += "        \"id\": 3,\n";
-                WORKERTEMPLATE += "        \"method\": \"worker.add\",\n";
-                WORKERTEMPLATE += "        \"params\": [\n";
-                WORKERTEMPLATE += "          \"daggerhashimoto\",\n";
-                WORKERTEMPLATE += "          \"" + uuid + "\"\n";
-                WORKERTEMPLATE += "        ]\n";
-                if (currentIndex == gpuUuids.Count() - 1) WORKERTEMPLATE += "      }\n";
-                else WORKERTEMPLATE += "      },\n";
-                currentIndex++;
-            });
-            TEMPLATE = TEMPLATE.Replace("_WORKERS_", WORKERTEMPLATE);
-            return TEMPLATE;
-        }
-
-        private static string[] _invalidTemplateMethiods = new string[] { "subscribe", "algorithm.add", "worker.add" };
         private static string CreateCommandWithTemplate(string subscribeLocation, string subscribeUsername, IEnumerable<string> gpuUuids, string templateFilePath)
         {
-            // Parse template file
-            var template = ParseTemplateFile(templateFilePath);
-            if (template == null) return CreateCommandString(subscribeLocation, subscribeUsername, gpuUuids);
-            var validCmds = template
-                .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethiods.Contains(c.Method)))
-                .Select(cmd => (cmd, commands: cmd.Commands.Where(c => IsValidSessionCommand(c, gpuUuids)).ToList()))
-                .Where(p => p.commands.Any())
-                .ToArray();
-            foreach (var (cmd, commands) in validCmds)
+            var template = ParseTemplateFileAndCreateCMD(templateFilePath, gpuUuids, subscribeLocation, subscribeUsername);
+            if (template == null)
             {
-                // modify commands to not include GPUs that are not part of this mining session
-                cmd.Commands = commands;
+                Logger.Warn("Excavator.CmdConfig", "Template file not found, using default!");
+                template = CreateDefaultTemplateAndCreateCMD(subscribeLocation, subscribeUsername, gpuUuids);
             }
-            try
-            {
-                var initialCommands = new List<Command>
-                {
-                    new Command { Id = 1, Method = "subscribe", Params = new List<string>{ subscribeLocation, subscribeUsername } },
-                    new Command { Id = 2, Method = "algorithm.add", Params = new List<string>{ "daggerhashimoto" } },
-                };
-                initialCommands.AddRange(gpuUuids.Select((gpu, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { "daggerhashimoto", gpu } }));
-                var TEMPLATE = new List<Cmd>
-                {
-                    new Cmd
-                    {
-                        Time = 0,
-                        Commands = initialCommands,
-                    },
-                };
-                if (validCmds.Any()) TEMPLATE.AddRange(validCmds.Select(p => p.cmd));
-                return JsonConvert.SerializeObject(TEMPLATE, Formatting.Indented, _jsonSettings);
-            }
-            catch (Exception e)
-            {
-                Logger.Error("Excavator.CmdConfig", $"CreateCommandFileWithTemplate error {e.Message}");
-                return null;
-            }
+            return template;
         }
         private static string GetServiceLocation(string miningLocation)
         {
@@ -207,11 +155,7 @@ namespace Excavator
             var templatePath = CommandFileTemplatePath(pluginUUID);
             var miningServiceLocation = GetServiceLocation(miningLocation);
             var command = CreateCommandWithTemplate(miningServiceLocation, username, uuids, templatePath);
-            if (command == null)
-            {
-                Logger.Error("Excavator.CmdConfig", "command is NULL, creating with safe method");
-                command = CreateSafeFallbackCMD(miningServiceLocation, username, uuids);
-            }
+            if (command == null) Logger.Error("Excavator.CmdConfig", "command is NULL");
             return command;
         }
 
