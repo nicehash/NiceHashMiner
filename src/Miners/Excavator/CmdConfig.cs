@@ -100,7 +100,6 @@ namespace Excavator
                     .Select(cmd => (cmd, commands: cmd.Commands.Where(c => IsValidSessionCommand(c, gpuUuids)).ToList()))
                     .Where(p => p.commands.Any())
                     .ToArray();
-                Logger.Warn("Excavator.CmdConfig", "Valid additional commands: " + validCmds.Length);
                 foreach (var (cmd, commands) in validCmds)
                 {
                     cmd.Commands = commands;

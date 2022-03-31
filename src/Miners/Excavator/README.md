@@ -109,14 +109,14 @@ In our example, we have 3 GPUs in our computer, and we will disable LHR unlock f
     "commands": [
       {
         "id": 1,
-        "method": "disable.lhr.device",
+        "method": "device.lhr.disable",
         "params": [
           "GPU-1d07feec-f101-b824-e32e-a8d2f50eef75" // <- Each GPU is passed as a separate command!
         ]
       },
       {
         "id": 2,
-        "method": "disable.lhr.device",
+        "method": "device.lhr.disable",
         "params": [
           "GPU-7d9113ac-267b-11be-7c6c-ee77ba7f5e89"
         ]
