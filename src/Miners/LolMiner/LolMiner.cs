@@ -49,9 +49,11 @@ namespace LolMiner
                 var algo = summary.Algorithms.FirstOrDefault();
                 if (algo == null)
                 {
-                    algo.Performance_Unit = "mh/s";
-                    algo.Total_Performance = 0;
-                    algo.Worker_Performance = new List<double> { 0 };
+                    algo = new Algo() {
+                        Performance_Unit = "mh/s",
+                        Total_Performance = 0,
+                        Worker_Performance = new List<double> { 0 } 
+                    };
                 }
                 var multiplier = GetMultiplier(algo.Performance_Unit);
                 var totalSpeed = algo.Total_Performance * multiplier;
