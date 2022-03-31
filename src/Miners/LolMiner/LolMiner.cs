@@ -66,6 +66,7 @@ namespace LolMiner
                     var gpuUUID = pair.Device.UUID;
                     var gpuID = _mappedDeviceIds[gpuUUID];
                     var index = summary.Workers.FindIndex(devStats => devStats.Index == gpuID);
+                    if (index == -1) continue;
                     var currentStats = algo.Worker_Performance[index];
                     perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats * multiplier * (1 - DevFee * 0.01)) });
                 }
