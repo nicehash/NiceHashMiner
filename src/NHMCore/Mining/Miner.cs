@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.DeviceMonitoring;
 using NHM.MinerPlugin;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
@@ -10,7 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NHM.DeviceMonitoring;
 
 namespace NHMCore.Mining
 {
@@ -248,9 +248,9 @@ namespace NHMCore.Mining
             }
         }
 
-        private async Task<object> StartAsync(CancellationToken stop, string miningLocation, string username)
+        private async Task<object> StartAsync(CancellationToken stop, string username)
         {
-            _miner.InitMiningLocationAndUsername(miningLocation, username);
+            _miner.InitMiningLocationAndUsername("auto", username);
             _miner.InitMiningPairs(_miningPairs);
             EthlargementIntegratedPlugin.Instance.Start(_miningPairs);
             var ret = await _miner.StartMiningTask(stop);
@@ -276,13 +276,13 @@ namespace NHMCore.Mining
         }
 
 
-        public Task StartMinerTask(CancellationToken stop, string miningLocation, string username)
+        public Task StartMinerTask(CancellationToken stop, string username)
         {
             var tsc = new TaskCompletionSource<object>();
             var wdTask = MinerWatchdogTask;
             if (wdTask == null || wdTask.IsCompleted)
             {
-                MinerWatchdogTask = Task.Run(() => RunMinerWatchDogLoop(tsc, stop, miningLocation, username));
+                MinerWatchdogTask = Task.Run(() => RunMinerWatchDogLoop(tsc, stop, username));
             }
             else
             {
@@ -292,7 +292,7 @@ namespace NHMCore.Mining
             return tsc.Task;
         }
 
-        private async Task RunMinerWatchDogLoop(TaskCompletionSource<object> tsc, CancellationToken stop, string miningLocation, string username)
+        private async Task RunMinerWatchDogLoop(TaskCompletionSource<object> tsc, CancellationToken stop, string username)
         {
             // if we fail 3 times in a row under certain conditions mark on of them
             const int maxRestartCount = 3;
@@ -316,7 +316,7 @@ namespace NHMCore.Mining
                                 AvailableNotifications.CreateRestartedMinerInfo(DateTime.UtcNow.ToLocalTime(), _plugin.Name);
                                 await TaskHelpers.TryDelay(MiningSettings.Instance.MinerRestartDelayMS, linkedEndMiner.Token);
                             }
-                            var result = await StartAsync(linkedEndMiner.Token, miningLocation, username);
+                            var result = await StartAsync(linkedEndMiner.Token, username);
                             if (firstStart)
                             {
                                 firstStart = false;

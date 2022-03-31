@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>9.0</LangVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -55,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AMD\AMD_ODN.cs" />
+    <Compile Include="IMemoryTimings.cs" />
     <Compile Include="LibreHardwareMonitorManager.cs" />
     <Compile Include="NVIDIA\NVIDIA_MON.cs" />
     <Compile Include="UpdateVisitor.cs" />

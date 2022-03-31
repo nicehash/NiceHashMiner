@@ -87,7 +87,11 @@ namespace NHMCore.Mining.Grouping
                 .OrderByDescending(algo => algo.CurrentNormalizedProfit)
                 .FirstOrDefault();
 
-            if (mostProfitable == null)
+            if(Device.IsGaming == true)
+            {
+                MostProfitableAlgorithmStringID = "NONE";
+            }
+            else if (mostProfitable == null)
             {
                 AvailableNotifications.CreateNoAvailableAlgorithmsInfo(Device.ID, Device.Name);
                 MostProfitableAlgorithmStringID = "NONE";

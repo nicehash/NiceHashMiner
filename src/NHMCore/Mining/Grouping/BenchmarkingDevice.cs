@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Benchmarking;
 using NHMCore.Mining.Plugins;
@@ -48,13 +49,6 @@ namespace NHMCore.Mining.Grouping
                 return false;
             }
 
-            // TODO here you got shity state
-            var miningLocation = StratumService.Instance.SelectedOrFallbackServiceLocationCode().miningLocationCode;
-            // TODO hidden issue here if our market is not available we will not be able to execute benchmarks
-            // unable to benchmark service locations are not operational
-            if (miningLocation == null) return false;
-
-
             bool ret = false;
             var miningPairs = new List<MiningPair> { algo.ToMiningPair() };
             try
@@ -69,10 +63,10 @@ namespace NHMCore.Mining.Grouping
                     EthlargementIntegratedPlugin.Instance.Start(miningPairs);
                     miner.InitMiningPairs(miningPairs);
                     // fill service since the benchmark might be online. DemoUser.BTC must be used
-                    miner.InitMiningLocationAndUsername(miningLocation, DemoUser.BTC);
+                    miner.InitMiningLocationAndUsername("auto", DemoUser.BTC);
                     powerHelper.Start();
                     algo.ComputeDevice.State = DeviceState.Benchmarking;
-                    var result = await miner.StartBenchmark(stop, PerformanceType);
+                    var result = await miner.StartBenchmark(stop, BenchmarkManagerState.Instance.SelectedBenchmarkType);
                     EthlargementIntegratedPlugin.Instance.Stop(miningPairs);
                     if (stop.IsCancellationRequested) return false;
 

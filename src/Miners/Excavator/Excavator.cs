@@ -20,8 +20,6 @@ namespace Excavator
 {
     public class Excavator : MinerBase, IAfterStartMining
     {
-        private int _apiPort;
-
         public Excavator(string uuid) : base(uuid)
         { }
 
@@ -173,7 +171,7 @@ namespace Excavator
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return $"nhmp-ssl-test.{miningLocation}.nicehash.com:443";
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return $"stratum-dev.{miningLocation}.nicehash.com:443";
             //BuildTag.PRODUCTION
-            return $"nhmp-ssl.{miningLocation}.nicehash.com:443";
+            return $"nhmp.auto.nicehash.com:443";
         }
 
         private static (string templateStr, bool oldTemplate) CmdJSONString(string pluginUUID, string miningLocation, string username, params string[] uuids)

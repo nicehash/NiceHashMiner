@@ -92,22 +92,19 @@ namespace NHM.DeviceDetection.CPU
             var ret = new List<CpuInfo>();
             try
             {
-                using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Processor"))
-                using (var query = searcher.Get())
+                using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Processor");
+                using var query = searcher.Get();
+                foreach (var obj in query)
                 {
-                    foreach (var obj in query)
+                    var numberOfCores = Convert.ToInt32(obj.GetPropertyValue("NumberOfCores"));
+                    ret.Add(new CpuInfo
                     {
-                        var numberOfCores = Convert.ToInt32(obj.GetPropertyValue("NumberOfCores"));
-                        var info = new CpuInfo
-                        {
-                            Family = obj["Family"].ToString(),
-                            VendorID = obj["Manufacturer"].ToString(),
-                            ModelName = obj["Name"].ToString(),
-                            PhysicalID = obj["ProcessorID"].ToString(),
-                            NumberOfCores = numberOfCores
-                        };
-                        ret.Add(info);
-                    }
+                        Family = obj["Family"].ToString(),
+                        VendorID = obj["Manufacturer"].ToString(),
+                        ModelName = obj["Name"].ToString(),
+                        PhysicalID = obj["ProcessorID"].ToString(),
+                        NumberOfCores = numberOfCores
+                    });
                 }
             }
             catch (Exception e)
@@ -119,23 +116,22 @@ namespace NHM.DeviceDetection.CPU
 
         private static int GetVirtualCoresCount()
         {
-            var virtualCoreCount = 0;
             try
             {
-                using (var searcher = new ManagementObjectSearcher("SELECT NumberOfLogicalProcessors FROM Win32_ComputerSystem"))
-                using (var query = searcher.Get())
+                using var searcher = new ManagementObjectSearcher("SELECT NumberOfLogicalProcessors FROM Win32_ComputerSystem");
+                using var query = searcher.Get();
+                var virtualCoreCount = 0;
+                foreach (var item in query)
                 {
-                    foreach (var item in query)
-                    {
-                        virtualCoreCount += Convert.ToInt32(item.GetPropertyValue("NumberOfLogicalProcessors"));
-                    }
+                    virtualCoreCount += Convert.ToInt32(item.GetPropertyValue("NumberOfLogicalProcessors"));
                 }
+                return virtualCoreCount;
             }
             catch (Exception e)
             {
                 Logger.Error(Tag, $"GetVirtualCoresCount error: {e.Message}");
             }
-            return virtualCoreCount;
+            return 0;
         }
     }
 }

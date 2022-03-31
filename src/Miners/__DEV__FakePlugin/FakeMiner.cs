@@ -87,7 +87,7 @@ namespace FakePlugin
         protected override string MiningCreateCommandLine()
         {
             var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-            return $"-devices={_devices} -algorithm={_algorithmType.ToString()} -miningLocaiton={_miningLocation} -username={_username} -UUID {_uuid} -url {urlWithPort}";
+            return $"-devices={_devices} -algorithm={_algorithmType} -miningLocaiton={_miningLocation} -username={_username} -UUID {_uuid} -url {urlWithPort}";
         }
     }
 }

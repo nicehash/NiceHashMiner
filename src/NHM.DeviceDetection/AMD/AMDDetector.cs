@@ -142,9 +142,14 @@ namespace NHM.DeviceDetection.AMD
                         var setName = vramPart != null ? $"{name} {vramPart}" : name;
                         var bd = new BaseDevice(DeviceType.AMD, uuidNew, setName, (int)oclDev.DeviceID);
                         var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
-                        //// BUM HERE!!!!
-                        //var thisDeviceDriverVersion = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID).AdrenalinVersion;
-                        //if(thisDeviceDriverVersion != "") amdDevice.DEVICE_AMD_DRIVER = new Version(thisDeviceDriverVersion);
+                        var thisDeviceExtraADLResult = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID);
+                        if(thisDeviceExtraADLResult != null && thisDeviceExtraADLResult.BUS_ID == oclDev.BUS_ID)
+                        {
+                            amdDevice.ADLFunctionCall = thisDeviceExtraADLResult.FunctionCall;
+                            amdDevice.ADLReturnCode = thisDeviceExtraADLResult.ADLRetCode;
+                            amdDevice.RawDriverVersion = thisDeviceExtraADLResult.AdrenalinVersion;
+                            if (Version.TryParse(thisDeviceExtraADLResult.AdrenalinVersion, out var parsedVer)) amdDevice.DEVICE_AMD_DRIVER = parsedVer;
+                        }
                         amdDevices.Add(amdDevice);
                     }
                 }
@@ -154,9 +159,9 @@ namespace NHM.DeviceDetection.AMD
             return amdDevices;
         }
 
-
         private static bool IsAMDPlatform(OpenCLPlatform platform)
         {
+            if (platform == null) return false; 
             return platform.PlatformName == "AMD Accelerated Parallel Processing"
                 || platform.PlatformVendor == "Advanced Micro Devices, Inc."
                 || platform.PlatformName.Contains("AMD");
@@ -164,24 +169,14 @@ namespace NHM.DeviceDetection.AMD
 
         private static bool DuplicatedDevices(OpenCLDeviceDetectionResult data)
         {
-            if (data?.Platforms?.Count > 0)
-            {
-                var devicesWithBusID = new HashSet<int>();
-                var amdPlatforms = data.Platforms.Where(platform => IsAMDPlatform(platform)).ToList();
-                foreach (var platform in amdPlatforms)
-                {
-                    foreach (var oclDev in platform.Devices)
-                    {
-                        var id = oclDev.BUS_ID;
-                        if (devicesWithBusID.Contains(id))
-                        {
-                            return true;
-                        }
-                        devicesWithBusID.Add(id);
-                    }
-                }
-            }
-            return false;
+            var anyMultipleSameBusIDs = data?.Platforms?
+                    .Where(platform => IsAMDPlatform(platform))
+                    .SelectMany(platform => platform.Devices)
+                    .Where(dev => dev != null)
+                    .GroupBy(dev => dev.BUS_ID)
+                    .Select(group => group.Count() > 1)
+                    .Any(multipleSameBusIDs => multipleSameBusIDs);
+            return anyMultipleSameBusIDs ?? false;
         }
 
         // take lower platform

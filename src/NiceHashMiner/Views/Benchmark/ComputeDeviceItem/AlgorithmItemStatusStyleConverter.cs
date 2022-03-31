@@ -17,6 +17,7 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
                 case AlgorithmStatus.ErrorNegativeSMA:
                 case AlgorithmStatus.MissingSMA:
                 case AlgorithmStatus.Unprofitable:
+                case AlgorithmStatus.Unstable:
                     return Application.Current.FindResource("RedDangerColorBrush");
                 case AlgorithmStatus.Benchmarked:
                 case AlgorithmStatus.Mining:

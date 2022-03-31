@@ -5,7 +5,10 @@ namespace NHM.DeviceMonitoring.NVIDIA
     internal static class NVIDIA_MON
     {
         const string dll = "device_monitoring_nvidia.dll";
+        public delegate void log_cb(string error);
 
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        public static extern int nhm_nvidia_reg_log_cb(log_cb cb);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_init();
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
@@ -54,6 +57,10 @@ namespace NHM.DeviceMonitoring.NVIDIA
         public static extern int nhm_nvidia_device_get_clocks_delta(int bus_number, ref int core_clock, ref int mem_clock);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_oc_limits_delta(int bus_number, ref int delta_core_min, ref int delta_core_max, ref int delta_mem_min, ref int delta_mem_max);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_set_memory_timings(int bus_number, string memory_timings);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_reset_memory_timings(int bus_number);
 
         //Excavator no longer has these functions (or they have been moved)
         //[DllImport(dll, CallingConvention = CallingConvention.StdCall)]

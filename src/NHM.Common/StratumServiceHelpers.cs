@@ -9,12 +9,6 @@ namespace NHM.Common
 {
     public static class StratumServiceHelpers
     {
-        private static int GetAlgorithmTypePort(AlgorithmType algorithmType, bool ssl = false)
-        {
-            int port = 3333 + (int)algorithmType;
-            return ssl ? 30000 + port : port;
-        }
-
         #region CUSTOM_ENDPOINTS
         internal class ServiceCustomSettings
         {
@@ -27,10 +21,8 @@ namespace NHM.Common
             public string NhmSocketAddress { get; set; } = "";
             public Dictionary<AlgorithmType, StratumTemplateEntry> StratumEndpointTemplatesByAlgorithmType { get; set; } = new Dictionary<AlgorithmType, StratumTemplateEntry>();
 
-            const string LOCATION_TEMPLATE = "{LOCATION}";
             const string PREFIX_TEMPLATE = "{PREFIX://}";
             const string PORT_TEMPLATE = "{:PORT}";
-            //const string NAME_TEMPLATE = "NAME";
 
             public static ServiceCustomSettings Defaults()
             {
@@ -46,8 +38,8 @@ namespace NHM.Common
                     stratumTemplates[algorithmType] = new StratumTemplateEntry
                     {
                         // we get something like this "{PREFIX://}daggerhashimoto.{LOCATION}.nicehash.com{:PORT}"
-                        Template = $"{PREFIX_TEMPLATE}{name}.{LOCATION_TEMPLATE}.nicehash.com{PORT_TEMPLATE}",
-                        Port = GetAlgorithmTypePort(algorithmType)
+                        Template = $"{PREFIX_TEMPLATE}{name}.auto.nicehash.com{PORT_TEMPLATE}",
+                        Port = 9200 // 9200 or 443
                     };
                 }
                 return new ServiceCustomSettings
@@ -57,25 +49,37 @@ namespace NHM.Common
                 };
             }
 
-            public string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
+            internal string GetLocationUrl(AlgorithmType algorithmType, NhmConectionType conectionType)
             {
                 if (StratumEndpointTemplatesByAlgorithmType.ContainsKey(algorithmType))
                 {
                     var customEndpointTemplateEntry = StratumEndpointTemplatesByAlgorithmType[algorithmType];
-                    return GetCustomUrl(customEndpointTemplateEntry, algorithmType, miningLocation, conectionType);
+                    return GetCustomUrl(customEndpointTemplateEntry, conectionType);
                 }
                 return "";
             }
 
-            private static string GetCustomUrl(StratumTemplateEntry customEndpointTemplateEntry, AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
+            internal (string url, int port) GetLocationUrlV2(AlgorithmType algorithmType)
             {
-                var (prefix, _) = GetProtocolPrefixAndPort(algorithmType, conectionType);
+                if (StratumEndpointTemplatesByAlgorithmType.ContainsKey(algorithmType))
+                {
+                    var customEndpointTemplateEntry = StratumEndpointTemplatesByAlgorithmType[algorithmType];
+                    var customPort = customEndpointTemplateEntry.Port;
+                    var customEndpointTemplate = customEndpointTemplateEntry.Template
+                        .Replace(PREFIX_TEMPLATE, "")
+                        .Replace(PORT_TEMPLATE, "");
+                    return (customEndpointTemplate, customPort);
+                }
+                return ("", 0);
+            }
+
+            private static string GetCustomUrl(StratumTemplateEntry customEndpointTemplateEntry, NhmConectionType conectionType)
+            {
+                var (prefix, _) = GetProtocolPrefixAndPort(conectionType);
                 var customPort = customEndpointTemplateEntry.Port;
-                if (conectionType == NhmConectionType.STRATUM_SSL) customPort = customPort + 30000;
 
                 var customEndpointTemplate = customEndpointTemplateEntry.Template
                     .Replace(PREFIX_TEMPLATE, prefix)
-                    .Replace(LOCATION_TEMPLATE, miningLocation)
                     .Replace(PORT_TEMPLATE, $":{customPort}");
                 return customEndpointTemplate;
             }
@@ -100,41 +104,9 @@ namespace NHM.Common
             return (name.ToLower(), ok);
         }
 
-        public class Location
+        private static (string prefix, int port) GetProtocolPrefixAndPort(NhmConectionType conectionType)
         {
-            public Location(string code, string name, params string[] markets)
-            {
-                Code = code;
-                Name = name;
-                Markets = markets;
-            }
-
-            public string Code { get; }
-            public string Name { get; }
-            public IReadOnlyList<string> Markets { get; }
-            public bool IsOperational { get; private set; } = true;
-
-            public (bool IsOperationalBeforeSet, bool IsOperationalAfterSet) SetAndReturnIsOperational(IEnumerable<string> markets)
-            {
-                var before = IsOperational;
-                IsOperational = Markets.Any(market => markets.Contains(market));
-                return (before, IsOperational);
-            }
-        }
-
-        public static IReadOnlyList<Location> MiningServiceLocations = new List<Location>
-        {
-            new Location("eu", "Europe", "EU", "EU_N"),
-            new Location("usa", "USA", "USA", "USA_E"),
-            new Location("eu-west", "Europe - West", "EU"),
-            new Location("eu-north", "Europe - North", "EU_N"),
-            new Location("usa-west", "USA - West", "USA"),
-            new Location("usa-east", "USA - East", "USA_E"),
-        };
-
-        private static (string prefix, int port) GetProtocolPrefixAndPort(AlgorithmType algorithmType, NhmConectionType conectionType)
-        {
-            int port = GetAlgorithmTypePort(algorithmType, conectionType == NhmConectionType.STRATUM_SSL);
+            int port = conectionType == NhmConectionType.STRATUM_SSL ? 443 : 9200;
             switch (conectionType)
             {
                 case NhmConectionType.STRATUM_TCP: return ("stratum+tcp://", port);
@@ -146,23 +118,22 @@ namespace NHM.Common
 
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         {
-            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrl(algorithmType, miningLocation, conectionType);
-            if (NhmConectionType.LOCKED == conectionType) return miningLocation;
-
+            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrl(algorithmType, conectionType);
+            
             var (name, okName) = GetAlgorithmUrlName(algorithmType);
             // if name is not ok return
             if (!okName) return "";
 
-            var (prefix, port) = GetProtocolPrefixAndPort(algorithmType, conectionType);
+            var (prefix, port) = GetProtocolPrefixAndPort(conectionType);
             
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) 
-                return $"{prefix}stratum-test.{miningLocation}.nicehash.com:{port}";
+                return $"{prefix}{name}-test.auto.nicehash.com:{port}";
             
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
-                return $"{prefix}stratum-dev.{miningLocation}.nicehash.com:{port}";
+                return $"{prefix}{name}-dev.auto.nicehash.com:{port}";
 
             //BuildTag.PRODUCTION
-            var url = name + "." + miningLocation + ".nicehash.com";
+            var url = name + ".auto.nicehash.com";
             if (UseDNSQ)
             {
                 var urlT = Task.Run(async () => await DNSQuery.QueryOrDefault(url));
@@ -171,6 +142,31 @@ namespace NHM.Common
                 if (gotIP) url = IP;
             }
             return prefix + url + $":{port}";
+        }
+
+        public static async Task<(string url, int port)> GetLocationUrlV2(AlgorithmType algorithmType, bool ssl = false)
+        {
+            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrlV2(algorithmType);
+
+            var (name, okName) = GetAlgorithmUrlName(algorithmType);
+            // if name is not ok return
+            if (!okName) return ("", -1);
+            int port = ssl ? 443 : 9200;
+
+            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
+                return ($"{name}-test.auto.nicehash.com", port);
+
+            if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
+                return ($"{name}-dev.auto.nicehash.com", port);
+
+            //BuildTag.PRODUCTION
+            var url = name + ".auto.nicehash.com";
+            if (UseDNSQ)
+            {
+                var (IP, gotIP) = await DNSQuery.QueryOrDefault(url);
+                if (gotIP) return (IP, port);
+            }
+            return (url, port);
         }
     }
 }

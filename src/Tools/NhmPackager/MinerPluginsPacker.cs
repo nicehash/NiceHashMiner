@@ -93,7 +93,7 @@ namespace NhmPackager
                         var name = pluginSettings.AlgorithmName(algo);
                         if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
                         {
-                            throw new Exception($"CheckPluginMetaData {plugin.Name}-{plugin.PluginUUID} Invalid name '{name}' for algorithm type '{algo}'");
+                            //throw new Exception($"CheckPluginMetaData {plugin.Name}-{plugin.PluginUUID} Invalid name '{name}' for algorithm type '{algo}'");
                         }
                     }
                 }
@@ -186,6 +186,15 @@ namespace NhmPackager
                 "ExamplePlugin",
                 "FakePlugin",
                 "CryptoDredge",
+                "ZEnemy",
+                "WildRig",
+                "TTMiner",
+                "TRex",
+                "TeamRedMiner",
+                "SRBMiner",
+                "Phoenix",
+                "MiniZ",
+                "GMiner",
             };
         private static bool PathMustNOTContain(string path) => _pathMustNOTContain.All(subDir => !path.Contains(subDir));
 
@@ -258,7 +267,7 @@ namespace NhmPackager
                 var preinstalledDllPlugin = GetMinerPluginsPath(plugin.PluginUUID);
                 var fileName = Path.GetFileName(dllFilePath);
                 var dllPath = Path.Combine(preinstalledDllPlugin, fileName);
-                if (!Directory.Exists(preinstalledDllPlugin)) Directory.CreateDirectory(preinstalledDllPlugin);
+                Paths.EnsureDirectoryPath(preinstalledDllPlugin);
                 File.Copy(dllFilePath, dllPath);
             }
 

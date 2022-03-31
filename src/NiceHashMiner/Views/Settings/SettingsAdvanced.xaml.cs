@@ -1,5 +1,7 @@
-﻿using NHMCore.Configs;
+﻿using NHM.Common;
+using NHMCore.Configs;
 using NHMCore.Mining;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace NiceHashMiner.Views.Settings
@@ -42,6 +44,12 @@ namespace NiceHashMiner.Views.Settings
 
         private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            ConfigManager.GeneralConfigFileCommit();
+        }
+
+        private void GPUComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MiningSettings.Instance.DeviceToPauseUuid = AvailableDevices.GPUs[cBoxGPUs.SelectedIndex].Uuid;
             ConfigManager.GeneralConfigFileCommit();
         }
     }

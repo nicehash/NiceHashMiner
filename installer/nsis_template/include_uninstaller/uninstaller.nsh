@@ -1,6 +1,9 @@
 Function un.onInit
   !insertmacro check64BitAndSetRegView
   !insertmacro initUserDataCheck
+  ${IfNot} ${UAC_IsInnerInstance}
+    !insertmacro ALLOW_ONLY_ONE_INSTALLER_INSTANCE
+  ${EndIf}
 FunctionEnd
 
 Section "un.install"

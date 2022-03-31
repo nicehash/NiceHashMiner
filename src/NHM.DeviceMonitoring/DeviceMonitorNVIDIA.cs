@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings
     {
         public static object _lock = new object();
 
@@ -203,7 +203,7 @@ namespace NHM.DeviceMonitoring
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)(percentage*100));
             if (execRet < 0) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
-            return execRet < 0;
+            return execRet == 0;
         }
 
         public bool SetTDPPercentage(double percentage)
@@ -222,9 +222,17 @@ namespace NHM.DeviceMonitoring
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
             Logger.Info(LogTag, $"SetTDPPercentage {execRet}.");
-            return execRet < 0;
+            return execRet == 0;
         }
 
         #endregion ITDP
+        public int SetMemoryTimings(string mt)
+        {
+            return NVIDIA_MON.nhm_nvidia_device_set_memory_timings(BusID, mt);
+        }
+        public int ResetMemoryTimings()
+        {
+            return NVIDIA_MON.nhm_nvidia_device_reset_memory_timings(BusID);
+        }
     }
 }

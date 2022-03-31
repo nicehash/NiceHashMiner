@@ -49,6 +49,7 @@ namespace NHM.MinerPluginToolkitV1
             var miner = CreateMinerBase();
             miner.BinAndCwdPathsGettter = this; // set the paths interface
             miner.PluginSupportedAlgorithms = this; // dev fee, algo names
+            miner.MinerCommandLineSettings = MinerCommandLineSettings;
             // set internal settings
             if (MinerOptionsPackage != null) miner.MinerOptionsPackage = MinerOptionsPackage;
             if (MinerSystemEnvironmentVariables != null) miner.MinerSystemEnvironmentVariables = MinerSystemEnvironmentVariables;
@@ -67,6 +68,7 @@ namespace NHM.MinerPluginToolkitV1
         #region IInitInternals
         public virtual void InitInternals()
         {
+            (MinerCommandLineSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerCommandLineSettings.json"), MinerCommandLineSettings);
             (MinerSystemEnvironmentVariables, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerSystemEnvironmentVariables.json"), MinerSystemEnvironmentVariables);
             (MinerOptionsPackage, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerOptionsPackage.json"), MinerOptionsPackage);
             (MinerReservedApiPorts, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerReservedPorts.json"), MinerReservedApiPorts);
@@ -77,7 +79,9 @@ namespace NHM.MinerPluginToolkitV1
             (MinerCustomActionSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerCustomActionSettings.json"), MinerCustomActionSettings);
         }
 
+
         // internal settings
+        protected MinerCommandLineSettings MinerCommandLineSettings { get; set; } = new MinerCommandLineSettings { };
         protected MinerOptionsPackage MinerOptionsPackage { get; set; } = new MinerOptionsPackage { };
         protected MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; } = new MinerSystemEnvironmentVariables { };
         protected MinerReservedPorts MinerReservedApiPorts { get; set; } = new MinerReservedPorts { };
@@ -88,7 +92,7 @@ namespace NHM.MinerPluginToolkitV1
 
         protected MinerCustomActionSettings MinerCustomActionSettings { get; set; } = new MinerCustomActionSettings { };
 
-        public PluginSupportedAlgorithmsSettings PluginSupportedAlgorithmsSettings { get; set; } = new PluginSupportedAlgorithmsSettings();
+        public PluginSupportedAlgorithmsSettings PluginSupportedAlgorithmsSettings { get; set; } = new PluginSupportedAlgorithmsSettings(); // THIS ONE IS MANDATORY
 
         // we must define this for every miner plugin
         protected abstract PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings { get; }
@@ -191,7 +195,10 @@ namespace NHM.MinerPluginToolkitV1
             if (PluginSupportedAlgorithmsSettings.Algorithms?.ContainsKey(deviceType) ?? false)
             {
                 var sass = PluginSupportedAlgorithmsSettings.Algorithms[deviceType];
-                return sass.Select(sas => sas.ToAlgorithm(PluginUUID)).ToList();
+                return sass.Select(sas => sas.ToAlgorithmV2(PluginUUID))
+                    .Where(p => p.ok)
+                    .Select(p => p.algorithm)
+                    .ToList();
             }
             return new List<Algorithm>(); // return empty
         }
@@ -211,14 +218,18 @@ namespace NHM.MinerPluginToolkitV1
 
         public virtual double DevFee(params AlgorithmType[] algorithmTypes)
         {
-            if (algorithmTypes.Length == 1)
+            var (idString, ok) = MinerToolkit.AlgorithmIDsToString(algorithmTypes);
+            if (ok && (PluginSupportedAlgorithmsSettings.AlgorithmFeesV2?.ContainsKey(idString) ?? false))
             {
-                var id = algorithmTypes[0];
-                if (PluginSupportedAlgorithmsSettings.AlgorithmFees?.ContainsKey(id) ?? false)
-                {
-                    return PluginSupportedAlgorithmsSettings.AlgorithmFees[id];
-                }
+                return PluginSupportedAlgorithmsSettings.AlgorithmFeesV2[idString];
             }
+#pragma warning disable CS0619
+            var id = algorithmTypes.First();
+            if (PluginSupportedAlgorithmsSettings.AlgorithmFees?.ContainsKey(id) ?? false)
+            {
+                return PluginSupportedAlgorithmsSettings.AlgorithmFees[id];
+            }
+#pragma warning restore CS0619
             return PluginSupportedAlgorithmsSettings.DefaultFee;
         }
         #endregion IPluginSupportedAlgorithmsSettings
@@ -229,11 +240,12 @@ namespace NHM.MinerPluginToolkitV1
             if (PluginSupportedAlgorithmsSettings.Algorithms?.ContainsKey(deviceType) ?? false)
             {
                 var sass = PluginSupportedAlgorithmsSettings.Algorithms[deviceType];
-                var customRAMLimits = sass.Where(sas => sas.NonDefaultRAMLimit.HasValue);
-                foreach (var el in customRAMLimits)
-                {
-                    ret[el.IDs.First()] = el.NonDefaultRAMLimit.Value;
-                }
+                var customRAMLimits = sass.Where(sas => sas.NonDefaultRAMLimit.HasValue)
+                                          .Select(sas => (pair: sas.ToAlgorithmV2(""), ramLimit: sas.NonDefaultRAMLimit.Value))
+                                          .Where(a => a.pair.ok)
+                                          .Select(a => (id: a.pair.algorithm.IDs.First(), a.ramLimit))
+                                          .ToArray();
+                foreach (var (id, ramLimit) in customRAMLimits) ret[id] = ramLimit;
             }
             return ret;
         }
@@ -246,7 +258,7 @@ namespace NHM.MinerPluginToolkitV1
             if (UnsafeLimits() || gpu == null) return algorithms;
             // GPU RAM filtering
             var ramLimits = GetCustomMinimumMemoryPerAlgorithm(deviceType);
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsListCustom(gpu.GpuRam, algorithms, ramLimits);
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms, ramLimits);
             return filteredAlgorithms;
         }
 

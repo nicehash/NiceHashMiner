@@ -32,14 +32,6 @@ namespace NHMCore.Configs.Data
         }
         #endregion CredentialsSettings
 
-        #region ServiceLocationSettings
-        public int ServiceLocation
-        {
-            get => StratumService.Instance.ServiceLocation;
-            set => StratumService.Instance.ServiceLocation = value;
-        }
-        #endregion ServiceLocationSettings
-
         #region MiningSettings
         public bool AutoStartMining
         {
@@ -80,6 +72,12 @@ namespace NHMCore.Configs.Data
         {
             get => MiningSettings.Instance.PauseMiningWhenGamingMode;
             set => MiningSettings.Instance.PauseMiningWhenGamingMode = value;
+        }
+
+        public string DeviceToPauseUuid
+        {
+            get => MiningSettings.Instance.DeviceToPauseUuid;
+            set => MiningSettings.Instance.DeviceToPauseUuid = value;
         }
         #endregion MiningSettings
 
@@ -358,7 +356,6 @@ namespace NHMCore.Configs.Data
             RigGroup = "";
             Language = "";
             TimeUnit = TimeUnitType.Day;
-            ServiceLocation = 0;
             AutoStartMining = false;
             //LessThreads = 0;
             DebugConsole = false;
@@ -374,6 +371,7 @@ namespace NHMCore.Configs.Data
             ShowInternetConnectionWarning = true;
             NVIDIAP0State = false;
             PauseMiningWhenGamingMode = false;
+            DeviceToPauseUuid = "";
             MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;
             SwitchProfitabilityThreshold = 0.02; // percent

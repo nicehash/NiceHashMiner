@@ -29,13 +29,14 @@ namespace NHMCore.Mining
         private static bool _isGameRunning;
 
         private static bool _isPauseMiningWhenGamingEnabled;
+
+        private static string _deviceToPauseUuid;
         public static bool IsMiningEnabled => _miningDevices.Any();
 
 
-        private static CancellationToken stopMiningManager = CancellationToken.None;
+        private static CancellationToken _stopMiningManager = CancellationToken.None;
         #region State for mining
         private static string _username = DemoUser.BTC;
-        private static string _miningLocation = null;
         private static Dictionary<AlgorithmType, double> _normalizedProfits = null;
 
         // TODO make sure _miningDevices and _runningMiners are in sync
@@ -59,12 +60,6 @@ namespace NHMCore.Mining
         {
             public NormalizedProfitsUpdateCommand(Dictionary<AlgorithmType, double> normalizedProfits) { this.normalizedProfits = normalizedProfits; }
             public Dictionary<AlgorithmType, double> normalizedProfits { get; private set; }
-        }
-
-        private class MiningLocationChangedCommand : MainCommand
-        {
-            public MiningLocationChangedCommand(string miningLocation) { this.miningLocation = miningLocation; }
-            public string miningLocation { get; private set; }
         }
 
         private class UsernameChangedCommand : MainCommand
@@ -94,6 +89,13 @@ namespace NHMCore.Mining
             public IsSteamGameRunningChangedCommand(bool isSteamGameRunning) { this.isSteamGameRunning = isSteamGameRunning; }
 
             public bool isSteamGameRunning { get; private set; }
+        }
+
+        private class GPUToPauseChangedCommand : MainCommand
+        {
+            public GPUToPauseChangedCommand(string gpuUuid) { this.gpuUuid = gpuUuid; }
+
+            public string gpuUuid { get; private set; }
         }
 
         #region Deferred Device Commands
@@ -151,14 +153,6 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
-        private static Task MiningLocationChanged(string miningLocation)
-        {
-            if (RunninLoops == null) return Task.CompletedTask;
-            var command = new MiningLocationChangedCommand(miningLocation);
-            _commandQueue.Enqueue(command);
-            return command.Tsc.Task;
-        }
-
         private static Task UseEthlargementChanged()
         {
             if (RunninLoops == null) return Task.CompletedTask;
@@ -178,6 +172,14 @@ namespace NHMCore.Mining
         {
             if (RunninLoops == null) return Task.CompletedTask;
             var command = new PauseMiningWhenGamingModeSettingsChangedCommand(isPauseMiningWhenGamingModeEnabled);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        private static Task SelectedGPUSettingsChanged(string selectedGPUUuid)
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new GPUToPauseChangedCommand(selectedGPUUuid);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -226,20 +228,20 @@ namespace NHMCore.Mining
         {
             ApplicationStateManager.OnInternetCheck += OnInternetCheck;
 
-            _miningLocation = StratumService.Instance.SelectedOrFallbackServiceLocationCode().miningLocationCode;
-            StratumService.Instance.OnServiceLocationChanged += StratumServiceInstance_PropertyChanged;
-
             MiscSettings.Instance.PropertyChanged += MiscSettingsInstance_PropertyChanged;
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
 
             _isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
             MiningSettings.Instance.PropertyChanged += PauseMiningWhenGamingModeInstance_PropertyChanged;
+
+            _deviceToPauseUuid = MiningSettings.Instance.DeviceToPauseUuid;
+            MiningSettings.Instance.PropertyChanged += DeviceToPauseUuid_PropertyChanged;
         }
 
         public static void StartLoops(CancellationToken stop, string username)
         {
             _username = username;
-            stopMiningManager = stop;
+            _stopMiningManager = stop;
             RunninLoops = Task.Run(() => StartLoopsTask(stop));
         }
 
@@ -248,11 +250,6 @@ namespace NHMCore.Mining
             var loop1 = MiningManagerCommandQueueLoop(stop);
             var loop2 = MiningManagerMainLoop(stop);
             return Task.WhenAll(loop1, loop2);
-        }
-
-        private static void StratumServiceInstance_PropertyChanged(object sender, string miningLocation)
-        {
-            _ = MiningLocationChanged(miningLocation);
         }
 
         private static void MiscSettingsInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -273,6 +270,14 @@ namespace NHMCore.Mining
             if (e.PropertyName == nameof(MiningSettings.PauseMiningWhenGamingMode))
             {
                 _ = PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode);
+            }
+        }
+
+        private static void DeviceToPauseUuid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MiningSettings.DeviceToPauseUuid))
+            {
+                _ = SelectedGPUSettingsChanged(MiningSettings.Instance.DeviceToPauseUuid);
             }
         }
 
@@ -579,7 +584,7 @@ namespace NHMCore.Mining
         //{
         //    foreach (var groupMiner in _runningMiners.Values)
         //    {
-        //        await groupMiner.StartMinerTask(stopMiningManager, _miningLocation, _username);
+        //        await groupMiner.StartMinerTask(stopMiningManager, _username);
         //    }
         //    // TODO resume devices to Mining state
         //}
@@ -593,12 +598,6 @@ namespace NHMCore.Mining
             {
                 _normalizedProfits = normalizedProfitsUpdateCommand.normalizedProfits;
             }
-            else if (command is MiningLocationChangedCommand miningLocationChangedCommand)
-            {
-                var oldLocation = _miningLocation;
-                _miningLocation = miningLocationChangedCommand.miningLocation;
-                if (_miningLocation == oldLocation) return;
-            }
             else if (command is UsernameChangedCommand usernameChangedCommand)
             {
                 _username = usernameChangedCommand.username;
@@ -606,44 +605,57 @@ namespace NHMCore.Mining
             else if (command is PauseMiningWhenGamingModeSettingsChangedCommand pauseMiningWhenGamingModeSettingsChangedCommand)
             {
                 _isPauseMiningWhenGamingEnabled = pauseMiningWhenGamingModeSettingsChangedCommand.isPauseMiningWhenGamingModeSettingEnabled;
+                if (!_isPauseMiningWhenGamingEnabled)
+                {
+                    var dev = AvailableDevices.Devices.FirstOrDefault(d => d.IsGaming == true);
+                    if (dev != null) dev.IsGaming = false;
+                }
             }
             else if (command is IsSteamGameRunningChangedCommand isSteamGameRunningChangedCommand)
             {
                 _isGameRunning = isSteamGameRunningChangedCommand.isSteamGameRunning;
             }
+            else if (command is GPUToPauseChangedCommand gpuToPauseChangedCommand)
+            {
+                _deviceToPauseUuid = gpuToPauseChangedCommand.gpuUuid;
+                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
+                if (dev != null) dev.IsGaming = false;
+            }
 
             // here we do the deciding
             // to mine we need to have the username mining location set and ofc device to mine with
-            if (_username == null || _normalizedProfits == null || _miningLocation == null)
+            if (_username == null || _normalizedProfits == null)
             {
                 if (_username == null) Logger.Error(Tag, "_username is null");
                 if (_normalizedProfits == null) Logger.Error(Tag, "_normalizedProfits is null");
-                if (_miningLocation == null) Logger.Error(Tag, "_miningLocation is null");
                 await PauseAllMiners();
             }
-            else if (command is MiningLocationChangedCommand || command is UsernameChangedCommand || command is RunEthlargementChangedCommand)
+            else if (command is UsernameChangedCommand || command is RunEthlargementChangedCommand)
             {
-                // TODO this is miner restarts on mining location and username change, you should take into account the mining location changed for benchmarking
                 // RESTART-STOP-START
                 // STOP
                 foreach (var miner in _runningMiners.Values) await miner.StopTask();
                 // START
-                foreach (var miner in _runningMiners.Values) await miner.StartMinerTask(stopMiningManager, _miningLocation, _username);
+                foreach (var miner in _runningMiners.Values) await miner.StartMinerTask(_stopMiningManager, _username);
             }
             else if (_miningDevices.Count == 0)
             {
                 await StopAllMinersTask();
                 ApplicationStateManager.StopMining();
             }
-            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled)
+            else if (_isGameRunning && _isPauseMiningWhenGamingEnabled && _deviceToPauseUuid != null)
             {
                 AvailableNotifications.CreateGamingStarted();
-                await PauseAllMiners();
+                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
+                dev.IsGaming = true;
+                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
+                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
             else if(!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand)
             {
                 AvailableNotifications.CreateGamingFinished();
-                ApplicationStateManager.StartMining();
+                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
+                dev.IsGaming = false;
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
@@ -851,7 +863,7 @@ namespace NHMCore.Mining
                     continue;
                 }
                 _runningMiners[startKey] = toStart;
-                await toStart.StartMinerTask(stopMiningManager, _miningLocation, _username);
+                await toStart.StartMinerTask(_stopMiningManager, _username);
             }
             // log scope
             {

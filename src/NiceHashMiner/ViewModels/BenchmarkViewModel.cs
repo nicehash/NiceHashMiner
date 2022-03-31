@@ -38,6 +38,7 @@ namespace NiceHashMiner.ViewModels
             OnPropertyChanged(nameof(BenchmarksPendingStr));
             OnPropertyChanged(nameof(CanStart));
             OnPropertyChanged(nameof(CanStartBenchmaring));
+            OnPropertyChanged(nameof(SelectedBenchmarkType));
         }
 
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)

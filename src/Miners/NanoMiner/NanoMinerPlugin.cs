@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace NanoMiner
 {
-    public partial class NanoMinerPlugin : PluginBase, IDevicesCrossReference//, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+    public partial class NanoMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
     {
         public NanoMinerPlugin()
         {
@@ -24,11 +24,11 @@ namespace NanoMiner
             // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.3.14",
-                ExePath = new List<string> { "nanominer-windows-3.3.14-cuda11", "nanominer.exe" },
+                BinVersion = "v3.5.2",
+                ExePath = new List<string> { "nanominer-windows-3.5.2-cuda11", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v3.3.14/nanominer-windows-3.3.14-cuda11.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v3.5.2/nanominer-windows-3.5.2-cuda11.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,7 +40,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "f25fee20-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(16, 2);
+        public override Version Version => new Version(17, 0);
 
         public override string Name => "NanoMiner";
 
@@ -63,7 +63,7 @@ namespace NanoMiner
             }
             var minDrivers = new Version(455, 23);
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(455, 23);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(456, 38);
             if (!isDriverSupported)
             {
                 Logger.Error("NanoMinerPlugin", $"GetSupportedAlgorithms installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
@@ -123,27 +123,15 @@ namespace NanoMiner
             return false;
         }
 
-        public (int ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
-            var minAMD = new Version(21, 5, 2);
-            if (device is AMDDevice amd)
-            {
-                if (amd.DEVICE_AMD_DRIVER < minAMD) return (-2, minAMD);
-                return (0, minAMD);
-            }
-            return (-1, new Version(0, 0));
+            return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }
 
 
-        public (int ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-            var minNVIDIA = new Version(411, 31);
-            if (device is CUDADevice nvidia)
-            {
-                if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minNVIDIA) return (-2, minNVIDIA);
-                return (0, minNVIDIA);
-            }
-            return (-1, new Version(0, 0));
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
     }
 }

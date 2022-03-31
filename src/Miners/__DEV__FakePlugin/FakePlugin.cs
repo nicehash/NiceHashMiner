@@ -26,7 +26,7 @@ namespace FakePlugin
         {
             name = "FakePlugin2",
             exitTimeWaitSeconds = 5,
-            version = new Version(16, 0),
+            version = new Version(17, 0),
         };
 
         private testSettingsJson GetTestSettings()

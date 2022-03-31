@@ -107,7 +107,6 @@ namespace NiceHashMiner.ViewModels
         #region Exposed settings
         public BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
         public MiningState MiningState => MiningState.Instance;
-        public StratumService StratumService => StratumService.Instance;
         public CredentialsSettings CredentialsSettings => CredentialsSettings.Instance;
         public GlobalDeviceSettings GlobalDeviceSettings => GlobalDeviceSettings.Instance;
         public GUISettings GUISettings => GUISettings.Instance;

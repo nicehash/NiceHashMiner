@@ -84,7 +84,7 @@ namespace NHM.DeviceDetection
                 }
             }
 
-            DetectionResult.AvailableVideoControllers = vidControllers;
+            DetectionResult.AvailableVideoControllers = vidControllers.ToList();
             // check NVIDIA drivers, we assume all NVIDIA devices are using the same driver version
             var nvidiaVideoControllerData = vidControllers.Where(vidC => vidC.IsNvidia).FirstOrDefault();
             if (nvidiaVideoControllerData != null)

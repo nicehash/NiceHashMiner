@@ -1,17 +1,7 @@
 ﻿## Integrate plugins build tags
   - INTEGRATE_BrokenMiner_PLUGIN // test plugin
   - INTEGRATE_ExamplePlugin_PLUGIN // test plugin
-  - INTEGRATE_WildRig_PLUGIN
-  - INTEGRATE_TTMiner_PLUGIN
-  - INTEGRATE_TRex_PLUGIN
-  - INTEGRATE_TeamRedMiner_PLUGIN
   - INTEGRATE_NBMiner_PLUGIN
-  - INTEGRATE_Phoenix_PLUGIN
   - INTEGRATE_NanoMiner_PLUGIN
-  - INTEGRATE_GMiner_PLUGIN
-  - INTEGRATE_CryptoDredge_PLUGIN
-  - INTEGRATE_ZEnemy_PLUGIN
   - INTEGRATE_LolMiner_PLUGIN
-  - INTEGRATE_SRBMiner_PLUGIN 
   - INTEGRATE_XMRig_PLUGIN
-  - INTEGRATE_MiniZ_PLUGIN
