@@ -166,63 +166,15 @@ namespace Excavator
 
         protected override void Init() { }
 
-        private static string GetServiceLocation(string miningLocation)
-        {
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return $"nhmp-ssl-test.{miningLocation}.nicehash.com:443";
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return $"stratum-dev.{miningLocation}.nicehash.com:443";
-            //BuildTag.PRODUCTION
-            return $"nhmp.auto.nicehash.com:443";
-        }
-
-        private static (string templateStr, bool oldTemplate) CmdJSONString(string pluginUUID, string miningLocation, string username, params string[] uuids)
-        {
-            var templatePath = CmdConfig.CommandFileTemplatePath(pluginUUID);
-            var miningServiceLocation = GetServiceLocation(miningLocation);
-            var str = CmdConfig.CreateCommandFileWithTemplate(miningServiceLocation, username, uuids, templatePath);
-            if (str != null) return (str, false);
-            const string DEVICE = @"		{""id"":3,""method"":""worker.add"",""params"":[""daggerhashimoto"",""_DEV_ID_""]}";
-            const string TEMPLATE = @"
-[
-	{""time"":0,""commands"":[
-		{""id"":1,""method"":""subscribe"",""params"":[""_MINING_SERVICE_LOCATION_"",""_PUT_YOUR_BTC_HERE_""]}
-	]},
-	{""time"":1,""commands"":[
-        {""id"":1,""method"":""algorithm.add"",""params"":[""daggerhashimoto""]}
-    ]},
-	{""time"":2,""commands"":[
-_DEVICES_
-	]}
-]";
-            var devices = string.Join(",\n", uuids.Select(uuid => DEVICE.Replace("_DEV_ID_", uuid)));
-            var oldTemplateStr = TEMPLATE
-                .Replace("_MINING_SERVICE_LOCATION_", miningServiceLocation)
-                .Replace("_PUT_YOUR_BTC_HERE_", username)
-                .Replace("_DEVICES_", devices);
-            return (oldTemplateStr, true);
-        }
-
-        private static string GetMiningLocation(string location)
-        {
-            // new mining locations new clients
-            if (location.StartsWith("eu") || location.StartsWith("usa")) return location;
-            // old mining locations old clients with obsolete locations fallback to usa
-            return "usa";
-        }
-
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var uuids = _miningPairs.Select(p => p.Device).Cast<CUDADevice>().Select(gpu => gpu.UUID);
             var ids = _miningPairs.Select(p => p.Device).Cast<CUDADevice>().Select(gpu => gpu.PCIeBusID);
-            //var algo = AlgorithmName(_algorithmType);
-            // "--algo {algo} --url={urlWithPort} --user {_username} 
             var (_, cwd) = GetBinAndCwdPaths();
             var fileName = $"cmd_{string.Join("_", ids)}.json";
-            //Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            //var logName = $"log_{string.Join("_", ids)}_{unixTimestamp}.log";
-            var (cmdStr, isOldCmd) = CmdJSONString(_uuid, GetMiningLocation(_miningLocation), _username, uuids.ToArray());
-            if (isOldCmd) Logger.Warn(_logGroup, $"MiningCreateCommandLine usign old command file template");
+            var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, uuids.ToArray());
             File.WriteAllText(Path.Combine(cwd, fileName), cmdStr);
             if (USE_HTTP_CLIENT)
             {

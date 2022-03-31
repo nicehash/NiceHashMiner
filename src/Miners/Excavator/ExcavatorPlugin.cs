@@ -26,11 +26,11 @@ namespace Excavator
             // TODO link
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.6.11f",
-                ExePath = new List<string> { "excavator.exe" },
+                BinVersion = "v1.7.6.2",
+                ExePath = new List<string> { "NHQM_v0.5.3.3", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/excavator/releases/download/v1.6.11f/excavator_v1.6.11f_build819_Win64_signed.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.3.3/NHQM_v0.5.3.3.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,13 +40,15 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(17, 1);
 
         public override string Name => "Excavator";
 
         public override string Author => "info@nicehash.com";
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
+
+        private bool TriedToDeleteQMFiles = false;
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -86,7 +88,29 @@ namespace Excavator
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "excavator.exe" });
+            List<string> importantExcavatorFiles = new List<string>() { "excavator.exe", "EIO.dll", "IOMap64.sys" };
+            if (!TriedToDeleteQMFiles) DeleteUnusedQMFiles(pluginRootBinsPath, importantExcavatorFiles);
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, importantExcavatorFiles);
+        }
+
+        private void DeleteUnusedQMFiles(string binPath, List<string> filesToLeave)
+        {
+            TriedToDeleteQMFiles = true;
+            var filesToDelete = new List<string>();
+            try
+            {
+                var allDirectoryFiles = Directory.GetFiles(binPath).ToList();
+                allDirectoryFiles.ForEach(fileToDelete =>
+                {
+                    if (!filesToLeave.Any(leaveFile => fileToDelete.Contains(leaveFile))) filesToDelete.Add(fileToDelete);
+                });
+                filesToDelete.ForEach(file => File.Delete(file));
+                if (filesToDelete.Count == 0) Logger.Error("ExcavatorPlugin", "DeleteUnusedQMFiles: no QM files deleted!");
+            }
+            catch (Exception e)
+            {
+                Logger.Error("ExcavatorPlugin", $"DeleteUnusedQMFiles: {e.Message}");
+            }
         }
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
