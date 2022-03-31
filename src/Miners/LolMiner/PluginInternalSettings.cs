@@ -278,6 +278,15 @@ namespace LolMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "lolMiner_watchdog",
                     ShortName = "--watchdog"
+                },
+                /// <summary
+                /// --lhrwait n will set the miner to wait n seconds, until the LHR detection and calibration gets active. Allows to wait for systems with delayed memory overclock settings.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_lhrwait",
+                    ShortName = "--lhrwait"
                 }
             }
         };
