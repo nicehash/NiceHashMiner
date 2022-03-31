@@ -29,12 +29,10 @@ namespace LolMiner
 
         private static int GetMultiplier(string speedUnit)
         {
-            switch (speedUnit)
+            switch (speedUnit.ToLower())
             {
                 case "mh/s": return 1000000; //1M
                 case "kh/s": return 1000; //1k
-                case "Mh/s": return 1000000; //1M
-                case "Kh/s": return 1000; //1k
                 default: return 1;
             }
         }
@@ -48,8 +46,15 @@ namespace LolMiner
                 ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var multiplier = GetMultiplier(summary.Algorithms.FirstOrDefault().Performance_Unit);
-                var totalSpeed = summary.Algorithms.FirstOrDefault().Total_Performance * multiplier;
+                var algo = summary.Algorithms.FirstOrDefault();
+                if (algo == null)
+                {
+                    algo.Performance_Unit = "mh/s";
+                    algo.Total_Performance = 0;
+                    algo.Worker_Performance = new List<double> { 0 };
+                }
+                var multiplier = GetMultiplier(algo.Performance_Unit);
+                var totalSpeed = algo.Total_Performance * multiplier;
 
                 var totalPowerUsage = 0;
                 var perDevicePowerInfo = new Dictionary<string, int>();
@@ -61,7 +66,7 @@ namespace LolMiner
                     var gpuUUID = pair.Device.UUID;
                     var gpuID = _mappedDeviceIds[gpuUUID];
                     var index = summary.Workers.FindIndex(devStats => devStats.Index == gpuID);
-                    var currentStats = summary.Algorithms.FirstOrDefault().Worker_Performance[index];
+                    var currentStats = algo.Worker_Performance[index];
                     perDeviceSpeedInfo.Add(gpuUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentStats * multiplier * (1 - DevFee * 0.01)) });
                 }
 
@@ -169,10 +174,9 @@ namespace LolMiner
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            int benchmarkTime;
             var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
-            if (!isDaggerNvidia) benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 180, 240, 300 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
-            else benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 90, 120, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
+            var defaultTimes = isDaggerNvidia ? new List<int> { 180, 240, 300 } : new List<int> { 90, 120, 180 };
+            int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(defaultTimes, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
 
             using var tickCancelSource = new CancellationTokenSource();
             // determine benchmark time 
