@@ -4,12 +4,13 @@ namespace NHM.Common.Device
 {
     public class CUDADevice : BaseDevice, IGpuDevice
     {
-        public CUDADevice(BaseDevice bd, int iPCIeBusID, ulong gpuRam, int sM_major, int sM_minor) : base(bd)
+        public CUDADevice(BaseDevice bd, int iPCIeBusID, ulong gpuRam, int sM_major, int sM_minor, bool isLhr) : base(bd)
         {
             PCIeBusID = iPCIeBusID;
             GpuRam = gpuRam;
             SM_major = sM_major;
             SM_minor = sM_minor;
+            IsLHR = isLhr;
         }
 
         // TODO does it make sense to set here the actual installed NVIDIA drivers??
@@ -24,6 +25,7 @@ namespace NHM.Common.Device
         // these should be more than enough for filtering 
         public int SM_major { get; }
         public int SM_minor { get; }
+        public bool IsLHR { get; }
 
         public void SetIsOpenCLBackendEnabled(bool enabled)
         {
