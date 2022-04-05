@@ -106,6 +106,35 @@ namespace Excavator
 
         private void DeleteUnusedQMFiles(string binPath, List<string> filesToLeave)
         {
+            Func<string, DirectoryInfo> getDirectoryInfo = (string path) =>
+            {
+                try
+                {
+                    DirectoryInfo dirInfo;
+                    dirInfo = new DirectoryInfo(binPath);
+                    return dirInfo;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("ExcavatorPlugin", $"DeleteUnusedQMFiles: {e.Message}");
+                }
+                return null;
+            };
+
+            Action<DirectoryInfo> deleteDirectoryInfo = (DirectoryInfo dirInfo) =>
+            {
+                dirInfo.GetFiles().ToList().ForEach(file =>
+                {
+                    try { if (!filesToLeave.Any(leaveFile => file.Name.Contains(leaveFile))) file.Delete(); }
+                    catch (Exception e) { Logger.Error("ExcavatorPlugin", "Failed to delete file: " + file); };
+                });
+                dirInfo.GetDirectories().ToList().ForEach(directory =>
+                {
+                    try { directory.Delete(true); }
+                    catch (Exception e) { Logger.Error("ExcavatorPlugin", "Failed to folder: " + directory); }
+                });
+            };
+
             if (Directory.Exists(binPath))
             {
                 DirectoryInfo dirInfo;
