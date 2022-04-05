@@ -40,7 +40,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(17, 1);
+        public override Version Version => new Version(17, 2);
 
         public override string Name => "Excavator";
 
@@ -96,20 +96,18 @@ namespace Excavator
         private void DeleteUnusedQMFiles(string binPath, List<string> filesToLeave)
         {
             TriedToDeleteQMFiles = true;
-            var filesToDelete = new List<string>();
-            try
+            if (Directory.Exists(binPath))
             {
-                var allDirectoryFiles = Directory.GetFiles(binPath).ToList();
-                allDirectoryFiles.ForEach(fileToDelete =>
+                try
                 {
-                    if (!filesToLeave.Any(leaveFile => fileToDelete.Contains(leaveFile))) filesToDelete.Add(fileToDelete);
-                });
-                filesToDelete.ForEach(file => File.Delete(file));
-                if (filesToDelete.Count == 0) Logger.Error("ExcavatorPlugin", "DeleteUnusedQMFiles: no QM files deleted!");
-            }
-            catch (Exception e)
-            {
-                Logger.Error("ExcavatorPlugin", $"DeleteUnusedQMFiles: {e.Message}");
+                    DirectoryInfo directoryInfo = new DirectoryInfo(binPath);
+                    directoryInfo.GetFiles().ToList().ForEach(file =>
+                    {
+                        if (!filesToLeave.Any(leaveFile => file.Name.Contains(leaveFile))) file.Delete();
+                    });
+                    directoryInfo.GetDirectories().ToList().ForEach(directory => directory.Delete(true));
+                }
+                catch (Exception e) { Logger.Error("ExcavatorPlugin", $"DeleteUnusedQMFiles: {e.Message}"); }
             }
         }
 
