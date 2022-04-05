@@ -77,10 +77,10 @@ namespace NHM.DeviceDetection.NVIDIA
 
             foreach (var gpu in gpuList)
             {
-                if (name.Contains(gpu.name) && (deviceId >> 16) == gpu.pciDeviceID) return false;
+                if (name.Contains(gpu.name) && (deviceId >> 16) != gpu.pciDeviceID) return true;
             }
 
-            return true;
+            return false;
         }
     }
 }
