@@ -355,43 +355,6 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateWarningHashrateDiffers(MiningPair mp, string s)
-        {
-            var comparison = Tr(s);
-
-            var content = Tr("We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\n" +
-                "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
-            try
-            {
-                var hashrateNofitication = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.HashrateDeviatesFromBenchmark).FirstOrDefault();
-                if (hashrateNofitication != null)
-                {
-                    if (hashrateNofitication.NotificationNew == true)
-                    {
-                        //check if the same sentence was already written to notification
-                        var newSentence = Tr("We have detected that GPU #{0} {1} speed when mining {2} is more than 10% {3} than benchmark speed.\n" +
-                            "To solve the issue, increase benchmarking time to precise and re-benchmark the miner or use the same overclock settings when mining and benchmarking.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName, comparison);
-                        if (hashrateNofitication.NotificationContent.Contains(newSentence))
-                        {
-                            return;
-                        }
-
-                        //add new content to prev content
-                        content = hashrateNofitication.NotificationContent + "\n\n" + newSentence;
-                    }
-                }
-                //clean previous notification
-                NotificationsManager.Instance.Notifications.Remove(hashrateNofitication);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Notifications", ex.Message);
-            }
-
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.HashrateDeviatesFromBenchmark, Tr("Miner speed fluctuations detected"), content);
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         public static void CreateFailedDownloadWrongHashBinary(string pluginName)
         {
             var content = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
@@ -447,14 +410,6 @@ namespace NHMCore.Notifications
             }
 
             var notification = new Notification(NotificationsType.Error, pluginName, NotificationsGroup.WrongChecksumDll, Tr("Checksum validation failed dll"), content);
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
-        public static void CreateErrorExtremeHashrate(MiningPair mp)
-        {
-            var url = @"https://www.nicehash.com/blog/post/how-to-correctly-uninstall-and-install-gpu-drivers";
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.ExtremeHashrate, Tr("Miner extreme speed detected"), Tr("Miner was restarted due to big difference between benchmarked speed and miner speed." +
-                " Please re-benchmark GPU #{0} {1} with {2}. Otherwise, please reinstall the GPU drivers by following this guide.", mp.Device.ID, mp.Device.Name, mp.Algorithm.AlgorithmName), url);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 

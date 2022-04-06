@@ -68,7 +68,19 @@ namespace NHM.DeviceDetection.NVIDIA
             }
             var name = GetNameFromCudaDevice(cudaDevice);
             var bd = new BaseDevice(DeviceType.NVIDIA, uuid, name, (int)cudaDevice.DeviceID);
-            return new CUDADevice(bd, cudaDevice.pciBusID, cudaDevice.DeviceGlobalMemory, cudaDevice.SM_major, cudaDevice.SM_minor);
+            return new CUDADevice(bd, cudaDevice.pciBusID, cudaDevice.DeviceGlobalMemory, cudaDevice.SM_major, cudaDevice.SM_minor, GetGpuVersionFromNameAndDeviceId(name, (int)cudaDevice.pciDeviceId));
+        }
+
+        private static bool GetGpuVersionFromNameAndDeviceId(string name, int deviceId)
+        {
+            var gpuList = new (string name, int pciDeviceID)[] { ("GeForce RTX 3060", 9475), ("GeForce RTX 3060 Ti", 9350), ("GeForce RTX 3070", 9348), ("GeForce RTX 3080", 8710), ("GeForce RTX 3090", 8708) };
+
+            foreach (var gpu in gpuList)
+            {
+                if (name.Contains(gpu.name) && (deviceId >> 16) != gpu.pciDeviceID) return true;
+            }
+
+            return false;
         }
     }
 }
