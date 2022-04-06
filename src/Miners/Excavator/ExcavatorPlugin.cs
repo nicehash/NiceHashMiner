@@ -40,7 +40,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(17, 1);
+        public override Version Version => new Version(17, 2);
 
         public override string Name => "Excavator";
 
@@ -49,6 +49,19 @@ namespace Excavator
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
 
         private bool TriedToDeleteQMFiles = false;
+
+        private readonly List<string> ImportantExcavatorFiles = new List<string>() { "excavator.exe", "EIO.dll", "IOMap64.sys" };
+
+        public override void InitInternals()
+        {
+            base.InitInternals();
+            var (_, pluginRootBinsPath) = GetBinAndCwdPaths();
+            if (!TriedToDeleteQMFiles)
+            {
+                TriedToDeleteQMFiles = true;
+                DeleteUnusedQMFiles(pluginRootBinsPath, ImportantExcavatorFiles);
+            }
+        }
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -87,29 +100,61 @@ namespace Excavator
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
-            List<string> importantExcavatorFiles = new List<string>() { "excavator.exe", "EIO.dll", "IOMap64.sys" };
-            if (!TriedToDeleteQMFiles) DeleteUnusedQMFiles(pluginRootBinsPath, importantExcavatorFiles);
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, importantExcavatorFiles);
+            var (_, pluginRootBinsPath) = GetBinAndCwdPaths();
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, ImportantExcavatorFiles);
         }
 
         private void DeleteUnusedQMFiles(string binPath, List<string> filesToLeave)
         {
-            TriedToDeleteQMFiles = true;
-            var filesToDelete = new List<string>();
-            try
+            Func<string, DirectoryInfo> getDirectoryInfo = (string path) =>
             {
-                var allDirectoryFiles = Directory.GetFiles(binPath).ToList();
-                allDirectoryFiles.ForEach(fileToDelete =>
+                try
                 {
-                    if (!filesToLeave.Any(leaveFile => fileToDelete.Contains(leaveFile))) filesToDelete.Add(fileToDelete);
-                });
-                filesToDelete.ForEach(file => File.Delete(file));
-                if (filesToDelete.Count == 0) Logger.Error("ExcavatorPlugin", "DeleteUnusedQMFiles: no QM files deleted!");
-            }
-            catch (Exception e)
+                    DirectoryInfo dirInfo;
+                    dirInfo = new DirectoryInfo(binPath);
+                    return dirInfo;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("ExcavatorPlugin", $"DeleteUnusedQMFiles: {e.Message}");
+                }
+                return null;
+            };
+
+            Action<DirectoryInfo> deleteDirectoryInfo = (DirectoryInfo dirInfo) =>
             {
-                Logger.Error("ExcavatorPlugin", $"DeleteUnusedQMFiles: {e.Message}");
+                dirInfo.GetFiles().ToList().ForEach(file =>
+                {
+                    try { if (!filesToLeave.Any(leaveFile => file.Name.Contains(leaveFile))) file.Delete(); }
+                    catch (Exception e) { Logger.Error("ExcavatorPlugin", "Failed to delete file: " + file); };
+                });
+                dirInfo.GetDirectories().ToList().ForEach(directory =>
+                {
+                    try { directory.Delete(true); }
+                    catch (Exception e) { Logger.Error("ExcavatorPlugin", "Failed to folder: " + directory); }
+                });
+            };
+
+            if (Directory.Exists(binPath))
+            {
+                DirectoryInfo dirInfo;
+                try
+                {
+                    dirInfo = new DirectoryInfo(binPath);
+                }
+                catch (Exception e) { 
+                    Logger.Error("ExcavatorPlugin", $"DeleteUnusedQMFiles: {e.Message}");
+                    return;
+                }
+                dirInfo.GetFiles().ToList().ForEach(file =>
+                {
+                    try { if (!filesToLeave.Any(leaveFile => file.Name.Contains(leaveFile))) file.Delete(); }
+                    catch (Exception e) { Logger.Error("ExcavatorPlugin", "Failed to delete file: " + file); };
+                });
+                dirInfo.GetDirectories().ToList().ForEach(directory => {
+                    try { directory.Delete(true); }
+                    catch (Exception e) { Logger.Error("ExcavatorPlugin", "Failed to folder: " + directory); }
+                });
             }
         }
 
