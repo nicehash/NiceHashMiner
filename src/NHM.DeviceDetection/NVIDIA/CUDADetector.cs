@@ -74,8 +74,8 @@ namespace NHM.DeviceDetection.NVIDIA
 
         private static bool IsLHR(string name, int deviceId)
         {
-            var gpuList = new (string name, int pciDeviceID)[] { ("GeForce RTX 3060", 9475), ("GeForce RTX 3060 Ti", 9350), ("GeForce RTX 3070", 9348), ("GeForce RTX 3080", 8710), ("GeForce RTX 3090", 8708) };
-            return gpuList.Any(gpu => name.Contains(gpu.name) && (deviceId >> 16) != gpu.pciDeviceID);
+            var nonLHR_GPUs = new (string name, int pciDeviceID)[] { ("GeForce RTX 3060", 9475), ("GeForce RTX 3060 Ti", 9350), ("GeForce RTX 3070", 9348), ("GeForce RTX 3080", 8710), ("GeForce RTX 3090", 8708) };
+            return nonLHR_GPUs.Any(gpu => name.Contains(gpu.name) && (deviceId >> 16) != gpu.pciDeviceID);
         }
     }
 }
