@@ -18,6 +18,13 @@ namespace Excavator
                     {
                         new SAS(AlgorithmType.DaggerHashimoto)
                     }
+                },
+                {
+                    DeviceType.AMD,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.DaggerHashimoto)
+                    }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>

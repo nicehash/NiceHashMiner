@@ -20,8 +20,11 @@ namespace Excavator
 {
     public class Excavator : MinerBase, IAfterStartMining
     {
-        public Excavator(string uuid) : base(uuid)
-        { }
+        protected readonly Dictionary<string, string> _mappedDeviceIds = new Dictionary<string, string>();
+        public Excavator(string uuid, Dictionary<string, string> mappedIDs) : base(uuid)
+        {
+            _mappedDeviceIds = mappedIDs;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
@@ -144,13 +147,14 @@ namespace Excavator
                 var response = await ExecuteCommand(speeds, stop);
                 ad.ApiResponse = response;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(response);
-                var gpus = _miningPairs.Select(pair => pair.Device.UUID);
+                var gpus = _miningPairs.Select(pair => _mappedDeviceIds[pair.Device.UUID]);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 foreach (var gpu in gpus)
                 {
+                    var nhmGPUuuid = _mappedDeviceIds.Where(uuid => uuid.Value == gpu).Select(item => item.Key).FirstOrDefault();
                     var speed = summary.workers.Where(w => w.device_uuid == gpu).SelectMany(w => w.algorithms.Select(a => a.speed)).Sum();
-                    perDeviceSpeedInfo.Add(gpu, new List<(AlgorithmType type, double speed)>() { (_algorithmType, speed) });
+                    perDeviceSpeedInfo.Add(nhmGPUuuid, new List<(AlgorithmType type, double speed)>() { (_algorithmType, speed) });
                 }
                 ad.PowerUsageTotal = 0;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
@@ -165,13 +169,26 @@ namespace Excavator
         }
 
         protected override void Init() { }
+        private (IEnumerable<string> uuids, IEnumerable<int> ids) GetUUIDsAndIDs(IEnumerable<MiningPair> pairs)
+        {
+            var devices = pairs
+                .Select(p => p.Device)
+                .Where(dev => dev is IGpuDevice);
+            if (devices.Any())
+            {
+                var devs = devices.Cast<IGpuDevice>();
+                var uuids = devs.Select(gpu => _mappedDeviceIds[gpu.UUID]);
+                var ids = devs.Select(gpu => gpu.PCIeBusID);
+                return (uuids, ids);
+            }
+            return (Enumerable.Empty<string>(), Enumerable.Empty<int>());
+        }
 
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
-            var uuids = _miningPairs.Select(p => p.Device).Cast<CUDADevice>().Select(gpu => gpu.UUID);
-            var ids = _miningPairs.Select(p => p.Device).Cast<CUDADevice>().Select(gpu => gpu.PCIeBusID);
+            var (uuids, ids) = GetUUIDsAndIDs(_miningPairs);
             var (_, cwd) = GetBinAndCwdPaths();
             var fileName = $"cmd_{string.Join("_", ids)}.json";
             var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, uuids.ToArray());
