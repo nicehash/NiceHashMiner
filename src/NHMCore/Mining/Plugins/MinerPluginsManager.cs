@@ -417,6 +417,7 @@ namespace NHMCore.Mining.Plugins
                 .Where(p => p.Enabled)
                 .Where(p => p.HasMisingBinaryPackageFiles())
                 .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
+                .Where(p => !BlacklistedPlugins.IsDownloadPermaBan(p.PluginUUID))
                 .Select(p => (p, p.GetMinerBinsUrls().ToList()))
                 .Where<(PluginContainer p, List<string> urls)>(pair => pair.urls.Any())
                 .ToArray();
@@ -554,6 +555,7 @@ namespace NHMCore.Mining.Plugins
             var anyPluginWithMissingPackageFiles = PluginContainer.PluginContainers
                 .Where(p => p.Enabled)
                 .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
+                .Where(p => !BlacklistedPlugins.IsDownloadPermaBan(p.PluginUUID))
                 .Any(p => p.HasMisingBinaryPackageFiles());
             return anyPluginWithMissingPackageFiles;
         }
