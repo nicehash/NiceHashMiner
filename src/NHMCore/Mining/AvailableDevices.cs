@@ -26,7 +26,6 @@ namespace NHMCore.Mining
 
         public static int AvailGpus => AvailAmdGpus + AvailNVGpus;
 
-
         public static ulong AvailNvidiaGpuRam
         {
             get
@@ -35,7 +34,7 @@ namespace NHMCore.Mining
                 var gpuRams = _devices
                     .Where(dev => dev.BaseDevice is CUDADevice)
                     .Select(dev => dev.BaseDevice)
-                    .Cast<CUDADevice>()
+                    .Cast<IGpuDevice>()
                     .Select(gpu => gpu.GpuRam);
                 foreach (var ram in gpuRams) ramSum += ram;
                 return ramSum;
@@ -50,15 +49,12 @@ namespace NHMCore.Mining
                 var gpuRams = _devices
                     .Where(dev => dev.BaseDevice is AMDDevice)
                     .Select(dev => dev.BaseDevice)
-                    .Cast<AMDDevice>()
+                    .Cast<IGpuDevice>()
                     .Select(gpu => gpu.GpuRam);
                 foreach (var ram in gpuRams) ramSum += ram;
                 return ramSum;
             }
         }
-
-        public static int NumDetectedNvDevs => _devices.Count(d => d.DeviceType == DeviceType.NVIDIA);
-        public static int NumDetectedAmdDevs => _devices.Count(d => d.DeviceType == DeviceType.AMD);
 
         internal static void AddDevice(ComputeDevice dev)
         {
@@ -87,20 +83,7 @@ namespace NHMCore.Mining
             return Devices.FirstOrDefault(dev => uuid == dev.Uuid || uuid == dev.B64Uuid);
         }
 
-        public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUuid(string uuid)
-        {
-            var compareDev = GetDeviceWithUuid(uuid);
-            return (from dev in Devices
-                    where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType
-                    select GetDeviceWithUuid(dev.Uuid)).ToList();
-        }
-
-        public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique)
-        {
-            return Devices[index];
-        }
-
-        public static int GetCountForType(DeviceType type)
+        private static int GetCountForType(DeviceType type)
         {
             return Devices.Count(device => device.DeviceType == type);
         }
@@ -108,30 +91,22 @@ namespace NHMCore.Mining
         internal static void UncheckCpuIfGpu()
         {
             if (!HasGpu) return;
-            foreach (var dev in Devices.Where(d => d.DeviceType == DeviceType.CPU))
-            {
-                if (dev.BaseDevice is CPUDevice cpu && cpu.CpuID.IsZen == false) dev.Enabled = false;
-            }
+            bool isNotAMDZenCPU(ComputeDevice d) => d.BaseDevice is CPUDevice cpu && !cpu.CpuID.IsZen;
+            var cpus = Devices.Where(isNotAMDZenCPU)
+                              .ToArray();
+            foreach (var dev in cpus) dev.Enabled = false;
         }
 
         public static int GetDeviceIndexFromUuid(string uuid)
         {
-            for (var i = 0; i < _gpus.Count; i++)
-            {
-                var gpu = _gpus[i];
-                if (gpu.Uuid == uuid) {
-                    return i;
-                }
-            }
+            var index = _gpus.FindIndex(gpu => gpu.Uuid == uuid);
+            if (index >= 0) return index;
             return 0;
         }
 
         public static string GetDeviceUuidFromIndex(int index)
         {
-            if (index < _gpus.Count)
-            {
-                return _gpus[index].Uuid;
-            }
+            if (index < _gpus.Count) return _gpus[index].Uuid;
             return "";
         }
     }

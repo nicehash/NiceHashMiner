@@ -117,8 +117,8 @@ namespace NHMCore
                         nameCount = $"GPU#{cudaCount}";
                     }
                     AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
-                }
                 
+
                 AvailableDevices.UncheckCpuIfGpu();
                 var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
                 if (!ramCheckOK)
@@ -293,6 +293,9 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
+
+                // This here is problematic because the GUI fires up file saving
+                MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(MiningSettings.Instance.DeviceToPauseUuid);
             }
             catch (Exception e)
             {

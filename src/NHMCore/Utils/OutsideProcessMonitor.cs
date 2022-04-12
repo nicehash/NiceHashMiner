@@ -22,7 +22,6 @@ namespace NHMCore.Utils
             {
                 await ProcessMonitorLoop(stop);
             });
-            Logger.Info(Tag, "Closed outside process monitor loop");
         }
         private static async Task ProcessMonitorLoop(CancellationToken stop)
         {
@@ -34,6 +33,7 @@ namespace NHMCore.Utils
             finally
             {
                 if (IsNHMShutdownNeeded()) await GracefulShutdown();
+                Logger.Info(Tag, "Closed outside process monitor loop");
             }
         }
         private static async Task GracefulShutdown()
