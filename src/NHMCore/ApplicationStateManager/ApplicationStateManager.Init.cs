@@ -1,4 +1,5 @@
 using NHM.Common;
+using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceDetection;
 using NHM.DeviceMonitoring;
@@ -86,39 +87,31 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateWarningNVIDIADCHInfo();
                 }
-                if(!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
+                if (!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
                 OutsideProcessMonitor.Init(ExitApplication.Token);
                 GPUProfileManager.Init();
                 // add devices
-                var detectionResult = DeviceDetection.DetectionResult;
-                var index = 0;
-                var cpuCount = 0;
-                var cudaCount = 0;
-                var amdCount = 0;
-                foreach (var cDev in DeviceDetection.GetDetectedDevices())
+                string getDeviceNameCount(DeviceType deviceType, int index)
                 {
-                    var nameCount = "";
-                    if (cDev.DeviceType == DeviceType.CPU)
+                    switch (deviceType)
                     {
-                        cpuCount++;
-                        nameCount = $"CPU#{cpuCount}";
+                        case DeviceType.CPU: return $"CPU#{index}";
+                        case DeviceType.AMD: return $"AMD#{index}";
+                        case DeviceType.NVIDIA: return $"GPU#{index}";
+                        default: return $"UNKNOWN#{index}";
                     }
-                    if (cDev.DeviceType == DeviceType.AMD)
-                    {
-                        amdCount++;
-                        nameCount = $"AMD#{amdCount}";
-                    }
-                    if (cDev.DeviceType == DeviceType.NVIDIA)
-                    {
-                        cudaCount++;
-                        nameCount = $"GPU#{cudaCount}";
-                    }
-                    AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
                 }
+                ComputeDevice newComputeDevice(BaseDevice d, int i) => new ComputeDevice(d, getDeviceNameCount(d.DeviceType, i + 1));
+                var detectionResult = DeviceDetection.DetectionResult;
+                var groupedComputeDevices = DeviceDetection.GetDetectedDevices()
+                    .GroupBy(dev => dev.DeviceType)
+                    .SelectMany(group => group.Select(newComputeDevice));
+                foreach (var cDev in groupedComputeDevices) AvailableDevices.AddDevice(cDev);
                 AvailableDevices.UncheckCpuIfGpu();
+
                 var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
                 if (!ramCheckOK)
                 {

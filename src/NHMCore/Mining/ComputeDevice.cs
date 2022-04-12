@@ -31,8 +31,6 @@ namespace NHMCore.Mining
 
         public string FullName => GetFullName();
 
-        public int Index { get; private set; } // For socket control, unique
-
         // name count is the short name for displaying in moning groups
         public string NameCount { get; private set; }
 
@@ -252,10 +250,9 @@ namespace NHMCore.Mining
 
 
         // constructor
-        public ComputeDevice(BaseDevice baseDevice, int index, string nameCount)
+        public ComputeDevice(BaseDevice baseDevice, string nameCount)
         {
             BaseDevice = baseDevice;
-            Index = index;
             NameCount = nameCount;
             Enabled = true;
 
