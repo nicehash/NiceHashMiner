@@ -27,4 +27,24 @@ namespace Excavator
         public int id { get; set; }
         public object error { get; set; }
     }
+
+    [Serializable]
+    public class DeviceListApiResponse
+    {
+        public List<Device> devices { get; set; }
+    }
+
+    [Serializable]
+    public class Device
+    {
+        public int device_id { get; set; }
+        public string uuid { get; set; }
+        public Details details { get; set; }
+    }
+
+    [Serializable]
+    public class Details
+    {
+        public int bus_id { get; set; }
+    }
 }

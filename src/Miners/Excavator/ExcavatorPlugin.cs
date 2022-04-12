@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿#define EXCAVATOR_VERSION_16
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -9,10 +10,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NHM.MinerPluginToolkitV1.Interfaces;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Threading;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Excavator
 {
-    public partial class ExcavatorPlugin : PluginBase, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+#if EXCAVATOR_VERSION_16
+    public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference
+#else
+    public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+#endif
     {
         public ExcavatorPlugin()
         {
@@ -39,8 +49,11 @@ namespace Excavator
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
-
-        public override Version Version => new Version(17, 2);
+#if EXCAVATOR_VERSION_16
+        public override Version Version => new Version(16, 2);
+#else
+        public override Version Version => new Version(17, 3);
+#endif
 
         public override string Name => "Excavator";
 
@@ -49,6 +62,7 @@ namespace Excavator
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
 
         private bool TriedToDeleteQMFiles = false;
+        protected readonly Dictionary<string, string> _mappedDeviceIds = new Dictionary<string, string>();
 
         private static readonly List<string> ImportantExcavatorFiles = new List<string>() { "excavator.exe", "EIO.dll", "IOMap64.sys" };
 
@@ -65,21 +79,44 @@ namespace Excavator
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            // SM 6.0+
-            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 6).Cast<CUDADevice>();
-            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var minDrivers = new Version(411, 0); // TODO
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+            var supported = GetSupportedDevicesAndAlgorithms(devices);
+            supported.ToList().ForEach(dev => _mappedDeviceIds[dev.Key.UUID] = dev.Key.UUID);
+            return supported;
+        }
 
-            foreach (var gpu in cudaGpus)
+        private Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedDevicesAndAlgorithms(IEnumerable<BaseDevice> devices)
+        {
+            var gpus = devices
+                .Where(dev => dev is IGpuDevice)
+                .Cast<IGpuDevice>()
+                .OrderBy(gpu => gpu.PCIeBusID)
+                .Cast<BaseDevice>();
+            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+            var cudaGpus = gpus.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 6).Cast<CUDADevice>();
+            var amdGpus = gpus.Where(dev => dev is AMDDevice amd).Cast<AMDDevice>();
+            var minDrivers = new Version(411, 0); // TODO
+            if (!(CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers))
+            {
+                foreach (var gpu in cudaGpus)
+                {
+                    var algos = GetSupportedAlgorithmsForDevice(gpu);
+                    if (algos.Count > 0) supported.Add(gpu, algos);
+                }
+            }
+            foreach (var gpu in amdGpus)
             {
                 var algos = GetSupportedAlgorithmsForDevice(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
+            return supported;
+        }
+
+        private void CreateExcavatorCommandTemplate(IEnumerable<string> uuids)
+        {
             try
             {
                 var templatePath = CmdConfig.CommandFileTemplatePath(PluginUUID);
-                var template = CmdConfig.CreateTemplate(supported.Select(p => p.Key.UUID));
+                var template = CmdConfig.CreateTemplate(uuids);
                 if (!File.Exists(templatePath) && template != null)
                 {
                     File.WriteAllText(templatePath, template);
@@ -87,15 +124,13 @@ namespace Excavator
             }
             catch (Exception e)
             {
-                Logger.Error("ExcavatorPlugin", $"GetSupportedAlgorithms create cmd template {e}");
+                Logger.Error("ExcavatorPlugin", $"CreateExcavatorCommandTemplate {e}");
             }
-
-            return supported;
         }
 
         protected override MinerBase CreateMinerBase()
         {
-            return new Excavator(PluginUUID);
+            return new Excavator(PluginUUID, _mappedDeviceIds);
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
@@ -179,6 +214,89 @@ namespace Excavator
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
+        }
+
+        private async Task<string> QueryExcavatorForDevices(string binPath)
+        {
+            string result = string.Empty;
+            var tempQueryPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = binPath,
+                Arguments = $"-wp {tempQueryPort}",
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+            };
+            Action<Process> KillProcess = (handle) =>
+            {
+                try
+                {
+                    var isRunning = !handle?.HasExited ?? false;
+                    if (!isRunning) return;
+                    handle.CloseMainWindow();
+                    var hasExited = handle?.WaitForExit(1000) ?? false;
+                    if (!hasExited) handle.Kill();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("ExcavatorPlugin", $"Unable to get handle: {e.Message}");
+                }
+            };
+
+            using var excavatorHandle = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
+            using var ct = new CancellationTokenSource(30 * 1000);
+            using var client = new HttpClient();
+            excavatorHandle.Start();
+            while (!ct.IsCancellationRequested)
+            {
+                try
+                {
+                    var address = $"http://localhost:{tempQueryPort}";
+                    var response = await client.GetAsync(address + @"/api?command={""id"":1,""method"":""devices.get"",""params"":[]}");
+                    if (!response.IsSuccessStatusCode) continue;
+                    result = await response.Content.ReadAsStringAsync();
+                    KillProcess(excavatorHandle);
+                    break;
+                }
+                catch { }
+                await Task.Delay(1000, ct.Token);
+            }
+            KillProcess(excavatorHandle);
+            return result;
+        }
+
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            (var binPath, _) = GetBinAndCwdPaths();
+            try
+            {
+                var supported = GetSupportedDevicesAndAlgorithms(devices).Keys;
+                var queryResult = await QueryExcavatorForDevices(binPath);
+                if (queryResult == string.Empty)
+                {
+                    Logger.Error("ExcavatorPlugin", "Initial excavator uuid query failed, only NVIDIA gpus will work");
+                    return;
+                }
+                var serialized = JsonConvert.DeserializeObject<DeviceListApiResponse>(queryResult);
+                serialized.devices.ForEach(serializedDev =>
+                {
+                    supported.ToList().ForEach(supportedDev =>
+                    {
+                        if (supportedDev is IGpuDevice device
+                            && serializedDev.details.bus_id == device.PCIeBusID)
+                        {
+                            _mappedDeviceIds[supportedDev.UUID] = serializedDev.uuid;
+                        }
+                    });
+                });
+                CreateExcavatorCommandTemplate(_mappedDeviceIds.Values);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("ExcavatorPlugin", "DevicesCrossReference: " + e.Message);
+            }
         }
     }
 }
