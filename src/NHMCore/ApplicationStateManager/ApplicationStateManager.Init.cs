@@ -186,6 +186,11 @@ namespace NHMCore
                     var deviceToPauseUuid = AvailableDevices.Devices.FirstOrDefault(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU).Uuid;
                     MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(deviceToPauseUuid);
                 }
+                else if (MiningSettings.Instance.DeviceToPauseUuid != "")
+                {
+                    MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(MiningSettings.Instance.DeviceToPauseUuid);
+                    AvailableDevices.GPUs.FirstOrDefault(dev => dev.Uuid == MiningSettings.Instance.DeviceToPauseUuid).PauseMiningWhenGamingMode = true;
+                }
                 else if (AvailableDevices.HasGpu)
                 {
                     MiningSettings.Instance.DeviceIndex = 0;
