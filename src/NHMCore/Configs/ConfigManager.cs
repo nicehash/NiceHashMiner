@@ -186,6 +186,8 @@ namespace NHMCore.Configs
                     device.SetDeviceConfig(currentConfig);
                 }
             }
+            // save settings
+            CommitBenchmarks();
         }
 
         private class GeneralConfigBackup
