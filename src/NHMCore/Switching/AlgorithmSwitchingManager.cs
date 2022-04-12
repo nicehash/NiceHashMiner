@@ -14,6 +14,7 @@ namespace NHMCore.Switching
     /// </summary>
     public class AlgorithmSwitchingManager
     {
+        public static AlgorithmSwitchingManager Instance { get; } = new AlgorithmSwitchingManager();
         private const string Tag = "SwitchingManager";
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace NHMCore.Switching
         /// </summary>
         private readonly Dictionary<AlgorithmType, double> _lastLegitPaying;
 
-        public AlgorithmSwitchingManager()
+        private AlgorithmSwitchingManager()
         {
             _stableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();
             _unstableHistory = new Dictionary<AlgorithmType, AlgorithmHistory>();

@@ -20,6 +20,28 @@ namespace NHMCore.Configs
             {
                 _switchSmaTimeChangeSeconds = value;
                 OnPropertyChanged(nameof(SwitchSmaTimeChangeSeconds));
+                OnPropertyChanged(nameof(SwitchSmaTimeChangeSecondsLower));
+                OnPropertyChanged(nameof(SwitchSmaTimeChangeSecondsUpper));
+            }
+        }
+
+        public int SwitchSmaTimeChangeSecondsLower
+        {
+            get => SwitchSmaTimeChangeSeconds.Lower;
+            set
+            {
+                SwitchSmaTimeChangeSeconds = new Interval(value, SwitchSmaTimeChangeSeconds.Upper);
+                OnPropertyChanged(nameof(SwitchSmaTimeChangeSecondsLower));
+            }
+        }
+
+        public int SwitchSmaTimeChangeSecondsUpper
+        {
+            get => SwitchSmaTimeChangeSeconds.Upper;
+            set
+            {
+                SwitchSmaTimeChangeSeconds = new Interval(SwitchSmaTimeChangeSeconds.Lower, value);
+                OnPropertyChanged(nameof(SwitchSmaTimeChangeSecondsUpper));
             }
         }
 

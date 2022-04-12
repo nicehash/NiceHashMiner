@@ -134,14 +134,14 @@
                         <Label Content="Switch Minimum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSeconds.Lower, Mode=TwoWay}" Margin="0,0,24,0" />
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSecondsLower, Mode=TwoWay}" Margin="0,0,24,0" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource switchMaximum}">
                         <Label Content="Switch Maximum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSeconds.Upper, Mode=TwoWay}" Margin="0,0,24,0"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSecondsUpper, Mode=TwoWay}" Margin="0,0,24,0"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,16,0,0">
