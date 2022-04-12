@@ -118,7 +118,7 @@ namespace NHMCore
                     }
                     AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
                 }
-                MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(MiningSettings.Instance.DeviceToPauseUuid);
+                
                 AvailableDevices.UncheckCpuIfGpu();
                 var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
                 if (!ramCheckOK)
@@ -181,6 +181,16 @@ namespace NHMCore
                 //    }
                 //}
 
+                if (AvailableDevices.HasGpuToPause)
+                {
+                    var deviceToPauseUuid = AvailableDevices.Devices.FirstOrDefault(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU).Uuid;
+                    MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(deviceToPauseUuid);
+                }
+                else if (AvailableDevices.HasGpu)
+                {
+                    MiningSettings.Instance.DeviceIndex = 0;
+                    AvailableDevices.GPUs.FirstOrDefault().PauseMiningWhenGamingMode = true;
+                }
                 #endregion Device Detection
                 // STEP
                 // load plugins

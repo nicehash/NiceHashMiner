@@ -137,10 +137,16 @@ namespace NHMCore.Configs
         {
             ApplicationStateManager.App.Dispatcher.Invoke(() =>
             {
-                CommitBenchmarks();
                 InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
                 ShowRestartRequired?.Invoke(null, IsRestartNeeded());
             });
+        }
+
+        public static void DeviceConfigFileCommit(ComputeDevice device)
+        {
+            var devSettingsPath = GetDeviceSettingsPath(device.Uuid);
+            var configs = device.GetDeviceConfig();
+            InternalConfigs.WriteFileSettings(devSettingsPath, configs);
         }
 
         private static string GetDeviceSettingsPath(string uuid)
@@ -180,8 +186,6 @@ namespace NHMCore.Configs
                     device.SetDeviceConfig(currentConfig);
                 }
             }
-            // save settings
-            GeneralConfigFileCommit();
         }
 
         private class GeneralConfigBackup

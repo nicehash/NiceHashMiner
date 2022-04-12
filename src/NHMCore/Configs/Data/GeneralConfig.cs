@@ -73,12 +73,6 @@ namespace NHMCore.Configs.Data
             get => MiningSettings.Instance.PauseMiningWhenGamingMode;
             set => MiningSettings.Instance.PauseMiningWhenGamingMode = value;
         }
-
-        public string DeviceToPauseUuid
-        {
-            get => MiningSettings.Instance.DeviceToPauseUuid;
-            set => MiningSettings.Instance.DeviceToPauseUuid = value;
-        }
         #endregion MiningSettings
 
         #region IdleMiningSettings
@@ -371,7 +365,6 @@ namespace NHMCore.Configs.Data
             ShowInternetConnectionWarning = true;
             NVIDIAP0State = false;
             PauseMiningWhenGamingMode = false;
-            DeviceToPauseUuid = "";
             MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;
             SwitchProfitabilityThreshold = 0.02; // percent
