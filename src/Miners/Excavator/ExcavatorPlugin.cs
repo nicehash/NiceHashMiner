@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿#define EXCAVATOR_VERSION_16
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -17,7 +18,11 @@ using System.Diagnostics;
 
 namespace Excavator
 {
+#if EXCAVATOR_VERSION_16
+    public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference
+#else
     public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+#endif
     {
         public ExcavatorPlugin()
         {
@@ -44,8 +49,11 @@ namespace Excavator
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
-
+#if EXCAVATOR_VERSION_16
+        public override Version Version => new Version(16, 2);
+#else
         public override Version Version => new Version(17, 3);
+#endif
 
         public override string Name => "Excavator";
 

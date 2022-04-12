@@ -33,6 +33,7 @@ namespace Excavator
         private HttpClient _httpClient;
         private const bool USE_HTTP_CLIENT = true;
         private string _authToken = Guid.NewGuid().ToString();
+        new protected int _apiPort;
 
         private ApiData LastApiData
         {
