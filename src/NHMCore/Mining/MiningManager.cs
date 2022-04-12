@@ -434,7 +434,6 @@ namespace NHMCore.Mining
 
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
-            var switchingManager = new AlgorithmSwitchingManager();
 
             var lastDeferredCommandTime = DateTime.UtcNow;
             var steamWatcher = new SteamWatcher();
@@ -442,8 +441,8 @@ namespace NHMCore.Mining
             var deferredCommands = new List<DeferredDeviceCommand>();
             try
             {
-                switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
-                switchingManager.ForceUpdate();
+                AlgorithmSwitchingManager.Instance.SmaCheck += SwichMostProfitableGroupUpMethod;
+                AlgorithmSwitchingManager.Instance.ForceUpdate();
 
                 var checkWaitTime = TimeSpan.FromMilliseconds(50);
                 bool isActive() => !stop.IsCancellationRequested;
@@ -486,8 +485,8 @@ namespace NHMCore.Mining
             {
                 Logger.Info(Tag, "Exiting MiningManagerCommandQueueLoop run cleanup");
                 // cleanup
-                switchingManager.SmaCheck -= SwichMostProfitableGroupUpMethod;
-                switchingManager.Stop();
+                AlgorithmSwitchingManager.Instance.SmaCheck -= SwichMostProfitableGroupUpMethod;
+                AlgorithmSwitchingManager.Instance.Stop();
                 foreach (var groupMiner in _runningMiners.Values)
                 {
                     await groupMiner.StopTask();
@@ -618,8 +617,26 @@ namespace NHMCore.Mining
             else if (command is GPUToPauseChangedCommand gpuToPauseChangedCommand)
             {
                 _deviceToPauseUuid = gpuToPauseChangedCommand.gpuUuid;
-                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
-                if (dev != null) dev.IsGaming = false;
+                
+                // unpause device if not mining and not selected
+                var devToUnpause = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
+                if (devToUnpause != null) devToUnpause.IsGaming = false;
+
+                // set new selected gpu to true
+                var newSelectedDev = AvailableDevices.GetDeviceWithUuid(_deviceToPauseUuid);
+                if(newSelectedDev != null)
+                {
+                    newSelectedDev.PauseMiningWhenGamingMode = true;
+                    ConfigManager.DeviceConfigFileCommit(newSelectedDev);
+                }
+
+                // set previous selected gpu to false
+                var oldSelectedDev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.PauseMiningWhenGamingMode);
+                if (oldSelectedDev != null)
+                {
+                    oldSelectedDev.PauseMiningWhenGamingMode = false;
+                    ConfigManager.DeviceConfigFileCommit(oldSelectedDev);
+                }
             }
 
             // here we do the deciding

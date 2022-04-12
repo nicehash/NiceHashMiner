@@ -73,7 +73,6 @@ namespace NHMCore.Configs.Data
             get => MiningSettings.Instance.PauseMiningWhenGamingMode;
             set => MiningSettings.Instance.PauseMiningWhenGamingMode = value;
         }
-
         public string DeviceToPauseUuid
         {
             get => MiningSettings.Instance.DeviceToPauseUuid;

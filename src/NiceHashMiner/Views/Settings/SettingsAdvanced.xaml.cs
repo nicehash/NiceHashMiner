@@ -50,7 +50,6 @@ namespace NiceHashMiner.Views.Settings
         private void GPUComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             MiningSettings.Instance.DeviceToPauseUuid = AvailableDevices.GPUs[cBoxGPUs.SelectedIndex].Uuid;
-            ConfigManager.GeneralConfigFileCommit();
         }
     }
 }

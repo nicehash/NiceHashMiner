@@ -48,6 +48,18 @@ namespace NHMCore.Mining
             }
         }
 
+        private bool _pauseMiningWhenGamingMode = false;
+        public bool PauseMiningWhenGamingMode
+        {
+            get => _pauseMiningWhenGamingMode;
+            internal set
+            {
+                if (value == _pauseMiningWhenGamingMode) return;
+                _pauseMiningWhenGamingMode = value;
+                OnPropertyChanged();
+            }
+        }
+
         // disabled state check
         public bool IsDisabled => (!Enabled || State == DeviceState.Disabled);
 
@@ -375,6 +387,7 @@ namespace NHMCore.Mining
             //Enabled = config.Enabled;
             Enabled = config.Enabled;
             MinimumProfit = config.MinimumProfit;
+            PauseMiningWhenGamingMode = config.PauseMiningWhenGamingMode;
 
             if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
@@ -467,6 +480,7 @@ namespace NHMCore.Mining
                 Enabled = Enabled,
                 MinimumProfit = MinimumProfit,
                 TDPSettings = TDPSettings,
+                PauseMiningWhenGamingMode = PauseMiningWhenGamingMode
             };
             // init algo settings
             foreach (var algo in AlgorithmSettings)
