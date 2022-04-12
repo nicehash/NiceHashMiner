@@ -79,6 +79,12 @@ namespace NHMCore.Configs.Data
             get => MiningSettings.Instance.DeviceToPauseUuid;
             set => MiningSettings.Instance.DeviceToPauseUuid = value;
         }
+
+        public bool EnableSSLMining
+        {
+            get => MiningSettings.Instance.EnableSSLMining;
+            set => MiningSettings.Instance.EnableSSLMining = value;
+        }
         #endregion MiningSettings
 
         #region IdleMiningSettings
@@ -372,6 +378,7 @@ namespace NHMCore.Configs.Data
             NVIDIAP0State = false;
             PauseMiningWhenGamingMode = false;
             DeviceToPauseUuid = "";
+            EnableSSLMining = false;
             MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;
             SwitchProfitabilityThreshold = 0.02; // percent

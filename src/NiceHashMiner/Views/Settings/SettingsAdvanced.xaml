@@ -69,6 +69,9 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.ResolveNiceHashDomainsToIPs}"
                                         Label="Resolve NiceHash domains to IPs via Cloudflare"
                                         Description="This will resolve NiceHash domains to IPs via cloudflare in case of DNS sinkholing."/>
+            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.EnableSSLMining}"
+                                        Label="Enable SSL Mining"
+                                        Description="This will enable SSL mining for miner plugins that have SSL mining support. Some miner plugins might not have this feature implemented."/>
             
         </WrapPanel>
         <!--Device Monitoring-->
