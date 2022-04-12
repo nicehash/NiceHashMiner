@@ -618,8 +618,26 @@ namespace NHMCore.Mining
             else if (command is GPUToPauseChangedCommand gpuToPauseChangedCommand)
             {
                 _deviceToPauseUuid = gpuToPauseChangedCommand.gpuUuid;
-                var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
-                if (dev != null) dev.IsGaming = false;
+                
+                // unpause device if not mining and not selected
+                var devToUnpause = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
+                if (devToUnpause != null) devToUnpause.IsGaming = false;
+
+                // set new selected gpu to true
+                var newSelectedDev = AvailableDevices.GetDeviceWithUuid(_deviceToPauseUuid);
+                if(newSelectedDev != null)
+                {
+                    newSelectedDev.PauseMiningWhenGamingMode = true;
+                    ConfigManager.DeviceConfigFileCommit(newSelectedDev);
+                }
+
+                // set previous selected gpu to false
+                var oldSelectedDev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.PauseMiningWhenGamingMode);
+                if (oldSelectedDev != null)
+                {
+                    oldSelectedDev.PauseMiningWhenGamingMode = false;
+                    ConfigManager.DeviceConfigFileCommit(oldSelectedDev);
+                }
             }
 
             // here we do the deciding

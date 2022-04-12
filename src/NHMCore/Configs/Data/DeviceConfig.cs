@@ -12,6 +12,7 @@ namespace NHMCore.Configs.Data
 
         public bool Enabled = true;
         public double MinimumProfit = 0;
+        public bool PauseMiningWhenGamingMode = false;
 
         public DeviceTDPSettings TDPSettings;
 

@@ -56,7 +56,6 @@ namespace NiceHashMiner.Views.Notifications
             {
                 MiscSettings.Instance.ShowNotifications.Remove(_notification.NotificationUUID);
                 MiscSettings.Instance.ShowNotifications.Add(_notification.NotificationUUID, DontShowAgainCheckBox?.IsChecked ?? false);
-                ConfigManager.GeneralConfigFileCommit();
             }
         }
 
