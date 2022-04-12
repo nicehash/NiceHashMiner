@@ -116,32 +116,48 @@ namespace NHM.Common
             }
         }
 
-        public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
+        private static string GetLocationUrlInner(AlgorithmType algorithmType, NhmConectionType conectionType)
         {
             if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrl(algorithmType, conectionType);
-            
+
             var (name, okName) = GetAlgorithmUrlName(algorithmType);
             // if name is not ok return
             if (!okName) return "";
 
             var (prefix, port) = GetProtocolPrefixAndPort(conectionType);
-            
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) 
+
+            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
                 return $"{prefix}{name}-test.auto.nicehash.com:{port}";
-            
+
             if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
                 return $"{prefix}{name}-dev.auto.nicehash.com:{port}";
 
             //BuildTag.PRODUCTION
-            var url = name + ".auto.nicehash.com";
-            if (UseDNSQ)
+            return $"{prefix}{name}.auto.nicehash.com:{port}";
+        }
+
+        // miningLocation is now auto location but keep it for backward compatibility
+        public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
+        {
+            try
             {
-                var urlT = Task.Run(async () => await DNSQuery.QueryOrDefault(url));
-                urlT.Wait();
-                var (IP, gotIP) = urlT.Result;
-                if (gotIP) url = IP;
+                var url = GetLocationUrlInner(algorithmType, conectionType);
+                if (!UseDNSQ) return url;
+
+                var uri = new Uri(url);
+                var host = uri.Host;
+
+                var hostT = Task.Run(async () => await DNSQuery.QueryOrDefault(host));
+                hostT.Wait(); // <== BLOCKING
+                var (IP, gotIP) = hostT.Result;
+                if (gotIP) return url.Replace(host, IP);
+                return url;
             }
-            return prefix + url + $":{port}";
+            catch (Exception e)
+            {
+                Logger.Error("StratumServiceHelpers", $"GetLocationUrl error: {e.Message}");
+                return "";
+            }
         }
 
         public static async Task<(string url, int port)> GetLocationUrlV2(AlgorithmType algorithmType, bool ssl = false)
@@ -160,7 +176,7 @@ namespace NHM.Common
                 return ($"{name}-dev.auto.nicehash.com", port);
 
             //BuildTag.PRODUCTION
-            var url = name + ".auto.nicehash.com";
+            var url = $"{name}.auto.nicehash.com";
             if (UseDNSQ)
             {
                 var (IP, gotIP) = await DNSQuery.QueryOrDefault(url);
