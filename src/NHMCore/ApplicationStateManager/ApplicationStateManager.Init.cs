@@ -117,7 +117,7 @@ namespace NHMCore
                         nameCount = $"GPU#{cudaCount}";
                     }
                     AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
-                
+                }
 
                 AvailableDevices.UncheckCpuIfGpu();
                 var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
