@@ -174,14 +174,15 @@ namespace Excavator
         {
             var devices = pairs
                 .Select(p => p.Device)
-                .Where(dev => dev is IGpuDevice);
+                .Where(dev => dev is IGpuDevice)
+                .Cast<IGpuDevice>();
             if (devices.Any())
             {
-                var devs = devices.Cast<IGpuDevice>();
-                var uuids = devs.Select(gpu => _mappedDeviceIds[gpu.UUID]);
-                var ids = devs.Select(gpu => gpu.PCIeBusID);
+                var uuids = devices.Select(gpu => _mappedDeviceIds[gpu.UUID]);
+                var ids = devices.Select(gpu => gpu.PCIeBusID);
                 return (uuids, ids);
             }
+            Logger.Warn(_logGroup, "No excavator supported devices found!");
             return (Enumerable.Empty<string>(), Enumerable.Empty<int>());
         }
 

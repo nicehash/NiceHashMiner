@@ -36,11 +36,11 @@ namespace Excavator
             // TODO link
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.7.6.2",
-                ExePath = new List<string> { "NHQM_v0.5.3.3", "excavator.exe" },
+                BinVersion = "v1.7.6.5",
+                ExePath = new List<string> { "NHQM_v0.5.3.6_RC", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.3.3/NHQM_v0.5.3.3.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.3.6_RC/NHQM_v0.5.3.6_RC.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -84,26 +84,26 @@ namespace Excavator
             return supported;
         }
 
+        private bool IsDeviceSupported(BaseDevice device)
+        {
+            if (device is AMDDevice amd) return true;
+            var minNvidiaDrivers = new Version(411, 0);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minNvidiaDrivers &&
+                device is CUDADevice cuda &&
+                cuda.SM_major >= 6) return true;
+            return false;
+        }
+
         private Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedDevicesAndAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var gpus = devices
                 .Where(dev => dev is IGpuDevice)
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID)
-                .Cast<BaseDevice>();
+                .Cast<BaseDevice>()
+                .Where(gpu => IsDeviceSupported(gpu));
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var cudaGpus = gpus.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 6).Cast<CUDADevice>();
-            var amdGpus = gpus.Where(dev => dev is AMDDevice amd).Cast<AMDDevice>();
-            var minDrivers = new Version(411, 0); // TODO
-            if (!(CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers))
-            {
-                foreach (var gpu in cudaGpus)
-                {
-                    var algos = GetSupportedAlgorithmsForDevice(gpu);
-                    if (algos.Count > 0) supported.Add(gpu, algos);
-                }
-            }
-            foreach (var gpu in amdGpus)
+            foreach (var gpu in gpus)
             {
                 var algos = GetSupportedAlgorithmsForDevice(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
@@ -229,7 +229,7 @@ namespace Excavator
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
             };
-            Action<Process> KillProcess = (handle) =>
+            void killProcess(Process handle)
             {
                 try
                 {
@@ -257,13 +257,13 @@ namespace Excavator
                     var response = await client.GetAsync(address + @"/api?command={""id"":1,""method"":""devices.get"",""params"":[]}");
                     if (!response.IsSuccessStatusCode) continue;
                     result = await response.Content.ReadAsStringAsync();
-                    KillProcess(excavatorHandle);
+                    killProcess(excavatorHandle);
                     break;
                 }
                 catch { }
                 await Task.Delay(1000, ct.Token);
             }
-            KillProcess(excavatorHandle);
+            killProcess(excavatorHandle);
             return result;
         }
 
@@ -280,17 +280,17 @@ namespace Excavator
                     return;
                 }
                 var serialized = JsonConvert.DeserializeObject<DeviceListApiResponse>(queryResult);
-                serialized.devices.ForEach(serializedDev =>
+                foreach (var serializedDev in serialized.devices)
                 {
-                    supported.ToList().ForEach(supportedDev =>
+                    foreach (var supportedDev in supported)
                     {
                         if (supportedDev is IGpuDevice device
                             && serializedDev.details.bus_id == device.PCIeBusID)
                         {
                             _mappedDeviceIds[supportedDev.UUID] = serializedDev.uuid;
                         }
-                    });
-                });
+                    }
+                }
                 CreateExcavatorCommandTemplate(_mappedDeviceIds.Values);
             }
             catch (Exception e)
