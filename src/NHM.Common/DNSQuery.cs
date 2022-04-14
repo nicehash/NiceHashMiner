@@ -42,15 +42,33 @@ namespace NHM.Common
 
         public static async Task<(string IP, bool gotIP)> QueryOrDefault(string url)
         {
+            string prependSchemeIfMissing(string url) => url.Contains("://") ? url : $"stratum+tcp://{url}";
+            try
+            {
+                var uri = new Uri(prependSchemeIfMissing(url));
+                var host = uri.Host;
+                var IP = await QueryHostToIP(host);
+                if (IP != null) return (url.Replace(host, IP), true);
+                Logger.Warn("DNSQuery", $"QueryOrDefault unable get IP for url='{url}'. Falling back to Default");
+            }
+            catch (Exception e)
+            {
+                Logger.Error("DNSQuery", $"QueryOrDefault for url='{url}' error: {e.Message}");
+            }
+            return (url, false);
+        }
+
+        private static async Task<string> QueryHostToIP(string host)
+        {
             foreach (var dest in _destinations)
             {
                 var requestLocation = URL
                     .Replace(DESTINATION_TEMPLATE, dest)
-                    .Replace(REQUEST_TEMPLATE, url);
+                    .Replace(REQUEST_TEMPLATE, host);
                 var ip = await Request(requestLocation);
-                if (ip != null) return (ip, true);
+                if (ip != null) return ip;
             }
-            return (url, false);
+            return null;
         }
 
         private static async Task<string> Request(string targetUrl)
