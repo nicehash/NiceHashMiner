@@ -21,7 +21,7 @@ using System.Windows;
 #endif
 
 [assembly: AssemblyCompany("H-BIT, d.o.o.")]
-[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2021")]
+[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2022")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

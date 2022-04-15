@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("runnhmasadmin")]
-[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2021")]
+[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
