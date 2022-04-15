@@ -30,8 +30,6 @@ namespace MP.Joker
         // the order of intializing devices is the order how the API responds
         protected Dictionary<string, int> _mappedDeviceIds;
 
-        private int _openClAmdPlatformNum;
-
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
 
@@ -40,33 +38,31 @@ namespace MP.Joker
             _mappedDeviceIds = mappedDeviceIds;
             _minerSettings = minerSettings;
             _pluginEngine = pluginEngine;
-            _openClAmdPlatformNum = openClAmdPlatformNum;
+            //_openClAmdPlatformNum = openClAmdPlatformNum;
         }
 
         #region GetMinerStatsDataAsync
 
-        public override Task<ApiData> GetMinerStatsDataAsync()
-        {
-            switch (_pluginEngine)
+        public override Task<ApiData> GetMinerStatsDataAsync() => 
+            _pluginEngine switch
             {
-                case PluginEngine.CryptoDredge: return CryptoDredgeGetMinerStatsDataAsync();
-                case PluginEngine.GMiner: return GMinerGetMinerStatsDataAsync();
-                case PluginEngine.LolMiner: return LolMinerGetMinerStatsDataAsync();
-                case PluginEngine.MiniZ: return MiniZGetMinerStatsDataAsync();
-                case PluginEngine.NanoMiner: return NanoMinerGetMinerStatsDataAsync();
-                case PluginEngine.NBMiner: return NBMinerGetMinerStatsDataAsync();
-                case PluginEngine.Phoenix: return PhoenixGetMinerStatsDataAsync();
-                case PluginEngine.SRBMiner: return SRBMinerGetMinerStatsDataAsync();
-                case PluginEngine.TeamRedMiner: return TeamRedMinerGetMinerStatsDataAsync();
-                case PluginEngine.TRex: return TRexGetMinerStatsDataAsync();
-                case PluginEngine.TTMiner: return TTMinerGetMinerStatsDataAsync();
-                case PluginEngine.WildRig: return WildRigGetMinerStatsDataAsync();
-                case PluginEngine.XMRig: return XMRigGetMinerStatsDataAsync();
-                case PluginEngine.ZEnemy: return ZEnemyGetMinerStatsDataAsync();
-                
-                default: return GetMinerStatsDataAsyncSTUB();
-            }
-        }
+                PluginEngine.CryptoDredge => CryptoDredgeGetMinerStatsDataAsync(),
+                PluginEngine.GMiner => GMinerGetMinerStatsDataAsync(),
+                PluginEngine.LolMiner => LolMinerGetMinerStatsDataAsync(),
+                PluginEngine.MiniZ => MiniZGetMinerStatsDataAsync(),
+                PluginEngine.NanoMiner => NanoMinerGetMinerStatsDataAsync(),
+                PluginEngine.NBMiner => NBMinerGetMinerStatsDataAsync(),
+                PluginEngine.Phoenix => PhoenixGetMinerStatsDataAsync(),
+                PluginEngine.SRBMiner => SRBMinerGetMinerStatsDataAsync(),
+                PluginEngine.TeamRedMiner => TeamRedMinerGetMinerStatsDataAsync(),
+                PluginEngine.TRex => TRexGetMinerStatsDataAsync(),
+                PluginEngine.TTMiner => TTMinerGetMinerStatsDataAsync(),
+                PluginEngine.WildRig => WildRigGetMinerStatsDataAsync(),
+                PluginEngine.XMRig => XMRigGetMinerStatsDataAsync(),
+                PluginEngine.ZEnemy => ZEnemyGetMinerStatsDataAsync(),
+
+                _ => GetMinerStatsDataAsyncSTUB(),
+            };
 
         #region CryptoDredge
         
@@ -296,17 +292,15 @@ namespace MP.Joker
             }
         }
 
-        private static int GetMultiplier(string speedUnit)
-        {
-            switch (speedUnit)
-            {
-                case "mh/s": return 1000000; //1M
-                case "kh/s": return 1000; //1k
-                default: return 1;
-            }
-        }
         public async Task<ApiData> LolMinerGetMinerStatsDataAsync()
         {
+            int getMultiplier(string speedUnit) =>
+                speedUnit.ToLower() switch
+                {
+                    "mh/s" => 1000000, //1M
+                    "kh/s" => 1000, //1k
+                    _ => 1,
+                };
             var ad = new ApiData();
             try
             {
@@ -314,7 +308,7 @@ namespace MP.Joker
                 ad.ApiResponse = summaryApiResult;
                 var summary = JsonConvert.DeserializeObject<LolMiner.ApiJsonResponse>(summaryApiResult);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var multiplier = GetMultiplier(summary.Session.Performance_Unit);
+                var multiplier = getMultiplier(summary.Session.Performance_Unit);
                 var totalSpeed = summary.Session.Performance_Summary * multiplier;
 
                 var totalPowerUsage = 0;
@@ -1568,42 +1562,6 @@ namespace MP.Joker
             {
                 _initOrderMirrorApiOrderUUIDs[i] = miningPairsArray[i].Device.UUID;
             }
-        }
-
-        private static (string url, string port, bool ok) SplitUrlWithPort(string urlWithPort)
-        {
-            var port = string.Join("", urlWithPort
-                .Reverse()
-                .TakeWhile(char.IsDigit)
-                .Reverse());
-            var url = urlWithPort.Replace($":{port}", "");
-            return (url, port, int.TryParse(port, out var _)); 
-        }
-
-        private static string GetCommandLineTemplate(MinerSettings minerSettings, AlgorithmType algo)
-        {
-            if (minerSettings.AlgorithmCommandLine?.ContainsKey(algo) ?? false) return minerSettings.AlgorithmCommandLine[algo];
-            return minerSettings.DefaultCommandLine;
-        }
-
-        protected override string MiningCreateCommandLine()
-        {
-            // API port function might be blocking
-            _apiPort = GetAvaliablePort();
-            // instant non blocking
-            var urlWithPort = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, _minerSettings.NhmConectionType);
-            var (url, port, _) = SplitUrlWithPort(urlWithPort);
-            var commandLine = GetCommandLineTemplate(_minerSettings, _algorithmType)
-                .Replace(MinerSettings.USERNAME_TEMPLATE, _username)
-                .Replace(MinerSettings.API_PORT_TEMPLATE, $"{_apiPort}")
-                .Replace(MinerSettings.POOL_URL_TEMPLATE, url)
-                .Replace(MinerSettings.POOL_PORT_TEMPLATE, port)
-                //.Replace(MinerSettings.ALGORITHM_TEMPLATE, algo)
-                .Replace(MinerSettings.DEVICES_TEMPLATE, _devices)
-                .Replace(MinerSettings.OPEN_CL_AMD_PLATFORM_NUM, $"{_openClAmdPlatformNum}")
-                .Replace(MinerSettings.EXTRA_LAUNCH_PARAMETERS_TEMPLATE, _extraLaunchParameters);
-
-            return commandLine;
         }
     }
 }
