@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace NHM.DeviceDetection.Models.AMDBusIDVersionResult
 {

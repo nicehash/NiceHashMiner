@@ -1,7 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
-using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHMCore.Utils;
 using System;

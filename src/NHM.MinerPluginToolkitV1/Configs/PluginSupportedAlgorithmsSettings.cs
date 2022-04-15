@@ -4,7 +4,6 @@ using NHM.Common.Configs;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NHM.MinerPluginToolkitV1.Configs
 {

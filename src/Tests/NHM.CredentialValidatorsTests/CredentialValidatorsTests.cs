@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using static NHM.CredentialValidators.CredentialValidators;
 
 namespace NHM.CredentialValidatorsTests

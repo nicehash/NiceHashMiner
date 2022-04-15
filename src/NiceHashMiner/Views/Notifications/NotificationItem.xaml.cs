@@ -1,5 +1,4 @@
-﻿using NHM.Common;
-using NHMCore;
+﻿using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Notifications;
 using NiceHashMiner.Views.Common;

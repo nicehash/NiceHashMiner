@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NHM.CredentialValidators
+﻿namespace NHM.CredentialValidators
 {
     internal static class BTC_Bech32
     {

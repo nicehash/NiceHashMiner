@@ -5,12 +5,10 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using static MP.Joker.PluginEngines;
 using InternalConfigsCommon = NHM.Common.Configs.InternalConfigs;
 

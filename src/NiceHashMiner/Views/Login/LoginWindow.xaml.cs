@@ -8,10 +8,8 @@ using NiceHashMiner.Views.Common.NHBase;
 using System;
 using System.Diagnostics;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 namespace NiceHashMiner.Views.Login
 {

@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NHM.Common;
-using NHM.Common.Device;
-using NHMCore.Mining;
-using NHMCore.Utils;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace NHMCore.Utils

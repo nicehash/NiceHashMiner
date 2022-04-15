@@ -1,15 +1,9 @@
-﻿using NHM.Common;
-using NHMCore;
-using NiceHashMiner.ViewModels.Models;
+﻿using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.Views.Common;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using static NHMCore.Translations;
 
 namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 {

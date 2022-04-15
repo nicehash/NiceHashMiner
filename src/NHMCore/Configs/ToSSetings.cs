@@ -1,6 +1,5 @@
 ﻿using NHM.Common;
 using NHM.CommonWin32;
-using System;
 
 namespace NHMCore.Configs
 {

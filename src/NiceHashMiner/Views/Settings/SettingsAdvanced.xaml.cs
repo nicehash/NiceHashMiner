@@ -1,7 +1,5 @@
-﻿using NHM.Common;
-using NHMCore.Configs;
+﻿using NHMCore.Configs;
 using NHMCore.Mining;
-using System.Linq;
 using System.Windows.Controls;
 
 namespace NiceHashMiner.Views.Settings

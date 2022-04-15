@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using NHM.Common.Enums;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using static MP.Joker.PluginEngines;
 
 namespace MP.Joker.Settings

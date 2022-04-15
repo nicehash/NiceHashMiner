@@ -13,7 +13,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Security.Cryptography;
 using static NhmPackager.PackagerFileDirectoryUtils;
 using static NhmPackager.PackagerPaths;
