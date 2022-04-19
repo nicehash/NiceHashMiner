@@ -51,7 +51,7 @@ namespace Excavator
 #if EXCAVATOR_VERSION_16
         public override Version Version => new Version(16, 2);
 #else
-        public override Version Version => new Version(17, 3);
+        public override Version Version => new Version(17, 0);
 #endif
 
         public override string Name => "Excavator";
