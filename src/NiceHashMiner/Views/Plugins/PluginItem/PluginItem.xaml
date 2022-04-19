@@ -249,7 +249,7 @@
                                FontSize="12"
                                Margin="0,0,16,0"
                                Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverterFalse}}"
-                               Text="NOT COMPATIBLE. Update NiceHash Miner" />
+                               Text="{Binding Plugin.CompatibilityIssueMessage}" />
 
 
                 </WrapPanel>
