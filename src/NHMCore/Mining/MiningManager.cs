@@ -77,6 +77,12 @@ namespace NHMCore.Mining
         private class RunEthlargementChangedCommand : MainCommand
         { }
 
+        private class DNSQChangedCommand : MainCommand
+        { }
+
+        private class SSLMiningChangedCommand : MainCommand
+        { }
+
         private class PauseMiningWhenGamingModeSettingsChangedCommand : MainCommand
         {
             public PauseMiningWhenGamingModeSettingsChangedCommand(bool isPauseMiningWhenGamingModeSettingEnabled) { this.isPauseMiningWhenGamingModeSettingEnabled = isPauseMiningWhenGamingModeSettingEnabled; }
@@ -149,6 +155,21 @@ namespace NHMCore.Mining
         {
             if (RunninLoops == null) return Task.CompletedTask;
             var command = new NormalizedProfitsUpdateCommand(normalizedProfits);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
+        private static Task DNSQChanged()
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new DNSQChangedCommand();
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+        private static Task SSLMiningChanged()
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new SSLMiningChangedCommand();
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -232,10 +253,8 @@ namespace NHMCore.Mining
             MiningProfitSettings.Instance.PropertyChanged += MiningProfitSettingsInstance_PropertyChanged;
 
             _isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
-            MiningSettings.Instance.PropertyChanged += PauseMiningWhenGamingModeInstance_PropertyChanged;
-
             _deviceToPauseUuid = MiningSettings.Instance.DeviceToPauseUuid;
-            MiningSettings.Instance.PropertyChanged += DeviceToPauseUuid_PropertyChanged;
+            MiningSettings.Instance.PropertyChanged += MiningSettingsInstance_PropertyChanged;
         }
 
         public static void StartLoops(CancellationToken stop, string username)
@@ -254,10 +273,12 @@ namespace NHMCore.Mining
 
         private static void MiscSettingsInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MiscSettings.UseEthlargement))
+            _ = e.PropertyName switch
             {
-                _ = UseEthlargementChanged();
-            }
+                nameof(MiscSettings.UseEthlargement) => UseEthlargementChanged(),
+                nameof(MiscSettings.ResolveNiceHashDomainsToIPs) => DNSQChanged(),
+                _ => Task.CompletedTask,
+            };            
         }
 
         private static void MiningProfitSettingsInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -265,20 +286,15 @@ namespace NHMCore.Mining
             _ = MiningProfitSettingsChanged();
         }
 
-        private static void PauseMiningWhenGamingModeInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private static void MiningSettingsInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MiningSettings.PauseMiningWhenGamingMode))
+            _ = e.PropertyName switch
             {
-                _ = PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode);
-            }
-        }
-
-        private static void DeviceToPauseUuid_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(MiningSettings.DeviceToPauseUuid))
-            {
-                _ = SelectedGPUSettingsChanged(MiningSettings.Instance.DeviceToPauseUuid);
-            }
+                nameof(MiningSettings.PauseMiningWhenGamingMode) => PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode),
+                nameof(MiningSettings.DeviceToPauseUuid) => SelectedGPUSettingsChanged(MiningSettings.Instance.DeviceToPauseUuid),
+                nameof(MiningSettings.EnableSSLMining) => SSLMiningChanged(),
+                _ => Task.CompletedTask,
+            };
         }
 
         private static async Task StopAndRemoveBenchmark(DeferredDeviceCommand c)
@@ -639,6 +655,15 @@ namespace NHMCore.Mining
                 }
             }
 
+            bool isRestartMinersCommand(Command command) =>
+                command switch
+                {
+                    UsernameChangedCommand => true,
+                    RunEthlargementChangedCommand => true,
+                    DNSQChangedCommand => true,
+                    SSLMiningChangedCommand => true,
+                    _ => false,
+                };
             // here we do the deciding
             // to mine we need to have the username mining location set and ofc device to mine with
             if (_username == null || _normalizedProfits == null)
@@ -647,7 +672,7 @@ namespace NHMCore.Mining
                 if (_normalizedProfits == null) Logger.Error(Tag, "_normalizedProfits is null");
                 await PauseAllMiners();
             }
-            else if (command is UsernameChangedCommand || command is RunEthlargementChangedCommand)
+            else if (isRestartMinersCommand(command))
             {
                 // RESTART-STOP-START
                 // STOP

@@ -11,8 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +29,6 @@ namespace Excavator
         private object _lockLastApiData = new object();
         private ApiData _lastApiData = null;
         private HttpClient _httpClient;
-        private const bool USE_HTTP_CLIENT = true;
         private string _authToken = Guid.NewGuid().ToString();
         new protected int _apiPort;
 
@@ -74,7 +71,7 @@ namespace Excavator
                 //Authorization
                 var requestUri = Uri.EscapeUriString($"http://localhost:{_apiPort}/api?command={command}");
                 // http://bind-ip:bind-port/api?command=%7BJSON-command-here%7D
-                Logger.Info(_logGroup, $"Excavator_DELETE HttpGet requestUri: '{requestUri}'");
+                //Logger.Info(_logGroup, $"Excavator_DELETE HttpGet requestUri: '{requestUri}'");
                 var result = await _httpClient.GetStringAsync(requestUri);
                 return result;
             }
@@ -85,46 +82,13 @@ namespace Excavator
             }
         }
 
-        public static async Task<string> GetApiDataAsync(int port, string dataToSend, string logGroup, CancellationToken stop)
-        {
-            try
-            {
-                using (var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-                using (var ct = CancellationTokenSource.CreateLinkedTokenSource(stop, timeout.Token))
-                using (var client = new TcpClient("127.0.0.1", port))
-                using (var nwStream = client.GetStream())
-                {
-                    var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
-                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length, ct.Token);
-                    var bytesToRead = new byte[client.ReceiveBufferSize];
-                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize, ct.Token);
-                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    client.Close();
-                    return respStr;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(logGroup, $"Excavator GetApiDataAsync error: {e.Message}");
-                return "";
-            }
-        }
-
         private async Task<string> ExecuteCommand(string command, CancellationToken stop)
         {
             try
             {
-                if (USE_HTTP_CLIENT)
-                {
-                    _ = stop;
-                    var response = await HttpGet(command);
-                    return response;
-                }
-                else
-                {
-                    var response = await GetApiDataAsync(_apiPort, command + "\r\n", _logGroup, stop);
-                    return response;
-                }
+                _ = stop;
+                var response = await HttpGet(command);
+                return response;
             }
             catch (Exception e)
             {
@@ -194,16 +158,8 @@ namespace Excavator
             var fileName = $"cmd_{string.Join("_", ids)}.json";
             var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, uuids.ToArray());
             File.WriteAllText(Path.Combine(cwd, fileName), cmdStr);
-            if (USE_HTTP_CLIENT)
-            {
-                var commandLine = $"-wp {_apiPort} -wa \"{_authToken}\" -c {fileName} -m -qx {_extraLaunchParameters}";
-                return commandLine;
-            }
-            else
-            {
-                var commandLine = $"-p {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
-                return commandLine;
-            }
+            var commandLine = $"-wp {_apiPort} -wa \"{_authToken}\" -c {fileName} -m -qx {_extraLaunchParameters}";
+            return commandLine;
         }
 
         void IAfterStartMining.AfterStartMining()

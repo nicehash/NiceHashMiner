@@ -33,14 +33,13 @@ namespace Excavator
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
-            // TODO link
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.7.6.2",
-                ExePath = new List<string> { "NHQM_v0.5.3.3", "excavator.exe" },
+                BinVersion = "v1.7.6.5",
+                ExePath = new List<string> { "NHQM_v0.5.3.6_RC", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.3.3/NHQM_v0.5.3.3.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.3.6_RC/NHQM_v0.5.3.6_RC.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -84,31 +83,22 @@ namespace Excavator
             return supported;
         }
 
+        private static Version NVIDIA_Min_Version = new Version(411, 0);
         private Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedDevicesAndAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            var gpus = devices
-                .Where(dev => dev is IGpuDevice)
-                .Cast<IGpuDevice>()
-                .OrderBy(gpu => gpu.PCIeBusID)
-                .Cast<BaseDevice>();
-            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var cudaGpus = gpus.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 6).Cast<CUDADevice>();
-            var amdGpus = gpus.Where(dev => dev is AMDDevice amd).Cast<AMDDevice>();
-            var minDrivers = new Version(411, 0); // TODO
-            if (!(CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers))
-            {
-                foreach (var gpu in cudaGpus)
+            bool isNVIDIADriverGreaterThanMinVersion() => CUDADevice.INSTALLED_NVIDIA_DRIVERS >= NVIDIA_Min_Version;
+            bool isSupportedGPU(BaseDevice gpu) =>
+                gpu switch
                 {
-                    var algos = GetSupportedAlgorithmsForDevice(gpu);
-                    if (algos.Count > 0) supported.Add(gpu, algos);
-                }
-            }
-            foreach (var gpu in amdGpus)
-            {
-                var algos = GetSupportedAlgorithmsForDevice(gpu);
-                if (algos.Count > 0) supported.Add(gpu, algos);
-            }
-            return supported;
+                    CUDADevice cuda => isNVIDIADriverGreaterThanMinVersion() && cuda.SM_major >= 6,
+                    _ => gpu is AMDDevice,
+                };
+            if (!isNVIDIADriverGreaterThanMinVersion()) Logger.Error("ExcavatorPlugin", $"Insufficient NVIDIA driver version. Installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS} Required {NVIDIA_Min_Version}");
+            return devices
+                .Where(isSupportedGPU)
+                .Select(gpu => (gpu, algos: GetSupportedAlgorithmsForDevice(gpu)))
+                .Where(p => p.algos.Any())
+                .ToDictionary(p => p.gpu, p => p.algos);
         }
 
         private void CreateExcavatorCommandTemplate(IEnumerable<string> uuids)
@@ -229,7 +219,7 @@ namespace Excavator
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
             };
-            Action<Process> KillProcess = (handle) =>
+            void killProcess(Process handle)
             {
                 try
                 {
@@ -257,13 +247,13 @@ namespace Excavator
                     var response = await client.GetAsync(address + @"/api?command={""id"":1,""method"":""devices.get"",""params"":[]}");
                     if (!response.IsSuccessStatusCode) continue;
                     result = await response.Content.ReadAsStringAsync();
-                    KillProcess(excavatorHandle);
+                    killProcess(excavatorHandle);
                     break;
                 }
                 catch { }
                 await Task.Delay(1000, ct.Token);
             }
-            KillProcess(excavatorHandle);
+            killProcess(excavatorHandle);
             return result;
         }
 
@@ -272,7 +262,8 @@ namespace Excavator
             (var binPath, _) = GetBinAndCwdPaths();
             try
             {
-                var supported = GetSupportedDevicesAndAlgorithms(devices).Keys;
+                var gpus = devices.Where(dev => dev is IGpuDevice)
+                                       .Cast<IGpuDevice>();
                 var queryResult = await QueryExcavatorForDevices(binPath);
                 if (queryResult == string.Empty)
                 {
@@ -280,17 +271,12 @@ namespace Excavator
                     return;
                 }
                 var serialized = JsonConvert.DeserializeObject<DeviceListApiResponse>(queryResult);
-                serialized.devices.ForEach(serializedDev =>
+                foreach (var serializedDev in serialized.devices)
                 {
-                    supported.ToList().ForEach(supportedDev =>
-                    {
-                        if (supportedDev is IGpuDevice device
-                            && serializedDev.details.bus_id == device.PCIeBusID)
-                        {
-                            _mappedDeviceIds[supportedDev.UUID] = serializedDev.uuid;
-                        }
-                    });
-                });
+                    var targetGpu = gpus.FirstOrDefault(gpu => serializedDev.details.bus_id == gpu.PCIeBusID);
+                    if (targetGpu == null) continue; 
+                    _mappedDeviceIds[targetGpu.UUID] = serializedDev.uuid;
+                }
                 CreateExcavatorCommandTemplate(_mappedDeviceIds.Values);
             }
             catch (Exception e)
