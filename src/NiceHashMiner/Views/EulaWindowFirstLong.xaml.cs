@@ -31,11 +31,6 @@ namespace NiceHashMiner.Views
             EulaRtb.Selection.ApplyPropertyValue(FontFamilyProperty, FindResource("UbuntuFontFamily") as FontFamily);
         }
 
-        private void EulaRtb_OnLinkClicked(object sender, LinkClickedEventArgs e)
-        {
-            Process.Start(e.LinkText);
-        }
-
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
             AcceptedTos = true;

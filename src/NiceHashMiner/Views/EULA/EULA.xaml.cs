@@ -40,12 +40,7 @@ namespace NiceHashMiner.Views.EULA
             EulaRtb.SelectAll();
             EulaRtb.Selection.ApplyPropertyValue(FontFamilyProperty, FindResource("UbuntuFontFamily") as FontFamily);
         }
-
-        private void EulaRtb_OnLinkClicked(object sender, LinkClickedEventArgs e)
-        {
-            Process.Start(e.LinkText);
-        }
-
+        
         private void Hyperlink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var hyperlink = (Hyperlink)sender;

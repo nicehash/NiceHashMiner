@@ -10,7 +10,6 @@ namespace NiceHashMiner.ViewModels
 {
     public class DashboardViewModel : NotifyChangedBase
     {
-        public bool IsBitcoinAddressValid { get; private set; }
         public string StatusText
         {
             get

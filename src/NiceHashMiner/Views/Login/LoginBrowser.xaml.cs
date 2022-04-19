@@ -96,8 +96,6 @@ namespace NiceHashMiner.Views.Login
 
         public bool? LoginSuccess { get; private set; } = null;
 
-        private bool? _isOnLoginPage { get; set; } = null;
-
         private void Browser_Loaded(object sender, RoutedEventArgs e)
         {
             WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;

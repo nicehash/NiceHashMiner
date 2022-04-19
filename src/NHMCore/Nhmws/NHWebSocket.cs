@@ -575,14 +575,6 @@ namespace NHMCore.Nhmws
         }
 
         #region RpcMessages
-
-        private class RpcExecutionResult
-        {
-            public bool LoginNeeded { get; set; }
-            public bool Id { get; set; }
-            public bool Success { get; set; }
-        }
-
         private static void ThrowIfWeCannotHanldeRPC()
         {
             var rigStatusPending = ApplicationStateManager.CalcRigStatus() == RigStatus.Pending;

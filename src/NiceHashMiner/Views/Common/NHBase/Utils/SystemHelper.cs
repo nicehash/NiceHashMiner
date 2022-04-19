@@ -15,11 +15,5 @@ namespace NiceHashMiner.Views.Common.NHBase.Utils
         {
             return (double)SystemHelper.GetCurrentDPI() / 96;
         }
-
-        public static Point GetMouseScreenPosition()
-        {
-            System.Drawing.Point point = Control.MousePosition;
-            return new Point(point.X, point.Y);
-        }
     }
 }

@@ -42,6 +42,7 @@ namespace NHMCore.Utils
                     float entriesCount = archive.Entries.Count;
                     while (reader.MoveToNextEntry())
                     {
+                        if (stop.IsCancellationRequested) return false;
                         extractedEntries += 1;
                         if (!reader.Entry.IsDirectory)
                         {
@@ -85,6 +86,7 @@ namespace NHMCore.Utils
                     float entriesCount = archive.Entries.Count;
                     while (reader.MoveToNextEntry())
                     {
+                        if (stop.IsCancellationRequested) return false;
                         extractedEntries += 1;
                         if (!reader.Entry.IsDirectory)
                         {

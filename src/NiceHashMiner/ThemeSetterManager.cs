@@ -31,11 +31,6 @@ namespace NiceHashMiner
             }
         }
 
-        internal static void RemoveThemeSetter(IThemeSetter setter)
-        {
-            _themeSetters.Remove(setter);
-        }
-
         internal static void SetThemeSelectedThemes()
         {
             SetTheme(IsLight);
