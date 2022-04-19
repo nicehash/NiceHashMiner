@@ -181,7 +181,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                var pluginURL = OnlineInfo?.PluginPackageURL ?? "N/A";
+                var pluginURL = GetInfoSource()?.PluginPackageURL ?? "N/A";
                 return pluginURL;
             }
         }

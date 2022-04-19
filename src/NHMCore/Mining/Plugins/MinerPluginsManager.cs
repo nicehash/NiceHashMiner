@@ -695,6 +695,7 @@ namespace NHMCore.Mining.Plugins
                     localPluginInfo.MinerPackageURL = pb.GetMinerBinsUrlsForPlugin().FirstOrDefault();
                     localPluginInfo.PluginDescription = ConstructLocalPluginDescription(pb);
                     localPluginInfo.SupportedDevicesAlgorithms = new Dictionary<string, List<string>>();
+                    localPluginInfo.PackagePassword = pb.BinsPackagePassword;
                     var supportedList = pb.SupportedDevicesAlgorithmsDict();
                     foreach (var supported in supportedList)
                     {
