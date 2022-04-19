@@ -252,7 +252,7 @@ namespace NHMCore
         public static CurrentFormState CurrentForm
         {
             get => _currentForm;
-            set
+            private set
             {
                 if (_currentForm == value) return;
                 _currentForm = value;

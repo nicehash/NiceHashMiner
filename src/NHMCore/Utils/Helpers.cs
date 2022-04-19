@@ -226,7 +226,7 @@ namespace NHMCore.Utils
         {
             try
             {
-                using (var p = Process.Start(urlLink)) { }
+                using var _p = Process.Start(urlLink);
             }
             catch (Exception ex)
             {
@@ -234,19 +234,12 @@ namespace NHMCore.Utils
             }
         }
 
-        public static async Task<bool> CreateAndUploadLogReport(string uuid)
+        public static async Task<(bool isUploaded, string dumpUUID, string uploadUrl)> CreateAndUploadLogReport()
         {
             try
             {
-                // Create archive
-                if (!CreateLogArchive()) return false;
-
-                // Upload archive
                 var tmpZipPath = Paths.RootPath($"tmp._archive_logs.zip");
-                var res2 = await UploadLogArchive(tmpZipPath, uuid);
-                if (!res2) return false;
-
-                // Delete archive
+                // Delete old archive
                 try
                 {
                     File.Delete(tmpZipPath);
@@ -256,12 +249,18 @@ namespace NHMCore.Utils
                     Logger.Error("Log-Report", $"Unable to delete log archive: {ex.Message}");
                 }
 
-                return true;
+                var (dumpUUID, uploadUrl) = CreateSystemDumpUrl();
+                // Create archive
+                if (!CreateLogArchive()) return (false, dumpUUID, uploadUrl);
+
+                // Upload archive
+                var isUploaded = await UploadLogArchive(tmpZipPath, uploadUrl);
+                return (isUploaded, dumpUUID, uploadUrl);
             }
             catch (Exception ex)
             {
                 Logger.Error("Log-Report", ex.Message);
-                return false;
+                return (false, "", "");
             }
         }
 
@@ -280,10 +279,8 @@ namespace NHMCore.Utils
                     CreateNoWindow = true
                 };
                 Logger.Info("Log-Report", $"Created log report with: {startLogInfo.FileName} - arguments: {startLogInfo.Arguments}");
-                using (var doCreateLog = Process.Start(startLogInfo))
-                {
-                    doCreateLog.WaitForExit(10 * 1000);
-                }
+                using var doCreateLog = Process.Start(startLogInfo);
+                doCreateLog.WaitForExit(10 * 1000);
                 return true;
             }
             catch (Exception ex)
@@ -293,21 +290,23 @@ namespace NHMCore.Utils
             }
         }
 
-        private static async Task<bool> UploadLogArchive(string tmpArchivePath, string uuid)
+        private static (string uuid, string url) CreateSystemDumpUrl()
+        {
+            var uuid = System.Guid.NewGuid().ToString();
+            var rigId = ApplicationStateManager.RigID();
+            var url = $"https://nhos.nicehash.com/nhm-dump/{rigId}-{uuid}.zip";
+            return (uuid, url);
+        }
+
+        private static async Task<bool> UploadLogArchive(string tmpArchivePath, string uploadUrl)
         {
             try
             {
-                var rigID = ApplicationStateManager.RigID();
-                var url = $"https://nhos.nicehash.com/nhm-dump/{rigID}-{uuid}.zip";
-
-                using (var httpClient = new HttpClient())
-                {
-                    using (var stream = File.OpenRead(tmpArchivePath))
-                    {
-                        var response = await httpClient.PutAsync(url, new StreamContent(stream));
-                        response.EnsureSuccessStatusCode();
-                    }
-                }
+                using var httpClient = new HttpClient();
+                using var stream = File.OpenRead(tmpArchivePath);
+                using var content = new StreamContent(stream);
+                using var response = await httpClient.PutAsync(uploadUrl, content);
+                response.EnsureSuccessStatusCode();
                 return true;
             }
             catch (Exception ex)

@@ -555,23 +555,16 @@ namespace NHMCore.Nhmws
 
         static private Task HandleNonRpcMessage(string method, string data)
         {
-            switch (method)
+            return method switch
             {
-                case "sma":
-                    return HandleSMAMessage(data);
-                case "markets":
-                    return HandleMarkets(data); ;
-                case "balance":
-                    return SetBalance(data);
-                case "versions":
-                    return SetVersion(data);
-                case "burn":
-                    return HandleBurn(data);
-                case "exchange_rates":
-                    return SetExchangeRates(data);
-                default:
-                    throw new Exception($"NonRpcMessage operation not supported for method '{method}'");
-            }
+                "sma" => HandleSMAMessage(data),
+                "markets" => HandleMarkets(data),
+                "balance" => SetBalance(data),
+                "versions" => SetVersion(data),
+                "burn" => HandleBurn(data),
+                "exchange_rates" => SetExchangeRates(data),
+                _ => throw new Exception($"NonRpcMessage operation not supported for method '{method}'"),
+            };
         }
 
         #region RpcMessages
@@ -829,43 +822,42 @@ namespace NHMCore.Nhmws
             }
         }
 
-        private static string MinerReset(string level)
+        private static async Task<string> MinerReset(string level)
         {
-            switch (level)
+            string appBurn()
             {
-                case "app burn":
-                    HandleBurn("MinerReset app burn called");
-                    return "";
-                case "rig restart":
-                    _ = Task.Run(async () =>
-                    {
-                        await Task.Delay(3 * 1000);
-                        var startInfo = new ProcessStartInfo
-                        {
-                            FileName = "shutdown",
-                            Arguments = "-r -f -t 0",
-                            CreateNoWindow = true,
-                            UseShellExecute = false
-                        };
-                        using (var reboot = Process.Start(startInfo))
-                        {
-                            reboot.WaitForExit();
-                        }
-                    });
-                    return "";
-                case "system dump":
-                    var uuid = System.Guid.NewGuid().ToString();
-                    var rigId = ApplicationStateManager.RigID();
-                    var url = $"https://nhos.nicehash.com/nhm-dump/{rigId}-{uuid}.zip";
-                    var success = Task.Run(() => Helpers.CreateAndUploadLogReport(uuid)).Result;
-                    if (success) return url;
-                    return "";
-                //case "benchmarks":
-                //    // TODO
-                //    break;
-                default:
-                    throw new RpcException($"RpcMessage MinerReset operation not supported for level '{level}'", ErrorCode.UnableToHandleRpc);
+                _ = HandleBurn("MinerReset app burn called");
+                return "";
             }
+            string rigRestart()
+            {
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(3 * 1000);
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName = "shutdown",
+                        Arguments = "-r -f -t 0",
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    };
+                    using var reboot = Process.Start(startInfo);
+                    reboot.WaitForExit();
+                });
+                return "";
+            }
+            async Task<string> systemDump()
+            {
+                var result = await Task.Run(async () => await Helpers.CreateAndUploadLogReport());
+                return result.isUploaded ? result.uploadUrl : "";
+            }
+            return level switch
+            {
+                "app burn" => appBurn(),
+                "rig restart" => rigRestart(),
+                "system dump" => await systemDump(),
+                _ => throw new RpcException($"RpcMessage MinerReset operation not supported for level '{level}'", ErrorCode.UnableToHandleRpc),
+            };
         }
 
         #endregion RpcMessages
@@ -921,7 +913,7 @@ namespace NHMCore.Nhmws
                         SetPowerMode((string)message.device, (TDPSimpleType)message.power_mode);
                         break;
                     case "miner.reset":
-                        rpcAnswer = MinerReset((string)message.level);
+                        rpcAnswer = await MinerReset((string)message.level);
                         break;
                     default:
                         throw new RpcException($"RpcMessage operation not supported for method '{method}'", ErrorCode.UnableToHandleRpc);
