@@ -2,7 +2,6 @@
 using NHM.DeviceMonitoring.NVIDIA;
 using NHM.DeviceMonitoring.TDP;
 using System;
-using System.Linq;
 using System.Threading;
 
 namespace NHM.DeviceMonitoring
@@ -175,16 +174,15 @@ namespace NHM.DeviceMonitoring
             }
         }
 
-        private static double? PowerLevelToTDPPercentage(TDPSimpleType level)
-        {
-            switch (level)
+        private static double? PowerLevelToTDPPercentage(TDPSimpleType level) =>
+            level switch
             {
-                case TDPSimpleType.LOW: return 0.6d; // 60%
-                case TDPSimpleType.MEDIUM: return 0.8d; // 80%
-                case TDPSimpleType.HIGH: return 1.0d; // 100%
-                default: return null;
-            }
-        }
+                TDPSimpleType.LOW => 0.6d, // 60%
+                TDPSimpleType.MEDIUM => 0.8d, // 80%
+                TDPSimpleType.HIGH => 1.0d, // 100%
+                _ => null,
+            };
+        
         public bool SetTDPSimple(TDPSimpleType level)
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings)

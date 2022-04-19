@@ -26,16 +26,13 @@ namespace NHMCore.Mining.Grouping
 
         private static string GetDisabledDeviceStatusString(ComputeDevice dev, DeviceMiningStatus status)
         {
-            switch (status)
+            return status switch
             {
-                case DeviceMiningStatus.DeviceNull:
-                    return "Passed Device is NULL";
-                case DeviceMiningStatus.Disabled:
-                    return "DISABLED: " + dev.GetFullName();
-                case DeviceMiningStatus.NoEnabledAlgorithms:
-                    return "No Enabled Algorithms: " + dev.GetFullName();
-                default: return "Invalid status Passed";
-            }            
+                DeviceMiningStatus.DeviceNull => "Passed Device is NULL",
+                DeviceMiningStatus.Disabled => $"DISABLED: {dev.GetFullName()}",
+                DeviceMiningStatus.NoEnabledAlgorithms => $"No Enabled Algorithms: {dev.GetFullName()}",
+                _ => "Invalid status Passed",
+        };         
         }
 
         private static void LogMiningNonMiningStatuses(IEnumerable<(ComputeDevice device, DeviceMiningStatus status)> devicesMiningStatusPairs)

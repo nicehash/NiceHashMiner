@@ -29,18 +29,15 @@ namespace LolMiner
             _mappedDeviceIds = mappedDeviceIds;
         }
 
-        private static int GetMultiplier(string speedUnit)
-        {
-            switch (speedUnit.ToLower())
-            {
-                case "mh/s": return 1000000; //1M
-                case "kh/s": return 1000; //1k
-                default: return 1;
-            }
-        }
-
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
+            int getMultiplier(string speedUnit) =>
+                speedUnit.ToLower() switch
+                {
+                    "mh/s" => 1000000, //1M
+                    "kh/s" => 1000, //1k
+                    _ => 1,
+                };
             var ad = new ApiData();
             try
             {
@@ -57,7 +54,7 @@ namespace LolMiner
                         Worker_Performance = new List<double> { 0 } 
                     };
                 }
-                var multiplier = GetMultiplier(algo.Performance_Unit);
+                var multiplier = getMultiplier(algo.Performance_Unit);
                 var totalSpeed = algo.Total_Performance * multiplier;
 
                 var totalPowerUsage = 0;

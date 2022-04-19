@@ -94,16 +94,15 @@ namespace NHMCore
                 OutsideProcessMonitor.Init(ExitApplication.Token);
                 GPUProfileManager.Init();
                 // add devices
-                string getDeviceNameCount(DeviceType deviceType, int index)
-                {
-                    switch (deviceType)
+                string getDeviceNameCount(DeviceType deviceType, int index) => 
+                    deviceType switch
                     {
-                        case DeviceType.CPU: return $"CPU#{index}";
-                        case DeviceType.AMD: return $"AMD#{index}";
-                        case DeviceType.NVIDIA: return $"GPU#{index}";
-                        default: return $"UNKNOWN#{index}";
-                    }
-                }
+                        DeviceType.CPU => $"CPU#{index}",
+                        DeviceType.AMD => $"AMD#{index}",
+                        DeviceType.NVIDIA => $"GPU#{index}",
+                        _ => $"UNKNOWN#{index}",
+                    };
+
                 ComputeDevice newComputeDevice(BaseDevice d, int i) => new ComputeDevice(d, getDeviceNameCount(d.DeviceType, i + 1));
                 var detectionResult = DeviceDetection.DetectionResult;
                 var groupedComputeDevices = DeviceDetection.GetDetectedDevices()

@@ -226,17 +226,17 @@ namespace NHMCore
         public static string CalcRigStatusString()
         {
             var rigState = CalcRigStatus();
-            switch (rigState)
+            return rigState switch
             {
-                case RigStatus.Offline: return "OFFLINE";
-                case RigStatus.Stopped: return "STOPPED";
-                case RigStatus.Mining: return "MINING";
-                case RigStatus.Benchmarking: return "BENCHMARKING";
-                case RigStatus.Error: return "ERROR";
-                case RigStatus.Pending: return "PENDING";
-                case RigStatus.Disabled: return "DISABLED";
-                default: return "UNKNOWN";
-            }
+                RigStatus.Offline => "OFFLINE",
+                RigStatus.Stopped => "STOPPED",
+                RigStatus.Mining => "MINING",
+                RigStatus.Benchmarking => "BENCHMARKING",
+                RigStatus.Error => "ERROR",
+                RigStatus.Pending => "PENDING",
+                RigStatus.Disabled => "DISABLED",
+                _ => "UNKNOWN",
+            };
         }
 
 

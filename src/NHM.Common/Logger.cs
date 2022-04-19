@@ -38,22 +38,14 @@ namespace NHM.Common
             // try will prevent an error if something tries to print an invalid character
             try
             {
-                var logLine = $"[{grp}] {text}";
-                switch (type)
+                Action<object> log = type switch
                 {
-                    case LogType.Debug:
-                        _log.Debug(logLine);
-                        break;
-                    case LogType.Warn:
-                        _log.Warn(logLine);
-                        break;
-                    case LogType.Error:
-                        _log.Error(logLine);
-                        break;
-                    default:
-                        _log.Info(logLine);
-                        break;
-                }
+                    LogType.Debug => _log.Debug, 
+                    LogType.Warn => _log.Warn,
+                    LogType.Error => _log.Error,
+                    _ => _log.Info,
+                };
+                log($"[{grp}] {text}");
             }
             catch { }  // Not gonna recursively call here in case something is seriously wrong
         }
