@@ -51,6 +51,7 @@ namespace NiceHashMiner.ViewModels.Plugins
                 }
                 if (Plugin.Installed && !Plugin.HasNewerVersion && localVer != null && onlineVer != null)
                 {
+                    if(localVer > onlineVer) return Tr("{0}.{1} (Latest)", localVer.Major, localVer.Minor);
                     return Tr("{0}.{1} (Latest)", onlineVer.Major, onlineVer.Minor);
                 }
                 if (localVer != null)

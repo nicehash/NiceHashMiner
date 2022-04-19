@@ -126,6 +126,10 @@ namespace NHMCore.Mining.Plugins
         // algos for NiceHashMiner Client
         private Dictionary<string, List<AlgorithmContainer>> _cachedNiceHashMinerAlgorithms { get; } = new Dictionary<string, List<AlgorithmContainer>>();
 
+        public IMinerPlugin GetPlugin()
+        {
+            return _plugin;
+        }
         public bool InitPluginContainer()
         {
             if (IsInitialized) return true;

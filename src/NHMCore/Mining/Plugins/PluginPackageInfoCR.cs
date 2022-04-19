@@ -88,6 +88,16 @@ namespace NHMCore.Mining.Plugins
 
         public bool Supported => OnlineSupportedDeviceCount > 0;
 
+        public PluginPackageInfo GetInfoSource()
+        {
+            if (OnlineInfo?.PluginVersion != null &&
+                LocalInfo?.PluginVersion != null &&
+                LocalInfo?.PluginVersion > OnlineInfo?.PluginVersion)
+            {
+                return LocalInfo;
+            }
+            return OnlineInfo;
+        }
         // for plugins that we provide we can know what versions are and are not supported
         public bool CompatibleNHPluginVersion
         {
@@ -120,7 +130,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                var hash = LocalInfo?.PluginPackageHash ?? OnlineInfo?.PluginPackageHash ?? "N/A";
+                var hash = OnlineInfo?.PluginPackageHash ?? "N/A";
                 return hash;
             }
         }
@@ -129,7 +139,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                var hash = LocalInfo?.BinaryPackageHash ?? OnlineInfo?.BinaryPackageHash ?? "N/A";
+                var hash = OnlineInfo?.BinaryPackageHash ?? "N/A";
                 return hash;
             }
         }
@@ -148,7 +158,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                var ver = LocalInfo?.PluginVersion ?? OnlineInfo?.PluginVersion ?? new Version(0, 0);
+                var ver = GetInfoSource()?.PluginVersion ?? new Version(0, 0);
                 return ver;
             }
         }
@@ -157,7 +167,6 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                //var pluginURL = LocalInfo?.PluginPackageURL ?? OnlineInfo?.PluginPackageURL ?? "N/A";
                 var pluginURL = OnlineInfo?.PluginPackageURL ?? "N/A";
                 return pluginURL;
             }
@@ -167,8 +176,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                //var minerURL = LocalInfo?.MinerPackageURL ?? OnlineInfo?.MinerPackageURL ?? "N/A";
-                var minerURL = OnlineInfo?.MinerPackageURL ?? "N/A";
+                var minerURL = GetInfoSource()?.MinerPackageURL ?? "N/A";
                 return minerURL;
             }
         }
@@ -177,7 +185,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                var supportedDevicesAlgorithms = LocalInfo?.SupportedDevicesAlgorithms ?? OnlineInfo?.SupportedDevicesAlgorithms ?? new Dictionary<string, List<string>>();
+                var supportedDevicesAlgorithms = GetInfoSource()?.SupportedDevicesAlgorithms ?? new Dictionary<string, List<string>>();
                 var keysWithNoAlgorithms = supportedDevicesAlgorithms
                     .Where(pair => !pair.Value.Any())
                     .Select(pair => pair.Key)
@@ -192,7 +200,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                var author = LocalInfo?.PluginAuthor ?? OnlineInfo?.PluginAuthor ?? "N/A";
+                var author = GetInfoSource()?.PluginAuthor ?? "N/A";
                 return author;
             }
         }
@@ -202,8 +210,7 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                // prefer local over online
-                var desc = LocalInfo?.PluginDescription ?? OnlineInfo?.PluginDescription ?? "N/A";
+                var desc = GetInfoSource()?.PluginDescription ?? "N/A";
                 return desc;
             }
         }

@@ -664,6 +664,11 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
+        private static string ConstructLocalPluginDescription(PluginBase plugin)
+        {
+            var binVersion = plugin.GetMinerBinaryVersion();
+            return $"Miner Binary Version '{binVersion}'.\n\n" + plugin.GetPluginMetaInfo().PluginDescription;
+        }
         public static void CrossReferenceInstalledWithOnline()
         {
             // EthlargementIntegratedPlugin special case
@@ -685,6 +690,18 @@ namespace NHMCore.Mining.Plugins
                     PluginVersion = installed.Version,
                     // other stuff is not inside the plugin
                 };
+                if (installed.GetPlugin() is PluginBase pb)
+                {
+                    localPluginInfo.MinerPackageURL = pb.GetMinerBinsUrlsForPlugin().FirstOrDefault();
+                    localPluginInfo.PluginDescription = ConstructLocalPluginDescription(pb);
+                    localPluginInfo.SupportedDevicesAlgorithms = new Dictionary<string, List<string>>();
+                    var supportedList = pb.SupportedDevicesAlgorithmsDict();
+                    foreach (var supported in supportedList)
+                    {
+                        var algos = supported.Value.Select(algo => Enum.GetName(typeof(AlgorithmType), algo)).ToList();
+                        localPluginInfo.SupportedDevicesAlgorithms.Add(Enum.GetName(typeof(DeviceType), supported.Key), algos);
+                    }
+                }
                 if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
                 {
                     PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);

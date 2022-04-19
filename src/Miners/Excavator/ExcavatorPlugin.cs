@@ -45,7 +45,7 @@ namespace Excavator
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "Excavator NVIDIA GPU miner from NiceHash",
+                PluginDescription = "Excavator NVIDIA/AMD GPU miner from NiceHash",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
