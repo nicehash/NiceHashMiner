@@ -183,17 +183,13 @@ namespace NHMCore
             {
                 return RigStatus.Pending;
             }
-            if (IsInBenchmarkForm() || IsInSettingsForm() || IsInPluginsForm() || IsInUpdateForm())
-            {
-                return RigStatus.Pending;
-            }
             // TODO check if we are connected to ws if not retrun offline state
 
             // check devices
             var allDevs = AvailableDevices.Devices;
             // now assume we have all disabled
             var rigState = RigStatus.Disabled;
-            // order matters, we are excluding pending state
+            // ORDER MATTERS!!!, we are excluding pending state
             var anyDisabled = allDevs.Any(dev => dev.IsDisabled);
             if (anyDisabled)
             {
@@ -252,32 +248,6 @@ namespace NHMCore
         public static CurrentFormState CurrentForm
         {
             get => _currentForm;
-            private set
-            {
-                if (_currentForm == value) return;
-                _currentForm = value;
-                NHWebSocket.NotifyStateChanged();
-            }
-        }
-
-        public static bool IsInMainForm => CurrentForm == CurrentFormState.Main;
-
-        public static bool IsInBenchmarkForm()
-        {
-            return CurrentForm == CurrentFormState.Benchmark;
-        }
-        public static bool IsInSettingsForm()
-        {
-            return CurrentForm == CurrentFormState.Settings;
-        }
-        public static bool IsInPluginsForm()
-        {
-            return CurrentForm == CurrentFormState.Plugins;
-        }
-
-        public static bool IsInUpdateForm()
-        {
-            return CurrentForm == CurrentFormState.Update;
         }
     }
 }

@@ -578,24 +578,10 @@ namespace NHMCore.Nhmws
 
         private static void ThrowIfWeCannotHanldeRPC()
         {
-            var rigStatusPending = ApplicationStateManager.CalcRigStatus() == RigStatus.Pending;
-            var formState = ApplicationStateManager.IsInBenchmarkForm() ? ". Rig is in benchmarks form" : "";
-            if (ApplicationStateManager.IsInSettingsForm())
-            {
-                formState = ". Rig is in settings form";
-            }
-            if (ApplicationStateManager.IsInPluginsForm())
-            {
-                formState = ". Rig is in plugins form";
-            }
-            if (ApplicationStateManager.IsInUpdateForm())
-            {
-                formState = ". Rig is in update form";
-            }
             // throw if pending
-            if (rigStatusPending)
+            if (ApplicationStateManager.CalcRigStatus() == RigStatus.Pending)
             {
-                throw new RpcException($"Cannot handle RPC call Rig is in PENDING state{formState}", ErrorCode.UnableToHandleRpc);
+                throw new RpcException($"Cannot handle RPC call Rig is in PENDING state.", ErrorCode.UnableToHandleRpc);
             }
         }
 
