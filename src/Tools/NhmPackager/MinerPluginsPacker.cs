@@ -117,25 +117,14 @@ namespace NhmPackager
             {
                 var filepath = GetTemporaryWorkFolder($"{plugin.PluginUUID}.tmp");
                 Logger.Info("MinerPluginsPacker", $"Calculating hash for {plugin.Name}-{plugin.PluginUUID}");
-                using (var myWebClient = new WebClient()) myWebClient.DownloadFile(minerPackageURL, filepath);
-                using (var sha256Hash = SHA256.Create())
-                using (var stream = File.OpenRead(filepath))
-                {
-                    var hash = sha256Hash.ComputeHash(stream);
-                    binaryHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
+                using var myWebClient = new WebClient();
+                myWebClient.DownloadFile(minerPackageURL, filepath);
+                binaryHash = FileHelpers.GetFileSHA256Checksum(filepath);
                 File.Delete(filepath);
             }
-            string pluginPackageHash = null;
             var pluginZipFileName = GetPluginPackageName(plugin);
             var dllPackageZip = GetPluginsPackagesPath(pluginZipFileName);
-            using (var sha256Hash = SHA256.Create())
-            using (var stream = File.OpenRead(dllPackageZip))
-            {
-                var hash = sha256Hash.ComputeHash(stream);
-                pluginPackageHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-            }
-
+            string pluginPackageHash = FileHelpers.GetFileSHA256Checksum(dllPackageZip);
             var binaryVersion = "N/A";
             // TODO binary version
             if (plugin is IGetMinerBinaryVersion binVersionGetter)

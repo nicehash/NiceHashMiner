@@ -1172,7 +1172,6 @@ namespace NHMCore.Mining.Plugins
                 var installedVersions = new DirectoryInfo(pluginBinsPath).GetDirectories("*", SearchOption.AllDirectories).ToList();
                 if (installedVersions.Count() > numOfKeepVersions)
                 {
-
                     //parse versions
                     var versionDic = new Dictionary<Version, string>();
                     foreach (var dir in installedVersions)
@@ -1209,20 +1208,14 @@ namespace NHMCore.Mining.Plugins
 
         private static bool FilePathHashEqualsToDatabaseHash(string filepath, string databaseHash, string pluginName)
         {
-            //make hash from file stream and compare to database hash
-            using (var sha256Hash = SHA256.Create())
-            using (var stream = File.OpenRead(filepath))
+            const string EMPTY_HASH = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+            string hashString = FileHelpers.GetFileSHA256Checksum(filepath);
+            if (hashString == EMPTY_HASH)
             {
-                var hash = sha256Hash.ComputeHash(stream);
-                var hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                if (hashString == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
-                {
-                    AvailableNotifications.CreateNullChecksumError(pluginName);
-                    Logger.Error("MinerPluginsManager", "Downloaded file is empty");
-                }
-
-                return hashString == databaseHash;
+                AvailableNotifications.CreateNullChecksumError(pluginName);
+                Logger.Error("MinerPluginsManager", "Downloaded file is empty");
             }
+            return hashString == databaseHash.ToLowerInvariant();
         }
     }
 }
