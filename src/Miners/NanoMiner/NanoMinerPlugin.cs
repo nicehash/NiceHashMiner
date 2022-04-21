@@ -24,11 +24,11 @@ namespace NanoMiner
             // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.5.2",
-                ExePath = new List<string> { "nanominer-windows-3.5.2-cuda11", "nanominer.exe" },
+                BinVersion = "v3.6.0",
+                ExePath = new List<string> { "nanominer-windows-3.6.0-cuda11", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v3.5.2/nanominer-windows-3.5.2-cuda11.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v3.6.0/nanominer-windows-3.6.0-cuda11.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,7 +40,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "f25fee20-94eb-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(17, 1);
 
         public override string Name => "NanoMiner";
 
