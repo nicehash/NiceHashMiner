@@ -99,7 +99,7 @@ namespace NHMCore.Mining.Plugins
                 return PluginsPackagesInfosCRs
                     .Select(kvp => kvp.Value)
                     .OrderByDescending(info => info.HasNewerVersion)
-                    .ThenByDescending(info => info.OnlineSupportedDeviceCount)
+                    .ThenByDescending(info => info.SupportedDeviceCount)
                     .ThenBy(info => info.PluginName);
             }
         }
@@ -662,7 +662,7 @@ namespace NHMCore.Mining.Plugins
                 var devRank = AvailableDevices.Devices
                     .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
                     .Count();
-                PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
+                PluginsPackagesInfosCRs[uuid].SupportedDeviceCount = devRank;
             }
         }
 
@@ -671,6 +671,29 @@ namespace NHMCore.Mining.Plugins
             var binVersion = plugin.GetMinerBinaryVersion();
             return $"Miner Binary Version '{binVersion}'.\n\n" + plugin.GetPluginMetaInfo().PluginDescription;
         }
+
+        private static int GetDeviceRank(PluginPackageInfo info)
+        {
+            if (info.SupportedDevicesAlgorithms != null)
+            {
+                var supportedDevices = info.SupportedDevicesAlgorithms
+                    .Where(kvp => kvp.Value.Count > 0)
+                    .Select(kvp => kvp.Key);
+                var devRank = AvailableDevices.Devices
+                    .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
+                    .Count();
+                return devRank;
+            }
+            return 0;
+        }
+
+        private static int DetermineSupportedDeviceCountSourceAndReturnValue(PluginPackageInfoCR devicePackageInfo)
+        {
+            var infoSource = devicePackageInfo.GetInfoSource();
+            var rank = GetDeviceRank(infoSource);
+            return rank;
+        }
+
         public static void CrossReferenceInstalledWithOnline()
         {
             // EthlargementIntegratedPlugin special case
@@ -723,18 +746,11 @@ namespace NHMCore.Mining.Plugins
                     PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
                 }
                 PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
-                if (online.SupportedDevicesAlgorithms != null)
-                {
-                    var supportedDevices = online.SupportedDevicesAlgorithms
-                        .Where(kvp => kvp.Value.Count > 0)
-                        .Select(kvp => kvp.Key);
-                    var devRank = AvailableDevices.Devices
-                        .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
-                        .Count();
-                    PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
-                }
             }
-
+            foreach(var plugin in PluginsPackagesInfosCRs)
+            {
+                PluginsPackagesInfosCRs[plugin.Key].SupportedDeviceCount = DetermineSupportedDeviceCountSourceAndReturnValue(plugin.Value);
+            }
             MinerPluginsManagerState.Instance.RankedPlugins = RankedPlugins.ToList();
         }
 

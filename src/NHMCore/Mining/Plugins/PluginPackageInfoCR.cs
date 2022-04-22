@@ -84,12 +84,13 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public int OnlineSupportedDeviceCount { get; set; } = 0;
+        public int SupportedDeviceCount { get; set; } = 0;
 
-        public bool Supported => OnlineSupportedDeviceCount > 0;
+        public bool Supported => SupportedDeviceCount > 0;
 
         public PluginPackageInfo GetInfoSource()
         {
+            if (OnlineInfo == null && LocalInfo != null) return LocalInfo;
             if (OnlineInfo?.PluginVersion != null &&
                 LocalInfo?.PluginVersion != null &&
                 LocalInfo?.PluginVersion > OnlineInfo?.PluginVersion)
