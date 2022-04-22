@@ -672,28 +672,17 @@ namespace NHMCore.Mining.Plugins
             return $"Miner Binary Version '{binVersion}'.\n\n" + plugin.GetPluginMetaInfo().PluginDescription;
         }
 
-        private static int GetDeviceRank(PluginPackageInfo info)
+        private static int GetPluginDeviceRank(PluginPackageInfo info)
         {
-            if (info.SupportedDevicesAlgorithms != null)
-            {
-                var supportedDevices = info.SupportedDevicesAlgorithms
-                    .Where(kvp => kvp.Value.Count > 0)
-                    .Select(kvp => kvp.Key);
-                var devRank = AvailableDevices.Devices
-                    .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
-                    .Count();
-                return devRank;
-            }
-            return 0;
+            if (info.SupportedDevicesAlgorithms == null) return 0;
+            var supportedDevices = info.SupportedDevicesAlgorithms
+                .Where(kvp => kvp.Value.Count > 0)
+                .Select(kvp => kvp.Key);
+            var devRank = AvailableDevices.Devices
+                .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
+                .Count();
+            return devRank;
         }
-
-        private static int DetermineSupportedDeviceCountSourceAndReturnValue(PluginPackageInfoCR devicePackageInfo)
-        {
-            var infoSource = devicePackageInfo.GetInfoSource();
-            var rank = GetDeviceRank(infoSource);
-            return rank;
-        }
-
         public static void CrossReferenceInstalledWithOnline()
         {
             // EthlargementIntegratedPlugin special case
@@ -747,9 +736,9 @@ namespace NHMCore.Mining.Plugins
                 }
                 PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
             }
-            foreach(var plugin in PluginsPackagesInfosCRs)
+            foreach (var plugin in PluginsPackagesInfosCRs)
             {
-                PluginsPackagesInfosCRs[plugin.Key].SupportedDeviceCount = DetermineSupportedDeviceCountSourceAndReturnValue(plugin.Value);
+                PluginsPackagesInfosCRs[plugin.Key].SupportedDeviceCount = GetPluginDeviceRank(plugin.Value.GetInfoSource());
             }
             MinerPluginsManagerState.Instance.RankedPlugins = RankedPlugins.ToList();
         }
