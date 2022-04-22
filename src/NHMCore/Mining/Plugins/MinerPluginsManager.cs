@@ -98,7 +98,7 @@ namespace NHMCore.Mining.Plugins
                 return PluginsPackagesInfosCRs
                     .Select(kvp => kvp.Value)
                     .OrderByDescending(info => info.HasNewerVersion)
-                    .ThenByDescending(info => info.OnlineSupportedDeviceCount)
+                    .ThenByDescending(info => info.SupportedDeviceCount)
                     .ThenBy(info => info.PluginName);
             }
         }
@@ -659,7 +659,7 @@ namespace NHMCore.Mining.Plugins
                 var devRank = AvailableDevices.Devices
                     .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
                     .Count();
-                PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
+                PluginsPackagesInfosCRs[uuid].SupportedDeviceCount = devRank;
             }
         }
 
@@ -667,6 +667,18 @@ namespace NHMCore.Mining.Plugins
         {
             var binVersion = plugin.GetMinerBinaryVersion();
             return $"Miner Binary Version '{binVersion}'.\n\n" + plugin.GetPluginMetaInfo().PluginDescription;
+        }
+
+        private static int GetPluginDeviceRank(PluginPackageInfo info)
+        {
+            if (info.SupportedDevicesAlgorithms == null) return 0;
+            var supportedDevices = info.SupportedDevicesAlgorithms
+                .Where(kvp => kvp.Value.Count > 0)
+                .Select(kvp => kvp.Key);
+            var devRank = AvailableDevices.Devices
+                .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
+                .Count();
+            return devRank;
         }
         public static void CrossReferenceInstalledWithOnline()
         {
@@ -720,18 +732,11 @@ namespace NHMCore.Mining.Plugins
                     PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
                 }
                 PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
-                if (online.SupportedDevicesAlgorithms != null)
-                {
-                    var supportedDevices = online.SupportedDevicesAlgorithms
-                        .Where(kvp => kvp.Value.Count > 0)
-                        .Select(kvp => kvp.Key);
-                    var devRank = AvailableDevices.Devices
-                        .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
-                        .Count();
-                    PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
-                }
             }
-
+            foreach (var plugin in PluginsPackagesInfosCRs)
+            {
+                PluginsPackagesInfosCRs[plugin.Key].SupportedDeviceCount = GetPluginDeviceRank(plugin.Value.GetInfoSource());
+            }
             MinerPluginsManagerState.Instance.RankedPlugins = RankedPlugins.ToList();
         }
 
