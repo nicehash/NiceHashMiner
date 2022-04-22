@@ -126,11 +126,29 @@ namespace NHMCore.Mining.Plugins
                     var ver = OnlineInfo?.PluginVersion ?? null;
                     if (ver == null) return string.Empty;
                     var maxVersion = Checkers.GetLatestSupportedVersion;
-                    return ver.Major > maxVersion ? "Please update NiceHash Miner" : "Plugin not compatible";
+                    return ver.Major > maxVersion ? 
+                        "The latest online version of this plugin is not compatible with your current version of NiceHash miner. Please update NiceHash miner to the latest version" :
+                        "This plugin is not compatible with NiceHash miner. Please update this plugin to the latest version";
                 }
                 return string.Empty;
             }
         }
+
+        public bool NHMNeedsUpdate
+        {
+            get
+            {
+                if (!CompatibleNHPluginVersion)
+                {
+                    var ver = OnlineInfo?.PluginVersion ?? null;
+                    if (ver == null) return false;
+                    var maxVersion = Checkers.GetLatestSupportedVersion;
+                    return ver.Major > maxVersion ? true : false;
+                }
+                return false;
+            }
+        }
+
         // PluginPackageInfo region
         public string PluginUUID
         {
