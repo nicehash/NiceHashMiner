@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using static NHMCore.Translations;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -122,12 +121,16 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                const string UpdateNHMMessage = "The latest online version of this plugin is not compatible with your current version of NiceHash miner. Please update NiceHash miner to the latest version.";
-                const string UpdatePluginMessage = "This plugin is not compatible with NiceHash miner. Please update this plugin to the latest version.";
-                if (CompatibleNHPluginVersion) return string.Empty;
-                var major = OnlineInfo?.PluginVersion?.Major ?? -1;
-                var maxVersion = Checkers.GetLatestSupportedVersion;
-                return major > maxVersion ? Tr(UpdateNHMMessage) : Tr(UpdatePluginMessage);
+                if (!CompatibleNHPluginVersion)
+                {
+                    var ver = OnlineInfo?.PluginVersion ?? null;
+                    if (ver == null) return string.Empty;
+                    var maxVersion = Checkers.GetLatestSupportedVersion;
+                    return ver.Major > maxVersion ? 
+                        "The latest online version of this plugin is not compatible with your current version of NiceHash miner. Please update NiceHash miner to the latest version" :
+                        "This plugin is not compatible with NiceHash miner. Please update this plugin to the latest version";
+                }
+                return string.Empty;
             }
         }
 
@@ -135,10 +138,14 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                if (CompatibleNHPluginVersion) return false;
-                var major = OnlineInfo?.PluginVersion?.Major ?? -1;
-                var maxVersion = Checkers.GetLatestSupportedVersion;
-                return major > maxVersion;
+                if (!CompatibleNHPluginVersion)
+                {
+                    var ver = OnlineInfo?.PluginVersion ?? null;
+                    if (ver == null) return false;
+                    var maxVersion = Checkers.GetLatestSupportedVersion;
+                    return ver.Major > maxVersion ? true : false;
+                }
+                return false;
             }
         }
 

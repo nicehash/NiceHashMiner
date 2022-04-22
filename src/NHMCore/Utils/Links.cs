@@ -112,7 +112,7 @@ namespace NHMCore.Utils
         {
             get
             {
-                if (BuildOptions.IS_PLUGINS_TEST_SOURCE) return "https://miner-plugins-test-dev.nicehash.com/api/plugins?v=17";
+                if (BuildOptions.IS_PLUGINS_TEST_SOURCE) return "https://miner-plugins-test-dev.nicehash.com/api/plugins";
                 return "https://miner-plugins.nicehash.com/api/plugins";
             }
         }
