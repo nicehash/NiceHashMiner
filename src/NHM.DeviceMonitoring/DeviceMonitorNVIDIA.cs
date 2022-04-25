@@ -199,7 +199,7 @@ namespace NHM.DeviceMonitoring
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)(percentage*100));
-            if (execRet < 0) TDPSimple = level;
+            if (execRet >= 0) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet == 0;
         }
