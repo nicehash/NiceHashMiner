@@ -94,6 +94,7 @@ namespace NHM.Common.Configs
         /// <param name="setting">Represents setting of type T that will be written to file if the file doesn't exist and UseUserSettings equals false</param>
         /// <param name="settingFileName">Represents file name user for reading and writing the <paramref name="setting"/></param>
         /// <returns></returns>
+        [Obsolete("Use GetDefaultOrFileSettings", true)]
         public static T InitInternalSetting<T>(string pluginRoot, T setting, string settingFileName) where T : class, IInternalSetting
         {
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");

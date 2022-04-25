@@ -184,7 +184,7 @@ namespace NHM.DeviceDetection.AMD
         {
             var addedDevicesWithBusID = new HashSet<int>();
             var platformDevices = new Dictionary<int, OpenCLPlatform>();
-            Action<OpenCLDeviceDetectionResult> fillUniquePlatformDevices = (OpenCLDeviceDetectionResult r) =>
+            void fillUniquePlatformDevices(OpenCLDeviceDetectionResult r)
             {
                 if (r?.Platforms?.Count > 0)
                 {

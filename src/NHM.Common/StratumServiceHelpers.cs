@@ -59,20 +59,6 @@ namespace NHM.Common
                 return "";
             }
 
-            internal (string url, int port) GetLocationUrlV2(AlgorithmType algorithmType)
-            {
-                if (StratumEndpointTemplatesByAlgorithmType.ContainsKey(algorithmType))
-                {
-                    var customEndpointTemplateEntry = StratumEndpointTemplatesByAlgorithmType[algorithmType];
-                    var customPort = customEndpointTemplateEntry.Port;
-                    var customEndpointTemplate = customEndpointTemplateEntry.Template
-                        .Replace(PREFIX_TEMPLATE, "")
-                        .Replace(PORT_TEMPLATE, "");
-                    return (customEndpointTemplate, customPort);
-                }
-                return ("", 0);
-            }
-
             private static string GetCustomUrl(StratumTemplateEntry customEndpointTemplateEntry, NhmConectionType conectionType)
             {
                 var (prefix, _) = GetProtocolPrefixAndPort(conectionType);

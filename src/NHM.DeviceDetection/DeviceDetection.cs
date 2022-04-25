@@ -19,7 +19,6 @@ namespace NHM.DeviceDetection
 
         public static DeviceDetectionResult DetectionResult { get; } = new DeviceDetectionResult();
 
-
         private class DeviceDetectionSettings : IInternalSetting
         {
             public bool UseUserSettings { get; set; } = false;
@@ -60,7 +59,6 @@ namespace NHM.DeviceDetection
                 stringBuilder.AppendLine($"\tThreadsPerCPU: {cpu.ThreadsPerCPU}");
                 stringBuilder.AppendLine($"\tSupportsHyperThreading: {cpu.SupportsHyperThreading}");
                 Logger.Info(Tag, stringBuilder.ToString());
-
             }
             Logger.Info(Tag, $"DetectCPU END");
         }

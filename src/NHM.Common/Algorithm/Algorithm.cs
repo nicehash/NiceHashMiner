@@ -37,13 +37,7 @@ namespace NHM.Common.Algorithm
 
         public string AlgorithmName { get; private set; }
 
-        public string AlgorithmStringID
-        {
-            get
-            {
-                return $"{AlgorithmName}_{MinerID}";
-            }
-        }
+        public string AlgorithmStringID => $"{AlgorithmName}_{MinerID}";
 
         // variable settings
         public IList<double> Speeds { get; private set; }
