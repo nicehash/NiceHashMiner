@@ -4161,6 +4161,12 @@
     },
     "Currently mining is not profitable. Mining will be resumed once it will be profitable again.": {
 
+    },
+    "The latest online version of this plugin is not compatible with your current version of NiceHash miner. Please update NiceHash miner to the latest version.": {
+
+    },
+    "This plugin is not compatible with NiceHash miner. Please update this plugin to the latest version.": {
+
     }
   }
 } 

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static NHMCore.Translations;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -121,16 +122,26 @@ namespace NHMCore.Mining.Plugins
         {
             get
             {
-                if (!CompatibleNHPluginVersion)
-                {
-                    var ver = OnlineInfo?.PluginVersion ?? null;
-                    if (ver == null) return string.Empty;
-                    var maxVersion = Checkers.GetLatestSupportedVersion;
-                    return ver.Major > maxVersion ? "Please update NiceHash Miner" : "Plugin not compatible";
-                }
-                return string.Empty;
+                const string UpdateNHMMessage = "The latest online version of this plugin is not compatible with your current version of NiceHash miner. Please update NiceHash miner to the latest version.";
+                const string UpdatePluginMessage = "This plugin is not compatible with NiceHash miner. Please update this plugin to the latest version.";
+                if (CompatibleNHPluginVersion) return string.Empty;
+                var major = OnlineInfo?.PluginVersion?.Major ?? -1;
+                var maxVersion = Checkers.GetLatestSupportedVersion;
+                return major > maxVersion ? Tr(UpdateNHMMessage) : Tr(UpdatePluginMessage);
             }
         }
+
+        public bool NHMNeedsUpdate
+        {
+            get
+            {
+                if (CompatibleNHPluginVersion) return false;
+                var major = OnlineInfo?.PluginVersion?.Major ?? -1;
+                var maxVersion = Checkers.GetLatestSupportedVersion;
+                return major > maxVersion;
+            }
+        }
+
         // PluginPackageInfo region
         public string PluginUUID
         {
