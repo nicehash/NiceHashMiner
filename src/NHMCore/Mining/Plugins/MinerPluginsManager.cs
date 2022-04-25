@@ -18,7 +18,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -435,25 +434,23 @@ namespace NHMCore.Mining.Plugins
 
         private static string PluginInstallProgressStateToString(PluginInstallProgressState state, string pluginName, int progressPerc)
         {
-            switch (state)
+            return state switch
             {
-                case PluginInstallProgressState.DownloadingMiner:
-                    return Translations.Tr("Downloading Miner: {0}%", $"{pluginName} {progressPerc}");
-                case PluginInstallProgressState.DownloadingPlugin:
-                    return Translations.Tr("Downloading Plugin: {0}%", $"{pluginName} {progressPerc}");
-                case PluginInstallProgressState.ExtractingMiner:
-                    return Translations.Tr("Extracting Miner: {0}%", $"{pluginName} {progressPerc}");
-                case PluginInstallProgressState.ExtractingPlugin:
-                    return Translations.Tr("Extracting Plugin: {0}%", $"{pluginName} {progressPerc}");
-                default:
-                    return Translations.Tr("Pending Install") + $" {pluginName}";
-            }
+                PluginInstallProgressState.DownloadingMiner => Translations.Tr("Downloading Miner: {0}%", $"{pluginName} {progressPerc}"),
+                PluginInstallProgressState.DownloadingPlugin => Translations.Tr("Downloading Plugin: {0}%", $"{pluginName} {progressPerc}"),
+                PluginInstallProgressState.ExtractingMiner => Translations.Tr("Extracting Miner: {0}%", $"{pluginName} {progressPerc}"),
+                PluginInstallProgressState.ExtractingPlugin => Translations.Tr("Extracting Plugin: {0}%", $"{pluginName} {progressPerc}"),
+                _ => Translations.Tr("Pending Install") + $" {pluginName}",
+            };
         }
 
 
         public static async Task UpdateMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
-            bool hasUpdate(PluginContainer p) => PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr) && pcr.HasNewerVersion;
+            bool hasUpdate(PluginContainer p) =>
+                PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr)
+                && pcr.HasNewerVersion
+                && pcr.CompatibleNHPluginVersion;
 
             var pluginsToUpdate = PluginContainer.PluginContainers
                 .Where(p => p.Enabled)
@@ -743,39 +740,21 @@ namespace NHMCore.Mining.Plugins
             MinerPluginsManagerState.Instance.RankedPlugins = RankedPlugins.ToList();
         }
 
-
-        private class NoKeepAlivesWebClient : WebClient
-        {
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                var request = base.GetWebRequest(address);
-                if (request is HttpWebRequest)
-                {
-                    ((HttpWebRequest)request).KeepAlive = false;
-                }
-
-                return request;
-            }
-        }
-
-
         private static async Task<bool> GetOnlineMinerPlugins()
         {
             try
             {
-                using (var client = new NoKeepAlivesWebClient())
+                using var client = new NoKeepAliveWebClient();
+                string s = await client.DownloadStringTaskAsync(Links.PluginsJsonApiUrl);
+                //// local fake string
+                //string s = Properties.Resources.pluginJSON;
+                var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
-                    string s = await client.DownloadStringTaskAsync(Links.PluginsJsonApiUrl);
-                    //// local fake string
-                    //string s = Properties.Resources.pluginJSON;
-                    var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        MissingMemberHandling = MissingMemberHandling.Ignore,
-                        Culture = CultureInfo.InvariantCulture
-                    });
-                    OnlinePlugins = onlinePlugins;
-                }
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    Culture = CultureInfo.InvariantCulture
+                });
+                OnlinePlugins = onlinePlugins;
 
                 return true;
             }

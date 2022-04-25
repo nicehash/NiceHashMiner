@@ -316,35 +316,18 @@ namespace NhmPackager
             return false;
         }
 
-        private class NoKeepAlivesWebClient : WebClient
-        {
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                var request = base.GetWebRequest(address);
-                if (request is HttpWebRequest)
-                {
-                    ((HttpWebRequest)request).KeepAlive = false;
-                }
-
-                return request;
-            }
-        }
-
-
         private static List<PluginPackageInfo> GetOnlineMinerPlugins()
         {
             try
             {
-                using (var client = new NoKeepAlivesWebClient())
+                using var client = new NoKeepAliveWebClient();
+                string s = client.DownloadString("https://miner-plugins.nicehash.com/api/plugins");
+                return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
-                    string s = client.DownloadString("https://miner-plugins.nicehash.com/api/plugins");
-                    return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        MissingMemberHandling = MissingMemberHandling.Ignore,
-                        Culture = CultureInfo.InvariantCulture
-                    });
-                }
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    Culture = CultureInfo.InvariantCulture
+                });
             }
             catch (Exception e)
             {
