@@ -732,20 +732,30 @@ namespace NHMCore.Mining.Plugins
 
         private static async Task<bool> GetOnlineMinerPlugins()
         {
-            try
+            async Task<List<PluginPackageInfo>> getPlugins(int version)
             {
                 using var client = new NoKeepAliveWebClient();
-                string s = await client.DownloadStringTaskAsync(Links.PluginsJsonApiUrl);
-                //// local fake string
-                //string s = Properties.Resources.pluginJSON;
-                var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                string s = await client.DownloadStringTaskAsync($"{Links.PluginsJsonApiUrl}?v={version}");
+                return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
                     MissingMemberHandling = MissingMemberHandling.Ignore,
                     Culture = CultureInfo.InvariantCulture
                 });
-                OnlinePlugins = onlinePlugins;
-
+            }
+            try
+            {
+                var random = new Random();
+                var onlinePluginsAllVersions = new List<PluginPackageInfo>();
+                foreach (var version in Checkers.SupportedMajorVersions)
+                {
+                    onlinePluginsAllVersions.AddRange(await getPlugins(version));
+                    await Task.Delay(TimeSpan.FromMilliseconds(100 + random.Next(0, 200)));
+                }
+                OnlinePlugins = onlinePluginsAllVersions.GroupBy(p => p.PluginUUID)
+                                        .Select(g => g.OrderByDescending(p => p.PluginVersion).FirstOrDefault())
+                                        .Where(p => p != null)
+                                        .ToList();
                 return true;
             }
             catch (Exception e)
