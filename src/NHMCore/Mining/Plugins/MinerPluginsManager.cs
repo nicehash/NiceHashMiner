@@ -740,23 +740,11 @@ namespace NHMCore.Mining.Plugins
             MinerPluginsManagerState.Instance.RankedPlugins = RankedPlugins.ToList();
         }
 
-
-        private class NoKeepAlivesWebClient : WebClient
-        {
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                var request = base.GetWebRequest(address);
-                if (request is HttpWebRequest httpWebRequest) httpWebRequest.KeepAlive = false;
-                return request;
-            }
-        }
-
-
         private static async Task<bool> GetOnlineMinerPlugins()
         {
             try
             {
-                using var client = new NoKeepAlivesWebClient();
+                using var client = new NoKeepAliveWebClient();
                 string s = await client.DownloadStringTaskAsync(Links.PluginsJsonApiUrl);
                 //// local fake string
                 //string s = Properties.Resources.pluginJSON;
