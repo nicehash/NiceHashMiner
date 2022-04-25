@@ -62,13 +62,13 @@ namespace NiceHashMiner.Views.Settings
             var url = name switch
             {
                 "btn_facebook" => "https://www.facebook.com/NiceHash/",
-                "btn_instagram" => "https://www.instagram.com/nicehashmining/",
+                "btn_instagram" => "https://www.instagram.com/nicehash_official/",
                 "btn_twitter" => "https://twitter.com/NiceHashMining/",
-                "btn_youtube" => "https://www.youtube.com/c/NiceHashmining",
+                "btn_youtube" => "https://www.youtube.com/c/NiceHash_Official",
                 "btn_vk" => "https://vk.com/nicehashmining",
                 "btn_github" => "https://github.com/nicehash",
                 "btn_reddit" => "https://www.reddit.com/r/NiceHash/",
-                "btn_discord" => "https://discord.gg/BQae9ag",
+                "btn_discord" => "https://discord.gg/nicehash",
                 _ => null,
             };
             return (url, url != null);
