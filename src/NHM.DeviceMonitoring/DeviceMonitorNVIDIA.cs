@@ -33,7 +33,7 @@ namespace NHM.DeviceMonitoring
         }
 
         private static void RestartDrivers()
-        { 
+        {
             NVIDIA_MON.nhm_nvidia_deinit();
             NVIDIA_MON.nhm_nvidia_init();
         }
