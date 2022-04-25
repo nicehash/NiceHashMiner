@@ -59,34 +59,26 @@ namespace NiceHashMiner.Views.Settings
 
         private static (string, bool) UrlForButtonName(string name)
         {
-            switch (name)
+            var url = name switch
             {
-                case "btn_facebook":
-                    return ("https://www.facebook.com/NiceHash/", true);
-                case "btn_instagram":
-                    return ("https://www.instagram.com/nicehashmining/", true);
-                case "btn_twitter":
-                    return ("https://twitter.com/NiceHashMining/", true);
-                case "btn_youtube":
-                    return ("https://www.youtube.com/c/NiceHashmining", true);
-                case "btn_vk":
-                    return ("https://vk.com/nicehashmining", true);
-                case "btn_github":
-                    return ("https://github.com/nicehash", true);
-                case "btn_reddit":
-                    return ("https://www.reddit.com/r/NiceHash/", true);
-                case "btn_discord":
-                    return ("https://discord.gg/BQae9ag", true);
-                default:
-                    return ("", false);
-            }
+                "btn_facebook" => "https://www.facebook.com/NiceHash/",
+                "btn_instagram" => "https://www.instagram.com/nicehashmining/",
+                "btn_twitter" => "https://twitter.com/NiceHashMining/",
+                "btn_youtube" => "https://www.youtube.com/c/NiceHashmining",
+                "btn_vk" => "https://vk.com/nicehashmining",
+                "btn_github" => "https://github.com/nicehash",
+                "btn_reddit" => "https://www.reddit.com/r/NiceHash/",
+                "btn_discord" => "https://discord.gg/BQae9ag",
+                _ => null,
+            };
+            return (url, url != null);
         }
 
         private void btn_social_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var senderBtn = sender as Button;
+                if (sender is not Button senderBtn) return;
                 var (url, ok) = UrlForButtonName(senderBtn.Name);
                 if (ok)
                 {
