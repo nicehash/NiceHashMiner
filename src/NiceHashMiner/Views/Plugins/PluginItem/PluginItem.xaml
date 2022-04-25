@@ -161,7 +161,7 @@
                                   Style="{StaticResource local.PluginIconStyle}"
                                   Margin="16,9" />
 
-                <UniformGrid Grid.Column="1" Columns="4">
+                <UniformGrid Grid.Column="1" Columns="5">
                     <TextBlock
                         IsEnabled="{Binding Plugin.Supported}"
                         Style="{StaticResource local.TextBoxPluginName}"
@@ -196,6 +196,11 @@
                                    TextWrapping="Wrap"
                                    TextAlignment="Left"/>
                     </ToggleButton>
+                    <TextBlock Grid.Column="4" 
+                               Style="{StaticResource AlertIcon}"
+                               ToolTip="{Binding Plugin.CompatibilityIssueMessage}"
+                               Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverterFalse}}"/>
+
                 </UniformGrid>
 
                 <WrapPanel Grid.Column="2"
@@ -204,8 +209,8 @@
                             VerticalAlignment="Center"
                             Visibility="{Binding Plugin, Converter={StaticResource CompatibleVisibilityConverter}}">
 
-
-                    <StackPanel x:Name="swapStackPanel" Margin="0,0,16,0" Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverter}}">
+                    
+                    <StackPanel x:Name="swapStackPanel" Margin="0,0,16,0">
                         <ToggleButton Style="{StaticResource MenuDropdownButton}"
                                   Visibility="{Binding ActionsButtonVisibility}"
                                   Click="Button_Click">
@@ -237,21 +242,11 @@
 
                     <Button Style="{Binding Plugin.Installed, Converter={StaticResource PluginItemButtonStyleConverter}}"
                             IsEnabled="{Binding InstallButtonEnabled}"
-                            Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverter}}"
                             Width="105" Height="24"
                             Margin="0,0,16,0"
                             Content="{Binding InstallString }"
                             Click="Button_Click_Install"
                             />
-
-                    <TextBlock Style="{StaticResource local.TextBoxPluginName}"
-                               Foreground="{StaticResource RedDangerColorBrush}"
-                               FontSize="12"
-                               Margin="0,0,16,0"
-                               Visibility="{Binding Plugin.CompatibleNHPluginVersion, Converter={StaticResource NulBoolToVisibilityConverterFalse}}"
-                               Text="{Binding Plugin.CompatibilityIssueMessage}" />
-
-
                 </WrapPanel>
 
             </Grid>

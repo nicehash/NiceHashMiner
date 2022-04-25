@@ -63,7 +63,10 @@ namespace NiceHashMiner.ViewModels.Plugins
         }
 
         //public bool InstallButtonEnabled => (Plugin.Installed || Plugin.Supported) && !Load.IsInstalling;
-        public bool InstallButtonEnabled => Plugin.Supported && !Load.IsInstalling && (Plugin.HasNewerVersion || !Plugin.Installed);
+        public bool InstallButtonEnabled => Plugin.Supported
+            && !Load.IsInstalling
+            && (Plugin.HasNewerVersion || !Plugin.Installed)
+            && !Plugin.NHMNeedsUpdate;
 
 
         public Visibility ActionsButtonVisibility
