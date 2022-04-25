@@ -22,7 +22,7 @@ namespace NiceHashMiner.ViewModels.Plugins
             get
             {
                 // order really matters
-                if (Load.IsInstalling && Plugin.Supported)
+                if (Load.IsInstalling && Plugin.HasSupportedDevices)
                 {
                     if (!Plugin.Installed) return Tr("INSTALLING");
                     if (Plugin.HasNewerVersion) return Tr("UPDATING");
@@ -30,7 +30,7 @@ namespace NiceHashMiner.ViewModels.Plugins
 
                 if (Plugin.HasNewerVersion) return Tr("UPDATE");
                 if (Plugin.Installed) return Tr("INSTALLED");
-                if (Plugin.Supported) return Tr("INSTALL");
+                if (Plugin.HasSupportedDevices) return Tr("INSTALL");
                 return Tr("Not Supported");
             }
         }
@@ -63,7 +63,7 @@ namespace NiceHashMiner.ViewModels.Plugins
         }
 
         //public bool InstallButtonEnabled => (Plugin.Installed || Plugin.Supported) && !Load.IsInstalling;
-        public bool InstallButtonEnabled => Plugin.Supported
+        public bool InstallButtonEnabled => Plugin.HasSupportedDevices
             && !Load.IsInstalling
             && (Plugin.HasNewerVersion || !Plugin.Installed)
             && !Plugin.NHMNeedsUpdate;

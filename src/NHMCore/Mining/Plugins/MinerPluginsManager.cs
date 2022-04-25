@@ -162,7 +162,7 @@ namespace NHMCore.Mining.Plugins
                         plugin.InitPluginContainer();
                     }
 
-                    if (plugin.Enabled)
+                    if (plugin.IsCompatibleInitializedAndNotBroken)
                     {
                         plugin.AddAlgorithmsToDevices();
                     }
@@ -195,6 +195,13 @@ namespace NHMCore.Mining.Plugins
             });
         }
 
+        private static bool CanUpdatePlugin(PluginPackageInfoCR pcr) =>
+            AcceptedPlugins.IsAccepted(pcr.PluginUUID)
+            && pcr.IsAutoUpdateEnabled
+            && pcr.HasNewerVersion 
+            && pcr.CompatibleNHPluginVersion
+            && pcr.HasSupportedDevices;
+
         private static async Task PluginsUpdaterLoop(CancellationToken stop)
         {
             try
@@ -217,11 +224,7 @@ namespace NHMCore.Mining.Plugins
                     Logger.Debug("MinerPluginsManager", $"Checking plugins to Install/Update");
                     var pluginsThatCanAutoUpdate = PluginsPackagesInfosCRs.Values
                         .Where(p => p.Installed)
-                        .Where(p => p.IsAutoUpdateEnabled)
-                        .Where(p => p.HasNewerVersion)
-                        .Where(p => p.CompatibleNHPluginVersion)
-                        .Where(p => p.Supported)
-                        .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
+                        .Where(CanUpdatePlugin)
                         .Where(p => MinerPluginInstallTasks.ContainsKey(p.PluginUUID) == false) // skip if update is already in progress
                         .Select(p => p.PluginUUID)
                         .ToArray();
@@ -377,7 +380,7 @@ namespace NHMCore.Mining.Plugins
             // get devices
             var baseDevices = AvailableDevices.Devices.Select(dev => dev.BaseDevice);
             var checkPlugins = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
+                .Where(p => p.IsCompatibleInitializedAndNotBroken)
                 .Where(p => p.HasDevicesCrossReference())
                 //.Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID)) // WARNING We still want to mine with these 
                 .ToArray();
@@ -413,7 +416,7 @@ namespace NHMCore.Mining.Plugins
         public static async Task DownloadMissingMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             var pluginsWithMissingPackageFiles = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
+                .Where(p => p.IsCompatibleInitializedAndNotBroken)
                 .Where(p => p.HasMisingBinaryPackageFiles())
                 .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
                 .Where(p => !BlacklistedPlugins.IsDownloadPermaBan(p.PluginUUID))
@@ -444,18 +447,14 @@ namespace NHMCore.Mining.Plugins
             };
         }
 
-
         public static async Task UpdateMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             bool hasUpdate(PluginContainer p) =>
-                PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr)
-                && pcr.HasNewerVersion
-                && pcr.CompatibleNHPluginVersion;
+                PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr) && CanUpdatePlugin(pcr);
 
             var pluginsToUpdate = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
+                .Where(p => p.IsCompatibleInitializedAndNotBroken)
                 .Where(hasUpdate)
-                .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
                 .ToArray();
 
             foreach (var plugin in pluginsToUpdate)
@@ -487,23 +486,24 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public static List<PluginPackageInfoCR> EulaConfirm { get; private set; } = new List<PluginPackageInfoCR>();
+        public static List<PluginPackageInfoCR> PluginsForEulaConfirm { get; private set; } = new List<PluginPackageInfoCR>();
 
         private static void CheckAccepted3rdPartyPlugins()
         {
             var nonAcceptedlugins = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
+                .Where(p => p.IsCompatibleInitializedAndNotBroken)
                 .Where(p => !AcceptedPlugins.IsAccepted(p.PluginUUID))
                 .ToArray();
             var nonAcceptedluginsUUIDs = nonAcceptedlugins
                 .Select(p => p.PluginUUID)
                 .ToArray();
-            EulaConfirm = RankedPlugins.Where(pcr => nonAcceptedluginsUUIDs.Contains(pcr.PluginUUID)).ToList();
-            EulaConfirm.ForEach(el =>
+            PluginsForEulaConfirm = RankedPlugins.Where(pcr => nonAcceptedluginsUUIDs.Contains(pcr.PluginUUID)).ToList();
+            PluginsForEulaConfirm.ForEach(el =>
             {
                 Logger.Info("MinerPluginsManager", $"Plugin EULA is not accepted {el.PluginUUID}-{el.PluginName}. Skipping...");
                 el.IsUserActionRequired = true;
             });
+            // we check this in order to keep mining in case of an update from NHM version without 3rd party EULA
             var nonAcceptedPluginsWithMissingBinaries = nonAcceptedlugins
                 .Where(p => p.HasMisingBinaryPackageFiles())
                 .Where(p => Directory.Exists(Paths.MinerPluginsPath(p.PluginUUID, "dlls")))
@@ -528,7 +528,7 @@ namespace NHMCore.Mining.Plugins
                             plugin.InitPluginContainer();
                         }
 
-                        if (plugin.Enabled)
+                        if (plugin.IsCompatibleInitializedAndNotBroken)
                         {
                             plugin.AddAlgorithmsToDevices();
                             break; // we are good stop fallback plugins init
@@ -545,16 +545,6 @@ namespace NHMCore.Mining.Plugins
                     Logger.Error("MinerPluginsManager", $"Error setting fallback plugin '{p.PluginUUID}': {e.Message}");
                 }
             }
-        }
-
-        public static bool HasMissingMiners()
-        {
-            var anyPluginWithMissingPackageFiles = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
-                .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
-                .Where(p => !BlacklistedPlugins.IsDownloadPermaBan(p.PluginUUID))
-                .Any(p => p.HasMisingBinaryPackageFiles());
-            return anyPluginWithMissingPackageFiles;
         }
 
         private static async Task DelayedPluginDelete(string pluginUUID)

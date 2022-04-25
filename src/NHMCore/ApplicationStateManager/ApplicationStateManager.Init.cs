@@ -236,12 +236,6 @@ namespace NHMCore
                 //    }
                 //}
 
-                // re-check after download we should have all miner files
-                if (MinerPluginsManager.HasMissingMiners())
-                {
-                    AvailableNotifications.CreateMissingMinersInfo();
-                }
-
                 // show notification if EthPill could be running and it is not
                 if (EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevicesNotSystemElevated)
                 {

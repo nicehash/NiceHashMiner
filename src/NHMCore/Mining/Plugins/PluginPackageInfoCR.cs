@@ -87,7 +87,7 @@ namespace NHMCore.Mining.Plugins
 
         public int SupportedDeviceCount { get; set; } = 0;
 
-        public bool Supported => SupportedDeviceCount > 0;
+        public bool HasSupportedDevices => SupportedDeviceCount > 0;
 
         public PluginPackageInfo GetInfoSource()
         {
