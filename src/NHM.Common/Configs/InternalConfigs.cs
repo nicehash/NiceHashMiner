@@ -94,6 +94,7 @@ namespace NHM.Common.Configs
         /// <param name="setting">Represents setting of type T that will be written to file if the file doesn't exist and UseUserSettings equals false</param>
         /// <param name="settingFileName">Represents file name user for reading and writing the <paramref name="setting"/></param>
         /// <returns></returns>
+        [Obsolete("Use GetDefaultOrFileSettings", true)]
         public static T InitInternalSetting<T>(string pluginRoot, T setting, string settingFileName) where T : class, IInternalSetting
         {
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
@@ -110,16 +111,16 @@ namespace NHM.Common.Configs
             }
         }
 
-        private static bool UseFileSettings<T>(T fileSettings) where T : class
+        private static bool UseFileSettings<T>(T fileSettings, bool forceUseUserSettings) where T : class
         {
-            if (fileSettings != null && fileSettings is IInternalSetting internals) return internals.UseUserSettings;
+            if (fileSettings != null && fileSettings is IInternalSetting internals) return internals.UseUserSettings || forceUseUserSettings;
             return fileSettings != null;
         }
 
-        public static (T settings, bool fromFile) GetDefaultOrFileSettings<T>(string settingFilePath, T defaultSettings, bool writeDefaultSettingsToFile = true) where T : class
+        public static (T settings, bool fromFile) GetDefaultOrFileSettings<T>(string settingFilePath, T defaultSettings, bool writeDefaultSettingsToFile = true, bool forceUseUserSettings = false) where T : class
         {
             var fileSettings = ReadFileSettings<T>(settingFilePath);
-            if (UseFileSettings(fileSettings)) return (fileSettings, true);
+            if (UseFileSettings(fileSettings, forceUseUserSettings)) return (fileSettings, true);
             if (writeDefaultSettingsToFile) WriteFileSettings(settingFilePath, defaultSettings);
             return (defaultSettings, false);
         }

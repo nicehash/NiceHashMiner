@@ -19,6 +19,7 @@ namespace NHM.MinerPluginToolkitV1
     {
         public static bool HideMiningWindows { set; get; } = false;
         public static bool MinimizeMiningWindows { set; get; } = false;
+        public static bool EnableSSLMining { set; get; } = false;
 
         public static (AlgorithmType first, AlgorithmType second, bool ok) GetFirstAndSecondAlgorithmType(this IEnumerable<MiningPair> mps)
         {

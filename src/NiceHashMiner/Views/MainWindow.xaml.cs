@@ -7,7 +7,6 @@ using NHMCore.Notifications;
 using NHMCore.Utils;
 using NiceHashMiner.ViewModels;
 using NiceHashMiner.Views.Common;
-using NiceHashMiner.Views.EULA;
 using NiceHashMiner.Views.Common.NHBase;
 using NiceHashMiner.Views.TDPSettings;
 using System;
@@ -224,12 +223,12 @@ namespace NiceHashMiner.Views
                 tdpWindow.Show();
             }
 
-            if (MinerPluginsManager.EulaConfirm.Any())
+            if (MinerPluginsManager.PluginsForEulaConfirm.Any())
             {
                 var pluginsPopup = new Plugins.PluginsConfirmDialog();
                 pluginsPopup.DataContext = new Plugins.PluginsConfirmDialog.VM
                 {
-                    Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.EulaConfirm)
+                    Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.PluginsForEulaConfirm)
                 };
                 ShowContentAsModalDialog(pluginsPopup);
             }

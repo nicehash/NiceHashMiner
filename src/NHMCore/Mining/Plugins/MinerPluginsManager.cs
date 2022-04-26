@@ -18,7 +18,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -99,7 +98,7 @@ namespace NHMCore.Mining.Plugins
                 return PluginsPackagesInfosCRs
                     .Select(kvp => kvp.Value)
                     .OrderByDescending(info => info.HasNewerVersion)
-                    .ThenByDescending(info => info.OnlineSupportedDeviceCount)
+                    .ThenByDescending(info => info.SupportedDeviceCount)
                     .ThenBy(info => info.PluginName);
             }
         }
@@ -163,7 +162,7 @@ namespace NHMCore.Mining.Plugins
                         plugin.InitPluginContainer();
                     }
 
-                    if (plugin.Enabled)
+                    if (plugin.IsCompatibleInitializedAndNotBroken)
                     {
                         plugin.AddAlgorithmsToDevices();
                     }
@@ -196,6 +195,13 @@ namespace NHMCore.Mining.Plugins
             });
         }
 
+        private static bool CanUpdatePlugin(PluginPackageInfoCR pcr) =>
+            AcceptedPlugins.IsAccepted(pcr.PluginUUID)
+            && pcr.IsAutoUpdateEnabled
+            && pcr.HasNewerVersion 
+            && pcr.CompatibleNHPluginVersion
+            && pcr.HasSupportedDevices;
+
         private static async Task PluginsUpdaterLoop(CancellationToken stop)
         {
             try
@@ -218,11 +224,7 @@ namespace NHMCore.Mining.Plugins
                     Logger.Debug("MinerPluginsManager", $"Checking plugins to Install/Update");
                     var pluginsThatCanAutoUpdate = PluginsPackagesInfosCRs.Values
                         .Where(p => p.Installed)
-                        .Where(p => p.IsAutoUpdateEnabled)
-                        .Where(p => p.HasNewerVersion)
-                        .Where(p => p.CompatibleNHPluginVersion)
-                        .Where(p => p.Supported)
-                        .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
+                        .Where(CanUpdatePlugin)
                         .Where(p => MinerPluginInstallTasks.ContainsKey(p.PluginUUID) == false) // skip if update is already in progress
                         .Select(p => p.PluginUUID)
                         .ToArray();
@@ -378,7 +380,7 @@ namespace NHMCore.Mining.Plugins
             // get devices
             var baseDevices = AvailableDevices.Devices.Select(dev => dev.BaseDevice);
             var checkPlugins = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
+                .Where(p => p.IsCompatibleInitializedAndNotBroken)
                 .Where(p => p.HasDevicesCrossReference())
                 //.Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID)) // WARNING We still want to mine with these 
                 .ToArray();
@@ -414,9 +416,10 @@ namespace NHMCore.Mining.Plugins
         public static async Task DownloadMissingMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             var pluginsWithMissingPackageFiles = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
+                .Where(p => p.IsCompatibleInitializedAndNotBroken)
                 .Where(p => p.HasMisingBinaryPackageFiles())
                 .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
+                .Where(p => !BlacklistedPlugins.IsDownloadPermaBan(p.PluginUUID))
                 .Select(p => (p, p.GetMinerBinsUrls().ToList()))
                 .Where<(PluginContainer p, List<string> urls)>(pair => pair.urls.Any())
                 .ToArray();
@@ -434,30 +437,24 @@ namespace NHMCore.Mining.Plugins
 
         private static string PluginInstallProgressStateToString(PluginInstallProgressState state, string pluginName, int progressPerc)
         {
-            switch (state)
+            return state switch
             {
-                case PluginInstallProgressState.DownloadingMiner:
-                    return Translations.Tr("Downloading Miner: {0}%", $"{pluginName} {progressPerc}");
-                case PluginInstallProgressState.DownloadingPlugin:
-                    return Translations.Tr("Downloading Plugin: {0}%", $"{pluginName} {progressPerc}");
-                case PluginInstallProgressState.ExtractingMiner:
-                    return Translations.Tr("Extracting Miner: {0}%", $"{pluginName} {progressPerc}");
-                case PluginInstallProgressState.ExtractingPlugin:
-                    return Translations.Tr("Extracting Plugin: {0}%", $"{pluginName} {progressPerc}");
-                default:
-                    return Translations.Tr("Pending Install") + $" {pluginName}";
-            }
+                PluginInstallProgressState.DownloadingMiner => Translations.Tr("Downloading Miner: {0}%", $"{pluginName} {progressPerc}"),
+                PluginInstallProgressState.DownloadingPlugin => Translations.Tr("Downloading Plugin: {0}%", $"{pluginName} {progressPerc}"),
+                PluginInstallProgressState.ExtractingMiner => Translations.Tr("Extracting Miner: {0}%", $"{pluginName} {progressPerc}"),
+                PluginInstallProgressState.ExtractingPlugin => Translations.Tr("Extracting Plugin: {0}%", $"{pluginName} {progressPerc}"),
+                _ => Translations.Tr("Pending Install") + $" {pluginName}",
+            };
         }
-
 
         public static async Task UpdateMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
-            bool hasUpdate(PluginContainer p) => PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr) && pcr.HasNewerVersion;
+            bool hasUpdate(PluginContainer p) =>
+                PluginsPackagesInfosCRs.TryGetValue(p.PluginUUID, out var pcr) && CanUpdatePlugin(pcr);
 
             var pluginsToUpdate = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
+                .Where(p => p.IsCompatibleInitializedAndNotBroken)
                 .Where(hasUpdate)
-                .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
                 .ToArray();
 
             foreach (var plugin in pluginsToUpdate)
@@ -489,23 +486,24 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public static List<PluginPackageInfoCR> EulaConfirm { get; private set; } = new List<PluginPackageInfoCR>();
+        public static List<PluginPackageInfoCR> PluginsForEulaConfirm { get; private set; } = new List<PluginPackageInfoCR>();
 
         private static void CheckAccepted3rdPartyPlugins()
         {
             var nonAcceptedlugins = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
+                .Where(p => p.IsCompatibleInitializedAndNotBroken)
                 .Where(p => !AcceptedPlugins.IsAccepted(p.PluginUUID))
                 .ToArray();
             var nonAcceptedluginsUUIDs = nonAcceptedlugins
                 .Select(p => p.PluginUUID)
                 .ToArray();
-            EulaConfirm = RankedPlugins.Where(pcr => nonAcceptedluginsUUIDs.Contains(pcr.PluginUUID)).ToList();
-            EulaConfirm.ForEach(el =>
+            PluginsForEulaConfirm = RankedPlugins.Where(pcr => nonAcceptedluginsUUIDs.Contains(pcr.PluginUUID)).ToList();
+            PluginsForEulaConfirm.ForEach(el =>
             {
                 Logger.Info("MinerPluginsManager", $"Plugin EULA is not accepted {el.PluginUUID}-{el.PluginName}. Skipping...");
                 el.IsUserActionRequired = true;
             });
+            // we check this in order to keep mining in case of an update from NHM version without 3rd party EULA
             var nonAcceptedPluginsWithMissingBinaries = nonAcceptedlugins
                 .Where(p => p.HasMisingBinaryPackageFiles())
                 .Where(p => Directory.Exists(Paths.MinerPluginsPath(p.PluginUUID, "dlls")))
@@ -530,7 +528,7 @@ namespace NHMCore.Mining.Plugins
                             plugin.InitPluginContainer();
                         }
 
-                        if (plugin.Enabled)
+                        if (plugin.IsCompatibleInitializedAndNotBroken)
                         {
                             plugin.AddAlgorithmsToDevices();
                             break; // we are good stop fallback plugins init
@@ -547,15 +545,6 @@ namespace NHMCore.Mining.Plugins
                     Logger.Error("MinerPluginsManager", $"Error setting fallback plugin '{p.PluginUUID}': {e.Message}");
                 }
             }
-        }
-
-        public static bool HasMissingMiners()
-        {
-            var anyPluginWithMissingPackageFiles = PluginContainer.PluginContainers
-                .Where(p => p.Enabled)
-                .Where(p => AcceptedPlugins.IsAccepted(p.PluginUUID))
-                .Any(p => p.HasMisingBinaryPackageFiles());
-            return anyPluginWithMissingPackageFiles;
         }
 
         private static async Task DelayedPluginDelete(string pluginUUID)
@@ -660,10 +649,27 @@ namespace NHMCore.Mining.Plugins
                 var devRank = AvailableDevices.Devices
                     .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
                     .Count();
-                PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
+                PluginsPackagesInfosCRs[uuid].SupportedDeviceCount = devRank;
             }
         }
 
+        private static string ConstructLocalPluginDescription(PluginBase plugin)
+        {
+            var binVersion = plugin.GetMinerBinaryVersion();
+            return $"Miner Binary Version '{binVersion}'.\n\n" + plugin.GetPluginMetaInfo().PluginDescription;
+        }
+
+        private static int GetPluginDeviceRank(PluginPackageInfo info)
+        {
+            if (info.SupportedDevicesAlgorithms == null) return 0;
+            var supportedDevices = info.SupportedDevicesAlgorithms
+                .Where(kvp => kvp.Value.Count > 0)
+                .Select(kvp => kvp.Key);
+            var devRank = AvailableDevices.Devices
+                .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
+                .Count();
+            return devRank;
+        }
         public static void CrossReferenceInstalledWithOnline()
         {
             // EthlargementIntegratedPlugin special case
@@ -685,6 +691,19 @@ namespace NHMCore.Mining.Plugins
                     PluginVersion = installed.Version,
                     // other stuff is not inside the plugin
                 };
+                if (installed.GetPlugin() is PluginBase pb)
+                {
+                    localPluginInfo.MinerPackageURL = pb.GetMinerBinsUrlsForPlugin().FirstOrDefault();
+                    localPluginInfo.PluginDescription = ConstructLocalPluginDescription(pb);
+                    localPluginInfo.SupportedDevicesAlgorithms = new Dictionary<string, List<string>>();
+                    localPluginInfo.PackagePassword = pb.BinsPackagePassword;
+                    var supportedList = pb.SupportedDevicesAlgorithmsDict();
+                    foreach (var supported in supportedList)
+                    {
+                        var algos = supported.Value.Select(algo => Enum.GetName(typeof(AlgorithmType), algo)).ToList();
+                        localPluginInfo.SupportedDevicesAlgorithms.Add(Enum.GetName(typeof(DeviceType), supported.Key), algos);
+                    }
+                }
                 if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
                 {
                     PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
@@ -703,55 +722,40 @@ namespace NHMCore.Mining.Plugins
                     PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
                 }
                 PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
-                if (online.SupportedDevicesAlgorithms != null)
-                {
-                    var supportedDevices = online.SupportedDevicesAlgorithms
-                        .Where(kvp => kvp.Value.Count > 0)
-                        .Select(kvp => kvp.Key);
-                    var devRank = AvailableDevices.Devices
-                        .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
-                        .Count();
-                    PluginsPackagesInfosCRs[uuid].OnlineSupportedDeviceCount = devRank;
-                }
             }
-
+            foreach (var plugin in PluginsPackagesInfosCRs)
+            {
+                PluginsPackagesInfosCRs[plugin.Key].SupportedDeviceCount = GetPluginDeviceRank(plugin.Value.GetInfoSource());
+            }
             MinerPluginsManagerState.Instance.RankedPlugins = RankedPlugins.ToList();
         }
 
-
-        private class NoKeepAlivesWebClient : WebClient
-        {
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                var request = base.GetWebRequest(address);
-                if (request is HttpWebRequest)
-                {
-                    ((HttpWebRequest)request).KeepAlive = false;
-                }
-
-                return request;
-            }
-        }
-
-
         private static async Task<bool> GetOnlineMinerPlugins()
         {
+            async Task<List<PluginPackageInfo>> getPlugins(int version)
+            {
+                using var client = new NoKeepAliveWebClient();
+                string s = await client.DownloadStringTaskAsync($"{Links.PluginsJsonApiUrl}?v={version}");
+                return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    Culture = CultureInfo.InvariantCulture
+                });
+            }
             try
             {
-                using (var client = new NoKeepAlivesWebClient())
+                var random = new Random();
+                var onlinePluginsAllVersions = new List<PluginPackageInfo>();
+                foreach (var version in Checkers.SupportedMajorVersions)
                 {
-                    string s = await client.DownloadStringTaskAsync(Links.PluginsJsonApiUrl);
-                    //// local fake string
-                    //string s = Properties.Resources.pluginJSON;
-                    var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        MissingMemberHandling = MissingMemberHandling.Ignore,
-                        Culture = CultureInfo.InvariantCulture
-                    });
-                    OnlinePlugins = onlinePlugins;
+                    onlinePluginsAllVersions.AddRange(await getPlugins(version));
+                    await Task.Delay(TimeSpan.FromMilliseconds(100 + random.Next(0, 200)));
                 }
-
+                OnlinePlugins = onlinePluginsAllVersions.GroupBy(p => p.PluginUUID)
+                                        .Select(g => g.OrderByDescending(p => p.PluginVersion).FirstOrDefault())
+                                        .Where(p => p != null)
+                                        .ToList();
                 return true;
             }
             catch (Exception e)
@@ -1170,7 +1174,6 @@ namespace NHMCore.Mining.Plugins
                 var installedVersions = new DirectoryInfo(pluginBinsPath).GetDirectories("*", SearchOption.AllDirectories).ToList();
                 if (installedVersions.Count() > numOfKeepVersions)
                 {
-
                     //parse versions
                     var versionDic = new Dictionary<Version, string>();
                     foreach (var dir in installedVersions)
@@ -1207,20 +1210,14 @@ namespace NHMCore.Mining.Plugins
 
         private static bool FilePathHashEqualsToDatabaseHash(string filepath, string databaseHash, string pluginName)
         {
-            //make hash from file stream and compare to database hash
-            using (var sha256Hash = SHA256.Create())
-            using (var stream = File.OpenRead(filepath))
+            const string EMPTY_HASH = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+            string hashString = FileHelpers.GetFileSHA256Checksum(filepath);
+            if (hashString == EMPTY_HASH)
             {
-                var hash = sha256Hash.ComputeHash(stream);
-                var hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                if (hashString == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
-                {
-                    AvailableNotifications.CreateNullChecksumError(pluginName);
-                    Logger.Error("MinerPluginsManager", "Downloaded file is empty");
-                }
-
-                return hashString == databaseHash;
+                AvailableNotifications.CreateNullChecksumError(pluginName);
+                Logger.Error("MinerPluginsManager", "Downloaded file is empty");
             }
+            return hashString == databaseHash.ToLowerInvariant();
         }
     }
 }

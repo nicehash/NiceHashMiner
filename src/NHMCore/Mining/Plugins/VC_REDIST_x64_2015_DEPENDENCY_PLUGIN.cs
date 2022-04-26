@@ -9,7 +9,6 @@ using NHMCore.Configs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 
 namespace NHMCore.Mining.Plugins
 {

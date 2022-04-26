@@ -23,19 +23,17 @@ namespace NHM.DeviceDetection.CPU
         /// </summary>
         /// <param name="type"></param>
         /// <returns>False if type Automatic otherwise True if supported</returns>
-        private static bool HasExtensionSupport(CpuExtensionType type, CpuID cpuID)
-        {
-            switch (type)
+        private static bool HasExtensionSupport(CpuExtensionType type, CpuID cpuID) =>
+            type switch
             {
-                case CpuExtensionType.AVX2_AES: return cpuID.SupportsAVX2 && cpuID.SupportsAES_SSE42;
-                case CpuExtensionType.AVX2: return cpuID.SupportsAVX2;
-                case CpuExtensionType.AVX_AES: return cpuID.SupportsAVX && cpuID.SupportsAES_SSE42;
-                case CpuExtensionType.AVX: return cpuID.SupportsAVX;
-                case CpuExtensionType.AES: return cpuID.SupportsAES_SSE42;
-                case CpuExtensionType.SSE2: return cpuID.SupportsSSE2;
-                default: return false;
-            }
-        }
+                CpuExtensionType.AVX2_AES => cpuID.SupportsAVX2 && cpuID.SupportsAES_SSE42,
+                CpuExtensionType.AVX2 => cpuID.SupportsAVX2,
+                CpuExtensionType.AVX_AES => cpuID.SupportsAVX && cpuID.SupportsAES_SSE42,
+                CpuExtensionType.AVX => cpuID.SupportsAVX,
+                CpuExtensionType.AES => cpuID.SupportsAES_SSE42,
+                CpuExtensionType.SSE2 => cpuID.SupportsSSE2,
+                _ => false,
+            };
 
         public static List<CpuExtensionType> SupportedExtensions(CpuID cpuID)
         {

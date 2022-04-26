@@ -31,8 +31,6 @@ namespace NHMCore.Mining
 
         public string FullName => GetFullName();
 
-        public int Index { get; private set; } // For socket control, unique
-
         // name count is the short name for displaying in moning groups
         public string NameCount { get; private set; }
 
@@ -46,6 +44,18 @@ namespace NHMCore.Mining
                 _enabled = value;
                 StartState = false;
                 State = value ? DeviceState.Stopped : DeviceState.Disabled;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _pauseMiningWhenGamingMode = false;
+        public bool PauseMiningWhenGamingMode
+        {
+            get => _pauseMiningWhenGamingMode;
+            internal set
+            {
+                if (value == _pauseMiningWhenGamingMode) return;
+                _pauseMiningWhenGamingMode = value;
                 OnPropertyChanged();
             }
         }
@@ -252,10 +262,9 @@ namespace NHMCore.Mining
 
 
         // constructor
-        public ComputeDevice(BaseDevice baseDevice, int index, string nameCount)
+        public ComputeDevice(BaseDevice baseDevice, string nameCount)
         {
             BaseDevice = baseDevice;
-            Index = index;
             NameCount = nameCount;
             Enabled = true;
 
@@ -378,6 +387,7 @@ namespace NHMCore.Mining
             //Enabled = config.Enabled;
             Enabled = config.Enabled;
             MinimumProfit = config.MinimumProfit;
+            PauseMiningWhenGamingMode = config.PauseMiningWhenGamingMode;
 
             if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
@@ -470,6 +480,7 @@ namespace NHMCore.Mining
                 Enabled = Enabled,
                 MinimumProfit = MinimumProfit,
                 TDPSettings = TDPSettings,
+                PauseMiningWhenGamingMode = PauseMiningWhenGamingMode
             };
             // init algo settings
             foreach (var algo in AlgorithmSettings)

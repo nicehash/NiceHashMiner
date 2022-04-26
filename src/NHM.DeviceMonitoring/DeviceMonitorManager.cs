@@ -21,27 +21,31 @@ namespace NHM.DeviceMonitoring
 
         static DeviceMonitorManager()
         {
-            try
+            int customLogSettings(string fileName)
             {
-                string customSettingsFile = Paths.InternalsPath("AMD_ODN_LOG.txt");
-                if (File.Exists(customSettingsFile))
+                try
                 {
-                    string read = File.ReadAllText(customSettingsFile);
-                    _amdDebugLogLevel = int.Parse(read);
+                    string customSettingsFile = Paths.InternalsPath(fileName);
+                    if (File.Exists(customSettingsFile))
+                    {
+                        string read = File.ReadAllText(customSettingsFile);
+                        return int.Parse(read);
+                    }
                 }
+                catch (Exception e)
+                {
+                    Logger.Error("DeviceMonitorManager", $"Constructor fileName='{fileName}' error: {e.Message}");
+                }
+                return 0;
             }
-            catch (Exception e)
-            {
-                Logger.Error("DeviceMonitorManager", $"Constructor {e.Message}");
-            }
+            _amdDebugLogLevel = customLogSettings("AMD_ODN_LOG.txt");
+            _nvidiaDebugLogLevel = customLogSettings("NVIDIA_MON_LOG.txt");
 
             try
             {
-                using (var identity = WindowsIdentity.GetCurrent())
-                {
-                    var principal = new WindowsPrincipal(identity);
-                    IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
-                }
+                using var identity = WindowsIdentity.GetCurrent();
+                var principal = new WindowsPrincipal(identity);
+                IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
             catch (Exception e)
             {
@@ -58,10 +62,16 @@ namespace NHM.DeviceMonitoring
             Logger.InfoDelayed("AMD_ODN", logStr, TimeSpan.FromSeconds(10));
         }
 
+        private static int _nvidiaDebugLogLevel = 0;
         private static readonly NVIDIA_MON.log_cb _nvidiaLog = new NVIDIA_MON.log_cb(LogNvidia_MON);
         private static void LogNvidia_MON(string logStr)
         {
             Logger.InfoDelayed("NVIDIA_MON", logStr, TimeSpan.FromSeconds(10));
+        }
+
+        private static T[] GetDeviceTypes<T>(this IEnumerable<BaseDevice> devices) where T : BaseDevice
+        {
+            return devices.Where(dev => dev is T).Cast<T>().ToArray();
         }
 
         public static Task<List<DeviceMonitor>> GetDeviceMonitors(IEnumerable<BaseDevice> devices)
@@ -70,59 +80,67 @@ namespace NHM.DeviceMonitoring
             {
                 var ret = new List<DeviceMonitor>();
 
-                var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>().ToList();
-                var amds = devices.Where(dev => dev is AMDDevice).Cast<AMDDevice>().ToList();
-                var nvidias = devices.Where(dev => dev is CUDADevice).Cast<CUDADevice>().ToList();
-
-                foreach (var cpu in cpus)
+                void addCPUs()
                 {
-                    ret.Add(new DeviceMonitorCPU(cpu.UUID));
+                    var cpus = devices.GetDeviceTypes<CPUDevice>();
+                    foreach (var cpu in cpus)
+                    {
+                        ret.Add(new DeviceMonitorCPU(cpu.UUID));
+                    }
                 }
-                if (amds.Count > 0)
+                void addAMDs()
                 {
+                    var amds = devices.GetDeviceTypes<AMDDevice>();
+                    if (!amds.Any()) return;
+
                     AMD_ODN.nhm_amd_set_debug_log_level(_amdDebugLogLevel);
                     AMD_ODN.nhm_amd_reg_log_cb(_amdLog);
                     var amdInit = AMD_ODN.nhm_amd_init();
-                    if (0 == amdInit)
-                    {
-                        foreach (var amd in amds)
-                        {
-                            var hasRet = AMD_ODN.nhm_amd_has_adapter(amd.PCIeBusID);
-                            if (0 == hasRet)
-                            {
-                                ret.Add(new DeviceMonitorAMD(amd.UUID, amd.PCIeBusID));
-                            }
-                            else
-                            {
-                                Logger.Info("DeviceMonitorManager", $"AMD nhm_amd_has_adapter {hasRet} for BusID {amd.PCIeBusID}");
-                            }
-                        }
-                    }
-                    else
+                    if (0 != amdInit)
                     {
                         Logger.Info("DeviceMonitorManager", $"AMD nhm_amd_init {amdInit}");
+                        return;
+                    }
+                    foreach (var amd in amds)
+                    {
+                        var hasRet = AMD_ODN.nhm_amd_has_adapter(amd.PCIeBusID);
+                        if (0 == hasRet)
+                        {
+                            ret.Add(new DeviceMonitorAMD(amd.UUID, amd.PCIeBusID));
+                        }
+                        else
+                        {
+                            Logger.Info("DeviceMonitorManager", $"AMD nhm_amd_has_adapter {hasRet} for BusID {amd.PCIeBusID}");
+                        }
                     }
                 }
-                if (nvidias.Count > 0)
+                void addNVIDIAs()
                 {
-                    var initialNvmlRestartTimeWait = Math.Min(500 * nvidias.Count, 5000); // 500ms per GPU or initial MAX of 5seconds
+                    var nvidias = devices.GetDeviceTypes<CUDADevice>();
+                    if (!nvidias.Any()) return;
+
+                    NVIDIA_MON.nhm_nvidia_set_debug_log_level(_nvidiaDebugLogLevel);
+                    NVIDIA_MON.nhm_nvidia_reg_log_cb(_nvidiaLog);
+                    var initialNvmlRestartTimeWait = Math.Min(500 * nvidias.Length, 5000); // 500ms per GPU or initial MAX of 5seconds
                     var nvidiaUUIDAndBusIds = nvidias.ToDictionary(nvidia => nvidia.UUID, nvidia => nvidia.PCIeBusID);
                     var nvidiaInit = NVIDIA_MON.nhm_nvidia_init();
                     NVIDIA_MON.nhm_nvidia_reg_log_cb(_nvidiaLog);
                     DeviceMonitorNVIDIA.Init();
-                    if (nvidiaInit == 0)
+
+                    if (nvidiaInit != 0)
                     {
-                        foreach (var nvidia in nvidias)
-                        {
-                            var deviceMonitorNVIDIA = new DeviceMonitorNVIDIA(nvidia.UUID, nvidia.PCIeBusID);
-                            ret.Add(deviceMonitorNVIDIA);
-                        }
+                        Logger.Info("DeviceMonitorManager", $"AMD nhm_nvidia_init {nvidiaInit}");
+                        return;
                     }
-                    else
+
+                    foreach (var nvidia in nvidias)
                     {
-                        Logger.Info("DeviceMonitorManager", $"AMD nhm_amd_init {nvidiaInit}");
+                        ret.Add(new DeviceMonitorNVIDIA(nvidia.UUID, nvidia.PCIeBusID));
                     }
                 }
+                addCPUs();
+                addAMDs();
+                addNVIDIAs();
                 return ret;
             });
         }

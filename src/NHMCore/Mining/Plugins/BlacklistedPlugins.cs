@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Configs;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace NHMCore.Mining.Plugins
@@ -49,5 +50,22 @@ namespace NHMCore.Mining.Plugins
             BlacklistedPluginUUIDs.Remove(pluginUUID);
             CommitToFile();
         }
+
+
+
+
+        private static IReadOnlyList<string> _skipDownload = new string[] {
+            "e294f620-94eb-11ea-a64d-17be303ea466",
+            "e7a58030-94eb-11ea-a64d-17be303ea466",
+            "eda6abd0-94eb-11ea-a64d-17be303ea466",
+            "fa369d10-94eb-11ea-a64d-17be303ea466",
+            "fd45fff0-94eb-11ea-a64d-17be303ea466",
+            "03f80500-94ec-11ea-a64d-17be303ea466",
+            "074d4a80-94ec-11ea-a64d-17be303ea466",
+            "01177a50-94ec-11ea-a64d-17be303ea466",
+            "0a07d6a0-94ec-11ea-a64d-17be303ea466",
+            "1484c660-94ec-11ea-a64d-17be303ea466",
+        };
+        public static bool IsDownloadPermaBan(string pluginUUID) => _skipDownload.Contains(pluginUUID);
     }
 }

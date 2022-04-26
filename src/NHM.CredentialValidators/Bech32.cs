@@ -20,9 +20,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Security.Cryptography;
 
 // https://github.com/DesWurstes/Bech32-Csharp/blob/master/Bech32-Csharp/Bech32-Csharp.cs
 namespace Bech32_Csharp

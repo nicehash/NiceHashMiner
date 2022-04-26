@@ -8,6 +8,7 @@ namespace LolMiner
     internal static class PluginInternalSettings
     {
         static string _urlPort => $"{MinerCommandLineSettings.POOL_URL_TEMPLATE}:{MinerCommandLineSettings.POOL_PORT_TEMPLATE}";
+        static string _url => MinerCommandLineSettings.POOL_URL_TEMPLATE;
         static string _username => MinerCommandLineSettings.USERNAME_TEMPLATE;
         static string _apiPort => MinerCommandLineSettings.API_PORT_TEMPLATE;
         static string _devices => MinerCommandLineSettings.DEVICES_TEMPLATE;
@@ -46,6 +47,37 @@ namespace LolMiner
                 {
                     $"{AlgorithmType.ZelHash}",
                     $"--coin ZEL --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                }
+            },
+            AlgorithmCommandLineSSL = new Dictionary<string, string>
+            {
+                {
+                    $"{AlgorithmType.ZHash}",
+                    $"--coin AUTO144_5 --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.GrinCuckatoo31}",
+                    $"--algo C31 --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.GrinCuckatoo32}",
+                    $"--algo C32 --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.BeamV3}",
+                    $"--algo BEAM-III --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.DaggerHashimoto}",
+                    $"--algo ETHASH --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters} --ethstratum ETHV1"
+                },
+                {
+                    $"{AlgorithmType.Autolykos}",
+                    $"--algo AUTOLYKOS2 --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.ZelHash}",
+                    $"--coin ZEL --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 }
             }
         };

@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32;
-using NHM.Common;
-using NHM.CommonWin32;
+﻿using NHM.Common;
 using NHM.MinersDownloader;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;

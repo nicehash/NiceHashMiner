@@ -11,8 +11,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,16 +18,19 @@ namespace Excavator
 {
     public class Excavator : MinerBase, IAfterStartMining
     {
-        public Excavator(string uuid) : base(uuid)
-        { }
+        protected readonly Dictionary<string, string> _mappedDeviceIds = new Dictionary<string, string>();
+        public Excavator(string uuid, Dictionary<string, string> mappedIDs) : base(uuid)
+        {
+            _mappedDeviceIds = mappedIDs;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType) => PluginSupportedAlgorithms.AlgorithmName(algorithmType);
 
         private object _lockLastApiData = new object();
         private ApiData _lastApiData = null;
         private HttpClient _httpClient;
-        private const bool USE_HTTP_CLIENT = true;
         private string _authToken = Guid.NewGuid().ToString();
+        new protected int _apiPort;
 
         private ApiData LastApiData
         {
@@ -70,7 +71,7 @@ namespace Excavator
                 //Authorization
                 var requestUri = Uri.EscapeUriString($"http://localhost:{_apiPort}/api?command={command}");
                 // http://bind-ip:bind-port/api?command=%7BJSON-command-here%7D
-                Logger.Info(_logGroup, $"Excavator_DELETE HttpGet requestUri: '{requestUri}'");
+                //Logger.Info(_logGroup, $"Excavator_DELETE HttpGet requestUri: '{requestUri}'");
                 var result = await _httpClient.GetStringAsync(requestUri);
                 return result;
             }
@@ -81,46 +82,13 @@ namespace Excavator
             }
         }
 
-        public static async Task<string> GetApiDataAsync(int port, string dataToSend, string logGroup, CancellationToken stop)
-        {
-            try
-            {
-                using (var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-                using (var ct = CancellationTokenSource.CreateLinkedTokenSource(stop, timeout.Token))
-                using (var client = new TcpClient("127.0.0.1", port))
-                using (var nwStream = client.GetStream())
-                {
-                    var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
-                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length, ct.Token);
-                    var bytesToRead = new byte[client.ReceiveBufferSize];
-                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize, ct.Token);
-                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    client.Close();
-                    return respStr;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(logGroup, $"Excavator GetApiDataAsync error: {e.Message}");
-                return "";
-            }
-        }
-
         private async Task<string> ExecuteCommand(string command, CancellationToken stop)
         {
             try
             {
-                if (USE_HTTP_CLIENT)
-                {
-                    _ = stop;
-                    var response = await HttpGet(command);
-                    return response;
-                }
-                else
-                {
-                    var response = await GetApiDataAsync(_apiPort, command + "\r\n", _logGroup, stop);
-                    return response;
-                }
+                _ = stop;
+                var response = await HttpGet(command);
+                return response;
             }
             catch (Exception e)
             {
@@ -144,13 +112,14 @@ namespace Excavator
                 var response = await ExecuteCommand(speeds, stop);
                 ad.ApiResponse = response;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(response);
-                var gpus = _miningPairs.Select(pair => pair.Device.UUID);
+                var gpus = _miningPairs.Select(pair => _mappedDeviceIds[pair.Device.UUID]);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 foreach (var gpu in gpus)
                 {
+                    var nhmGPUuuid = _mappedDeviceIds.Where(uuid => uuid.Value == gpu).Select(item => item.Key).FirstOrDefault();
                     var speed = summary.workers.Where(w => w.device_uuid == gpu).SelectMany(w => w.algorithms.Select(a => a.speed)).Sum();
-                    perDeviceSpeedInfo.Add(gpu, new List<(AlgorithmType type, double speed)>() { (_algorithmType, speed) });
+                    perDeviceSpeedInfo.Add(nhmGPUuuid, new List<(AlgorithmType type, double speed)>() { (_algorithmType, speed) });
                 }
                 ad.PowerUsageTotal = 0;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
@@ -165,75 +134,32 @@ namespace Excavator
         }
 
         protected override void Init() { }
-
-        private static string GetServiceLocation(string miningLocation)
+        private (IEnumerable<string> uuids, IEnumerable<int> ids) GetUUIDsAndIDs(IEnumerable<MiningPair> pairs)
         {
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return $"nhmp-ssl-test.{miningLocation}.nicehash.com:443";
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return $"stratum-dev.{miningLocation}.nicehash.com:443";
-            //BuildTag.PRODUCTION
-            return $"nhmp.auto.nicehash.com:443";
-        }
-
-        private static (string templateStr, bool oldTemplate) CmdJSONString(string pluginUUID, string miningLocation, string username, params string[] uuids)
-        {
-            var templatePath = CmdConfig.CommandFileTemplatePath(pluginUUID);
-            var miningServiceLocation = GetServiceLocation(miningLocation);
-            var str = CmdConfig.CreateCommandFileWithTemplate(miningServiceLocation, username, uuids, templatePath);
-            if (str != null) return (str, false);
-            const string DEVICE = @"		{""id"":3,""method"":""worker.add"",""params"":[""daggerhashimoto"",""_DEV_ID_""]}";
-            const string TEMPLATE = @"
-[
-	{""time"":0,""commands"":[
-		{""id"":1,""method"":""subscribe"",""params"":[""_MINING_SERVICE_LOCATION_"",""_PUT_YOUR_BTC_HERE_""]}
-	]},
-	{""time"":1,""commands"":[
-        {""id"":1,""method"":""algorithm.add"",""params"":[""daggerhashimoto""]}
-    ]},
-	{""time"":2,""commands"":[
-_DEVICES_
-	]}
-]";
-            var devices = string.Join(",\n", uuids.Select(uuid => DEVICE.Replace("_DEV_ID_", uuid)));
-            var oldTemplateStr = TEMPLATE
-                .Replace("_MINING_SERVICE_LOCATION_", miningServiceLocation)
-                .Replace("_PUT_YOUR_BTC_HERE_", username)
-                .Replace("_DEVICES_", devices);
-            return (oldTemplateStr, true);
-        }
-
-        private static string GetMiningLocation(string location)
-        {
-            // new mining locations new clients
-            if (location.StartsWith("eu") || location.StartsWith("usa")) return location;
-            // old mining locations old clients with obsolete locations fallback to usa
-            return "usa";
+            var devices = pairs
+                .Select(p => p.Device)
+                .Where(dev => dev is IGpuDevice);
+            if (devices.Any())
+            {
+                var devs = devices.Cast<IGpuDevice>();
+                var uuids = devs.Select(gpu => _mappedDeviceIds[gpu.UUID]);
+                var ids = devs.Select(gpu => gpu.PCIeBusID);
+                return (uuids, ids);
+            }
+            return (Enumerable.Empty<string>(), Enumerable.Empty<int>());
         }
 
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
-            var uuids = _miningPairs.Select(p => p.Device).Cast<CUDADevice>().Select(gpu => gpu.UUID);
-            var ids = _miningPairs.Select(p => p.Device).Cast<CUDADevice>().Select(gpu => gpu.PCIeBusID);
-            //var algo = AlgorithmName(_algorithmType);
-            // "--algo {algo} --url={urlWithPort} --user {_username} 
+            var (uuids, ids) = GetUUIDsAndIDs(_miningPairs);
             var (_, cwd) = GetBinAndCwdPaths();
             var fileName = $"cmd_{string.Join("_", ids)}.json";
-            //Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            //var logName = $"log_{string.Join("_", ids)}_{unixTimestamp}.log";
-            var (cmdStr, isOldCmd) = CmdJSONString(_uuid, GetMiningLocation(_miningLocation), _username, uuids.ToArray());
-            if (isOldCmd) Logger.Warn(_logGroup, $"MiningCreateCommandLine usign old command file template");
+            var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, uuids.ToArray());
             File.WriteAllText(Path.Combine(cwd, fileName), cmdStr);
-            if (USE_HTTP_CLIENT)
-            {
-                var commandLine = $"-wp {_apiPort} -wa \"{_authToken}\" -c {fileName} -m -qx {_extraLaunchParameters}";
-                return commandLine;
-            }
-            else
-            {
-                var commandLine = $"-p {_apiPort} -c {fileName} -m -qx {_extraLaunchParameters}";
-                return commandLine;
-            }
+            var commandLine = $"-wp {_apiPort} -wa \"{_authToken}\" -c {fileName} -m -qx {_extraLaunchParameters}";
+            return commandLine;
         }
 
         void IAfterStartMining.AfterStartMining()

@@ -103,6 +103,18 @@ namespace NHMCore.Configs
             }
         }
 
+        private bool _enableSSLMining = false;
+        public bool EnableSSLMining
+        {
+            get => _enableSSLMining;
+            set
+            {
+                _enableSSLMining = value;
+                NHM.MinerPluginToolkitV1.MinerToolkit.EnableSSLMining = value;
+                OnPropertyChanged(nameof(EnableSSLMining));
+            }
+        }
+
         public IEnumerable<ComputeDevice> GPUs => AvailableDevices.GPUs;
 
         private string _deviceToPauseUuid = "";

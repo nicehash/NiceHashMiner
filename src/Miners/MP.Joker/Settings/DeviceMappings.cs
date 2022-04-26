@@ -1,14 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MP.Joker.Settings
 {
     class DeviceMappings
     {
         [JsonProperty("compatible")]
-        public bool Compatible { get; set; } = false;
+        public bool Compatible { get; set; } = true;
 
         [JsonProperty("device_name")]
         public string DeviceName { get; set; } = null;

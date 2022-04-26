@@ -9,6 +9,7 @@ namespace NBMiner
     internal static class PluginInternalSettings
     {
         static string _urlPort => $"{MinerCommandLineSettings.POOL_URL_TEMPLATE}:{MinerCommandLineSettings.POOL_PORT_TEMPLATE}";
+        static string _url => MinerCommandLineSettings.POOL_URL_TEMPLATE;
         static string _username => MinerCommandLineSettings.USERNAME_TEMPLATE;
         static string _apiPort => MinerCommandLineSettings.API_PORT_TEMPLATE;
         static string _devices => MinerCommandLineSettings.DEVICES_TEMPLATE;
@@ -41,6 +42,33 @@ namespace NBMiner
                 {
                     $"{AlgorithmType.Autolykos}",
                     $"-a ergo -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                }
+            },
+            AlgorithmCommandLineSSL = new Dictionary<string, string>
+            {
+                {
+                    $"{AlgorithmType.DaggerHashimoto}",
+                    $"-a ethash -o nicehash+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.CuckooCycle}",
+                    $"-a cuckoo_ae -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.KAWPOW}",
+                    $"-a kawpow -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.BeamV3}",
+                    $"-a beamv3 -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.Octopus}",
+                    $"-a octopus -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.Autolykos}",
+                    $"-a ergo -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
                 }
             }
         };

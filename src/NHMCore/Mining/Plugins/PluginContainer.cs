@@ -111,13 +111,7 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public bool Enabled
-        {
-            get
-            {
-                return IsCompatible && !IsBroken && IsInitialized;
-            }
-        }
+        public bool IsCompatibleInitializedAndNotBroken => IsCompatible && IsInitialized && !IsBroken;
         public bool IsBroken { get; private set; } = false;
         public bool IsCompatible { get; private set; } = false;
         public bool IsInitialized { get; private set; } = false;
@@ -126,6 +120,10 @@ namespace NHMCore.Mining.Plugins
         // algos for NiceHashMiner Client
         private Dictionary<string, List<AlgorithmContainer>> _cachedNiceHashMinerAlgorithms { get; } = new Dictionary<string, List<AlgorithmContainer>>();
 
+        public IMinerPlugin GetPlugin()
+        {
+            return _plugin;
+        }
         public bool InitPluginContainer()
         {
             if (IsInitialized) return true;
@@ -207,7 +205,7 @@ namespace NHMCore.Mining.Plugins
         public void AddAlgorithmsToDevices()
         {
             var payingRates = NHSmaData.CurrentPayingRatesSnapshot();
-            CheckExec(nameof(AddAlgorithmsToDevices), () =>
+            SafeCheckExec(nameof(AddAlgorithmsToDevices), () =>
             {
                 if (!_initInternalsCalled && _plugin is IInitInternals impl)
                 {
@@ -275,12 +273,12 @@ namespace NHMCore.Mining.Plugins
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
-            return CheckExec(nameof(CanGroup), () => _plugin.CanGroup(a, b), false);
+            return SafeCheckExec(nameof(CanGroup), () => _plugin.CanGroup(a, b), false);
         }
 
         public IMiner CreateMiner()
         {
-            return CheckExec(nameof(CreateMiner), () => _plugin.CreateMiner(), null);
+            return SafeCheckExec(nameof(CreateMiner), () => _plugin.CreateMiner(), null);
         }
 
 
@@ -297,7 +295,7 @@ namespace NHMCore.Mining.Plugins
             var defaultRet = Enumerable.Empty<string>();
             if (_plugin is IBinaryPackageMissingFilesChecker impl)
             {
-                return CheckExec(nameof(impl.CheckBinaryPackageMissingFiles), () => impl.CheckBinaryPackageMissingFiles(), defaultRet);
+                return SafeCheckExec(nameof(impl.CheckBinaryPackageMissingFiles), () => impl.CheckBinaryPackageMissingFiles(), defaultRet);
             }
             return defaultRet;
         }
@@ -317,7 +315,7 @@ namespace NHMCore.Mining.Plugins
             if (!_devicesCrossReference && _plugin is IDevicesCrossReference impl)
             {
                 _devicesCrossReference = true;
-                return CheckExec(nameof(impl.DevicesCrossReference), () => impl.DevicesCrossReference(devices), Task.CompletedTask);
+                return SafeCheckExec(nameof(impl.DevicesCrossReference), () => impl.DevicesCrossReference(devices), Task.CompletedTask);
             }
             return Task.CompletedTask;
         }
@@ -373,13 +371,13 @@ namespace NHMCore.Mining.Plugins
         {
             if (_plugin is IGetApiMaxTimeoutV2 impl)
             {
-                var enabled = CheckExec(nameof(impl.IsGetApiMaxTimeoutEnabled) + "V2", () => impl.IsGetApiMaxTimeoutEnabled, false);
+                var enabled = SafeCheckExec(nameof(impl.IsGetApiMaxTimeoutEnabled) + "V2", () => impl.IsGetApiMaxTimeoutEnabled, false);
                 if (!enabled)
                 {
                     // 10 years for a timeout this is basically like being disabled
                     return new TimeSpan(3650, 0, 30, 0);
                 }
-                return CheckExec(nameof(impl.GetApiMaxTimeout) + "V2", () => impl.GetApiMaxTimeout(miningPairs), new TimeSpan(0, 30, 0));
+                return SafeCheckExec(nameof(impl.GetApiMaxTimeout) + "V2", () => impl.GetApiMaxTimeout(miningPairs), new TimeSpan(0, 30, 0));
             }
             // make default 30minutes
             return new TimeSpan(0, 30, 0);
@@ -401,7 +399,7 @@ namespace NHMCore.Mining.Plugins
         {
             if (_plugin is IMinerBinsSource impl)
             {
-                return CheckExec(nameof(impl.GetMinerBinsUrlsForPlugin), () => impl.GetMinerBinsUrlsForPlugin(), Enumerable.Empty<string>());
+                return SafeCheckExec(nameof(impl.GetMinerBinsUrlsForPlugin), () => impl.GetMinerBinsUrlsForPlugin(), Enumerable.Empty<string>());
             }
             return Enumerable.Empty<string>();
         }
@@ -410,7 +408,7 @@ namespace NHMCore.Mining.Plugins
         {
             if (_plugin is IGetBinsPackagePassword impl)
             {
-                return CheckExec(nameof(impl.BinsPackagePassword), () => impl.BinsPackagePassword, null);
+                return SafeCheckExec(nameof(impl.BinsPackagePassword), () => impl.BinsPackagePassword, null);
             }
             return null;
         }
@@ -438,7 +436,7 @@ namespace NHMCore.Mining.Plugins
 
         // generic checker
         #region Generic Safe Checkers
-        private T CheckExec<T>(string functionName, Func<T> function, T defaultRet)
+        private T SafeCheckExec<T>(string functionName, Func<T> function, T defaultRet)
         {
             if (IsBroken)
             {
@@ -459,10 +457,10 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        private void CheckExec(string functionName, Action function)
+        private void SafeCheckExec(string functionName, Action function)
         {
             // fake return
-            CheckExec(functionName, () =>
+            SafeCheckExec(functionName, () =>
             {
                 function();
                 return "success";

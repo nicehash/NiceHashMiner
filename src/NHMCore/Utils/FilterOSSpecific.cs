@@ -13,15 +13,13 @@ namespace NHMCore.Utils
             var BuildNumber = 0;
             try
             {
-                using (var searcher = new ManagementObjectSearcher("root\\CIMV2", $"SELECT Caption,BuildNumber FROM Win32_OperatingSystem"))
-                using (var query = searcher.Get())
+                using var searcher = new ManagementObjectSearcher("root\\CIMV2", $"SELECT Caption,BuildNumber FROM Win32_OperatingSystem");
+                using var query = searcher.Get();
+                foreach (var item in query)
                 {
-                    foreach (var item in query)
-                    {
-                        if (!(item is ManagementObject mo)) continue;
-                        OSName = item.GetPropertyValue("Caption").ToString();
-                        BuildNumber = Convert.ToInt32(item.GetPropertyValue("BuildNumber"));
-                    }
+                    if (!(item is ManagementObject mo)) continue;
+                    OSName = item.GetPropertyValue("Caption").ToString();
+                    BuildNumber = Convert.ToInt32(item.GetPropertyValue("BuildNumber"));
                 }
             }
             catch (Exception e)

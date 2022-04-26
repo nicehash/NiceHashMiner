@@ -69,6 +69,9 @@
             <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.ResolveNiceHashDomainsToIPs}"
                                         Label="Resolve NiceHash domains to IPs via Cloudflare"
                                         Description="This will resolve NiceHash domains to IPs via cloudflare in case of DNS sinkholing."/>
+            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.EnableSSLMining}"
+                                        Label="Enable SSL Mining"
+                                        Description="This will enable SSL mining for miner plugins that have SSL mining support. Some miner plugins might not have this feature implemented."/>
             
         </WrapPanel>
         <!--Device Monitoring-->
@@ -134,14 +137,14 @@
                         <Label Content="Switch Minimum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSeconds.Lower, Mode=TwoWay}" Margin="0,0,24,0" />
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSecondsLower, Mode=TwoWay}" Margin="0,0,24,0" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource switchMaximum}">
                         <Label Content="Switch Maximum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
-                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSeconds.Upper, Mode=TwoWay}" Margin="0,0,24,0"/>
+                    <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSecondsUpper, Mode=TwoWay}" Margin="0,0,24,0"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,16,0,0">

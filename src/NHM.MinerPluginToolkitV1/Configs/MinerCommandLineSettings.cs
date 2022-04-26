@@ -1,10 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common.Configs;
-using NHM.Common.Enums;
-using NHM.MinerPlugin;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NHM.MinerPluginToolkitV1.Configs
 {
@@ -29,6 +26,12 @@ namespace NHM.MinerPluginToolkitV1.Configs
 
         [JsonProperty("algorithm_command_line")]
         public Dictionary<string, string> AlgorithmCommandLine { get; set; } = new Dictionary<string, string>
+        {
+            //{AlgorithmType.DaggerHashimoto.ToString(), $"--user {USERNAME_TEMPLATE} --pool {POOL_URL_TEMPLATE}:{POOL_PORT_TEMPLATE} --algo dagger --apiport {API_PORT_TEMPLATE} --devices {DEVICES_TEMPLATE} {EXTRA_LAUNCH_PARAMETERS_TEMPLATE}"},
+        };
+
+        [JsonProperty("algorithm_command_line_ssl")]
+        public Dictionary<string, string> AlgorithmCommandLineSSL { get; set; } = new Dictionary<string, string>
         {
             //{AlgorithmType.DaggerHashimoto.ToString(), $"--user {USERNAME_TEMPLATE} --pool {POOL_URL_TEMPLATE}:{POOL_PORT_TEMPLATE} --algo dagger --apiport {API_PORT_TEMPLATE} --devices {DEVICES_TEMPLATE} {EXTRA_LAUNCH_PARAMETERS_TEMPLATE}"},
         };
@@ -62,5 +65,16 @@ namespace NHM.MinerPluginToolkitV1.Configs
                 ;
             return commandLine;
         }
+
+
+        public static (string template, bool ok) GetCommandLineTemplate(string key, MinerCommandLineSettings s, bool useSSL)
+        {
+            if (useSSL && (s.AlgorithmCommandLineSSL?.ContainsKey(key) ?? false))
+            {
+                return (s.AlgorithmCommandLineSSL[key], true);
+            }
+            return (s.AlgorithmCommandLine[key], useSSL == false);
+        }
+
     }
 }

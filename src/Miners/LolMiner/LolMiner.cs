@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿#define CUDA_DEVICE_HAS_NO_LHR_PROPERY
+using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NHM.MinerPluginToolkitV1.Configs;
 using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
+using NHM.Common.Device;
 
 namespace LolMiner
 {
@@ -27,18 +29,15 @@ namespace LolMiner
             _mappedDeviceIds = mappedDeviceIds;
         }
 
-        private static int GetMultiplier(string speedUnit)
-        {
-            switch (speedUnit.ToLower())
-            {
-                case "mh/s": return 1000000; //1M
-                case "kh/s": return 1000; //1k
-                default: return 1;
-            }
-        }
-
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
+            int getMultiplier(string speedUnit) =>
+                speedUnit.ToLower() switch
+                {
+                    "mh/s" => 1000000, //1M
+                    "kh/s" => 1000, //1k
+                    _ => 1,
+                };
             var ad = new ApiData();
             try
             {
@@ -55,7 +54,7 @@ namespace LolMiner
                         Worker_Performance = new List<double> { 0 } 
                     };
                 }
-                var multiplier = GetMultiplier(algo.Performance_Unit);
+                var multiplier = getMultiplier(algo.Performance_Unit);
                 var totalSpeed = algo.Total_Performance * multiplier;
 
                 var totalPowerUsage = 0;
@@ -175,12 +174,24 @@ namespace LolMiner
             return " --mode " + String.Join(",", existingOptions) + " ";
         }
 
+
+        private static bool IsLhrGPU(BaseDevice dev)
+        {
+            if (dev is not CUDADevice gpu) return false;
+#if CUDA_DEVICE_HAS_NO_LHR_PROPERY
+            var lhrGPUNameList = new string[] { "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
+            return lhrGPUNameList.Any(dev.Name.Contains);
+#else
+            return gpu.IsLHR;
+#endif
+        }
+
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
             var defaultTimes = isDaggerNvidia ? new List<int> { 180, 240, 300 } : new List<int> { 90, 120, 180 };
             int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(defaultTimes, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
-
+            var isLhr = isDaggerNvidia && IsLhrGPU(_miningPairs.Select(mp => mp.Device).FirstOrDefault());
             using var tickCancelSource = new CancellationTokenSource();
             // determine benchmark time 
             // settup times
@@ -251,8 +262,8 @@ namespace LolMiner
                     var sameCountApiDatas = nonZeroSpeeds.Where(adCount => adCount.Count == maxAlgoPiarsCount).Select(adCount => adCount.ad).ToList();
                     var firstPair = sameCountApiDatas.FirstOrDefault();
                     // sum 
-                    var values = sameCountApiDatas.SelectMany(x => x.AlgorithmSpeedsTotal()).Select(pair => pair.speed).Reverse().Take(10).ToArray();
-                    var value = values.Sum() / values.Length;
+                    var values = sameCountApiDatas.SelectMany(x => x.AlgorithmSpeedsTotal()).Select(pair => pair.speed).ToArray();
+                    var value = isLhr ? values.Max() : values.Sum() / values.Length;
                     result = new BenchmarkResult
                     {
                         AlgorithmTypeSpeeds = firstPair.AlgorithmSpeedsTotal().Select(pair => (pair.type, value)).ToList(),

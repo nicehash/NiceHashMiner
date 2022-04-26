@@ -13,7 +13,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Security.Cryptography;
 using static NhmPackager.PackagerFileDirectoryUtils;
 using static NhmPackager.PackagerPaths;
@@ -118,25 +117,14 @@ namespace NhmPackager
             {
                 var filepath = GetTemporaryWorkFolder($"{plugin.PluginUUID}.tmp");
                 Logger.Info("MinerPluginsPacker", $"Calculating hash for {plugin.Name}-{plugin.PluginUUID}");
-                using (var myWebClient = new WebClient()) myWebClient.DownloadFile(minerPackageURL, filepath);
-                using (var sha256Hash = SHA256.Create())
-                using (var stream = File.OpenRead(filepath))
-                {
-                    var hash = sha256Hash.ComputeHash(stream);
-                    binaryHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
+                using var myWebClient = new WebClient();
+                myWebClient.DownloadFile(minerPackageURL, filepath);
+                binaryHash = FileHelpers.GetFileSHA256Checksum(filepath);
                 File.Delete(filepath);
             }
-            string pluginPackageHash = null;
             var pluginZipFileName = GetPluginPackageName(plugin);
             var dllPackageZip = GetPluginsPackagesPath(pluginZipFileName);
-            using (var sha256Hash = SHA256.Create())
-            using (var stream = File.OpenRead(dllPackageZip))
-            {
-                var hash = sha256Hash.ComputeHash(stream);
-                pluginPackageHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-            }
-
+            string pluginPackageHash = FileHelpers.GetFileSHA256Checksum(dllPackageZip);
             var binaryVersion = "N/A";
             // TODO binary version
             if (plugin is IGetMinerBinaryVersion binVersionGetter)
@@ -328,35 +316,18 @@ namespace NhmPackager
             return false;
         }
 
-        private class NoKeepAlivesWebClient : WebClient
-        {
-            protected override WebRequest GetWebRequest(Uri address)
-            {
-                var request = base.GetWebRequest(address);
-                if (request is HttpWebRequest)
-                {
-                    ((HttpWebRequest)request).KeepAlive = false;
-                }
-
-                return request;
-            }
-        }
-
-
         private static List<PluginPackageInfo> GetOnlineMinerPlugins()
         {
             try
             {
-                using (var client = new NoKeepAlivesWebClient())
+                using var client = new NoKeepAliveWebClient();
+                string s = client.DownloadString("https://miner-plugins.nicehash.com/api/plugins");
+                return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
-                    string s = client.DownloadString("https://miner-plugins.nicehash.com/api/plugins");
-                    return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore,
-                        MissingMemberHandling = MissingMemberHandling.Ignore,
-                        Culture = CultureInfo.InvariantCulture
-                    });
-                }
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    Culture = CultureInfo.InvariantCulture
+                });
             }
             catch (Exception e)
             {

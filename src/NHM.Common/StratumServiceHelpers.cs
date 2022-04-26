@@ -59,20 +59,6 @@ namespace NHM.Common
                 return "";
             }
 
-            internal (string url, int port) GetLocationUrlV2(AlgorithmType algorithmType)
-            {
-                if (StratumEndpointTemplatesByAlgorithmType.ContainsKey(algorithmType))
-                {
-                    var customEndpointTemplateEntry = StratumEndpointTemplatesByAlgorithmType[algorithmType];
-                    var customPort = customEndpointTemplateEntry.Port;
-                    var customEndpointTemplate = customEndpointTemplateEntry.Template
-                        .Replace(PREFIX_TEMPLATE, "")
-                        .Replace(PORT_TEMPLATE, "");
-                    return (customEndpointTemplate, customPort);
-                }
-                return ("", 0);
-            }
-
             private static string GetCustomUrl(StratumTemplateEntry customEndpointTemplateEntry, NhmConectionType conectionType)
             {
                 var (prefix, _) = GetProtocolPrefixAndPort(conectionType);
@@ -107,66 +93,61 @@ namespace NHM.Common
         private static (string prefix, int port) GetProtocolPrefixAndPort(NhmConectionType conectionType)
         {
             int port = conectionType == NhmConectionType.STRATUM_SSL ? 443 : 9200;
-            switch (conectionType)
+            return conectionType switch
             {
-                case NhmConectionType.STRATUM_TCP: return ("stratum+tcp://", port);
-                case NhmConectionType.STRATUM_SSL: return ("stratum+ssl://", port);
-                // NHMConectionType.NONE
-                default: return ("", port);
+                NhmConectionType.STRATUM_TCP => ("stratum+tcp://", port),
+                NhmConectionType.STRATUM_SSL => ("stratum+ssl://", port),
+                _ => ("", port),
+            };
+        }
+
+        private static string GetLocationUrlInner(AlgorithmType algorithmType, NhmConectionType conectionType)
+        {
+            try
+            {
+                if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrl(algorithmType, conectionType);
+
+                var (name, okName) = GetAlgorithmUrlName(algorithmType);
+                // if name is not ok return
+                if (!okName) {
+                    Logger.Error("StratumServiceHelpers", $"GetLocationUrlInner algorithmType='{(int)algorithmType}' conectionType='{(int)conectionType}'");
+                    return "";
+                }
+                
+                var (prefix, port) = GetProtocolPrefixAndPort(conectionType);
+                var ret = BuildOptions.BUILD_TAG switch
+                {
+                    BuildTag.TESTNET => $"{prefix}{name}-test.auto.nicehash.com:{port}",
+                    BuildTag.TESTNETDEV => $"{prefix}{name}-dev.auto.nicehash.com:{port}",
+                    _ => $"{prefix}{name}.auto.nicehash.com:{port}",
+                };
+                return ret;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("StratumServiceHelpers", $"GetLocationUrlInner algorithmType='{algorithmType}' conectionType='{conectionType}' error: {e.Message}");
+                return "";
             }
         }
 
+        // miningLocation is now auto location but keep it for backward compatibility
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         {
-            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrl(algorithmType, conectionType);
-            
-            var (name, okName) = GetAlgorithmUrlName(algorithmType);
-            // if name is not ok return
-            if (!okName) return "";
-
-            var (prefix, port) = GetProtocolPrefixAndPort(conectionType);
-            
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) 
-                return $"{prefix}{name}-test.auto.nicehash.com:{port}";
-            
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
-                return $"{prefix}{name}-dev.auto.nicehash.com:{port}";
-
-            //BuildTag.PRODUCTION
-            var url = name + ".auto.nicehash.com";
-            if (UseDNSQ)
-            {
-                var urlT = Task.Run(async () => await DNSQuery.QueryOrDefault(url));
-                urlT.Wait();
-                var (IP, gotIP) = urlT.Result;
-                if (gotIP) url = IP;
+            var url = GetLocationUrlInner(algorithmType, conectionType);
+            if (UseDNSQ && url != "") {
+                try
+                {
+                    var hostT = Task.Run(async () => await DNSQuery.QueryOrDefault(url));
+                    hostT.Wait(); // <== BLOCKING
+                    var (IP_or_default, gotIP) = hostT.Result;
+                    return IP_or_default;
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("StratumServiceHelpers", $"GetLocationUrl for url='{url}' error: {e.Message}");
+                }
             }
-            return prefix + url + $":{port}";
-        }
-
-        public static async Task<(string url, int port)> GetLocationUrlV2(AlgorithmType algorithmType, bool ssl = false)
-        {
-            if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrlV2(algorithmType);
-
-            var (name, okName) = GetAlgorithmUrlName(algorithmType);
-            // if name is not ok return
-            if (!okName) return ("", -1);
-            int port = ssl ? 443 : 9200;
-
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET)
-                return ($"{name}-test.auto.nicehash.com", port);
-
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV)
-                return ($"{name}-dev.auto.nicehash.com", port);
-
-            //BuildTag.PRODUCTION
-            var url = name + ".auto.nicehash.com";
-            if (UseDNSQ)
-            {
-                var (IP, gotIP) = await DNSQuery.QueryOrDefault(url);
-                if (gotIP) return (IP, port);
-            }
-            return (url, port);
+            return url;
         }
     }
 }

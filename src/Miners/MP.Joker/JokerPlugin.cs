@@ -5,12 +5,10 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using static MP.Joker.PluginEngines;
 using InternalConfigsCommon = NHM.Common.Configs.InternalConfigs;
 
@@ -38,7 +36,21 @@ namespace MP.Joker
                 PluginDescription = "Unknown",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
-            (MinerSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "MinerSettings.json"), new MinerSettings {});
+            var defaultMinerSettings = new MinerSettings
+            {
+                UseUserSettings = true,
+                AlgorithmCommandLine = new Dictionary<string, string>
+                {
+                    {$"{AlgorithmType.DaggerHashimoto}", "--user {USERNAME} --pool stratum+tcp://{POOL_URL}:{POOL_PORT} --algo ethash --apiport {API_PORT} --devices {DEVICES} {EXTRA_LAUNCH_PARAMETERS}"},
+                },
+                AlgorithmCommandLineSSL = new Dictionary<string, string>
+                {
+                    {$"{AlgorithmType.DaggerHashimoto}", "--user {USERNAME} --pool stratum+ssl://{POOL_URL}:443 --tls 1 --algo ethash --apiport {API_PORT} --devices {DEVICES} {EXTRA_LAUNCH_PARAMETERS}"},
+                }
+            };
+            var (oldMinerSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "MinerSettings.json"), defaultMinerSettings, true, true);
+            oldMinerSettings.UseUserSettings = true;
+            (MinerSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "MinerSettings.json"), oldMinerSettings);
         }
 
         private int _openClAmdPlatformNum = 0;
@@ -62,6 +74,15 @@ namespace MP.Joker
             var exeName = MinersBinsUrlsSettings?.ExePath.LastOrDefault();
             PluginEngine = GuessMinerBinaryPluginEngine(exeName);
             Logger.Info(Name, $"PluginEngine {PluginEngine}");
+            try
+            {
+                // since MinerSettings is extending MinerCommandLineSettings delete this internal setting file to reduce confusion
+                //(MinerCommandLineSettings, _) = InternalConfigsCommon.GetDefaultOrFileSettings(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerCommandLineSettings.json"), MinerCommandLineSettings);
+                File.Delete(Paths.MinerPluginsPath(PluginUUID, "internals", "MinerCommandLineSettings.json"));
+            }
+            catch
+            {}
+            MinerCommandLineSettings = MinerSettings;
         }
 
         private static int GetMinerDeviceID(IEnumerable<DeviceMappings> userDevices, string deviceUUID)
@@ -74,7 +95,7 @@ namespace MP.Joker
         {
             return new DeviceMappings
             {
-                Compatible = false,
+                Compatible = true,
                 DeviceName = baseDevice.Name,
                 DeviceUUID = baseDevice.UUID,
                 Pcie = baseDevice is IGpuDevice gpu ? gpu.PCIeBusID : -1,

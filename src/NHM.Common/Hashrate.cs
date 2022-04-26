@@ -42,19 +42,15 @@ namespace NHM.Common
 
         public static string ToString(AlgorithmType algorithmType, double rawSpeed, string separator = " ")
         {
-            var speed = "";
-
-            if (rawSpeed < 1000)
-                speed = rawSpeed.ToString("F3", CultureInfo.InvariantCulture) + separator;
-            else if (rawSpeed < 100000)
-                speed = (rawSpeed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + separator + "k";
-            else if (rawSpeed < 100000000)
-                speed = (rawSpeed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "M";
-            else
-                speed = (rawSpeed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "G";
-
-            var ret = speed + algorithmType.GetUnitPerSecond();
-            return ret;
+            var (scaledSpeed, unit) = rawSpeed switch
+            {
+                < 1000 => (rawSpeed, separator),
+                < 100000 => (rawSpeed * 0.001, $"{separator}k"),
+                < 100000000 => (rawSpeed * 0.000001, $"{separator}M"),
+                _ => (rawSpeed * 0.000000001, $"{separator}G"),
+            };
+            var speed = scaledSpeed.ToString("F3", CultureInfo.InvariantCulture) + unit + algorithmType.GetUnitPerSecond();
+            return speed;
         }
     }
 }

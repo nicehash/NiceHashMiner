@@ -1,5 +1,4 @@
-﻿using NHM.Common;
-using NHMCore;
+﻿using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Notifications;
 using NiceHashMiner.Views.Common;
@@ -56,7 +55,6 @@ namespace NiceHashMiner.Views.Notifications
             {
                 MiscSettings.Instance.ShowNotifications.Remove(_notification.NotificationUUID);
                 MiscSettings.Instance.ShowNotifications.Add(_notification.NotificationUUID, DontShowAgainCheckBox?.IsChecked ?? false);
-                ConfigManager.GeneralConfigFileCommit();
             }
         }
 

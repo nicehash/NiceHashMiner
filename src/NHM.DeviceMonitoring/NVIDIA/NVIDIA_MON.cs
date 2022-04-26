@@ -9,6 +9,8 @@ namespace NHM.DeviceMonitoring.NVIDIA
 
         [DllImport(dll, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
         public static extern int nhm_nvidia_reg_log_cb(log_cb cb);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        public static extern int nhm_nvidia_set_debug_log_level(int level);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_init();
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]

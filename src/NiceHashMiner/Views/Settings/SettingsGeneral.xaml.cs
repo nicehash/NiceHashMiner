@@ -208,8 +208,7 @@ namespace NiceHashMiner.Views.Settings
 
         private async void ProcessLogReport()
         {
-            var uuid = Guid.NewGuid().ToString();
-            var success = await Helpers.CreateAndUploadLogReport(uuid);
+            var (success, uuid, _) = await Helpers.CreateAndUploadLogReport();
             if (success)
             {
                 _reportId = uuid;

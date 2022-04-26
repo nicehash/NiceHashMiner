@@ -183,17 +183,13 @@ namespace NHMCore
             {
                 return RigStatus.Pending;
             }
-            if (IsInBenchmarkForm() || IsInSettingsForm() || IsInPluginsForm() || IsInUpdateForm())
-            {
-                return RigStatus.Pending;
-            }
             // TODO check if we are connected to ws if not retrun offline state
 
             // check devices
             var allDevs = AvailableDevices.Devices;
             // now assume we have all disabled
             var rigState = RigStatus.Disabled;
-            // order matters, we are excluding pending state
+            // ORDER MATTERS!!!, we are excluding pending state
             var anyDisabled = allDevs.Any(dev => dev.IsDisabled);
             if (anyDisabled)
             {
@@ -226,17 +222,17 @@ namespace NHMCore
         public static string CalcRigStatusString()
         {
             var rigState = CalcRigStatus();
-            switch (rigState)
+            return rigState switch
             {
-                case RigStatus.Offline: return "OFFLINE";
-                case RigStatus.Stopped: return "STOPPED";
-                case RigStatus.Mining: return "MINING";
-                case RigStatus.Benchmarking: return "BENCHMARKING";
-                case RigStatus.Error: return "ERROR";
-                case RigStatus.Pending: return "PENDING";
-                case RigStatus.Disabled: return "DISABLED";
-                default: return "UNKNOWN";
-            }
+                RigStatus.Offline => "OFFLINE",
+                RigStatus.Stopped => "STOPPED",
+                RigStatus.Mining => "MINING",
+                RigStatus.Benchmarking => "BENCHMARKING",
+                RigStatus.Error => "ERROR",
+                RigStatus.Pending => "PENDING",
+                RigStatus.Disabled => "DISABLED",
+                _ => "UNKNOWN",
+            };
         }
 
 
@@ -252,32 +248,6 @@ namespace NHMCore
         public static CurrentFormState CurrentForm
         {
             get => _currentForm;
-            set
-            {
-                if (_currentForm == value) return;
-                _currentForm = value;
-                NHWebSocketV3.NotifyStateChanged();
-            }
-        }
-
-        public static bool IsInMainForm => CurrentForm == CurrentFormState.Main;
-
-        public static bool IsInBenchmarkForm()
-        {
-            return CurrentForm == CurrentFormState.Benchmark;
-        }
-        public static bool IsInSettingsForm()
-        {
-            return CurrentForm == CurrentFormState.Settings;
-        }
-        public static bool IsInPluginsForm()
-        {
-            return CurrentForm == CurrentFormState.Plugins;
-        }
-
-        public static bool IsInUpdateForm()
-        {
-            return CurrentForm == CurrentFormState.Update;
         }
     }
 }

@@ -2,13 +2,13 @@
 using NHM.DeviceMonitoring.NVIDIA;
 using NHM.DeviceMonitoring.TDP;
 using System;
-using System.Linq;
 using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
     internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings
     {
+        private const int RET_OK = 0;
         public static object _lock = new object();
 
         public int BusID { get; private set; }
@@ -28,10 +28,8 @@ namespace NHM.DeviceMonitoring
 
         public static void Init()
         {
-            using (var tryLock = new TryLock(_lock))
-            {
-                DriverAliveCheckTimer = new Timer(CheckDriverLife, null, 10000, 10000);
-            }
+            using var tryLock = new TryLock(_lock);
+            DriverAliveCheckTimer = new Timer(CheckDriverLife, null, 10000, 10000);
         }
 
         private static void RestartDrivers()
@@ -42,30 +40,28 @@ namespace NHM.DeviceMonitoring
 
         private static void CheckDriverLife(object objectInfo)
         {
-            using (var tryLock = new TryLock(_lock))
+            using var tryLock = new TryLock(_lock);
+            if (!NVIDIA_MON.nhm_nvidia_is_nvapi_alive() || !NVIDIA_MON.nhm_nvidia_is_nvml_alive())
             {
-                if (!NVIDIA_MON.nhm_nvidia_is_nvapi_alive() || !NVIDIA_MON.nhm_nvidia_is_nvml_alive())
+                FailCounter++;
+                RestartDrivers();
+                if (FailCounter == 20)
                 {
-                    FailCounter++;
-                    RestartDrivers();
-                    if (FailCounter == 20)
-                    {
-                        DriverAliveCheckTimer.Change(0, 60000);
-                        CurrentTimeout = 60000;
-                    }
-                    else if (FailCounter == 30)
-                    {
-                        DriverAliveCheckTimer.Change(0, 3600000);
-                        CurrentTimeout = 3600000;
-                    }
+                    DriverAliveCheckTimer.Change(0, 60000);
+                    CurrentTimeout = 60000;
                 }
-                else
+                else if (FailCounter == 30)
                 {
-                    FailCounter = 0;
-                    if(CurrentTimeout != 10000)
-                    {
-                        DriverAliveCheckTimer.Change(0, 10000);
-                    }
+                    DriverAliveCheckTimer.Change(0, 3600000);
+                    CurrentTimeout = 3600000;
+                }
+            }
+            else
+            {
+                FailCounter = 0;
+                if (CurrentTimeout != 10000)
+                {
+                    DriverAliveCheckTimer.Change(0, 10000);
                 }
             }
         }
@@ -76,10 +72,7 @@ namespace NHM.DeviceMonitoring
             {
                 int load_perc = 0;
                 int ok = NVIDIA_MON.nhm_nvidia_device_get_load_percentage(BusID, ref load_perc);
-                if (ok == 0)
-                {
-                    return load_perc;
-                }
+                if (ok == RET_OK) return load_perc;
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_load_percentage failed with error code {ok}", _delayedLogging);
                 return -1;
             }
@@ -91,10 +84,7 @@ namespace NHM.DeviceMonitoring
             {
                 ulong temperature = 0;
                 int ok = NVIDIA_MON.nhm_nvidia_device_get_temperature(BusID, ref temperature);
-                if (ok == 0)
-                {
-                    return temperature;
-                }
+                if (ok == RET_OK) return temperature;
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_temperature failed with error code {ok}", _delayedLogging);
                 return -1;
             }
@@ -104,10 +94,7 @@ namespace NHM.DeviceMonitoring
         {
             int percentage = 0;
             int ok = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_percentage(BusID, ref percentage);
-            if (ok != 0)
-            {
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
-            }
+            if (ok != RET_OK) Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
             return (ok, percentage);
         }
 
@@ -117,10 +104,7 @@ namespace NHM.DeviceMonitoring
             {
                 int rpm = 0;
                 int ok = NVIDIA_MON.nhm_nvidia_device_get_fan_speed_rpm(BusID, ref rpm);
-                if (ok == 0)
-                {
-                    return rpm;
-                }
+                if (ok == RET_OK) return rpm;
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_fan_speed_rpm failed with error code {ok}", _delayedLogging);
                 return -1;
             }
@@ -132,10 +116,7 @@ namespace NHM.DeviceMonitoring
             {
                 int power_usage = 0;
                 int ok = NVIDIA_MON.nhm_nvidia_device_get_power_usage(BusID, ref power_usage);
-                if (ok == 0)
-                {
-                    return power_usage;
-                }
+                if (ok == RET_OK) return power_usage;
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_power_usage failed with error code {ok}", _delayedLogging);
                 return -1;
             }
@@ -145,7 +126,7 @@ namespace NHM.DeviceMonitoring
         public bool SetFanSpeedPercentage(int percentage)
         {
             int ok = NVIDIA_MON.nhm_nvidia_device_set_fan_speed_percentage(BusID, percentage);
-            if (ok != 0)
+            if (ok != RET_OK)
             {
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_set_fan_speed_rpm failed with error code {ok}", _delayedLogging);
                 return false;
@@ -165,7 +146,7 @@ namespace NHM.DeviceMonitoring
             {
                 int tdpRaw = 0;
                 int ok = NVIDIA_MON.nhm_nvidia_device_get_tdp(BusID, ref tdpRaw);
-                if (ok != 0)
+                if (ok != RET_OK)
                 {
                     Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp failed with error code {ok}", _delayedLogging);
                     return -1;
@@ -175,16 +156,15 @@ namespace NHM.DeviceMonitoring
             }
         }
 
-        private static double? PowerLevelToTDPPercentage(TDPSimpleType level)
-        {
-            switch (level)
+        private static double? PowerLevelToTDPPercentage(TDPSimpleType level) =>
+            level switch
             {
-                case TDPSimpleType.LOW: return 0.6d; // 60%
-                case TDPSimpleType.MEDIUM: return 0.8d; // 80%
-                case TDPSimpleType.HIGH: return 1.0d; // 100%
-                default: return null;
-            }
-        }
+                TDPSimpleType.LOW => 0.6d, // 60%
+                TDPSimpleType.MEDIUM => 0.8d, // 80%
+                TDPSimpleType.HIGH => 1.0d, // 100%
+                _ => null,
+            };
+        
         public bool SetTDPSimple(TDPSimpleType level)
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings)
@@ -201,9 +181,9 @@ namespace NHM.DeviceMonitoring
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)(percentage*100));
-            if (execRet < 0) TDPSimple = level;
+            if (execRet == RET_OK) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
-            return execRet == 0;
+            return execRet == RET_OK;
         }
 
         public bool SetTDPPercentage(double percentage)
@@ -222,7 +202,7 @@ namespace NHM.DeviceMonitoring
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
             Logger.Info(LogTag, $"SetTDPPercentage {execRet}.");
-            return execRet == 0;
+            return execRet == RET_OK;
         }
 
         #endregion ITDP

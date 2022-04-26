@@ -8,20 +8,20 @@ using System.Windows;
 
 #if TESTNET
 [assembly: AssemblyTitle("NiceHash Miner TESTNET")]
-[assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
+[assembly: AssemblyDescription("NiceHash Miner is a simple to use mining tool")]
 [assembly: AssemblyProduct("NiceHash Miner TESTNET")]
 #elif TESTNETDEV
 [assembly: AssemblyTitle("NiceHash Miner TESTNETDEV")]
-[assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
+[assembly: AssemblyDescription("NiceHash Miner is a simple to use mining tool")]
 [assembly: AssemblyProduct("NiceHash Miner TESTNETDEV")]
 #else
 [assembly: AssemblyTitle("NiceHash Miner")]
-[assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
+[assembly: AssemblyDescription("NiceHash Miner is a simple to use mining tool")]
 [assembly: AssemblyProduct("NiceHash Miner")]
 #endif
 
 [assembly: AssemblyCompany("H-BIT, d.o.o.")]
-[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2021")]
+[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2022")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -64,5 +64,5 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("3.0.7.2")]
-[assembly: AssemblyFileVersion("3.0.7.2")]
+[assembly: AssemblyVersion("3.0.8.1")]
+[assembly: AssemblyFileVersion("3.0.8.1")]

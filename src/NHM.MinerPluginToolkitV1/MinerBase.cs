@@ -176,7 +176,9 @@ namespace NHM.MinerPluginToolkitV1
             var url2WithPort = StratumServiceHelpers.GetLocationUrl(_algorithmSecondType, _miningLocation, NhmConectionType.NONE);
             var (url2, port2, _) = SplitUrlWithPort(url2WithPort);
             var name = string.Join("+", _miningPairs.First().Algorithm.IDs.Select(a => $"{a}"));
-            var template = MinerCommandLineSettings.AlgorithmCommandLine[name];
+            var ssl = MinerToolkit.EnableSSLMining;
+            var (template, correctTemplate) = MinerCommandLineSettings.GetCommandLineTemplate(name, MinerCommandLineSettings, ssl);
+            if (!correctTemplate) Logger.Warn(_logGroup, $"MiningCreateCommandLine {name} got wrong template SSL='{ssl}'");
             var args = new MinerCommandLineSettings.CommandLineParams
             {
                 Username = _username,

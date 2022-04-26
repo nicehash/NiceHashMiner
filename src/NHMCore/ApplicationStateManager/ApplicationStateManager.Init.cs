@@ -1,4 +1,5 @@
 using NHM.Common;
+using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceDetection;
 using NHM.DeviceMonitoring;
@@ -86,40 +87,31 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateWarningNVIDIADCHInfo();
                 }
-                if(!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
+                if (!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
                 OutsideProcessMonitor.Init(ExitApplication.Token);
                 GPUProfileManager.Init();
                 // add devices
+                string getDeviceNameCount(DeviceType deviceType, int index) => 
+                    deviceType switch
+                    {
+                        DeviceType.CPU => $"CPU#{index}",
+                        DeviceType.AMD => $"AMD#{index}",
+                        DeviceType.NVIDIA => $"GPU#{index}",
+                        _ => $"UNKNOWN#{index}",
+                    };
+
+                ComputeDevice newComputeDevice(BaseDevice d, int i) => new ComputeDevice(d, getDeviceNameCount(d.DeviceType, i + 1));
                 var detectionResult = DeviceDetection.DetectionResult;
-                var index = 0;
-                var cpuCount = 0;
-                var cudaCount = 0;
-                var amdCount = 0;
-                foreach (var cDev in DeviceDetection.GetDetectedDevices())
-                {
-                    var nameCount = "";
-                    if (cDev.DeviceType == DeviceType.CPU)
-                    {
-                        cpuCount++;
-                        nameCount = $"CPU#{cpuCount}";
-                    }
-                    if (cDev.DeviceType == DeviceType.AMD)
-                    {
-                        amdCount++;
-                        nameCount = $"AMD#{amdCount}";
-                    }
-                    if (cDev.DeviceType == DeviceType.NVIDIA)
-                    {
-                        cudaCount++;
-                        nameCount = $"GPU#{cudaCount}";
-                    }
-                    AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
-                }
-                MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(MiningSettings.Instance.DeviceToPauseUuid);
+                var groupedComputeDevices = DeviceDetection.GetDetectedDevices()
+                    .GroupBy(dev => dev.DeviceType)
+                    .SelectMany(group => group.Select(newComputeDevice));
+                foreach (var cDev in groupedComputeDevices) AvailableDevices.AddDevice(cDev);
+
                 AvailableDevices.UncheckCpuIfGpu();
+
                 var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
                 if (!ramCheckOK)
                 {
@@ -180,7 +172,6 @@ namespace NHMCore
                 //        AvailableNotifications.CreateEnableComputeModeAMDInfo();
                 //    }
                 //}
-
                 #endregion Device Detection
                 // STEP
                 // load plugins
@@ -245,12 +236,6 @@ namespace NHMCore
                 //    }
                 //}
 
-                // re-check after download we should have all miner files
-                if (MinerPluginsManager.HasMissingMiners())
-                {
-                    AvailableNotifications.CreateMissingMinersInfo();
-                }
-
                 // show notification if EthPill could be running and it is not
                 if (EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevicesNotSystemElevated)
                 {
@@ -278,6 +263,22 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
+
+                if (AvailableDevices.HasGpuToPause)
+                {
+                    var deviceToPauseUuid = AvailableDevices.Devices.FirstOrDefault(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU).Uuid;
+                    MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(deviceToPauseUuid);
+                }
+                else if (MiningSettings.Instance.DeviceToPauseUuid != "")
+                {
+                    MiningSettings.Instance.DeviceIndex = AvailableDevices.GetDeviceIndexFromUuid(MiningSettings.Instance.DeviceToPauseUuid);
+                    AvailableDevices.GPUs.FirstOrDefault(dev => dev.Uuid == MiningSettings.Instance.DeviceToPauseUuid).PauseMiningWhenGamingMode = true;
+                }
+                else if (AvailableDevices.HasGpu)
+                {
+                    MiningSettings.Instance.DeviceIndex = 0;
+                    AvailableDevices.GPUs.FirstOrDefault().PauseMiningWhenGamingMode = true;
+                }
             }
             catch (Exception e)
             {
