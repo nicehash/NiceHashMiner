@@ -3,7 +3,6 @@ using NHMCore.Configs;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
-using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
