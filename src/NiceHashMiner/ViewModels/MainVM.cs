@@ -10,6 +10,7 @@ using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
 using NHMCore.Switching;
+using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.ViewModels.Plugins;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace NiceHashMiner.ViewModels
 
         public UpdateSettings UpdateSettings => UpdateSettings.Instance;
 
-        public EthlargementIntegratedPlugin EthlargementIntegratedPlugin => EthlargementIntegratedPlugin.Instance;
+        public GPUProfileManager GPUProfileManager => GPUProfileManager.Instance;
         #endregion Exposed settings
 
 
