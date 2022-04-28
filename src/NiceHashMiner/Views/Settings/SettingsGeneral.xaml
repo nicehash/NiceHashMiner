@@ -21,12 +21,13 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBox Style="{StaticResource inputBox}"
-                         Width="498"
                          x:Name="textBoxBTCAddress"
                          Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
                          TextChanged="TextBoxBitcoinAddress_TextChanged"
                          KeyUp="TextBoxBitcoinAddress_KeyUp"
                          LostFocus="TextBoxBitcoinAddress_LostFocus"
+                         MinWidth="344"
+                         Width="Auto"
                          >
                 </TextBox>
             </StackPanel>
