@@ -12,6 +12,6 @@
   </PropertyGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="&quot;$(SolutionDir)NhmPluginsWriteTimeSetter\BuildCopy\NhmPluginsWriteTimeSetter.exe&quot; &quot;$(ProjectDir) $(TargetPath)&quot;&#xD;&#xA;If NOT exist &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot; mkdir &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot;&#xD;&#xA;If exist &quot;$(TargetPath)&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot;" />
+    <Exec Command="&quot;$(SolutionDir)src\Tools\NhmSetPluginGitCommitTime\BuildCopy\NhmSetPluginGitCommitTime.exe&quot; &quot;$(ProjectDir) $(TargetPath)&quot;&#xD;&#xA;If NOT exist &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot; mkdir &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot;&#xD;&#xA;If exist &quot;$(TargetPath)&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot;" />
   </Target>
 </Project>

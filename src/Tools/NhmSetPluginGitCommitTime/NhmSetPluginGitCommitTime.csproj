@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A83BE532-8AD5-4669-A0CC-8EFB957F5C1C}</ProjectGuid>
+    <ProjectGuid>{F2069C67-6B16-408F-801E-4C51D6435FC0}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>NhmPluginsWriteTimeSetter</RootNamespace>
-    <AssemblyName>NhmPluginsWriteTimeSetter</AssemblyName>
+    <RootNamespace>NhmSetPluginGitCommitTime</RootNamespace>
+    <AssemblyName>NhmSetPluginGitCommitTime</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

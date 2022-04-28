@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NhmPluginsWriteTimeSetter")]
+[assembly: AssemblyTitle("NhmSetPluginGitCommitTime")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Razer")]
-[assembly: AssemblyProduct("NhmPluginsWriteTimeSetter")]
-[assembly: AssemblyCopyright("Copyright © Razer 2022")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("NhmSetPluginGitCommitTime")]
+[assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("a83be532-8ad5-4669-a0cc-8efb957f5c1c")]
+[assembly: Guid("f2069c67-6b16-408f-801e-4c51d6435fc0")]
 
 // Version information for an assembly consists of the following four values:
 //
