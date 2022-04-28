@@ -26,6 +26,8 @@
                          TextChanged="TextBoxBitcoinAddress_TextChanged"
                          KeyUp="TextBoxBitcoinAddress_KeyUp"
                          LostFocus="TextBoxBitcoinAddress_LostFocus"
+                         MinWidth="344"
+                         Width="Auto"
                          >
                 </TextBox>
             </StackPanel>
