@@ -10,4 +10,8 @@
     <Deterministic>true</Deterministic>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="&quot;$(SolutionDir)NhmPluginsWriteTimeSetter\BuildCopy\NhmPluginsWriteTimeSetter.exe&quot; &quot;$(ProjectDir) $(TargetPath)&quot;&#xD;&#xA;If NOT exist &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot; mkdir &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot;&#xD;&#xA;If exist &quot;$(TargetPath)&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot;" />
+  </Target>
 </Project>
