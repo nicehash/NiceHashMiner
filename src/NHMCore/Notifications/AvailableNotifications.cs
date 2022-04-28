@@ -96,17 +96,6 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateMissingMinersInfo()
-        {
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.MissingMiners, Tr("Missing miner files"), Tr("There are missing files from last Miners Initialization. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", Links.AVHelp));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Restart NiceHash Miner"),
-                Action = () => { _ = ApplicationStateManager.RestartProgram(); }
-            };
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         public static void CreateMissingGPUsInfo()
         {
             var notification = new Notification(

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NHMCore.Nhmws.Models
+namespace NHMCore.Nhmws.ModelsV3
 {
     class MarketsMessage
     {

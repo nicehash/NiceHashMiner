@@ -43,13 +43,13 @@ namespace NHMCore
             {
                 // Reset credentials
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
-                NHWebSocket.ResetCredentials(btc, worker, group);
+                NHWebSocketV3.ResetCredentials(btc, worker, group);
             }
             else
             {
                 // TODO notify invalid credentials?? send state?
                 // login without user if credentials are invalid
-                NHWebSocket.ResetCredentials();
+                NHWebSocketV3.ResetCredentials();
             }
         }
 

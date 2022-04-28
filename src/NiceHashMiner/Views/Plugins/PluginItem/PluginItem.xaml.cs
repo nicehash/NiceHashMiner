@@ -29,7 +29,7 @@ namespace NiceHashMiner.Views.Plugins.PluginItem
         {
             _vm = e.NewValue as PluginEntryVM; // ?? throw new InvalidOperationException("DataContext must be of type `PluginEntryVM`");
             PluginActionsButtonContext.DataContext = _vm;
-            if (!_vm.Plugin.Supported)
+            if (!_vm.Plugin.HasSupportedDevices)
             {
                 mainPluginGrid.ToolTip = "Not compatible with your hardware.";
             }

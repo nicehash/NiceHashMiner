@@ -223,12 +223,12 @@ namespace NiceHashMiner.Views
                 tdpWindow.Show();
             }
 
-            if (MinerPluginsManager.EulaConfirm.Any())
+            if (MinerPluginsManager.PluginsForEulaConfirm.Any())
             {
                 var pluginsPopup = new Plugins.PluginsConfirmDialog();
                 pluginsPopup.DataContext = new Plugins.PluginsConfirmDialog.VM
                 {
-                    Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.EulaConfirm)
+                    Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.PluginsForEulaConfirm)
                 };
                 ShowContentAsModalDialog(pluginsPopup);
             }

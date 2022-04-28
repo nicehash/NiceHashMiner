@@ -5,7 +5,7 @@ using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
-using NHMCore.Nhmws.Models;
+using NHMCore.Nhmws.ModelsV3;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
@@ -19,12 +19,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WebSocketSharp;
 // static imports
-using static NHMCore.Nhmws.StatusCodes;
+using static NHMCore.Nhmws.StatusCodesV3;
 using NHLog = NHM.Common.Logger;
 
 namespace NHMCore.Nhmws
 {
-    static class NHWebSocket
+    static class NHWebSocketV3
     {
         #region locking
 
@@ -581,7 +581,7 @@ namespace NHMCore.Nhmws
             // throw if pending
             if (ApplicationStateManager.CalcRigStatus() == RigStatus.Pending)
             {
-                throw new RpcException($"Cannot handle RPC call Rig is in PENDING state.", ErrorCode.UnableToHandleRpc);
+                throw new RpcException($"Cannot handle RPC call Rig is in PENDING state.", ErrorCodeV3.UnableToHandleRpc);
             }
         }
 
@@ -593,14 +593,14 @@ namespace NHMCore.Nhmws
             switch (userSetResult)
             {
                 case ApplicationStateManager.SetResult.INVALID:
-                    throw new RpcException("Bitcoin address invalid", ErrorCode.InvalidUsername);
+                    throw new RpcException("Bitcoin address invalid", ErrorCodeV3.InvalidUsername);
                 case ApplicationStateManager.SetResult.CHANGED:
                     // we return executed
                     return true;
                 case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    throw new RpcException($"Nothing to change btc \"{btc}\" already set", ErrorCode.RedundantRpc);
+                    throw new RpcException($"Nothing to change btc \"{btc}\" already set", ErrorCodeV3.RedundantRpc);
                 default:
-                    throw new RpcException($"", ErrorCode.InternalNhmError);
+                    throw new RpcException($"", ErrorCodeV3.InternalNhmError);
             }
             
         }
@@ -611,14 +611,14 @@ namespace NHMCore.Nhmws
             switch (workerSetResult)
             {
                 case ApplicationStateManager.SetResult.INVALID:
-                    throw new RpcException("Worker name invalid", ErrorCode.InvalidWorker);
+                    throw new RpcException("Worker name invalid", ErrorCodeV3.InvalidWorker);
                 case ApplicationStateManager.SetResult.CHANGED:
                     // we return executed
                     return true;
                 case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    throw new RpcException($"Nothing to change worker name \"{worker}\" already set", ErrorCode.RedundantRpc);
+                    throw new RpcException($"Nothing to change worker name \"{worker}\" already set", ErrorCodeV3.RedundantRpc);
                 default:
-                    throw new RpcException($"", ErrorCode.InternalNhmError);
+                    throw new RpcException($"", ErrorCodeV3.InternalNhmError);
             }
         }
 
@@ -629,14 +629,14 @@ namespace NHMCore.Nhmws
             {
                 case ApplicationStateManager.SetResult.INVALID:
                     // TODO error code not correct
-                    throw new RpcException("Group name invalid", ErrorCode.UnableToHandleRpc);
+                    throw new RpcException("Group name invalid", ErrorCodeV3.UnableToHandleRpc);
                 case ApplicationStateManager.SetResult.CHANGED:
                     // we return executed
                     return true;
                 case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    throw new RpcException($"Nothing to change group \"{group}\" already set", ErrorCode.RedundantRpc);
+                    throw new RpcException($"Nothing to change group \"{group}\" already set", ErrorCodeV3.RedundantRpc);
                 default:
-                    throw new RpcException($"", ErrorCode.InternalNhmError);
+                    throw new RpcException($"", ErrorCodeV3.InternalNhmError);
             }
         }
         #endregion Credentials setters (btc/username, worker, group)
@@ -651,23 +651,23 @@ namespace NHMCore.Nhmws
             // check if redundant rpc
             if (allDevices && enabled && AvailableDevices.IsEnableAllDevicesRedundantOperation())
             {
-                throw new RpcException("All devices are already enabled.", ErrorCode.RedundantRpc);
+                throw new RpcException("All devices are already enabled.", ErrorCodeV3.RedundantRpc);
             }
             // all disable
             if (allDevices && !enabled && AvailableDevices.IsDisableAllDevicesRedundantOperation())
             {
-                throw new RpcException("All devices are already disabled.", ErrorCode.RedundantRpc);
+                throw new RpcException("All devices are already disabled.", ErrorCodeV3.RedundantRpc);
             }
             // if single and doesn't exist
             if (!allDevices && deviceWithUUID == null)
             {
-                throw new RpcException("Device not found", ErrorCode.NonExistentDevice);
+                throw new RpcException("Device not found", ErrorCodeV3.NonExistentDevice);
             }
             // if we have the device but it is redundant
             if (!allDevices && deviceWithUUID.IsDisabled == !enabled)
             {
                 var stateStr = enabled ? "enabled" : "disabled";
-                throw new RpcException($"Devices with uuid {devs} is already {stateStr}.", ErrorCode.RedundantRpc);
+                throw new RpcException($"Devices with uuid {devs} is already {stateStr}.", ErrorCodeV3.RedundantRpc);
             }
 
             // if got here than we can execute the call
@@ -683,12 +683,12 @@ namespace NHMCore.Nhmws
             var allDisabled = AvailableDevices.Devices.All(dev => dev.IsDisabled);
             if (allDisabled)
             {
-                throw new RpcException("All devices are disabled cannot start", ErrorCode.DisabledDevice);
+                throw new RpcException("All devices are disabled cannot start", ErrorCodeV3.DisabledDevice);
             }
             var (success, msg) = await ApplicationStateManager.StartAllAvailableDevicesTask();
             if (!success)
             {
-                throw new RpcException(msg, ErrorCode.RedundantRpc);
+                throw new RpcException(msg, ErrorCodeV3.RedundantRpc);
             }
             return true;
         }
@@ -700,17 +700,17 @@ namespace NHMCore.Nhmws
             var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
             if (deviceWithUUID == null)
             {
-                throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCode.NonExistentDevice);
+                throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCodeV3.NonExistentDevice);
             }
             if (deviceWithUUID.IsDisabled)
             {
-                throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCode.DisabledDevice);
+                throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCodeV3.DisabledDevice);
             }
             var (success, msg) = await ApplicationStateManager.StartDeviceTask(deviceWithUUID);
             if (!success)
             {
                 // TODO this can also be an error
-                throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCode.RedundantRpc);
+                throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCodeV3.RedundantRpc);
             }
             return true;
         }
@@ -728,12 +728,12 @@ namespace NHMCore.Nhmws
             var allDisabled = AvailableDevices.Devices.All(dev => dev.IsDisabled);
             if (allDisabled)
             {
-                throw new RpcException("All devices are disabled cannot stop", ErrorCode.DisabledDevice);
+                throw new RpcException("All devices are disabled cannot stop", ErrorCodeV3.DisabledDevice);
             }
             var (success, msg) = await ApplicationStateManager.StopAllDevicesTask();
             if (!success)
             {
-                throw new RpcException(msg, ErrorCode.RedundantRpc);
+                throw new RpcException(msg, ErrorCodeV3.RedundantRpc);
             }
             return success;
         }
@@ -745,17 +745,17 @@ namespace NHMCore.Nhmws
             var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
             if (deviceWithUUID == null)
             {
-                throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCode.NonExistentDevice);
+                throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCodeV3.NonExistentDevice);
             }
             if (deviceWithUUID.IsDisabled)
             {
-                throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCode.DisabledDevice);
+                throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCodeV3.DisabledDevice);
             }
             var (success, msg) = await ApplicationStateManager.StopDeviceTask(deviceWithUUID);
             if (!success)
             {
                 // TODO this can also be an error
-                throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCode.RedundantRpc);
+                throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCodeV3.RedundantRpc);
             }
             return success;
         }
@@ -769,7 +769,7 @@ namespace NHMCore.Nhmws
 
         private static void SetPowerMode(string device, TDPSimpleType level)
         {
-            if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCode.UnableToHandleRpc);
+            if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCodeV3.UnableToHandleRpc);
 
             var devs = device == "*" ?
                 AvailableDevices.Devices :
@@ -792,19 +792,19 @@ namespace NHMCore.Nhmws
             {
                 if (setSuccess.Any(res => res.type == DeviceType.NVIDIA && !Helpers.IsElevated && !res.success))
                 {
-                    throw new RpcException("Not able to set power modes for devices: Must start NiceHashMiner as Admin", ErrorCode.UnableToHandleRpc);
+                    throw new RpcException("Not able to set power modes for devices: Must start NiceHashMiner as Admin", ErrorCodeV3.UnableToHandleRpc);
                 }
-                throw new RpcException("Not able to set power modes for all devices", ErrorCode.UnableToHandleRpc);
+                throw new RpcException("Not able to set power modes for all devices", ErrorCodeV3.UnableToHandleRpc);
             }
 
             if (found && !hasEnabled)
             {
-                throw new RpcException("No settable devices found", ErrorCode.UnableToHandleRpc);
+                throw new RpcException("No settable devices found", ErrorCodeV3.UnableToHandleRpc);
             }
 
             if (!found)
             {
-                throw new RpcException("No settable devices found", ErrorCode.UnableToHandleRpc);
+                throw new RpcException("No settable devices found", ErrorCodeV3.UnableToHandleRpc);
             }
         }
 
@@ -842,7 +842,7 @@ namespace NHMCore.Nhmws
                 "app burn" => appBurn(),
                 "rig restart" => rigRestart(),
                 "system dump" => await systemDump(),
-                _ => throw new RpcException($"RpcMessage MinerReset operation not supported for level '{level}'", ErrorCode.UnableToHandleRpc),
+                _ => throw new RpcException($"RpcMessage MinerReset operation not supported for level '{level}'", ErrorCodeV3.UnableToHandleRpc),
             };
         }
 
@@ -902,7 +902,7 @@ namespace NHMCore.Nhmws
                         rpcAnswer = await MinerReset((string)message.level);
                         break;
                     default:
-                        throw new RpcException($"RpcMessage operation not supported for method '{method}'", ErrorCode.UnableToHandleRpc);
+                        throw new RpcException($"RpcMessage operation not supported for method '{method}'", ErrorCodeV3.UnableToHandleRpc);
                 }
                 var rpcAnswerReturn = !string.IsNullOrEmpty(rpcAnswer) ? rpcAnswer : null;
                 executedCall = new ExecutedCall(rpcId, 0, rpcAnswerReturn);

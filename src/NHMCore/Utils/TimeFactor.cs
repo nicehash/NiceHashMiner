@@ -1,7 +1,7 @@
 ﻿using NHM.Common.Enums;
 using System;
 
-namespace NHMCore.Nhmws
+namespace NHMCore.Utils
 {
     public static class TimeFactor
     {
