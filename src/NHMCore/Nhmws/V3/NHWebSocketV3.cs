@@ -5,7 +5,7 @@ using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
-using NHMCore.Nhmws.ModelsV3;
+using NHMCore.Nhmws.V3.Models;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
@@ -19,10 +19,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WebSocketSharp;
 // static imports
-using static NHMCore.Nhmws.StatusCodesV3;
+using static NHMCore.Nhmws.V3.StatusCodesV3;
 using NHLog = NHM.Common.Logger;
 
-namespace NHMCore.Nhmws
+namespace NHMCore.Nhmws.V3
 {
     static class NHWebSocketV3
     {
@@ -111,7 +111,7 @@ namespace NHMCore.Nhmws
             MainLoop = Task.Run(() => Start(address, token));
         }
 
-        static public async Task Start(string address, CancellationToken token)
+        private static async Task Start(string address, CancellationToken token)
         {
             try
             {
@@ -168,55 +168,54 @@ namespace NHMCore.Nhmws
                 _sendQueue = new ConcurrentQueue<IEnumerable<NHSendMessage>>();
                 _isNhmwsRestart = false;
                 _notifyMinerStatusAfter.Value = null;
-
+                
                 NHLog.Info("NHWebSocket", "Creating socket");
-                using (_webSocket = new WebSocket(_address))
+                using var webSocket = new WebSocket(_address);
+                _webSocket = webSocket;
+                _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+                //stop.Register(() => _webSocket.Close(CloseStatusCode.Normal, "Closing CancellationToken"));
+                _webSocket.OnOpen += Login;
+                _webSocket.OnMessage += (s, eMsg) => _recieveQueue.Enqueue(eMsg);
+                _webSocket.OnError += (s, e) => NHLog.Info("NHWebSocket", $"Error occured: {e.Message}");
+                _webSocket.OnClose += (s, e) => NHLog.Info("NHWebSocket", $"Connection closed code {e.Code}: {e.Reason}"); ;
+                _webSocket.Log.Level = LogLevel.Debug;
+                _webSocket.Log.Output = (data, s) => NHLog.Info("NHWebSocket", data.ToString());
+                _webSocket.EnableRedirection = true;
+
+                NHLog.Info("NHWebSocket", "Connecting");
+                _webSocket.Connect();
+
+                const int minerStatusTickSeconds = 45;
+                var checkWaitTime = TimeSpan.FromMilliseconds(50);
+
+                var skipMinerStatus = !CredentialValidators.ValidateBitcoinAddress(_login.btc);
+
+                NHLog.Info("NHWebSocket", "Starting Loop");
+                while (IsWsAlive && !stop.IsCancellationRequested)
                 {
-                    _webSocket.SslConfiguration.EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-                    //stop.Register(() => _webSocket.Close(CloseStatusCode.Normal, "Closing CancellationToken"));
-                    _webSocket.OnOpen += Login;
-                    _webSocket.OnMessage += (s, eMsg) => _recieveQueue.Enqueue(eMsg);
-                    _webSocket.OnError += (s, e) => NHLog.Info("NHWebSocket", $"Error occured: {e.Message}");
-                    _webSocket.OnClose += (s, e) => NHLog.Info("NHWebSocket", $"Connection closed code {e.Code}: {e.Reason}"); ;
-                    _webSocket.Log.Level = LogLevel.Debug;
-                    _webSocket.Log.Output = (data, s) => NHLog.Info("NHWebSocket", data.ToString());
-                    _webSocket.EnableRedirection = true;
+                    if (IsWsAlive) HandleSendMessage();
+                    if (IsWsAlive) await HandleReceiveMessage();
+                    // TODO add here the last miner status send check
+                    if (IsWsAlive) await TaskHelpers.TryDelay(checkWaitTime, stop);
 
-                    NHLog.Info("NHWebSocket", "Connecting");
-                    _webSocket.Connect();
-
-                    const int minerStatusTickSeconds = 45;
-                    var checkWaitTime = TimeSpan.FromMilliseconds(50);
-
-                    var skipMinerStatus = !CredentialValidators.ValidateBitcoinAddress(_login.btc);
-
-                    NHLog.Info("NHWebSocket", "Starting Loop");
-                    while (IsWsAlive && !stop.IsCancellationRequested)
+                    if (skipMinerStatus) continue;
+                    var elapsedTime = DateTime.UtcNow - _lastSendMinerStatusTimestamp.Value;
+                    if (elapsedTime.TotalSeconds > minerStatusTickSeconds)
                     {
-                        if (IsWsAlive) HandleSendMessage();
-                        if (IsWsAlive) await HandleReceiveMessage();
-                        // TODO add here the last miner status send check
-                        if (IsWsAlive) await TaskHelpers.TryDelay(checkWaitTime, stop);
-
-                        if (skipMinerStatus) continue;
-                        var elapsedTime = DateTime.UtcNow - _lastSendMinerStatusTimestamp.Value;
-                        if (elapsedTime.TotalSeconds > minerStatusTickSeconds)
-                        {
-                            var minerStatusJsonStr = CreateMinerStatusMessage();
-                            var minerStatus = new NHSendMessage(MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr);
-                            _sendQueue.Enqueue(new NHSendMessage[1] { minerStatus });
-                        }
-                        if (_notifyMinerStatusAfter.Value.HasValue && DateTime.UtcNow >= _notifyMinerStatusAfter.Value.Value)
-                        {
-                            _notifyMinerStatusAfter.Value = null;
-                            var minerStatusJsonStr = CreateMinerStatusMessage();
-                            var minerStatus = new NHSendMessage(MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr);
-                            _sendQueue.Enqueue(new NHSendMessage[1] { minerStatus });
-                        }
+                        var minerStatusJsonStr = CreateMinerStatusMessage();
+                        var minerStatus = new NHSendMessage(MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr);
+                        _sendQueue.Enqueue(new NHSendMessage[1] { minerStatus });
                     }
-                    // Ws closed
-                    NHLog.Info("NHWebSocket", "Exited Loop");
+                    if (_notifyMinerStatusAfter.Value.HasValue && DateTime.UtcNow >= _notifyMinerStatusAfter.Value.Value)
+                    {
+                        _notifyMinerStatusAfter.Value = null;
+                        var minerStatusJsonStr = CreateMinerStatusMessage();
+                        var minerStatus = new NHSendMessage(MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr);
+                        _sendQueue.Enqueue(new NHSendMessage[1] { minerStatus });
+                    }
                 }
+                // Ws closed
+                NHLog.Info("NHWebSocket", "Exited Loop");
             }
             catch (TaskCanceledException e)
             {
@@ -322,89 +321,84 @@ namespace NHMCore.Nhmws
 
         private static string CreateMinerStatusMessage(bool sendDeviceNames = false)
         {
-            var devices = AvailableDevices.Devices;
-            var rigStatus = ApplicationStateManager.CalcRigStatusString();
-            var paramList = new List<JToken>
+            JArray serializeDeviceSpeeds(ComputeDevice device)
             {
-                rigStatus
-            };
-
-            var deviceList = new JArray();
-            foreach (var device in devices)
-            {
-                try
-                {
-                    var array = new JArray
-                    {
-                        sendDeviceNames ? device.Name : "",
-                        device.B64Uuid  // TODO
-                    };
-                    var status = DeviceReportStatus(device.DeviceType, device.State);
-                    array.Add(status);
-
-                    array.Add((int)Math.Round(device.Load));
-
-                    var speedsJson = new JArray();
-                    var speeds = MiningDataStats.GetSpeedForDevice(device.Uuid);
-                    if (speeds != null && device.State == DeviceState.Mining)
-                    {
-                        foreach (var kvp in speeds)
-                        {
-                            speedsJson.Add(new JArray((int)kvp.type, kvp.speed));
-                        }
-                    }
-                    array.Add(speedsJson);
-
-                    // Hardware monitoring
-                    array.Add((int)Math.Round(device.Temp));
-                    array.Add(device.FanSpeedRPM);
-                    array.Add((int)Math.Round(device.PowerUsage));
-
-                    // Power mode
-                    array.Add((int)device.TDPSimple);
-
-                    // Intensity mode
-                    array.Add(0);
-
-                    // fan speed percentage
-                    array.Add(device.FanSpeed);
-
-                    deviceList.Add(array);
-                }
-                catch (Exception e)
-                {
-                    NHLog.Error("NHWebSocket", e.Message);
-                }
+                if (device.State != DeviceState.Mining) return new JArray();
+                var speeds = MiningDataStats.GetSpeedForDevice(device.Uuid);
+                if (speeds == null) return new JArray();
+                var speedsJson = new JArray();
+                foreach (var kvp in speeds) speedsJson.Add(new JArray((int)kvp.type, kvp.speed));
+                return speedsJson;
             }
-
-            paramList.Add(deviceList);
-
-            var data = new MinerStatusMessage
+            JArray serializeDeviceData(ComputeDevice device)
             {
-                param = paramList
+                var name = sendDeviceNames ? device.Name : "";
+                var uuid = device.B64Uuid;
+                var status = DeviceReportStatus(device.DeviceType, device.State);
+                var load = (int)Math.Round(device.Load);
+                var speeds = serializeDeviceSpeeds(device);
+                // Hardware monitoring
+                var hw_mon_temperature = (int)Math.Round(device.Temp);
+                var hw_mon_fan_speed_rpm = device.FanSpeedRPM;
+                var hw_mon_power_usage = (int)Math.Round(device.PowerUsage);
+                // Power mode & Intensity mode. Intensity is always 0
+                var power_mode = (int)device.TDPSimple;
+                var intensity_mode = 0;
+                var hw_mon_fan_speed_percentage = device.FanSpeed;
+                // STRICT ORDER!
+                var deviceData = new JArray
+                {
+                    name,
+                    uuid,
+                    status,
+                    load,
+                    speeds,
+                    hw_mon_temperature,
+                    hw_mon_fan_speed_rpm,
+                    hw_mon_power_usage,
+                    power_mode,
+                    intensity_mode,
+                    hw_mon_fan_speed_percentage
+                };
+                return deviceData;
+            }
+            JArray serializeDevicesData() {
+                var deviceList = new JArray();
+                foreach (var device in AvailableDevices.Devices) deviceList.Add(serializeDeviceData(device));
+                return deviceList;
+            }
+            var minerStatusMessage = new MinerStatusMessage
+            {
+                param = new List<JToken>
+                {
+                    ApplicationStateManager.CalcRigStatusString(),
+                    serializeDevicesData()
+                }
             };
-            var sendData = JsonConvert.SerializeObject(data);
-
+            var sendData = JsonConvert.SerializeObject(minerStatusMessage);
             return sendData;
         }
 
 
         static private async Task HandleMessage(MessageEventArgs e)
         {
+            string getMethod(string data)
+            {
+                dynamic message = JsonConvert.DeserializeObject(data);
+                return message.method.Value as string;
+            }
             try
             {
-                if (e.IsText)
+                if (!e.IsText) return;
+                NHLog.Info("NHWebSocket", $"Received: {e.Data}");
+                var method = getMethod(e.Data);
+                if (IsRpcMethod(method))
                 {
-                    NHLog.Info("NHWebSocket", $"Received: {e.Data}");
-                    var method = GetMethod(e.Data);
-                    if (IsRpcMethod(method))
-                    {
-                        await HandleRpcMessage(method, e.Data);
-                    }
-                    else
-                    {
-                        await HandleNonRpcMessage(method, e.Data);
-                    }
+                    await HandleRpcMessage(method, e.Data);
+                }
+                else
+                {
+                    await HandleNonRpcMessage(method, e.Data);
                 }
             }
             catch (Exception ex)
@@ -575,16 +569,6 @@ namespace NHMCore.Nhmws
             public bool Id { get; set; }
             public bool Success { get; set; }
         }
-
-        private static void ThrowIfWeCannotHanldeRPC()
-        {
-            // throw if pending
-            if (ApplicationStateManager.CalcRigStatus() == RigStatus.Pending)
-            {
-                throw new RpcException($"Cannot handle RPC call Rig is in PENDING state.", ErrorCodeV3.UnableToHandleRpc);
-            }
-        }
-
 
         #region Credentials setters (btc/username, worker, group)
         private static async Task<bool> miningSetUsername(string btc)
@@ -854,45 +838,45 @@ namespace NHMCore.Nhmws
             string worker = null;
             string group = null;
             int rpcId = -1;
-            bool executed = false;
             bool loginNeeded = false;
             ExecutedCall executedCall = null;
-            string rpcAnswer = "";
             try
             {
+                string rpcAnswer = null;
                 _isInRPC.Value = true;
                 dynamic message = JsonConvert.DeserializeObject(data);
                 rpcId = (int?)message.id ?? -1;
 
-                ThrowIfWeCannotHanldeRPC();
+                // throw if pending
+                if (ApplicationStateManager.CalcRigStatus() == RigStatus.Pending)
+                {
+                    throw new RpcException($"Cannot handle RPC call Rig is in PENDING state.", ErrorCodeV3.UnableToHandleRpc);
+                }
                 switch (method)
                 {
                     case "mining.set.username":
                         btc = (string)message.username;
-                        executed = await miningSetUsername(btc);
-                        loginNeeded = executed;
+                        loginNeeded = await miningSetUsername(btc);
                         break;
                     case "mining.set.worker":
                         worker = (string)message.worker;
-                        executed = miningSetWorker(worker);
-                        loginNeeded = executed;
+                        loginNeeded = miningSetWorker(worker);
                         break;
                     case "mining.set.group":
                         group = (string)message.group;
-                        executed = miningSetGroup(group);
-                        loginNeeded = executed;
+                        loginNeeded = miningSetGroup(group);
                         break;
                     case "mining.enable":
-                        executed = await SetDevicesEnabled((string)message.device, true);
+                        await SetDevicesEnabled((string)message.device, true);
                         break;
                     case "mining.disable":
-                        executed = await SetDevicesEnabled((string)message.device, false);
+                        await SetDevicesEnabled((string)message.device, false);
                         break;
                     case "mining.start":
-                        executed = await StartMining((string)message.device);
+                        await StartMining((string)message.device);
                         break;
                     case "mining.stop":
-                        executed = await StopMining((string)message.device);
+                        await StopMining((string)message.device);
                         break;
                     case "mining.set.power_mode":
                         // TODO not supported atm
@@ -904,8 +888,7 @@ namespace NHMCore.Nhmws
                     default:
                         throw new RpcException($"RpcMessage operation not supported for method '{method}'", ErrorCodeV3.UnableToHandleRpc);
                 }
-                var rpcAnswerReturn = !string.IsNullOrEmpty(rpcAnswer) ? rpcAnswer : null;
-                executedCall = new ExecutedCall(rpcId, 0, rpcAnswerReturn);
+                executedCall = new ExecutedCall(rpcId, 0, rpcAnswer);
             }
             catch (RpcException rpcEx)
             {
@@ -928,8 +911,7 @@ namespace NHMCore.Nhmws
                     Send(minerStatusMsg);
                     _lastSendMinerStatusTimestamp.Value = DateTime.UtcNow;
                     // Then executed
-                    var rpcMessage = executedCall.Serialize();
-                    Send(rpcMessage);
+                    Send(JsonConvert.SerializeObject(executedCall));
                     // Login if we have to
                     if (loginNeeded)
                     {
@@ -937,12 +919,6 @@ namespace NHMCore.Nhmws
                     }
                 }
             }
-        }
-
-        private static string GetMethod(string data)
-        {
-            dynamic message = JsonConvert.DeserializeObject(data);
-            return message.method.Value as string;
         }
 
         private static bool IsRpcMethod(string method)

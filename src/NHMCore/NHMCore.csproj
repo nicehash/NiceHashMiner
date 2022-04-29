@@ -171,15 +171,15 @@
     <Compile Include="Mining\Plugins\PluginContainer.cs" />
     <Compile Include="Mining\Plugins\MinerPluginsManager.cs" />
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
-    <Compile Include="Nhmws\ErrorCodeV3.cs" />
-    <Compile Include="Nhmws\ModelsV3\ExchangeRateJson.cs" />
-    <Compile Include="Nhmws\ModelsV3\MarketsMessage.cs" />
-    <Compile Include="Nhmws\ModelsV3\MinerStatusMessage.cs" />
-    <Compile Include="Nhmws\ModelsV3\ExecutedCall.cs" />
-    <Compile Include="Nhmws\ModelsV3\LoginMessage.cs" />
-    <Compile Include="Nhmws\ModelsV3\RpcException.cs" />
-    <Compile Include="Nhmws\NHWebSocketV3.cs" />
-    <Compile Include="Nhmws\StatusCodesV3.cs" />
+    <Compile Include="Nhmws\V3\ErrorCodeV3.cs" />
+    <Compile Include="Nhmws\V3\Models\ExchangeRateJson.cs" />
+    <Compile Include="Nhmws\V3\Models\MarketsMessage.cs" />
+    <Compile Include="Nhmws\V3\Models\MinerStatusMessage.cs" />
+    <Compile Include="Nhmws\V3\Models\ExecutedCall.cs" />
+    <Compile Include="Nhmws\V3\Models\LoginMessage.cs" />
+    <Compile Include="Nhmws\V3\Models\RpcException.cs" />
+    <Compile Include="Nhmws\V3\NHWebSocketV3.cs" />
+    <Compile Include="Nhmws\V3\StatusCodesV3.cs" />
     <Compile Include="Notifications\AvailableNotifications.cs" />
     <Compile Include="Notifications\NotificationAction.cs" />
     <Compile Include="Notifications\Notification.cs" />
@@ -331,7 +331,9 @@
       <Name>NHM.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Nhmws\V4\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

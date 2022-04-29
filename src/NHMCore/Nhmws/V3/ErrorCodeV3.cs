@@ -1,5 +1,5 @@
 ﻿
-namespace NHMCore.Nhmws
+namespace NHMCore.Nhmws.V3
 {
     enum ErrorCodeV3 : int
     {

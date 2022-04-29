@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace NHMCore.Nhmws.ModelsV3
+namespace NHMCore.Nhmws.V3.Models
 {
     internal class ExecutedCall
     {
@@ -13,15 +13,7 @@ namespace NHMCore.Nhmws.ModelsV3
         {
             Params.Add(id);
             Params.Add(code);
-            if (message != null)
-            {
-                Params.Add(message);
-            }
-        }
-
-        public string Serialize()
-        {
-            return JsonConvert.SerializeObject(this);
+            if (message != null) Params.Add(message);
         }
     }
 }

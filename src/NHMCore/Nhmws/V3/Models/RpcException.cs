@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NHMCore.Nhmws.ModelsV3
+namespace NHMCore.Nhmws.V3.Models
 {
     internal class RpcException : Exception
     {

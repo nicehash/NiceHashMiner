@@ -1,5 +1,5 @@
 ﻿
-namespace NHMCore.Nhmws.ModelsV3
+namespace NHMCore.Nhmws.V3.Models
 {
 #pragma warning disable 649, IDE1006
     class LoginMessage

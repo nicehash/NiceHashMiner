@@ -2,7 +2,7 @@ using NHM.Common.Enums;
 using NHM.UUID;
 using NHMCore.Configs;
 using NHMCore.Mining;
-using NHMCore.Nhmws;
+using NHMCore.Nhmws.V3;
 using NHMCore.Utils;
 using System;
 using System.Linq;

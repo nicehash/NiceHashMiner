@@ -3,7 +3,7 @@ using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
-using NHMCore.Nhmws;
+using NHMCore.Nhmws.V3;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
