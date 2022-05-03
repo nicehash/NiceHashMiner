@@ -37,20 +37,10 @@
 
 ### NVIDIA and AMD
 
-* GMiner
 * LolMiner
 * NanoMiner
-
-### NVIDIA
-
+* Excavator
 * NBMiner
-* T-Rex
-* TT-Miner
-* CryptoDredge
-
-### AMD
-
-* TeamRedMiner
 
 ### CPU
 
