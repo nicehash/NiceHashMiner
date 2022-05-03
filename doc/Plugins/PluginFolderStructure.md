@@ -5,7 +5,7 @@ In each plugin folder there will be **bins** and **internals** folder.<br>
 
 ```
 ├───miner_plugins
-│   ├───XmrStak
+│   ├───NBMiner
 │   │   ├───bins
 │   │   └───internals
 ```

@@ -9,7 +9,6 @@ Example file for Xmr-Stak:
 {
   "use_user_settings": false,
   "default_system_environment_variables": {
-    "XMRSTAK_NOWAIT": "1",
     "GPU_MAX_ALLOC_PERCENT": "100",
     "GPU_SINGLE_ALLOC_PERCENT": "100",
     "GPU_MAX_HEAP_SIZE": "100",

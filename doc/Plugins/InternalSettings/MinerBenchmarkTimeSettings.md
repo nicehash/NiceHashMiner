@@ -16,7 +16,6 @@ Example file:
     },
     "time_per_algorithm_s":  {
         "Quick": {
-            "X16R": 40,
             "DaggerHashimoto": 60
         },
         "Standard": {

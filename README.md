@@ -158,14 +158,14 @@ Examples:
 --------
 ```
 {
-    "Name": "TRex",
+    "Name": "NBMiner",
     "PluginUUID": "03f80500-94ec-11ea-a64d-17be303ea466",
     "PluginVersion": "11.0",
     "AlgorithmIDs": "KAWPOW",
     "Speeds": [
       8841376.5
     ],
-    "ExtraLaunchParameters": "--intensity 20",
+    "ExtraLaunchParameters": "",
     "Enabled": true,
     "PowerUsage": 113.81357777777778
 }
