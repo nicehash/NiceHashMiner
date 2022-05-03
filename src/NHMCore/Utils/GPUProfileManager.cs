@@ -29,8 +29,7 @@ namespace NHMCore.Utils
         public bool ServiceEnabled { get; set; } = false;
         private static object _startStopLock = new object();
         public static GPUProfileManager Instance { get; } = new GPUProfileManager();
-        public List<string> SupportedDeviceNames { get; set; } = new List<string> { "1080", "1080 Ti", "Titan Xp", "TITAN Xp" };
-
+        public List<string> SupportedDeviceNames { get; set; } = new List<string> { "1080", "1080 ti", "titan xp"};
         public void Init()
         {
             if (!TriedInit)
@@ -53,6 +52,7 @@ namespace NHMCore.Utils
                     OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
                 }
                 Logger.Info(Tag, $"Init: {Success}");
+                Logger.Info(Tag, $"System contains supported devices: {SystemContainsSupportedDevices}");
             }
             catch (Exception ex)
             {
@@ -84,10 +84,9 @@ namespace NHMCore.Utils
             mtString = mtString.Trim(';');
             return mtString;
         }
-
         public void Start(IEnumerable<MiningPair> miningPairs)
         {
-            if (!GPUProfileManager.Instance.CanUseProfiles) return;
+            if (!CanUseProfiles) return;
             lock (_startStopLock)
             {
                 List<(ComputeDevice device, Device profile)> devicesWithProfilesToOptimize = new List<(ComputeDevice, Device)>();
@@ -105,13 +104,14 @@ namespace NHMCore.Utils
                 int setCount = 0;
                 foreach (var gpuProfilePair in devicesWithProfilesToOptimize)
                 {
-                    if (FindProfileForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile)) setCount++;
+                    if (FindProfileNumForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile)) setCount++;
                 }
                 Logger.Info(Tag, $"Optimized {setCount}/{miningPairs.Count()} devices");
             }
         }
         public void Stop(IEnumerable<MiningPair> miningPairs = null)
         {
+            if(!CanUseProfiles) return;
             lock (_startStopLock)
             {
                 var unique = miningPairs.GroupBy(x => x.Device.UUID).Select(y => y.First()).Distinct();
@@ -126,15 +126,31 @@ namespace NHMCore.Utils
         }
         private Device GetDeviceProfile(string deviceName)
         {
-            var foundProfiles = ProfileData.devices.Where(x => deviceName.Contains(x.name));
-            if (foundProfiles == null) return null;
-            if (foundProfiles.Any(item => item.name.Contains("Ti") || item.name.Contains("Xp")))
+            deviceName = "MYMOM GeForce GTX 1080 Ti";
+            var foundProfiles = ProfileData.devices
+                .Where(x => x.name != null)
+                .Where(x => deviceName.Contains(x.name));
+            if (foundProfiles.Count() == 0) return null;
+            (int matchCount, Device profile) bestMatch = (0, null);
+            foreach(var profile in foundProfiles)
             {
-                return foundProfiles.Where(prof => prof.name.Contains("Ti") || prof.name.Contains("Xp")).FirstOrDefault();
+                var split = profile.name.Split(' ');
+                var currentMatch = split.Count(item => deviceName.Contains(item));
+                if(currentMatch > bestMatch.matchCount)
+                {
+                    bestMatch.matchCount = currentMatch;
+                    bestMatch.profile = profile;
+                }
             }
-            return foundProfiles.Where(prof => !prof.name.Contains("Ti") && !prof.name.Contains("Xp")).FirstOrDefault();
+            if (bestMatch.profile != null && 
+                SupportedDeviceNames.Any(item => bestMatch.profile.name.ToLower().Split(' ').Last() == item.ToLower().Split(' ').Last()))
+            {
+                Logger.Info(Tag, $"{deviceName} can be optimized");
+                return bestMatch.profile;
+            }
+            return null;
         }
-        public bool FindProfileForDeviceAndSetIfExists(ComputeDevice device, Device profile)
+        public bool FindProfileNumForDeviceAndSetIfExists(ComputeDevice device, Device profile)
         {
             foreach (var profileID in ExistingProfiles.Reverse())
             {
@@ -144,19 +160,18 @@ namespace NHMCore.Utils
                 if (memoryTimings == string.Empty) continue;
                 var ret = device.TrySetMemoryTimings(memoryTimings);
                 //TODO SET OTHER STUFF FOR DEVICE HERE
-                if (ret >= RET_OK) return true;//todo check returns
-                return false;//todo should check amount of set timings and reset if not all set?
+                if (ret >= RET_OK) return true;
+                return false;
             }
             return false;
         }
-
         protected bool IsSupportedDeviceName(string deviceName)
         {
-            var isInList = SupportedDeviceNames.Any(dev => deviceName.Contains(dev));
-            return ProfileData.devices
-                .Where(dev => dev.name != null)
-                .Any(dev => deviceName.Contains(dev.name)) && isInList;
+            if(GetDeviceProfile(deviceName) == null) return false;
+            return true;
         }
+
+
         #region serialization
         public class Profiles
         {
