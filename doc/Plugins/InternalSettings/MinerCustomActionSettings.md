@@ -38,9 +38,6 @@ Right click the `test.bat` and edit in any text editor. Paste in the following c
 ```BAT
 tasklist /nh /fi "imagename eq ETHlargementPill-r2.exe" | find /i "ETHlargementPill-r2.exe" > nul || (start ETHlargementPill-r2.exe)
 ```
-<br />
-![Add command to test.bat](images/minerCustomActionSettings3.png) <br />
-
 The above bat script checks if the ethlargement process is already running, and starts it only if it is not. Please be aware that the name of the executable may change so you will need to change all references to the .exe accordingly.
 
 Open NHM and go to the `Plugins` tab and select the plugin you wish to open ethlargement with, open the context menu and click on `Show internals`: <br />
@@ -66,9 +63,6 @@ Paste the following to `MinerCustomActionSettings.json` and save the file:
   }
 }
 ``` 
-<br />
-![modified](images/minerCustomActionSettings7.png) <br />
-
 
 ### IMPORTANT:
 - You will be prompted for administrator rights when `ETHlargementPill-r2.exe` starts!!
