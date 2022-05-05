@@ -9,6 +9,7 @@ using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHM.Common.Device;
 using NHMCore.Configs;
+using NHM.Common.Enums;
 
 namespace NHMCore.Utils
 {
@@ -32,19 +33,14 @@ namespace NHMCore.Utils
         public List<string> SupportedDeviceNames { get; set; } = new List<string> { "1080", "1080 ti", "titan xp"};
         public void Init()
         {
-            if (!TriedInit)
-            {
-                TriedInit = true;
-            }
-            else return;
+            if (TriedInit) return;
+            TriedInit = true;
             try
             {
-                using (var sr = new StreamReader(Paths.AppRootPath("GPUprofiles.json")))
-                {
-                    var raw = sr.ReadToEnd();
-                    ProfileData = JsonConvert.DeserializeObject<Profiles>(raw);
-                    if (ProfileData != null) SuccessInit = true;
-                }
+                using var sr = new StreamReader(Paths.AppRootPath("GPUprofiles.json"));
+                var raw = sr.ReadToEnd();
+                ProfileData = JsonConvert.DeserializeObject<Profiles>(raw);
+                if (ProfileData != null) SuccessInit = true;
                 if (SuccessInit)
                 {
                     _systemContainsSupportedDevices = AvailableDevices.Devices.Any(dev => IsSupportedDeviceName(dev.Name));
@@ -62,27 +58,35 @@ namespace NHMCore.Utils
 
         public bool CanUseProfiles
         {
-            get 
-            { 
-                return MiscSettings.Instance.UseOptimizationProfiles 
+            get
+            {
+                return MiscSettings.Instance.UseOptimizationProfiles
                     && SuccessInit
                     && IsSystemElevated
-                    && SystemContainsSupportedDevices; 
+                    && SystemContainsSupportedDevices;
             }
+        }
+
+        private List<CUDADevice> GetViableCudaDevices(IEnumerable<MiningPair> miningPairs)
+        {
+            return miningPairs
+                    .GroupBy(x => x.Device.UUID)
+                    .Select(g => g.First())
+                    .Distinct()
+                    .Where(dev => dev.Device is CUDADevice)
+                    .Where(dev => dev.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto)
+                    .Select(dev => dev.Device)
+                    .Cast<CUDADevice>()
+                    .ToList();
         }
 
         public string BuildMTString(OptimizationProfile prof)
         {
             var mtString = string.Empty;
-            if (prof.mt != null)
-            {
-                foreach (var mtOpt in prof.mt)
-                {
-                    if (mtOpt.Count == 2) mtString += mtOpt[0] + "=" + mtOpt[1] + ";";
-                }
-            }
-            mtString = mtString.Trim(';');
-            return mtString;
+            if (prof.mt == null) return string.Empty;
+            return string.Join(";", prof.mt
+                .Where(m => m.Count == 2)
+                .Select(item => string.Join("=", new[] { item[0], item[1] })));
         }
         public void Start(IEnumerable<MiningPair> miningPairs)
         {
@@ -90,16 +94,12 @@ namespace NHMCore.Utils
             lock (_startStopLock)
             {
                 List<(ComputeDevice device, Device profile)> devicesWithProfilesToOptimize = new List<(ComputeDevice, Device)>();
-                var unique = miningPairs.GroupBy(x => x.Device.UUID).Select(y => y.First()).Distinct();
+                var unique = GetViableCudaDevices(miningPairs);
                 foreach (var gpu in unique)
                 {
-                    if (gpu.Device is CUDADevice cuda && 
-                        gpu.Algorithm.FirstAlgorithmType == NHM.Common.Enums.AlgorithmType.DaggerHashimoto)
-                    {
-                        var profileForDevice = GetDeviceProfile(cuda.Name);
-                        var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == cuda.UUID).FirstOrDefault();
-                        if (profileForDevice != null && computeDev != null) devicesWithProfilesToOptimize.Add((computeDev, profileForDevice));
-                    }
+                    var profileForDevice = GetDeviceProfile(gpu.Name);
+                    var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == gpu.UUID).FirstOrDefault();
+                    if (profileForDevice != null && computeDev != null) devicesWithProfilesToOptimize.Add((computeDev, profileForDevice));
                 }
                 Logger.Info(Tag, $"Can optimize {devicesWithProfilesToOptimize.Count}/{miningPairs.Count()} devices");
                 if (devicesWithProfilesToOptimize.Count == 0) return;
@@ -116,15 +116,11 @@ namespace NHMCore.Utils
             if(!CanUseProfiles) return;
             lock (_startStopLock)
             {
-                var unique = miningPairs.GroupBy(x => x.Device.UUID).Select(y => y.First()).Distinct();
+                var unique = GetViableCudaDevices(miningPairs);
                 foreach (var gpu in unique)
                 {
-                    if (gpu.Device is CUDADevice cuda &&
-                        gpu.Algorithm.FirstAlgorithmType == NHM.Common.Enums.AlgorithmType.DaggerHashimoto)
-                    {
-                        var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == cuda.UUID).FirstOrDefault();
-                        if (computeDev != null) computeDev.TryResetMemoryTimings();
-                    }
+                    var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == gpu.UUID).FirstOrDefault();
+                    if (computeDev != null) computeDev.TryResetMemoryTimings();
                 }
                 Logger.Info(Tag, "Gpu settings reset back to normal");
             }
@@ -146,7 +142,7 @@ namespace NHMCore.Utils
                     bestMatch.profile = profile;
                 }
             }
-            if (bestMatch.profile != null && 
+            if (bestMatch.profile != null &&
                 SupportedDeviceNames.Any(item => bestMatch.profile.name.ToLower().Split(' ').Last() == item.ToLower().Split(' ').Last()))
             {
                 Logger.Info(Tag, $"{deviceName} can be optimized");

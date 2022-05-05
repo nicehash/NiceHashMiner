@@ -8,9 +8,9 @@ namespace NHMCore.Notifications
         Market,
         Profit,
         MonitoringNvidiaElevate,
-        [Obsolete]
+        [Obsolete("Unused group, ethlargement removed", true)]
         EthlargementElevate,
-        [Obsolete]
+        [Obsolete("Unused group, ethlargement removed", true)]
         EthlargementNotEnabled,
         ConnectionLost,
         NoEnabledDevice,
