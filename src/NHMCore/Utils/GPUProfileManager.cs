@@ -48,7 +48,7 @@ namespace NHMCore.Utils
                 if (Success)
                 {
                     _systemContainsSupportedDevices = AvailableDevices.Devices.Any(dev => IsSupportedDeviceName(dev.Name));
-                    OnPropertyChanged(nameof(SystemContainsSupportedDevices));//todo probably not needed
+                    OnPropertyChanged(nameof(SystemContainsSupportedDevices));
                     OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
                 }
                 Logger.Info(Tag, $"Init: {Success}");
@@ -93,11 +93,13 @@ namespace NHMCore.Utils
                 var unique = miningPairs.GroupBy(x => x.Device.UUID).Select(y => y.First()).Distinct();
                 foreach (var gpu in unique)
                 {
-                    if (gpu.Device is not CUDADevice cuda || 
-                        gpu.Algorithm.FirstAlgorithmType != NHM.Common.Enums.AlgorithmType.DaggerHashimoto) continue;
-                    var profileForDevice = GetDeviceProfile(cuda.Name);
-                    var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == cuda.UUID).FirstOrDefault();
-                    if (profileForDevice != null && computeDev != null) devicesWithProfilesToOptimize.Add((computeDev, profileForDevice));
+                    if (gpu.Device is CUDADevice cuda && 
+                        gpu.Algorithm.FirstAlgorithmType == NHM.Common.Enums.AlgorithmType.DaggerHashimoto)
+                    {
+                        var profileForDevice = GetDeviceProfile(cuda.Name);
+                        var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == cuda.UUID).FirstOrDefault();
+                        if (profileForDevice != null && computeDev != null) devicesWithProfilesToOptimize.Add((computeDev, profileForDevice));
+                    }
                 }
                 Logger.Info(Tag, $"Can optimize {devicesWithProfilesToOptimize.Count}/{miningPairs.Count()} devices");
                 if (devicesWithProfilesToOptimize.Count == 0) return;
@@ -117,16 +119,18 @@ namespace NHMCore.Utils
                 var unique = miningPairs.GroupBy(x => x.Device.UUID).Select(y => y.First()).Distinct();
                 foreach (var gpu in unique)
                 {
-                    if (gpu.Device is not CUDADevice cuda) continue;
-                    var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == cuda.UUID).FirstOrDefault();
-                    if (computeDev != null) computeDev.TryResetMemoryTimings();
+                    if (gpu.Device is CUDADevice cuda &&
+                        gpu.Algorithm.FirstAlgorithmType == NHM.Common.Enums.AlgorithmType.DaggerHashimoto)
+                    {
+                        var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == cuda.UUID).FirstOrDefault();
+                        if (computeDev != null) computeDev.TryResetMemoryTimings();
+                    }
                 }
                 Logger.Info(Tag, "Gpu settings reset back to normal");
             }
         }
         private Device GetDeviceProfile(string deviceName)
         {
-            deviceName = "MYMOM GeForce GTX 1080 Ti";
             var foundProfiles = ProfileData.devices
                 .Where(x => x.name != null)
                 .Where(x => deviceName.Contains(x.name));
@@ -156,7 +160,7 @@ namespace NHMCore.Utils
             {
                 var foundProfile = profile.op.Where(x => x.id == profileID).FirstOrDefault();
                 if (foundProfile == null) continue;
-                var memoryTimings = GPUProfileManager.Instance.BuildMTString(foundProfile);
+                var memoryTimings = BuildMTString(foundProfile);
                 if (memoryTimings == string.Empty) continue;
                 var ret = device.TrySetMemoryTimings(memoryTimings);
                 //TODO SET OTHER STUFF FOR DEVICE HERE
