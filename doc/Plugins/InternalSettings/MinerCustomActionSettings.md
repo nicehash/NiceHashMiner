@@ -52,7 +52,7 @@ Navigate to the folder `internals` <br />
 
 ![internals](images/minerCustomActionSettings5.png) <br />
 
-Select `MinerCustomActionSettings.json` <br />
+Open `MinerCustomActionSettings.json` <br />
 
 ![minerCustomActionSettings file](images/minerCustomActionSettings6.png) <br />
 
@@ -70,7 +70,7 @@ Paste the following to `MinerCustomActionSettings.json` and save the file:
   }
 }
 ``` 
-Restart NHM and start mining on the modified plugin. If you did everything correctly, you will see Ethlargement window open after you click start mining.
+Restart NHM and start mining on the modified plugin. If you did everything correctly, you will see Ethlargement window open after you click `start mining`.
 
 ### IMPORTANT:
 - You will be prompted for administrator rights when `ETHlargementPill-r2.exe` starts!!
