@@ -19,7 +19,7 @@ namespace NHMCore.Utils
         private static readonly int RET_OK = 0;
         private readonly string Tag = "GPUProfileManager";
         private bool TriedInit = false;
-        private bool Success = false;
+        private bool SuccessInit = false;
         private Profiles ProfileData = null;
         public readonly int[] ExistingProfiles = { 1, 2, 3, 4, 11, 12, 101 };
         public bool IsSystemElevated => Helpers.IsElevated;
@@ -43,15 +43,15 @@ namespace NHMCore.Utils
                 {
                     var raw = sr.ReadToEnd();
                     ProfileData = JsonConvert.DeserializeObject<Profiles>(raw);
-                    if (ProfileData != null) Success = true;
+                    if (ProfileData != null) SuccessInit = true;
                 }
-                if (Success)
+                if (SuccessInit)
                 {
                     _systemContainsSupportedDevices = AvailableDevices.Devices.Any(dev => IsSupportedDeviceName(dev.Name));
                     OnPropertyChanged(nameof(SystemContainsSupportedDevices));
                     OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
                 }
-                Logger.Info(Tag, $"Init: {Success}");
+                Logger.Info(Tag, $"Init: {SuccessInit}");
                 Logger.Info(Tag, $"System contains supported devices: {SystemContainsSupportedDevices}");
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace NHMCore.Utils
             get 
             { 
                 return MiscSettings.Instance.UseOptimizationProfiles 
-                    && Success 
+                    && SuccessInit
                     && IsSystemElevated
                     && SystemContainsSupportedDevices; 
             }
