@@ -28,13 +28,15 @@ Example file (run calculator):
 
 ## How to use Ethlargement-Pill (even though it has been removed)
 
-Since Ethlargement-pill was removed from the official NHM release you must download the executable yourself (here) -> https://github.com/Virosa/ETHlargementPill/raw/master/ETHlargementPill-r2.exe
+Since Ethlargement-pill was removed from the official NHM release you must download the executable yourself [HERE](https://github.com/Virosa/ETHlargementPill/raw/master/ETHlargementPill-r2.exe).
+
 Place the downloaded .exe in the installation directory of your NHM.
-In order to ensure that only one ethlargement process is running, create a .bat file in the NHM installation directory
+In order to ensure that only one ethlargement process is running, create a .bat file in the NHM installation directory:
 ```BAT
 tasklist /nh /fi "imagename eq ETHlargementPill-r2.exe" | find /i "ETHlargementPill-r2.exe" > nul || (start ETHlargementPill-r2.exe)
 ```
-The above bat script checks if the ethlargement process is already running, and start it only if it is not.
+The above bat script checks if the ethlargement process is already running, and starts it only if it is not.
+
 Configure the `algorithm_custom_actions` in your desired plugin:
 ```JSON
 {
@@ -49,7 +51,7 @@ Configure the `algorithm_custom_actions` in your desired plugin:
   }
 }
 ```
-###IMPORTANT:
+### IMPORTANT:
 - You will be prompted for administrator rights when `ETHlargementPill-r2.exe` starts!!
 - After making changes to the mentioned files, please restart NHM.
 - After you are done with mining, manually close the Ethlargement-Pill window.
