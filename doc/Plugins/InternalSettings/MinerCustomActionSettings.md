@@ -28,22 +28,36 @@ Example file (run calculator):
 
 ## How to use Ethlargement-Pill (even though it has been removed)
 
-Since Ethlargement-pill was removed from the official NHM release you must download the executable yourself [HERE](https://github.com/Virosa/ETHlargementPill/raw/master/ETHlargementPill-r2.exe).
+Since Ethlargement-pill was removed from the official NHM release you must download the executable yourself.
 
 Place the downloaded .exe in the installation directory of your NHM.
-In order to ensure that only one ethlargement process is running, create a .bat file in the NHM installation directory:
+![Ethpill in install dir](images/minerCustomActionSettings1.png)
+In order to ensure that only one ethlargement process is running, create a .bat file in the NHM installation directory (we will name it `test.bat`):
+![Create test.bat](images/minerCustomActionSettings2.png)
+Right click the `test.bat` and edit in any text editor. Paste in the following command and save the file:
 ```BAT
 tasklist /nh /fi "imagename eq ETHlargementPill-r2.exe" | find /i "ETHlargementPill-r2.exe" > nul || (start ETHlargementPill-r2.exe)
 ```
-The above bat script checks if the ethlargement process is already running, and starts it only if it is not.
+![Add command to test.bat](images/minerCustomActionSettings3.png)
 
-Configure the `algorithm_custom_actions` in your desired plugin:
+The above bat script checks if the ethlargement process is already running, and starts it only if it is not. Please be aware that the name of the executable may change so you will need to change all references to the .exe accordingly.
+
+Open NHM and go to the `Plugins` tab and select the plugin you wish to open ethlargement with, open the context menu and click on `Show internals`:
+![Path to internals](images/minerCustomActionSettings4.png)
+
+Navigate to the folder `internals`
+![internals](images/minerCustomActionSettings5.png)
+
+Select `MinerCustomActionSettings.json`
+![minerCustomActionSettings file](images/minerCustomActionSettings6.png)
+
+Paste the following to `MinerCustomActionSettings.json` and save the file:
 ```JSON
 {
   "use_user_settings": true,
   "algorithm_custom_actions": {
       "DaggerHashimoto": {
-          "start": "YOUR_BAT_SCRIPT.bat",
+          "start": "test.bat",
           "wait_start_exec": true,
           "stop": "",
           "wait_stop_exec": false
@@ -51,6 +65,9 @@ Configure the `algorithm_custom_actions` in your desired plugin:
   }
 }
 ```
+![minerCustomActionSettings file inside](images/minerCustomActionSettings7.png)
+
+
 ### IMPORTANT:
 - You will be prompted for administrator rights when `ETHlargementPill-r2.exe` starts!!
 - After making changes to the mentioned files, please restart NHM.
