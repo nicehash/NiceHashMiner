@@ -67,7 +67,7 @@ Paste the following to `MinerCustomActionSettings.json` and save the file:
 }
 ``` 
 <br />
-![minerCustomActionSettings modified](images/minerCustomActionSettings7.png) <br />
+![modified](images/minerCustomActionSettings7.png) <br />
 
 
 ### IMPORTANT:
