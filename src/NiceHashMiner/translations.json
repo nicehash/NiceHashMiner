@@ -2133,12 +2133,6 @@
       "ru": "Перезагрузка {0}",
       "zh_cn": "正在重启 {0}"
     },
-    "Run Ethlargement": {
-      "ru": "Запустить Ethlargement"
-    },
-    "Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.": {
-      "ru": "Запустите Ethlargement для алгоритмов Dagger, когда присутствуют поддерживаемые видеокарты.\nТребует запуска от имени администратора и включения сторонних майнеров."
-    },
     "Run With Windows": {
       "bg": "Стартирайте с Windows",
       "es": "Ejecutar con Windows",
@@ -3216,12 +3210,6 @@
     "Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {
       "ru": "Настройка режима энергопотребления отключена из-за отсутствия разрешений. Если вы хотите использовать эту функцию, вам необходимо запустить программу от имени Администратора."
     },
-    "Ethlargement-Pill Settings Insufficient Permissions": {
-      "ru": "Недостаточно разрешений для настройки таблетки Ethlargement"
-    },
-    "Can't run Ethlargement-Pill due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {
-      "ru": "Невозможно запустить Ethlargement-Pill из-за отсутствия разрешений. Если вы хотите использовать эту функцию, вам необходимо запустить программу от имени Администратора."
-    },
     "Run As Administrator": {
       "ru": "Запуск от имени Администратора"
     },
@@ -3536,9 +3524,6 @@
     },
     "When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state. This will slightly increase performance on certain algorithms. This feature needs administrator privileges to be activated.": {
       "ru": "Если отмечено, NiceHash Miner изменит все поддерживаемые NVidia GPU в статус P0. Это немного увеличит производительность на некоторых алгоритмах. Требуются права администратора."
-    },
-    "When checked, NiceHash Miner will run Ethlargement for Dagger algorithms when supported GPUs are present. Requires running NHML as admin and enabling 3rd-party miners.": {
-      "ru": "Если отмечено, NiceHash Miner запустит Ethlargement для алгоритмов Dagger, если есть поддерживаемые видеокарты. Требуются права администратора и включение сторонних майнеров."
     },
     "Fixed part of minimal time (in seconds) before miner switches algorithm.": {
       "ru": "Фиксированная часть минимального времени в секундах перед переключением алгоритма майнером."
@@ -4057,12 +4042,6 @@
     "DEMO mode will not earn Bitcoins!": {
       "ru": "В режиме ДЕМО не зарабатываются биткоины!"
     },
-    "EthLargement-Pill not enabled": {
-      "ru": "EthLargement-Pill не включен"
-    },
-    "EthLargement-Pill is not enabled. Enable it for 50% higher hashrates. Run NiceHash Miner as an Administrator and enable Run Ethlargement in advanced settings.": {
-      "ru": "EthLargement-Pill не включен. Включите для увеличения скорости майнинга на 50%. Запустите NiceHash от имени администратора и включите Запустить Ethlargement в расширенных настройках."
-    },
     "Check this setting if you would like NiceHash Miner to check for missing GPUs every 5 minutes.": {
       "ru": "Включите эту настройку, если вы хотели бы, чтобы NiceHash Miner каждые 5 минут проверял, работают ли видеокарты."
     },
@@ -4167,6 +4146,21 @@
     },
     "This plugin is not compatible with NiceHash miner. Please update this plugin to the latest version.": {
 
+    },
+    "Optimization profiles Insufficient Permissions":{
+    
+    },
+    "Can't run optimization profiles due to insufficient permissions. If you want to use this feature you need to run as Administrator.":{
+    
+    },
+    "Optimization profiles not enabled":{
+    
+    },
+    "Optimization profiles are not enabled. Enable for optimization of some GPUs for a bigger hash rate. Run NiceHash Miner as an Administrator and enable Optimization profiles in advanced settings.":{
+    
+    },
+    "When checked, NiceHash Miner will use optimization profiles for Dagger algorithms when supported GPUs are present. Requires running NHM as admin and enabling 3rd-party miners.":{
+    
     }
   }
 } 
