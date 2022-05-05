@@ -92,7 +92,6 @@ namespace NHMCore
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
                 OutsideProcessMonitor.Init(ExitApplication.Token);
-                GPUProfileManager.Init();
                 // add devices
                 string getDeviceNameCount(DeviceType deviceType, int index) => 
                     deviceType switch
@@ -236,19 +235,6 @@ namespace NHMCore
                 //    }
                 //}
 
-                // show notification if EthPill could be running and it is not
-                if (EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevicesNotSystemElevated)
-                {
-                    if (MiscSettings.Instance.UseEthlargement)
-                    {
-                        AvailableNotifications.CreateEthlargementElevateInfo();
-                    }
-                    else
-                    {
-                        AvailableNotifications.CreateEthlargementNotEnabledInfo();
-                    }
-                }
-
                 // fire up mining manager loop
                 var username = CredentialValidators.ValidateBitcoinAddress(btc) ? CreateUsername(btc, RigID()) : DemoUser.BTC;
                 MiningManager.StartLoops(ExitApplication.Token, username);
@@ -278,6 +264,12 @@ namespace NHMCore
                 {
                     MiningSettings.Instance.DeviceIndex = 0;
                     AvailableDevices.GPUs.FirstOrDefault().PauseMiningWhenGamingMode = true;
+                }
+                GPUProfileManager.Instance.Init();
+                if (GPUProfileManager.Instance.SystemContainsSupportedDevicesNotSystemElevated)
+                {
+                    if (MiscSettings.Instance.UseOptimizationProfiles) AvailableNotifications.CreateOptimizationProfileElevateInfo();
+                    else AvailableNotifications.CreateOptimizationProfileNotEnabledInfo();
                 }
             }
             catch (Exception e)

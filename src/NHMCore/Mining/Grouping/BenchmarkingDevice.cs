@@ -59,15 +59,14 @@ namespace NHMCore.Mining.Grouping
                     var plugin = algo.PluginContainer;
                     var miner = plugin.CreateMiner();
 
-                    // check ethlargement
-                    EthlargementIntegratedPlugin.Instance.Start(miningPairs);
+                    GPUProfileManager.Instance.Start(miningPairs);
                     miner.InitMiningPairs(miningPairs);
                     // fill service since the benchmark might be online. DemoUser.BTC must be used
                     miner.InitMiningLocationAndUsername("auto", DemoUser.BTC);
                     powerHelper.Start();
                     algo.ComputeDevice.State = DeviceState.Benchmarking;
                     var result = await miner.StartBenchmark(stop, BenchmarkManagerState.Instance.SelectedBenchmarkType);
-                    EthlargementIntegratedPlugin.Instance.Stop(miningPairs);
+                    GPUProfileManager.Instance.Stop(miningPairs);
                     if (stop.IsCancellationRequested) return false;
 
                     algo.IsReBenchmark = false;
@@ -89,7 +88,7 @@ namespace NHMCore.Mining.Grouping
             }
             finally
             {
-                EthlargementIntegratedPlugin.Instance.Stop(miningPairs);
+                GPUProfileManager.Instance.Stop(miningPairs);
                 algo.ClearBenchmarkPending();
                 algo.IsBenchmarking = false;
             }

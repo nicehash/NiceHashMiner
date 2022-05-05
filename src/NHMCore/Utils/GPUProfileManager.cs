@@ -4,86 +4,175 @@ using Newtonsoft.Json;
 using NHM.Common;
 using System.IO;
 using System.Linq;
-
+using NHM.MinerPluginToolkitV1.Interfaces;
+using NHM.MinerPlugin;
+using NHMCore.Mining;
+using NHM.Common.Device;
+using NHMCore.Configs;
+using NHM.Common.Enums;
 
 namespace NHMCore.Utils
 {
-    public static class GPUProfileManager
+    public class GPUProfileManager : NotifyChangedBase, IBackgroundService
     {
-        public static readonly int NDEF = Int32.MinValue;
-        private static readonly string Tag = "GPUProfileManager";
-        private static bool TriedInit = false;
-        private static bool Success = false;
-        public static Profiles ProfileData = null;
-        public static readonly int[] ExistingProfiles = { 1, 2, 3, 4, 11, 12, 101 };
-
-        public static bool CanUseProfiles
+        private GPUProfileManager() { }
+        private static readonly int NDEF = Int32.MinValue;
+        private static readonly int RET_OK = 0;
+        private readonly string Tag = "GPUProfileManager";
+        private bool TriedInit = false;
+        private bool SuccessInit = false;
+        private Profiles ProfileData = null;
+        public readonly int[] ExistingProfiles = { 1, 2, 3, 4, 11, 12, 101 };
+        public bool IsSystemElevated => Helpers.IsElevated;
+        private bool _systemContainsSupportedDevices = false;
+        public bool SystemContainsSupportedDevices => _systemContainsSupportedDevices;
+        public bool SystemContainsSupportedDevicesNotSystemElevated => SystemContainsSupportedDevices && !IsSystemElevated;
+        public bool ServiceEnabled { get; set; } = false;
+        private static object _startStopLock = new object();
+        public static GPUProfileManager Instance { get; } = new GPUProfileManager();
+        public List<string> SupportedDeviceNames { get; set; } = new List<string> { "1080", "1080 ti", "titan xp"};
+        public void Init()
         {
-            get { return TriedInit && Success; }
-        }
-        public static void Init()
-        {
-            if (!TriedInit)
-            {
-                TriedInit = true;
-            }
-            else return;
+            if (TriedInit) return;
+            TriedInit = true;
             try
             {
-                string path = Paths.RootPath("app/");
-                using (var sr = new StreamReader(path + "GPUprofiles.json"))
+                using var sr = new StreamReader(Paths.AppRootPath("GPUprofiles.json"));
+                var raw = sr.ReadToEnd();
+                ProfileData = JsonConvert.DeserializeObject<Profiles>(raw);
+                if (ProfileData != null) SuccessInit = true;
+                if (SuccessInit)
                 {
-                    var raw = sr.ReadToEnd();
-                    ProfileData = JsonConvert.DeserializeObject<Profiles>(raw);
-                    if (ProfileData != null) Success = true;
+                    _systemContainsSupportedDevices = AvailableDevices.Devices.Any(dev => IsSupportedDeviceName(dev.Name));
+                    OnPropertyChanged(nameof(SystemContainsSupportedDevices));
+                    OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
+                }
+                Logger.Info(Tag, $"Init: {SuccessInit}");
+                Logger.Info(Tag, $"System contains supported devices: {SystemContainsSupportedDevices}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(Tag, ex.Message);
+            }
+        }
+
+        public bool CanUseProfiles
+        {
+            get
+            {
+                return MiscSettings.Instance.UseOptimizationProfiles
+                    && SuccessInit
+                    && IsSystemElevated
+                    && SystemContainsSupportedDevices;
+            }
+        }
+
+        private List<CUDADevice> GetViableCudaDevices(IEnumerable<MiningPair> miningPairs)
+        {
+            return miningPairs
+                    .GroupBy(x => x.Device.UUID)
+                    .Select(g => g.First())
+                    .Distinct()
+                    .Where(dev => dev.Device is CUDADevice)
+                    .Where(dev => dev.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto)
+                    .Select(dev => dev.Device)
+                    .Cast<CUDADevice>()
+                    .ToList();
+        }
+
+        public string BuildMTString(OptimizationProfile prof)
+        {
+            var mtString = string.Empty;
+            if (prof.mt == null) return string.Empty;
+            return string.Join(";", prof.mt
+                .Where(m => m.Count == 2)
+                .Select(item => string.Join("=", new[] { item[0], item[1] })));
+        }
+        public void Start(IEnumerable<MiningPair> miningPairs)
+        {
+            if (!CanUseProfiles) return;
+            lock (_startStopLock)
+            {
+                List<(ComputeDevice device, Device profile)> devicesWithProfilesToOptimize = new List<(ComputeDevice, Device)>();
+                var unique = GetViableCudaDevices(miningPairs);
+                foreach (var gpu in unique)
+                {
+                    var profileForDevice = GetDeviceProfile(gpu.Name);
+                    var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == gpu.UUID).FirstOrDefault();
+                    if (profileForDevice != null && computeDev != null) devicesWithProfilesToOptimize.Add((computeDev, profileForDevice));
+                }
+                Logger.Info(Tag, $"Can optimize {devicesWithProfilesToOptimize.Count}/{miningPairs.Count()} devices");
+                if (devicesWithProfilesToOptimize.Count == 0) return;
+                int setCount = 0;
+                foreach (var gpuProfilePair in devicesWithProfilesToOptimize)
+                {
+                    if (FindProfileNumForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile)) setCount++;
+                }
+                Logger.Info(Tag, $"Optimized {setCount}/{miningPairs.Count()} devices");
+            }
+        }
+        public void Stop(IEnumerable<MiningPair> miningPairs = null)
+        {
+            if(!CanUseProfiles) return;
+            lock (_startStopLock)
+            {
+                var unique = GetViableCudaDevices(miningPairs);
+                foreach (var gpu in unique)
+                {
+                    var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == gpu.UUID).FirstOrDefault();
+                    if (computeDev != null) computeDev.TryResetMemoryTimings();
+                }
+                Logger.Info(Tag, "Gpu settings reset back to normal");
+            }
+        }
+        private Device GetDeviceProfile(string deviceName)
+        {
+            var foundProfiles = ProfileData.devices
+                .Where(x => x.name != null)
+                .Where(x => deviceName.Contains(x.name));
+            if (foundProfiles.Count() == 0) return null;
+            (int matchCount, Device profile) bestMatch = (0, null);
+            foreach(var profile in foundProfiles)
+            {
+                var split = profile.name.Split(' ');
+                var currentMatch = split.Count(item => deviceName.Contains(item));
+                if(currentMatch > bestMatch.matchCount)
+                {
+                    bestMatch.matchCount = currentMatch;
+                    bestMatch.profile = profile;
                 }
             }
-            catch (Exception ex)
+            if (bestMatch.profile != null &&
+                SupportedDeviceNames.Any(item => bestMatch.profile.name.ToLower().Split(' ').Last() == item.ToLower().Split(' ').Last()))
             {
-                Logger.Error(Tag, ex.Message);
+                Logger.Info(Tag, $"{deviceName} can be optimized");
+                return bestMatch.profile;
             }
+            return null;
         }
-
-        public static bool GetProfileForSelectedGPUIfExists(string gpuName, int profile, out OptimizationProfile retProfile)
+        public bool FindProfileNumForDeviceAndSetIfExists(ComputeDevice device, Device profile)
         {
-            retProfile = null;
-            if (!Success) return false;
-            if (ProfileData.devices == null) return false;
-            try
+            foreach (var profileID in ExistingProfiles.Reverse())
             {
-                var devs = ProfileData.devices
-                    .Where(dev => dev.name != null)
-                    .Where(dev => (gpuName.Contains(dev.name)
-                    || dev.name.Contains(gpuName)))
-                    .FirstOrDefault();
-                if (devs == null || devs.op == null) return false;
-                var profiles = devs.op
-                    .Where(prof => prof.id == profile)
-                    .FirstOrDefault();
-                if (profiles == null) return false;
-                retProfile = profiles;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(Tag, ex.Message);
+                var foundProfile = profile.op.Where(x => x.id == profileID).FirstOrDefault();
+                if (foundProfile == null) continue;
+                var memoryTimings = BuildMTString(foundProfile);
+                if (memoryTimings == string.Empty) continue;
+                var ret = device.TrySetMemoryTimings(memoryTimings);
+                //TODO SET OTHER STUFF FOR DEVICE HERE
+                if (ret >= RET_OK) return true;
+                return false;
             }
             return false;
         }
-
-        public static string BuildMTString(OptimizationProfile prof)
+        protected bool IsSupportedDeviceName(string deviceName)
         {
-            var mtString = "";
-            if (prof.mt != null)
-                prof.mt.ForEach(mtOpt =>
-                {
-                    if (mtOpt.Count == 2) mtString += mtOpt[0] + "=" + mtOpt[1] + ";";
-                });
-            mtString = mtString.Trim(';');
-            return mtString;
+            if(GetDeviceProfile(deviceName) == null) return false;
+            return true;
         }
 
-#region serialization
+
+        #region serialization
         public class Profiles
         {
             public int data_version { get; set; }
@@ -119,5 +208,5 @@ namespace NHMCore.Utils
             public List<float> lhr { get; set; }
         }
     }
-#endregion serialization
+    #endregion serialization
 }

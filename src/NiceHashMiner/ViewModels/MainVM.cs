@@ -123,7 +123,7 @@ namespace NiceHashMiner.ViewModels
 
         public UpdateSettings UpdateSettings => UpdateSettings.Instance;
 
-        public EthlargementIntegratedPlugin EthlargementIntegratedPlugin => EthlargementIntegratedPlugin.Instance;
+        public GPUProfileManager GPUProfileManager => GPUProfileManager.Instance;
         #endregion Exposed settings
 
 

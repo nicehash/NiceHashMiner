@@ -34,7 +34,7 @@
     <system:String x:Key="maxLogSize">Sets the maximum size for the log file.</system:String>
     <system:String x:Key="runScriptCUDAlost">When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost, by default script should restart whole system.</system:String>
     <system:String x:Key="nvidiaP0State">When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state. This will slightly increase performance on certain algorithms. This feature needs administrator privileges to be activated.</system:String>
-    <system:String x:Key="useEthlargement">When checked, NiceHash Miner will run Ethlargement for Dagger algorithms when supported GPUs are present. Requires running NHML as admin and enabling 3rd-party miners.</system:String>
+    <system:String x:Key="useOptimizationProfiles">When checked, NiceHash Miner will use optimization profiles for Dagger algorithms when supported GPUs are present. Requires running NHM as admin and enabling 3rd-party miners.</system:String>
     <system:String x:Key="switchMinimum">Fixed part of minimal time (in seconds) before miner switches algorithm.</system:String>
     <system:String x:Key="switchMaximum">Fixed part of maximum time (in seconds) before miner switches algorithm.</system:String>
     <system:String x:Key="switchThreshold">Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]</system:String>
