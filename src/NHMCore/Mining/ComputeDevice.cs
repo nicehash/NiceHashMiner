@@ -7,7 +7,7 @@ using NHM.UUID;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
-using NHMCore.Nhmws.V3;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -73,7 +73,7 @@ namespace NHMCore.Mining
                 _state = value;
                 MiningState.Instance.CalculateDevicesStateChange();
                 OnPropertyChanged();
-                NHWebSocketV3.NotifyStateChanged();
+                NHWebSocket.NotifyStateChanged();
             }
         }
 

@@ -71,7 +71,7 @@ namespace NHM.Common
             }
         }
         
-        internal static string NhmSocketAddress => _serviceCustomSettings.NhmSocketAddress;
+        public static string NhmSocketAddress => _serviceCustomSettings.NhmSocketAddress;
         private static ServiceCustomSettings _serviceCustomSettings;
         internal static void InitStratumServiceHelpers()
         {

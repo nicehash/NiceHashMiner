@@ -18,12 +18,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WebSocketSharp;
 // static imports
-using static NHMCore.Nhmws.V3.StatusCodes;
+using static NHMCore.Nhmws.V4.StatusCodes;
 using NHLog = NHM.Common.Logger;
 
-namespace NHMCore.Nhmws.V3
+namespace NHMCore.Nhmws.V4
 {
-    static class NHWebSocketV3
+    static class NHWebSocketV4
     {
         #region locking
 
@@ -73,9 +73,9 @@ namespace NHMCore.Nhmws.V3
         static private WebSocket _webSocket = null;
         static private string _address;
 
-        static private readonly LoginMessage _login = new LoginMessage
+        static private LoginMessage _login = new LoginMessage
         {
-            Version = $"NHM/{Application.ProductVersion}",
+            Version = new List<string> { "NHM/" + Application.ProductVersion, "NA/NA" },
         };
 
         static private ConcurrentQueue<MessageEventArgs> _recieveQueue { get; set; } = new ConcurrentQueue<MessageEventArgs>();
@@ -166,6 +166,7 @@ namespace NHMCore.Nhmws.V3
                 _sendQueue = new ConcurrentQueue<IEnumerable<(MessageType type, string msg)>>();
                 _isNhmwsRestart = false;
                 _notifyMinerStatusAfter.Value = null;
+
                 NHLog.Info("NHWebSocket", "Creating socket");
                 using var webSocket = new WebSocket(_address);
                 _webSocket = webSocket;
@@ -204,13 +205,13 @@ namespace NHMCore.Nhmws.V3
                     if (elapsedTime.TotalSeconds > MINER_STATUS_TICK_SECONDS)
                     {
                         var minerStatusJsonStr = CreateMinerStatusMessage();
-                        _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+                        //_sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
                     }
                     if (_notifyMinerStatusAfter.Value.HasValue && DateTime.UtcNow >= _notifyMinerStatusAfter.Value.Value)
                     {
                         _notifyMinerStatusAfter.Value = null;
                         var minerStatusJsonStr = CreateMinerStatusMessage();
-                        _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+                        //_sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
                     }
                 }
                 // Ws closed
@@ -286,7 +287,6 @@ namespace NHMCore.Nhmws.V3
             return false;
         }
 
-
         static private void Login(object sender, EventArgs e)
         {
             NHLog.Info("NHWebSocket", "Connected");
@@ -299,7 +299,7 @@ namespace NHMCore.Nhmws.V3
                 if (CredentialValidators.ValidateBitcoinAddress(_login.Btc))
                 {
                     var minerStatusJsonStr = CreateMinerStatusMessage(true);
-                    sendMessages.Add((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+                    //sendMessages.Add((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
                 }
                 _sendQueue.Enqueue(sendMessages);
             }
@@ -314,17 +314,17 @@ namespace NHMCore.Nhmws.V3
             // TODO check protocol
             // send status first and re-set credentials
             var minerStatusJsonStr = CreateMinerStatusMessage();
-            _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+            //_sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
             // TODO check 
             SetCredentials(btc, worker, group);
         }
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
-            _login.Rig = ApplicationStateManager.RigID();
+            _login = MessageParser.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices);
             if (btc != null) _login.Btc = btc;
             if (worker != null) _login.Worker = worker;
-            if (group != null) _login.Group = group;
+            //if (group != null) _login.Group = group;
             // on credentials change always send close websocket message
             var closeMsg = (MessageType.CLOSE_WEBSOCKET, $"Credentials change reconnecting {ApplicationStateManager.Title}.");
             _sendQueue.EnqueueParams(closeMsg);

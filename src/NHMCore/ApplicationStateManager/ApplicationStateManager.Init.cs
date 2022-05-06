@@ -7,7 +7,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
-using NHMCore.Nhmws.V3;
+using NHMCore.Nhmws;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
@@ -190,8 +190,8 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
                 // Init ws connection
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
-                NHWebSocketV3.SetCredentials(btc, worker, group);
-                NHWebSocketV3.StartLoop(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token);
+                NHWebSocket.SetCredentials(btc, worker, group);
+                NHWebSocket.StartLoop(ExitApplication.Token);
 
 
                 // STEP
@@ -287,7 +287,7 @@ namespace NHMCore
             finally
             {
                 isInitFinished = true;
-                NHWebSocketV3.NotifyStateChanged();
+                NHWebSocket.NotifyStateChanged();
 
                 // start update checker
                 // updater loops after we finish

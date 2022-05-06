@@ -3,7 +3,7 @@ using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
-using NHMCore.Nhmws.V3;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -70,7 +70,7 @@ namespace NHMCore
                 ConfigManager.GeneralConfigFileCommit();
                 var waitTasks = new List<Task>();
                 waitTasks.Add(MiningManager.RunninLoops);
-                waitTasks.Add(NHWebSocketV3.MainLoop);
+                waitTasks.Add(NHWebSocket.MainLoop);
                 waitTasks.Add(MinerPluginsManager.RunninLoops);
                 waitTasks.Add(UpdateHelpers.RunninLoops);
                 await Task.WhenAll(waitTasks.Where(t => t != null));

@@ -1,9 +1,9 @@
 ﻿using NHM.Common.Enums;
 using System;
 
-namespace NHMCore.Nhmws.V3
+namespace NHMCore.Nhmws.V4
 {
-    internal static class StatusCodesV3
+    internal static class StatusCodes
     {
         private static string deviceTypePrefixPart(DeviceType type) =>
             type switch
