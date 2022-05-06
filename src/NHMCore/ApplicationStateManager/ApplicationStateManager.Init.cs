@@ -242,8 +242,7 @@ namespace NHMCore
                 // STEP
                 // VC_REDIST check
                 loader.PrimaryProgress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
-                VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
-
+                await VC_REDIST_x64_2015_2019_Manager.Instance.InitVCRedist(loader.SecondaryProgress, ExitApplication.Token);
                 // STEP
                 // Cross reference plugin indexes 
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
