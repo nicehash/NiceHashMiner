@@ -158,9 +158,7 @@ namespace NhmPackager
 
         private static readonly List<string> _pathMustContain = new List<string>
             {
-                "obj",
-                "Release",
-                "netstandard2.0",
+                "PluginsToSign"
             };
         private static bool PathMustContain(string path) => _pathMustContain.All(subDir => path.Contains(subDir));
 
@@ -210,10 +208,6 @@ namespace NhmPackager
 
             RecreateDirectoryIfExists(GetPluginsPackagesPath());
             List<string> temporaryPath = new List<string>();
-            //get all plugin projects paths
-            var pluginProjectPaths = Directory.GetFiles(pluginsSearchRoot, "*.csproj", SearchOption.AllDirectories)
-                .Where(PathMustNOTContain)
-                .Select(projectPath => Directory.GetParent(projectPath).ToString());
             // get all managed plugin dll's 
             var plugins = Directory.GetFiles(pluginsSearchRoot, "*.dll", SearchOption.AllDirectories)
                 .Where(PathMustContain)
@@ -235,18 +229,6 @@ namespace NhmPackager
                 {
                     archive.CreateEntryFromFile(dllFilePath, fileName);
                 }
-                var pluginProjectPath = pluginProjectPaths.FirstOrDefault(path => dllFilePath.Contains(path));
-
-                var dateTimeStr = GetLastCommitDateTime(GetGitCommitHash(pluginProjectPath));
-                DateTimeOffset.TryParseExact(dateTimeStr, "ddd MMM d HH:mm:ss yyyy K",
-                                 CultureInfo.InvariantCulture,
-                                 DateTimeStyles.None, out var dateTime);
-
-                using (ZipArchive archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Update))
-                {
-                    archive.Entries.FirstOrDefault().LastWriteTime = dateTime;
-                }
-
             }
             Logger.Info("MinerPluginsPacker", "Packaging pre inastalled plugins:");
             var preInstalledPlugins = plugins.Where(pair => PreInstalledPlugins.Contains(pair.plugin.PluginUUID));
@@ -332,48 +314,6 @@ namespace NhmPackager
             catch (Exception e)
             {
                 Logger.Error("MinerPluginsPacker", $"Error occured while getting online miner plugins: {e.Message}");
-            }
-            return null;
-        }        
-
-        public static string GetGitCommitHash(string pluginProjectPath)
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "git",
-                Arguments = $"rev-list --all {pluginProjectPath}\\**",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-            using (var getGitHash = new Process { StartInfo = startInfo })
-            {
-                var ok = getGitHash.Start();
-                if (!getGitHash.StandardOutput.EndOfStream)
-                    return getGitHash.StandardOutput.ReadLine();
-            }
-            return null;
-        }
-
-        public static string GetLastCommitDateTime(string commitHash)
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "git",
-                Arguments = $"show {commitHash}",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-            using (var getGitCommitDateTime = new Process { StartInfo = startInfo })
-            {
-                getGitCommitDateTime.Start();
-
-                while (!getGitCommitDateTime.StandardOutput.EndOfStream)
-                {
-                    var line = getGitCommitDateTime.StandardOutput.ReadLine();
-                    if (line.StartsWith("Date:")) return line.Replace("Date:", "").Trim();
-                }
             }
             return null;
         }

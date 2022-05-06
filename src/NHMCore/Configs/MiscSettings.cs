@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
+using NHMCore.Utils;
 using System.Collections.Generic;
 
 namespace NHMCore.Configs
@@ -24,15 +25,15 @@ namespace NHMCore.Configs
             }
         }
 
-        private bool _useEthlargement = false;
-        public bool UseEthlargement
+        private bool _useOptimizationProfiles = false;
+        public bool UseOptimizationProfiles
         {
-            get => _useEthlargement;
+            get => _useOptimizationProfiles;
             set
             {
-                _useEthlargement = value;
-                EthlargementIntegratedPlugin.Instance.ServiceEnabled = value;
-                OnPropertyChanged(nameof(UseEthlargement));
+                _useOptimizationProfiles = value;
+                GPUProfileManager.Instance.ServiceEnabled = value;
+                OnPropertyChanged(nameof(UseOptimizationProfiles));
             }
         }
 

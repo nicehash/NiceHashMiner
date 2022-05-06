@@ -85,14 +85,16 @@ ConfigFileVersion | Version | This is to identify which version of NiceHashMiner
 BitcoinAddress | valid BTC address | The address that NiceHashMiner will mine to.
 WorkerName | text | To identify the computer on NiceHash web UI.
 RigGroup | text | To identify the group your rig belongs to.
-ServiceLocation | number | Used to select the location of the mining server.
 AutoStartMining | true or false | When set to true, NiceHashMiner will start mining on program start.
 HideMiningWindows | true or false | When set to true, miner console windows will be hidden (not working for all miners).
 MinimizeMiningWindows | true or false | When set to true, miner console windows will be minimized to tray (not working for all miners).
 MinerAPIQueryInterval | number | Amount of time between each API call to get the latest stats from miner.
 MinerRestartDelayMS | number | Amount of time to delay before trying to restart the miner.
-ApiBindPortPoolStart | number | Set the starting value (default is 5100) for miners API ports. When a new miner is created it will use an avaliable API port starting from the ApiBindPortPoolStart and higher.
+ApiBindPortPoolStart | number | Set the starting value (default is 4000) for miners API ports. When a new miner is created it will use an avaliable API port starting from the ApiBindPortPoolStart and higher.
 NVIDIAP0State | true or false | When set to true, NiceHashMiner would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.
+PauseMiningWhenGamingMode | true or false | When set to true, on steam game start, the mining with selected GPU will stop.
+DeviceToPauseUuid | text | UUID from GPU, which is selected to pause on gaming.
+EnableSSLMining | true or false | When set to true, it will enable SSL mining for miner plugins that support SSL mining.
 StartMiningWhenIdle | true or false | Automatically start mining when computer is idle and stop mining when computer is being used.
 IdleCheckType | 0 or 1 | If 0 idle state will be set by InputTimeout; if set to 1 idle state will be set by SessionLock
 MinIdleSeconds | number | When StartMiningWhenIdle is set to true and IdleCheckType is set to 0, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.
@@ -107,9 +109,7 @@ MinimumProfit | number | If set to any value, NiceHashMiner will stop mining if 
 MineRegardlessOfProfit | true or false | When set to true, NiceHashMiner will mine regardless of your mining profitability.
 UseIFTTT | true or false | When set to true, NiceHashMiner will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.
 IFTTTKey | text | IFTTT key for notifications.
-Use3rdPartyMinersTOS | 0 or 4 | If set to 4, you agree with the 3rd Party Miners TOS
 Hwid | text | Your hardware ID. Better left intact
-AgreedWithTOS | 0 or 4 | If set to 4, you agree with the NiceHash Miner TOS
 SwitchSmaTimeChangeSeconds | "lower": number, "upper": number | Set range for SMA check.
 SwitchSmaTicksStable | "lower": number, "upper": number | Set range for stable algorithms ticks needed for switch.
 SwitchSmaTicksUnstable | "lower": number, "upper": number | Set range for unstable algorithms ticks needed for switch.
@@ -128,9 +128,12 @@ MainFormSize | "X, Y" | Set X and Y sizes for the NiceHash Miner window.
 AllowMultipleInstances | true or false | When set to true, multiple NiceHash Miner instances will be allowed to run at the same time.
 UseSmaCache | true or false | When set to true, received SMA values will be saved to file.
 UseEthlargement | true or false | When set to true, EthlargementPill will be used when possible during mining.
-ShowNotifications | {"NotificationID": true|false} | When set to false, specified notification won't be shown anymore in the future.
-DisableVisualCRedistributableCheck | true or false | When set to true, NiceHash Miner won't try to download VC Redist file. 
-RunScriptOnCUDA_GPU_Lost | true or false | When set to true, script will be run on detected GPU dead.
+RunAtStartup | true or false | When set to true, Nicehash Miner will run on login
+ShowNotifications | {"NotificationID": true or false} | When set to false, specified notification won't be shown anymore in the future.
+DisableVisualCRedistributableCheck | true or false | When set to true, NiceHash Miner won't try to download VC Redist file.
+ResolveNiceHashDomainsToIPs | true or false | When set to true, NiceHash Miner will resolve Nicehash domains to IPs via cloudflare in case of DNS sinkholing.
+CheckForMissingGPUs |true or false | When set to true, Nicehash Miner will check for missing GPUs every 5 minutes.
+RestartMachineOnLostGPU | true or false | When set to true, script will be run on detected GPU dead.
 DisableDeviceStatusMonitoring | true or false | When set to true, device status monitoring (temp, fan speed, etc.) will be disabled.
 DisableDevicePowerModeSettings | true or false | When set to true, NiceHash Miner won't be able to change your power mode settings.
 ShowGPUPCIeBusIDs | true or false | When set to true, PCIe Bus IDs will be shown in the device overview.
@@ -158,14 +161,14 @@ Examples:
 --------
 ```
 {
-    "Name": "TRex",
+    "Name": "NBMiner",
     "PluginUUID": "03f80500-94ec-11ea-a64d-17be303ea466",
     "PluginVersion": "11.0",
     "AlgorithmIDs": "KAWPOW",
     "Speeds": [
       8841376.5
     ],
-    "ExtraLaunchParameters": "--intensity 20",
+    "ExtraLaunchParameters": "",
     "Enabled": true,
     "PowerUsage": 113.81357777777778
 }

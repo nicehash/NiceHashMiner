@@ -159,7 +159,6 @@
     <Compile Include="Mining\MiningStats\MinerMiningStats.cs" />
     <Compile Include="Mining\Plugins\AcceptedPlugins.cs" />
     <Compile Include="Mining\Plugins\BlacklistedPlugins.cs" />
-    <Compile Include="Mining\Plugins\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Mining\Plugins\MinerPluginInstallTask.cs" />
     <Compile Include="Mining\Plugins\MinerPluginsUpdaterSettings.cs" />
     <Compile Include="Mining\Plugins\PluginInstallProgressState.cs" />

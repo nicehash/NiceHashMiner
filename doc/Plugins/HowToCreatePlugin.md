@@ -52,7 +52,7 @@ public override IEnumerable<string> CheckBinaryPackageMissingFiles()
 ```
 *This MinerPluginToolkitV1 function allows developer to easly check if all important files were downloaded successfully.*
 
-If you are writing a plugin we highly recommend that you use MinerPluginToolkitV1. All miner plugins that are developed by NiceHash miner dev team are using MinerPluginToolkitV1. For example you can check <a href="../../src/Miners/GMiner">GMiner Plugin</a>.</p>
+If you are writing a plugin we highly recommend that you use MinerPluginToolkitV1. All miner plugins that are developed by NiceHash miner dev team are using MinerPluginToolkitV1. For example you can check <a href="../../src/Miners/NBMiner">NBMiner Plugin</a>.</p>
 <p>MinerPluginToolkitV1 also enables creation of <b>Background Services</b>, check out <a href="../../src/NHMCore/Mining/Plugins/EthlargementIntegratedPlugin.cs">Ethlargement plugin</a> for example.</p>
 
 *NOTE: Major plugin versions are raised with the new algorithm, while minor versions on every update.*

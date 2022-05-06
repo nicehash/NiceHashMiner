@@ -12,8 +12,6 @@ We welcome suggestions to add new miners to NHML. You can make a request by open
 
 * The miner is actually needed. If it does not provide speed bonuses compared to current miners, it will not be included so that NHML does not get bloated with obsolete miners
 
-The miner does not have to be open source, closed source miners such as ClaymoreDual are included as 3rd party miners. It does however have to allow distribution (i.e. the automatic downloading NHML does on setup). 
-
 After these requirements are checked, you can open an issue and explain what kind of speed improvements you are seeing with it. 
 
 Note miner suggestions based off algorithms not supported by NiceHash will not be considered. NHML is designed to work with NH pools, and if there is no pool for an algorithm then there is no point in including miners for it.

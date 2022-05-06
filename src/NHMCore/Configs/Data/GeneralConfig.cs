@@ -282,10 +282,10 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.UseSmaCache;
             set => MiscSettings.Instance.UseSmaCache = value;
         }
-        public bool UseEthlargement
+        public bool UseOptimizationProfiles
         {
-            get => MiscSettings.Instance.UseEthlargement;
-            set => MiscSettings.Instance.UseEthlargement = value;
+            get => MiscSettings.Instance.UseOptimizationProfiles;
+            set => MiscSettings.Instance.UseOptimizationProfiles = value;
         }
         public bool RunAtStartup
         {
@@ -399,7 +399,7 @@ namespace NHMCore.Configs.Data
             UseSmaCache = true;
             ShowPowerColumns = false;
             ShowDiagColumns = true;
-            UseEthlargement = false;
+            UseOptimizationProfiles = false;
             Hwid = "";
             KwhPrice = 0;
             DisplayPureProfit = false;

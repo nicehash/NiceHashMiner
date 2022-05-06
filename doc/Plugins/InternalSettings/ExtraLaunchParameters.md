@@ -61,7 +61,7 @@ This is the example of GMiner `MinerOptionsPackage.json` file:
   "temperature_options": [
     {
       "type": "OptionWithMultipleParameters",
-      "id": "gminer_templimit",
+      "id": "nbminer_templimit",
       "short_name": "-t",
       "long_name": "--templimit",
       "default_value": "90",

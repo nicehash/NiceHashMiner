@@ -25,9 +25,9 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateEthlargementElevateInfo()
+        public static void CreateOptimizationProfileElevateInfo()
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.EthlargementElevate, Tr("Ethlargement-Pill Settings Insufficient Permissions"), Tr("Can't run Ethlargement-Pill due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.OptimizationProfilesElevate, Tr("Optimization profiles Insufficient Permissions"), Tr("Can't run optimization profiles due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
             notification.Action = new NotificationAction
             {
                 Info = Tr("Run As Administrator"),
@@ -36,9 +36,9 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateEthlargementNotEnabledInfo()
+        public static void CreateOptimizationProfileNotEnabledInfo()
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.EthlargementNotEnabled, Tr("EthLargement-Pill not enabled"), Tr("EthLargement-Pill is not enabled. is not running. Enable it for 50% higher hashrates. Run NiceHash Miner as an Administrator and enable Run Ethlargement in advanced settings."));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.OptimizationWithProfilesDisabled, Tr("Optimization profiles not enabled"), Tr("Optimization profiles are not enabled. Enable for optimization of some GPUs for a bigger hash rate. Run NiceHash Miner as an Administrator and enable Optimization profiles in advanced settings."));
             notification.Action = new NotificationAction
             {
                 Info = Tr("Run As Administrator"),

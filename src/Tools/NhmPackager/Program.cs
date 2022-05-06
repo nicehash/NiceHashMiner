@@ -108,7 +108,7 @@ namespace NhmPackager
 
                 // run the plugins packer in the installer
                 Logger.Info("Main", "MinerPluginsPacker.Execute START");
-                MinerPluginsPacker.Execute(GetRootPath(@"..\", "src", "Miners"));
+                MinerPluginsPacker.Execute(GetRootPath(@"..\", "Release", "PluginsToSign"));
                 Logger.Info("Main", "MinerPluginsPacker.Execute DONE. Press any key to continue\n\n");
                 Console.ReadKey();
 

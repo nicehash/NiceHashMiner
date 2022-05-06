@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.156
+VisualStudioVersion = 16.0.32228.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdParty", "3rdParty", "{A1439575-6634-4B04-A802-93E1729D932C}"
 EndProject
@@ -73,6 +73,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CredentialValidatorsTests", "src\Tests\NHM.CredentialValidatorsTests\NHM.CredentialValidatorsTests.csproj", "{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CommonWin32", "src\NHM.CommonWin32\NHM.CommonWin32.csproj", "{FF5822A1-6311-4431-9281-261A8DE0CB43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhmSetPluginGitCommitTime", "src\Tools\NhmSetPluginGitCommitTime\NhmSetPluginGitCommitTime.csproj", "{F2069C67-6B16-408F-801E-4C51D6435FC0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -322,6 +324,14 @@ Global
 		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|x64.ActiveCfg = Release|Any CPU
 		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|x64.Build.0 = Release|Any CPU
+		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Debug|x64.Build.0 = Debug|Any CPU
+		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Release|x64.ActiveCfg = Release|Any CPU
+		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -344,6 +354,7 @@ Global
 		{FC2DF88E-4D80-4FCC-A4AB-88E764DB035B} = {BB931C9A-EE48-42A6-B5F3-3A193B1A051A}
 		{A23E8384-0C0B-4CF2-A2B9-46F34E32D0FB} = {F40126B4-5B3B-4085-B47D-A5EF4B51570C}
 		{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B} = {FFB721FA-CA35-4B5D-859E-EB744ED01138}
+		{F2069C67-6B16-408F-801E-4C51D6435FC0} = {BB931C9A-EE48-42A6-B5F3-3A193B1A051A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E8897DC-99C6-4585-A2BA-CB194F3B1AB7}

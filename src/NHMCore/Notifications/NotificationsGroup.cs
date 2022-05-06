@@ -8,7 +8,9 @@ namespace NHMCore.Notifications
         Market,
         Profit,
         MonitoringNvidiaElevate,
+        [Obsolete("Unused group, ethlargement removed", true)]
         EthlargementElevate,
+        [Obsolete("Unused group, ethlargement removed", true)]
         EthlargementNotEnabled,
         ConnectionLost,
         NoEnabledDevice,
@@ -53,6 +55,8 @@ namespace NHMCore.Notifications
         GamingFinished,
         AdminRunRequired,
         MotherboardNotCompatible,
-        DriverVersionProblem
+        DriverVersionProblem,
+        OptimizationWithProfilesDisabled,
+        OptimizationProfilesElevate
     }
 }

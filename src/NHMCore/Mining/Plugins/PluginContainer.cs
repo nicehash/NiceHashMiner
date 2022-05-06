@@ -182,12 +182,6 @@ namespace NHMCore.Mining.Plugins
                         .ToList();
                     _cachedNiceHashMinerAlgorithms[deviceUUID] = algos;
                 }
-
-                // Ethlargement extra check
-                if (_plugin == EthlargementIntegratedPlugin.Instance)
-                {
-                    IsCompatible = EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevices;
-                }
                 CheckDevicesDriverVersionsAndNotifyIfOutdated(baseDevices);
             }
             catch (Exception e)

@@ -63,10 +63,6 @@ namespace NHMCore.Mining.Plugins
                 new XMRig.XMRigPlugin(),
 #endif
 
-
-                // service plugin
-                EthlargementIntegratedPlugin.Instance,
-
                 // plugin dependencies
                 VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
@@ -141,7 +137,6 @@ namespace NHMCore.Mining.Plugins
                     .Select(PluginContainer.Create);
 
                 // TODO ADD STEP AND MESSAGE
-                EthlargementIntegratedPlugin.Instance.InitAndCheckSupportedDevices(AvailableDevices.Devices.Select(dev => dev.BaseDevice));
                 CheckAndDeleteUnsupportedPlugins();
 
                 // load dll's and create plugin containers
@@ -575,7 +570,6 @@ namespace NHMCore.Mining.Plugins
             try
             {
                 PluginInstaller.RemovePlugin(pluginUUID);
-                if (EthlargementIntegratedPlugin.Instance.PluginUUID == pluginUUID) EthlargementIntegratedPlugin.Instance.Remove();
 
                 AcceptedPlugins.Remove(pluginUUID);
                 MinerPluginHost.MinerPlugin.Remove(pluginUUID);
@@ -606,52 +600,6 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        private static void CrossReferenceInstalledWithOnlineEthlargementIntegratedPlugin()
-        {
-            if (!EthlargementIntegratedPlugin.Instance.SystemContainsSupportedDevices) return;
-            var uuid = EthlargementIntegratedPlugin.Instance.PluginUUID;
-            if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
-            {
-                PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
-            }
-            if (EthlargementIntegratedPlugin.Instance.IsInstalled)
-            {
-                var localPluginInfo = new PluginPackageInfo
-                {
-                    PluginAuthor = EthlargementIntegratedPlugin.Instance.Author,
-                    PluginName = EthlargementIntegratedPlugin.Instance.Name,
-                    PluginUUID = uuid,
-                    PluginVersion = EthlargementIntegratedPlugin.Instance.Version,
-                    // other stuff is not inside the plugin
-                };
-                PluginsPackagesInfosCRs[uuid].LocalInfo = localPluginInfo;
-            }
-            var online = new PluginPackageInfo
-            {
-                PluginAuthor = EthlargementIntegratedPlugin.Instance.Author,
-                PluginName = EthlargementIntegratedPlugin.Instance.Name,
-                PluginUUID = uuid,
-                PluginVersion = EthlargementIntegratedPlugin.Instance.Version,
-                MinerPackageURL = EthlargementIntegratedPlugin.Instance.GetMinerBinsUrlsForPlugin().FirstOrDefault(),
-                PackagePassword = null,
-                PluginDescription = "ETHlargement increases DaggerHashimoto hashrate for NVIDIA 1080, 1080 Ti and Titan Xp GPUs.",
-                PluginPackageURL = "N/A",
-                SupportedDevicesAlgorithms = new Dictionary<string, List<string>> {
-                        { DeviceType.NVIDIA.ToString(), new List<string> { AlgorithmType.DaggerHashimoto.ToString() } }
-                    }
-            };
-            PluginsPackagesInfosCRs[uuid].OnlineInfo = online;
-            if (online.SupportedDevicesAlgorithms != null)
-            {
-                var supportedDevices = online.SupportedDevicesAlgorithms
-                    .Where(kvp => kvp.Value.Count > 0)
-                    .Select(kvp => kvp.Key);
-                var devRank = AvailableDevices.Devices
-                    .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
-                    .Count();
-                PluginsPackagesInfosCRs[uuid].SupportedDeviceCount = devRank;
-            }
-        }
 
         private static string ConstructLocalPluginDescription(PluginBase plugin)
         {
@@ -672,9 +620,6 @@ namespace NHMCore.Mining.Plugins
         }
         public static void CrossReferenceInstalledWithOnline()
         {
-            // EthlargementIntegratedPlugin special case
-            CrossReferenceInstalledWithOnlineEthlargementIntegratedPlugin();
-
             // first go over the installed plugins
             var installedPlugins = PluginContainer.PluginContainers
                 //.Where(p => p.Enabled) // we can have installed plugins that are obsolete
@@ -798,11 +743,6 @@ namespace NHMCore.Mining.Plugins
 
         public static async Task DownloadInternalBins(PluginContainer pluginContainer, List<string> urls, IProgress<int> downloadProgress, IProgress<int> unzipProgress, CancellationToken stop)
         {
-            if (EthlargementIntegratedPlugin.Instance.PluginUUID == pluginContainer.PluginUUID)
-            {
-                await DownloadEthlargementInternalBins(urls, downloadProgress, stop);
-                return;
-            }
             var pluginUUID = pluginContainer.PluginUUID;
             var ver = pluginContainer.Version;
             var installingPluginBinsPath = Paths.MinerPluginsPath(pluginUUID, "bins", $"{ver.Major}.{ver.Minor}");
@@ -839,44 +779,6 @@ namespace NHMCore.Mining.Plugins
             catch (Exception e)
             {
                 Logger.Error("MinerPluginsManager", $"Installation of {pluginUUID} failed: ${e.Message}");
-            }
-        }
-
-        private static async Task<bool> DownloadEthlargementInternalBins(List<string> urls, IProgress<int> downloadProgress, CancellationToken stop)
-        {
-            var pluginUUID = EthlargementIntegratedPlugin.Instance.PluginUUID;
-            var ver = EthlargementIntegratedPlugin.Instance.Version;
-            var installingPluginBinsPath = Paths.MinerPluginsPath(pluginUUID, "bins", $"{ver.Major}.{ver.Minor}");
-            try
-            {
-                if (Directory.Exists(installingPluginBinsPath)) Directory.Delete(installingPluginBinsPath, true);
-                Directory.CreateDirectory(installingPluginBinsPath);
-                var installedBins = false;
-                foreach (var url in urls)
-                {
-                    var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(url, installingPluginBinsPath, EthlargementIntegratedPlugin.BinName.Replace(".exe", ""), downloadProgress, stop);
-                    var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
-                    var downloadMinerBinsOK = downloadMinerBinsResult.success;
-                    installedBins = true;
-                    if (!downloadMinerBinsOK || stop.IsCancellationRequested) return false;
-                    if (stop.IsCancellationRequested) return false;
-
-                    break;
-                }
-                if (!installedBins)
-                {
-                    Logger.Error("DownloadEthlargementInternalBins", $"Miners bins of {pluginUUID} not installed");
-                }
-
-                //clear old bins
-                clearOldPluginBins(Paths.MinerPluginsPath(pluginUUID, "bins"));
-                CrossReferenceInstalledWithOnlineEthlargementIntegratedPlugin();
-                return installedBins;
-            }
-            catch (Exception e)
-            {
-                Logger.Error("DownloadEthlargementInternalBins", $"Installation of {pluginUUID} failed: ${e.Message}");
-                return false;
             }
         }
 
@@ -929,14 +831,7 @@ namespace NHMCore.Mining.Plugins
                         progress?.Report(Tuple.Create(PluginInstallProgressState.Pending, 0));
                         minerInstall.AddProgress(progress);
                     }
-                    if (pluginPackageInfo.PluginUUID == EthlargementIntegratedPlugin.Instance.PluginUUID)
-                    {
-                        installResult = await DownloadAndInstallEthlargementIntegratedPlugin(pluginPackageInfo, minerInstall, tcs.Token);
-                    }
-                    else
-                    {
-                        installResult = await DownloadAndInstall(pluginPackageInfo, minerInstall, tcs.Token);
-                    }
+                    installResult = await DownloadAndInstall(pluginPackageInfo, minerInstall, tcs.Token);
                     installSuccess = installResult == PluginInstallProgressState.Success;
                 }
                 finally
@@ -1098,56 +993,6 @@ namespace NHMCore.Mining.Plugins
                         Logger.Error("MinerPluginsManager", $"DownloadAndInstall unable to init and install {pluginUUID}");
                     }
                 }
-                // cross reference local and online list
-                CrossReferenceInstalledWithOnline();
-            }
-            catch (Exception e)
-            {
-                Logger.Error("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: {e.Message}");
-                //downloadAndInstallUpdate();
-                finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedUnknown;
-            }
-            finally
-            {
-                progress?.Report(Tuple.Create(finalState, 0));
-            }
-            return finalState;
-        }
-
-        internal static async Task<PluginInstallProgressState> DownloadAndInstallEthlargementIntegratedPlugin(PluginPackageInfoCR plugin, IProgress<Tuple<PluginInstallProgressState, int>> progress, CancellationToken stop)
-        {
-            var downloadPluginProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.DownloadingPlugin, perc)));
-            var zipProgressPluginChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.ExtractingPlugin, perc)));
-            var downloadMinerProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.DownloadingMiner, perc)));
-            var zipProgressMinerChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.ExtractingMiner, perc)));
-
-            var finalState = PluginInstallProgressState.Pending;
-            try
-            {
-                var versionStr = $"{plugin.OnlineInfo.PluginVersion.Major}.{plugin.OnlineInfo.PluginVersion.Minor}";
-                var pluginRootPath = Paths.MinerPluginsPath(plugin.PluginUUID);
-                var installDllPath = Path.Combine(pluginRootPath, "dlls", versionStr);
-                var installBinsPath = Path.Combine(pluginRootPath, "bins", versionStr);
-
-                if (Directory.Exists(installDllPath)) Directory.Delete(installDllPath, true);
-                Directory.CreateDirectory(installDllPath);
-                if (Directory.Exists(installBinsPath)) Directory.Delete(installBinsPath, true);
-                Directory.CreateDirectory(installBinsPath);
-
-                //clear old bins
-                clearOldPluginBins(Path.Combine(pluginRootPath, "bins"));
-
-                // download plugin binary
-                progress?.Report(Tuple.Create(PluginInstallProgressState.PendingDownloadingMiner, 0));
-                var urls = EthlargementIntegratedPlugin.Instance.GetMinerBinsUrlsForPlugin().ToList();
-                var downloadMinerBinsOK = await DownloadEthlargementInternalBins(urls, downloadMinerProgressChangedEventHandler, stop);
-                if (!downloadMinerBinsOK || stop.IsCancellationRequested)
-                {
-                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedDownloadingMiner;
-                    return finalState;
-                }
-                EthlargementIntegratedPlugin.Instance.InitAndCheckSupportedDevices(AvailableDevices.Devices.Select(dev => dev.BaseDevice));
-                finalState = PluginInstallProgressState.Success;
                 // cross reference local and online list
                 CrossReferenceInstalledWithOnline();
             }
