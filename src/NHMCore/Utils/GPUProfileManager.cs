@@ -73,20 +73,19 @@ namespace NHMCore.Utils
                     .GroupBy(x => x.Device.UUID)
                     .Select(g => g.First())
                     .Distinct()
-                    .Where(dev => dev.Device is CUDADevice)
-                    .Where(dev => dev.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto)
-                    .Select(dev => dev.Device)
+                    .Where(mp => mp.Device is CUDADevice)
+                    .Where(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto)
+                    .Select(mp => mp.Device)
                     .Cast<CUDADevice>()
                     .ToList();
         }
 
         public string BuildMTString(OptimizationProfile prof)
         {
-            var mtString = string.Empty;
             if (prof.mt == null) return string.Empty;
             return string.Join(";", prof.mt
                 .Where(m => m.Count == 2)
-                .Select(item => string.Join("=", new[] { item[0], item[1] })));
+                .Select(item => $"{item[0]}={item[1]}"));
         }
         public void Start(IEnumerable<MiningPair> miningPairs)
         {
