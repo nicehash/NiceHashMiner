@@ -85,9 +85,9 @@ namespace NHMCore.Utils
                 Logger.Error(Tag, $"InstallVcRedist error: {e.Message}");
             }
         }
-        IEnumerable<string> GetBinsUrlsForDependency()
+        public string GetURLForInstaller()
         {
-            yield return "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/VC_redist.x64_2015_2019.7z";
+            return "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/VC_redist.x64_2015_2019.7z";
         }
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
@@ -101,23 +101,18 @@ namespace NHMCore.Utils
                 if (Directory.Exists(installingPluginBinsPath)) Directory.Delete(installingPluginBinsPath, true);
                 Directory.CreateDirectory(installingPluginBinsPath);
                 var installedBins = false;
-                var urls = GetBinsUrlsForDependency();
-                foreach (var url in urls)
+                var url = GetURLForInstaller();
+                var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(url, installingPluginBinsPath, "vc_bins", downloadProgress, stop);
+                var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
+                var downloadMinerBinsOK = downloadMinerBinsResult.success;
+                if (!downloadMinerBinsOK || stop.IsCancellationRequested) return;
+                var binsUnzipPath = installingPluginBinsPath;
+                var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(string.Empty, binsPackageDownloaded, binsUnzipPath, unzipProgress, stop);
+                if (stop.IsCancellationRequested) return;
+                if (unzipMinerBinsOK)
                 {
-                    var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(url, installingPluginBinsPath, "vc_bins", downloadProgress, stop);
-                    var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
-                    var downloadMinerBinsOK = downloadMinerBinsResult.success;
-                    if (!downloadMinerBinsOK || stop.IsCancellationRequested) return;
-                    // unzip 
-                    var binsUnzipPath = installingPluginBinsPath;
-                    var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(string.Empty, binsPackageDownloaded, binsUnzipPath, unzipProgress, stop);
-                    if (stop.IsCancellationRequested) return;
-                    if (unzipMinerBinsOK)
-                    {
-                        installedBins = true;
-                        File.Delete(binsPackageDownloaded);
-                        break;
-                    }
+                    installedBins = true;
+                    File.Delete(binsPackageDownloaded);
                 }
                 if (!installedBins)
                 {
