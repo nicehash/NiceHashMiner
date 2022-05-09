@@ -49,7 +49,7 @@ namespace NHMCore.Utils
         {
             try
             {
-                return Mutex.TryOpenExisting(APP_GUID.GUID, MutexRights.ReadPermissions, out var _);
+                return Mutex.TryOpenExisting(APP_GUID.GUID,  out var _);
             }
             catch (Exception ex)
             {

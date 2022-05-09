@@ -15,7 +15,7 @@ namespace NiceHashMiner.Views.Settings
     /// </summary>
     public partial class SettingsQrLogin : System.Windows.Controls.UserControl
     {
-        private string _uuid = Guid.NewGuid().ToString();
+        private string _uuid = System.Guid.NewGuid().ToString();
         Stopwatch stopWatch;
 
         public SettingsQrLogin()

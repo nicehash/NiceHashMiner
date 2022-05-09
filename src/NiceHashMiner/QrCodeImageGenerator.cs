@@ -25,15 +25,15 @@ namespace NiceHashMiner
             };
             encOptions.Hints.Add(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
 
-            var bw = new BarcodeWriter();
+            /*var bw = new BarcodeWriter();
             bw.Renderer = new BitmapRenderer();
-            bw.Options = encOptions;
-            bw.Format = BarcodeFormat.QR_CODE;
-
-            var bm = bw.Write(uuid);
+                bw.Options = encOptions;
+                bw.Format = BarcodeFormat.QR_CODE;
+            
+            var bm = bw.Write(uuid);*/
             try
             {
-                var overlay = new Bitmap(Properties.Resources.logoLight32);
+                /*var overlay = new Bitmap(Properties.Resources.logoLight32);
                 if (!LightTheme)
                 {
                     for (int j = 0; (j <= (bm.Height - 1)); j++)
@@ -69,7 +69,8 @@ namespace NiceHashMiner
                 // end of bmp to bmpimg
 
                 var brush = new ImageBrush(bitmapImage);
-                return (brush, true);
+                return (brush, true);*/
+                return (new ImageBrush(), true);
             }
             catch (Exception ex)
             {

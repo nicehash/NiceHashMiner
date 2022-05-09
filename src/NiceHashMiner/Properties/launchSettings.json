@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "NiceHashMiner": {
+      "commandName": "Project",
+      "commandLineArgs": "-dev"
+    }
+  }
+}

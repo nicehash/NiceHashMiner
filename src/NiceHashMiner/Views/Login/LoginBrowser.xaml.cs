@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHMCore;
 using NHMCore.Utils;
@@ -11,6 +10,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Windows.Web.UI;
 
 namespace NiceHashMiner.Views.Login
 {
@@ -35,7 +35,7 @@ namespace NiceHashMiner.Views.Login
                 new KeyValuePair<string, string>("User-Agent", _userAgent),
                 new KeyValuePair<string, string>("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0"),
             };
-            WebViewBrowser.Navigate(new Uri(url), HttpMethod.Get, null, headers);
+            //WebViewBrowser.Navigate(new Uri(url), HttpMethod.Get, null, headers);
         }
 
         private void LoginBrowser_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -69,7 +69,7 @@ namespace NiceHashMiner.Views.Login
             WebViewBrowser.Dispose();
             try
             {
-                Process.GetProcessById((int)WebViewBrowser.Process.ProcessId)?.Kill();
+                //Process.GetProcessById((int)WebViewBrowser.Process.ProcessId)?.Kill();
             }
             catch
             { }
@@ -100,7 +100,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Browser_Loaded(object sender, RoutedEventArgs e)
         {
-            WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
+            //WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
         }
 
         private void CancelNavigateAndCheck()
@@ -128,7 +128,7 @@ namespace NiceHashMiner.Views.Login
         private async Task NavigateAndCheck(CancellationToken stop)
         {
             _navigationStart = DateTime.UtcNow;
-            WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
+            //WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
             var urlEncoded = Uri.EscapeUriString($"{Links.Login}?nhm=1&client={_userAgent}");
             NavigateTo(urlEncoded);
             bool isActive() => !stop.IsCancellationRequested;
@@ -182,7 +182,7 @@ namespace NiceHashMiner.Views.Login
             string htmlEvalValue = null;
             try
             {
-                htmlEvalValue = await WebViewBrowser.InvokeScriptAsync("eval", _jsEvalCode);
+                //htmlEvalValue = await WebViewBrowser.InvokeScriptAsync("eval", _jsEvalCode);
                 Logger.InfoDelayed("Login", $"JS eval returned htmlEvalValue='{htmlEvalValue}'", TimeSpan.FromSeconds(15));
                 var noNhmResponse = htmlEvalValue == null || htmlEvalValue == "NO_RESPONSE" || htmlEvalValue.Contains("INJ_ERROR");
                 if (showRetry)

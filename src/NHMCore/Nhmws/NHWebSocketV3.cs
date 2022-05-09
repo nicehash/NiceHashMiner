@@ -14,9 +14,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using WebSocketSharp;
 // static imports
 using static NHMCore.Nhmws.StatusCodesV3;
@@ -87,7 +87,7 @@ namespace NHMCore.Nhmws
 
         static private readonly LoginMessage _login = new LoginMessage
         {
-            version = "NHM/" + Application.ProductVersion,
+            version = "NHM/" + Assembly.GetExecutingAssembly().GetName().Version,
             protocol = 3
         };
 

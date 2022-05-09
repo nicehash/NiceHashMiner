@@ -349,7 +349,7 @@ namespace NiceHashMiner.Views
             {
                 // Attempt to get a list of security permissions from the folder. 
                 // This will raise an exception if the path is read only or do not have access to view the permissions. 
-                var ds = Directory.GetAccessControl(folderPath);
+                var ds = new DirectoryInfo(folderPath).GetAccessControl();
                 return true;
             }
             catch (UnauthorizedAccessException)

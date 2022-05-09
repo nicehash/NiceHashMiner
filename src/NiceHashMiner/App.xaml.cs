@@ -110,8 +110,7 @@ namespace NiceHashMiner
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls |
                                                    SecurityProtocolType.Tls11 |
-                                                   SecurityProtocolType.Tls12 |
-                                                   SecurityProtocolType.Ssl3;
+                                                   SecurityProtocolType.Tls12;
 
             // Initialize config
             ConfigManager.InitializeConfig();
@@ -249,7 +248,7 @@ namespace NiceHashMiner
                 "Inner Exception:\n" + ex_inner.Message + "\n\n" + ex_inner.StackTrace;
             MessageBox.Show(msg, "Application Halted!", MessageBoxButton.OK);
             e.Handled = true;
-            Application.Current.Shutdown();
+            Current.Shutdown();
         }
     }
 }

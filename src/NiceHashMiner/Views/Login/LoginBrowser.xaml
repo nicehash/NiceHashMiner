@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:WPF="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
-        xmlns:local="clr-namespace:NiceHashMiner.Views.Login"
+        xmlns:controls="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d"
         Height="450" Width="800"
         Loaded="Browser_Loaded">
@@ -34,7 +33,7 @@
                     <TextBlock Text="&#xf01e;"/>
                 </Button>
             </StackPanel>
-            <WPF:WebView x:Name="WebViewBrowser" Grid.Row="1" />
+            <controls:WebView2 x:Name="WebViewBrowser" Grid.Row="1" />
         </Grid>
         <StackPanel Orientation="Vertical" x:Name="LoadingPanel">
             <!--<Border Width="200" Height="200" Margin="0,32,0,0" BorderThickness="1" BorderBrush="Black">-->

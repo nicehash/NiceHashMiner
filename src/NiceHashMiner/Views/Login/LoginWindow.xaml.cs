@@ -106,7 +106,7 @@ namespace NiceHashMiner.Views.Login
         private async Task InitQRCode()
         {
             // this is vaild for 10 minutes
-            _uuid = Guid.NewGuid().ToString();
+            _uuid = System.Guid.NewGuid().ToString();
             _gotQRCode = await QrCodeGenerator.RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
             if (_gotQRCode)
             {

@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace NHMCore.Utils
 {
@@ -13,7 +13,7 @@ namespace NHMCore.Utils
             try
             {
                 var current = Process.GetCurrentProcess();
-                Execute(current.Id, Application.ExecutablePath);
+                Execute(current.Id, System.Reflection.Assembly.GetExecutingAssembly().Location);
             }
             catch (Exception)
             {
