@@ -63,8 +63,6 @@ namespace NHMCore.Mining.Plugins
                 new XMRig.XMRigPlugin(),
 #endif
 
-                // plugin dependencies
-                VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
 
 #if INTEGRATE_Joker_PLUGIN
