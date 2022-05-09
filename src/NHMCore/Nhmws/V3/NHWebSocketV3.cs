@@ -399,7 +399,7 @@ namespace NHMCore.Nhmws.V3
             {
                 if (!e.IsText) return;
                 NHLog.Info("NHWebSocket", $"Received: {e.Data}");
-                var msg = MessageParser.ParseMessage(e.Data);
+                var msg = MessageParserV3.ParseMessage(e.Data);
                 var task = msg switch
                 {
                     ObsoleteMessage => Task.CompletedTask,

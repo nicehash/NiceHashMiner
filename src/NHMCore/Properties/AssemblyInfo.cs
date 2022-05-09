@@ -20,6 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: InternalsVisibleTo("NiceHashMiner.Tests")]
+[assembly: InternalsVisibleTo("NHMCoreTests")]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("43dcaf38-d0c4-4335-983d-650f78461eb2")]

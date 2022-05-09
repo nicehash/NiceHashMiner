@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;
@@ -6,11 +7,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace NHMCore.Nhmws.V3
+namespace NHMCore.Nhmws
 {
     static class MessageParser
     {
-        private static string ParseMessageData(string jsonData)
+        internal static string ParseMessageData(string jsonData)
         {
             try
             {
@@ -19,33 +20,6 @@ namespace NHMCore.Nhmws.V3
             }
             catch { }
             return null;
-        }
-
-        internal static IMethod ParseMessage(string jsonData)
-        {
-            var method = ParseMessageData(jsonData);
-            return method switch
-            {
-                // non rpc
-                "sma" => JsonConvert.DeserializeObject<SmaMessage>(jsonData),
-                "markets" => new ObsoleteMessage { Method = method },
-                "balance" => JsonConvert.DeserializeObject<BalanceMessage>(jsonData),
-                "versions" => JsonConvert.DeserializeObject<VersionsMessage>(jsonData),
-                "burn" => JsonConvert.DeserializeObject<BurnMessage>(jsonData),
-                "exchange_rates" => JsonConvert.DeserializeObject<ExchangeRatesMessage>(jsonData),
-                // rpc
-                "mining.set.username" => JsonConvert.DeserializeObject<MiningSetUsername>(jsonData),
-                "mining.set.worker" => JsonConvert.DeserializeObject<MiningSetWorker>(jsonData),
-                "mining.set.group" => JsonConvert.DeserializeObject<MiningSetGroup>(jsonData),
-                "mining.enable" => JsonConvert.DeserializeObject<MiningEnable>(jsonData),
-                "mining.disable" => JsonConvert.DeserializeObject<MiningDisable>(jsonData),
-                "mining.start" => JsonConvert.DeserializeObject<MiningStart>(jsonData),
-                "mining.stop" => JsonConvert.DeserializeObject<MiningStop>(jsonData),
-                "mining.set.power_mode" => JsonConvert.DeserializeObject<MiningSetPowerMode>(jsonData),
-                "miner.reset" => JsonConvert.DeserializeObject<MinerReset>(jsonData),
-                // non supported
-                _ => throw new Exception($"Unable to deserialize '{jsonData}' got method '{method}'."),
-            };
         }
 
         public static double? ParseBalanceMessage(this BalanceMessage msg)
@@ -61,7 +35,7 @@ namespace NHMCore.Nhmws.V3
                 var stables = JsonConvert.DeserializeObject<int[]>(msg.Stable).Select(id => (AlgorithmType)id);
                 var payingPairs = msg.Data
                     .Where(pair => pair.Count >= 2)
-                    .Select(pair => (id: pair[0] as int?, paying: pair[1] as double?))
+                    .Select(pair => (id: pair[0].Value<int?>(), paying: pair[1].Value<double?>()))
                     .Where(pair => pair.id.HasValue && pair.paying.HasValue)
                     .Select(pair => (id: (AlgorithmType)pair.id.Value, paying: pair.paying.Value))
                     .ToArray();

@@ -321,7 +321,7 @@ namespace NHMCore.Nhmws.V4
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
-            _login = MessageParser.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices);
+            _login = MessageParserV4.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices);
             if (btc != null) _login.Btc = btc;
             if (worker != null) _login.Worker = worker;
             //if (group != null) _login.Group = group;
@@ -399,7 +399,7 @@ namespace NHMCore.Nhmws.V4
             {
                 if (!e.IsText) return;
                 NHLog.Info("NHWebSocket", $"Received: {e.Data}");
-                var msg = MessageParser.ParseMessage(e.Data);
+                var msg = MessageParserV4.ParseMessage(e.Data);
                 var task = msg switch
                 {
                     ObsoleteMessage => Task.CompletedTask,

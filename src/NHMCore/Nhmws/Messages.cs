@@ -1,8 +1,12 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace NHMCore.Nhmws.V3
+namespace NHMCore.Nhmws
 {
     internal interface IMethod
     {
@@ -43,7 +47,7 @@ namespace NHMCore.Nhmws.V3
         [JsonProperty("method")]
         public string Method => "sma";
         [JsonProperty("data")]
-        public List<List<object>> Data { get; set; }
+        public List<JArray> Data { get; set; }
         [JsonProperty("stable")]
         public string Stable { get; set; }
     }
@@ -198,31 +202,5 @@ namespace NHMCore.Nhmws.V3
             Params.Add(errorCode);
             if (message != null) Params.Add(message);
         }
-    }
-
-    internal class MinerStatusMessage : ISendMessage
-    {
-        [JsonProperty("method")]
-        public string Method => "miner.status";
-        [JsonProperty("params")]
-        public List<JToken> Params { get; set; }
-    }
-
-    internal class LoginMessage : ISendMessage
-    {
-        [JsonProperty("method")]
-        public string Method => "login";
-        [JsonProperty("protocol")]
-        public int Protocol => 3;
-        [JsonProperty("version")]
-        public string Version { get; set; } = "";
-        [JsonProperty("btc")]
-        public string Btc { get; set; } = "";
-        [JsonProperty("rig")]
-        public string Rig { get; set; } = "";
-        [JsonProperty("worker")]
-        public string Worker { get; set; } = "";
-        [JsonProperty("group")]
-        public string Group { get; set; } = "";
     }
 }
