@@ -142,7 +142,7 @@ namespace NHMCore.Utils
                 }
             }
             if (bestMatch.profile != null &&
-                SupportedDeviceNames.Any(item => bestMatch.profile.name.ToLower().Split(' ').Last() == item.ToLower().Split(' ').Last()))
+                SupportedDeviceNames.Any(item => bestMatch.profile.name.ToLower().Contains(item)))
             {
                 Logger.Info(Tag, $"{deviceName} can be optimized");
                 return bestMatch.profile;
