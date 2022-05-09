@@ -17,7 +17,7 @@ namespace NHM.MinerPluginToolkitV1
     /// <summary>
     /// MinerBase class implements most common IMiner features and supports MinerOptionsPackage, MinerSystemEnvironmentVariables, MinerReservedApiPorts integration, process watchdog functionality.
     /// </summary>
-    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
+    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter, IDisposable
     {
         /// <summary>
         /// This is internal ID counter used for logging
@@ -432,7 +432,7 @@ namespace NHM.MinerPluginToolkitV1
             var (binPath, binCwd) = GetBinAndCwdPaths();
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+            using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             // disable line readings and read speeds from API
             bp.CheckData = null;
 
@@ -516,7 +516,33 @@ namespace NHM.MinerPluginToolkitV1
             // return API result
             return result;
         }
-
+        private bool Disposed = false;
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!Disposed)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        _miningProcess?.Kill();
+                        _miningProcess?.Dispose();
+                        _miningProcessTask?.Dispose();
+                    }
+                    catch (Exception) { }
+                }
+                Disposed = true;
+            }
+        }
+        ~MinerBase()
+        {
+            Dispose(false);
+        }
 
     }
 }

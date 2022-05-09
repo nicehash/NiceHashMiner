@@ -16,7 +16,7 @@ using NHM.Common.Device;
 
 namespace LolMiner
 {
-    public class LolMiner : MinerBase
+    public class LolMiner : MinerBase, IDisposable
     {
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
@@ -204,7 +204,7 @@ namespace LolMiner
             var (binPath, binCwd) = GetBinAndCwdPaths();
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+            using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             // disable line readings and read speeds from API
             bp.CheckData = null;
 
@@ -279,6 +279,13 @@ namespace LolMiner
             // return API result
             return result;
         }
-
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                base.Dispose(false);
+                _httpClient.Dispose();
+            }
+        }
     }
 }

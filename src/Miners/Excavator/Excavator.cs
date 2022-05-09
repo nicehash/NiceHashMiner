@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Excavator
 {
-    public class Excavator : MinerBase, IAfterStartMining
+    public class Excavator : MinerBase, IAfterStartMining, IDisposable
     {
         protected readonly Dictionary<string, string> _mappedDeviceIds = new Dictionary<string, string>();
         public Excavator(string uuid, Dictionary<string, string> mappedIDs) : base(uuid)
@@ -277,7 +277,7 @@ namespace Excavator
                 var (binPath, binCwd) = GetBinAndCwdPaths();
                 Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
                 Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
-                var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+                using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
                 // disable line readings and read speeds from API
                 bp.CheckData = null;
 
@@ -366,6 +366,14 @@ namespace Excavator
 
                 // return API result
                 return result;
+            }
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                base.Dispose(false);
+                _httpClient.Dispose();
             }
         }
     }

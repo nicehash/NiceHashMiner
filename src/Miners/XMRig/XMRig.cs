@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace XMRig
 {
-    public class XMRig : MinerBase, IBeforeStartMining
+    public class XMRig : MinerBase, IBeforeStartMining, IDisposable
     {
         protected readonly HttpClient _httpClient = new HttpClient();
 
@@ -84,6 +84,14 @@ namespace XMRig
                 {
                     Logger.Error(_logGroup, $"BeforeStartMining error while deleting file '{deleteFile}': {e.Message}");
                 }
+            }
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                base.Dispose(false);
+                _httpClient.Dispose();
             }
         }
     }

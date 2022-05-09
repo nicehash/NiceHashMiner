@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NHM.MinerPluginToolkitV1
 {
     // This one just reads from std out and err
-    public class BenchmarkProcess
+    public class BenchmarkProcess : IDisposable
     {
         public BenchmarkProcess(Process p)
         {
@@ -108,6 +108,32 @@ namespace NHM.MinerPluginToolkitV1
             });
 
             return tcs.Task;
+        }
+        private bool Disposed = false;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!Disposed)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        TryExit();
+                        Handle?.Dispose();
+                    }
+                    catch (Exception) { }
+                }
+                Disposed = true;
+            }
+        }
+        ~BenchmarkProcess()
+        {
+            Dispose(false);
         }
     }
 }

@@ -570,6 +570,7 @@ namespace NHMCore.Mining
             foreach (var groupMiner in _runningMiners.Values)
             {
                 await groupMiner.StopTask();
+                groupMiner.Dispose();
             }
             _runningMiners.Clear();
             _miningDevices.Clear();

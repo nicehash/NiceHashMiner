@@ -98,7 +98,7 @@ namespace NBMiner
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
             Logger.Info(_logGroup, $"Benchmarking is Dagger NVIDIA LHR {isDaggerNvidia}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+            using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             // disable line readings and read speeds from API
             bp.CheckData = null;
 
@@ -252,9 +252,13 @@ namespace NBMiner
             _devices = string.Join(MinerCommandLineSettings.DevicesSeparator, _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _httpClient.Dispose();
+            if (disposing)
+            {
+                base.Dispose(false);
+                _httpClient.Dispose();
+            }
         }
     }
 }

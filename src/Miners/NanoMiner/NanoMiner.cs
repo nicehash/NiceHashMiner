@@ -14,7 +14,7 @@ using NHM.MinerPluginToolkitV1.Configs;
 
 namespace NanoMiner
 {
-    public class NanoMiner : MinerBase
+    public class NanoMiner : MinerBase, IDisposable
     {
 
         private readonly HttpClient _httpClient = new HttpClient();
@@ -149,7 +149,7 @@ namespace NanoMiner
                 Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
                 Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
                 Logger.Info(_logGroup, $"Benchmarking is Dagger NVIDIA LHR {isDaggerNvidia}");
-                var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+                using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
                 // disable line readings and read speeds from API
                 bp.CheckData = null;
 
@@ -238,6 +238,14 @@ namespace NanoMiner
 
                 // return API result
                 return result;
+            }
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                base.Dispose(false);
+                _httpClient.Dispose();
             }
         }
     }
