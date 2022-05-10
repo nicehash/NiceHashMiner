@@ -14,7 +14,7 @@ using NHM.MinerPluginToolkitV1.Configs;
 
 namespace NanoMiner
 {
-    public class NanoMiner : MinerBase
+    public class NanoMiner : MinerBase, IDisposable
     {
 
         private readonly HttpClient _httpClient = new HttpClient();
@@ -235,10 +235,32 @@ namespace NanoMiner
                 {
                     Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
                 }
-
                 // return API result
                 return result;
             }
+        }
+        private bool _disposed = false;
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                try
+                {
+                    _httpClient.Dispose();
+                }
+                catch (Exception) { }
+            }
+            _disposed = true;
+        }
+        ~NanoMiner()
+        {
+            Dispose(false);
         }
     }
 }

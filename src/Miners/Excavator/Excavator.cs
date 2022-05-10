@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Excavator
 {
-    public class Excavator : MinerBase, IAfterStartMining
+    public class Excavator : MinerBase, IAfterStartMining, IDisposable
     {
         protected readonly Dictionary<string, string> _mappedDeviceIds = new Dictionary<string, string>();
         public Excavator(string uuid, Dictionary<string, string> mappedIDs) : base(uuid)
@@ -363,10 +363,32 @@ namespace Excavator
                 {
                     Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
                 }
-
                 // return API result
                 return result;
             }
+        }
+        private bool _disposed = false;
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                try
+                {
+                    _httpClient.Dispose();
+                }
+                catch (Exception) { }
+            }
+            _disposed = true;
+        }
+        ~Excavator()
+        {
+            Dispose(false);
         }
     }
 }

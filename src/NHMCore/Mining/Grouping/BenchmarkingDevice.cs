@@ -51,39 +51,38 @@ namespace NHMCore.Mining.Grouping
 
             bool ret = false;
             var miningPairs = new List<MiningPair> { algo.ToMiningPair() };
+            IMiner miner = null;
             try
             {
                 algo.IsBenchmarking = true;
-                using (var powerHelper = new PowerHelper(algo.ComputeDevice))
+                using var powerHelper = new PowerHelper(algo.ComputeDevice);
+                var plugin = algo.PluginContainer;
+                miner = plugin.CreateMiner();
+
+                GPUProfileManager.Instance.Start(miningPairs);
+                miner.InitMiningPairs(miningPairs);
+                // fill service since the benchmark might be online. DemoUser.BTC must be used
+                miner.InitMiningLocationAndUsername("auto", DemoUser.BTC);
+                powerHelper.Start();
+                algo.ComputeDevice.State = DeviceState.Benchmarking;
+                var result = await miner.StartBenchmark(stop, BenchmarkManagerState.Instance.SelectedBenchmarkType);
+                GPUProfileManager.Instance.Stop(miningPairs);
+                if (stop.IsCancellationRequested) return false;
+
+                algo.IsReBenchmark = false;
+                var power = powerHelper.Stop();
+                ret = result.Success || result.AlgorithmTypeSpeeds?.Count > 0;
+                if (ret)
                 {
-                    var plugin = algo.PluginContainer;
-                    var miner = plugin.CreateMiner();
-
-                    GPUProfileManager.Instance.Start(miningPairs);
-                    miner.InitMiningPairs(miningPairs);
-                    // fill service since the benchmark might be online. DemoUser.BTC must be used
-                    miner.InitMiningLocationAndUsername("auto", DemoUser.BTC);
-                    powerHelper.Start();
-                    algo.ComputeDevice.State = DeviceState.Benchmarking;
-                    var result = await miner.StartBenchmark(stop, BenchmarkManagerState.Instance.SelectedBenchmarkType);
-                    GPUProfileManager.Instance.Stop(miningPairs);
-                    if (stop.IsCancellationRequested) return false;
-
-                    algo.IsReBenchmark = false;
-                    var power = powerHelper.Stop();
-                    ret = result.Success || result.AlgorithmTypeSpeeds?.Count > 0;
-                    if (ret)
-                    {
-                        algo.Speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.speed).ToList();
-                        algo.PowerUsage = power;
-                        ConfigManager.CommitBenchmarksForDevice(algo.ComputeDevice);
-                    }
-                    else
-                    {
-                        // mark it as failed
-                        algo.LastBenchmarkingFailed = true;
-                        algo.SetBenchmarkError(result.ErrorMessage);
-                    }
+                    algo.Speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.speed).ToList();
+                    algo.PowerUsage = power;
+                    ConfigManager.CommitBenchmarksForDevice(algo.ComputeDevice);
+                }
+                else
+                {
+                    // mark it as failed
+                    algo.LastBenchmarkingFailed = true;
+                    algo.SetBenchmarkError(result.ErrorMessage);
                 }
             }
             finally
@@ -91,6 +90,7 @@ namespace NHMCore.Mining.Grouping
                 GPUProfileManager.Instance.Stop(miningPairs);
                 algo.ClearBenchmarkPending();
                 algo.IsBenchmarking = false;
+                if(miner is IDisposable disp) disp.Dispose();
             }
 
             return ret;
@@ -210,5 +210,5 @@ namespace NHMCore.Mining.Grouping
         }
     }
 
-    
+
 }
