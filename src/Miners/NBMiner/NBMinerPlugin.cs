@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿#define IS_LHR_BUILD
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -28,11 +29,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v40.1",
+                BinVersion = "v41.3",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v40.1/NBMiner_40.1_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v41.3/NBMiner_41.3_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,10 +43,16 @@ namespace NBMiner
             };
         }
 
+#if IS_LHR_BUILD
+        public override string PluginUUID => "NBMiner_LHR";
+        public override string Name => "NBMiner_LHR";
+#else
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
+        public override string Name => "NBMiner";
+#endif
 
         public override Version Version => new Version(17, 0);
-        public override string Name => "NBMiner";
+        
 
         public override string Author => "info@nicehash.com";
 
@@ -151,15 +158,21 @@ namespace NBMiner
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe" });
         }
 
+        private static bool IsLHR(string name)
+        {
+            var nonLHR_GPUs = new string[] { "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
+            return nonLHR_GPUs.Any(name.Contains);
+        }
+
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 15 && benchmarkedPluginVersion.Minor < 3 && device.DeviceType == DeviceType.NVIDIA && ids.Contains(AlgorithmType.DaggerHashimoto)) return true;
-                if ((benchmarkedPluginVersion.Major < 16 || (benchmarkedPluginVersion.Major == 16 && benchmarkedPluginVersion.Minor < 2)) && device.DeviceType == DeviceType.AMD && ids.Contains(AlgorithmType.DaggerHashimoto)) return true;
-                // LHR re-benchmark
-                if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.DaggerHashimoto && benchmarkedPluginVersion < Version) return true;
+                if (device.DeviceType != DeviceType.NVIDIA) return false;
+                if (ids.FirstOrDefault() != AlgorithmType.DaggerHashimoto) return false;
+                if (!IsLHR(device.Name)) return false;
+                return benchmarkedPluginVersion < Version;
             }
             catch (Exception e)
             {
@@ -170,10 +183,14 @@ namespace NBMiner
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
+#if IS_LHR_BUILD
+            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(512, 15));
+#else
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
+#endif
         }
 
-        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+    public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
             return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }

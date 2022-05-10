@@ -33,54 +33,6 @@ namespace NBMiner
             _mappedDeviceIds = mappedIDs;
         }
 
-        public override void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
-        {
-            // now should be ordered
-            _miningPairs = GetSortedMiningPairs(miningPairs);
-            // update log group
-            try
-            {
-                var devs = _miningPairs.Select(pair => $"{pair.Device.DeviceType}:{pair.Device.ID}");
-                var devsTag = $"devs({string.Join(",", devs)})";
-                var algo = _miningPairs.First().Algorithm.AlgorithmName;
-                var algoTag = $"algo({algo})";
-                _logGroup = $"{_baseTag}-{algoTag}-{devsTag}";
-            }
-            catch (Exception e)
-            {
-                Logger.Error(_logGroup, $"Error while setting _logGroup: {e.Message}");
-            }
-
-            // init algo, ELP and finally miner specific init
-            // init algo
-            var (first, second, ok) = MinerToolkit.GetFirstAndSecondAlgorithmType(_miningPairs);
-            _algorithmType = first;
-            _algorithmSecondType = second;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // init ELP, _miningPairs are ordered and ELP parsing keeps ordering
-            if (MinerOptionsPackage != null)
-            {
-                var miningPairsList = _miningPairs.ToList();
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-
-                var firstPair = miningPairsList.FirstOrDefault();
-                var optionsWithoutLHR = MinerOptionsPackage.GeneralOptions.Where(opt => !opt.ID.Contains("lhr")).ToList();
-                var optionsWithLHR = MinerOptionsPackage.GeneralOptions.Where(opt => opt.ID.Contains("lhr")).ToList();
-                var generalParamsWithoutLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithoutLHR, ignoreDefaults);
-                var isDagger = firstPair.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto;
-                var generalParamsWithLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithLHR, !isDagger);
-                var generalParams = generalParamsWithoutLHR + " " + generalParamsWithLHR;
-                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
-            // miner specific init
-            Init();
-        }
-
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             using var tickCancelSource = new CancellationTokenSource();
