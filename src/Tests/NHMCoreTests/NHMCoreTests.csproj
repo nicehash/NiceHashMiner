@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Nhmws\MessageParserTests.cs" />
     <Compile Include="Paths.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
