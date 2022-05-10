@@ -433,7 +433,7 @@ namespace NHM.MinerPluginToolkitV1
             var (binPath, binCwd) = GetBinAndCwdPaths();
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
-            using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             // disable line readings and read speeds from API
             bp.CheckData = null;
 

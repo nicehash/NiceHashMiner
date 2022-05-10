@@ -181,7 +181,6 @@ namespace NBMiner
             {
                 Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
             }
-            if (bp is IDisposable disp) disp.Dispose();
             // return API result
             return result;
         }
