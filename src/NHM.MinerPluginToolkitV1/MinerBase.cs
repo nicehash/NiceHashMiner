@@ -17,7 +17,7 @@ namespace NHM.MinerPluginToolkitV1
     /// <summary>
     /// MinerBase class implements most common IMiner features and supports MinerOptionsPackage, MinerSystemEnvironmentVariables, MinerReservedApiPorts integration, process watchdog functionality.
     /// </summary>
-    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter, IDisposable
+    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
         /// <summary>
         /// This is internal ID counter used for logging
@@ -320,6 +320,7 @@ namespace NHM.MinerPluginToolkitV1
             var commandLine = MiningCreateCommandLine();
             var environmentVariables = GetEnvironmentVariables();
             var stopActionExec = false;
+            if (_miningProcessTask != null) _miningProcessTask.Dispose();
             _miningProcessTask = Task.Run(() =>
             {
                 using var stopMinerTaskSource = new CancellationTokenSource();
@@ -514,33 +515,6 @@ namespace NHM.MinerPluginToolkitV1
             }
             // return API result
             return result;
-        }
-        private bool Disposed = false;
-        public virtual void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!Disposed)
-            {
-                if (disposing)
-                {
-                    try
-                    {
-                        _miningProcess?.Kill();
-                        _miningProcess?.Dispose();
-                        _miningProcessTask?.Dispose();
-                    }
-                    catch (Exception) { }
-                }
-                Disposed = true;
-            }
-        }
-        ~MinerBase()
-        {
-            Dispose(false);
         }
 
     }

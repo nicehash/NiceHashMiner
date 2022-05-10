@@ -117,19 +117,17 @@ namespace NHM.MinerPluginToolkitV1
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!Disposed)
+            if (Disposed) return;
+            if (disposing)
             {
-                if (disposing)
+                try
                 {
-                    try
-                    {
-                        TryExit();
-                        Handle?.Dispose();
-                    }
-                    catch (Exception) { }
+                    TryExit();
+                    Handle?.Dispose();
                 }
-                Disposed = true;
+                catch (Exception) { }
             }
+            Disposed = true;
         }
         ~BenchmarkProcess()
         {

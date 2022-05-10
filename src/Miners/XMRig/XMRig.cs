@@ -86,13 +86,28 @@ namespace XMRig
                 }
             }
         }
-        protected override void Dispose(bool disposing)
+        private bool Disposed = false;
+        public virtual void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected void Dispose(bool disposing)
+        {
+            if (Disposed) return;
             if (disposing)
             {
-                base.Dispose(false);
-                _httpClient.Dispose();
+                try
+                {
+                    _httpClient.Dispose();
+                }
+                catch (Exception) { }
             }
+            Disposed = true;
+        }
+        ~XMRig()
+        {
+            Dispose(false);
         }
     }
 }

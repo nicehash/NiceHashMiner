@@ -204,12 +204,12 @@ namespace NHMCore.Mining
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
             }
-           
+
             // TODO temporary here move it outside later
             MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
 
             var apiDataStatus = ExamineApiData(apiData, _miningPairs);
-            
+
             if (apiDataStatus != ApiDataStatus.OK) return;
         }
 
@@ -464,19 +464,16 @@ namespace NHMCore.Mining
         }
         protected virtual void Dispose(bool disposing)
         {
-            if (!Disposed)
+            if (Disposed) return;
+            if (disposing)
             {
-                if (disposing)
+                try
                 {
-                    try
-                    {
-                        _apiSemaphore?.Dispose();
-                        _minerWatchdogTask?.Dispose();
-                    }
-                    catch (Exception) { }
+                    _apiSemaphore?.Dispose();
                 }
-                Disposed = true;
+                catch (Exception) { }
             }
+            Disposed = true;
         }
         ~Miner()
         {
