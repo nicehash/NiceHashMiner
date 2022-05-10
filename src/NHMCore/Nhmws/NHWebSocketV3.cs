@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
@@ -88,7 +89,8 @@ namespace NHMCore.Nhmws
         static private readonly LoginMessage _login = new LoginMessage
         {
             version = "NHM/" + Application.ProductVersion,
-            protocol = 3
+            protocol = 3,
+            btc = DemoUser.BTC,
         };
 
         static private ConcurrentQueue<MessageEventArgs> _recieveQueue { get; set; } = new ConcurrentQueue<MessageEventArgs>();
@@ -310,7 +312,7 @@ namespace NHMCore.Nhmws
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
             _login.rig = ApplicationStateManager.RigID();
-            if (btc != null) _login.btc = btc;
+            if (!string.IsNullOrEmpty(btc)) _login.btc = btc;
             if (worker != null) _login.worker = worker;
             if (group != null) _login.group = group;
             // on credentials change always send close websocket message
