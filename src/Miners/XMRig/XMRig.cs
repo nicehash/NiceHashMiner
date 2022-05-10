@@ -86,7 +86,7 @@ namespace XMRig
                 }
             }
         }
-        private bool Disposed = false;
+        private bool _disposed = false;
         public virtual void Dispose()
         {
             Dispose(true);
@@ -94,7 +94,7 @@ namespace XMRig
         }
         protected void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (_disposed) return;
             if (disposing)
             {
                 try
@@ -103,7 +103,7 @@ namespace XMRig
                 }
                 catch (Exception) { }
             }
-            Disposed = true;
+            _disposed = true;
         }
         ~XMRig()
         {

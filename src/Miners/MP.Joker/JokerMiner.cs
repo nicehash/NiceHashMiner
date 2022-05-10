@@ -1563,7 +1563,7 @@ namespace MP.Joker
                 _initOrderMirrorApiOrderUUIDs[i] = miningPairsArray[i].Device.UUID;
             }
         }
-        private bool Disposed = false;
+        private bool _disposed = false;
         public virtual void Dispose()
         {
             Dispose(true);
@@ -1571,7 +1571,7 @@ namespace MP.Joker
         }
         protected void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (_disposed) return;
             if (disposing)
             {
                 try
@@ -1580,7 +1580,7 @@ namespace MP.Joker
                 }
                 catch (Exception) { }
             }
-            Disposed = true;
+            _disposed = true;
         }
         ~JokerMiner()
         {

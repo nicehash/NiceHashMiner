@@ -202,7 +202,7 @@ namespace NBMiner
             // separator ","
             _devices = string.Join(MinerCommandLineSettings.DevicesSeparator, _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
         }
-        private bool Disposed = false;
+        private bool _disposed = false;
         public virtual void Dispose()
         {
             Dispose(true);
@@ -210,7 +210,7 @@ namespace NBMiner
         }
         protected void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (_disposed) return;
             if (disposing)
             {
                 try
@@ -219,7 +219,7 @@ namespace NBMiner
                 }
                 catch (Exception) { }
             }
-            Disposed = true;
+            _disposed = true;
         }
         ~NBMiner()
         {

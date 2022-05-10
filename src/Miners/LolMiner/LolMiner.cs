@@ -278,7 +278,7 @@ namespace LolMiner
             // return API result
             return result;
         }
-        private bool Disposed = false;
+        private bool _disposed = false;
         public virtual void Dispose()
         {
             Dispose(true);
@@ -286,7 +286,7 @@ namespace LolMiner
         }
         protected void Dispose(bool disposing)
         {
-            if (Disposed) return;
+            if (_disposed) return;
             if (disposing)
             {
                 try
@@ -295,7 +295,7 @@ namespace LolMiner
                 }
                 catch (Exception) { }
             }
-            Disposed = true;
+            _disposed = true;
         }
         ~LolMiner()
         {
