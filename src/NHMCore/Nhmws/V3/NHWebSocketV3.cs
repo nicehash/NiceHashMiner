@@ -77,6 +77,7 @@ namespace NHMCore.Nhmws.V3
         static private readonly LoginMessage _login = new LoginMessage
         {
             Version = $"NHM/{Application.ProductVersion}",
+            Btc = DemoUser.BTC,
         };
 
         static private ConcurrentQueue<MessageEventArgs> _recieveQueue { get; set; } = new ConcurrentQueue<MessageEventArgs>();
