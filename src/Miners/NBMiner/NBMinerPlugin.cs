@@ -86,6 +86,17 @@ namespace NBMiner
             {
                 Logger.Error("NBMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
             }
+#if IS_LHR_BUILD
+            var gpus = devices
+                .Where(dev => dev is CUDADevice)
+                .Cast<CUDADevice>()
+                .Where(dev => supportedNVIDIA_Driver && IsSupportedNvidiaDevice(dev))
+                .Where(dev => IsLHR(dev.Name))
+                .OrderBy(gpu => gpu.PCIeBusID)
+                .Cast<BaseDevice>()
+                .Select((gpu, minerDeviceId) => (gpu, minerDeviceId))
+                .ToArray();
+#else
             var gpus = devices
                 .Where(dev => dev is IGpuDevice)
                 .Where(dev => IsSupportedAMDDevice(dev) || (supportedNVIDIA_Driver && IsSupportedNvidiaDevice(dev)))
@@ -94,6 +105,8 @@ namespace NBMiner
                 .Cast<BaseDevice>()
                 .Select((gpu, minerDeviceId) => (gpu, minerDeviceId))
                 .ToArray();
+#endif
+
 
             // NBMiner sortes devices by PCIe and indexes are 0 based
             foreach (var (gpu, minerDeviceId) in gpus)
@@ -163,6 +176,12 @@ namespace NBMiner
             var nonLHR_GPUs = new string[] { "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
             return nonLHR_GPUs.Any(name.Contains);
         }
+
+        //private static bool IsLHR_Ignore(CUDADevice dev)
+        //{
+        //    const ulong maxGPU_VRAM = 11UL << 30; // 11GB
+        //    return dev.Name.Contains("GeForce RTX 3080") && dev.GpuRam > maxGPU_VRAM;
+        //}
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
