@@ -16,7 +16,7 @@ using NHM.Common.Device;
 
 namespace LolMiner
 {
-    public class LolMiner : MinerBase
+    public class LolMiner : MinerBase, IDisposable
     {
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
@@ -275,10 +275,31 @@ namespace LolMiner
             {
                 Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
             }
-
             // return API result
             return result;
         }
-
+        private bool Disposed = false;
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected void Dispose(bool disposing)
+        {
+            if (Disposed) return;
+            if (disposing)
+            {
+                try
+                {
+                    _httpClient.Dispose();
+                }
+                catch (Exception) { }
+            }
+            Disposed = true;
+        }
+        ~LolMiner()
+        {
+            Dispose(false);
+        }
     }
 }

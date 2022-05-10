@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Mining
 {
-    public class Miner
+    public class Miner : IDisposable
     {
         public static Miner CreateMinerForMining(List<AlgorithmContainer> algorithms, string groupKey)
         {
@@ -204,12 +204,12 @@ namespace NHMCore.Mining
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
             }
-           
+
             // TODO temporary here move it outside later
             MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
 
             var apiDataStatus = ExamineApiData(apiData, _miningPairs);
-            
+
             if (apiDataStatus != ApiDataStatus.OK) return;
         }
 
@@ -234,10 +234,10 @@ namespace NHMCore.Mining
             MiningDataStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             await _miner.StopMiningTask();
             _algos.ForEach(a => a.IsCurrentlyMining = false);
-            //if (_miner is IDisposable disposableMiner)
-            //{
-            //    disposableMiner.Dispose();
-            //}
+            if (_miner is IDisposable disposableMiner)
+            {
+                disposableMiner.Dispose();
+            }
         }
 
 
@@ -456,5 +456,28 @@ namespace NHMCore.Mining
             MinerApiWatchdog.UpdateApiTimestamp(GroupKey, DateTime.UtcNow);
         }
         #endregion MinerApiWatchdog
+        private bool Disposed = false;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (Disposed) return;
+            if (disposing)
+            {
+                try
+                {
+                    _apiSemaphore?.Dispose();
+                }
+                catch (Exception) { }
+            }
+            Disposed = true;
+        }
+        ~Miner()
+        {
+            Dispose(false);
+        }
     }
 }

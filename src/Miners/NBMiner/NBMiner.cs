@@ -133,7 +133,6 @@ namespace NBMiner
             {
                 Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
             }
-
             // return API result
             return result;
         }
@@ -203,10 +202,28 @@ namespace NBMiner
             // separator ","
             _devices = string.Join(MinerCommandLineSettings.DevicesSeparator, _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
         }
-
-        public void Dispose()
+        private bool Disposed = false;
+        public virtual void Dispose()
         {
-            _httpClient.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected void Dispose(bool disposing)
+        {
+            if (Disposed) return;
+            if (disposing)
+            {
+                try
+                {
+                    _httpClient.Dispose();
+                }
+                catch (Exception) { }
+            }
+            Disposed = true;
+        }
+        ~NBMiner()
+        {
+            Dispose(false);
         }
     }
 }
