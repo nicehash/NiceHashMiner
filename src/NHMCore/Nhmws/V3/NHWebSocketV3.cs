@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
@@ -322,7 +323,7 @@ namespace NHMCore.Nhmws.V3
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
             _login.Rig = ApplicationStateManager.RigID();
-            if (btc != null) _login.Btc = btc;
+            if (!string.IsNullOrEmpty(btc)) _login.Btc = btc;
             if (worker != null) _login.Worker = worker;
             if (group != null) _login.Group = group;
             // on credentials change always send close websocket message
