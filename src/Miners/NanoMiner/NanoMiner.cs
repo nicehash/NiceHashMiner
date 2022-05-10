@@ -149,7 +149,7 @@ namespace NanoMiner
                 Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
                 Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
                 Logger.Info(_logGroup, $"Benchmarking is Dagger NVIDIA LHR {isDaggerNvidia}");
-                using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+                var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
                 // disable line readings and read speeds from API
                 bp.CheckData = null;
 
@@ -235,7 +235,7 @@ namespace NanoMiner
                 {
                     Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
                 }
-
+                if (bp is IDisposable disp) disp.Dispose();
                 // return API result
                 return result;
             }

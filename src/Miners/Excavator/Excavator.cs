@@ -277,7 +277,7 @@ namespace Excavator
                 var (binPath, binCwd) = GetBinAndCwdPaths();
                 Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
                 Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
-                using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+                var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
                 // disable line readings and read speeds from API
                 bp.CheckData = null;
 
@@ -363,7 +363,7 @@ namespace Excavator
                 {
                     Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
                 }
-
+                if (bp is IDisposable disp) disp.Dispose();
                 // return API result
                 return result;
             }
