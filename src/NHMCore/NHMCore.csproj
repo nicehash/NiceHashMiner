@@ -162,7 +162,6 @@
     <Compile Include="Mining\Plugins\MinerPluginInstallTask.cs" />
     <Compile Include="Mining\Plugins\MinerPluginsUpdaterSettings.cs" />
     <Compile Include="Mining\Plugins\PluginInstallProgressState.cs" />
-    <Compile Include="Mining\Plugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
     <Compile Include="Mining\MinerApiWatchdog.cs" />
     <Compile Include="Mining\MiningManager.cs" />
     <Compile Include="Mining\MiningDataStats.cs" />
@@ -223,6 +222,7 @@
     <Compile Include="Utils\TrivialChannel.cs" />
     <Compile Include="Utils\UpdateHelpers.cs" />
     <Compile Include="Utils\AmdModeSwitcher.cs" />
+    <Compile Include="Utils\VC_REDIST_x64_2015_2019_Manager.cs" />
     <Compile Include="Utils\WindowsUptimeCheck.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
