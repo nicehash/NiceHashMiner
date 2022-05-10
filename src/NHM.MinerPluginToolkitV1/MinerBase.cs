@@ -432,7 +432,7 @@ namespace NHM.MinerPluginToolkitV1
             var (binPath, binCwd) = GetBinAndCwdPaths();
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             Logger.Info(_logGroup, $"Benchmarking settings: time={benchmarkTime} ticks={maxTicks} ticksEnabled={maxTicksEnabled}");
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+            using var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             // disable line readings and read speeds from API
             bp.CheckData = null;
 
@@ -512,7 +512,6 @@ namespace NHM.MinerPluginToolkitV1
             {
                 Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
             }
-            if (bp is IDisposable disp) disp.Dispose();
             // return API result
             return result;
         }
