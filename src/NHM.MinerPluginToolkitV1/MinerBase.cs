@@ -320,6 +320,7 @@ namespace NHM.MinerPluginToolkitV1
             var commandLine = MiningCreateCommandLine();
             var environmentVariables = GetEnvironmentVariables();
             var stopActionExec = false;
+            if (_miningProcessTask != null) _miningProcessTask.Dispose();
             _miningProcessTask = Task.Run(() =>
             {
                 using var stopMinerTaskSource = new CancellationTokenSource();
@@ -512,11 +513,9 @@ namespace NHM.MinerPluginToolkitV1
             {
                 Logger.Warn(_logGroup, $"benchmarking AlgorithmSpeedsTotal error {e.Message}");
             }
-
             // return API result
             return result;
         }
-
 
     }
 }

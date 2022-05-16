@@ -74,7 +74,7 @@ namespace NHMCore.Mining
         private class MinerRestartLoopNotifyCommand : MainCommand
         { }
 
-        private class RunEthlargementChangedCommand : MainCommand
+        private class UseOptimizationProfilesChangedCommand : MainCommand
         { }
 
         private class DNSQChangedCommand : MainCommand
@@ -174,10 +174,10 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
-        private static Task UseEthlargementChanged()
+        private static Task UseOptimizationProfilesChanged()
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new RunEthlargementChangedCommand();
+            var command = new UseOptimizationProfilesChangedCommand();
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -275,7 +275,7 @@ namespace NHMCore.Mining
         {
             _ = e.PropertyName switch
             {
-                nameof(MiscSettings.UseEthlargement) => UseEthlargementChanged(),
+                nameof(MiscSettings.UseOptimizationProfiles) => UseOptimizationProfilesChanged(),
                 nameof(MiscSettings.ResolveNiceHashDomainsToIPs) => DNSQChanged(),
                 _ => Task.CompletedTask,
             };            
@@ -570,6 +570,7 @@ namespace NHMCore.Mining
             foreach (var groupMiner in _runningMiners.Values)
             {
                 await groupMiner.StopTask();
+                groupMiner.Dispose();
             }
             _runningMiners.Clear();
             _miningDevices.Clear();
@@ -659,7 +660,7 @@ namespace NHMCore.Mining
                 command switch
                 {
                     UsernameChangedCommand => true,
-                    RunEthlargementChangedCommand => true,
+                    UseOptimizationProfilesChangedCommand => true,
                     DNSQChangedCommand => true,
                     SSLMiningChangedCommand => true,
                     _ => false,

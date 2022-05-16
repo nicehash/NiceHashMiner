@@ -17,7 +17,7 @@ using static MP.Joker.PluginEngines;
 
 namespace MP.Joker
 {
-    public class JokerMiner : MinerBase
+    public class JokerMiner : MinerBase, IDisposable
     {
         PluginEngine _pluginEngine;
 
@@ -1562,6 +1562,29 @@ namespace MP.Joker
             {
                 _initOrderMirrorApiOrderUUIDs[i] = miningPairsArray[i].Device.UUID;
             }
+        }
+        private bool _disposed = false;
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                try
+                {
+                    _httpClient.Dispose();
+                }
+                catch (Exception) { }
+            }
+            _disposed = true;
+        }
+        ~JokerMiner()
+        {
+            Dispose(false);
         }
     }
 }

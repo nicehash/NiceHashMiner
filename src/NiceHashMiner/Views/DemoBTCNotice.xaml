@@ -105,7 +105,9 @@
                  TextChanged="TextBoxBitcoinAddress_TextChanged"
                  KeyUp="TextBoxBitcoinAddress_KeyUp"
                  LostFocus="TextBoxBitcoinAddress_LostFocus"
-                 Margin="0,8,0,0" />
+                 Margin="0,8,0,0"
+                 MinWidth="344"
+                 Width="Auto" />
         <TextBlock Grid.Row="4"
                    TextWrapping="WrapWithOverflow"
                    TextAlignment="Left"

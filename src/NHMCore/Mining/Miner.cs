@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Mining
 {
-    public class Miner
+    public class Miner : IDisposable
     {
         public static Miner CreateMinerForMining(List<AlgorithmContainer> algorithms, string groupKey)
         {
@@ -204,12 +204,12 @@ namespace NHMCore.Mining
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
             }
-           
+
             // TODO temporary here move it outside later
             MiningDataStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
 
             var apiDataStatus = ExamineApiData(apiData, _miningPairs);
-            
+
             if (apiDataStatus != ApiDataStatus.OK) return;
         }
 
@@ -217,7 +217,7 @@ namespace NHMCore.Mining
         {
             _miner.InitMiningLocationAndUsername("auto", username);
             _miner.InitMiningPairs(_miningPairs);
-            EthlargementIntegratedPlugin.Instance.Start(_miningPairs);
+            GPUProfileManager.Instance.Start(_miningPairs);
             var ret = await _miner.StartMiningTask(stop);
             var maxTimeout = _plugin.GetApiMaxTimeout(_miningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
@@ -229,15 +229,15 @@ namespace NHMCore.Mining
         private async Task StopAsync()
         {
             // TODO thing about this case, closing opening on switching
-            EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
+            GPUProfileManager.Instance.Stop(_miningPairs);
             MinerApiWatchdog.RemoveGroup(GroupKey);
             MiningDataStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             await _miner.StopMiningTask();
             _algos.ForEach(a => a.IsCurrentlyMining = false);
-            //if (_miner is IDisposable disposableMiner)
-            //{
-            //    disposableMiner.Dispose();
-            //}
+            if (_miner is IDisposable disposableMiner)
+            {
+                disposableMiner.Dispose();
+            }
         }
 
 
@@ -456,5 +456,28 @@ namespace NHMCore.Mining
             MinerApiWatchdog.UpdateApiTimestamp(GroupKey, DateTime.UtcNow);
         }
         #endregion MinerApiWatchdog
+        private bool _disposed = false;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                try
+                {
+                    _apiSemaphore?.Dispose();
+                }
+                catch (Exception) { }
+            }
+            _disposed = true;
+        }
+        ~Miner()
+        {
+            Dispose(false);
+        }
     }
 }

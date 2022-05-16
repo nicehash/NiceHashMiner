@@ -526,24 +526,12 @@ namespace NHMCore.Mining
         }
 
         #endregion Checker
-        public int TrySetMemoryTimings(int profileNum)
-        {
-            if (!GPUProfileManager.CanUseProfiles) return -1;
-            if (!GPUProfileManager.ExistingProfiles.Contains(profileNum)) return -1;
-            var editedGPUName = Regex.Replace(Name, @"[0-9]+GB", "").Trim();
-            if (GPUProfileManager.GetProfileForSelectedGPUIfExists(editedGPUName, profileNum, out var prof) && DeviceMonitor is IMemoryTimings mp)
-            {
-                var memoryTimings = GPUProfileManager.BuildMTString(prof);
-                return mp.SetMemoryTimings(memoryTimings);
-            }
-            return -1;
-        }
 
-        public int TrySetMemoryTimings(string customMT)
+        public int TrySetMemoryTimings(string mtString)
         {
             if(DeviceMonitor is IMemoryTimings mp)
             {
-                return mp.SetMemoryTimings(customMT);
+                return mp.SetMemoryTimings(mtString);
             }
             return -1;
         }
