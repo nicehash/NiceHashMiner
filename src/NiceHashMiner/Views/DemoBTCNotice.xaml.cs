@@ -32,7 +32,7 @@ namespace NiceHashMiner.Views
         {
             try
             {
-                //_showMeHowWindow.Close();
+                _showMeHowWindow.Close();
             }
             catch
             { }

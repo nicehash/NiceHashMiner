@@ -31,11 +31,7 @@ namespace NiceHashMiner.Views.Login
 
         private void NavigateTo(string url)
         {
-            var headers = new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("User-Agent", _userAgent),
-                new KeyValuePair<string, string>("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0"),
-            };
-            //WebViewBrowser.Navigate(new Uri(url), HttpMethod.Get, null, headers);
+            WebViewBrowser.CoreWebView2.Navigate(url);
         }
 
         private void LoginBrowser_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -69,7 +65,7 @@ namespace NiceHashMiner.Views.Login
             WebViewBrowser.Dispose();
             try
             {
-                //Process.GetProcessById((int)WebViewBrowser.Process.ProcessId)?.Kill();
+                Process.GetProcessById((int)WebViewBrowser.CoreWebView2.BrowserProcessId)?.Kill();
             }
             catch
             { }
@@ -100,7 +96,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Browser_Loaded(object sender, RoutedEventArgs e)
         {
-            //WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
+            WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
         }
 
         private void CancelNavigateAndCheck()
@@ -128,8 +124,9 @@ namespace NiceHashMiner.Views.Login
         private async Task NavigateAndCheck(CancellationToken stop)
         {
             _navigationStart = DateTime.UtcNow;
-            //WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
-            var urlEncoded = Uri.EscapeUriString($"{Links.Login}?nhm=1&client={_userAgent}");
+            await WebViewBrowser.EnsureCoreWebView2Async();
+            WebViewBrowser.NavigationCompleted += Browser_NavigationCompleted;
+            var urlEncoded = $"{Links.Login}?nhm=1&client={_userAgent}";
             NavigateTo(urlEncoded);
             bool isActive() => !stop.IsCancellationRequested;
             while (isActive())
@@ -144,9 +141,9 @@ namespace NiceHashMiner.Views.Login
             }
         }
 
-        private void Browser_NavigationCompleted(object sender, WebViewControlNavigationCompletedEventArgs e)
+        private void Browser_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
-            Logger.InfoDelayed("Login", $"Navigation to {e.Uri} {e.WebErrorStatus}", TimeSpan.FromSeconds(5));
+            Logger.InfoDelayed("Login", $"Navigation to {e.NavigationId} {e.WebErrorStatus}", TimeSpan.FromSeconds(5));
         }
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
@@ -173,7 +170,6 @@ namespace NiceHashMiner.Views.Login
         private class Response
         {
             public string btcAddress { get; set; }
-            public string error { get; set; }
         }
 
         private async Task<bool?> CheckForBtc()
@@ -182,8 +178,10 @@ namespace NiceHashMiner.Views.Login
             string htmlEvalValue = null;
             try
             {
-                //htmlEvalValue = await WebViewBrowser.InvokeScriptAsync("eval", _jsEvalCode);
-                Logger.InfoDelayed("Login", $"JS eval returned htmlEvalValue='{htmlEvalValue}'", TimeSpan.FromSeconds(15));
+                htmlEvalValue = await WebViewBrowser.ExecuteScriptAsync(_jsEvalCode);
+                var btcAddr = htmlEvalValue.Remove(htmlEvalValue.Length - 1, 1).Remove(0, 1).Replace("\\\"", "\"");
+                Logger.InfoDelayed("Login", $"JS eval returned htmlEvalValue='{btcAddr}'", TimeSpan.FromSeconds(15));
+                
                 var noNhmResponse = htmlEvalValue == null || htmlEvalValue == "NO_RESPONSE" || htmlEvalValue.Contains("INJ_ERROR");
                 if (showRetry)
                 {
@@ -200,9 +198,8 @@ namespace NiceHashMiner.Views.Login
                     WebViewGrid.Visibility = Visibility.Visible;
                 }
 
-                var webResponse = JsonConvert.DeserializeObject<Response>(htmlEvalValue);
+                var webResponse = JsonConvert.DeserializeObject<Response>(btcAddr);
                 if (webResponse == null) return null;
-
                 if (webResponse.btcAddress != null)
                 {
                     var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(webResponse.btcAddress);
@@ -211,15 +208,8 @@ namespace NiceHashMiner.Views.Login
                         Logger.Info("Login", $"Navigation and processing successfull.");
                         return true;
                     }
-                    else
-                    {
-                        Logger.Error("Login", $"Btc address: {webResponse.btcAddress} was not saved. Result: {result}.");
-                    }
-                }
-                else if (webResponse.error != null)
-                {
-                    var error = webResponse.error;
-                    Logger.Error("Login", "Received error: " + error);
+
+                    Logger.Error("Login", $"Btc address: {webResponse.btcAddress} was not saved. Result: {result}.");
                 }
                 else
                 {
