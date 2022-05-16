@@ -88,7 +88,7 @@ namespace NHMCore.Nhmws
 
         static private readonly LoginMessage _login = new LoginMessage
         {
-            version = "NHM/" + Assembly.GetExecutingAssembly().GetName().Version,
+            version = "NHM/" + Assembly.GetEntryAssembly().GetName().Version,
             protocol = 3,
             btc = DemoUser.BTC,
         };

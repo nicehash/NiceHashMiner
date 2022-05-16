@@ -70,7 +70,7 @@ namespace NHMCore.Configs
             GeneralConfig.SetDefaults();
             ToSSetings.Instance.Hwid = ApplicationStateManager.RigID();
 
-            var asmVersion = new Version(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            var asmVersion = new Version(Assembly.GetEntryAssembly().GetName().Version.ToString());
 
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);

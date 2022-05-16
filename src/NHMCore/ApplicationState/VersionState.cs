@@ -17,7 +17,7 @@ namespace NHMCore.ApplicationState
 
         private VersionState()
         {
-            ProgramVersion = new Version(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            ProgramVersion = new Version(Assembly.GetEntryAssembly().GetName().Version.ToString());
         }
 
         public Version ProgramVersion { get; private set; }

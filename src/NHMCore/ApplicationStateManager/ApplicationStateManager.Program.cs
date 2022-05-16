@@ -38,7 +38,7 @@ namespace NHMCore
         {
             get
             {
-                return $"{NHMProductInfo.Name} v" + FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion + BetaAlphaPostfixString + BuildTagStr;
+                return $"{NHMProductInfo.Name} v" + FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location).ProductVersion + BetaAlphaPostfixString + BuildTagStr;
             }
         }
         #endregion BuildTag

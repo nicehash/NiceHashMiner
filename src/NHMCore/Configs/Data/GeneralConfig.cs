@@ -355,7 +355,7 @@ namespace NHMCore.Configs.Data
         // methods
         public void SetDefaults()
         {
-            ConfigFileVersion = new Version(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            ConfigFileVersion = new Version(Assembly.GetEntryAssembly().GetName().Version.ToString());
             BitcoinAddress = "";
             WorkerName = "worker1";
             RigGroup = "";
@@ -421,7 +421,7 @@ namespace NHMCore.Configs.Data
 
         public void FixSettingBounds()
         {
-            ConfigFileVersion = new Version(Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            ConfigFileVersion = new Version(Assembly.GetEntryAssembly().GetName().Version.ToString());
             if (string.IsNullOrEmpty(DisplayCurrency)
                 || string.IsNullOrWhiteSpace(DisplayCurrency))
             {
