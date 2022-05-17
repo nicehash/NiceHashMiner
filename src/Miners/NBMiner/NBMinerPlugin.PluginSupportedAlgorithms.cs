@@ -26,6 +26,7 @@ namespace NBMiner
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.Autolykos),
                     }
                 },
             }

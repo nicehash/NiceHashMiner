@@ -173,7 +173,7 @@ namespace NBMiner
 
         private static bool IsLHR(string name)
         {
-            var nonLHR_GPUs = new string[] { "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
+            var nonLHR_GPUs = new string[] { "GeForce RTX 3050", "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
             return nonLHR_GPUs.Any(name.Contains);
         }
 
