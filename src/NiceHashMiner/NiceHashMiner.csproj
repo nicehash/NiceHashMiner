@@ -39,10 +39,6 @@
     <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Design" />
-    <Reference Include="System.Net" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-R.ttf" />
     <Resource Include="Resources\Fonts\FontAwesome\fa-solid-900.ttf" />
     <Resource Include="Resources\Fonts\Ubuntu\Ubuntu-B.ttf" />
