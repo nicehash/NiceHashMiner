@@ -179,7 +179,7 @@ namespace LolMiner
         {
             if (dev is not CUDADevice gpu) return false;
 #if CUDA_DEVICE_HAS_NO_LHR_PROPERY
-            var lhrGPUNameList = new string[] { "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
+            var lhrGPUNameList = new string[] { "GeForce RTX 3050", "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
             return lhrGPUNameList.Any(dev.Name.Contains);
 #else
             return gpu.IsLHR;

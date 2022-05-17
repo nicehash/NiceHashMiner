@@ -1,4 +1,5 @@
-﻿using NHM.Common.Enums;
+﻿#define DAGGER_ONLY
+using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1.Configs;
 using System.Collections.Generic;
 using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
@@ -7,6 +8,7 @@ namespace LolMiner
 {
     public partial class LolMinerPlugin
     {
+#if !DAGGER_ONLY
         const ulong AMD_8GBMemory = 7UL << 30; // 7GB but really 8GB
         const ulong AMD_6GBMemory = 5UL << 30; // 5GB but really 6GB
         const ulong AMD_3GBMemory = 3UL << 30; // 3GB but really 4GB
@@ -34,7 +36,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.ZelHash),
                     };
         }
-
+#else
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // fixed fee
@@ -43,6 +45,7 @@ namespace LolMiner
             {
                 { $"{AlgorithmType.DaggerHashimoto}", 0.7 }
             },
+
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 // don't use NVIDIA OpenCL backend
@@ -54,6 +57,10 @@ namespace LolMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                    }
+#endif
+#if !DAGGER_ONLY
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash),
@@ -66,6 +73,7 @@ namespace LolMiner
                 {
                     DeviceType.AMD,
                     SupportedAMDAlgos()
+#endif
                 }
             }
         };
