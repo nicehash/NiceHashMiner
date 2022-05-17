@@ -36,7 +36,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.ZelHash),
                     };
         }
-#else
+#endif
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // fixed fee
@@ -45,7 +45,18 @@ namespace LolMiner
             {
                 { $"{AlgorithmType.DaggerHashimoto}", 0.7 }
             },
-
+#if DAGGER_ONLY
+            Algorithms = new Dictionary<DeviceType, List<SAS>>
+            {
+                {
+                    DeviceType.NVIDIA,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                    }
+                }
+            }
+#else
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 // don't use NVIDIA OpenCL backend
@@ -57,10 +68,7 @@ namespace LolMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                    }
-#endif
-#if !DAGGER_ONLY
+
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash),
@@ -73,9 +81,9 @@ namespace LolMiner
                 {
                     DeviceType.AMD,
                     SupportedAMDAlgos()
-#endif
                 }
             }
+#endif
         };
     }
 }
