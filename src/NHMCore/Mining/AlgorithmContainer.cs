@@ -25,6 +25,8 @@ namespace NHMCore.Mining
         public Version PluginVersion => PluginContainer?.Version;
 
         public DateTime IgnoreUntil { get; internal set; } = DateTime.UtcNow;
+        private List<double> _powerUsageHistory = new List<double>();
+        private List<double> _speedHistory = new List<double>();
 
         // status is always calculated
         public AlgorithmStatus Status
@@ -86,6 +88,14 @@ namespace NHMCore.Mining
             };
         }
 
+        public void UpdateConfigVersionIfNeeded()
+        {
+            if ((_powerUsageHistory.Count >= 2 && _powerUsageHistory.Last() != _powerUsageHistory[_powerUsageHistory.Count - 2]) ||
+                (_speedHistory.Count >= 2 && _speedHistory.Last() != _speedHistory[_speedHistory.Count - 2]))
+            {
+                ConfigVersion = PluginVersion;
+            }
+        }
         public bool IsUserEditable { get; private set; } = true;
 
         /// <summary>
@@ -145,7 +155,9 @@ namespace NHMCore.Mining
             }
             set
             {
+                _speedHistory.Add(value);
                 Algorithm.Speeds[0] = value;
+                UpdateConfigVersionIfNeeded();
                 NotifySpeedChanged();
             }
         }
@@ -176,7 +188,8 @@ namespace NHMCore.Mining
                 {
                     Algorithm.Speeds[i] = value[i];
                 }
-
+                _speedHistory.Add(Algorithm.Speeds[0]);
+                UpdateConfigVersionIfNeeded();
                 NotifySpeedChanged();
             }
         }
@@ -375,7 +388,9 @@ namespace NHMCore.Mining
             }
             set
             {
+                _powerUsageHistory.Add(value);
                 _powerUsage = value;
+                UpdateConfigVersionIfNeeded();
                 OnPropertyChanged(nameof(PowerUsage));
             }
         }
