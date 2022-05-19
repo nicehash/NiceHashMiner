@@ -29,11 +29,11 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v41.3",
+                BinVersion = "v41.5",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v41.3/NBMiner_41.3_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v41.5/NBMiner_41.5_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -51,7 +51,7 @@ namespace NBMiner
         public override string Name => "NBMiner";
 #endif
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(17, 1);
         
 
         public override string Author => "info@nicehash.com";
@@ -173,7 +173,7 @@ namespace NBMiner
 
         private static bool IsLHR(string name)
         {
-            var nonLHR_GPUs = new string[] { "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
+            var nonLHR_GPUs = new string[] { "GeForce RTX 3050", "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
             return nonLHR_GPUs.Any(name.Contains);
         }
 
