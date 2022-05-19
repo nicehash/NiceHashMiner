@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NHMCore.Nhmws.V4
 {
@@ -123,6 +125,9 @@ namespace NHMCore.Nhmws.V4
 
         //[JsonProperty("range")]
         //public TR Range { get; set; }
+
+        [JsonIgnore]
+        public Func<object, Task<object>> ExecuteTask { get; set; }
     }
 
     internal class OptionalMutablePropertyInt : OptionalMutableProperty
@@ -186,6 +191,9 @@ namespace NHMCore.Nhmws.V4
 
         [JsonProperty("display_group")]
         public int DisplayGroup { get; set; }
+
+        [JsonIgnore]
+        public Func<Task<object>> ExecuteTask { get; set; }
     }
 
     internal class Device
@@ -202,6 +210,28 @@ namespace NHMCore.Nhmws.V4
 
         [JsonProperty("actions")]
         public List<NhnwsAction> Actions { get; set; }
+
+    }
+
+    internal class MinerState : ISendMessage
+    {
+        [JsonProperty("method")]
+        public string Method => "miner.state";
+
+        [JsonProperty("mdv")]
+        public JArray MutableDynamicValues { get; set; }
+
+        [JsonProperty("odv")]
+        public JArray OptionalDynamicValues { get; set; }
+
+        [JsonProperty("mmv")]
+        public JArray MandatoryMutableValues { get; set; }
+
+        [JsonProperty("omv")]
+        public JArray OptionalMutableValues { get; set; }
+
+        [JsonProperty("devices")]
+        public JArray Devices { get; set; }
 
     }
 

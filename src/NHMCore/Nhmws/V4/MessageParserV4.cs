@@ -1,8 +1,12 @@
 ﻿using Newtonsoft.Json;
+using NHM.Common.Device;
+using NHM.DeviceMonitoring;
+using NHM.DeviceMonitoring.TDP;
 using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NHMCore.Nhmws.V4
@@ -35,6 +39,8 @@ namespace NHMCore.Nhmws.V4
                 _ => throw new Exception($"Unable to deserialize '{jsonData}' got method '{method}'."),
             };
         }
+
+
 
         private static LoginMessage _loginMessage = null;
         public static LoginMessage CreateLoginMessage(string btc, string worker, string rigID, IEnumerable<ComputeDevice> devices)
@@ -77,6 +83,61 @@ namespace NHMCore.Nhmws.V4
 
             Device mapComputeDevice(ComputeDevice d)
             {
+                Dictionary<string, object> getStaticPropertiesOptionalValues(ComputeDevice d)
+                {
+                    return d.BaseDevice switch
+                    {
+                        IGpuDevice gpu => new Dictionary<string, object>
+                        {
+                            { "bus_id", $"{gpu.PCIeBusID}" },
+                            { "vram", $"{gpu.GpuRam}" },
+                        },
+                        _ => new Dictionary<string, object> { },
+                    };
+                }
+                
+                List<(string name, string unit)> getOptionalDynamicProperties(ComputeDevice d)
+                {
+                    // TODO sort by type
+                    (string name, string unit)? pairOrNull<T>(string name, string unit) => d.DeviceMonitor is T ? (name, unit) : null;
+                    var dynamicProperties = new List<(string name, string unit)?>
+                    {
+                        pairOrNull<ITemp>("Temperature","C"),
+                        pairOrNull<IPowerUsage>("Power Usage","W"),
+                        pairOrNull<ILoad>("Load","%"),
+                        pairOrNull<IGetFanSpeedPercentage>("Fan speed percentage","%"),
+                    };
+                    return dynamicProperties
+                        .Where(p => p.HasValue)
+                        .Select(p => p.Value)
+                        .ToList();
+                }
+                List<OptionalMutableProperty> getOptionalMutableProperties(ComputeDevice d)
+                {
+                    // TODO sort by type
+                    OptionalMutableProperty valueOrNull<T>(OptionalMutableProperty v) => d.DeviceMonitor is T ? v : null;
+                    var optionalProperties = new List<OptionalMutableProperty>
+                    {
+                        valueOrNull<ITDP>(new OptionalMutablePropertyEnum
+                        {
+                            PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
+                            DisplayName = "TDP Simple",
+                            DefaultValue = "Medium",
+                            Range = new List<string>{ "Low", "Medium", "High" },
+                            // TODO action/setter to execute
+                            ExecuteTask = async (object p) =>
+                            {
+                                // #1 validate JSON input
+                                if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
+                                // TODO do something
+                                return Task.FromResult<object>(null);
+                            },
+                        }),
+                    };
+                    return optionalProperties
+                        .Where(p => p != null)
+                        .ToList();
+                }
                 return new Device
                 {
                     StaticProperties = new Dictionary<string, object>
@@ -84,11 +145,11 @@ namespace NHMCore.Nhmws.V4
                         { "device_id", d.B64Uuid },
                         { "class", $"{(int)d.DeviceType}" },
                         { "name", d.Name },
-                        { "optional", new List<string>() },
+                        { "optional", getStaticPropertiesOptionalValues(d) },
                     },
                     Actions = createDefaultActions(),
-                    OptionalDynamicProperties = new List<(string name, string unit)> { },
-                    OptionalMutableProperties = new List<OptionalMutableProperty> { },
+                    OptionalDynamicProperties = getOptionalDynamicProperties(d),
+                    OptionalMutableProperties = getOptionalMutableProperties(d),
                 };
             } 
 
