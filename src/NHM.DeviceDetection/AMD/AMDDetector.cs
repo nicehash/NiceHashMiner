@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace NHM.DeviceDetection.AMD
 {
+    using NHM.DeviceDetection.Models.AMDBusIDVersionResult;
     using NHM.UUID;
     using System.IO;
 
@@ -90,7 +91,7 @@ namespace NHM.DeviceDetection.AMD
             if (result?.Platforms?.Count > 0)
             {
                 Platforms = result.Platforms;
-                var amdPlatforms = result.Platforms.Where(platform => IsAMDPlatform(platform)).ToList();
+                var amdPlatforms = result.Platforms.Where(IsAMDPlatform).ToList();
                 foreach (var platform in amdPlatforms)
                 {
                     var platformNum = platform.PlatformNum;
@@ -170,7 +171,7 @@ namespace NHM.DeviceDetection.AMD
         private static bool DuplicatedDevices(OpenCLDeviceDetectionResult data)
         {
             var anyMultipleSameBusIDs = data?.Platforms?
-                    .Where(platform => IsAMDPlatform(platform))
+                    .Where(IsAMDPlatform)
                     .SelectMany(platform => platform.Devices)
                     .Where(dev => dev != null)
                     .GroupBy(dev => dev.BUS_ID)
@@ -184,12 +185,13 @@ namespace NHM.DeviceDetection.AMD
         {
             var addedDevicesWithBusID = new HashSet<int>();
             var platformDevices = new Dictionary<int, OpenCLPlatform>();
+            var AMDBusIDVersionPairs = new List<AMDBusIDVersionResult>();
             void fillUniquePlatformDevices(OpenCLDeviceDetectionResult r)
             {
                 if (r?.Platforms?.Count > 0)
                 {
                     var amdPlatforms = r.Platforms
-                    .Where(platform => IsAMDPlatform(platform))
+                    .Where(IsAMDPlatform)
                     .OrderBy(p => p.PlatformNum)
                     .ToList();
                     foreach (var platform in amdPlatforms)
@@ -215,13 +217,22 @@ namespace NHM.DeviceDetection.AMD
                         }
                     }
                 }
-            };
+
+                if (r?.AMDBusIDVersionPairs?.Count > 0)
+                {
+                    foreach (var dvr in r.AMDBusIDVersionPairs)
+                    {
+                        if (!AMDBusIDVersionPairs.Any(d => d.BUS_ID == dvr.BUS_ID)) AMDBusIDVersionPairs.Add(dvr);
+                    }
+                }
+            }
 
             fillUniquePlatformDevices(a);
             fillUniquePlatformDevices(b);
 
             var ret = new OpenCLDeviceDetectionResult
             {
+                AMDBusIDVersionPairs = AMDBusIDVersionPairs,
                 Platforms = platformDevices.Values.ToList(),
                 ErrorString = "",
                 Status = "",
