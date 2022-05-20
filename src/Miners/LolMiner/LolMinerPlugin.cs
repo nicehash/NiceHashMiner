@@ -26,11 +26,11 @@ namespace LolMiner
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.48",
-                ExePath = new List<string> { "1.48", "lolMiner.exe" },
+                BinVersion = "1.50",
+                ExePath = new List<string> { "1.50", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.48/lolMiner_v1.48_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.50/lolMiner_v1.50_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -42,12 +42,16 @@ namespace LolMiner
 
         public override Version Version => new Version(17, 0);
 
+        public override string Author => "info@nicehash.com";
+#if LHR_BUILD_ON
+        public override string Name => "lolMiner_LHR";
+
+        public override string PluginUUID => "lolMiner_LHR";
+#else
         public override string Name => "lolMiner";
 
-        public override string Author => "info@nicehash.com";
-
         public override string PluginUUID => "eb75e920-94eb-11ea-a64d-17be303ea466";
-
+#endif
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)

@@ -1,5 +1,4 @@
-﻿#define DAGGER_ONLY
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1.Configs;
 using System.Collections.Generic;
 using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
@@ -18,14 +17,15 @@ namespace NBMiner
                 { $"{AlgorithmType.DaggerHashimoto}", 1.0 },
                 { $"{AlgorithmType.Octopus}", 3.0 },
             },
-#if DAGGER_ONLY
-        Algorithms = new Dictionary<DeviceType, List<SAS>>
+#if LHR_BUILD_ON
+            Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.Autolykos),
                     }
                 },
             }

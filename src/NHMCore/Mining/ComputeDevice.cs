@@ -489,10 +489,14 @@ namespace NHMCore.Mining
                     AlgorithmIDs = string.Join("-", algo.Algorithm.IDs.Select(id => id.ToString())),
                     Enabled = algo.Enabled,
                     ExtraLaunchParameters = algo.ExtraLaunchParameters,
-                    PluginVersion = $"{algo.PluginVersion.Major}.{algo.PluginVersion.Minor}",
+                    PluginVersion = $"{algo.ConfigVersion.Major}.{algo.ConfigVersion.Minor}",
                     PowerUsage = algo.PowerUsage,
                     Speeds = algo.Speeds
                 };
+                if (!algo.HasBenchmark)
+                {
+                    pluginConf.PluginVersion = $"{algo.PluginVersion.Major}.{algo.PluginVersion.Minor}";
+                }
                 ret.PluginAlgorithmSettings.Add(pluginConf);
             }
             // add old algo configs
