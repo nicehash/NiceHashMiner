@@ -1,5 +1,4 @@
-﻿#define DAGGER_ONLY
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1.Configs;
 using System.Collections.Generic;
 using SAS = NHM.MinerPluginToolkitV1.Configs.PluginSupportedAlgorithmsSettings.SupportedAlgorithmSettings;
@@ -8,7 +7,7 @@ namespace LolMiner
 {
     public partial class LolMinerPlugin
     {
-#if !DAGGER_ONLY
+#if !LHR_BUILD_ON
         const ulong AMD_8GBMemory = 7UL << 30; // 7GB but really 8GB
         const ulong AMD_6GBMemory = 5UL << 30; // 5GB but really 6GB
         const ulong AMD_3GBMemory = 3UL << 30; // 3GB but really 4GB
@@ -45,7 +44,7 @@ namespace LolMiner
             {
                 { $"{AlgorithmType.DaggerHashimoto}", 0.7 }
             },
-#if DAGGER_ONLY
+#if LHR_BUILD_ON
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {

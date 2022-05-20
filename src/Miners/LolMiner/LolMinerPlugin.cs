@@ -1,5 +1,4 @@
-﻿#define IS_LHR_BUILD
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -44,7 +43,7 @@ namespace LolMiner
         public override Version Version => new Version(17, 0);
 
         public override string Author => "info@nicehash.com";
-#if IS_LHR_BUILD
+#if LHR_BUILD_ON
         public override string Name => "lolMiner_LHR";
 
         public override string PluginUUID => "lolMiner_LHR";

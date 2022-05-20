@@ -1,5 +1,4 @@
-﻿#define IS_LHR_BUILD
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -43,7 +42,7 @@ namespace NBMiner
             };
         }
 
-#if IS_LHR_BUILD
+#if LHR_BUILD_ON
         public override string PluginUUID => "NBMiner_LHR";
         public override string Name => "NBMiner_LHR";
 #else
@@ -86,7 +85,7 @@ namespace NBMiner
             {
                 Logger.Error("NBMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
             }
-#if IS_LHR_BUILD
+#if LHR_BUILD_ON
             var gpus = devices
                 .Where(dev => dev is CUDADevice)
                 .Cast<CUDADevice>()
@@ -202,7 +201,7 @@ namespace NBMiner
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-#if IS_LHR_BUILD
+#if LHR_BUILD_ON
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(512, 15));
 #else
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
