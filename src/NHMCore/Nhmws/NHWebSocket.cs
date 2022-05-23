@@ -1,4 +1,4 @@
-﻿#define USE_NHMWS4
+﻿//#define USE_NHMWS4
 using NHM.Common;
 using NHM.Common.Enums;
 using System.Threading;
