@@ -371,6 +371,7 @@ namespace NHMCore.Nhmws
                     // fan speed percentage
                     array.Add(device.FanSpeed);
 
+                    //todo include new info here + calculate efficiency
                     deviceList.Add(array);
                 }
                 catch (Exception e)

@@ -5,7 +5,7 @@ using System;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps
     {
         public int BusID { get; private set; }
 
@@ -207,5 +207,40 @@ namespace NHM.DeviceMonitoring
             return execRet;
         }
         #endregion ITDP
+        private (int vramTemp, int hotspotTemp) GetSpecialTemperatures()
+        {
+            int vramT = 0;
+            int hotspotT = 0;
+            int ok = AMD_ODN.nhm_amd_device_get_special_temperatures(BusID, ref hotspotT, ref vramT);
+            if (ok == 0) return (vramT, hotspotT);
+            Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_special_temperatures failed with error code {ok}", _delayedLogging);
+            return (-1, -1);
+        }
+
+        public int HotspotTemp
+        {
+            get
+            {
+                return GetSpecialTemperatures().hotspotTemp;
+            }
+        }
+        public int VramTemp
+        {
+            get
+            {
+                return GetSpecialTemperatures().vramTemp;
+            }
+        }
+        public int MemoryControllerLoad
+        {
+            get
+            {
+                int memCtrlLoad = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_memory_controller_load(BusID, ref memCtrlLoad);
+                if (ok == 0) return (memCtrlLoad);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_controller_load failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
     }
 }
