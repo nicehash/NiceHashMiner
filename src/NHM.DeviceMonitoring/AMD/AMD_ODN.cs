@@ -52,6 +52,10 @@ namespace NHM.DeviceMonitoring.AMD
         public static extern int nhm_amd_device_get_memory_clocks(int bus_number, ref int memory_clocks);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_set_memory_clocks(int bus_number, int memory_clocks);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_amd_device_get_special_temperatures(int bus_number, ref int hotspot_temp, ref int vram_temp);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_amd_device_get_memory_controller_load(int bus_number, ref int mem_ctrl_load);
 
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
