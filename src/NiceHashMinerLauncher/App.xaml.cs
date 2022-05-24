@@ -233,11 +233,19 @@ namespace NiceHashMiner
             ClearAllDoFiles();
             // Set shutdown mode back to default
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            var isInfo = Environment.GetCommandLineArgs().Contains("-info");
             var isUpdater = Environment.GetCommandLineArgs().Contains("-update");
             var isUpdated = Environment.GetCommandLineArgs().Contains("-updated");
 
+            if (isInfo)
+            {
+                ProgramInfo();
+                Shutdown();
+                return;
+            }
+
 #warning TRANSITIONAL CODE, REMOVE IN FUTURE VERSIONS (registry integration)
-            if (isUpdated)
+                if (isUpdated)
             {
                 const string GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
                 const string TOSMain = "4";
@@ -547,6 +555,18 @@ namespace NiceHashMiner
                 Console.WriteLine($"Error occured while unzipping file: {e.Message}");
                 return false;
             }
+        }
+
+        private static bool ProgramInfo()
+        {
+            var a = ResourceAssembly;
+            var version = a.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+            var base_name = a.GetCustomAttribute<AssemblyTitleAttribute>().Title;
+            var company_name = a.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
+            var app_description = a.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
+            var copyright = a.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
+            Console.WriteLine(version + ";" + base_name + ";" + company_name + ";" + app_description + ";" + copyright);
+            return true;
         }
     }
 }

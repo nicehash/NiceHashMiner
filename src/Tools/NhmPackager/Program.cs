@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using static NhmPackager.PackagerFileDirectoryUtils;
@@ -55,6 +56,25 @@ namespace NhmPackager
                     Logger.Info("7z-pwd", line);
                 }
                 return ok && proc.ExitCode == 0;
+            }
+        }
+
+        private static string GetFileAssemblyInfo(string filename)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = filename,
+                Arguments = "-info",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+            };
+            using (var proc = new Process { StartInfo = startInfo })
+            {
+                var ok = proc.Start();
+                var assemblyInfo = "test";
+                assemblyInfo = proc.StandardOutput.ReadToEnd();
+                return assemblyInfo;
             }
         }
 
@@ -126,12 +146,15 @@ namespace NhmPackager
                 DeletePathIfExists(GetTemporaryWorkFolder("Release", "build_settings.json"));
 
                 // #3 
-                var (generatedTemplateLauncher, versionLauncher, buildTagLauncher) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));
-                var (generatedTemplate, version, buildTag) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "app", "app_nhm.exe"));
-                if (generatedTemplateLauncher != generatedTemplate || versionLauncher != version || buildTagLauncher != buildTag)
+                var assemblyLauncher = GetFileAssemblyInfo(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));
+                var assemblyExecutable = GetFileAssemblyInfo(GetTemporaryWorkFolder("Release", "app", "app_nhm.exe"));
+
+                if (assemblyLauncher != assemblyExecutable)
                 {
-                    throw new Exception($"Launcher and App TAG or Version missmatch!!!\n{generatedTemplateLauncher} != {generatedTemplate} \n{versionLauncher} != {version} \n{buildTagLauncher} != {buildTag}");
+                    throw new Exception($"Launcher and App assembly info missmatch!!!\n{assemblyLauncher} != {assemblyExecutable}");
                 }
+
+                var (generatedTemplate, version) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));
                 Logger.Info("Main", "ExecPluginsPacker resumming...");
                 // #4 
                 var appDirOld = GetTemporaryWorkFolder("Release", "app");
@@ -147,7 +170,7 @@ namespace NhmPackager
                 ExecXCopy(GetTemporaryWorkFolder("Release"), Path.Combine(filesToPackPath, "bins"));
                 ExecXCopy(GetRootPath("nsis_template"), Path.Combine(filesToPackPath, "nsis"));
                 File.WriteAllText(Path.Combine(filesToPackPath, "nsis", "include_common", "packageDefsGenerated.nsh"), generatedTemplate, new UTF8Encoding(true));
-                File.WriteAllText(Path.Combine(filesToPackPath, "version.txt"), version + buildTag);
+                File.WriteAllText(Path.Combine(filesToPackPath, "version.txt"), version);
                 // delete previous _files_to_pack from nhmpacker
                 var nhmPackerFilesToPack = GetRootPath("nhmpacker", "_files_to_pack");
                 RecreateDirectoryIfExists(nhmPackerFilesToPack);

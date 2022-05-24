@@ -8,7 +8,7 @@ namespace NhmPackager
 {
     internal static class VersionInfoHelpers
     {
-        internal static (string nsisFileTemplate, string version, string buildTag) GenerateVariableTemplate(string path)
+        internal static (string nsisFileTemplate, string version) GenerateVariableTemplate(string path)
         {
             byte[] assemblyBytes = File.ReadAllBytes(path);
             var assembly = Assembly.Load(assemblyBytes);
@@ -27,16 +27,6 @@ namespace NhmPackager
 
             string APP_ID = "com.nicehash.nhm";
             string APP_GUID_ = APP_GUID.GUID;
-
-            string BuildTag = "";
-            if (BASE_NAME.Contains("TESTNETDEV"))
-            {
-                BuildTag = "_TESTNETDEV";
-            }
-            else if (BASE_NAME.Contains("TESTNET"))
-            {
-                BuildTag = "_TESTNET";
-            }
 
             string NSIS_GENERATED_FILE_TEMPLATE =
             "########################################\n" +
@@ -71,7 +61,7 @@ namespace NhmPackager
             ";--------------------------------\n" +
             "!macroend\n";
 
-            return (NSIS_GENERATED_FILE_TEMPLATE, VERSION, BuildTag);
+            return (NSIS_GENERATED_FILE_TEMPLATE, VERSION);
         }
     }
 }
