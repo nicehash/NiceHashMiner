@@ -38,20 +38,20 @@ namespace NHMCore.Utils
             {
                 try
                 {
-                    var fileName = Paths.RootPath("runnhmasadmin.exe");
-                    var startInfo = new ProcessStartInfo
+                    using var runAsAdmin = new Process()
                     {
-                        FileName = fileName,
-                        Arguments = $"{pid} {path}",
-                        Verb = "runas",
-                        UseShellExecute = true,
-                        CreateNoWindow = true
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = Paths.RootPath("runnhmasadmin.exe"),
+                            Arguments = $"{pid} \"{path}\"",
+                            Verb = "runas",
+                            UseShellExecute = true,
+                            CreateNoWindow = true,
+                            WindowStyle = ProcessWindowStyle.Hidden, // used for hidden window
+                        }
                     };
-                    startInfo.WindowStyle = ProcessWindowStyle.Hidden; // used for hidden window
-                    using (var runAsAdmin = Process.Start(startInfo))
-                    {
-                        runAsAdmin.WaitForExit();
-                    }
+                    runAsAdmin.Start();
+                    runAsAdmin.WaitForExit();
                 }
                 catch (Exception ex)
                 {

@@ -85,10 +85,7 @@ namespace NHMCore
                             FileName = Paths.RootPath("OnGPUsLost.bat"),
                             WindowStyle = ProcessWindowStyle.Minimized
                         };
-                        using (var p = Process.Start(onGpusLost))
-                        {
-                            //p.WaitForExit(10 * 1000);
-                        }
+                        using var p = Process.Start(onGpusLost);
                     }
                     catch (Exception ex)
                     {

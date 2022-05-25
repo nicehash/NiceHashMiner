@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace NHMCore.Nhmws.ModelsV3
+namespace NHMCore.Nhmws
 {
     internal class RpcException : Exception
     {
         public int Code = 0;
 
-        public RpcException(string message, ErrorCodeV3 code)
+        public RpcException(string message, ErrorCode code)
             : base(message)
         {
             Code = (int)code;

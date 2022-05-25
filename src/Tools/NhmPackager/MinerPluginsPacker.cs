@@ -14,6 +14,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using static NhmPackager.PackagerFileDirectoryUtils;
 using static NhmPackager.PackagerPaths;
 
@@ -298,12 +299,14 @@ namespace NhmPackager
             return false;
         }
 
-        private static List<PluginPackageInfo> GetOnlineMinerPlugins()
+        private static List<PluginPackageInfo> GetOnlineMinerPluginsDev() => GetOnlineMinerPlugins("https://miner-plugins-test-dev.nicehash.com/api/plugins");
+
+        private static List<PluginPackageInfo> GetOnlineMinerPlugins(string url = "https://miner-plugins.nicehash.com/api/plugins")
         {
-            try
+            List<PluginPackageInfo> getPlugins(int version)
             {
                 using var client = new NoKeepAliveWebClient();
-                string s = client.DownloadString("https://miner-plugins.nicehash.com/api/plugins");
+                string s = client.DownloadString($"{url}?v={version}");
                 return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
@@ -311,11 +314,52 @@ namespace NhmPackager
                     Culture = CultureInfo.InvariantCulture
                 });
             }
+            try
+            {
+                var random = new Random();
+                var onlinePluginsAllVersions = new List<PluginPackageInfo>();
+                foreach (var version in Enumerable.Range(15, Checkers.GetLatestSupportedVersion))
+                {
+                    onlinePluginsAllVersions.AddRange(getPlugins(version));
+                    Task.Delay(TimeSpan.FromMilliseconds(100 + random.Next(0, 200))).Wait();
+                }
+                return onlinePluginsAllVersions.OrderBy(p => p.PluginUUID)
+                                        .ThenByDescending(p => p.PluginVersion)
+                                        .ToList();
+            }
             catch (Exception e)
             {
                 Logger.Error("MinerPluginsPacker", $"Error occured while getting online miner plugins: {e.Message}");
             }
             return null;
         }
+
+        public static void CheckOnlinePlugins()
+        {
+            bool isHashOk(string fileUrl, string hash) => FileHelpers.GetURLFileSHA256Checksum(fileUrl) == hash;
+            string pluginStr(PluginPackageInfo p) => $"{p.PluginUUID} {p.PluginVersion.Major}.{p.PluginVersion.Minor} {p.PluginName} ";
+            void checkAndIterate(List<PluginPackageInfo> plugins)
+            {
+                foreach (var p in plugins)
+                {
+                    var pluginOk = isHashOk(p.PluginPackageURL, p.PluginPackageHash);
+                    var minerOk = isHashOk(p.MinerPackageURL, p.BinaryPackageHash);
+                    var msg = (pluginOk, minerOk) switch
+                    {
+                        (true, true) => $"OK",
+                        _ => $"ERROR (pluginOk, minerOk)={(pluginOk, minerOk)}",
+                    };
+                    Logger.Info("MinerPluginsPacker", $"{pluginStr(p)} {msg}");
+                }
+            }
+            Logger.Info("MinerPluginsPacker", "Checking production hashes START");
+            checkAndIterate(GetOnlineMinerPlugins());
+            Logger.Info("MinerPluginsPacker", "Checking production hashes DONE\n\n");
+
+            Logger.Info("MinerPluginsPacker", "Checking DEV hashes START");
+            checkAndIterate(GetOnlineMinerPluginsDev());
+            Logger.Info("MinerPluginsPacker", "Checking DEV hashes DONE\n\n");
+        }
+
     }
 }

@@ -63,6 +63,10 @@ namespace NHM.DeviceMonitoring.NVIDIA
         public static extern int nhm_nvidia_device_set_memory_timings(int bus_number, string memory_timings);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_reset_memory_timings(int bus_number);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_get_special_temperatures(int bus_number, ref int hotspot_temp, ref int vram_temp);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_get_memory_controller_load(int bus_number, ref int mem_ctrl_load);
 
         //Excavator no longer has these functions (or they have been moved)
         //[DllImport(dll, CallingConvention = CallingConvention.StdCall)]

@@ -189,22 +189,14 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
                 // Init ws connection
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
-                NHWebSocketV3.SetCredentials(btc, worker, group);
-                NHWebSocketV3.StartLoop(NHM.Common.Nhmws.NhmSocketAddress, ExitApplication.Token);
+                NHWebSocket.SetCredentials(btc, worker, group);
+                NHWebSocket.StartLoop(ExitApplication.Token);
 
 
                 // STEP
                 // disable windows error reporting
                 loader.PrimaryProgress?.Report((Tr("Setting Windows error reporting..."), nextProgPerc()));
                 Helpers.DisableWindowsErrorReporting(WarningSettings.Instance.DisableWindowsErrorReporting);
-
-                // STEP
-                // Nvidia p0
-                loader.PrimaryProgress?.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
-                if (MiningSettings.Instance.NVIDIAP0State && AvailableDevices.HasNvidia)
-                {
-                    Helpers.SetNvidiaP0State();
-                }
 
                 // STEP
                 // Update miner plugin binaries
@@ -278,7 +270,7 @@ namespace NHMCore
             finally
             {
                 isInitFinished = true;
-                NHWebSocketV3.NotifyStateChanged();
+                NHWebSocket.NotifyStateChanged();
 
                 // start update checker
                 // updater loops after we finish

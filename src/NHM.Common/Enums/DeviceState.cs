@@ -9,7 +9,7 @@ namespace NHM.Common.Enums
         Error,
         Pending,
         Disabled,
-        Gaming,
+        //Gaming,
         // TODO Extra states, NotProfitable
     }
 }

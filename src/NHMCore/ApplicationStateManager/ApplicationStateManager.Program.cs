@@ -71,7 +71,7 @@ namespace NHMCore
                 ConfigManager.GeneralConfigFileCommit();
                 var waitTasks = new List<Task>();
                 waitTasks.Add(MiningManager.RunninLoops);
-                waitTasks.Add(NHWebSocketV3.MainLoop);
+                waitTasks.Add(NHWebSocket.MainLoop);
                 waitTasks.Add(MinerPluginsManager.RunninLoops);
                 waitTasks.Add(UpdateHelpers.RunninLoops);
                 await Task.WhenAll(waitTasks.Where(t => t != null));

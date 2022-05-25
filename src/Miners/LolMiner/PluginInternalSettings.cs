@@ -311,7 +311,7 @@ namespace LolMiner
                     ID = "lolMiner_watchdog",
                     ShortName = "--watchdog"
                 },
-                /// <summary
+                /// <summary>
                 /// --lhrwait n will set the miner to wait n seconds, until the LHR detection and calibration gets active. Allows to wait for systems with delayed memory overclock settings.
                 /// </summary>
                 new MinerOption
@@ -319,6 +319,15 @@ namespace LolMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "lolMiner_lhrwait",
                     ShortName = "--lhrwait"
+                },
+                /// <summary>
+                /// Added experimental LHR v3 unlock to ~90% (3050) and ~92% (3080 12G) (default enables) Use --lhrv3boost 0 to disable the mode and fall back to ~65% unlock (see notes below).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_lhrv3boost",
+                    ShortName = "--lhrv3boost"
                 }
             }
         };

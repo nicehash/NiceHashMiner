@@ -1,7 +1,7 @@
 ﻿
 namespace NHMCore.Nhmws
 {
-    enum ErrorCodeV3 : int
+    enum ErrorCode : int
     {
         NoError = 0,
         DisabledDevice = -7,
@@ -12,12 +12,5 @@ namespace NHMCore.Nhmws
         NonExistentDevice = -2,
         RedundantRpc = -1,
         InternalNhmError = 1,
-        TerminalError = 50,
-        MultipleMinerErrors = 100,
-        InternalRPCTimeout = 101,
-        ExcavatorError = 110,
-        ExcavatorMissing = 111,
-        XmrStakError = 120,
-        XmrStakMissing = 121
     }
 }

@@ -24,44 +24,44 @@ namespace NHM.MinerPluginToolkitV1
             try
             {
                 string workingDirectory = Path.GetDirectoryName(path);
-                var startInfo = new ProcessStartInfo
+                using var getDevicesHandle = new Process
                 {
-                    FileName = path,
-                    Arguments = arguments,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    WorkingDirectory = workingDirectory,
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = path,
+                        Arguments = arguments,
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        WorkingDirectory = workingDirectory,
+                    },
+                    EnableRaisingEvents = true
                 };
-
-                using (var getDevicesHandle = new Process { StartInfo = startInfo, EnableRaisingEvents = true })
-                using (var ct = new CancellationTokenSource(timeoutMilliseconds))
+                using var ct = new CancellationTokenSource(timeoutMilliseconds);
+                getDevicesHandle.Start();
+                void getDevicesHandleStop(string stopFrom)
                 {
-                    getDevicesHandle.Start();
-                    Action<string> getDevicesHandleStop = (string stopFrom) =>
+                    try
                     {
-                        try
-                        {
-                            var isRunning = !getDevicesHandle?.HasExited ?? false;
-                            if (!isRunning) return;
-                            getDevicesHandle.CloseMainWindow();
-                            var hasExited = getDevicesHandle?.WaitForExit(1000) ?? false;
-                            if (!hasExited) getDevicesHandle.Kill();
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.Error("DeviceCrossReference", $"Unable to get DevicesHandle: {e.Message}");
-                        }
-                    };
-                    ct.Token.Register(() => getDevicesHandleStop("from cancel token"));
-                    output = await getDevicesHandle.StandardOutput.ReadToEndAsync();
-                    if (output == "")
-                    {
-                        output = await getDevicesHandle.StandardError.ReadToEndAsync();
+                        var isRunning = !getDevicesHandle?.HasExited ?? false;
+                        if (!isRunning) return;
+                        getDevicesHandle.CloseMainWindow();
+                        var hasExited = getDevicesHandle?.WaitForExit(1000) ?? false;
+                        if (!hasExited) getDevicesHandle.Kill();
                     }
-                    getDevicesHandleStop("after read to end");
+                    catch (Exception e)
+                    {
+                        Logger.Error("DeviceCrossReference", $"Unable to get DevicesHandle: {e.Message}");
+                    }
                 }
+                ct.Token.Register(() => getDevicesHandleStop("from cancel token"));
+                output = await getDevicesHandle.StandardOutput.ReadToEndAsync();
+                if (output == "")
+                {
+                    output = await getDevicesHandle.StandardError.ReadToEndAsync();
+                }
+                getDevicesHandleStop("after read to end");
             }
             catch (Exception e)
             {
@@ -80,56 +80,55 @@ namespace NHM.MinerPluginToolkitV1
             var output = new StringBuilder();
             try
             {
-                string workingDirectory = Path.GetDirectoryName(path);
-                var startInfo = new ProcessStartInfo
+                using var getDevicesHandle = new Process
                 {
-                    FileName = path,
-                    Arguments = arguments,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    WorkingDirectory = workingDirectory,
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = path,
+                        Arguments = arguments,
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        WorkingDirectory = Path.GetDirectoryName(path),
+                    },
+                    EnableRaisingEvents = true
                 };
-
-                using (var getDevicesHandle = new Process { StartInfo = startInfo, EnableRaisingEvents = true })
-                using (var ct = new CancellationTokenSource(timeoutMilliseconds))
+                using var ct = new CancellationTokenSource(timeoutMilliseconds);
+                getDevicesHandle.Start();
+                void getDevicesHandleStop(string stopFrom)
                 {
-                    getDevicesHandle.Start();
-                    Action<string> getDevicesHandleStop = (string stopFrom) =>
+                    try
                     {
-                        try
-                        {
-                            var isRunning = !getDevicesHandle?.HasExited ?? false;
-                            if (!isRunning) return;
-                            getDevicesHandle.CloseMainWindow();
-                            var hasExited = getDevicesHandle?.WaitForExit(1000) ?? false;
-                            if (!hasExited) getDevicesHandle.Kill();
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.Error("DeviceCrossReference", $"Unable to get DevicesHandle: {e.Message}");
-                        }
-                    };
-                    ct.Token.Register(() => getDevicesHandleStop("from cancel token"));
-
-                    var line = "";
-                    while (!getDevicesHandle.HasExited)
-                    {
-                        line = await getDevicesHandle.StandardOutput.ReadLineAsync();
-                        if (line != null)
-                        {
-                            //Console.WriteLine(line);
-                            if (breakLines.Any(breakLine => line.Contains(breakLine)))
-                            {
-                                getDevicesHandleStop("from read line loop");
-                                break;
-                            }
-                            output.AppendLine(line);
-                        }
+                        var isRunning = !getDevicesHandle?.HasExited ?? false;
+                        if (!isRunning) return;
+                        getDevicesHandle.CloseMainWindow();
+                        var hasExited = getDevicesHandle?.WaitForExit(1000) ?? false;
+                        if (!hasExited) getDevicesHandle.Kill();
                     }
-
-                    getDevicesHandleStop("after read to end");
+                    catch (Exception e)
+                    {
+                        Logger.Error("DeviceCrossReference", $"Unable to get DevicesHandle: {e.Message}");
+                    }
                 }
+                ct.Token.Register(() => getDevicesHandleStop("from cancel token"));
+
+                var line = "";
+                while (!getDevicesHandle.HasExited)
+                {
+                    line = await getDevicesHandle.StandardOutput.ReadLineAsync();
+                    if (line != null)
+                    {
+                        //Console.WriteLine(line);
+                        if (breakLines.Any(breakLine => line.Contains(breakLine)))
+                        {
+                            getDevicesHandleStop("from read line loop");
+                            break;
+                        }
+                        output.AppendLine(line);
+                    }
+                }
+
+                getDevicesHandleStop("after read to end");
             }
             catch (Exception e)
             {

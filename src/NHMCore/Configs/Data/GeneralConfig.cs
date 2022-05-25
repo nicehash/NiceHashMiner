@@ -63,11 +63,6 @@ namespace NHMCore.Configs.Data
             get => MiningSettings.Instance.ApiBindPortPoolStart;
             set => MiningSettings.Instance.ApiBindPortPoolStart = value;
         }
-        public bool NVIDIAP0State
-        {
-            get => MiningSettings.Instance.NVIDIAP0State;
-            set => MiningSettings.Instance.NVIDIAP0State = value;
-        }
         public bool PauseMiningWhenGamingMode
         {
             get => MiningSettings.Instance.PauseMiningWhenGamingMode;
@@ -374,7 +369,6 @@ namespace NHMCore.Configs.Data
             ShowDriverVersionWarning = true;
             DisableWindowsErrorReporting = true;
             ShowInternetConnectionWarning = true;
-            NVIDIAP0State = false;
             PauseMiningWhenGamingMode = false;
             DeviceToPauseUuid = "";
             EnableSSLMining = false;

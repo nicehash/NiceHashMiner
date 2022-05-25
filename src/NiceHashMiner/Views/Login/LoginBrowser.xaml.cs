@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHMCore;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -203,7 +204,7 @@ namespace NiceHashMiner.Views.Login
                 if (webResponse.btcAddress != null)
                 {
                     var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(webResponse.btcAddress);
-                    if (result == ApplicationStateManager.SetResult.CHANGED)
+                    if (result == NhmwsSetResult.CHANGED)
                     {
                         Logger.Info("Login", $"Navigation and processing successfull.");
                         return true;
