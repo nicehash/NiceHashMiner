@@ -243,6 +243,30 @@ namespace NHMCore.Mining
                 return canSet;
             }
         }
+        public int VramTemperature
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ISpecialTemps get) return get.VramTemp;
+                return -1;
+            }
+        }
+        public int HotspotTemperature
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ISpecialTemps get) return get.HotspotTemp;
+                return -1;
+            }
+        }
+        public int MemoryControllerLoad
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemControllerLoad get) return get.MemoryControllerLoad;
+                return -1;
+            }
+        }
         #endregion Getters
 
         #region Setters
