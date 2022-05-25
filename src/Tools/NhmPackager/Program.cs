@@ -2,6 +2,7 @@ using log4net.Core;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,45 +18,45 @@ namespace NhmPackager
     {
         private static bool ExecNhmpackerCreateInstallers(string exePath)
         {
-            var startInfo = new ProcessStartInfo
+            using var proc = new Process
             {
-                FileName = exePath,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-            using (var proc = new Process { StartInfo = startInfo })
-            {
-                var ok = proc.Start();
-                while (!proc.StandardOutput.EndOfStream)
+                StartInfo = new ProcessStartInfo
                 {
-                    string line = proc.StandardOutput.ReadLine();
-                    Logger.Info("nhmpacker", line);
+                    FileName = exePath,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
-                return ok && proc.ExitCode == 0;
+            };
+            var ok = proc.Start();
+            while (!proc.StandardOutput.EndOfStream)
+            {
+                string line = proc.StandardOutput.ReadLine();
+                Logger.Info("nhmpacker", line);
             }
+            return ok && proc.ExitCode == 0;
         }
 
         private static bool Exec7ZipCreatePasswordArchive(string password, string archiveName, string releasePath)
         {
-            var startInfo = new ProcessStartInfo
+            using var proc = new Process
             {
-                FileName = "7z.exe",
-                Arguments = $"-p{password} a {archiveName} {releasePath}\\*",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-            using (var proc = new Process { StartInfo = startInfo })
-            {
-                var ok = proc.Start();
-                while (!proc.StandardOutput.EndOfStream)
+                StartInfo = new ProcessStartInfo
                 {
-                    string line = proc.StandardOutput.ReadLine();
-                    Logger.Info("7z-pwd", line);
+                    FileName = "7z.exe",
+                    Arguments = $"-p{password} a {archiveName} {releasePath}\\*",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
-                return ok && proc.ExitCode == 0;
+            };
+            var ok = proc.Start();
+            while (!proc.StandardOutput.EndOfStream)
+            {
+                string line = proc.StandardOutput.ReadLine();
+                Logger.Info("7z-pwd", line);
             }
+            return ok && proc.ExitCode == 0;
         }
 
         private static void Add7zToPath()
@@ -100,6 +101,12 @@ namespace NhmPackager
                 // TODO check if this already exists
                 SetTemporaryWorkFolder(tmpWorkFolder);
                 Add7zToPath();
+
+                if (args.Contains("-info"))
+                {
+                    MinerPluginsPacker.CheckOnlinePlugins();
+                    return;
+                }
 
                 // #1
                 // assume we are in installer folder
