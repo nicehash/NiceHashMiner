@@ -16,7 +16,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using WebSocketSharp;
 // static imports
 using static NHMCore.Nhmws.V4.StatusCodes;
@@ -76,7 +75,7 @@ namespace NHMCore.Nhmws.V4
 
         static private LoginMessage _login = new LoginMessage
         {
-            Version = new List<string> { "NHM/" + Application.ProductVersion, "NA/NA" },
+            Version = new List<string> { "NHM/" + Assembly.GetEntryAssembly().GetName().Version.ToString(), "NA/NA" },
             Btc = DemoUser.BTC,
         };
 
