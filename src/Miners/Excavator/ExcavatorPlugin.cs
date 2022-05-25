@@ -1,5 +1,4 @@
-﻿#define EXCAVATOR_VERSION_16
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -18,10 +17,10 @@ using System.Diagnostics;
 
 namespace Excavator
 {
-#if EXCAVATOR_VERSION_16
-    public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference
-#else
+#if LHR_BUILD_ON
     public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
+#else
+    public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference
 #endif
     {
         public ExcavatorPlugin()
@@ -33,6 +32,17 @@ namespace Excavator
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
+#if LHR_BUILD_ON
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                BinVersion = "v1.7.7.2",
+                ExePath = new List<string> { "NHQM_v0.5.4.2_RC", "excavator.exe" },
+                Urls = new List<string>
+                {
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.4.2_RC/NHQM_v0.5.4.2_RC.zip"
+                }
+            };
+#else
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 BinVersion = "v1.7.6.5",
@@ -42,23 +52,24 @@ namespace Excavator
                     "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.3.6/NHQM_v0.5.3.6.zip"
                 }
             };
+#endif
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Excavator NVIDIA/AMD GPU miner from NiceHash",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
-#if EXCAVATOR_VERSION_16
-        public override Version Version => new Version(16, 3);
-#else
+
+#if LHR_BUILD_ON
         public override Version Version => new Version(17, 0);
+#else
+        public override Version Version => new Version(16, 3);
 #endif
 
+        public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";
 
         public override string Author => "info@nicehash.com";
-
-        public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
 
         private bool TriedToDeleteQMFiles = false;
         protected readonly Dictionary<string, string> _mappedDeviceIds = new Dictionary<string, string>();
