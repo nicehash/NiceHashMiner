@@ -199,14 +199,6 @@ namespace NHMCore
                 Helpers.DisableWindowsErrorReporting(WarningSettings.Instance.DisableWindowsErrorReporting);
 
                 // STEP
-                // Nvidia p0
-                loader.PrimaryProgress?.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
-                if (MiningSettings.Instance.NVIDIAP0State && AvailableDevices.HasNvidia)
-                {
-                    Helpers.SetNvidiaP0State();
-                }
-
-                // STEP
                 // Update miner plugin binaries
                 loader.SecondaryTitle = Tr("Updating Miner Binaries");
                 loader.SecondaryVisible = true;

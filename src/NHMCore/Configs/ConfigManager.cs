@@ -111,7 +111,6 @@ namespace NHMCore.Configs
                 DebugConsole = LoggingDebugConsoleSettings.Instance.DebugConsole,
                 LogToFile = LoggingDebugConsoleSettings.Instance.LogToFile,
                 LogMaxFileSize = LoggingDebugConsoleSettings.Instance.LogMaxFileSize,
-                NVIDIAP0State = MiningSettings.Instance.NVIDIAP0State,
                 DisableWindowsErrorReporting = WarningSettings.Instance.DisableWindowsErrorReporting,
                 DisableDevicePowerModeSettings = GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings,
             };
@@ -128,7 +127,6 @@ namespace NHMCore.Configs
             return LoggingDebugConsoleSettings.Instance.DebugConsole != _generalConfigBackup.DebugConsole
                    || LoggingDebugConsoleSettings.Instance.LogToFile != _generalConfigBackup.LogToFile
                    || LoggingDebugConsoleSettings.Instance.LogMaxFileSize != _generalConfigBackup.LogMaxFileSize
-                   || MiningSettings.Instance.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
                    || WarningSettings.Instance.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
                    || GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings != _generalConfigBackup.DisableDevicePowerModeSettings;
         }
@@ -195,7 +193,6 @@ namespace NHMCore.Configs
             public bool DebugConsole { get; set; }
             public bool LogToFile { get; set; }
             public long LogMaxFileSize { get; set; }
-            public bool NVIDIAP0State { get; set; }
             public bool DisableWindowsErrorReporting { get; set; }
             public bool DisableDevicePowerModeSettings { get; set; }
         }
