@@ -227,7 +227,6 @@
     <Compile Include="Utils\TimeFactor.cs" />
     <Compile Include="Utils\TrivialChannel.cs" />
     <Compile Include="Utils\UpdateHelpers.cs" />
-    <Compile Include="Utils\AmdModeSwitcher.cs" />
     <Compile Include="Utils\VC_REDIST_x64_2015_2019_Manager.cs" />
     <Compile Include="Utils\WindowsUptimeCheck.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
