@@ -48,23 +48,57 @@ namespace NHM.DeviceDetection.AMD
                 return null;
             }
         }
-        private static async Task<OpenCLDeviceDetectionResult> GetOpenCLDeviceDetectionResult((string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResult, (string rawOutput, OpenCLDeviceDetectionResult parsed)? openCLResultFallback = null)
+        public static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers)
         {
-            OpenCLDeviceDetectionResult result = openCLResult.parsed;
-            Logger.Info(Tag, "Checking duplicate devices...");
+            var openCLResult = await OpenCLDetector.TryQueryOpenCLDevicesAsync();
+            var result = ConvertOpenCLResultToList(availableVideoControllers, openCLResult);
+            if (result.success)
+            {
+                AMDDevice.RawDetectionOutput = openCLResult.rawOutput;
+                return result.list;
+            }
+            var openCLResultFallback = await OpenCLDetector.TryQueryOpenCLDevicesAsyncFallback();
+            var result2 = ConvertOpenCLResultToListFallback(availableVideoControllers, openCLResult, openCLResultFallback);
+            AMDDevice.RawDetectionOutput = openCLResult.rawOutput;
+            return result2;
+        }
+        private static (bool success, List<AMDDevice> list) ConvertOpenCLResultToList(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResult)
+        {
+            var amdDevices = new List<AMDDevice>();
+            Logger.Info(Tag, "TryQueryAMDDevicesAsync START");
+            Logger.Info(Tag, $"TryQueryOpenCLDevicesAsync RAW: '{openCLResult.rawOutput}'");
             if (DuplicatedDevices(openCLResult.parsed))
             {
-                Logger.Info(Tag, "Found duplicate devices. Trying fallback detection");
-                var openCLResult2 = openCLResultFallback == null ? await TryQueryOpenCLDevicesAsyncFallback() : openCLResultFallback;
-                Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback RAW: '{openCLResult2?.rawOutput}'");
-                IsOpenClFallback = true;
-                var isDuplicate = DuplicatedDevices(openCLResult2?.parsed);
-                result = isDuplicate ?
-                    MergeResults(openCLResult.parsed, openCLResult2?.parsed) :
-                    openCLResult2?.parsed;
-                if (isDuplicate) Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback has duplicate files as well... Taking filtering lower platform devices");
+                return (false, amdDevices);
             }
-            return result;
+            Platforms = openCLResult.parsed.Platforms;
+            if (openCLResult.parsed.Platforms.Count <= 0)
+            {
+                Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
+                return (true, amdDevices);
+            }
+            amdDevices = PopulateAMDDeviceList(openCLResult.parsed, availableVideoControllers);
+            return (true, amdDevices);
+        }
+        private static List<AMDDevice> ConvertOpenCLResultToListFallback(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResultOriginal, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResultFallback)
+        {
+            var amdDevices = new List<AMDDevice>();
+            Logger.Info(Tag, "Found duplicate devices. Trying fallback detection");
+            Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback RAW: '{openCLResultFallback.rawOutput}'");
+            IsOpenClFallback = true;
+            var isDuplicate = DuplicatedDevices(openCLResultFallback.parsed);
+            var result = isDuplicate ?
+                MergeResults(openCLResultOriginal.parsed, openCLResultFallback.parsed) :
+                openCLResultFallback.parsed;
+            if (isDuplicate) Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback has duplicate files as well... Taking filtering lower platform devices");
+            Platforms = result.Platforms;
+            if (result.Platforms.Count <= 0)
+            {
+                Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
+                return amdDevices;
+            }
+            amdDevices = PopulateAMDDeviceList(result, availableVideoControllers);
+            return amdDevices;
         }
         private static List<AMDDevice> PopulateAMDDeviceList(OpenCLDeviceDetectionResult result, List<VideoControllerData> availableVideoControllers)
         {
@@ -131,37 +165,6 @@ namespace NHM.DeviceDetection.AMD
             }
             return amdDevices;
         }
-        private static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResult)
-        {
-            var amdDevices = new List<AMDDevice>();
-            Logger.Info(Tag, "TryQueryAMDDevicesAsync START");
-            Logger.Info(Tag, $"TryQueryOpenCLDevicesAsync RAW: '{openCLResult.rawOutput}'");
-            var result = await GetOpenCLDeviceDetectionResult(openCLResult);
-            Platforms = result.Platforms;
-            if (result?.Platforms?.Count <= 0)
-            {
-                Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
-                return amdDevices;
-            }
-            //_HERE parse raw string per each device;
-            AMDDevice.RawDetectionOutput = openCLResult.rawOutput;
-            amdDevices = PopulateAMDDeviceList(result, availableVideoControllers);
-            return amdDevices;
-        }
-        private static async Task<(string rawOutput, OpenCLDeviceDetectionResult parsed)?> TryQueryOpenCLDevicesAsyncFallback((string rawOutput, OpenCLDeviceDetectionResult parsed)? openCLResult = null)
-        {
-            if (openCLResult is null)
-            {
-                return await OpenCLDetector.TryQueryOpenCLDevicesAsyncFallback();
-            }
-            return openCLResult;
-        }
-        public static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers)
-        {
-            var openCLResult = await OpenCLDetector.TryQueryOpenCLDevicesAsync();
-            return await TryQueryAMDDevicesAsync(availableVideoControllers, openCLResult);
-        }
-
         private static bool IsAMDPlatform(OpenCLPlatform platform)
         {
             if (platform == null) return false;
@@ -169,7 +172,6 @@ namespace NHM.DeviceDetection.AMD
                 || platform.PlatformVendor == "Advanced Micro Devices, Inc."
                 || platform.PlatformName.Contains("AMD");
         }
-
         private static bool DuplicatedDevices(OpenCLDeviceDetectionResult data)
         {
             var anyMultipleSameBusIDs = data?.Platforms?
