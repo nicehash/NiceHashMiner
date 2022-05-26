@@ -6,6 +6,11 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="3rdParty\**" />
+    <EmbeddedResource Remove="3rdParty\**" />
+    <None Remove="3rdParty\**" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
@@ -13,14 +18,11 @@
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="6.0.1" />
     <PackageReference Include="System.Management" Version="6.0.0" />
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.326103">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="3rdParty\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.8.9" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.0" />
   </ItemGroup>
 </Project>
