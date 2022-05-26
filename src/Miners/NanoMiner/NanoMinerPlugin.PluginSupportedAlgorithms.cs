@@ -12,6 +12,16 @@ namespace NanoMiner
             DefaultFee = 2.0,
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
+#if LHR_BUILD_ON
+                {
+                    DeviceType.NVIDIA,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.DaggerHashimoto)
+                    }
+                }
+            },
+#else
                 {
                     DeviceType.AMD,
                     new List<SAS>
@@ -32,6 +42,7 @@ namespace NanoMiner
                     }
                 }
             },
+#endif
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.KAWPOW, "Kawpow" },
