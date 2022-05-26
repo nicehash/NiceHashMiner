@@ -1,4 +1,5 @@
 ﻿using NHMCore;
+using NHMCore.Nhmws;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -13,7 +14,7 @@ namespace NiceHashMiner.Validators
         {
             var result = Task.Run(async () => await ApplicationStateManager.SetBTCIfValidOrDifferent(value)).Result;
 
-            if (result == ApplicationStateManager.SetResult.INVALID)
+            if (result == NhmwsSetResult.INVALID)
             {
                 return new ValidationResult(false, Translations.Tr("Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
             }
@@ -28,7 +29,7 @@ namespace NiceHashMiner.Validators
         {
             var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(value);
 
-            if (result == ApplicationStateManager.SetResult.INVALID)
+            if (result == NhmwsSetResult.INVALID)
             {
                 return new ValidationResult(false, Translations.Tr("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long)."));
             }

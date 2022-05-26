@@ -11,42 +11,42 @@ namespace NhmSetPluginGitCommitTime
     {
         private static string GetGitCommitHash(string pluginProjectPath)
         {
-            var startInfo = new ProcessStartInfo
+            using var getGitHash = new Process
             {
-                FileName = "git",
-                Arguments = $"rev-list --all {pluginProjectPath}\\**",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "git",
+                    Arguments = $"rev-list --all {pluginProjectPath}\\**",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
             };
-            using (var getGitHash = new Process { StartInfo = startInfo })
-            {
-                var ok = getGitHash.Start();
-                if (!getGitHash.StandardOutput.EndOfStream)
-                    return getGitHash.StandardOutput.ReadLine();
-            }
+            var ok = getGitHash.Start();
+            if (!getGitHash.StandardOutput.EndOfStream)
+                return getGitHash.StandardOutput.ReadLine();
             return null;
         }
 
         private static string GetLastCommitDateTime(string commitHash)
         {
-            var startInfo = new ProcessStartInfo
+            using var getGitCommitDateTime = new Process
             {
-                FileName = "git",
-                Arguments = $"show {commitHash}",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-            using (var getGitCommitDateTime = new Process { StartInfo = startInfo })
-            {
-                getGitCommitDateTime.Start();
-
-                while (!getGitCommitDateTime.StandardOutput.EndOfStream)
+                StartInfo = new ProcessStartInfo
                 {
-                    var line = getGitCommitDateTime.StandardOutput.ReadLine();
-                    if (line.StartsWith("Date:")) return line.Replace("Date:", "").Trim();
+                    FileName = "git",
+                    Arguments = $"show {commitHash}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
+            };
+            getGitCommitDateTime.Start();
+
+            while (!getGitCommitDateTime.StandardOutput.EndOfStream)
+            {
+                var line = getGitCommitDateTime.StandardOutput.ReadLine();
+                if (line.StartsWith("Date:")) return line.Replace("Date:", "").Trim();
             }
             return null;
         }

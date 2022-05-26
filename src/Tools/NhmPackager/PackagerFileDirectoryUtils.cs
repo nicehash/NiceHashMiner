@@ -24,24 +24,23 @@ namespace NhmPackager
 
         public static bool ExecXCopy(string copyFrom, string copyTo)
         {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "xcopy.exe",
-                Arguments = $"/s /i {copyFrom} {copyTo}",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-            using (var copyRelease = new Process { StartInfo = startInfo })
-            {
-                var ok = copyRelease.Start();
-                while (!copyRelease.StandardOutput.EndOfStream)
+            using var copyRelease = new Process {
+                StartInfo = new ProcessStartInfo
                 {
-                    string line = copyRelease.StandardOutput.ReadLine();
-                    Logger.Info("ExecXCopy", line);
+                    FileName = "xcopy.exe",
+                    Arguments = $"/s /i {copyFrom} {copyTo}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
-                return ok && copyRelease.ExitCode == 0;
+            };
+            var ok = copyRelease.Start();
+            while (!copyRelease.StandardOutput.EndOfStream)
+            {
+                string line = copyRelease.StandardOutput.ReadLine();
+                Logger.Info("ExecXCopy", line);
             }
+            return ok && copyRelease.ExitCode == 0;
         }
     }
 }

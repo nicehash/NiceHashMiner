@@ -41,9 +41,6 @@
     <Reference Include="LibreHardwareMonitorLib, Version=0.8.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\LibreHardwareMonitorLib.0.8.9\lib\net452\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
-    <Reference Include="NvAPIWrapper, Version=0.8.1.100, Culture=neutral, PublicKeyToken=310fd07b25df79b3, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NvAPIWrapper.Net.0.8.1.101\lib\net45\NvAPIWrapper.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -56,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AMD\AMD_ODN.cs" />
+    <Compile Include="IMemControllerLoad.cs" />
     <Compile Include="IMemoryTimings.cs" />
+    <Compile Include="ISpecialTemps.cs" />
     <Compile Include="LibreHardwareMonitorManager.cs" />
     <Compile Include="NVIDIA\NVIDIA_MON.cs" />
     <Compile Include="UpdateVisitor.cs" />

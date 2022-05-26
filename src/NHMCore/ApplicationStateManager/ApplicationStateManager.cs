@@ -43,44 +43,37 @@ namespace NHMCore
             {
                 // Reset credentials
                 var (btc, worker, group) = CredentialsSettings.Instance.GetCredentials();
-                NHWebSocketV3.ResetCredentials(btc, worker, group);
+                NHWebSocket.ResetCredentials(btc, worker, group);
             }
             else
             {
                 // TODO notify invalid credentials?? send state?
                 // login without user if credentials are invalid
-                NHWebSocketV3.ResetCredentials();
+                NHWebSocket.ResetCredentials();
             }
-        }
-
-        public enum SetResult
-        {
-            INVALID = 0,
-            NOTHING_TO_CHANGE,
-            CHANGED
         }
 
         #region BTC setter
 
         // make sure to pass in trimmedBtc
-        public static async Task<SetResult> SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
+        public static async Task<NhmwsSetResult> SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
         {
             if (btc == CredentialsSettings.Instance.BitcoinAddress && btc != "")
             {
-                return SetResult.NOTHING_TO_CHANGE;
+                return NhmwsSetResult.NOTHING_TO_CHANGE;
             }
             if (!CredentialValidators.ValidateBitcoinAddress(btc))
             {
                 // TODO if RPC set only if valid if local then just set it
                 //CredentialsSettings.Instance.BitcoinAddress = btc;
-                return SetResult.INVALID;
+                return NhmwsSetResult.INVALID;
             }
             await SetBTC(btc);
             if (!skipCredentialsSet)
             {
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
             }
-            return SetResult.CHANGED;
+            return NhmwsSetResult.CHANGED;
         }
 
         private static async Task SetBTC(string btc)
@@ -96,15 +89,15 @@ namespace NHMCore
 
         // make sure to pass in trimmed workerName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
-        public static SetResult SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
+        public static NhmwsSetResult SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
         {
             if (workerName == CredentialsSettings.Instance.WorkerName)
             {
-                return SetResult.NOTHING_TO_CHANGE;
+                return NhmwsSetResult.NOTHING_TO_CHANGE;
             }
             if (!CredentialValidators.ValidateWorkerName(workerName))
             {
-                return SetResult.INVALID;
+                return NhmwsSetResult.INVALID;
             }
             SetWorker(workerName);
             if (!skipCredentialsSet)
@@ -112,7 +105,7 @@ namespace NHMCore
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
             }
 
-            return SetResult.CHANGED;
+            return NhmwsSetResult.CHANGED;
         }
 
         private static void SetWorker(string workerName)
@@ -127,17 +120,17 @@ namespace NHMCore
 
         // make sure to pass in trimmed GroupName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
-        public static SetResult SetGroupIfValidOrDifferent(string groupName, bool skipCredentialsSet = false)
+        public static NhmwsSetResult SetGroupIfValidOrDifferent(string groupName, bool skipCredentialsSet = false)
         {
             if (groupName == CredentialsSettings.Instance.RigGroup)
             {
-                return SetResult.NOTHING_TO_CHANGE;
+                return NhmwsSetResult.NOTHING_TO_CHANGE;
             }
             // TODO group validator
             var groupValid = true; /*!BitcoinAddress.ValidateGroupName(GroupName)*/
             if (!groupValid)
             {
-                return SetResult.INVALID;
+                return NhmwsSetResult.INVALID;
             }
             SetGroup(groupName);
             if (!skipCredentialsSet)
@@ -145,7 +138,7 @@ namespace NHMCore
                 _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
             }
 
-            return SetResult.CHANGED;
+            return NhmwsSetResult.CHANGED;
         }
 
         private static void SetGroup(string groupName)
@@ -233,21 +226,6 @@ namespace NHMCore
                 RigStatus.Disabled => "DISABLED",
                 _ => "UNKNOWN",
             };
-        }
-
-
-        public enum CurrentFormState
-        {
-            Main,
-            Benchmark,
-            Settings,
-            Plugins,
-            Update
-        }
-        private static CurrentFormState _currentForm = CurrentFormState.Main;
-        public static CurrentFormState CurrentForm
-        {
-            get => _currentForm;
         }
     }
 }

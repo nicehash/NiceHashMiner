@@ -9,17 +9,6 @@ namespace CreateLogReport
 {
     class Program
     {
-
-        private static string[] _extensions = { ".txt", ".log", ".json" };
-        private static bool IsPackExtension(string filePath)
-        {
-            foreach (var ext in _extensions)
-            {
-                if (filePath.EndsWith(ext)) return true;
-            }
-            return false;
-        }
-
         private static void Run_device_detection_Bat(string appRoot)
         {
             try
@@ -28,19 +17,19 @@ namespace CreateLogReport
                 var appRootFullExe = Path.Combine(appRootFull, "device_detection.bat");
                 Console.WriteLine(appRootFull);
                 Console.WriteLine(appRootFullExe);
-                var startInfo = new ProcessStartInfo
+                using var p = new Process
                 {
-                    WindowStyle = ProcessWindowStyle.Minimized,
-                    UseShellExecute = true,
-                    FileName = appRootFullExe,
-                    WorkingDirectory = appRootFull,
-                    CreateNoWindow = true
+                    StartInfo = new ProcessStartInfo
+                    {
+                        WindowStyle = ProcessWindowStyle.Minimized,
+                        UseShellExecute = true,
+                        FileName = appRootFullExe,
+                        WorkingDirectory = appRootFull,
+                        CreateNoWindow = true
+                    }
                 };
-                using (var p = new Process { StartInfo = startInfo })
-                {
-                    p.Start();
-                    p.WaitForExit(30 * 1000);
-                }
+                p.Start();
+                p.WaitForExit(30 * 1000);
             }
             catch (Exception e)
             {
@@ -72,6 +61,9 @@ namespace CreateLogReport
             return false;
         }
 
+        private static string[] _extensions = { ".txt", ".log", ".json" };
+        private static bool IsPackExtension(string filePath) => _extensions.Any(ext => filePath.EndsWith(ext));
+
         static void Main(string[] args)
         {
             // TODO
@@ -92,26 +84,22 @@ namespace CreateLogReport
             const string tmpLocked = "tmpLocked";
             double max = filesToPack.Count;
             double step = 0;
-            using (var progress = new ProgressBar())
-            using (var fileStream = new FileStream(archiveFileName, FileMode.Create))
-            using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true))
+            using var progress = new ProgressBar();
+            using var fileStream = new FileStream(archiveFileName, FileMode.Create);
+            using var archive = new ZipArchive(fileStream, ZipArchiveMode.Create, true);
+            foreach (var filePath in filesToPack)
             {
-                foreach (var filePath in filesToPack)
-                {
-                    step += 1;
-                    var entryPath = filePath.Replace(exePath, "").Substring(1);
-                    var zipFile = archive.CreateEntry(entryPath);
-                    var lockedFile = IsFileLocked(filePath);
-                    if (lockedFile) File.Copy(filePath, tmpLocked, true);
-                    var openFilePath = lockedFile ? tmpLocked : filePath;
-                    using (var readFile = File.Open(openFilePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    using (var entryStream = zipFile.Open())
-                    {
-                        readFile.CopyTo(entryStream);
-                    }
-                    if (lockedFile) File.Delete(tmpLocked);
-                    progress.Report(step / max);
-                }
+                step += 1;
+                var entryPath = filePath.Replace(exePath, "").Substring(1);
+                var zipFile = archive.CreateEntry(entryPath);
+                var lockedFile = IsFileLocked(filePath);
+                if (lockedFile) File.Copy(filePath, tmpLocked, true);
+                var openFilePath = lockedFile ? tmpLocked : filePath;
+                using var readFile = File.Open(openFilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using var entryStream = zipFile.Open();
+                readFile.CopyTo(entryStream);
+                if (lockedFile) File.Delete(tmpLocked);
+                progress.Report(step / max);
             }
             Console.WriteLine("Done.");
             Console.WriteLine($"Packed file: '{archiveFileName}'");

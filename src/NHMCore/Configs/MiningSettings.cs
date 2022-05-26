@@ -9,17 +9,6 @@ namespace NHMCore.Configs
         public static MiningSettings Instance { get; } = new MiningSettings();
         private MiningSettings() { }
 
-        private bool _nVIDIAP0State = false;
-        public bool NVIDIAP0State
-        {
-            get => _nVIDIAP0State;
-            set
-            {
-                _nVIDIAP0State = value;
-                OnPropertyChanged(nameof(NVIDIAP0State));
-            }
-        }
-
         private bool _autoStartMining = false;
         public bool AutoStartMining
         {

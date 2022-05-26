@@ -1,4 +1,5 @@
 ﻿using NHMCore;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System.Diagnostics;
 using System.Windows;
@@ -66,7 +67,7 @@ namespace NiceHashMiner.Views.Common
         {
             var trimmedBtcText = textBoxBTCAddress.Text.Trim();
             var result = await ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
-            if (ApplicationStateManager.SetResult.INVALID == result)
+            if (NhmwsSetResult.INVALID == result)
             {
                 textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxBad") as Style;
                 textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");

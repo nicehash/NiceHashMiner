@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps
     {
         private const int RET_OK = 0;
         public static object _lock = new object();
@@ -213,6 +213,40 @@ namespace NHM.DeviceMonitoring
         public int ResetMemoryTimings()
         {
             return NVIDIA_MON.nhm_nvidia_device_reset_memory_timings(BusID);
+        }
+        private (int vramTemp, int hotspotTemp) GetSpecialTemperatures()
+        {
+            int vramT = 0;
+            int hotspotT = 0;
+            int ok = NVIDIA_MON.nhm_nvidia_device_get_special_temperatures(BusID, ref hotspotT, ref vramT);
+            if (ok == RET_OK) return (vramT, hotspotT);
+            Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_special_temperatures failed with error code {ok}", _delayedLogging);
+            return (-1, -1);
+        }
+        public int HotspotTemp
+        {
+            get
+            {
+                return GetSpecialTemperatures().hotspotTemp;
+            }
+        }
+        public int VramTemp
+        {
+            get
+            {
+                return GetSpecialTemperatures().vramTemp;
+            }
+        }
+        public int MemoryControllerLoad
+        {
+            get
+            {
+                int memCtrlLoad = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_memory_controller_load(BusID, ref memCtrlLoad);
+                if (ok == RET_OK) return (memCtrlLoad);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_controller_load failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
         }
     }
 }

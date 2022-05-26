@@ -1,4 +1,5 @@
 ﻿using NHMCore;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Windows;
@@ -60,7 +61,7 @@ namespace NiceHashMiner.Views.Common
         {
             var trimmedWorkernameText = textBoxWorkername.Text.Trim();
             var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkernameText);
-            if (ApplicationStateManager.SetResult.INVALID == result)
+            if (NhmwsSetResult.INVALID == result)
             {
                 textBoxWorkername.Style = Application.Current.FindResource("InputBoxBad") as Style;
                 textBoxWorkername.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");

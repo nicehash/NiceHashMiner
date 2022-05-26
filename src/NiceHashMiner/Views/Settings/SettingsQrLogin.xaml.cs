@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
@@ -99,7 +100,7 @@ namespace NiceHashMiner.Views.Settings
                             if (btcResp.btc != null)
                             {
                                 var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btc);
-                                if (ret == ApplicationStateManager.SetResult.CHANGED)
+                                if (ret == NhmwsSetResult.CHANGED)
                                 {
                                     lbl_qr_status.Visibility = Visibility.Visible;
                                     btn_gen_qr.Visibility = Visibility.Visible;

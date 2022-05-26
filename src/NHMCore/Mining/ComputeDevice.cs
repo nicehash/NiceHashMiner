@@ -9,6 +9,7 @@ using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Nhmws;
 using NHMCore.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace NHMCore.Mining
                 _state = value;
                 MiningState.Instance.CalculateDevicesStateChange();
                 OnPropertyChanged();
-                NHWebSocketV3.NotifyStateChanged();
+                NHWebSocket.NotifyStateChanged();
             }
         }
 
@@ -116,22 +117,17 @@ namespace NHMCore.Mining
         {
             get
             {
-                //UUIDs
+                //UUIDs types
                 //RIG - 0
                 //CPU - 1
                 //GPU - 2 // NVIDIA
                 //AMD - 3
-                // types 
-
-                int type = 1; // assume type is CPU
-                if (DeviceType == DeviceType.NVIDIA)
-                {
-                    type = 2;
-                }
-                else if (DeviceType == DeviceType.AMD)
-                {
-                    type = 3;
-                }
+                int type = DeviceType switch {
+                    DeviceType.CPU => 1,
+                    DeviceType.NVIDIA => 2,
+                    DeviceType.AMD => 3,
+                    _ => throw new Exception($"Unknown DeviceType {(int)DeviceType}"),
+                };
                 var b64Web = UUID.GetB64UUID(Uuid);
                 return $"{type}-{b64Web}";
             }
@@ -171,11 +167,15 @@ namespace NHMCore.Mining
 
         #region Getters
 
+        private bool CanMonitorStatus => !GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null;
+
+        private bool CanSetTDP => !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null;
+
         public uint PowerTarget
         {
             get
             {
-                if (!GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is IPowerTarget get) return get.PowerTarget;
+                if (CanSetTDP && DeviceMonitor is IPowerTarget get) return get.PowerTarget;
                 //throw new NotSupportedException($"Device with {Uuid} doesn't support PowerTarget");
                 return 0;
             }
@@ -185,7 +185,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITDP get) return get.TDPSimple;
+                if (CanMonitorStatus && DeviceMonitor is ITDP get) return get.TDPSimple;
                 return (TDPSimpleType)(-1);
             }
         }
@@ -194,7 +194,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ILoad get) return get.Load;
+                if (CanMonitorStatus && DeviceMonitor is ILoad get) return get.Load;
                 return -1;
             }
         }
@@ -202,7 +202,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITemp get) return get.Temp;
+                if (CanMonitorStatus && DeviceMonitor is ITemp get) return get.Temp;
                 return -1;
             }
         }
@@ -210,7 +210,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IGetFanSpeedPercentage get)
+                if (CanMonitorStatus && DeviceMonitor is IGetFanSpeedPercentage get)
                 {
                     var (ok, percentage) = get.GetFanSpeedPercentage();
                     if (ok == 0) return percentage;
@@ -222,7 +222,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IFanSpeedRPM get) return get.FanSpeedRPM;
+                if (CanMonitorStatus && DeviceMonitor is IFanSpeedRPM get) return get.FanSpeedRPM;
                 return -1;
             }
         }
@@ -230,7 +230,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IPowerUsage get) return get.PowerUsage;
+                if (CanMonitorStatus && DeviceMonitor is IPowerUsage get) return get.PowerUsage;
                 return -1;
             }
         }
@@ -239,8 +239,32 @@ namespace NHMCore.Mining
         {
             get
             {
-                var canSet = !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP;
+                var canSet = CanSetTDP && DeviceMonitor is ITDP;
                 return canSet;
+            }
+        }
+        public int VramTemperature
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ISpecialTemps get) return get.VramTemp;
+                return -1;
+            }
+        }
+        public int HotspotTemperature
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ISpecialTemps get) return get.HotspotTemp;
+                return -1;
+            }
+        }
+        public int MemoryControllerLoad
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemControllerLoad get) return get.MemoryControllerLoad;
+                return -1;
             }
         }
         #endregion Getters
@@ -249,10 +273,7 @@ namespace NHMCore.Mining
 
         public bool SetPowerMode(TDPSimpleType level)
         {
-            if (!GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP set)
-            {
-                return set.SetTDPSimple(level);
-            }
+            if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDPSimple(level);
             return false;
         }
 

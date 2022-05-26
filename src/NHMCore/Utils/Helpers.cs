@@ -194,34 +194,6 @@ namespace NHMCore.Utils
             }
         }
 
-        public static void SetNvidiaP0State()
-        {
-            try
-            {
-                var fileName = Paths.AppRootPath("nvidiasetp0state.exe");
-                var startInfo = new ProcessStartInfo
-                {
-                    FileName = fileName,
-                    Verb = "runas",
-                    UseShellExecute = true,
-                    CreateNoWindow = true
-                };
-                using (var p = new Process { StartInfo = startInfo })
-                {
-                    p.Start();
-                    p?.WaitForExit(10 * 1000);
-                    if (p?.ExitCode != 0)
-                        Logger.Info("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
-                    else
-                        Logger.Info("NICEHASH", "nvidiasetp0state all OK");
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("NICEHASH", "nvidiasetp0state error: " + ex.Message);
-            }
-        }
-
         public static void VisitUrlLink(string urlLink)
         {
             try
