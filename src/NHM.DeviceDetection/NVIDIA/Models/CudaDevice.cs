@@ -2,8 +2,7 @@
 
 namespace NHM.DeviceDetection.NVIDIA.Models
 {
-    [Serializable]
-    internal class CudaDevice
+    internal record CudaDevice
     {
         public uint DeviceID { get; set; } // CUDA Index
         public int pciBusID { get; set; }

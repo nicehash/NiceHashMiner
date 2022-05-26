@@ -58,7 +58,7 @@
     <Compile Include="DeviceDetectionPrinter.cs" />
     <Compile Include="DeviceDetectionResult.cs" />
     <Compile Include="DeviceDetectionStep.cs" />
-    <Compile Include="Models\AMDBusIDVersionResult.cs" />
+    <Compile Include="AMD\AMDBusIDVersionResult.cs" />
     <Compile Include="NVIDIA\Models\CudaDevice.cs" />
     <Compile Include="NVIDIA\Models\CudaDeviceDetectionResult.cs" />
     <Compile Include="NVIDIA\CUDADetector.cs" />

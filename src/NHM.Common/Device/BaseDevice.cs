@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common.Enums;
+using System;
 
 namespace NHM.Common.Device
 {
-    public class BaseDevice
+    public class BaseDevice : IEquatable<BaseDevice>
     {
         public BaseDevice(BaseDevice bd)
         {
@@ -28,5 +29,14 @@ namespace NHM.Common.Device
 
         // TODO the ID will correspond to CPU Index, CUDA ID and AMD/OpenCL ID
         public int ID { get; }
+
+        public bool Equals(BaseDevice other)
+        {
+            if(Name != other.Name) return false; 
+            if(ID != other.ID) return false;
+            if(DeviceType != other.DeviceType) return false;
+            if(UUID != other.UUID) return false;
+            return true;
+        }
     }
 }

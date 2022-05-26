@@ -1,6 +1,8 @@
-﻿namespace NHM.DeviceDetection.WMI
+﻿using System;
+
+namespace NHM.DeviceDetection.WMI
 {
-    public class VideoControllerData
+    public record VideoControllerData
     {
         public string Name { get; }
         public string Description { get; }
@@ -37,16 +39,16 @@
             IsAmd = lowerName.Contains("amd") || lowerName.Contains("radeon") || lowerName.Contains("firepro");
         }
 
-        public string GetFormattedString()
+        public override string ToString()
         {
             return $"\t\tName: {Name}\n" +
-                   $"\t\tDescription: {Description}\n" +
-                   $"\t\tPNPDeviceID: {PnpDeviceID}\n" +
-                   $"\t\tDriverVersion: {DriverVersion}\n" +
-                   $"\t\tStatus: {Status}\n" +
-                   $"\t\tInfSection: {InfSection}\n" +
-                   $"\t\tAdapterRAM: {AdapterRam}\n" +
-                   $"\t\tPCI_BUS_ID: {PCI_BUS_ID}";
+               $"\t\tDescription: {Description}\n" +
+               $"\t\tPNPDeviceID: {PnpDeviceID}\n" +
+               $"\t\tDriverVersion: {DriverVersion}\n" +
+               $"\t\tStatus: {Status}\n" +
+               $"\t\tInfSection: {InfSection}\n" +
+               $"\t\tAdapterRAM: {AdapterRam}\n" +
+               $"\t\tPCI_BUS_ID: {PCI_BUS_ID}";
         }
     }
 }

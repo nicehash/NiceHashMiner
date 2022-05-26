@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -101,7 +102,7 @@ namespace NHM.DeviceDetection
             foreach (var vidController in vidControllers)
             {
                 stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
+                stringBuilder.AppendLine($"{vidController.ToString()}");
             }
             Logger.Info(Tag, stringBuilder.ToString());
         }
@@ -116,12 +117,18 @@ namespace NHM.DeviceDetection
         private static async Task DetectCUDADevices()
         {
             var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
+            CUDADevice.RawDetectionOutput = cudaQueryResult.rawOutput;
+            //_HERE parse per device
             Logger.Info(Tag, $"TryQueryCUDADevicesAsync RAW: '{cudaQueryResult.rawOutput}'");
             var result = cudaQueryResult.parsed;
             if (result?.CudaDevices?.Count > 0)
             {
                 // we got NVIDIA devices
                 var cudaDevices = result.CudaDevices.Select(dev => CUDADetector.Transform(dev)).ToList();
+                foreach(var cudaDevice in cudaDevices)
+                {
+                    cudaDevice.RawDeviceData = JsonConvert.SerializeObject(result.CudaDevices.Where(dev => dev.pciBusID == cudaDevice.PCIeBusID).FirstOrDefault());
+                }
                 // filter out no supported SM versions
                 DetectionResult.CUDADevices = cudaDevices.Where(IsCUDADeviceSupported).OrderBy(cudaDev => cudaDev.PCIeBusID).ToList();
                 DetectionResult.UnsupportedCUDADevices = cudaDevices.Where(cudaDev => IsCUDADeviceSupported(cudaDev) == false).ToList();

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace NHM.DeviceDetection.AMD
 {
+    using Newtonsoft.Json;
     using NHM.DeviceDetection.Models.AMDBusIDVersionResult;
     using NHM.UUID;
     using System.IO;
@@ -19,8 +20,6 @@ namespace NHM.DeviceDetection.AMD
     {
         private const string Tag = "AMDDetector";
         public static bool IsOpenClFallback { get; private set; }
-
-        // Ok so this is kinda stupid and probably should be split into OpenCL class but since we currently QueryOpenCLDevices inside AMD we will check for NVIDIA OpenCL backend only after AMD Query is finished
         public static List<OpenCLPlatform> Platforms { get; private set; } = null;
 
         private static string convertSize(double size)
@@ -38,12 +37,9 @@ namespace NHM.DeviceDetection.AMD
                 }
                 var GBResult = Math.Round(size, 0);
                 // if number is odd we can assume that free memory was presented and we can return the upper even...
-                if(GBResult > 5.0)//1,3,5gb gpus exist
+                if (GBResult > 5.0 && GBResult % 2 != 0)//1,3,5gb gpus exist
                 {
-                    if (GBResult % 2 != 0)
-                    {
-                        GBResult += 1;
-                    }
+                    GBResult += 1;
                 }
                 return GBResult + units[i];
             }
@@ -52,117 +48,123 @@ namespace NHM.DeviceDetection.AMD
                 return null;
             }
         }
-
-        public static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers)
+        private static async Task<OpenCLDeviceDetectionResult> GetOpenCLDeviceDetectionResult((string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResult, (string rawOutput, OpenCLDeviceDetectionResult parsed)? openCLResultFallback = null)
         {
-            var amdDevices = new List<AMDDevice>();
-            Logger.Info(Tag, "TryQueryAMDDevicesAsync START");
-            var openCLResult = await OpenCLDetector.TryQueryOpenCLDevicesAsync();
-            Logger.Info(Tag, $"TryQueryOpenCLDevicesAsync RAW: '{openCLResult.rawOutput}'");
-
-
-            OpenCLDeviceDetectionResult result = null;
-            // check if we have duplicated platforms
+            OpenCLDeviceDetectionResult result = openCLResult.parsed;
             Logger.Info(Tag, "Checking duplicate devices...");
             if (DuplicatedDevices(openCLResult.parsed))
             {
                 Logger.Info(Tag, "Found duplicate devices. Trying fallback detection");
-                var openCLResult2 = await OpenCLDetector.TryQueryOpenCLDevicesAsyncFallback();
-                Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback RAW: '{openCLResult2.rawOutput}'");
+                var openCLResult2 = openCLResultFallback == null ? await TryQueryOpenCLDevicesAsyncFallback() : openCLResultFallback;
+                Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback RAW: '{openCLResult2?.rawOutput}'");
                 IsOpenClFallback = true;
-                if (DuplicatedDevices(openCLResult2.parsed))
-                {
-                    Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback has duplicate files as well... Taking filtering lower platform devices");
-                    // #3 try merging both results and take lower platform unique devices
-                    result = MergeResults(openCLResult.parsed, openCLResult2.parsed);
-                }
-                else
-                {
-                    // #2 try good
-                    result = openCLResult2.parsed;
-                }
+                var isDuplicate = DuplicatedDevices(openCLResult2?.parsed);
+                result = isDuplicate ?
+                    MergeResults(openCLResult.parsed, openCLResult2?.parsed) :
+                    openCLResult2?.parsed;
+                if (isDuplicate) Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback has duplicate files as well... Taking filtering lower platform devices");
             }
-            else
+            return result;
+        }
+        private static List<AMDDevice> PopulateAMDDeviceList(OpenCLDeviceDetectionResult result, List<VideoControllerData> availableVideoControllers)
+        {
+            var amdDevices = new List<AMDDevice>();
+            var amdPlatforms = result.Platforms.Where(IsAMDPlatform).ToList();
+            foreach (var platform in amdPlatforms)
             {
-                // #1 try good
-                result = openCLResult.parsed;
-            }
-
-            if (result?.Platforms?.Count > 0)
-            {
-                Platforms = result.Platforms;
-                var amdPlatforms = result.Platforms.Where(IsAMDPlatform).ToList();
-                foreach (var platform in amdPlatforms)
+                var platformNum = platform.PlatformNum;
+                foreach (var oclDev in platform.Devices)
                 {
-                    var platformNum = platform.PlatformNum;
-                    foreach (var oclDev in platform.Devices)
+                    var infSection = "";
+                    var name = oclDev._CL_DEVICE_BOARD_NAME_AMD;
+                    var codename = oclDev._CL_DEVICE_NAME;
+                    var gpuRAM = oclDev._CL_DEVICE_GLOBAL_MEM_SIZE;
+                    var infoToHashedNew = $"{oclDev.DeviceID}--{oclDev.BUS_ID}--{DeviceType.AMD}--{codename}--{name}";
+                    var infoToHashedOld = $"{oclDev.DeviceID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
+                    var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.BUS_ID).FirstOrDefault() ?? null;
+                    if (vidCtrl != null)
                     {
-                        var infSection = "";
-                        var name = oclDev._CL_DEVICE_BOARD_NAME_AMD;
-                        var codename = oclDev._CL_DEVICE_NAME;
-                        var gpuRAM = oclDev._CL_DEVICE_GLOBAL_MEM_SIZE;
-                        var infoToHashedNew = $"{oclDev.DeviceID}--{oclDev.BUS_ID}--{DeviceType.AMD}--{codename}--{name}";
-                        var infoToHashedOld = $"{oclDev.DeviceID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
-                        // cross ref info from vid controllers with bus id
-                        var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.BUS_ID).FirstOrDefault() ?? null;
-                        if (vidCtrl != null)
-                        {
-                            infSection = vidCtrl.InfSection;
-                            infoToHashedOld += vidCtrl.PnpDeviceID;
-                            infoToHashedNew += vidCtrl.PnpDeviceID;
-                        }
-                        else
-                        {
-                            Logger.Info(Tag, $"TryQueryAMDDevicesAsync cannot find VideoControllerData with bus ID {oclDev.BUS_ID}");
-                        }
-                        var uuidHEXOld = UUID.GetHexUUID(infoToHashedOld);
-                        var uuidHEXNew = UUID.GetHexUUID(infoToHashedNew);
-                        var uuidOld = $"AMD-{uuidHEXOld}";
-                        var uuidNew = $"AMD-{uuidHEXNew}";
-                        // append VRAM to distinguish AMD GPUs
-
-                        //transition from old uuid's to new
-                        try
-                        {                                
-                            var cfgPathOld = Paths.ConfigsPath($"device_settings_{uuidOld}.json");
-                            var cfgPathNew = Paths.ConfigsPath($"device_settings_{uuidNew}.json");
-                            if (File.Exists(cfgPathOld) && !File.Exists(cfgPathNew))//rename file and rename first line
-                            {
-                                string configText = File.ReadAllText(cfgPathOld);
-                                configText = configText.Replace(uuidOld, uuidNew);
-                                File.WriteAllText(cfgPathNew, configText);
-                                File.Delete(cfgPathOld);
-                            }
-                        }
-                        catch(Exception e)
-                        {
-                            Logger.Info(Tag, $"Error when transitioning from old to new AMD GPU config file. " + e.Message);
-                        }
-
-                        var vramPart = convertSize(gpuRAM);
-                        var setName = vramPart != null ? $"{name} {vramPart}" : name;
-                        var bd = new BaseDevice(DeviceType.AMD, uuidNew, setName, (int)oclDev.DeviceID);
-                        var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
-                        var thisDeviceExtraADLResult = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID);
-                        if(thisDeviceExtraADLResult != null && thisDeviceExtraADLResult.BUS_ID == oclDev.BUS_ID)
-                        {
-                            amdDevice.ADLFunctionCall = thisDeviceExtraADLResult.FunctionCall;
-                            amdDevice.ADLReturnCode = thisDeviceExtraADLResult.ADLRetCode;
-                            amdDevice.RawDriverVersion = thisDeviceExtraADLResult.AdrenalinVersion;
-                            if (Version.TryParse(thisDeviceExtraADLResult.AdrenalinVersion, out var parsedVer)) amdDevice.DEVICE_AMD_DRIVER = parsedVer;
-                        }
-                        amdDevices.Add(amdDevice);
+                        infSection = vidCtrl.InfSection;
+                        infoToHashedOld += vidCtrl.PnpDeviceID;
+                        infoToHashedNew += vidCtrl.PnpDeviceID;
                     }
+                    else
+                    {
+                        Logger.Info(Tag, $"TryQueryAMDDevicesAsync cannot find VideoControllerData with bus ID {oclDev.BUS_ID}");
+                    }
+                    var uuidHEXOld = UUID.GetHexUUID(infoToHashedOld);
+                    var uuidHEXNew = UUID.GetHexUUID(infoToHashedNew);
+                    var uuidOld = $"AMD-{uuidHEXOld}";
+                    var uuidNew = $"AMD-{uuidHEXNew}";
+                    try
+                    {
+                        var cfgPathOld = Paths.ConfigsPath($"device_settings_{uuidOld}.json");
+                        var cfgPathNew = Paths.ConfigsPath($"device_settings_{uuidNew}.json");
+                        if (File.Exists(cfgPathOld) && !File.Exists(cfgPathNew))//rename file and rename first line
+                        {
+                            string configText = File.ReadAllText(cfgPathOld);
+                            configText = configText.Replace(uuidOld, uuidNew);
+                            File.WriteAllText(cfgPathNew, configText);
+                            File.Delete(cfgPathOld);
+                        }
+                    }
+                    catch(Exception e)
+                    {
+                        Logger.Info(Tag, $"Error when transitioning from old to new AMD GPU config file. " + e.Message);
+                    }
+
+                    var vramPart = convertSize(gpuRAM);
+                    var setName = vramPart != null ? $"{name} {vramPart}" : name;
+                    var bd = new BaseDevice(DeviceType.AMD, uuidNew, setName, (int)oclDev.DeviceID);
+                    var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
+                    amdDevice.RawDeviceData = JsonConvert.SerializeObject(oclDev);
+                    var thisDeviceExtraADLResult = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID);
+                    if(thisDeviceExtraADLResult != null && thisDeviceExtraADLResult.BUS_ID == oclDev.BUS_ID)
+                    {
+                        amdDevice.ADLFunctionCall = thisDeviceExtraADLResult.FunctionCall;
+                        amdDevice.ADLReturnCode = thisDeviceExtraADLResult.ADLRetCode;
+                        amdDevice.RawDriverVersion = thisDeviceExtraADLResult.AdrenalinVersion;
+                        if (Version.TryParse(thisDeviceExtraADLResult.AdrenalinVersion, out var parsedVer)) amdDevice.DEVICE_AMD_DRIVER = parsedVer;
+                    }
+                    amdDevices.Add(amdDevice);
                 }
             }
-            Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
-
             return amdDevices;
+        }
+        private static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResult)
+        {
+            var amdDevices = new List<AMDDevice>();
+            Logger.Info(Tag, "TryQueryAMDDevicesAsync START");
+            Logger.Info(Tag, $"TryQueryOpenCLDevicesAsync RAW: '{openCLResult.rawOutput}'");
+            var result = await GetOpenCLDeviceDetectionResult(openCLResult);
+            Platforms = result.Platforms;
+            if (result?.Platforms?.Count <= 0)
+            {
+                Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
+                return amdDevices;
+            }
+            //_HERE parse raw string per each device;
+            AMDDevice.RawDetectionOutput = openCLResult.rawOutput;
+            amdDevices = PopulateAMDDeviceList(result, availableVideoControllers);
+            return amdDevices;
+        }
+        private static async Task<(string rawOutput, OpenCLDeviceDetectionResult parsed)?> TryQueryOpenCLDevicesAsyncFallback((string rawOutput, OpenCLDeviceDetectionResult parsed)? openCLResult = null)
+        {
+            if (openCLResult is null)
+            {
+                return await OpenCLDetector.TryQueryOpenCLDevicesAsyncFallback();
+            }
+            return openCLResult;
+        }
+        public static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers)
+        {
+            var openCLResult = await OpenCLDetector.TryQueryOpenCLDevicesAsync();
+            return await TryQueryAMDDevicesAsync(availableVideoControllers, openCLResult);
         }
 
         private static bool IsAMDPlatform(OpenCLPlatform platform)
         {
-            if (platform == null) return false; 
+            if (platform == null) return false;
             return platform.PlatformName == "AMD Accelerated Parallel Processing"
                 || platform.PlatformVendor == "Advanced Micro Devices, Inc."
                 || platform.PlatformName.Contains("AMD");
@@ -179,8 +181,6 @@ namespace NHM.DeviceDetection.AMD
                     .Any(multipleSameBusIDs => multipleSameBusIDs);
             return anyMultipleSameBusIDs ?? false;
         }
-
-        // take lower platform
         private static OpenCLDeviceDetectionResult MergeResults(OpenCLDeviceDetectionResult a, OpenCLDeviceDetectionResult b)
         {
             var addedDevicesWithBusID = new HashSet<int>();
@@ -207,13 +207,10 @@ namespace NHM.DeviceDetection.AMD
                             };
                         }
                         var curPlatform = platformDevices[platform.PlatformNum];
-                        foreach (var oclDev in platform.Devices)
+                        foreach (var oclDev in platform.Devices.Where(dev => !addedDevicesWithBusID.Contains(dev.BUS_ID)))
                         {
-                            if (!addedDevicesWithBusID.Contains(oclDev.BUS_ID))
-                            {
-                                addedDevicesWithBusID.Add(oclDev.BUS_ID);
-                                curPlatform.Devices.Add(oclDev);
-                            }
+                            addedDevicesWithBusID.Add(oclDev.BUS_ID);
+                            curPlatform.Devices.Add(oclDev);
                         }
                     }
                 }
