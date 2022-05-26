@@ -23,7 +23,7 @@ After you have successfully added the new plugin project right click on it and s
 Then you change `PropertyGroup` to the following:
 ```
 <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>
 </PropertyGroup>
 ```

@@ -4,9 +4,8 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
 </Project>

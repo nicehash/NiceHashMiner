@@ -3,24 +3,25 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace NhmPackager
 {
     internal static class VersionInfoHelpers
     {
+        static ShellFile _file;
         internal static (string nsisFileTemplate, string version) GenerateVariableTemplate(string path)
         {
-            byte[] assemblyBytes = File.ReadAllBytes(path);
-            var assembly = Assembly.Load(assemblyBytes);
-            var assemblyData = assembly.CustomAttributes;
+            // Disposing ShellFile under NET6 throws an error hence the static fiasco
+            _file = ShellFile.FromFilePath(path);
+            var file = _file;
 
-            string VERSION = assemblyData.Where(data => data.AttributeType == typeof(AssemblyFileVersionAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
-
-
-            string BASE_NAME = assemblyData.Where(data => data.AttributeType == typeof(AssemblyTitleAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
-            string COMPANY_NAME = assemblyData.Where(data => data.AttributeType == typeof(AssemblyCompanyAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString();
-            string APP_DESCRIPTION = assemblyData.Where(data => data.AttributeType == typeof(AssemblyDescriptionAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
-            string COPYRIGHT = assemblyData.Where(data => data.AttributeType == typeof(AssemblyCopyrightAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
+            string VERSION = file.Properties.System.FileVersion.Value;
+            string BASE_NAME = file.Properties.System.FileDescription.Value;
+            string COMPANY_NAME = file.Properties.System.Company.Value;
+            string APP_DESCRIPTION = "NiceHash Miner is a simple to use mining tool";
+            string COPYRIGHT = file.Properties.System.Copyright.Value;
 
             string BASE_BRAND_NAME = "NiceHash Miner";
             string TRADEMARK = "NICEHASH ®";
@@ -31,7 +32,7 @@ namespace NhmPackager
             string NSIS_GENERATED_FILE_TEMPLATE =
             "########################################\n" +
             "## This is generated file\n" +
-            $"## Date: {DateTime.Now.ToString()}\n\n" +
+            $"## Date: {DateTime.Now}\n\n" +
 
             "; Product and version\n" +
             $"!define BASE_NAME \"{BASE_NAME}\"\n" +
