@@ -67,17 +67,11 @@ namespace NHM.DeviceDetection.AMD
             var amdDevices = new List<AMDDevice>();
             Logger.Info(Tag, "TryQueryAMDDevicesAsync START");
             Logger.Info(Tag, $"TryQueryOpenCLDevicesAsync RAW: '{openCLResult.rawOutput}'");
-            if (DuplicatedDevices(openCLResult.parsed))
-            {
-                return (false, amdDevices);
-            }
+            if (DuplicatedDevices(openCLResult.parsed)) return (false, amdDevices);
             Platforms = openCLResult.parsed.Platforms;
-            if (openCLResult.parsed.Platforms.Count <= 0)
-            {
-                Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
-                return (true, amdDevices);
-            }
+            if (openCLResult.parsed.Platforms.Count <= 0) return (true, amdDevices);
             amdDevices = PopulateAMDDeviceList(openCLResult.parsed, availableVideoControllers);
+            Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
             return (true, amdDevices);
         }
         private static List<AMDDevice> ConvertOpenCLResultToListFallback(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResultOriginal, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResultFallback)
@@ -92,12 +86,9 @@ namespace NHM.DeviceDetection.AMD
                 openCLResultFallback.parsed;
             if (isDuplicate) Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback has duplicate files as well... Taking filtering lower platform devices");
             Platforms = result.Platforms;
-            if (result.Platforms.Count <= 0)
-            {
-                Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
-                return amdDevices;
-            }
+            if (result.Platforms.Count <= 0) return amdDevices;
             amdDevices = PopulateAMDDeviceList(result, availableVideoControllers);
+            Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
             return amdDevices;
         }
         private static List<AMDDevice> PopulateAMDDeviceList(OpenCLDeviceDetectionResult result, List<VideoControllerData> availableVideoControllers)
