@@ -4,12 +4,8 @@
     <OutputType>Library</OutputType>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="3rdParty\**" />
-    <EmbeddedResource Remove="3rdParty\**" />
-    <None Remove="3rdParty\**" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj" />
   </ItemGroup>
