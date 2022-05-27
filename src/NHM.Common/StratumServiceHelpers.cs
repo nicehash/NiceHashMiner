@@ -14,8 +14,8 @@ namespace NHM.Common
         {
             internal class StratumTemplateEntry
             {
-                public string Template { get; set; } = "";
-                public int Port { get; set; } = -1;
+                public string Template { get; init; } = "";
+                public int Port { get; init; } = -1;
             }
 
             public string NhmSocketAddress { get; set; } = "";

@@ -156,11 +156,11 @@ namespace NhmPackager
                 {
                     var cachedPluginsPath = GetCachedPluginsPath(name);
                     var cachedPluginsUpdatedPath = GetCachedPluginsPath($"{name}.txt");
-                    using (WebClient wc = new WebClient())
-                    {
-                        await wc.DownloadFileTaskAsync(new Uri(url), cachedPluginsPath);
-                        File.WriteAllText(cachedPluginsUpdatedPath, lastUpdated);
-                    }
+                    using var client = new HttpClient();
+                    using var s = await client.GetStreamAsync(url);
+                    using var fs = new FileStream(cachedPluginsPath, FileMode.CreateNew);
+                    await s.CopyToAsync(fs);
+                    File.WriteAllText(cachedPluginsUpdatedPath, lastUpdated);
                     return true;
                 }
                 catch (Exception e)

@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -677,8 +676,8 @@ namespace NHMCore.Mining.Plugins
         {
             async Task<List<PluginPackageInfo>> getPlugins(int version)
             {
-                using var client = new NoKeepAliveWebClient();
-                string s = await client.DownloadStringTaskAsync($"{Links.PluginsJsonApiUrl}?v={version}");
+                using var client = new NoKeepAliveHttpClient();
+                string s = await client.GetStringAsync($"{Links.PluginsJsonApiUrl}?v={version}");
                 return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,

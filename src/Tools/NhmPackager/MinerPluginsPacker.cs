@@ -7,13 +7,11 @@ using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
-using System.Security.Cryptography;
+using System.Net.Http;
 using System.Threading.Tasks;
 using static NhmPackager.PackagerFileDirectoryUtils;
 using static NhmPackager.PackagerPaths;
@@ -78,16 +76,9 @@ namespace NhmPackager
             {
                 minerPackageURL = binsSource.GetMinerBinsUrlsForPlugin().FirstOrDefault();
             }
-            string binaryHash = null;
-            if (minerPackageURL != null)
-            {
-                var filepath = GetTemporaryWorkFolder($"{plugin.PluginUUID}.tmp");
-                Logger.Info("MinerPluginsPacker", $"Calculating hash for {plugin.Name}-{plugin.PluginUUID}");
-                using var myWebClient = new WebClient();
-                myWebClient.DownloadFile(minerPackageURL, filepath);
-                binaryHash = FileHelpers.GetFileSHA256Checksum(filepath);
-                File.Delete(filepath);
-            }
+            Logger.Info("MinerPluginsPacker", $"Calculating hash for {plugin.Name}-{plugin.PluginUUID} - url {minerPackageURL}");
+            string binaryHash = minerPackageURL != null ? FileHelpers.GetURLFileSHA256Checksum(minerPackageURL) : null;
+
             var pluginZipFileName = GetPluginPackageName(plugin);
             var dllPackageZip = GetPluginsPackagesPath(pluginZipFileName);
             string pluginPackageHash = FileHelpers.GetFileSHA256Checksum(dllPackageZip);
@@ -269,8 +260,8 @@ namespace NhmPackager
         {
             List<PluginPackageInfo> getPlugins(int version)
             {
-                using var client = new NoKeepAliveWebClient();
-                string s = client.DownloadString($"{url}?v={version}");
+                using var client = new NoKeepAliveHttpClient();
+                string s = client.GetStringAsync($"{url}?v={version}").Result;
                 return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,
