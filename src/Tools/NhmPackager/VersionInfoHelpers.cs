@@ -1,21 +1,24 @@
 ﻿using NHM.Common;
 using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using Microsoft.WindowsAPICodePack.Shell;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using System.Collections.Generic;
 
 namespace NhmPackager
 {
     internal static class VersionInfoHelpers
     {
-        static ShellFile _file;
+        // Disposing ShellFile under NET6 throws an error hence the static fiasco
+        static List<ShellFile> _files = new List<ShellFile>();
+
         internal static (string nsisFileTemplate, string version) GenerateVariableTemplate(string path)
         {
-            // Disposing ShellFile under NET6 throws an error hence the static fiasco
-            _file = ShellFile.FromFilePath(path);
-            var file = _file;
+            ShellFile openFilePath(string path)
+            {
+                var file = ShellFile.FromFilePath(path);
+                _files.Add(file);
+                return file;
+            }
+            var file = openFilePath(path);
 
             string VERSION = file.Properties.System.FileVersion.Value;
             string BASE_NAME = file.Properties.System.FileDescription.Value;

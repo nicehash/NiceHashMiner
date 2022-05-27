@@ -79,20 +79,13 @@ namespace NiceHashMiner
                     this.Shutdown();
                 });
             };
-            var isInfo = Environment.GetCommandLineArgs().Contains("-info");
+
             var isDevelop = Environment.GetCommandLineArgs().Contains("-dev");
             var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
             var launcherPID = ParseLauncherPID();
             Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
             Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
             Launcher.SetIsLauncher(isLauncher);
-
-            if (isInfo)
-            {
-                ProgramInfo();
-                Application.Current.Shutdown();
-                return;
-            }
 
             var (ok, rootPath, appRootPath) = GetPaths(isLauncher, isDevelop);
             if (!ok)
@@ -257,18 +250,6 @@ namespace NiceHashMiner
             MessageBox.Show(msg, "Application Halted!", MessageBoxButton.OK);
             e.Handled = true;
             Current.Shutdown();
-        }
-        
-        private static bool ProgramInfo()
-        {
-            var a = ResourceAssembly;
-            var version = a.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
-            var base_name = a.GetCustomAttribute<AssemblyTitleAttribute>().Title;
-            var company_name = a.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
-            var app_description = a.GetCustomAttribute<AssemblyDescriptionAttribute>().Description;
-            var copyright = a.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
-            Console.WriteLine(version + ";" + base_name + ";" + company_name + ";" + app_description + ";" + copyright);
-            return true;
         }
     }
 }

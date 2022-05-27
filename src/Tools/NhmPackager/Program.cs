@@ -60,25 +60,6 @@ namespace NhmPackager
             return ok && proc.ExitCode == 0;
         }
 
-        private static string GetFileAssemblyInfo(string filename)
-        {
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = filename,
-                Arguments = "-info",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-            using (var proc = new Process { StartInfo = startInfo })
-            {
-                var ok = proc.Start();
-                var assemblyInfo = "test";
-                assemblyInfo = proc.StandardOutput.ReadToEnd();
-                return assemblyInfo;
-            }
-        }
-
         private static void Add7zToPath()
         {
             // Add common folder to path for launched processes
@@ -152,16 +133,13 @@ namespace NhmPackager
                 // #2 
                 DeletePathIfExists(GetTemporaryWorkFolder("Release", "build_settings.json"));
 
-                // #3 
-                var assemblyLauncher = GetFileAssemblyInfo(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));
-                var assemblyExecutable = GetFileAssemblyInfo(GetTemporaryWorkFolder("Release", "app", "app_nhm.exe"));
-
-                if (assemblyLauncher != assemblyExecutable)
+                // #3
+                var (generatedTemplateLauncher, versionLauncher) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));
+                var (generatedTemplate, version) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "app", "app_nhm.exe"));
+                if (generatedTemplateLauncher != generatedTemplate || versionLauncher != version)
                 {
-                    throw new Exception($"Launcher and App assembly info missmatch!!!\n{assemblyLauncher} != {assemblyExecutable}");
+                    throw new Exception($"Launcher and App TAG or Version missmatch!!!\n{generatedTemplateLauncher} != {generatedTemplate} \n{versionLauncher} != {version}");
                 }
-
-                var (generatedTemplate, version) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));
                 Logger.Info("Main", "ExecPluginsPacker resumming...");
                 // #4 
                 var appDirOld = GetTemporaryWorkFolder("Release", "app");
