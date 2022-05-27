@@ -1,7 +1,4 @@
 ﻿namespace NHM.Common.Device
 {
-    public class FakeDevice : BaseDevice
-    {
-        public FakeDevice(BaseDevice bd) : base(bd) { }
-    }
+    public class FakeDevice : BaseDevice {}
 }

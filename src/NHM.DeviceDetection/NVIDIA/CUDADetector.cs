@@ -67,9 +67,18 @@ namespace NHM.DeviceDetection.NVIDIA
                 uuid = $"NVF-{uuidHEX}"; // TODO indicate NVF as NVIDIA Fallback 
             }
             var name = GetNameFromCudaDevice(cudaDevice);
-            var bd = new BaseDevice(DeviceType.NVIDIA, uuid, name, (int)cudaDevice.DeviceID);
-            var isLHR = IsLHR(name, (int)cudaDevice.pciDeviceId);
-            return new CUDADevice(bd, cudaDevice.pciBusID, cudaDevice.DeviceGlobalMemory, cudaDevice.SM_major, cudaDevice.SM_minor, isLHR);
+            return new CUDADevice
+            {
+                DeviceType = DeviceType.NVIDIA,
+                UUID = uuid,
+                Name = name,
+                ID = (int)cudaDevice.DeviceID,
+                PCIeBusID = cudaDevice.pciBusID,
+                GpuRam = cudaDevice.DeviceGlobalMemory,
+                SM_major = cudaDevice.SM_major,
+                SM_minor = cudaDevice.SM_minor,
+                IsLHR = IsLHR(name, (int)cudaDevice.pciDeviceId),
+            };
         }
 
         private static bool IsLHR(string name, int deviceId)

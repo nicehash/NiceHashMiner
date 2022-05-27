@@ -141,8 +141,18 @@ namespace NHM.DeviceDetection.AMD
 
                         var vramPart = convertSize(gpuRAM);
                         var setName = vramPart != null ? $"{name} {vramPart}" : name;
-                        var bd = new BaseDevice(DeviceType.AMD, uuidNew, setName, (int)oclDev.DeviceID);
-                        var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
+                        var amdDevice = new AMDDevice
+                        {
+                            DeviceType = DeviceType.AMD,
+                            UUID = uuidNew,
+                            Name = setName,
+                            ID = (int)oclDev.DeviceID,
+                            PCIeBusID = oclDev.BUS_ID,
+                            GpuRam = gpuRAM,
+                            Codename = codename,
+                            InfSection = infSection,
+                            OpenCLPlatformID = platformNum,
+                        };
                         var thisDeviceExtraADLResult = result.AMDBusIDVersionPairs.FirstOrDefault(ver => ver.BUS_ID == oclDev.BUS_ID);
                         if(thisDeviceExtraADLResult != null && thisDeviceExtraADLResult.BUS_ID == oclDev.BUS_ID)
                         {

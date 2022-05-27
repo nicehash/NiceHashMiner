@@ -4,25 +4,18 @@ namespace NHM.Common.Device
 {
     public class AMDDevice : BaseDevice, IGpuDevice
     {
-        public AMDDevice(BaseDevice bd, int iPCIeBusID, ulong gpuRam, string codename, string infSection, int openCLPlatformID = -1) : base(bd)
-        {
-            PCIeBusID = iPCIeBusID;
-            GpuRam = gpuRam;
-            Codename = codename;
-            InfSection = infSection;
-            OpenCLPlatformID = openCLPlatformID;
-        }
-        public Version DEVICE_AMD_DRIVER = new Version(0, 0);
+        public Version DEVICE_AMD_DRIVER { get; set; } = new Version(0, 0);
         public string RawDriverVersion { get; set; }
         public int ADLReturnCode { get; set; }
         public int ADLFunctionCall { get; set; }
-        public int OpenCLPlatformID { get; }
 
-        public int PCIeBusID { get; }
-        public ulong GpuRam { get; }
+        public int OpenCLPlatformID { get; init; }
 
-        public string Codename { get; }
-        public string InfSection { get; }
+        public int PCIeBusID { get; init; }
+        public ulong GpuRam { get; init; }
+
+        public string Codename { get; init; }
+        public string InfSection { get; init; }
 
         // AMD always true
         public bool IsOpenCLBackendEnabled => true;
