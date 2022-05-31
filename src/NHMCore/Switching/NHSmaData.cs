@@ -16,7 +16,6 @@ namespace NHMCore.Switching
     public static class NHSmaData
     {
         private const string Tag = "NHSMAData";
-        private static string CachedFile => Paths.InternalsPath("cached_sma.json");
 
         /// <summary>
         /// True iff there has been at least one SMA update
@@ -47,17 +46,12 @@ namespace NHMCore.Switching
             _currentPayingRates = new Dictionary<AlgorithmType, double>();
             _stableAlgorithms = new HashSet<AlgorithmType>();
 
-            var cacheDict = InternalConfigs.ReadFileSettings<Dictionary<AlgorithmType, double>>(CachedFile);
-
             // _recentPaying = new Dictionary<AlgorithmType, List<double>>();
             foreach (AlgorithmType algo in Enum.GetValues(typeof(AlgorithmType)))
             {
                 if (algo >= 0)
                 {
                     var paying = 0d;
-
-                    if (cacheDict?.TryGetValue(algo, out paying) ?? false)
-                        HasData = true;
 
                     if (BuildOptions.FORCE_MINING || BuildOptions.FORCE_PROFITABLE)
                     {
@@ -90,13 +84,6 @@ namespace NHMCore.Switching
                             _currentPayingRates[algo] = 1000;
                         }
                     }
-                }
-
-                if (MiscSettings.Instance.UseSmaCache)
-                {
-                    // Cache while in lock so file is not accessed on multiple threads
-                    var isFileSaved = InternalConfigs.WriteFileSettings(CachedFile, newSma);
-                    if (!isFileSaved) Logger.Error(Tag, "CachedSma not saved");
                 }
             }
 
