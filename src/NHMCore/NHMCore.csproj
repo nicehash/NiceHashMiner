@@ -183,7 +183,6 @@
     <Compile Include="Nhmws\V4\MessageParserV4.cs" />
     <Compile Include="Nhmws\V4\MessagesV4.cs" />
     <Compile Include="Nhmws\V4\NHWebSocketV4.cs" />
-    <Compile Include="Nhmws\V4\StatusCodes.cs" />
     <Compile Include="Notifications\AvailableNotifications.cs" />
     <Compile Include="Notifications\NotificationAction.cs" />
     <Compile Include="Notifications\Notification.cs" />
