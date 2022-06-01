@@ -53,7 +53,7 @@ namespace NHMCore
 
         public static void ExecuteApplicationExit()
         {
-            Application.Current.Shutdown();
+            Environment.Exit(0);
             ApplicationExit?.Invoke();
         }
 
