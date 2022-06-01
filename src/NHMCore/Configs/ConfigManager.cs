@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Reflection;
 
 namespace NHMCore.Configs
 {
@@ -70,7 +69,7 @@ namespace NHMCore.Configs
             GeneralConfig.SetDefaults();
             ToSSetings.Instance.Hwid = ApplicationStateManager.RigID();
 
-            var asmVersion = new Version(Assembly.GetEntryAssembly().GetName().Version.ToString());
+            var asmVersion = new Version(NHMApplication.ProductVersion);
 
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);

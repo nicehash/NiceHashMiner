@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
@@ -73,7 +72,7 @@ namespace NHMCore.Nhmws.V4
 
         static private LoginMessage _login = new LoginMessage
         {
-            Version = new List<string> { "NHM/" + Assembly.GetEntryAssembly().GetName().Version.ToString(), "NA/NA" },
+            Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", "NA/NA" },
             Btc = DemoUser.BTC,
         };
 

@@ -1,6 +1,5 @@
 ﻿using NHM.Common;
 using NHMCore.Mining;
-using NHMCore.Mining.Plugins;
 using NHMCore.Utils;
 using System.Collections.Generic;
 
