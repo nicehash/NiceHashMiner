@@ -18,7 +18,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
 // static imports
-using static NHMCore.Nhmws.V4.StatusCodes;
 using NHLog = NHM.Common.Logger;
 
 namespace NHMCore.Nhmws.V4
@@ -63,7 +62,6 @@ namespace NHMCore.Nhmws.V4
         private enum MessageType
         {
             CLOSE_WEBSOCKET = 0,
-            SEND_MESSAGE,
             SEND_MESSAGE_STATUS,
         }
 
@@ -206,13 +204,13 @@ namespace NHMCore.Nhmws.V4
                     if (elapsedTime.TotalSeconds > MINER_STATUS_TICK_SECONDS)
                     {
                         var minerStatusJsonStr = CreateMinerStatusMessage();
-                        //_sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+                        _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
                     }
                     if (_notifyMinerStatusAfter.Value.HasValue && DateTime.UtcNow >= _notifyMinerStatusAfter.Value.Value)
                     {
                         _notifyMinerStatusAfter.Value = null;
                         var minerStatusJsonStr = CreateMinerStatusMessage();
-                        //_sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+                        _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
                     }
                 }
                 // Ws closed
@@ -263,13 +261,9 @@ namespace NHMCore.Nhmws.V4
                         _webSocket?.Close(CloseStatusCode.Normal, data);
                         _isNhmwsRestart = true;
                         break;
-                    case MessageType.SEND_MESSAGE:
                     case MessageType.SEND_MESSAGE_STATUS:
                         Send(data);
-                        if (MessageType.SEND_MESSAGE_STATUS == type)
-                        {
-                            _lastSendMinerStatusTimestamp.Value = DateTime.UtcNow;
-                        }
+                        _lastSendMinerStatusTimestamp.Value = DateTime.UtcNow;
                         break;
                     default:
                         // TODO throw if we get here
@@ -296,13 +290,7 @@ namespace NHMCore.Nhmws.V4
             {
                 // always send login
                 var loginJson = JsonConvert.SerializeObject(_login);
-                var sendMessages = new List<(MessageType type, string msg)> { (MessageType.SEND_MESSAGE, loginJson) };
-                if (CredentialValidators.ValidateBitcoinAddress(_login.Btc))
-                {
-                    var minerStatusJsonStr = CreateMinerStatusMessage(true);
-                    //sendMessages.Add((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
-                }
-                _sendQueue.Enqueue(sendMessages);
+                _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, loginJson));
             }
             catch (Exception er)
             {
@@ -315,7 +303,7 @@ namespace NHMCore.Nhmws.V4
             // TODO check protocol
             // send status first and re-set credentials
             var minerStatusJsonStr = CreateMinerStatusMessage();
-            //_sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+            _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
             // TODO check 
             SetCredentials(btc, worker, group);
         }
@@ -333,66 +321,7 @@ namespace NHMCore.Nhmws.V4
 
         #region Message handling
 
-        private static string CreateMinerStatusMessage(bool sendDeviceNames = false)
-        {
-            JArray serializeDeviceSpeeds(ComputeDevice device)
-            {
-                if (device.State != DeviceState.Mining) return new JArray();
-                var speeds = MiningDataStats.GetSpeedForDevice(device.Uuid);
-                if (speeds == null) return new JArray();
-                var speedsJson = new JArray();
-                foreach (var kvp in speeds) speedsJson.Add(new JArray((int)kvp.type, kvp.speed));
-                return speedsJson;
-            }
-            JArray serializeDeviceData(ComputeDevice device)
-            {
-                var name = sendDeviceNames ? device.Name : "";
-                var uuid = device.B64Uuid;
-                var status = DeviceReportStatus(device.DeviceType, device.State);
-                var load = (int)Math.Round(device.Load);
-                var speeds = serializeDeviceSpeeds(device);
-                // Hardware monitoring
-                var hw_mon_temperature = (int)Math.Round(device.Temp);
-                var hw_mon_fan_speed_rpm = device.FanSpeedRPM;
-                var hw_mon_power_usage = (int)Math.Round(device.PowerUsage);
-                // Power mode & Intensity mode. Intensity is always 0
-                var power_mode = (int)device.TDPSimple;
-                var intensity_mode = 0;
-                var hw_mon_fan_speed_percentage = device.FanSpeed;
-                // STRICT ORDER!
-                var deviceData = new JArray
-                {
-                    name,
-                    uuid,
-                    status,
-                    load,
-                    speeds,
-                    hw_mon_temperature,
-                    hw_mon_fan_speed_rpm,
-                    hw_mon_power_usage,
-                    power_mode,
-                    intensity_mode,
-                    hw_mon_fan_speed_percentage
-                };
-                return deviceData;
-            }
-            JArray serializeDevicesData()
-            {
-                var deviceList = new JArray();
-                foreach (var device in AvailableDevices.Devices) deviceList.Add(serializeDeviceData(device));
-                return deviceList;
-            }
-            var minerStatusMessage = new MinerStatusMessage
-            {
-                Params = new List<JToken>
-                {
-                    ApplicationStateManager.CalcRigStatusString(),
-                    serializeDevicesData()
-                }
-            };
-            var sendData = JsonConvert.SerializeObject(minerStatusMessage);
-            return sendData;
-        }
+        private static string CreateMinerStatusMessage() => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(AvailableDevices.Devices));
 
         static private async Task HandleMessage(MessageEventArgs e)
         {

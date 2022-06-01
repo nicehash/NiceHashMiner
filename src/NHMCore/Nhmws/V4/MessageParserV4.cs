@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NHM.Common.Device;
+using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.Mining;
@@ -151,7 +153,7 @@ namespace NHMCore.Nhmws.V4
                     OptionalDynamicProperties = getOptionalDynamicProperties(d),
                     OptionalMutableProperties = getOptionalMutableProperties(d),
                 };
-            } 
+            }
 
             _loginMessage = new LoginMessage
             {
@@ -180,8 +182,87 @@ namespace NHMCore.Nhmws.V4
                 },
                 Actions = createDefaultActions(),
                 Devices = devices.Select(mapComputeDevice).ToList(),
+                MinerState = GetMinerStateValues(devices),
             };
             return _loginMessage;
+        }
+
+        private static JObject GetMinerStateValues(IEnumerable<ComputeDevice> devices)
+        {
+            var json = JObject.FromObject(GetMinerState(devices));
+            var delProp = json.Property("method");
+            delProp.Remove();
+            return json;
+        }
+
+        internal static MinerState GetMinerState(IEnumerable<ComputeDevice> devices)
+        {
+            MinerState.DeviceState toDeviceState(ComputeDevice d)
+            {
+                int deviceStateToInt(DeviceState s) => s switch
+                {
+                    DeviceState.Stopped => 1, // READY/IDLE/STOPPED
+                    DeviceState.Mining => 2, // MINING/WORKING
+                    DeviceState.Benchmarking => 3, // BENCHMARKING
+                    DeviceState.Error => 5, // ERROR
+                    DeviceState.Pending => 0, // NOT DEFINED
+                    DeviceState.Disabled => 4, // DISABLED
+                    _ => 0, // UNKNOWN
+                };
+
+                JArray mdv(ComputeDevice d)
+                {
+                    var state = deviceStateToInt(d.State);
+                    var speeds = MiningDataStats.GetSpeedForDevice(d.Uuid);
+                    return new JArray(state, new JArray(speeds.Select(kvp => new JArray((int)kvp.type, kvp.speed))));
+                }
+                JArray odv(ComputeDevice d)
+                {
+                    string getValue<T>(T o) => (typeof(T).Name, o) switch {
+                        (nameof(ITemp), ITemp g) => $"{g.Temp}",
+                        (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
+                        (nameof(ILoad), ILoad g) => $"{g.Load}",
+                        (nameof(IGetFanSpeedPercentage), IGetFanSpeedPercentage g) => $"{g.GetFanSpeedPercentage().percentage}",
+                        (_, _) => nameof(T),
+                    };
+                    string valueOrNull<T>() => d.DeviceMonitor is T sensor ? getValue<T>(sensor) : null;
+                    var optionalDynamicValues = new List<string>
+                    {
+                        valueOrNull<ITemp>(),
+                        valueOrNull<IPowerUsage>(),
+                        valueOrNull<ILoad>(),
+                        valueOrNull<IGetFanSpeedPercentage>(),
+                    };
+                    return new JArray(optionalDynamicValues
+                        .Where(v => !string.IsNullOrEmpty(v))
+                        .ToList());
+                }
+                JArray mmv(ComputeDevice d)
+                {
+                    return new JArray();
+                }
+                JArray omv(ComputeDevice d)
+                {
+                    return new JArray();
+                }
+
+                return new MinerState.DeviceState
+                {
+                    MutableDynamicValues = mdv(d),
+                    OptionalDynamicValues = odv(d),
+                    MandatoryMutableValues = mmv(d),
+                    OptionalMutableValues = omv(d),
+                };
+            }
+
+            return new MinerState
+            {
+                //MutableDynamicValues
+                //OptionalDynamicValues
+                //MandatoryMutableValues
+                //OptionalMutableValues
+                Devices = devices.Select(toDeviceState).ToList(),
+            };
         }
 
     }

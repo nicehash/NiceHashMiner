@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NHMCore.Nhmws.V4
 {
@@ -14,6 +16,7 @@ namespace NHMCore.Nhmws.V4
                 (int len, string charset) => charset != null ? new JArray(len, charset) : new JArray(len),
                 (int len, null) => new JArray(len),
                 (string name, string unit) => new JArray(name, unit),
+                List<(string name, string unit)> list => new JArray(list.Select(p => new JArray(p.name, p.unit))),
                 _ => new JArray(),
             };
             serializer.Serialize(writer, sValue);
