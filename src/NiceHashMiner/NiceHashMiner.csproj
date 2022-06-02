@@ -24,10 +24,18 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <AssemblyTitle>NiceHash Miner</AssemblyTitle>
+    <Description>NiceHash Miner is a simple to use mining tool</Description>
+    <Product>NiceHash Miner</Product>
+    <Company>H-BIT, d.o.o.</Company>
+    <Copyright>H-BIT, d.o.o. ©  2022</Copyright>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
+    <InformationalVersion>3.1.0.0</InformationalVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -95,6 +103,10 @@
       <Version>2.0.14</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="MSBuildGitHash" Version="2.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
@@ -116,5 +128,6 @@
     <PostBuildEvent>REM create directory
 If NOT exist "$(SolutionDir)$(Configuration)\app\assets\" mkdir "$(SolutionDir)$(Configuration)\app\assets\"
 copy /Y "$(SolutionDir)\Resources\enter_BTC_manually.gif" "$(SolutionDir)$(Configuration)\app\assets\enter_BTC_manually.gif"</PostBuildEvent>
+    <SignAssembly>False</SignAssembly>
   </PropertyGroup>
 </Project>

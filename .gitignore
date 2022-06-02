@@ -303,3 +303,4 @@ installer/miner_plugins/*
 prepare_installers.bat
 prepare_release.bat
 
+tmp*.json

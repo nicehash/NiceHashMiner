@@ -1,5 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
+  <Target Name="SetSourceRevisionId" BeforeTargets="InitializeSourceControlInformation">
+    <Exec Command="git rev-list --all --max-count=1 --abbrev-commit $(ProjectDir)\\**
+          git branch --show-current
+          git describe --long --always --dirty --exclude=* --abbrev=8" ConsoleToMSBuild="True" IgnoreExitCode="False">
+      <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput" />
+    </Exec>
+  </Target>
   
   <ItemGroup>
     <ProjectReference Include="..\..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
@@ -9,5 +16,7 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>
     <Deterministic>true</Deterministic>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <InformationalVersion></InformationalVersion>
   </PropertyGroup>
 </Project>
