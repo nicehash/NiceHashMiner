@@ -61,9 +61,9 @@ namespace Excavator
         }
 
 #if LHR_BUILD_ON
-        public override Version Version => new Version(17, 1);
+        public override Version Version => new Version(18, 0);
 #else
-        public override Version Version => new Version(16, 3);
+        public override Version Version => new Version(18, 0);
 #endif
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";

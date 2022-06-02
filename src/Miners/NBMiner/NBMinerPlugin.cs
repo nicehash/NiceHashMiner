@@ -50,7 +50,7 @@ namespace NBMiner
         public override string Name => "NBMiner";
 #endif
 
-        public override Version Version => new Version(17, 2);
+        public override Version Version => new Version(18, 0);
         
 
         public override string Author => "info@nicehash.com";
