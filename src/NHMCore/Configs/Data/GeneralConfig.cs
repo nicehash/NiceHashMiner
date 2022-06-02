@@ -272,11 +272,6 @@ namespace NHMCore.Configs.Data
             get => MiscSettings.Instance.CoolDownCheckEnabled;
             set => MiscSettings.Instance.CoolDownCheckEnabled = value;
         }
-        public bool UseSmaCache
-        {
-            get => MiscSettings.Instance.UseSmaCache;
-            set => MiscSettings.Instance.UseSmaCache = value;
-        }
         public bool UseOptimizationProfiles
         {
             get => MiscSettings.Instance.UseOptimizationProfiles;
@@ -390,7 +385,6 @@ namespace NHMCore.Configs.Data
             SwitchSmaTimeChangeSeconds = new Interval(34, 55);
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);
-            UseSmaCache = true;
             ShowPowerColumns = false;
             ShowDiagColumns = true;
             UseOptimizationProfiles = false;

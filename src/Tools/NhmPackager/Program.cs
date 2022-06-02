@@ -132,6 +132,7 @@ namespace NhmPackager
 
                 // #2 
                 DeletePathIfExists(GetTemporaryWorkFolder("Release", "build_settings.json"));
+                DeletePathIfExists(GetTemporaryWorkFolder("Release", "PluginsToSign"));
 
                 // #3
                 var (generatedTemplateLauncher, versionLauncher) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));

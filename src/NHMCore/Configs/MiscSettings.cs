@@ -10,20 +10,6 @@ namespace NHMCore.Configs
         public static MiscSettings Instance { get; } = new MiscSettings();
         private MiscSettings() { }
 
-        /// <summary>
-        /// True if NHML should try to cache SMA values for next launch
-        /// </summary>
-        private bool _useSmaCache = true;
-        public bool UseSmaCache
-        {
-            get => _useSmaCache;
-            set
-            {
-                _useSmaCache = value;
-                OnPropertyChanged(nameof(UseSmaCache));
-            }
-        }
-
         private bool _useOptimizationProfiles = false;
         public bool UseOptimizationProfiles
         {
