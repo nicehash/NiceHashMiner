@@ -9,6 +9,10 @@
     <PlatformTarget>x64</PlatformTarget>
     <Deterministic>true</Deterministic>
     <LangVersion>9.0</LangVersion>
+    <DefineConstants>LHR_BUILD_ON</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(DefineConstants)' == 'LHR_BUILD_ON' ">
+    <TargetName>MP.NanoMinerLHR</TargetName>
   </PropertyGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
