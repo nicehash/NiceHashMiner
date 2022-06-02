@@ -1,7 +1,6 @@
 ﻿using NHM.Common;
 using NHMCore.Utils;
 using System;
-using System.Reflection;
 
 namespace NHMCore.ApplicationState
 {
@@ -17,7 +16,7 @@ namespace NHMCore.ApplicationState
 
         private VersionState()
         {
-            ProgramVersion = new Version(Assembly.GetEntryAssembly().GetName().Version.ToString());
+            ProgramVersion = new Version(NHMApplication.ProductVersion);
         }
 
         public Version ProgramVersion { get; private set; }

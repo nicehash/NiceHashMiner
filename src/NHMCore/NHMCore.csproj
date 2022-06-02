@@ -51,9 +51,6 @@
     <PackageReference Include="WebSocketSharp.Standard" Version="1.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="NiceHashStats.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Miners\MP.Joker\MP.Joker.csproj" />
     <ProjectReference Include="..\NHM.CommonWin32\NHM.CommonWin32.csproj" />
     <ProjectReference Include="..\NHM.CredentialValidators\NHM.CredentialValidators.csproj" />

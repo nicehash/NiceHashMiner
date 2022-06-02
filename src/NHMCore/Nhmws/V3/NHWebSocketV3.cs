@@ -75,7 +75,7 @@ namespace NHMCore.Nhmws.V3
 
         static private readonly LoginMessage _login = new LoginMessage
         {
-            Version = $"NHM/{Assembly.GetEntryAssembly().GetName().Version}",
+            Version = $"NHM/{NHMApplication.ProductVersion}",
             Btc = DemoUser.BTC,
         };
 

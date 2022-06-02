@@ -46,7 +46,7 @@ namespace NHMCore.Nhmws.V4
         public List<Device> Devices { get; set; }
 
         [JsonProperty("miner.state")]
-        public Dictionary<string, string> MinerState { get; set; } = new Dictionary<string, string>();
+        public JObject MinerState { get; set; } 
     }
 
 
@@ -202,6 +202,7 @@ namespace NHMCore.Nhmws.V4
         public Dictionary<string, object> StaticProperties { get; set; }
 
         [JsonProperty("optional_dynamic_properties")]
+        [JsonConverter(typeof(Nhmws4JSONConverter))]
         public List<(string name, string unit)> OptionalDynamicProperties { get; set; }
 
         //
@@ -215,6 +216,21 @@ namespace NHMCore.Nhmws.V4
 
     internal class MinerState : ISendMessage
     {
+        internal class DeviceState
+        {
+            [JsonProperty("mdv")]
+            public JArray MutableDynamicValues { get; set; }
+
+            [JsonProperty("odv")]
+            public JArray OptionalDynamicValues { get; set; }
+
+            [JsonProperty("mmv")]
+            public JArray MandatoryMutableValues { get; set; }
+
+            [JsonProperty("omv")]
+            public JArray OptionalMutableValues { get; set; }
+        }
+
         [JsonProperty("method")]
         public string Method => "miner.state";
 
@@ -231,8 +247,7 @@ namespace NHMCore.Nhmws.V4
         public JArray OptionalMutableValues { get; set; }
 
         [JsonProperty("devices")]
-        public JArray Devices { get; set; }
-
+        public List<DeviceState> Devices { get; set; }
     }
 
 }

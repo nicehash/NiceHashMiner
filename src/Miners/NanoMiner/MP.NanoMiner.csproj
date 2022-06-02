@@ -18,6 +18,10 @@
     <Deterministic>true</Deterministic>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <InformationalVersion></InformationalVersion>
+    <DefineConstants>LHR_BUILD_ON</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(DefineConstants)' == 'LHR_BUILD_ON' ">
+    <TargetName>MP.NanoMinerLHR</TargetName>
   </PropertyGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

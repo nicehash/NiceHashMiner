@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -38,7 +37,7 @@ namespace NHMCore
         {
             get
             {
-                return $"{NHMProductInfo.Name} v" + FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location).ProductVersion + BetaAlphaPostfixString + BuildTagStr;
+                return $"{NHMProductInfo.Name} v" + NHMApplication.ProductVersion + BetaAlphaPostfixString + BuildTagStr;
             }
         }
         #endregion BuildTag
@@ -53,7 +52,7 @@ namespace NHMCore
 
         public static void ExecuteApplicationExit()
         {
-            Environment.Exit(0);
+            NHMApplication.Exit();
             ApplicationExit?.Invoke();
         }
 
@@ -99,7 +98,7 @@ namespace NHMCore
             // TODO we can have disable multiple instances so make a helper program that "swaps"/restarts parent/child
             if (!Launcher.IsLauncher)
             {
-                Process.Start(Assembly.GetExecutingAssembly().Location);
+                Process.Start(NHMApplication.ExecutablePath);
             }
             else
             {

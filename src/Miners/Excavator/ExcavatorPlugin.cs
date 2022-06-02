@@ -35,11 +35,11 @@ namespace Excavator
 #if LHR_BUILD_ON
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.7.7.2",
-                ExePath = new List<string> { "NHQM_v0.5.4.2_RC", "excavator.exe" },
+                BinVersion = "v1.7.7.3",
+                ExePath = new List<string> { "NHQM_v0.5.4.3_RC", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.4.2_RC/NHQM_v0.5.4.2_RC.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.4.3_RC/NHQM_v0.5.4.3_RC.zip"
                 }
             };
 #else
@@ -61,9 +61,9 @@ namespace Excavator
         }
 
 #if LHR_BUILD_ON
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(18, 0);
 #else
-        public override Version Version => new Version(16, 3);
+        public override Version Version => new Version(18, 0);
 #endif
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";

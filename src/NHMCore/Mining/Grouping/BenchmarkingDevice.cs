@@ -4,7 +4,6 @@ using NHM.MinerPlugin;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Benchmarking;
-using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
