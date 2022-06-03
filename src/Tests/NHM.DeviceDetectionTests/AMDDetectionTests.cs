@@ -65,8 +65,8 @@ namespace NHM.DeviceDetectionTests
             var detectionObject = JsonConvert.DeserializeObject<OpenCLDeviceDetectionResult>(rawDetection);
             var result = AMDDetector.ConvertOpenCLResultToList(videoControllerDatas, (rawDetection, detectionObject));
             Assert.IsTrue(result.success, tl.label());
-            Assert.IsTrue(result.list.Count == 1);
-            Assert.Equals(result.list.First().DeviceType, DeviceType.AMD);
+            Assert.IsTrue(result.list.Count == 1, tl.label());
+            Assert.AreEqual(result.list.First().DeviceType, DeviceType.AMD, tl.label());
         }
     }
 }
