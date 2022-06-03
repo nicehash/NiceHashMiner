@@ -42,13 +42,13 @@ namespace NHM.DeviceDetection.WMI
         public override string ToString()
         {
             return $"\t\tName: {Name}\n" +
-               $"\t\tDescription: {Description}\n" +
-               $"\t\tPNPDeviceID: {PnpDeviceID}\n" +
-               $"\t\tDriverVersion: {DriverVersion}\n" +
-               $"\t\tStatus: {Status}\n" +
-               $"\t\tInfSection: {InfSection}\n" +
-               $"\t\tAdapterRAM: {AdapterRam}\n" +
-               $"\t\tPCI_BUS_ID: {PCI_BUS_ID}";
+                   $"\t\tDescription: {Description}\n" +
+                   $"\t\tPNPDeviceID: {PnpDeviceID}\n" +
+                   $"\t\tDriverVersion: {DriverVersion}\n" +
+                   $"\t\tStatus: {Status}\n" +
+                   $"\t\tInfSection: {InfSection}\n" +
+                   $"\t\tAdapterRAM: {AdapterRam}\n" +
+                   $"\t\tPCI_BUS_ID: {PCI_BUS_ID}";
         }
     }
 }

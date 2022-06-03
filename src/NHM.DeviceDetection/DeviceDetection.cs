@@ -118,7 +118,6 @@ namespace NHM.DeviceDetection
         {
             var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
             CUDADevice.RawDetectionOutput = cudaQueryResult.rawOutput;
-            //_HERE parse per device
             Logger.Info(Tag, $"TryQueryCUDADevicesAsync RAW: '{cudaQueryResult.rawOutput}'");
             var result = cudaQueryResult.parsed;
             if (result?.CudaDevices?.Count > 0)

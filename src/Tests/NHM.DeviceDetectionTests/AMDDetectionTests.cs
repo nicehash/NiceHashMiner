@@ -7,6 +7,7 @@ using NHM.DeviceDetection.AMD;
 using NHM.DeviceDetection.WMI;
 using System.Linq;
 using NHM.Common.Device;
+using NHM.Common.Enums;
 
 namespace NHM.DeviceDetectionTests
 {
@@ -65,6 +66,7 @@ namespace NHM.DeviceDetectionTests
             var result = AMDDetector.ConvertOpenCLResultToList(videoControllerDatas, (rawDetection, detectionObject));
             Assert.IsTrue(result.success, tl.label());
             Assert.IsTrue(result.list.Count == 1);
+            Assert.Equals(result.list.First().DeviceType, DeviceType.AMD);
         }
     }
 }
