@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Views.Common.NHBase;
+﻿using NHMCore.Utils;
+using NiceHashMiner.Views.Common.NHBase;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -33,7 +34,8 @@ namespace NiceHashMiner.Views
 
         private void EulaRtb_OnLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            Process.Start(e.LinkText);
+            var psi = Helpers.GetProcessStartInfo(e.LinkText);
+            Process.Start(psi);
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
@@ -52,7 +54,8 @@ namespace NiceHashMiner.Views
         private void Hyperlink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var hyperlink = (Hyperlink)sender;
-            Process.Start(hyperlink.NavigateUri.ToString());
+            var psi = Helpers.GetProcessStartInfo(hyperlink.NavigateUri.ToString());
+            Process.Start(psi);
         }
     }
 }

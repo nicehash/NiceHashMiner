@@ -40,7 +40,8 @@ namespace NiceHashMiner.Views.Settings
                 article.NavigateUri = new Uri(Links.About);
                 article.RequestNavigate += ((sender, e) =>
                 {
-                    Process.Start(e.Uri.ToString());
+                    var psi = Helpers.GetProcessStartInfo(e.Uri.ToString());
+                    Process.Start(psi);
                 });
                 tbl_aboutText.Inlines.Add(" ");
                 tbl_aboutText.Inlines.Add(article);
@@ -53,7 +54,8 @@ namespace NiceHashMiner.Views.Settings
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.ToString());
+            var psi = Helpers.GetProcessStartInfo(e.Uri.ToString());
+            Process.Start(psi);
             e.Handled = true;
         }
 
@@ -82,7 +84,8 @@ namespace NiceHashMiner.Views.Settings
                 var (url, ok) = UrlForButtonName(senderBtn.Name);
                 if (ok)
                 {
-                    Process.Start(url);
+                    var psi = Helpers.GetProcessStartInfo(url);
+                    Process.Start(psi);
                     e.Handled = true;
                 }
                 else
