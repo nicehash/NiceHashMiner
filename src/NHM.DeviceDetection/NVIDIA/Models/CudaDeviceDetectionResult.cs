@@ -6,7 +6,7 @@ namespace NHM.DeviceDetection.NVIDIA.Models
     [Serializable]
     internal class CudaDeviceDetectionResult : IEquatable<CudaDeviceDetectionResult>
     {
-        public List<CudaDevice> CudaDevices { get; set; } = new List<CudaDevice>();
+        public List<CudaDevice> CudaDevices { get; set; }
         public string DriverVersion { get; set; }
         public string ErrorString { get; set; }
         public int NvmlLoaded { get; set; }
@@ -18,13 +18,16 @@ namespace NHM.DeviceDetection.NVIDIA.Models
             if (NvmlLoaded != other.NvmlLoaded) return false;
             if (ErrorString != other.ErrorString) return false;
             if (NvmlInitialized != other.NvmlInitialized) return false;
-            foreach(var thisCudaDevice in CudaDevices)
+            if(CudaDevices != null && other.CudaDevices != null)
             {
-                foreach(var otherCudaDevice in other.CudaDevices)
+                if (CudaDevices.Count != other.CudaDevices.Count) return false;
+                for (int i = 0; i < CudaDevices.Count; i++)
                 {
-                    if(otherCudaDevice != thisCudaDevice) return false;
+                    if (CudaDevices[i] != other.CudaDevices[i]) return false;
                 }
             }
+            if (CudaDevices == null && other.CudaDevices != null ||
+                CudaDevices != null && other.CudaDevices == null) return false;
             return true;
         }
     }

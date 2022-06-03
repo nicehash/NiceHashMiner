@@ -14,12 +14,10 @@ namespace NHM.DeviceDetection.CPU
             if(NumberOfCPUCores != other.NumberOfCPUCores) return false;
             if(VirtualCoresCount != other.VirtualCoresCount) return false;
             if(IsHyperThreadingEnabled != other.IsHyperThreadingEnabled) return false;
-            foreach(var cpuInfo in CpuInfos)
+            if (CpuInfos.Count != other.CpuInfos.Count) return false;
+            for(int i = 0; i < CpuInfos.Count; i++)
             {
-                foreach(var otherCpuInfo in other.CpuInfos)
-                {
-                    if(cpuInfo != otherCpuInfo) return false;
-                }
+                if(CpuInfos[i] != other.CpuInfos[i]) return false;
             }
             return true;
         }

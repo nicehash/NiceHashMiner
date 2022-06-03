@@ -44,23 +44,29 @@ namespace NHM.Common.Device
         public bool Equals(CPUDevice other)
         {
             if (!base.Equals(other)) return false;
-            foreach (var sce in SupportedCpuExtensions)
+            if(SupportedCpuExtensions != null && other.SupportedCpuExtensions != null)
             {
-                foreach (var sce2 in other.SupportedCpuExtensions)
+                if (SupportedCpuExtensions.Count != other.SupportedCpuExtensions.Count) return false;
+                for (int i = 0; i < SupportedCpuExtensions.Count; i++)
                 {
-                    if (sce != sce2) return false;
+                    if (SupportedCpuExtensions[i] != other.SupportedCpuExtensions[i]) return false;
                 }
             }
+            if (SupportedCpuExtensions == null && other.SupportedCpuExtensions != null ||
+                SupportedCpuExtensions != null && other.SupportedCpuExtensions == null) return false;
             if (PhysicalProcessorCount != other.PhysicalProcessorCount) return false;
             if (ThreadsPerCPU != other.ThreadsPerCPU) return false;
             if (SupportsHyperThreading != other.SupportsHyperThreading) return false;
-            foreach (var am in AffinityMasks)
+            if(AffinityMasks != null && other.AffinityMasks != null)
             {
-                foreach (var am2 in other.AffinityMasks)
+                if (AffinityMasks.Count != other.AffinityMasks.Count) return false;
+                for (int i = 0; i < AffinityMasks.Count; i++)
                 {
-                    if (am != am2) return false;
+                    if (AffinityMasks[i] != other.AffinityMasks[i]) return false;
                 }
             }
+            if (AffinityMasks == null && other.AffinityMasks != null ||
+                AffinityMasks != null && other.AffinityMasks == null) return false;
             if (CpuID != other.CpuID) return false;
             return true;
         }

@@ -62,7 +62,7 @@ namespace NHM.DeviceDetection.AMD
             AMDDevice.RawDetectionOutput = openCLResult.rawOutput;
             return result2;
         }
-        private static (bool success, List<AMDDevice> list) ConvertOpenCLResultToList(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResult)
+        internal static (bool success, List<AMDDevice> list) ConvertOpenCLResultToList(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResult)
         {
             var amdDevices = new List<AMDDevice>();
             Logger.Info(Tag, "TryQueryAMDDevicesAsync START");
@@ -74,7 +74,7 @@ namespace NHM.DeviceDetection.AMD
             Logger.Info(Tag, "TryQueryAMDDevicesAsync END");
             return (true, amdDevices);
         }
-        private static List<AMDDevice> ConvertOpenCLResultToListFallback(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResultOriginal, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResultFallback)
+        internal static List<AMDDevice> ConvertOpenCLResultToListFallback(List<VideoControllerData> availableVideoControllers, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResultOriginal, (string rawOutput, OpenCLDeviceDetectionResult parsed) openCLResultFallback)
         {
             var amdDevices = new List<AMDDevice>();
             Logger.Info(Tag, "Found duplicate devices. Trying fallback detection");

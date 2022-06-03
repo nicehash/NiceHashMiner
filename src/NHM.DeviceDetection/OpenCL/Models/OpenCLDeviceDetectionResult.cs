@@ -9,27 +9,33 @@ namespace NHM.DeviceDetection.OpenCL.Models
     internal class OpenCLDeviceDetectionResult : IEquatable<OpenCLDeviceDetectionResult>
     {
         public string ErrorString { get; set; }
-        public List<OpenCLPlatform> Platforms { get; set; } = new List<OpenCLPlatform>();
+        public List<OpenCLPlatform> Platforms { get; set; }
         public string Status { get; set; }
-        public List<AMDBusIDVersionResult> AMDBusIDVersionPairs { get; set; } = new List<AMDBusIDVersionResult>();
+        public List<AMDBusIDVersionResult> AMDBusIDVersionPairs { get; set; }
         public bool Equals(OpenCLDeviceDetectionResult other)
         {
             if (ErrorString != other.ErrorString) return false;
             if (Status != other.Status) return false;
-            foreach (var thisPlatform in Platforms)
+            if(Platforms != null && other.Platforms != null)
             {
-                foreach (var otherPlatform in other.Platforms)
+                if (Platforms.Count != other.Platforms.Count) return false;
+                for (int i = 0; i < Platforms.Count; i++)
                 {
-                    if (!thisPlatform.Equals(otherPlatform)) return false;
+                    if (!Platforms[i].Equals(other.Platforms[i])) return false;
                 }
             }
-            foreach (var thisAMDBusIDVersionPair in AMDBusIDVersionPairs)
+            if (Platforms == null && other.Platforms != null ||
+                Platforms != null && other.Platforms == null) return false;
+            if(AMDBusIDVersionPairs != null && other.AMDBusIDVersionPairs != null)
             {
-                foreach (var otherAMDBusIDVersionPair in other.AMDBusIDVersionPairs)
+                if (AMDBusIDVersionPairs.Count != other.AMDBusIDVersionPairs.Count) return false;
+                for (int i = 0; i < AMDBusIDVersionPairs.Count; i++)
                 {
-                    if (thisAMDBusIDVersionPair != otherAMDBusIDVersionPair) return false;
+                    if (AMDBusIDVersionPairs[i] != other.AMDBusIDVersionPairs[i]) return false;
                 }
             }
+            if (AMDBusIDVersionPairs == null && other.AMDBusIDVersionPairs != null ||
+                AMDBusIDVersionPairs != null && other.AMDBusIDVersionPairs == null) return false;
             return true;
         }
     }

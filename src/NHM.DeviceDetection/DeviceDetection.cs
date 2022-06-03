@@ -64,7 +64,7 @@ namespace NHM.DeviceDetection
             Logger.Info(Tag, $"DetectCPU END");
         }
 
-        private static async Task DetectWMIVideoControllers()
+        internal static async Task DetectWMIVideoControllers()
         {
             var vidControllers = await WMI.VideoControllerDetector.QueryWin32_VideoControllerTask();
             var busDevices = await WMI.DeviceBusDetector.QueryWin32_DeviceBusPCITask();

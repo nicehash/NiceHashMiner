@@ -16,13 +16,16 @@ namespace NHM.DeviceDetection.OpenCL.Models
             if (PlatformVendor != other.PlatformVendor) return false;
             if (PlatformNum != other.PlatformNum) return false;
             if (Devices.Count != other.Devices.Count) return false;
-            foreach (var thisDevice in Devices)
+            if (Devices.Count != other.Devices.Count) return false;
+            if(Devices != null && other.Devices != null)
             {
-                foreach (var otherDevice in other.Devices)
+                for (int i = 0; i < Devices.Count; i++)
                 {
-                    if (thisDevice != otherDevice) return false;
+                    if (Devices[i] != other.Devices[i]) return false;
                 }
             }
+            if (Devices == null && other.Devices != null ||
+                Devices != null && other.Devices == null) return false;
             return true;
         }
     }
