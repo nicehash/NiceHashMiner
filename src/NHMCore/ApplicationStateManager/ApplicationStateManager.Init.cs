@@ -83,10 +83,6 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateOpenClFallbackInfo();
                 }
-                if (DeviceDetection.DetectionResult.IsDCHDriver)
-                {
-                    AvailableNotifications.CreateWarningNVIDIADCHInfo();
-                }
                 if (!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
