@@ -38,6 +38,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">

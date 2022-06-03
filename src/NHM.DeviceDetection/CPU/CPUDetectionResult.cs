@@ -14,11 +14,16 @@ namespace NHM.DeviceDetection.CPU
             if(NumberOfCPUCores != other.NumberOfCPUCores) return false;
             if(VirtualCoresCount != other.VirtualCoresCount) return false;
             if(IsHyperThreadingEnabled != other.IsHyperThreadingEnabled) return false;
-            if (CpuInfos.Count != other.CpuInfos.Count) return false;
-            for(int i = 0; i < CpuInfos.Count; i++)
+            if(CpuInfos != null && other.CpuInfos != null)
             {
-                if(CpuInfos[i] != other.CpuInfos[i]) return false;
+                if (CpuInfos.Count != other.CpuInfos.Count) return false;
+                for (int i = 0; i < CpuInfos.Count; i++)
+                {
+                    if (CpuInfos[i] != other.CpuInfos[i]) return false;
+                }
             }
+            if (CpuInfos == null && other.CpuInfos != null ||
+                CpuInfos != null && other.CpuInfos == null) return false;
             return true;
         }
     }
