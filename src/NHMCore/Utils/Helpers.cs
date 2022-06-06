@@ -194,21 +194,15 @@ namespace NHMCore.Utils
             }
         }
 
-        public static ProcessStartInfo GetProcessStartInfo(string url)
-        {
-            var psi = new ProcessStartInfo()
-            {
-                FileName = url,
-                UseShellExecute = true
-            };
-            return psi;
-        }
-
-        public static void VisitUrlLink(string urlLink)
+        public static void VisitUrlLink(string url)
         {
             try
             {
-                var psi = GetProcessStartInfo(urlLink);
+                var psi = new ProcessStartInfo()
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                };
                 using var _p = Process.Start(psi);
             }
             catch (Exception ex)

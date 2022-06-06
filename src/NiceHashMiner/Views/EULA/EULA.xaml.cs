@@ -36,15 +36,13 @@ namespace NiceHashMiner.Views.EULA
 
         private void EulaRtb_OnLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            var psi = Helpers.GetProcessStartInfo(e.LinkText);
-            Process.Start(psi);
+            Helpers.VisitUrlLink(e.LinkText);
         }
 
         private void Hyperlink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var hyperlink = (Hyperlink)sender;
-            var psi = Helpers.GetProcessStartInfo(hyperlink.NavigateUri.ToString());
-            Process.Start(psi);
+            Helpers.VisitUrlLink(hyperlink.NavigateUri.ToString());
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)

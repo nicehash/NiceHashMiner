@@ -178,8 +178,7 @@ namespace NiceHashMiner.Views
                     };
                     nhmNoDeviceDialog.OKClick += (s, e) =>
                     {
-                        var psi = Helpers.GetProcessStartInfo(Links.NhmNoDevHelp);
-                        Process.Start(psi);
+                        Helpers.VisitUrlLink(Links.NhmNoDevHelp);
                     };
                     nhmNoDeviceDialog.OnExit += (s, e) =>
                     {
@@ -247,8 +246,7 @@ namespace NiceHashMiner.Views
                 };
                 btcLoginDialog.OKClick += (s, e) =>
                 {
-                    var psi = Helpers.GetProcessStartInfo(Links.Login);
-                    if (!LoginSuccess.Value) Process.Start(psi);
+                    if (!LoginSuccess.Value) Helpers.VisitUrlLink(Links.Login);
                 };
                 CustomDialogManager.ShowModalDialog(btcLoginDialog);
             }

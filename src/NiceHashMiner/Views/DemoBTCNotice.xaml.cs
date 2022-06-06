@@ -72,8 +72,7 @@ namespace NiceHashMiner.Views
 
         private void AddressHyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            var psi = Helpers.GetProcessStartInfo(e.Uri.AbsoluteUri);
-            Process.Start(psi);
+            Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
         }
 
         private void CloseDialog(object sender, RoutedEventArgs e)

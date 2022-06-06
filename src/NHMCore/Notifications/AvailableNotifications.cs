@@ -88,11 +88,10 @@ namespace NHMCore.Notifications
         public static void CreateNoSupportedDevicesInfo()
         {
             var notification = new Notification(NotificationsType.Fatal, NotificationsGroup.NoSupportedDevices, Tr("No Supported Devices"), Tr("No supported devices are found."));
-            var psi = Helpers.GetProcessStartInfo(Links.NhmNoDevHelp);
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(psi); }
+                Action = () => { Helpers.VisitUrlLink(Links.NhmNoDevHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -165,11 +164,10 @@ namespace NHMCore.Notifications
         public static void CreateNhmUpdateAttemptFail()
         {
             var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, NotificationsGroup.NhmUpdateFailed, Tr("NiceHash Miner Update Failed"), Tr("Update procedure failed please install manually. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", Links.AVHelp));
-            var psi = Helpers.GetProcessStartInfo(Links.VisitReleasesUrl);
             notificationIfUnsuccessfull.Action = new NotificationAction
             {
                 Info = Tr("Visit release Page"),
-                Action = () => { Process.Start(psi); }
+                Action = () => { Helpers.VisitUrlLink(Links.VisitReleasesUrl); }
             };
             NotificationsManager.Instance.AddNotificationToList(notificationIfUnsuccessfull);
             var notification = NotificationsManager.Instance.Notifications.FirstOrDefault(n => n.Group == NotificationsGroup.NhmUpdate);
@@ -225,11 +223,10 @@ namespace NHMCore.Notifications
         public static void CreateMissingMinerBinsInfo(string pluginName)
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.MissingMinerBins, Tr("Missing miner binaries"), Tr("Some of the {0} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application.", pluginName));
-            var psi = Helpers.GetProcessStartInfo(Links.AVHelp);
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(psi); }
+                Action = () => { Helpers.VisitUrlLink(Links.AVHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -237,11 +234,10 @@ namespace NHMCore.Notifications
         public static void CreateEnableComputeModeAMDInfo()
         {
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.ComputeModeAMD, Tr("Switch compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode for optimized profit?"));
-            var psi = Helpers.GetProcessStartInfo(Links.AMDComputeModeHelp);
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(psi); }
+                Action = () => { Helpers.VisitUrlLink(Links.AMDComputeModeHelp); }
             };
             notification.NotificationUUID = "AMDModeSwitchNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -250,11 +246,10 @@ namespace NHMCore.Notifications
         public static void CreateEnableLargePagesInfo()
         {
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.LargePages, Tr("Enable large pages for randomx"), Tr("Would you like to enable large pages when mining with RandomX(CPU)?"));
-            var psi = Helpers.GetProcessStartInfo(Links.LargePagesHelp);
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(psi); }
+                Action = () => { Helpers.VisitUrlLink(Links.LargePagesHelp); }
             };
             notification.NotificationUUID = "LargePagesNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -263,11 +258,10 @@ namespace NHMCore.Notifications
         public static void CreateIncreaseVirtualMemoryInfo()
         {
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.VirtualMemory, Tr("Increase virtual memory"), Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine. Would you like to increase virtual memory?"));
-            var psi = Helpers.GetProcessStartInfo(Links.VirtualMemoryHelp);
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(psi); }
+                Action = () => { Helpers.VisitUrlLink(Links.VirtualMemoryHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -275,11 +269,10 @@ namespace NHMCore.Notifications
         public static void CreateFailedBenchmarksInfo(ComputeDevice device)
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info.", device.Name));
-            var psi = Helpers.GetProcessStartInfo(Links.FailedBenchmarkHelp);
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(psi); }
+                Action = () => { Helpers.VisitUrlLink(Links.FailedBenchmarkHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }

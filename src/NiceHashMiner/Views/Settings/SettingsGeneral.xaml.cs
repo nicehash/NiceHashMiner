@@ -48,8 +48,7 @@ namespace NiceHashMiner.Views.Settings
 
         private void AddressHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            var psi = Helpers.GetProcessStartInfo(e.Uri.AbsoluteUri);
-            Process.Start(psi);
+            Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
         }
 
         private void ValidateBTCAddr()
