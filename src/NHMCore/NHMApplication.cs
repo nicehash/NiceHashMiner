@@ -6,7 +6,7 @@ namespace NHMCore
 {
     public static class NHMApplication
     {
-        public static Version Version => Assembly.GetExecutingAssembly().GetName().Version;
+        public static Version Version => Assembly.GetEntryAssembly().GetName().Version;
 
         //public static string ProductVersion => FileVersionInfo.GetVersionInfo(Assembly.GetEntryAssembly().Location).ProductVersion;
 
