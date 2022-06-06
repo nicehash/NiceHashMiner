@@ -1,0 +1,26 @@
+﻿[
+  {
+    "Name": "AMD Radeon(TM) Graphics",
+    "Description": "AMD Radeon(TM) Graphics",
+    "PnpDeviceID": "PCI\\VEN_1002&DEV_1638&SUBSYS_17221043&REV_C4\\4&12C9051D&0&0041",
+    "DriverVersion": "30.0.13002.1001",
+    "Status": "OK",
+    "InfSection": "ati2mtag_Cezanne",
+    "AdapterRam": 536870912,
+    "IsNvidia": false,
+    "IsAmd": true,
+    "PCI_BUS_ID": 4
+  },
+  {
+    "Name": "NVIDIA GeForce RTX 3060 Laptop GPU",
+    "Description": "NVIDIA GeForce RTX 3060 Laptop GPU",
+    "PnpDeviceID": "PCI\\VEN_1002&DEV_1638&SUBSYS_17221043&REV_C4\\4&12C9051D&0&0041",
+    "DriverVersion": "30.0.15.1215",
+    "Status": "OK",
+    "InfSection": "Section147",
+    "AdapterRam": 4293918720,
+    "IsNvidia": true,
+    "IsAmd": false,
+    "PCI_BUS_ID": 1
+  }
+]

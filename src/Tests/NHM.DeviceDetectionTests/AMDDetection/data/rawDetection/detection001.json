@@ -1,0 +1,61 @@
+﻿{
+  "ADLErrorString": "",
+  "AMDBusIDVersionPairs": [
+    {
+      "ADLRetCode": 0,
+      "AdrenalinVersion": "22.4.2",
+      "BUS_ID": 8,
+      "FunctionCall": 3
+    },
+    {
+      "ADLRetCode": 0,
+      "AdrenalinVersion": "22.4.2",
+      "BUS_ID": 12,
+      "FunctionCall": 3
+    }
+  ],
+  "ErrorString": "",
+  "Platforms": [
+    {
+      "Devices": [
+        {
+          "BUS_ID": 12,
+          "DeviceID": 0,
+          "_CL_DEVICE_BOARD_NAME_AMD": "Radeon RX550/ 550 Series",
+          "_CL_DEVICE_GLOBAL_MEM_SIZE": 4294967296,
+          "_CL_DEVICE_NAME": "gfx803",
+          "_CL_DEVICE_TYPE": "GPU",
+          "_CL_DEVICE_VENDOR": "Advanced Micro Devices, Inc.",
+          "_CL_DEVICE_VERSION": "OpenCL 2.0 AMD - APP(3380.6)",
+          "_CL_DRIVER_VERSION": "3380.6(PAL, HSAIL)"
+        },
+        {
+          "BUS_ID": 12,
+          "DeviceID": 1,
+          "_CL_DEVICE_BOARD_NAME_AMD": "Radeon RX550/ 550 Series",
+          "_CL_DEVICE_GLOBAL_MEM_SIZE": 4294967296,
+          "_CL_DEVICE_NAME": "gfx803",
+          "_CL_DEVICE_TYPE": "GPU",
+          "_CL_DEVICE_VENDOR": "Advanced Micro Devices, Inc.",
+          "_CL_DEVICE_VERSION": "OpenCL 2.0 AMD - APP(3380.6)",
+          "_CL_DRIVER_VERSION": "3380.6(PAL, HSAIL)"
+        },
+        {
+          "BUS_ID": 8,
+          "DeviceID": 2,
+          "_CL_DEVICE_BOARD_NAME_AMD": "AMD Radeon RX 5700 XT",
+          "_CL_DEVICE_GLOBAL_MEM_SIZE": 8573157376,
+          "_CL_DEVICE_NAME": "gfx1010: xnack - ",
+          "_CL_DEVICE_TYPE": "GPU",
+          "_CL_DEVICE_VENDOR": "Advanced Micro Devices, Inc.",
+          "_CL_DEVICE_VERSION": "OpenCL 2.0 AMD - APP(3380.6)",
+          "_CL_DRIVER_VERSION": "3380.6(PAL, LC)"
+        }
+      ],
+      "PlatformName": "AMD Accelerated Parallel Processing",
+      "PlatformNum": 0,
+      "PlatformVendor": "Advanced Micro Devices, Inc."
+    }
+  ],
+  "Status": "OK"
+}

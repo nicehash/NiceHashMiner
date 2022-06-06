@@ -59,10 +59,17 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AMDDetectionTests.cs" />
+    <Compile Include="AMDDetection\AMDDetectionTests.cs" />
+    <Compile Include="Paths.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AMDDetection\data\rawDetection\detection001.json" />
+    <None Include="AMDDetection\data\rawDetection\detection002.json" />
+    <None Include="AMDDetection\data\rawDetection\detection003.json" />
+    <None Include="AMDDetection\data\videoControllers\controllers001.json" />
+    <None Include="AMDDetection\data\videoControllers\controllers002.json" />
+    <None Include="AMDDetection\data\videoControllers\controllers003.json" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

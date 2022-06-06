@@ -1,0 +1,51 @@
+﻿{
+  "ADLErrorString": "",
+  "AMDBusIDVersionPairs": [
+    {
+      "ADLRetCode": 0,
+      "AdrenalinVersion": "21.30.02.01",
+      "BUS_ID": 4,
+      "FunctionCall": 3
+    }
+  ],
+  "ErrorString": "",
+  "Platforms": [
+    {
+      "Devices": [
+        {
+          "BUS_ID": 1,
+          "DeviceID": 0,
+          "_CL_DEVICE_BOARD_NAME_AMD": "",
+          "_CL_DEVICE_GLOBAL_MEM_SIZE": 6441926656,
+          "_CL_DEVICE_NAME": "NVIDIA GeForce RTX 3060 Laptop GPU",
+          "_CL_DEVICE_TYPE": "GPU",
+          "_CL_DEVICE_VENDOR": "NVIDIA Corporation",
+          "_CL_DEVICE_VERSION": "OpenCL 3.0 CUDA",
+          "_CL_DRIVER_VERSION": "512.15"
+        }
+      ],
+      "PlatformName": "NVIDIA CUDA",
+      "PlatformNum": 0,
+      "PlatformVendor": "NVIDIA Corporation"
+    },
+    {
+      "Devices": [
+        {
+          "BUS_ID": 4,
+          "DeviceID": 0,
+          "_CL_DEVICE_BOARD_NAME_AMD": "AMD Radeon(TM) Graphics",
+          "_CL_DEVICE_GLOBAL_MEM_SIZE": 6538919936,
+          "_CL_DEVICE_NAME": "gfx90c",
+          "_CL_DEVICE_TYPE": "GPU",
+          "_CL_DEVICE_VENDOR": "Advanced Micro Devices, Inc.",
+          "_CL_DEVICE_VERSION": "OpenCL 2.0 AMD-APP (3302.6)",
+          "_CL_DRIVER_VERSION": "3302.6 (PAL,HSAIL)"
+        }
+      ],
+      "PlatformName": "AMD Accelerated Parallel Processing",
+      "PlatformNum": 1,
+      "PlatformVendor": "Advanced Micro Devices, Inc."
+    }
+  ],
+  "Status": "OK"
+}

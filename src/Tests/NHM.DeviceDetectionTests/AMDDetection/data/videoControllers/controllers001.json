@@ -1,0 +1,26 @@
+﻿[
+  {
+    "Name": "AMD Radeon RX 5700 XT",
+    "Description": "AMD Radeon RX 5700 XT",
+    "PnpDeviceID": "PCI\\VEN_1002&DEV_731F&SUBSYS_04E21043&REV_C1\\8&3207BE53&0&00000018020B",
+    "DriverVersion": "30.0.15021.7000",
+    "Status": "OK",
+    "InfSection": "ati2mtag_Navi10",
+    "AdapterRam": 4293918720,
+    "IsNvidia": false,
+    "IsAmd": true,
+    "PCI_BUS_ID": 8
+  },
+  {
+    "Name": "Radeon RX550/550 Series",
+    "Description": "Radeon RX550/550 Series",
+    "PnpDeviceID": "PCI\\VEN_1002&DEV_699F&SUBSYS_8A901462&REV_C7\\4&1C3D25BB&0&0019",
+    "DriverVersion": "30.0.15021.7000",
+    "Status": "OK",
+    "InfSection": "ati2mtag_Polaris12",
+    "AdapterRam": 4293918720,
+    "IsNvidia": false,
+    "IsAmd": true,
+    "PCI_BUS_ID": 12
+  }
+]
