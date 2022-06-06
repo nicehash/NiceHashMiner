@@ -194,11 +194,16 @@ namespace NHMCore.Utils
             }
         }
 
-        public static void VisitUrlLink(string urlLink)
+        public static void VisitUrlLink(string url)
         {
             try
             {
-                using var _p = Process.Start(urlLink);
+                var psi = new ProcessStartInfo()
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                };
+                using var _p = Process.Start(psi);
             }
             catch (Exception ex)
             {

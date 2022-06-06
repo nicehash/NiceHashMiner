@@ -91,7 +91,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.NhmNoDevHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.NhmNoDevHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -167,7 +167,7 @@ namespace NHMCore.Notifications
             notificationIfUnsuccessfull.Action = new NotificationAction
             {
                 Info = Tr("Visit release Page"),
-                Action = () => { Process.Start(Links.VisitReleasesUrl); }
+                Action = () => { Helpers.VisitUrlLink(Links.VisitReleasesUrl); }
             };
             NotificationsManager.Instance.AddNotificationToList(notificationIfUnsuccessfull);
             var notification = NotificationsManager.Instance.Notifications.FirstOrDefault(n => n.Group == NotificationsGroup.NhmUpdate);
@@ -226,7 +226,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.AVHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.AVHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -237,7 +237,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.AMDComputeModeHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.AMDComputeModeHelp); }
             };
             notification.NotificationUUID = "AMDModeSwitchNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -249,7 +249,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.LargePagesHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.LargePagesHelp); }
             };
             notification.NotificationUUID = "LargePagesNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -261,7 +261,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.VirtualMemoryHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.VirtualMemoryHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -272,7 +272,7 @@ namespace NHMCore.Notifications
             notification.Action = new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Process.Start(Links.FailedBenchmarkHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.FailedBenchmarkHelp); }
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }

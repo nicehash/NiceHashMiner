@@ -1,5 +1,6 @@
 ﻿using NHMCore;
 using NHMCore.Configs;
+using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -35,13 +36,13 @@ namespace NiceHashMiner.Views.EULA
 
         private void EulaRtb_OnLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            Process.Start(e.LinkText);
+            Helpers.VisitUrlLink(e.LinkText);
         }
 
         private void Hyperlink_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var hyperlink = (Hyperlink)sender;
-            Process.Start(hyperlink.NavigateUri.ToString());
+            Helpers.VisitUrlLink(hyperlink.NavigateUri.ToString());
         }
 
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)

@@ -69,7 +69,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Register_OnClick(object sender, RoutedEventArgs e)
         {
-            Process.Start(Links.Register);
+            Helpers.VisitUrlLink(Links.Register);
         }
 
         private void ManuallyEnterBtc_OnClick(object sender, RoutedEventArgs e)

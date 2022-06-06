@@ -54,7 +54,7 @@ namespace NiceHashMiner.Views.Common
 
         private void AddressHyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
+            Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
         }
 
         private void CloseDialog(object sender, RoutedEventArgs e)
