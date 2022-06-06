@@ -17,7 +17,6 @@ namespace NHM.DeviceDetection
         // NVIDIA
         public IReadOnlyList<CUDADevice> CUDADevices { get; internal set; }
         public bool HasCUDADevices => CUDADevices != null && CUDADevices.Count > 0;
-        public bool IsDCHDriver { get; internal set; }
         public Version NvidiaDriver { get; internal set; }
         public bool NVIDIADriverObsolete { get; internal set; }
 

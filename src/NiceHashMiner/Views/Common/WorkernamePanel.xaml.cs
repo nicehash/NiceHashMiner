@@ -8,7 +8,7 @@ namespace NiceHashMiner.Views.Common
     /// </summary>
     public partial class WorkernamePanel : UserControl
     {
-        private static readonly EnterWorkernameDialog _enterWorkernameDialog = new EnterWorkernameDialog();
+        public static readonly EnterWorkernameDialog _enterWorkernameDialog = new EnterWorkernameDialog();
         public WorkernamePanel()
         {
             InitializeComponent();

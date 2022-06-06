@@ -29,6 +29,7 @@ namespace NiceHashMiner.Views.Login
             Loaded += LoginWindow_Loaded;
             HideIconAndTitle = true;
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
+            if (GUISettings.Instance.DisplayTheme == "Dark") CheckBoxMode.IsChecked = true;
         }
 
         private void LoginBrowser_Unloaded(object sender, RoutedEventArgs e)
@@ -110,8 +111,9 @@ namespace NiceHashMiner.Views.Login
             _gotQRCode = await QrCodeGenerator.RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
             if (_gotQRCode)
             {
+                var isLight = GUISettings.Instance.DisplayTheme == "Light";
                 // create qr code
-                var (image, ok) = QrCodeImageGenerator.GetQRCodeImage(_uuid);
+                var (image, ok) = QrCodeImageGenerator.GetQRCodeImage(_uuid, isLight);
                 if (ok)
                 {
                     rect_qrCode.Fill = image;

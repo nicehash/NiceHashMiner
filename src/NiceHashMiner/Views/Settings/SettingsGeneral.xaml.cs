@@ -116,6 +116,7 @@ namespace NiceHashMiner.Views.Settings
             var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
             var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
             ValidateWorkername();
+            WorkernamePanel._enterWorkernameDialog.OnWorkernameChangeHack?.Invoke(this, trimmedWorkerNameText);// hack on a hack
         }
 
         private void TextBoxWorkerName_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
