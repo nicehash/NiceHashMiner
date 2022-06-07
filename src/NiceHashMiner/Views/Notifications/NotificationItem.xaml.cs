@@ -1,6 +1,7 @@
 ﻿using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Notifications;
+using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using System;
 using System.Diagnostics;
@@ -95,7 +96,7 @@ namespace NiceHashMiner.Views.Notifications
 
         private void notificationHyperLink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
+            Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
         }
     }
 }
