@@ -191,8 +191,11 @@ namespace NiceHashMiner.ViewModels.Plugins
 
         public void ShowPluginInternals()
         {
-            var pluginPath = Paths.MinerPluginsPath(Plugin.PluginUUID);
-            Process.Start(pluginPath);
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = Paths.MinerPluginsPath(Plugin.PluginUUID),
+                UseShellExecute = true
+            });
         }
 
         private void CommonInstallOnPropertyChanged()
