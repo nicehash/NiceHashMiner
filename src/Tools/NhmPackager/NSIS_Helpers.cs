@@ -68,7 +68,8 @@ namespace NhmPackager
         internal static void CallMakeNSIS_Exe(string scriptPath)
         {
             var cwdPath = Path.GetDirectoryName(scriptPath);
-            Logger.Info("MakeNsis", cwdPath);
+            Logger.Info("MakeNsis", $"script '{scriptPath}'");
+            Logger.Info("MakeNsis", $"cwd '{cwdPath}'");
             using var makeNsis = new Process
             {
                 StartInfo = new ProcessStartInfo

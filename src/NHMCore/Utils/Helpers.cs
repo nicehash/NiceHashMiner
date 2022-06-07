@@ -23,11 +23,9 @@ namespace NHMCore.Utils
 
         static Helpers()
         {
-            using (var identity = WindowsIdentity.GetCurrent())
-            {
-                var principal = new WindowsPrincipal(identity);
-                IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
-            }
+            using var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         public static bool InternalCheckIsWow64()
@@ -35,10 +33,8 @@ namespace NHMCore.Utils
             if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) ||
                 Environment.OSVersion.Version.Major >= 6)
             {
-                using (var p = Process.GetCurrentProcess())
-                {
-                    return IsWow64Process(p.Handle, out var retVal) && retVal;
-                }
+                using var p = Process.GetCurrentProcess();
+                return IsWow64Process(p.Handle, out var retVal) && retVal;
             }
             return false;
         }
@@ -149,11 +145,9 @@ namespace NHMCore.Utils
 
         public static bool Is45NetOrHigher()
         {
-            using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32)
-                .OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\"))
-            {
-                return ndpKey?.GetValue("Release") != null && Is45DotVersion((int)ndpKey.GetValue("Release"));
-            }
+            using var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32)
+                .OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\");
+            return ndpKey?.GetValue("Release") != null && Is45DotVersion((int)ndpKey.GetValue("Release"));
         }
 
         public static bool IsConnectedToInternet()
