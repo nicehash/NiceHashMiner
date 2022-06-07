@@ -133,7 +133,6 @@ namespace NHM.DeviceDetection
                 DetectionResult.UnsupportedCUDADevices = cudaDevices.Where(cudaDev => IsCUDADeviceSupported(cudaDev) == false).ToList();
                 // NVIDIA drivers
                 var nvmlLoaded = result?.NvmlLoaded ?? -1;
-                DetectionResult.IsDCHDriver = nvmlLoaded == 1;
                 DetectionResult.IsNvidiaNVMLLoadedError = nvmlLoaded == -1;
                 DetectionResult.IsNvidiaNVMLInitializedError = result?.NvmlInitialized != 0;
                 var smiVersion = NvidiaSmiDriver.ToNvidiaSmiDriver(result.DriverVersion);
