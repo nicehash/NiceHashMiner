@@ -102,7 +102,7 @@ namespace NHM.DeviceDetection
             foreach (var vidController in vidControllers)
             {
                 stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                stringBuilder.AppendLine($"{vidController.ToString()}");
+                stringBuilder.AppendLine($"{vidController}");
             }
             Logger.Info(Tag, stringBuilder.ToString());
         }
@@ -124,10 +124,6 @@ namespace NHM.DeviceDetection
             {
                 // we got NVIDIA devices
                 var cudaDevices = result.CudaDevices.Select(dev => CUDADetector.Transform(dev)).ToList();
-                foreach(var cudaDevice in cudaDevices)
-                {
-                    cudaDevice.RawDeviceData = JsonConvert.SerializeObject(result.CudaDevices.Where(dev => dev.pciBusID == cudaDevice.PCIeBusID).FirstOrDefault());
-                }
                 // filter out no supported SM versions
                 DetectionResult.CUDADevices = cudaDevices.Where(IsCUDADeviceSupported).OrderBy(cudaDev => cudaDev.PCIeBusID).ToList();
                 DetectionResult.UnsupportedCUDADevices = cudaDevices.Where(cudaDev => IsCUDADeviceSupported(cudaDev) == false).ToList();

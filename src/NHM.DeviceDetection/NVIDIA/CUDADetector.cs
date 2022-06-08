@@ -1,7 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
-using NHM.DeviceDetection.NVIDIA.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace NHM.DeviceDetection.NVIDIA
 {
+    using Newtonsoft.Json;
     using NHM.UUID;
 
     internal static class CUDADetector
@@ -47,7 +47,7 @@ namespace NHM.DeviceDetection.NVIDIA
             }
         }
 
-        private static string GetNameFromCudaDevice(CudaDevice cudaDevice)
+        private static string GetNameFromCudaDevice(CudaDeviceDetectionResult.Device cudaDevice)
         {
             if (cudaDevice.VendorName == "UNKNOWN")
             {
@@ -56,7 +56,7 @@ namespace NHM.DeviceDetection.NVIDIA
             return $"{cudaDevice.VendorName} {cudaDevice.DeviceName}";
         }
 
-        public static CUDADevice Transform(CudaDevice cudaDevice)
+        public static CUDADevice Transform(CudaDeviceDetectionResult.Device cudaDevice)
         {
             string uuid = cudaDevice.UUID;
             // if no nvml loaded fallback ID
@@ -69,7 +69,9 @@ namespace NHM.DeviceDetection.NVIDIA
             var name = GetNameFromCudaDevice(cudaDevice);
             var bd = new BaseDevice(DeviceType.NVIDIA, uuid, name, (int)cudaDevice.DeviceID);
             var isLHR = IsLHR(name, (int)cudaDevice.pciDeviceId);
-            return new CUDADevice(bd, cudaDevice.pciBusID, cudaDevice.DeviceGlobalMemory, cudaDevice.SM_major, cudaDevice.SM_minor, isLHR);
+            var ret = new CUDADevice(bd, cudaDevice.pciBusID, cudaDevice.DeviceGlobalMemory, cudaDevice.SM_major, cudaDevice.SM_minor, isLHR);
+            ret.RawDeviceData = JsonConvert.SerializeObject(cudaDevice);
+            return ret;
         }
 
         private static bool IsLHR(string name, int deviceId)

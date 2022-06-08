@@ -2,7 +2,7 @@
 
 namespace NHM.Common.Device
 {
-    public class CUDADevice : BaseDevice, IGpuDevice, IEquatable<CUDADevice>
+    public class CUDADevice : BaseDevice, IGpuDevice
     {
         public static string RawDetectionOutput = string.Empty;
         public CUDADevice(BaseDevice bd, int iPCIeBusID, ulong gpuRam, int sM_major, int sM_minor, bool isLhr) : base(bd)
@@ -32,19 +32,6 @@ namespace NHM.Common.Device
         public void SetIsOpenCLBackendEnabled(bool enabled)
         {
             IsOpenCLBackendEnabled = enabled;
-        }
-
-        public bool Equals(CUDADevice other)
-        {
-            if (!base.Equals(other)) return false;
-            if (PCIeBusID != other.PCIeBusID) return false;
-            if (GpuRam != other.GpuRam) return false;
-            if (IsOpenCLBackendEnabled != other.IsOpenCLBackendEnabled) return false;
-            if (SM_major != other.SM_major) return false;
-            if (SM_minor != other.SM_minor) return false;
-            if (IsLHR != other.IsLHR) return false;
-            if (RawDeviceData != other.RawDeviceData) return false;
-            return true;
         }
     }
 }
