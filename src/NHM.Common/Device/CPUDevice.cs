@@ -1,4 +1,5 @@
 ﻿using NHM.Common.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace NHM.Common.Device
