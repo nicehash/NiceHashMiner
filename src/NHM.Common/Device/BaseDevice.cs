@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common.Enums;
-using System;
 
 namespace NHM.Common.Device
 {
