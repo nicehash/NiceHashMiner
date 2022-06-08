@@ -8,10 +8,6 @@ namespace NHMCore.Notifications
         Market,
         Profit,
         MonitoringNvidiaElevate,
-        [Obsolete("Unused group, ethlargement removed", true)]
-        EthlargementElevate,
-        [Obsolete("Unused group, ethlargement removed", true)]
-        EthlargementNotEnabled,
         ConnectionLost,
         NoEnabledDevice,
         DemoMining,
@@ -41,7 +37,6 @@ namespace NHMCore.Notifications
         ComputeModeAMD,
         LargePages,
         VirtualMemory,
-        OpenClFallback,
         NoAvailableAlgorithms,
         LogArchiveUpload,
         MissingGPUs,
