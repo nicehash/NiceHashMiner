@@ -4,6 +4,7 @@ namespace NHM.Common.Device
 {
     public class CUDADevice : BaseDevice, IGpuDevice
     {
+        public static string RawDetectionOutput = string.Empty;
         public CUDADevice(BaseDevice bd, int iPCIeBusID, ulong gpuRam, int sM_major, int sM_minor, bool isLhr) : base(bd)
         {
             PCIeBusID = iPCIeBusID;
@@ -26,6 +27,7 @@ namespace NHM.Common.Device
         public int SM_major { get; }
         public int SM_minor { get; }
         public bool IsLHR { get; }
+        public string RawDeviceData { get; set; }
 
         public void SetIsOpenCLBackendEnabled(bool enabled)
         {

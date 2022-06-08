@@ -4,6 +4,7 @@ namespace NHM.Common.Device
 {
     public class AMDDevice : BaseDevice, IGpuDevice
     {
+        public static string RawDetectionOutput = string.Empty;
         public AMDDevice(BaseDevice bd, int iPCIeBusID, ulong gpuRam, string codename, string infSection, int openCLPlatformID = -1) : base(bd)
         {
             PCIeBusID = iPCIeBusID;
@@ -23,6 +24,7 @@ namespace NHM.Common.Device
 
         public string Codename { get; }
         public string InfSection { get; }
+        public string RawDeviceData { get; set; }
 
         // AMD always true
         public bool IsOpenCLBackendEnabled => true;

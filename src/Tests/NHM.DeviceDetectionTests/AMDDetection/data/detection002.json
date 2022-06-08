@@ -1,0 +1,90 @@
+﻿{
+  "OpenCL": {
+    "ADLErrorString": "ADL no AMD GPU's detected | ",
+    "AMDBusIDVersionPairs": [
+
+    ],
+    "ErrorString": "",
+    "Platforms": [
+      {
+        "Devices": [
+          {
+            "BUS_ID": 6,
+            "DeviceID": 0,
+            "_CL_DEVICE_BOARD_NAME_AMD": "",
+            "_CL_DEVICE_GLOBAL_MEM_SIZE": 8589410304,
+            "_CL_DEVICE_NAME": "NVIDIA GeForce RTX 3060 Ti",
+            "_CL_DEVICE_TYPE": "GPU",
+            "_CL_DEVICE_VENDOR": "NVIDIA Corporation",
+            "_CL_DEVICE_VERSION": "OpenCL 3.0 CUDA",
+            "_CL_DRIVER_VERSION": "496.13"
+          },
+          {
+            "BUS_ID": 1,
+            "DeviceID": 1,
+            "_CL_DEVICE_BOARD_NAME_AMD": "",
+            "_CL_DEVICE_GLOBAL_MEM_SIZE": 6442123264,
+            "_CL_DEVICE_NAME": "NVIDIA GeForce RTX 2060",
+            "_CL_DEVICE_TYPE": "GPU",
+            "_CL_DEVICE_VENDOR": "NVIDIA Corporation",
+            "_CL_DEVICE_VERSION": "OpenCL 3.0 CUDA",
+            "_CL_DRIVER_VERSION": "496.13"
+          },
+          {
+            "BUS_ID": 4,
+            "DeviceID": 2,
+            "_CL_DEVICE_BOARD_NAME_AMD": "",
+            "_CL_DEVICE_GLOBAL_MEM_SIZE": 6442123264,
+            "_CL_DEVICE_NAME": "NVIDIA GeForce GTX 1660",
+            "_CL_DEVICE_TYPE": "GPU",
+            "_CL_DEVICE_VENDOR": "NVIDIA Corporation",
+            "_CL_DEVICE_VERSION": "OpenCL 3.0 CUDA",
+            "_CL_DRIVER_VERSION": "496.13"
+          }
+        ],
+        "PlatformName": "NVIDIA CUDA",
+        "PlatformNum": 0,
+        "PlatformVendor": "NVIDIA Corporation"
+      }
+    ],
+    "Status": "OK"
+  },
+  "WMI_VideoController": [
+    {
+      "Name": "NVIDIA GeForce RTX 3060 Ti",
+      "Description": "NVIDIA GeForce RTX 3060 Ti",
+      "PnpDeviceID": "PCI\\VEN_10DE&DEV_2486&SUBSYS_405A1458&REV_A1\\4&31ABA5D&0&00E6",
+      "DriverVersion": "30.0.14.9613",
+      "Status": "OK",
+      "InfSection": "Section072",
+      "AdapterRam": 4293918720,
+      "IsNvidia": true,
+      "IsAmd": false,
+      "PCI_BUS_ID": 6
+    },
+    {
+      "Name": "NVIDIA GeForce GTX 1660",
+      "Description": "NVIDIA GeForce GTX 1660",
+      "PnpDeviceID": "PCI\\VEN_10DE&DEV_2184&SUBSYS_86BD1043&REV_A1\\4&324D93F4&0&00E1",
+      "DriverVersion": "30.0.14.9613",
+      "Status": "OK",
+      "InfSection": "Section056",
+      "AdapterRam": 4293918720,
+      "IsNvidia": true,
+      "IsAmd": false,
+      "PCI_BUS_ID": 4
+    },
+    {
+      "Name": "NVIDIA GeForce RTX 2060",
+      "Description": "NVIDIA GeForce RTX 2060",
+      "PnpDeviceID": "PCI\\VEN_10DE&DEV_1F08&SUBSYS_37D11458&REV_A1\\4&2D78AB8F&0&0008",
+      "DriverVersion": "30.0.14.9613",
+      "Status": "OK",
+      "InfSection": "Section001",
+      "AdapterRam": 4293918720,
+      "IsNvidia": true,
+      "IsAmd": false,
+      "PCI_BUS_ID": 1
+    }
+  ]
+}
