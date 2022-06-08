@@ -67,6 +67,7 @@
     <None Include="AMDDetection\data\detection001.json" />
     <None Include="AMDDetection\data\detection002.json" />
     <None Include="AMDDetection\data\detection003.json" />
+    <None Include="AMDDetection\data\detection004.json" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

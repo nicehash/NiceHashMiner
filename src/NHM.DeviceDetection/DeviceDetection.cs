@@ -166,8 +166,7 @@ namespace NHM.DeviceDetection
                 Logger.Info(Tag, "DetectAMDDevices ZERO Found.");
                 return;
             }
-            DetectionResult.AMDDevices = amdDevices.OrderBy(amdDev => amdDev.PCIeBusID).ToList();
-            DetectionResult.IsOpenClFallback = AMD.AMDDetector.IsOpenClFallback;
+            DetectionResult.AMDDevices = amdDevices;
             // log result
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("");

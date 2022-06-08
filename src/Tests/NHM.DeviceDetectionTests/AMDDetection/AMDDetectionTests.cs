@@ -6,7 +6,6 @@ using NHM.DeviceDetection.AMD;
 using NHM.DeviceDetection.WMI;
 using System.Linq;
 using NHM.Common.Enums;
-using Newtonsoft.Json.Linq;
 
 namespace NHM.DeviceDetectionTests
 {
@@ -32,16 +31,13 @@ namespace NHM.DeviceDetectionTests
 
             var detectionStr = Paths.LoadTextFile(@"AMDDetection\data\detection001.json");
             var detectionData = JsonConvert.DeserializeObject<DetectionTestData>(detectionStr);
-
-            var rawDetectionText = JObject.Parse(detectionStr)["OpenCL"].ToString();
             var videoControllerDatas = detectionData.WMI_VideoController;
             var detectionObject = detectionData.OpenCL;
 
-            var result = AMDDetector.ConvertOpenCLResultToList(videoControllerDatas, (rawDetectionText, detectionObject));
-            Assert.IsFalse(result.success, tl.label());
-            var result2 = AMDDetector.ConvertOpenCLResultToListFallback(videoControllerDatas, (rawDetectionText, detectionObject), (rawDetectionText, detectionObject));
-            Assert.AreEqual(2, result2.Count, tl.label());
-            Assert.IsTrue(result2.Select(dev => dev.PCIeBusID).Distinct().Count() == 2, tl.label());
+            var result = AMDDetector.AMDDeviceWithUniqueBUS_IDs(videoControllerDatas, detectionObject);
+            var amdDevices = result.Select(p => p.dev).ToList();
+            Assert.AreEqual(2, amdDevices.Count, tl.label());
+            Assert.IsTrue(amdDevices.Select(dev => dev.PCIeBusID).Distinct().Count() == 2, tl.label());
         }
         [TestMethod]
         public void TestParseAMDDevicesToList_NoAMD()
@@ -49,14 +45,12 @@ namespace NHM.DeviceDetectionTests
             var tl = new TestLabel { };
             var detectionStr = Paths.LoadTextFile(@"AMDDetection\data\detection002.json");
             var detectionData = JsonConvert.DeserializeObject<DetectionTestData>(detectionStr);
-
-            var rawDetectionText = JObject.Parse(detectionStr)["OpenCL"].ToString();
             var videoControllerDatas = detectionData.WMI_VideoController;
             var detectionObject = detectionData.OpenCL;
 
-            var result = AMDDetector.ConvertOpenCLResultToList(videoControllerDatas, (rawDetectionText, detectionObject));
-            Assert.IsTrue(result.success, tl.label());
-            Assert.IsTrue(result.list.Count == 0, tl.label());
+            var result = AMDDetector.AMDDeviceWithUniqueBUS_IDs(videoControllerDatas, detectionObject);
+            var amdDevices = result.Select(p => p.dev).ToList();
+            Assert.IsTrue(amdDevices.Count == 0, tl.label());
         }
         [TestMethod]
         public void TestParseAMDDevices_MixedRig()
@@ -64,15 +58,27 @@ namespace NHM.DeviceDetectionTests
             var tl = new TestLabel { };
             var detectionStr = Paths.LoadTextFile(@"AMDDetection\data\detection003.json");
             var detectionData = JsonConvert.DeserializeObject<DetectionTestData>(detectionStr);
-
-            var rawDetectionText = JObject.Parse(detectionStr)["OpenCL"].ToString();
             var videoControllerDatas = detectionData.WMI_VideoController;
             var detectionObject = detectionData.OpenCL;
 
-            var result = AMDDetector.ConvertOpenCLResultToList(videoControllerDatas, (rawDetectionText, detectionObject));
-            Assert.IsTrue(result.success, tl.label());
-            Assert.IsTrue(result.list.Count == 1, tl.label());
-            Assert.AreEqual(result.list.First().DeviceType, DeviceType.AMD, tl.label());
+            var result = AMDDetector.AMDDeviceWithUniqueBUS_IDs(videoControllerDatas, detectionObject);
+            var amdDevices = result.Select(p => p.dev).ToList();
+            Assert.IsTrue(amdDevices.Count == 1, tl.label());
+            Assert.AreEqual(amdDevices.First().DeviceType, DeviceType.AMD, tl.label());
+        }
+
+        [TestMethod]
+        public void TestParseAMDDevices_AMD_MultiplePlatforms()
+        {
+            var tl = new TestLabel { };
+            var detectionStr = Paths.LoadTextFile(@"AMDDetection\data\detection004.json");
+            var detectionData = JsonConvert.DeserializeObject<DetectionTestData>(detectionStr);
+            var videoControllerDatas = detectionData.WMI_VideoController;
+            var detectionObject = detectionData.OpenCL;
+
+            var result = AMDDetector.AMDDeviceWithUniqueBUS_IDs(videoControllerDatas, detectionObject);
+            var amdDevices = result.Select(p => p.dev).ToList();
+            Assert.IsTrue(amdDevices.Count == 2, tl.label());
         }
     }
 }
