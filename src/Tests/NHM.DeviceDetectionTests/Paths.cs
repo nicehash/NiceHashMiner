@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NHMCoreTests
+namespace NHM.DeviceDetectionTests
 {
     internal static class Paths
     {
-
         internal static string LoadTextFile(string pathRelativeUnitTestingFile) => File.ReadAllText(GetFullPathToFile(pathRelativeUnitTestingFile));
 
         #region load data region https://stackoverflow.com/questions/23826773/how-do-i-make-a-data-file-available-to-unit-tests/53004985

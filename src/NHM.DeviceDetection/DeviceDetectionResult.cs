@@ -28,7 +28,6 @@ namespace NHM.DeviceDetection
         // AMD
         public IReadOnlyList<AMDDevice> AMDDevices { get; internal set; }
         public bool HasAMDDevices => AMDDevices != null && AMDDevices.Count > 0;
-        public bool IsOpenClFallback { get; internal set; }
         public Version AmdDriver { get; internal set; }
         public bool AMDDriverObsolete { get; internal set; }
 

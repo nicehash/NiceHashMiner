@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -93,7 +94,7 @@ namespace NHM.DeviceDetection
             Logger.Info(Tag, $"DetectCPU END");
         }
 
-        private static async Task DetectWMIVideoControllers()
+        internal static async Task DetectWMIVideoControllers()
         {
             var vidControllers = await WMI.VideoControllerDetector.QueryWin32_VideoControllerTask();
             var busDevices = await WMI.DeviceBusDetector.QueryWin32_DeviceBusPCITask();
@@ -131,7 +132,7 @@ namespace NHM.DeviceDetection
             foreach (var vidController in vidControllers)
             {
                 stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
+                stringBuilder.AppendLine($"{vidController}");
             }
             Logger.Info(Tag, stringBuilder.ToString());
         }
@@ -146,6 +147,7 @@ namespace NHM.DeviceDetection
         private static async Task DetectCUDADevices()
         {
             var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
+            CUDADevice.RawDetectionOutput = cudaQueryResult.rawOutput;
             Logger.Info(Tag, $"TryQueryCUDADevicesAsync RAW: '{cudaQueryResult.rawOutput}'");
             var result = cudaQueryResult.parsed;
             if (result?.CudaDevices?.Count > 0)
@@ -194,8 +196,7 @@ namespace NHM.DeviceDetection
                 Logger.Info(Tag, "DetectAMDDevices ZERO Found.");
                 return;
             }
-            DetectionResult.AMDDevices = amdDevices.OrderBy(amdDev => amdDev.PCIeBusID).ToList();
-            DetectionResult.IsOpenClFallback = AMD.AMDDetector.IsOpenClFallback;
+            DetectionResult.AMDDevices = amdDevices;
             // log result
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("");
