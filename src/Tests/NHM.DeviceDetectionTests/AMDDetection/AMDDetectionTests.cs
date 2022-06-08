@@ -1,13 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using NHM.DeviceDetection.OpenCL.Models;
 using NHM.DeviceDetection.AMD;
 using NHM.DeviceDetection.WMI;
 using System.Linq;
-using NHM.Common.Device;
 using NHM.Common.Enums;
+using Newtonsoft.Json.Linq;
 
 namespace NHM.DeviceDetectionTests
 {
@@ -19,27 +18,25 @@ namespace NHM.DeviceDetectionTests
             private int _testCount = 0;
             public string label() => $"#{++_testCount}";
         }
-        private string ReadTestFile(string path)
+        
+        internal class DetectionTestData
         {
-            try
-            {
-                return Paths.LoadTextFile(path);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return string.Empty;
+            public OpenCLDeviceDetectionResult OpenCL { get; set; }
+            public List<VideoControllerData> WMI_VideoController { get; set; }
         }
+
         [TestMethod]
         public void TestParseAMDDevicesToList_DuplicateDevice()
         {
             var tl = new TestLabel { };
-            var videoControllerText = ReadTestFile(@"AMDDetection\data\videoControllers\controllers001.json");
-            var rawDetectionText = ReadTestFile(@"AMDDetection\data\rawDetection\detection001.json");
-            if (videoControllerText == string.Empty || rawDetectionText == string.Empty) return;
-            var videoControllerDatas = JsonConvert.DeserializeObject<List<VideoControllerData>>(videoControllerText);
-            var detectionObject = JsonConvert.DeserializeObject<OpenCLDeviceDetectionResult>(rawDetectionText);
+
+            var detectionStr = Paths.LoadTextFile(@"AMDDetection\data\detection001.json");
+            var detectionData = JsonConvert.DeserializeObject<DetectionTestData>(detectionStr);
+
+            var rawDetectionText = JObject.Parse(detectionStr)["OpenCL"].ToString();
+            var videoControllerDatas = detectionData.WMI_VideoController;
+            var detectionObject = detectionData.OpenCL;
+
             var result = AMDDetector.ConvertOpenCLResultToList(videoControllerDatas, (rawDetectionText, detectionObject));
             Assert.IsFalse(result.success, tl.label());
             var result2 = AMDDetector.ConvertOpenCLResultToListFallback(videoControllerDatas, (rawDetectionText, detectionObject), (rawDetectionText, detectionObject));
@@ -50,11 +47,13 @@ namespace NHM.DeviceDetectionTests
         public void TestParseAMDDevicesToList_NoAMD()
         {
             var tl = new TestLabel { };
-            var videoControllerText = ReadTestFile(@"AMDDetection\data\videoControllers\controllers002.json");
-            var rawDetectionText = ReadTestFile(@"AMDDetection\data\rawDetection\detection002.json");
-            if (videoControllerText == string.Empty || rawDetectionText == string.Empty) return;
-            var videoControllerDatas = JsonConvert.DeserializeObject<List<VideoControllerData>>(videoControllerText);
-            var detectionObject = JsonConvert.DeserializeObject<OpenCLDeviceDetectionResult>(rawDetectionText);
+            var detectionStr = Paths.LoadTextFile(@"AMDDetection\data\detection002.json");
+            var detectionData = JsonConvert.DeserializeObject<DetectionTestData>(detectionStr);
+
+            var rawDetectionText = JObject.Parse(detectionStr)["OpenCL"].ToString();
+            var videoControllerDatas = detectionData.WMI_VideoController;
+            var detectionObject = detectionData.OpenCL;
+
             var result = AMDDetector.ConvertOpenCLResultToList(videoControllerDatas, (rawDetectionText, detectionObject));
             Assert.IsTrue(result.success, tl.label());
             Assert.IsTrue(result.list.Count == 0, tl.label());
@@ -63,11 +62,13 @@ namespace NHM.DeviceDetectionTests
         public void TestParseAMDDevices_MixedRig()
         {
             var tl = new TestLabel { };
-            var videoControllerText = ReadTestFile(@"AMDDetection\data\videoControllers\controllers003.json");
-            var rawDetectionText = ReadTestFile(@"AMDDetection\data\rawDetection\detection003.json");
-            if (videoControllerText == string.Empty || rawDetectionText == string.Empty) return;
-            var videoControllerDatas = JsonConvert.DeserializeObject<List<VideoControllerData>>(videoControllerText);
-            var detectionObject = JsonConvert.DeserializeObject<OpenCLDeviceDetectionResult>(rawDetectionText);
+            var detectionStr = Paths.LoadTextFile(@"AMDDetection\data\detection003.json");
+            var detectionData = JsonConvert.DeserializeObject<DetectionTestData>(detectionStr);
+
+            var rawDetectionText = JObject.Parse(detectionStr)["OpenCL"].ToString();
+            var videoControllerDatas = detectionData.WMI_VideoController;
+            var detectionObject = detectionData.OpenCL;
+
             var result = AMDDetector.ConvertOpenCLResultToList(videoControllerDatas, (rawDetectionText, detectionObject));
             Assert.IsTrue(result.success, tl.label());
             Assert.IsTrue(result.list.Count == 1, tl.label());
