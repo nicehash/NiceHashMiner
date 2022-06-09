@@ -102,7 +102,7 @@ namespace NiceHashMiner.Views.Login
         {
             // this is vaild for 10 minutes
             _uuid = Guid.NewGuid().ToString();
-            _gotQRCode = await QrCodeGenerator.RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
+            _gotQRCode = await BTC_FromQrCodeAPI.RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
             if (_gotQRCode)
             {
                 var isLight = GUISettings.Instance.DisplayTheme == "Light";
@@ -138,7 +138,7 @@ namespace NiceHashMiner.Views.Login
             try
             {
                 Logger.Info("LoginWindow.GetBTCForUUID", "Waiting for btc address");
-                return await QrCodeGenerator.GetBTCForUUID(uuid);
+                return await BTC_FromQrCodeAPI.GetBTCForUUID(uuid);
             }
             catch (Exception ex)
             {

@@ -202,7 +202,7 @@
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
     <Compile Include="Utils\OutsideProcessMonitor.cs" />
     <Compile Include="Utils\PInvokeHelpers.cs" />
-    <Compile Include="Utils\QrCodeGenerator.cs" />
+    <Compile Include="Utils\BTC_FromQrCodeAPI.cs" />
     <Compile Include="Utils\RunAsAdmin.cs" />
     <Compile Include="Utils\SteamWatcher.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />

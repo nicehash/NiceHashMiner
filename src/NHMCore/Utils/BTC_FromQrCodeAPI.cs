@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Utils
 {
-    public static class QrCodeGenerator
+    public static class BTC_FromQrCodeAPI
     {
-        internal class RigUUIDRequest
+        private static readonly string TAG = nameof(BTC_FromQrCodeAPI);
+
+        private class RigUUIDRequest
         {
             public string qrId { get; set; }
             public string rigId { get; set; }
         }
-
-        internal class BtcResponse
+        private class BtcResponse
         {
             public string btc { get; set; }
         }
@@ -32,7 +33,7 @@ namespace NHMCore.Utils
             }
             catch (Exception e)
             {
-                Logger.Error("QrCodeGenerator", $"RequestNew_QR_Code Got Exception: {e.Message}");
+                Logger.Error(TAG, $"RequestNew_QR_Code Got Exception: {e.Message}");
                 return false;
             }
         }
@@ -44,11 +45,11 @@ namespace NHMCore.Utils
                 using var client = new HttpClient();
                 using var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{uuid}");
                 if (!resp.IsSuccessStatusCode) {
-                    Logger.Warn("QrCodeGenerator", $"GetBTCForUUID IsSuccessStatusCode: {resp.IsSuccessStatusCode}");
+                    Logger.Warn(TAG, $"GetBTCForUUID IsSuccessStatusCode: {resp.IsSuccessStatusCode}");
                     return null;
                 }
                 var contentString = await resp.Content.ReadAsStringAsync();
-                Logger.Info("QrCodeGenerator", $"GetBTCForUUID contentString {contentString}");
+                Logger.Info(TAG, $"GetBTCForUUID contentString {contentString}");
                 if (string.IsNullOrEmpty(contentString)) {
                     return null;
                 }
@@ -57,7 +58,7 @@ namespace NHMCore.Utils
             }
             catch (Exception e)
             {
-                Logger.Error("QrCodeGenerator", $"GetBTCForUUID Got Exception: {e.Message}");
+                Logger.Error(TAG, $"GetBTCForUUID Got Exception: {e.Message}");
                 return null;
             }
         }

@@ -33,7 +33,7 @@ namespace NiceHashMiner.Views.Settings
             stopWatch.Start();
 
             var rigID = ApplicationStateManager.RigID();
-            var res = await QrCodeGenerator.RequestNew_QR_Code(_uuid, rigID);
+            var res = await BTC_FromQrCodeAPI.RequestNew_QR_Code(_uuid, rigID);
 
             if (!res)
             {
@@ -88,7 +88,7 @@ namespace NiceHashMiner.Views.Settings
         {
             try
             {
-                var btc = await QrCodeGenerator.GetBTCForUUID(_uuid);
+                var btc = await BTC_FromQrCodeAPI.GetBTCForUUID(_uuid);
                 if (btc == null) return;
                 var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btc);
                 if (ret == NhmwsSetResult.CHANGED)
