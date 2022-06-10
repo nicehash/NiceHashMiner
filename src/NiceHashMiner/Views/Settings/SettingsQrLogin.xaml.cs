@@ -33,7 +33,7 @@ namespace NiceHashMiner.Views.Settings
             stopWatch.Start();
 
             var rigID = ApplicationStateManager.RigID();
-            var res = await QrCodeGenerator.RequestNew_QR_Code(_uuid, rigID);
+            var res = await BTC_FromQrCodeAPI.RequestNew_QR_Code(_uuid, rigID);
 
             if (!res)
             {
@@ -88,14 +88,9 @@ namespace NiceHashMiner.Views.Settings
         {
             try
             {
-                using var client = new HttpClient();
-                using var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
-                if (!resp.IsSuccessStatusCode) return;
-                var contentString = await resp.Content.ReadAsStringAsync();
-                if (string.IsNullOrEmpty(contentString)) return;
-                var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
-                if (btcResp?.btc == null) return;
-                var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btc);
+                var btc = await BTC_FromQrCodeAPI.GetBTCForUUID(_uuid);
+                if (btc == null) return;
+                var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btc);
                 if (ret == NhmwsSetResult.CHANGED)
                 {
                     lbl_qr_status.Visibility = Visibility.Visible;
