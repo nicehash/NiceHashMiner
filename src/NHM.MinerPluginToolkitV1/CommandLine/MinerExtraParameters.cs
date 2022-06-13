@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,100 +16,81 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
 
 
     using Parameter = List<string>;
-    //using MinerParameters = List<List<string>>;
-    //using AlgorithmParameters = List<List<string>>;
-    using DeviceParameters = List<List<string>>;
+    using Parameters = List<List<string>>;
     using DevicesParametersList = List<List<List<string>>>;
+
     public static class MinerExtraParameters
     {
-        // this is a re-write of the NHM.MinerPluginToolkitV1.ExtraLaunchParameters.ExtraLaunchParametersParser
-        // that ofers a dynamic ELP options
-        // basically we have
-        // #1 options per miners that replace 'OptionIsParameter' and 'OptionWithSingleParameter'
-        // #2 options per devices that replace 'OptionWithMultipleParameters'
-        // This parser does not have support for default missing values and that is perfectally fine
-        // we should add a counterpart that has a mandatory miner command line​
-
-        //public interface DeviceParameters : IReadOnlyList<string[]> { }
-        //public interface DevicesParametersList : IReadOnlyList<IReadOnlyList<IReadOnlyList<string>>> { }
-        internal static bool IsOptionIsParameter(Parameter parameter) => parameter.Count == 1;
-        internal static bool IsOptionWithSingleParameter(Parameter parameter) => parameter.Count == 2;
-        internal static bool IsOptionWithMultipleParameters(Parameter parameter) => parameter.Count == 3;
-        public static DeviceParameters ToDeviceOptionsAreParameters(DeviceParameters parameters)
+        public class ElpFormat
         {
-            return parameters.Where(IsOptionIsParameter).ToList();
-        }
-        public static DeviceParameters ToDeviceOptionsWithSingleParameter(DeviceParameters parameters)
-        {
-            return parameters.Where(IsOptionWithSingleParameter).ToList();
-        }
-        public static DeviceParameters ToDeviceOptionsWithMultipleParameters(DeviceParameters parameters)
-        {
-            return parameters.Where(IsOptionWithMultipleParameters).ToList();
+            public Parameters MinerParameters { get; set; }
+            public Parameters AlgorithmParameters { get; set; }
+            public DevicesParametersList DevicesParametersList { get; set; }
         }
 
-        private static string DevicesStringForFlag(string flag, IEnumerable<DeviceParameters> parameters)
+        public static ElpFormat ReadJson(string path)
         {
-            var flagParams = parameters
-                .Select(p => p.FirstOrDefault(o => o[0] == flag));
-            var delimiter = flagParams.FirstOrDefault()[2];
-            var values = string.Join(delimiter, flagParams.Select(o => o[1]).ToArray());
-            var mask = flag.EndsWith("=") ? "{0}{1}" : "{0} {1}";
-            return string.Format(mask, flag, values);
+            var elp = JsonConvert.DeserializeObject<ElpFormat>(File.ReadAllText(path));
+            return elp;
         }
 
-        private static bool CheckIfCanGroup(List<string> aP, DeviceParameters b_Parameters)
+        internal enum ParameterType
         {
-            var bParams = b_Parameters.Where(bP => bP[0] == aP[0]);
-
-            var canGroup = bParams.Count() == 1;
-
-            return canGroup;
+            OptionIsParameter = 1,
+            OptionWithSingleParameter = 2,
+            OptionWithMultipleParameters = 3
         }
 
-        private static bool CheckIfCanGroupSingle(List<string> aP, DeviceParameters b_Parameters)
+        internal static bool IsParameterOfType(Parameter parameter, ParameterType type) => parameter.Count == (int)type;
+        private static Parameters FilterParametersOfType(Parameters parameters, ParameterType type)
         {
-            var bParams = b_Parameters.Where(bP => bP[0] == aP[0]);
-
-            var canGroup = bParams.Count() == 1 && 
-                bParams.All(bP => bP[1] == aP[1]);
-
-            return canGroup;
+            return parameters.Where(p => IsParameterOfType(p, type)).ToList();
         }
 
-        private static bool CheckIfCanGroupMultiple(List<string> aP, DeviceParameters b_Parameters)
+        private static bool IsValidParameter(Parameter parameter)
         {
-            var bParams = b_Parameters.Where(bP => bP[0] == aP[0] );
+            foreach (ParameterType type in Enum.GetValues(typeof(ParameterType)))
+            {
+                if (IsParameterOfType(parameter, type)) return true;
+            }
 
-            var canGroup = bParams.Count() == 1 && 
-                bParams.All(bP => bP[2] == aP[2]);
-
-            return canGroup;
+            return false;
         }
 
-        public static bool CheckIfCanGroup(DeviceParameters a, DeviceParameters b)
+        private static bool CheckIfCanGroup(Parameter aP, Parameter bP, ParameterType type)
+        {
+            if (!IsParameterOfType(aP, type) || !IsParameterOfType(bP, type)) return false;
+            if (aP[0] != bP[0]) return false;
+            if (type == ParameterType.OptionWithSingleParameter && aP[1] != bP[1]) return false;
+            if (type == ParameterType.OptionWithMultipleParameters && aP[2] != bP[2]) return false;
+
+            return true;
+        }
+
+        private static bool CheckIfCanGroup(Parameter aP, Parameters b_Parameters, ParameterType type)
+        {
+            return b_Parameters.Count(bP => CheckIfCanGroup(aP, bP, type)) == 1;
+        }
+
+        private static bool CheckIfCanGroup(Parameters a, Parameters b, ParameterType type)
+        {
+            return a.All(aP => CheckIfCanGroup(aP, b, type)) && b.All(bP => CheckIfCanGroup(bP, a, type));
+        }
+
+        private static bool CheckIfCanGroup(Parameters a, Parameters b)
         {
             if (a == null || b == null) return false;
 
-            var a_Parameters = ToDeviceOptionsAreParameters(a);
-            var b_Parameters = ToDeviceOptionsAreParameters(b);
-            var a_SingleParameters = ToDeviceOptionsWithSingleParameter(a);
-            var b_SingleParameters = ToDeviceOptionsWithSingleParameter(b);
-            var a_MultipleParameters = ToDeviceOptionsWithMultipleParameters(a);
-            var b_MultipleParameters = ToDeviceOptionsWithMultipleParameters(b);
+            foreach (ParameterType type in Enum.GetValues(typeof(ParameterType)))
+            {
+                var a_types = FilterParametersOfType(a, type);
+                var b_types = FilterParametersOfType(b, type);
+                if(!CheckIfCanGroup(a_types, b_types, type) && a_types.Count > 0 && b_types.Count > 0) return false;
+            }
 
-            var aCanGroupWithB = a_Parameters.All(aP => CheckIfCanGroup(aP, b_Parameters));
-            var bCanGroupWithA = b_Parameters.All(bP => CheckIfCanGroup(bP, a_Parameters));
-            var aCanGroupWithBSingle = a_SingleParameters.All(aP => CheckIfCanGroupSingle(aP, b_SingleParameters));
-            var bCanGroupWithASingle = b_SingleParameters.All(bP => CheckIfCanGroupSingle(bP, a_SingleParameters));
-            var aCanGroupWithBMultiple = a_MultipleParameters.All(aP => CheckIfCanGroupMultiple(aP, b_MultipleParameters));
-            var bCanGroupWithAMultiple = b_MultipleParameters.All(bP => CheckIfCanGroupMultiple(bP, a_MultipleParameters));
-
-            return aCanGroupWithB && bCanGroupWithA && a_Parameters.Count == b_Parameters.Count &&
-                aCanGroupWithBSingle && bCanGroupWithASingle && a_SingleParameters.Count == b_SingleParameters.Count && 
-                aCanGroupWithBMultiple && bCanGroupWithAMultiple && a_MultipleParameters.Count == b_MultipleParameters.Count;
+            return true;
         }
-        private static bool CheckIfCanGroup(DevicesParametersList devicesParameters)
+        public static bool CheckIfCanGroup(DevicesParametersList devicesParameters)
         {
             foreach (var a in devicesParameters)
             {
@@ -120,23 +103,36 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             return true;
         }
 
-        public static string Parse(DeviceParameters minerParameters, DeviceParameters algorithmParameters, DevicesParametersList devicesParameters)
+        private static string DevicesStringForFlag(string flag, Parameters parameters)
         {
-            if (devicesParameters == null || devicesParameters.Count == 0) return "";
+            var flagParams = parameters.FirstOrDefault(o => o[0] == flag);
+            var delimiter = flagParams.FirstOrDefault()[2];
+            var values = string.Join(delimiter, flagParams.Select(o => o[1]).ToArray());
+            var mask = flag.EndsWith("=") ? "{0}{1}" : "{0} {1}";
+            return string.Format(mask, flag, values);
+        }
+
+        public static string Parse(Parameters minerParameters, Parameters algorithmParameters, DevicesParametersList devicesParameters)
+        {
+            if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
             if (!CheckIfCanGroup(devicesParameters)) return "";
 
-            var options = devicesParameters.Select(ToDeviceOptionsAreParameters).SelectMany(x => x).GroupBy(p => p[0]).Select(grp => grp.First()).SelectMany(x => x);
-            var singleOptions = devicesParameters.Select(ToDeviceOptionsWithSingleParameter).SelectMany(x => x).GroupBy(p => p[0]).Select(grp => grp.First()).SelectMany(x => x);
-            var multipleOptions = devicesParameters
-                .Select(ToDeviceOptionsWithMultipleParameters);
+            var options = devicesParameters.Select(d => d.First()).Select(x => IsParameterOfType(x, ParameterType.OptionIsParameter));
+            var singleOptions = devicesParameters.First();
+            //var multipleOptions = devicesParameters.First(d => d.All(x => IsParameterOfType(x, ParameterType.OptionWithSingleParameter)));
 
             var miner = minerParameters.SelectMany(x => x).ToList();
             var algo = algorithmParameters.SelectMany(x => x).ToList();
-            var ss = multipleOptions.SelectMany(d => d.Select(o => o[0]));
-            var allFlags = new HashSet<string>(ss);
-            var deviceFlagValues = allFlags.Select(flag => DevicesStringForFlag(flag, multipleOptions));
+            //var ss = multipleOptions.SelectMany(d => d.Select(o => o[0]));
+            //var allFlags = new HashSet<string>((IEnumerable<string>)ss);
+            //var deviceFlagValues = allFlags.Select(flag => DevicesStringForFlag(flag, multipleOptions));
 
-            var elp = string.Join(" ", miner) + " " + string.Join(" ", algo) + " " + string.Join(" ", options) + " " + string.Join(" ", singleOptions) + " " + string.Join(" ", deviceFlagValues);
+            var elp = string.Join(" ", miner);
+            if (algo.Count > 0) elp += " " + string.Join(" ", algo);
+            if (options.Any()) elp += " " + string.Join(" ", options);
+            if (singleOptions.Any()) elp += " " + string.Join(" ", singleOptions);
+            //if (deviceFlagValues.Any()) elp += " " + string.Join(" ", deviceFlagValues);
+
             return elp;
         }
     }
