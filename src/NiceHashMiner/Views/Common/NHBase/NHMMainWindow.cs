@@ -26,6 +26,7 @@ namespace NiceHashMiner.Views.Common.NHBase
             PluginsButton,
             SettingsButton,
             NotificationsButton,
+            ParameterOverviewButton,
             //HelpButton,
         };
 
