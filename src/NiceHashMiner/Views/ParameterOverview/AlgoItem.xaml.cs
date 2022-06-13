@@ -28,8 +28,6 @@ namespace NiceHashMiner.Views.ParameterOverview
         private void DropDownDevices_Button_Click(object sender, RoutedEventArgs e)
         {
             var tb = e.Source as ToggleButton;
-            //if (EnableDisableCheckBox == tb) return; // don't trigger algo dropdown if we click disable button
-            //if (ToggleButtonActions == tb) return; // don't trigger algo dropdown if we click disable button
             if (tb.IsChecked.Value)
             {
                 Expand();
