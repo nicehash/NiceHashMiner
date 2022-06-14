@@ -1,4 +1,4 @@
-﻿using NHM.MinerPluginToolkitV1.CommandLine;
+using NHM.MinerPluginToolkitV1.CommandLine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,13 +26,13 @@ namespace NHM.MinerPluginToolkitV1Test
         public void TestJsonDeserializer()
         {
             ElpFormat DeserializeTest(string path) => ReadJson(path);
-            Assert.IsNotNull(DeserializeTest(@"C:\Users\zigat\Desktop\json_test.txt"));
+            Assert.IsNotNull(DeserializeTest(@"..\..\..\CommandLine\command_line01.json"));
         }
 
         [TestMethod]
         public void TestMinerExtraParametersParse()
         {
-            var elps = ReadJson(@"C:\Users\zigat\Desktop\json_test.txt");
+            var elps = ReadJson(@"..\..\..\CommandLine\command_line01.json");
             var miner = elps.MinerParameters;
             var algo = elps.AlgorithmParameters;
             var devices = elps.DevicesParametersList;

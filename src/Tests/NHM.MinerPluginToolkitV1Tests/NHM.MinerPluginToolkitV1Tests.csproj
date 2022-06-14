@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
+    <ProjectReference Include="..\..\NHM.MinerPluginToolkitV1\NHM.MinerPluginToolkitV1.csproj" />
   </ItemGroup>
 
 </Project>

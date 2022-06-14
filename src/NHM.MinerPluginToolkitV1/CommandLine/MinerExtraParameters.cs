@@ -117,14 +117,14 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
             if (!CheckIfCanGroup(devicesParameters)) return "";
 
-            var options = devicesParameters.Select(d => d.First()).Select(x => IsParameterOfType(x, ParameterType.OptionIsParameter));
-            var singleOptions = devicesParameters.First();
-            //var multipleOptions = devicesParameters.First(d => d.All(x => IsParameterOfType(x, ParameterType.OptionWithSingleParameter)));
+            var options = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionIsParameter).SelectMany(x => x);
+            var singleOptions = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionWithSingleParameter).SelectMany(x => x);
+            //var multipleOptions = devicesParameters.SelectMany(p => FilterParametersOfType(p, ParameterType.OptionWithMultipleParameters)).ToList();
 
             var miner = minerParameters.SelectMany(x => x).ToList();
             var algo = algorithmParameters.SelectMany(x => x).ToList();
-            //var ss = multipleOptions.SelectMany(d => d.Select(o => o[0]));
-            //var allFlags = new HashSet<string>((IEnumerable<string>)ss);
+            //var ss = multipleOptions.SelectMany(d => d);
+            //var allFlags = new HashSet<string>(ss);
             //var deviceFlagValues = allFlags.Select(flag => DevicesStringForFlag(flag, multipleOptions));
 
             var elp = string.Join(" ", miner);
