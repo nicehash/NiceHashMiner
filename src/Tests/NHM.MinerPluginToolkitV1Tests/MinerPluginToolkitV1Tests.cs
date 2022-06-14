@@ -30,7 +30,7 @@ namespace NHM.MinerPluginToolkitV1Test
         }
 
         [TestMethod]
-        public void TestMinerExtraParametersParse()
+        public void TestBasicELPs()
         {
             var elps = ReadJson(@"..\..\..\CommandLine\command_line01.json");
             var miner = elps.MinerParameters;
@@ -38,9 +38,58 @@ namespace NHM.MinerPluginToolkitV1Test
             var devices = elps.DevicesParametersList;
 
             string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
-            Assert.AreEqual("--apiport 4109 --test --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
+            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
             Assert.AreNotEqual("--apiport 4000 --coin ETH --zombie-mode 1,2", ParseTest(miner, algo, devices));
             Assert.AreNotEqual("--apiport 4000 --disablewatchdog 1 --coin ETH --pool nhmp.auto.nicehash.com:443 --makex --test 3 --zombie-mode 1,2", ParseTest(miner, algo, devices));
         }
+
+        [TestMethod]
+        public void TestDeviceAlgoSameELPs()
+        {
+            var elps = ReadJson(@"..\..\..\CommandLine\command_line02.json");
+            var miner = elps.MinerParameters;
+            var algo = elps.AlgorithmParameters;
+            var devices = elps.DevicesParametersList;
+
+            string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
+            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
+        }
+
+        [TestMethod]
+        public void TestDeviceMinerSameELPs()
+        {
+            var elps = ReadJson(@"..\..\..\CommandLine\command_line03.json");
+            var miner = elps.MinerParameters;
+            var algo = elps.AlgorithmParameters;
+            var devices = elps.DevicesParametersList;
+
+            string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
+            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
+        }
+
+        [TestMethod]
+        public void TestAlgoMinerSameELPs()
+        {
+            var elps = ReadJson(@"..\..\..\CommandLine\command_line04.json");
+            var miner = elps.MinerParameters;
+            var algo = elps.AlgorithmParameters;
+            var devices = elps.DevicesParametersList;
+
+            string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
+            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
+        }
+
+        [TestMethod]
+        public void TestDeviceAlgoMinerSameELPs()
+        {
+            var elps = ReadJson(@"..\..\..\CommandLine\command_line05.json");
+            var miner = elps.MinerParameters;
+            var algo = elps.AlgorithmParameters;
+            var devices = elps.DevicesParametersList;
+
+            string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
+            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
+        }
     }
 }
+

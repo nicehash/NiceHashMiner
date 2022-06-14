@@ -1,7 +1,6 @@
 {
   "MinerParameters": [
-    ["--apiport", "4109"],
-    ["--test"]
+    ["--apiport", "4109"]
   ],
   "AlgorithmParameters" : [
     ["--coin", "ETH"],

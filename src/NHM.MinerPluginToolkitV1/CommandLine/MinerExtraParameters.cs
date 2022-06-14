@@ -103,9 +103,10 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             return true;
         }
 
-        private static string DevicesStringForFlag(string flag, Parameters parameters)
+        private static string DevicesStringForFlag(string flag, IEnumerable<Parameters> parameters)
         {
-            var flagParams = parameters.FirstOrDefault(o => o[0] == flag);
+            var flagParams = parameters
+                .Select(p => p.FirstOrDefault(o => o[0] == flag));
             var delimiter = flagParams.FirstOrDefault()[2];
             var values = string.Join(delimiter, flagParams.Select(o => o[1]).ToArray());
             var mask = flag.EndsWith("=") ? "{0}{1}" : "{0} {1}";
@@ -117,21 +118,23 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
             if (!CheckIfCanGroup(devicesParameters)) return "";
 
-            var options = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionIsParameter).SelectMany(x => x);
-            var singleOptions = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionWithSingleParameter).SelectMany(x => x);
-            //var multipleOptions = devicesParameters.SelectMany(p => FilterParametersOfType(p, ParameterType.OptionWithMultipleParameters)).ToList();
+            var options = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionIsParameter).SelectMany(x => x).ToList();
+            var singleOptions = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionWithSingleParameter).SelectMany(x => x).ToList();
+            var multipleOptions = devicesParameters
+                .Select(p => FilterParametersOfType(p, ParameterType.OptionWithMultipleParameters));
+            var ss = multipleOptions.SelectMany(p => p.Select(x => x[0]));
+            var allFlags = new HashSet<string>(ss);
+            var deviceFlagValues = allFlags.Select(flag => DevicesStringForFlag(flag, multipleOptions));
+            var check = devicesParameters.SelectMany(x => x).ToList();
 
-            var miner = minerParameters.SelectMany(x => x).ToList();
-            var algo = algorithmParameters.SelectMany(x => x).ToList();
-            //var ss = multipleOptions.SelectMany(d => d);
-            //var allFlags = new HashSet<string>(ss);
-            //var deviceFlagValues = allFlags.Select(flag => DevicesStringForFlag(flag, multipleOptions));
-
-            var elp = string.Join(" ", miner);
-            if (algo.Count > 0) elp += " " + string.Join(" ", algo);
+            options.AddRange(singleOptions);
+            options.AddRange(deviceFlagValues);
+            var algo = algorithmParameters.Where(p => check.All(o => o[0] != p[0]));
+            var miner = minerParameters.Where(p => check.All(o => o[0] != p[0]) && algo.All(a=> a[0] != p[0]));
+            var elp = "";
+            if (miner.Any()) elp += string.Join(" ", miner.SelectMany(x => x));
+            if (algo.Any()) elp += " " + string.Join(" ", algo.SelectMany(x => x));
             if (options.Any()) elp += " " + string.Join(" ", options);
-            if (singleOptions.Any()) elp += " " + string.Join(" ", singleOptions);
-            //if (deviceFlagValues.Any()) elp += " " + string.Join(" ", deviceFlagValues);
 
             return elp;
         }
