@@ -164,7 +164,7 @@
                 </Grid>
             </ToggleButton>
         </Grid>
-        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="Transparent" Visibility="Collapsed" Width="Auto" Margin="40,20,40,0">
+        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="Transparent" Visibility="Collapsed" Width="auto" Margin="40,20,40,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -174,27 +174,44 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" Margin="38,3,10,3" Style="{StaticResource StatusColumnTitle}">Flags</TextBlock>
-                <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource StatusColumnTitle}">Delimiter</TextBlock>
-                <TextBox Grid.Row="1" Grid.Column="0" Style="{StaticResource inputBox}" Margin="38,3,10,3" MinWidth="130" Width="auto" x:Name="test3"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource inputBox}" Margin="0,3,10,3" MinWidth="130" Width="auto" x:Name="test4"/>
-            </Grid>
-            <Separator Grid.Row="1" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="0.4*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="1" Margin="12,0,0,0" Style="{StaticResource StatusColumnTitle}">Values</TextBlock>
+                <Grid Width="auto" Margin="18,0,0,0" Grid.Column="1" x:Name="FlagDelimGrid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="180"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Flag and delimiter</TextBlock>
+                        <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test4"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Flag and delimiter</TextBlock>
+                        <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test5"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Flag and delimiter</TextBlock>
+                        <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test6"/>
+                    </StackPanel>
+                    <!--<StackPanel Grid.Column="3">
+                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Flag and delimiter</TextBlock>
+                        <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test7"/>
+                    </StackPanel>-->
+                </Grid>
             </Grid>
-            <ItemsControl Grid.Row="3" ItemsSource="{Binding Devices}">
+            <!--<Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.4*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel x:Name="ValuePanel" Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Margin="19,0,0,0" Style="{StaticResource StatusColumnTitle}">Values</TextBlock>
+                </StackPanel>
+            </Grid>-->
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical"/>
@@ -206,7 +223,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Separator Grid.Row="4" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
+            <Separator Grid.Row="2" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
         </Grid>
     </Grid>
 </UserControl>

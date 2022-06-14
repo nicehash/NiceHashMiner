@@ -135,7 +135,38 @@
             <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="DeviceEntry"  HorizontalContentAlignment="Stretch">
                 <Grid Background="Transparent" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.6*" />
+                        <ColumnDefinition Width="0.4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Column="0" HorizontalAlignment="Left"  VerticalAlignment="Center" Orientation="Horizontal" >
+                        <TextBlock MinWidth="50" MaxHeight="40" Style="{DynamicResource local.TextBoxCol}" Text="{Binding Dev.Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                    </WrapPanel>
+                    <Grid Grid.Column="1" x:Name="DeviceValueGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="180"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel  Grid.Column="0">
+                            <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Value</TextBlock>
+                            <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test4"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Value</TextBlock>
+                            <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test5"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Value</TextBlock>
+                            <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test6"/>
+                        </StackPanel>
+                        <!--<StackPanel Grid.Column="3">
+                            <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Value</TextBlock>
+                            <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test7"/>
+                        </StackPanel>-->
+                    </Grid>
+                    <!--<Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.4*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <WrapPanel Grid.Row="0"  HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
@@ -146,7 +177,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" Style="{StaticResource inputBox}" Margin="0,3,10,3" Width="auto"  MinWidth="45" x:Name="test1"/>
-                    </Grid>
+                    </Grid>-->
                 </Grid>
             </ToggleButton>
         </Grid>
