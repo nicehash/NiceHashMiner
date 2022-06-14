@@ -90,6 +90,18 @@ namespace NHM.MinerPluginToolkitV1Test
             string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
             Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
         }
+
+        [TestMethod]
+        public void TestComplexELPs()
+        {
+            var elps = ReadJson(@"..\..\..\CommandLine\command_line06.json");
+            var miner = elps.MinerParameters;
+            var algo = elps.AlgorithmParameters;
+            var devices = elps.DevicesParametersList;
+
+            string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
+            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test --disable-watchdog 1 --lhr-mode 1,2 --core 451,808", ParseTest(miner, algo, devices));
+        }
     }
 }
 
