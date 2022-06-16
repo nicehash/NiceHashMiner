@@ -158,9 +158,6 @@
         <!-- NVIDIA/CUDA -->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="wp_cuda">
             <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
-            <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.NVIDIAP0State}"
-                                        Label="NVIDIA P0 State"
-                                        Description="{StaticResource nvidiaP0State}"/>
             <WrapPanel Orientation="Horizontal">
                 <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.UseOptimizationProfiles}"
                                         IsEnabled="{Binding GPUProfileManager.IsSystemElevated}"

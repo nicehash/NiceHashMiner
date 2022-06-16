@@ -61,17 +61,13 @@ namespace NHMCore
                 // STEP +3
                 string detectionStepMessage(DeviceDetectionStep step)
                 {
-                    switch (step)
+                    return step switch
                     {
-                        case DeviceDetectionStep.CPU:
-                            return Tr("Checking CPU Info");
-                        case DeviceDetectionStep.NVIDIA_CUDA:
-                            return Tr("Querying CUDA devices");
-                        case DeviceDetectionStep.AMD_OpenCL:
-                            return Tr("Checking AMD OpenCL GPUs");
-                        default: //DeviceDetectionStep.WMIWMIVideoControllers
-                            return Tr("Checking Windows Video Controllers");
-                    }
+                        DeviceDetectionStep.CPU => Tr("Checking CPU Info"),
+                        DeviceDetectionStep.NVIDIA_CUDA => Tr("Querying CUDA devices"),
+                        DeviceDetectionStep.AMD_OpenCL => Tr("Checking AMD OpenCL GPUs"),
+                        _ => Tr("Checking Windows Video Controllers"), //DeviceDetectionStep.WMIWMIVideoControllers
+                    };
                 };
                 var devDetectionProgress = new Progress<DeviceDetectionStep>(step =>
                 {

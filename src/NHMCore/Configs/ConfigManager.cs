@@ -34,7 +34,7 @@ namespace NHMCore.Configs
         {
             try
             {
-                var backupZipPath = Paths.RootPath("backups", $"configs_{backupVersion.ToString()}.zip");
+                var backupZipPath = Paths.RootPath("backups", $"configs_{backupVersion}.zip");
                 var dirPath = Path.GetDirectoryName(backupZipPath);
                 Paths.EnsureDirectoryPath(dirPath);
                 ZipFile.CreateFromDirectory(Paths.ConfigsPath(), backupZipPath);
@@ -49,7 +49,7 @@ namespace NHMCore.Configs
         {
             try
             {
-                var backupZipPath = Paths.RootPath("backups", $"configs_{backupVersion.ToString()}.zip");
+                var backupZipPath = Paths.RootPath("backups", $"configs_{backupVersion}.zip");
                 if (File.Exists(backupZipPath))
                 {
                     Directory.Delete(Paths.ConfigsPath(), true);

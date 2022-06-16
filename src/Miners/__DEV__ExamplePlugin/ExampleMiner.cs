@@ -123,7 +123,7 @@ namespace Example
             // prepare a bat script as this will simulate our miner
             var batFileContents = new StringBuilder();
             batFileContents.AppendLine($"echo \"{"I am a fake ExampleMiner from ExamplePlugin"}\"");
-            batFileContents.AppendLine($"echo \"{$"Currently mining algorithm {_algorithmType.ToString()}"}\"");
+            batFileContents.AppendLine($"echo \"{$"Currently mining algorithm {_algorithmType}"}\"");
             batFileContents.AppendLine($"echo \"{$"On mining location {_miningLocation}"}\"");
             batFileContents.AppendLine($"echo \"{$"With username {_username}"}\"");
             batFileContents.AppendLine($"echo \"{$"With devices:"}\"");

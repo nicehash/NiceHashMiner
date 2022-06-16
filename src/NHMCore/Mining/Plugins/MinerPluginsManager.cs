@@ -612,7 +612,7 @@ namespace NHMCore.Mining.Plugins
                 .Where(kvp => kvp.Value.Count > 0)
                 .Select(kvp => kvp.Key);
             var devRank = AvailableDevices.Devices
-                .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
+                .Where(d => supportedDevices.Contains($"{d.DeviceType}"))
                 .Count();
             return devRank;
         }
@@ -816,32 +816,30 @@ namespace NHMCore.Mining.Plugins
             var addSuccess = false;
             var installSuccess = false;
             var installResult = PluginInstallProgressState.Canceled;
-            using (var minerInstall = new MinerPluginInstallTask())
-            using (var tcs = CancellationTokenSource.CreateLinkedTokenSource(stop, minerInstall.CancelInstallToken))
+            using var minerInstall = new MinerPluginInstallTask();
+            using var tcs = CancellationTokenSource.CreateLinkedTokenSource(stop, minerInstall.CancelInstallToken);
+            try
             {
-                try
+                PluginInstaller.InstallPlugin(pluginUUID);
+                var pluginPackageInfo = PluginsPackagesInfosCRs[pluginUUID];
+                addSuccess = MinerPluginInstallTasks.TryAdd(pluginUUID, minerInstall);
+                if (progress != null)
                 {
-                    PluginInstaller.InstallPlugin(pluginUUID);
-                    var pluginPackageInfo = PluginsPackagesInfosCRs[pluginUUID];
-                    addSuccess = MinerPluginInstallTasks.TryAdd(pluginUUID, minerInstall);
-                    if (progress != null)
-                    {
-                        progress?.Report(Tuple.Create(PluginInstallProgressState.Pending, 0));
-                        minerInstall.AddProgress(progress);
-                    }
-                    installResult = await DownloadAndInstall(pluginPackageInfo, minerInstall, tcs.Token);
-                    installSuccess = installResult == PluginInstallProgressState.Success;
+                    progress?.Report(Tuple.Create(PluginInstallProgressState.Pending, 0));
+                    minerInstall.AddProgress(progress);
                 }
-                finally
-                {
-                    Logger.Info("MinerPluginsManager", $"DownloadAndInstall {pluginUUID} result: {installResult}");
-                    PluginInstaller.InstalledPluginStatus(pluginUUID, installSuccess);
-                    MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
-                    if (addSuccess) BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
+                installResult = await DownloadAndInstall(pluginPackageInfo, minerInstall, tcs.Token);
+                installSuccess = installResult == PluginInstallProgressState.Success;
+            }
+            finally
+            {
+                Logger.Info("MinerPluginsManager", $"DownloadAndInstall {pluginUUID} result: {installResult}");
+                PluginInstaller.InstalledPluginStatus(pluginUUID, installSuccess);
+                MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
+                if (addSuccess) BlacklistedPlugins.RemoveFromBlacklist(pluginUUID);
 
 
-                    AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, installSuccess);
-                }
+                AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, installSuccess);
             }
         }
 

@@ -70,21 +70,19 @@ namespace NHM.MinersDownloader
         {
             var downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(url));
             var downloadStatus = false;
-            using (var client = new System.Net.WebClient())
+            using var client = new System.Net.WebClient();
+            client.Proxy = null;
+            client.DownloadProgressChanged += (s, e1) =>
             {
-                client.Proxy = null;
-                client.DownloadProgressChanged += (s, e1) =>
-                {
-                    progress?.Report(e1.ProgressPercentage);
-                };
-                client.DownloadFileCompleted += (s, e) =>
-                {
-                    downloadStatus = !e.Cancelled && e.Error == null;
-                };
-                stop.Register(client.CancelAsync);
-                // Starts the download
-                await client.DownloadFileTaskAsync(new Uri(url), downloadFileLocation);
-            }
+                progress?.Report(e1.ProgressPercentage);
+            };
+            client.DownloadFileCompleted += (s, e) =>
+            {
+                downloadStatus = !e.Cancelled && e.Error == null;
+            };
+            stop.Register(client.CancelAsync);
+            // Starts the download
+            await client.DownloadFileTaskAsync(new Uri(url), downloadFileLocation);
             return (downloadStatus, downloadFileLocation);
         }
 

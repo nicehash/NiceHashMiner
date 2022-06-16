@@ -11,29 +11,24 @@ namespace NiceHashMiner.Converters
     {
         private static SolidColorBrush DEFAULT = new SolidColorBrush(Color.FromArgb(50, 00, 150, 50));
 
-        private static object ColorForDeviceState(DeviceState state)
+        private static object ColorForDeviceState(DeviceState state) => state switch
         {
-            switch (state)
-            {
-                case DeviceState.Mining:
-                    return Application.Current.FindResource("NastyGreenBrush");
-                case DeviceState.Benchmarking:
-                case DeviceState.Pending:
-                    return Application.Current.FindResource("PrimaryColorBrush");
-                case DeviceState.Disabled:
-                    return Application.Current.FindResource("Gray1ColorBrush");
-                case DeviceState.Error:
-                    return Application.Current.FindResource("RedDangerColorBrush");
-                case DeviceState.Stopped:
-                    return Application.Current.FindResource("TextColorBrush");
-                default: return DEFAULT;
-            }
-        }
+            DeviceState.Mining => Application.Current.FindResource("NastyGreenBrush"),
+            DeviceState.Benchmarking => Application.Current.FindResource("PrimaryColorBrush"),
+            DeviceState.Pending => Application.Current.FindResource("PrimaryColorBrush"),
+            DeviceState.Disabled => Application.Current.FindResource("Gray1ColorBrush"),
+            DeviceState.Error => Application.Current.FindResource("RedDangerColorBrush"),
+            DeviceState.Stopped => Application.Current.FindResource("TextColorBrush"),
+            _ => DEFAULT,
+        };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is DeviceState state) return ColorForDeviceState(state);
-            return DEFAULT;
+            return value switch
+            {
+                DeviceState state => ColorForDeviceState(state),
+                _ => DEFAULT,
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

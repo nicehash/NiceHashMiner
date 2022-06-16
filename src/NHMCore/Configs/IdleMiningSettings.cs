@@ -65,10 +65,10 @@ namespace NHMCore.Configs
             }
         }
 
-        public static IReadOnlyList<string> IdleCheckTypes { get; } = new List<string>
+        public static IReadOnlyList<string> IdleCheckTypes { get; } = new string[]
         {
-            IdleCheckType.InputTimeout.ToString(),
-            IdleCheckType.SessionLock.ToString(),
+            $"{IdleCheckType.InputTimeout}",
+            $"{IdleCheckType.SessionLock}",
         };
 
         public bool IsIdleCheckTypeInputTimeout

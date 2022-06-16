@@ -48,10 +48,8 @@ namespace NHM.CredentialValidators
 
         private static byte[] Hash(byte[] bytes)
         {
-            using (var hasher = new SHA256Managed())
-            {
-                return hasher.ComputeHash(bytes);
-            }
+            using var hasher = new SHA256Managed();
+            return hasher.ComputeHash(bytes);
         }
 
         private static byte[] SubArray(byte[] data, int index, int length)

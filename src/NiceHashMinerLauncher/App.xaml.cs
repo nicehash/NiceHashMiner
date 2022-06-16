@@ -201,10 +201,8 @@ namespace NiceHashMiner
             EnsureNHMSubKeyCalled = true;
             try
             {
-                using (var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, false))
-                {
-                    if (key == null) Registry.CurrentUser.CreateSubKey(NHM_SUBKEY);
-                }
+                using var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, false);
+                if (key == null) Registry.CurrentUser.CreateSubKey(NHM_SUBKEY);
             }
             catch (Exception e)
             {
@@ -216,10 +214,8 @@ namespace NiceHashMiner
             EnsureNHMSubKey();
             try
             {
-                using (var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, true))
-                {
-                    key.SetValue(subKey, value.ToString());
-                }
+                using var key = Registry.CurrentUser.OpenSubKey(NHM_SUBKEY, true);
+                key.SetValue(subKey, value.ToString());
             }
             catch (Exception e)
             {
@@ -398,97 +394,89 @@ namespace NiceHashMiner
                     run = false;
                     try
                     {
-                        using (var niceHashMiner = new Process { StartInfo = startInfo })
+                        using var niceHashMiner = new Process { StartInfo = startInfo };
+                        var hasStarted = niceHashMiner?.Start();
+                        niceHashMiner?.WaitForExit();
+                        if (afterUpdate == true)
                         {
-                            var hasStarted = niceHashMiner?.Start();
-                            niceHashMiner?.WaitForExit();
-                            if (afterUpdate == true)
+                            afterUpdate = false;
+                            startInfo.Arguments = startInfo.Arguments.Replace("-updated", "");
+                        }
+
+
+                        // TODO 
+                        Console.WriteLine(niceHashMiner.ExitCode);
+                        //in case of crash try to restart the program
+                        if (niceHashMiner.ExitCode != 0)
+                        {
+                            var endTime = DateTime.UtcNow;
+
+                            string path = GetRootPath("logs", "watchdogLog.txt");
+                            if (!File.Exists(path))
                             {
-                                afterUpdate = false;
-                                startInfo.Arguments = startInfo.Arguments.Replace("-updated", "");
-                            }
-
-
-                            // TODO 
-                            Console.WriteLine(niceHashMiner.ExitCode);
-                            //in case of crash try to restart the program
-                            if (niceHashMiner.ExitCode != 0)
-                            {
-                                var endTime = DateTime.UtcNow;
-
-                                string path = GetRootPath("logs", "watchdogLog.txt");
-                                if (!File.Exists(path))
-                                {
-                                    using (var sw = File.CreateText(path))
-                                    {
-                                        sw.WriteLine($"Exit code: {niceHashMiner.ExitCode} ---- {endTime}");
-                                    }
-                                }
-                                else
-                                {
-                                    using (var sw = File.AppendText(path))
-                                    {
-                                        sw.WriteLine($"Exit code: {niceHashMiner.ExitCode} ---- {endTime}");
-                                    }
-                                }
-                                //try to re-run the NHM
-                                run = true;
-
-                                //check if too many restarts
-                                var elapsedSeconds = (endTime - startTime).TotalSeconds;
-                                if (elapsedSeconds < minRestartTimeInSeconds)
-                                {
-                                    restartCount++;
-                                }
-                                else
-                                {
-                                    restartCount = 0;
-                                }
-                                if (restartCount >= maxRestartCount)
-                                {
-                                    using (var sw = File.AppendText(path))
-                                    {
-                                        sw.WriteLine($"Too many restarts! Closing nhm");
-                                    }
-                                    MessageBox.Show("NHM experienced too many crashes recently, therefore it will close itself", "Too many restarts");
-                                    run = false;
-                                }
+                                using var sw = File.CreateText(path);
+                                sw.WriteLine($"Exit code: {niceHashMiner.ExitCode} ---- {endTime}");
                             }
                             else
                             {
-                                // if exit code is 0 then check runasadmin or restart
-                                if (IsRunAsAdmin())
-                                {
-                                    RunAsAdmin.SelfElevate();
-                                }
-                                else if (IsRestart())
-                                {
-                                    ClearAllDoFiles();
-                                    run = true;
-                                }
-                                else if (IsUpdate())
-                                {
-                                    run = true; // mark to false if updating doesn't fail
-                                    ClearAllDoFiles();
-                                    var exePath = Assembly.GetExecutingAssembly().Location;
-                                    var randomPart = DateTime.UtcNow.Millisecond;
-                                    var tmpLauncher = GetRootPath($"tmp.nhm_updater_{randomPart}.exe");
-                                    File.Copy(exePath, tmpLauncher, true);
-                                    var doUpdate = new Process
-                                    {
-                                        StartInfo = new ProcessStartInfo
-                                        {
-                                            FileName = tmpLauncher,
-                                            Arguments = "-update",
-                                            WindowStyle = ProcessWindowStyle.Normal
-                                        }
-                                    };
-                                    afterUpdate = true;
-                                    var updateStarted = doUpdate.Start();
-                                    run = !updateStarted; // set if we are good
-                                }
-                                else { /*ELSE*/ }
+                                using var sw = File.AppendText(path);
+                                sw.WriteLine($"Exit code: {niceHashMiner.ExitCode} ---- {endTime}");
                             }
+                            //try to re-run the NHM
+                            run = true;
+
+                            //check if too many restarts
+                            var elapsedSeconds = (endTime - startTime).TotalSeconds;
+                            if (elapsedSeconds < minRestartTimeInSeconds)
+                            {
+                                restartCount++;
+                            }
+                            else
+                            {
+                                restartCount = 0;
+                            }
+                            if (restartCount >= maxRestartCount)
+                            {
+                                using var sw = File.AppendText(path);
+                                sw.WriteLine($"Too many restarts! Closing nhm");
+                                MessageBox.Show("NHM experienced too many crashes recently, therefore it will close itself", "Too many restarts");
+                                run = false;
+                            }
+                        }
+                        else
+                        {
+                            // if exit code is 0 then check runasadmin or restart
+                            if (IsRunAsAdmin())
+                            {
+                                RunAsAdmin.SelfElevate();
+                            }
+                            else if (IsRestart())
+                            {
+                                ClearAllDoFiles();
+                                run = true;
+                            }
+                            else if (IsUpdate())
+                            {
+                                run = true; // mark to false if updating doesn't fail
+                                ClearAllDoFiles();
+                                var exePath = Assembly.GetExecutingAssembly().Location;
+                                var randomPart = DateTime.UtcNow.Millisecond;
+                                var tmpLauncher = GetRootPath($"tmp.nhm_updater_{randomPart}.exe");
+                                File.Copy(exePath, tmpLauncher, true);
+                                var doUpdate = new Process
+                                {
+                                    StartInfo = new ProcessStartInfo
+                                    {
+                                        FileName = tmpLauncher,
+                                        Arguments = "-update",
+                                        WindowStyle = ProcessWindowStyle.Normal
+                                    }
+                                };
+                                afterUpdate = true;
+                                var updateStarted = doUpdate.Start();
+                                run = !updateStarted; // set if we are good
+                            }
+                            else { /*ELSE*/ }
                         }
                     }
                     catch (Exception ex)
@@ -510,35 +498,31 @@ namespace NiceHashMiner
         {
             try
             {
-                using (var archive = ZipFile.OpenRead(zipLocation))
+                using var archive = ZipFile.OpenRead(zipLocation);
+                float entriesCount = archive.Entries.Count;
+                float extractedEntries = 0;
+                foreach (var entry in archive.Entries)
                 {
-                    float entriesCount = archive.Entries.Count;
-                    float extractedEntries = 0;
-                    foreach (var entry in archive.Entries)
+                    if (stop.IsCancellationRequested) break;
+
+                    extractedEntries += 1;
+                    var isDirectory = entry.Name == "";
+                    if (isDirectory) continue;
+
+                    var prog = ((extractedEntries / entriesCount) * 100.0f);
+                    progress?.Report((int)prog);
+
+                    var extractPath = Path.Combine(unzipLocation, entry.FullName);
+                    var dirPath = Path.GetDirectoryName(extractPath);
+                    if (!Directory.Exists(dirPath))
                     {
-                        if (stop.IsCancellationRequested) break;
-
-                        extractedEntries += 1;
-                        var isDirectory = entry.Name == "";
-                        if (isDirectory) continue;
-
-                        var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        progress?.Report((int)prog);
-
-                        var extractPath = Path.Combine(unzipLocation, entry.FullName);
-                        var dirPath = Path.GetDirectoryName(extractPath);
-                        if (!Directory.Exists(dirPath))
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
-                        }
-                        //entry.ExtractToFile(extractPath, true);
-
-                        using (var zipStream = entry.Open())
-                        using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write)) // using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
-                        {
-                            await zipStream.CopyToAsync(fileStream);
-                        }
+                        Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
                     }
+                    //entry.ExtractToFile(extractPath, true);
+
+                    using var zipStream = entry.Open();
+                    using var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write); // using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
+                    await zipStream.CopyToAsync(fileStream);
                 }
                 return true;
             }

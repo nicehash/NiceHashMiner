@@ -157,20 +157,20 @@
                 </Grid.ColumnDefinitions>
 
                 <local:PluginIcon Grid.Column="0"
-                                  IsEnabled="{Binding Plugin.Supported}"
+                                  IsEnabled="{Binding Plugin.HasSupportedDevices}"
                                   Style="{StaticResource local.PluginIconStyle}"
                                   Margin="16,9" />
 
                 <UniformGrid Grid.Column="1" Columns="5">
                     <TextBlock
-                        IsEnabled="{Binding Plugin.Supported}"
+                        IsEnabled="{Binding Plugin.HasSupportedDevices}"
                         Style="{StaticResource local.TextBoxPluginName}"
                         Text="{ Binding Plugin.PluginName }"
                         HorizontalAlignment="Left"
                         />
 
                     <TextBlock
-                        IsEnabled="{Binding Plugin.Supported}"
+                        IsEnabled="{Binding Plugin.HasSupportedDevices}"
                         Style="{StaticResource local.TextBoxPluginInfo}"
                         Foreground="{DynamicResource Brushes.Light.Basic.NoticeColor}"
                         Text="Source"
@@ -179,7 +179,7 @@
                         />
 
                     <TextBlock Grid.Column="2"
-                           IsEnabled="{Binding Plugin.Supported}"
+                           IsEnabled="{Binding Plugin.HasSupportedDevices}"
                            Style="{StaticResource local.TextBoxPluginInfo}"
                            Margin="4,0,0,0"
                            Text="{Binding InstallVersionStatus}"/>

@@ -62,49 +62,33 @@ namespace NanoMiner
                 .OrderBy(gpu => gpu.PCIeBusID);
 
             int pcieId = -1;
-            foreach (var gpu in gpus)
-            {
-                _mappedIDs[gpu.UUID] = ++pcieId;
-            }
+            foreach (var gpu in gpus) _mappedIDs[gpu.UUID] = ++pcieId;
             var minDrivers = new Version(455, 23);
-            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(456, 38);
             if (!isDriverSupported)
             {
                 Logger.Error("NanoMinerPlugin", $"GetSupportedAlgorithms installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
             }
-            var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
 
-            foreach (var gpu in supportedGpus)
-            {
-                var algorithms = GetSupportedAlgorithmsForDevice(gpu as BaseDevice);
-                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
-            }
-
+            var supported = gpus
+                .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported))
+                .Cast<BaseDevice>()
+                .Select(gpu => (gpu, algorithms: GetSupportedAlgorithmsForDevice(gpu)))
+                .Where(p => p.algorithms.Any())
+                .ToDictionary(p => p.gpu, p => p.algorithms);
             return supported;
         }
 
-        private static bool IsSupportedAMDDevice(IGpuDevice dev)
-        {
-            var isSupported = dev is AMDDevice;
-            return isSupported;
-        }
+        private static bool IsSupportedAMDDevice(IGpuDevice dev) => dev is AMDDevice;
 
-        private static bool IsSupportedNVIDIADevice(IGpuDevice dev, bool isDriverSupported)
-        {
-            var isSupported = dev is CUDADevice;
-            return isSupported && isDriverSupported;
-        }
+        private static bool IsSupportedNVIDIADevice(IGpuDevice dev, bool isDriverSupported) => isDriverSupported && dev is CUDADevice;
 
-        protected override MinerBase CreateMinerBase()
-        {
-            return new NanoMiner(PluginUUID, _mappedIDs);
-        }
+        protected override MinerBase CreateMinerBase() => new NanoMiner(PluginUUID, _mappedIDs);
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedIDs.Count == 0) return;
-            var minerBinPath = GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().binPath;
 
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-d");
             var mappedDevs = DevicesListParser.ParseNanoMinerOutput(output, devices.ToList());
@@ -119,7 +103,7 @@ namespace NanoMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().cwdPath;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "service.dll", "nanominer.exe" });
         }
 

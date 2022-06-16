@@ -10,25 +10,20 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
     {
         private static bool IsStateVisible(AlgorithmStatus state)
         {
-            switch (state)
+            return state switch
             {
-                case AlgorithmStatus.Benchmarking:
-                case AlgorithmStatus.Mining:
-                    return true;
-                default:
-                    return false;
-            }
+                AlgorithmStatus.Benchmarking or AlgorithmStatus.Mining => true,
+                _ => false,
+            };
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch (value)
+            return value switch
             {
-                case AlgorithmStatus state when IsStateVisible(state):
-                    return Visibility.Visible;
-                default:
-                    return Visibility.Hidden;
-            }
+                AlgorithmStatus state when IsStateVisible(state) => Visibility.Visible,
+                _ => Visibility.Hidden,
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

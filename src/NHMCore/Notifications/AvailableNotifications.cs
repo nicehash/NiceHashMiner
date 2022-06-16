@@ -61,7 +61,7 @@ namespace NHMCore.Notifications
 
         public static void CreateDemoMiningInfo()
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.DemoMining, Tr("Demo mode mining"), Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer.\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.DemoMining, Tr("Demo mode mining"), Tr("You have not entered a mining address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer.\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -228,18 +228,6 @@ namespace NHMCore.Notifications
                 Info = Tr("Help"),
                 Action = () => { Process.Start(Links.AVHelp); }
             };
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
-        public static void CreateEnableComputeModeAMDInfo()
-        {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.ComputeModeAMD, Tr("Switch compute/graphic mode"), Tr("Would you like to switch between compute and graphic mode for optimized profit?"));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Process.Start(Links.AMDComputeModeHelp); }
-            };
-            notification.NotificationUUID = "AMDModeSwitchNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -471,8 +459,8 @@ namespace NHMCore.Notifications
             if (recommends.Any())
             {
                 content += Tr("Lower than recommended") + ":\n";
-                var nvidias = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
-                var amds = recommends.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
+                var nvidias = recommends.Where(dev => dev.Item2.DeviceType == DeviceType.NVIDIA);
+                var amds = recommends.Where(dev => dev.Item2.DeviceType == DeviceType.AMD);
                 if (nvidias.Any()) content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
                 if (amds.Any())
                 {
@@ -483,8 +471,8 @@ namespace NHMCore.Notifications
             if (criticals.Any())
             {
                 content += Tr("Lower than required") + ":\n";
-                var nvidias = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.NVIDIA);
-                var amds = criticals.Where(dev => dev.Item2.DeviceType == NHM.Common.Enums.DeviceType.AMD);
+                var nvidias = criticals.Where(dev => dev.Item2.DeviceType == DeviceType.NVIDIA);
+                var amds = criticals.Where(dev => dev.Item2.DeviceType == DeviceType.AMD);
                 if (nvidias.Any()) content += "\tNvidia: at least " + nvidias.FirstOrDefault().driverCheckReturn.minVersion + "\n";
                 if (amds.Any())
                 {

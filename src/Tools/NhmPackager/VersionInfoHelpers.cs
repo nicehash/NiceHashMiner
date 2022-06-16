@@ -41,7 +41,7 @@ namespace NhmPackager
             string NSIS_GENERATED_FILE_TEMPLATE =
             "########################################\n" +
             "## This is generated file\n" +
-            $"## Date: {DateTime.Now.ToString()}\n\n" +
+            $"## Date: {DateTime.Now}\n\n" +
 
             "; Product and version\n" +
             $"!define BASE_NAME \"{BASE_NAME}\"\n" +

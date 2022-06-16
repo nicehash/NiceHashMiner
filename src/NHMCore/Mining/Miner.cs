@@ -182,11 +182,11 @@ namespace NHMCore.Mining
                 apiData = new ApiData();
                 var perDevicePowerDict = new Dictionary<string, int>();
                 var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var perDeviceSpeeds = _miningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => (type, 0d))));
+                var perDeviceSpeeds = _miningPairs.Select(pair => (pair.Device.UUID, algoSpeeds: pair.Algorithm.IDs.Select(type => (type, 0d))));
                 foreach (var kvp in perDeviceSpeeds)
                 {
-                    var uuid = kvp.Item1; // kvp.UUID compiler doesn't recognize ValueTypes lib???
-                    perDeviceSpeedsDict[uuid] = kvp.Item2.ToList();
+                    var uuid = kvp.UUID;
+                    perDeviceSpeedsDict[uuid] = kvp.algoSpeeds.ToList();
                     perDevicePowerDict[uuid] = 0;
                 }
                 apiData.AlgorithmSpeedsPerDevice = perDeviceSpeedsDict;
