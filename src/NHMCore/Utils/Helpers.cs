@@ -57,37 +57,33 @@ namespace NHMCore.Utils
             // CurrentUser
             try
             {
-                using (var rk = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\Windows Error Reporting"))
+                using var rk = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\Windows Error Reporting");
+                if (rk == null)
                 {
-                    if (rk != null)
-                    {
-                        var o = rk.GetValue("DontShowUI");
-                        if (o != null)
-                        {
-                            var val = (int)o;
-                            Logger.Info("NICEHASH", $"Current DontShowUI value: {val}");
+                    Logger.Info("NICEHASH", "Unable to open SubKey.");
+                    return;
+                }
+                var o = rk.GetValue("DontShowUI");
+                if (o == null)
+                {
+                    Logger.Info("NICEHASH", "Registry key not found .. creating one..");
+                    rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
+                    Logger.Info("NICEHASH", "Setting register value to 1..");
+                    rk.SetValue("DontShowUI", en ? 1 : 0);
+                    return;
+                }
+                var val = (int)o;
+                Logger.Info("NICEHASH", $"Current DontShowUI value: {val}");
 
-                            if (val == 0 && en)
-                            {
-                                Logger.Info("NICEHASH", "Setting register value to 1.");
-                                rk.SetValue("DontShowUI", 1);
-                            }
-                            else if (val == 1 && !en)
-                            {
-                                Logger.Info("NICEHASH", "Setting register value to 0.");
-                                rk.SetValue("DontShowUI", 0);
-                            }
-                        }
-                        else
-                        {
-                            Logger.Info("NICEHASH", "Registry key not found .. creating one..");
-                            rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
-                            Logger.Info("NICEHASH", "Setting register value to 1..");
-                            rk.SetValue("DontShowUI", en ? 1 : 0);
-                        }
-                    }
-                    else
-                        Logger.Info("NICEHASH", "Unable to open SubKey.");
+                if (val == 0 && en)
+                {
+                    Logger.Info("NICEHASH", "Setting register value to 1.");
+                    rk.SetValue("DontShowUI", 1);
+                }
+                else if (val == 1 && !en)
+                {
+                    Logger.Info("NICEHASH", "Setting register value to 0.");
+                    rk.SetValue("DontShowUI", 0);
                 }
             }
             catch (Exception ex)

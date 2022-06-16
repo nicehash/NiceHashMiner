@@ -34,29 +34,25 @@ namespace NHMCore.Utils
         {
             try
             {
-                using (Stream stream = File.OpenRead(fileLocation))
-                using (var archive = OpenZipArchive(password, stream))
-                using (var reader = archive.ExtractAllEntries())
+                using Stream stream = File.OpenRead(fileLocation);
+                using var archive = OpenZipArchive(password, stream);
+                using var reader = archive.ExtractAllEntries();
+                float extractedEntries = 0;
+                float entriesCount = archive.Entries.Count;
+                while (reader.MoveToNextEntry())
                 {
-                    float extractedEntries = 0;
-                    float entriesCount = archive.Entries.Count;
-                    while (reader.MoveToNextEntry())
+                    extractedEntries += 1;
+                    if (!reader.Entry.IsDirectory)
                     {
-                        extractedEntries += 1;
-                        if (!reader.Entry.IsDirectory)
-                        {
-                            var extractPath = Path.Combine(extractLocation, reader.Entry.Key);
-                            var dirPath = Path.GetDirectoryName(extractPath);
-                            Paths.EnsureDirectoryPath(dirPath);
-                            using (var entryStream = reader.OpenEntryStream())
-                            using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
-                            {
-                                await entryStream.CopyToAsync(fileStream);
-                            }
-                        }
-                        var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        progress?.Report((int)prog);
+                        var extractPath = Path.Combine(extractLocation, reader.Entry.Key);
+                        var dirPath = Path.GetDirectoryName(extractPath);
+                        Paths.EnsureDirectoryPath(dirPath);
+                        using var entryStream = reader.OpenEntryStream();
+                        using var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write);
+                        await entryStream.CopyToAsync(fileStream);
                     }
+                    var prog = ((extractedEntries / entriesCount) * 100.0f);
+                    progress?.Report((int)prog);
                 }
                 return true;
             }
@@ -77,29 +73,25 @@ namespace NHMCore.Utils
         {
             try
             {
-                using (Stream stream = File.OpenRead(fileLocation))
-                using (var archive = OpenSevenZipArchive(password, stream))
-                using (var reader = archive.ExtractAllEntries())
+                using Stream stream = File.OpenRead(fileLocation);
+                using var archive = OpenSevenZipArchive(password, stream);
+                using var reader = archive.ExtractAllEntries();
+                float extractedEntries = 0;
+                float entriesCount = archive.Entries.Count;
+                while (reader.MoveToNextEntry())
                 {
-                    float extractedEntries = 0;
-                    float entriesCount = archive.Entries.Count;
-                    while (reader.MoveToNextEntry())
+                    extractedEntries += 1;
+                    if (!reader.Entry.IsDirectory)
                     {
-                        extractedEntries += 1;
-                        if (!reader.Entry.IsDirectory)
-                        {
-                            var extractPath = Path.Combine(extractLocation, reader.Entry.Key);
-                            var dirPath = Path.GetDirectoryName(extractPath);
-                            Paths.EnsureDirectoryPath(dirPath);
-                            using (var entryStream = reader.OpenEntryStream())
-                            using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
-                            {
-                                await entryStream.CopyToAsync(fileStream);
-                            }
-                        }
-                        var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        progress?.Report((int)prog);
+                        var extractPath = Path.Combine(extractLocation, reader.Entry.Key);
+                        var dirPath = Path.GetDirectoryName(extractPath);
+                        Paths.EnsureDirectoryPath(dirPath);
+                        using var entryStream = reader.OpenEntryStream();
+                        using var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write);
+                        await entryStream.CopyToAsync(fileStream);
                     }
+                    var prog = ((extractedEntries / entriesCount) * 100.0f);
+                    progress?.Report((int)prog);
                 }
                 return true;
             }

@@ -182,11 +182,11 @@ namespace NHMCore.Mining
                 apiData = new ApiData();
                 var perDevicePowerDict = new Dictionary<string, int>();
                 var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var perDeviceSpeeds = _miningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => (type, 0d))));
+                var perDeviceSpeeds = _miningPairs.Select(pair => (pair.Device.UUID, algoSpeeds: pair.Algorithm.IDs.Select(type => (type, 0d))));
                 foreach (var kvp in perDeviceSpeeds)
                 {
-                    var uuid = kvp.Item1; // kvp.UUID compiler doesn't recognize ValueTypes lib???
-                    perDeviceSpeedsDict[uuid] = kvp.Item2.ToList();
+                    var uuid = kvp.UUID;
+                    perDeviceSpeedsDict[uuid] = kvp.algoSpeeds.ToList();
                     perDevicePowerDict[uuid] = 0;
                 }
                 apiData.AlgorithmSpeedsPerDevice = perDeviceSpeedsDict;
@@ -234,10 +234,7 @@ namespace NHMCore.Mining
             MiningDataStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             await _miner.StopMiningTask();
             _algos.ForEach(a => a.IsCurrentlyMining = false);
-            if (_miner is IDisposable disposableMiner)
-            {
-                disposableMiner.Dispose();
-            }
+            if (_miner is IDisposable d) d.Dispose();
         }
 
 
@@ -266,70 +263,68 @@ namespace NHMCore.Mining
             try
             {
                 var firstStart = true;
-                using (_endMiner = new CancellationTokenSource())
-                using (var linkedEndMiner = CancellationTokenSource.CreateLinkedTokenSource(stop, _endMiner.Token))
+                _endMiner = new CancellationTokenSource();
+                using var linkedEndMiner = CancellationTokenSource.CreateLinkedTokenSource(stop, _endMiner.Token);
+                Logger.Info(MinerTag(), $"Starting miner watchdog task");
+                while (!linkedEndMiner.IsCancellationRequested && (restartCount < maxRestartCount))
                 {
-                    Logger.Info(MinerTag(), $"Starting miner watchdog task");
-                    while (!linkedEndMiner.IsCancellationRequested && (restartCount < maxRestartCount))
+                    var startTime = DateTime.UtcNow;
+                    try
                     {
-                        var startTime = DateTime.UtcNow;
-                        try
+                        if (!firstStart)
                         {
-                            if (!firstStart)
-                            {
-                                Logger.Info(MinerTag(), $"Restart Mining in {MiningSettings.Instance.MinerRestartDelayMS}ms");
-                                AvailableNotifications.CreateRestartedMinerInfo(DateTime.UtcNow.ToLocalTime(), _plugin.Name);
-                                await TaskHelpers.TryDelay(MiningSettings.Instance.MinerRestartDelayMS, linkedEndMiner.Token);
-                            }
-                            var result = await StartAsync(linkedEndMiner.Token, username);
-                            if (firstStart)
-                            {
-                                firstStart = false;
-                                tsc.SetResult(result);
-                            }
-                            if (result is bool ok && ok)
-                            {
-                                var runningMinerTask = _miner.MinerProcessTask;
-                                if (_algos.Any(a => a.AlgorithmName == "RandomXmonero")) _ = XMRingStartedWaitTime(runningMinerTask, linkedEndMiner.Token);
-                                _ = MinerStatsLoop(runningMinerTask, linkedEndMiner.Token);
-                                await runningMinerTask;
-                                // TODO log something here
-                                Logger.Info(MinerTag(), $"Running Miner Task Completed");
-                            }
-                            else
-                            {
-                                // TODO check if the miner file is missing or locked and blacklist the algorithm for a certain period of time 
-                                Logger.Error(MinerTag(), $"StartAsync result: {result}");
-                            }
+                            Logger.Info(MinerTag(), $"Restart Mining in {MiningSettings.Instance.MinerRestartDelayMS}ms");
+                            AvailableNotifications.CreateRestartedMinerInfo(DateTime.UtcNow.ToLocalTime(), _plugin.Name);
+                            await TaskHelpers.TryDelay(MiningSettings.Instance.MinerRestartDelayMS, linkedEndMiner.Token);
                         }
-                        catch (TaskCanceledException e)
+                        var result = await StartAsync(linkedEndMiner.Token, username);
+                        if (firstStart)
                         {
-                            Logger.Debug(MinerTag(), $"RunMinerWatchDogLoop TaskCanceledException: {e.Message}");
-                            return;
+                            firstStart = false;
+                            tsc.SetResult(result);
                         }
-                        catch (Exception e)
+                        if (result is bool ok && ok)
                         {
-                            Logger.Error(MinerTag(), $"RunMinerWatchDogLoop Exception: {e.Message}");
+                            var runningMinerTask = _miner.MinerProcessTask;
+                            if (_algos.Any(a => a.AlgorithmName == "RandomXmonero")) _ = XMRingStartedWaitTime(runningMinerTask, linkedEndMiner.Token);
+                            _ = MinerStatsLoop(runningMinerTask, linkedEndMiner.Token);
+                            await runningMinerTask;
+                            // TODO log something here
+                            Logger.Info(MinerTag(), $"Running Miner Task Completed");
                         }
-                        finally
+                        else
                         {
-                            var endTime = DateTime.UtcNow;
-                            var elapsedSeconds = (endTime - startTime).TotalSeconds - (MiningSettings.Instance.MinerRestartDelayMS/1000);
-                            if (elapsedSeconds < minRestartTimeInSeconds)
-                            {
-                                restartCount++;
-                            }
-                            else
-                            {
-                                restartCount = 0;
-                            }
-                            if (restartCount >= maxRestartCount)
-                            {
-                                var firstAlgo = _algos.FirstOrDefault();
-                                Random randWait = new Random();
-                                firstAlgo.IgnoreUntil = DateTime.UtcNow.AddMinutes(randWait.Next(20, 30));
-                                await MiningManager.MinerRestartLoopNotify();
-                            }
+                            // TODO check if the miner file is missing or locked and blacklist the algorithm for a certain period of time 
+                            Logger.Error(MinerTag(), $"StartAsync result: {result}");
+                        }
+                    }
+                    catch (TaskCanceledException e)
+                    {
+                        Logger.Debug(MinerTag(), $"RunMinerWatchDogLoop TaskCanceledException: {e.Message}");
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(MinerTag(), $"RunMinerWatchDogLoop Exception: {e.Message}");
+                    }
+                    finally
+                    {
+                        var endTime = DateTime.UtcNow;
+                        var elapsedSeconds = (endTime - startTime).TotalSeconds - (MiningSettings.Instance.MinerRestartDelayMS / 1000);
+                        if (elapsedSeconds < minRestartTimeInSeconds)
+                        {
+                            restartCount++;
+                        }
+                        else
+                        {
+                            restartCount = 0;
+                        }
+                        if (restartCount >= maxRestartCount)
+                        {
+                            var firstAlgo = _algos.FirstOrDefault();
+                            Random randWait = new Random();
+                            firstAlgo.IgnoreUntil = DateTime.UtcNow.AddMinutes(randWait.Next(20, 30));
+                            await MiningManager.MinerRestartLoopNotify();
                         }
                     }
                 }
@@ -337,6 +332,7 @@ namespace NHMCore.Mining
             finally
             {
                 Logger.Info(MinerTag(), $"Exited miner watchdog");
+                _endMiner?.Dispose();
             }
         }
 

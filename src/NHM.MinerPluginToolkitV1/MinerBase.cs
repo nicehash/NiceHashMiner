@@ -314,9 +314,7 @@ namespace NHM.MinerPluginToolkitV1
             // tsc for started process
             var startProcessTaskCompletionSource = new TaskCompletionSource<object>();
 
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
+            var (binPath, binCwd) = GetBinAndCwdPaths();
             var commandLine = MiningCreateCommandLine();
             var environmentVariables = GetEnvironmentVariables();
             var stopActionExec = false;

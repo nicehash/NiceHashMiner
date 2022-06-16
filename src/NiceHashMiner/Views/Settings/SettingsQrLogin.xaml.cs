@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using NHMCore;
+﻿using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 

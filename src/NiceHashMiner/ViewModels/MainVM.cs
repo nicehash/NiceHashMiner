@@ -6,7 +6,6 @@ using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
-using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
 using NHMCore.Switching;
 using NHMCore.Utils;

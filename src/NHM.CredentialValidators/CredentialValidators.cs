@@ -8,7 +8,18 @@ namespace NHM.CredentialValidators
         public static bool ValidateBitcoinAddress(string address, bool isProduction = true)
         {
             if (!isProduction) return !string.IsNullOrEmpty(address) && !string.IsNullOrWhiteSpace(address);
-            return ValidateBitcoinAddressBase58(address, isProduction) || ValidateBitcoinAddressBech32(address, isProduction);
+            return ValidateBitcoinAddressBase58(address, isProduction)
+                || ValidateBitcoinAddressBech32(address, isProduction)
+                || ValidateMiningAddress(address, isProduction);
+        }
+
+        public static bool ValidateMiningAddress(string address, bool isProduction = true)
+        {
+            bool isProductionValidPrefix() => isProduction && address.StartsWith("NH");
+            bool isTestnetValidPrefix() => !isProduction && address.StartsWith("PT");
+            if (string.IsNullOrEmpty(address) || string.IsNullOrWhiteSpace(address)) return false;
+            if (!isProductionValidPrefix() && !isTestnetValidPrefix()) return false;
+            return BTC_Base58.ValidateBitcoinAddress(address.Substring(2));
         }
 
         public static bool ValidateBitcoinAddressBase58(string address, bool isProduction = true)

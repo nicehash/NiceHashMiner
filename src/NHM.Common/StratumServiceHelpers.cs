@@ -133,7 +133,7 @@ namespace NHM.Common
         // miningLocation is now auto location but keep it for backward compatibility
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         {
-            if (AlgorithmType.NONE <= algorithmType) return "";
+            if (algorithmType <= AlgorithmType.NONE) return "";
             var url = GetLocationUrlInner(algorithmType, conectionType);
             if (UseDNSQ && url != "") {
                 try

@@ -89,7 +89,7 @@ namespace NHMCore.Mining.Grouping
                 GPUProfileManager.Instance.Stop(miningPairs);
                 algo.ClearBenchmarkPending();
                 algo.IsBenchmarking = false;
-                if(miner is IDisposable disp) disp.Dispose();
+                if(miner != null && miner is IDisposable disp) disp?.Dispose();
             }
 
             return ret;
