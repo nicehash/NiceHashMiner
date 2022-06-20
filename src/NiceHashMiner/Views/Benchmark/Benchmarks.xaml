@@ -109,13 +109,6 @@
                 Text="{Binding BenchmarkSettings.BenchmarksPendingStr}"
                 />
 
-            <ProgressBar Style="{StaticResource progressStyle}"
-                Grid.Row="1" Grid.Column="0"
-                Margin="40,0,0,0" Width="240" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Collapsed" />
-            <CheckBox Grid.Row="1" Grid.Column="1"
-                      HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed">
-                <TextBlock>Start mining after benchmark</TextBlock>
-            </CheckBox>
             <Button 
                 Grid.Row="0" Grid.Column="3"
                 Grid.RowSpan="2"
