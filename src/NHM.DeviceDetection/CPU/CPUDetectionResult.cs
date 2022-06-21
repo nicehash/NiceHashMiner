@@ -7,6 +7,6 @@ namespace NHM.DeviceDetection.CPU
         public int NumberOfCPUCores { get; internal set; }
         public int VirtualCoresCount { get; internal set; }
         public bool IsHyperThreadingEnabled => VirtualCoresCount > NumberOfCPUCores;
-        public List<CpuInfo> CpuInfos { get; internal set; }
+        public List<CpuInfo> CpuInfos { get; internal set; } = new List<CpuInfo>();
     }
 }

@@ -2,8 +2,7 @@
 
 namespace NHM.DeviceDetection.OpenCL.Models
 {
-    [Serializable]
-    internal class OpenCLDevice
+    internal record OpenCLDevice
     {
         public int BUS_ID { get; set; } = -1; // -1 indicates that it is not set
         public uint DeviceID { get; set; }

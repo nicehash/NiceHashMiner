@@ -4,6 +4,9 @@ namespace NHM.Common.Device
 {
     public class CUDADevice : BaseDevice, IGpuDevice
     {
+        
+        public static string RawDetectionOutput = string.Empty;
+
         // TODO does it make sense to set here the actual installed NVIDIA drivers??
         public static Version INSTALLED_NVIDIA_DRIVERS = new Version(0, 0); // or use just null
 
@@ -17,6 +20,7 @@ namespace NHM.Common.Device
         public int SM_major { get; init; }
         public int SM_minor { get; init; }
         public bool IsLHR { get; init; }
+        public string RawDeviceData { get; init; }
 
         public void SetIsOpenCLBackendEnabled(bool enabled)
         {

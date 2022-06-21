@@ -1,9 +1,10 @@
 ﻿using NHM.Common.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace NHM.Common.Device
 {
-    public class CpuID
+    public record CpuID
     {
         public bool AMD { get; init; }
         public bool Intel { get; init; }
@@ -20,6 +21,8 @@ namespace NHM.Common.Device
 
     public class CPUDevice : BaseDevice
     {
+        public static string RawDetectionOutput = string.Empty;
+
         public IReadOnlyList<CpuExtensionType> SupportedCpuExtensions { get; init; }
 
         public int PhysicalProcessorCount { get; init; }

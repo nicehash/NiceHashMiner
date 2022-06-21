@@ -296,12 +296,6 @@ namespace NHMCore.Notifications
             }
         }
 
-        public static void CreateOpenClFallbackInfo()
-        {
-            var notification = new Notification(NotificationsType.Error, NotificationsGroup.OpenClFallback, Tr("Fallback of OpenCL"), Tr("Please check if AMD drivers are installed properly. If they are please remove Intel video driver."));
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
         public static void CreateNoAvailableAlgorithmsInfo(int deviceId, string deviceName)
         {
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.NoAvailableAlgorithms, Tr("No available algorithms"), Tr("There are no available algorithms to mine with GPU #{0} {1}. Please check you rig stability and stability of installed plugins.", deviceId.ToString(), deviceName));
@@ -334,12 +328,6 @@ namespace NHMCore.Notifications
         public static void CreateFailedNVMLLoadInfo()
         {
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NVMLLoadFail, Tr("Failed NVML Load"), Tr("NVML was not loaded. Try to reinstall drivers - recommended standard drivers over DCH. Also you could try to restart Windows."));
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
-        public static void CreateWarningNVIDIADCHInfo()
-        {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NvidiaDCH, Tr("Nvidia DCH drivers detected"), Tr("Detected drivers are not recommended for mining with NiceHash Miner. Please change them for optimal performance."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 

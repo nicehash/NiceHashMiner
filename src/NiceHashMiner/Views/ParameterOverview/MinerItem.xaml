@@ -1,0 +1,197 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.ParameterOverview.MinerItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels.Models"
+             xmlns:local="clr-namespace:NiceHashMiner.Views.ParameterOverview"
+             mc:Ignorable="d" 
+             d:DesignHeight="53"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:MinerData}">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter  Property="FontSize" Value="10"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxCol">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxColDev" BasedOn="{StaticResource local.TextBoxCol}">
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush}" />
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxColStatus" BasedOn="{StaticResource local.TextBoxCol}">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+        </Style>
+        <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                </Trigger>
+
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <RotateTransform Angle="90" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+                    <Setter Property="LineHeight" Value="1.57" />
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="AlgorithmHeaderTextBoxButton" TargetType="Button" BasedOn="{StaticResource ButtonTextBlock}">
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                    <Setter Property="MaxWidth" Value="100" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Background="Transparent" x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" MinWidth="320" MinHeight="56" Margin="40,0,40,0">
+            <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=AlgorithmsGridToggleButtonHidden, Path=IsChecked}" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click"  HorizontalContentAlignment="Stretch">
+                <Grid Background="Transparent" HorizontalAlignment="Stretch" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
+                        <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                    </WrapPanel>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Style="{StaticResource inputBox}" Margin="0,3,10,3" Width="auto" MinWidth="150" x:Name="SingleParameterInput"/>
+                        <TextBox Grid.Column="1" Style="{StaticResource inputBox}" Margin="0,3,10,3" Width="auto" MinWidth="150" x:Name="DualParameterInput" 
+                                 TextChanged="DualParameterInput_TextChanged" 
+                                 LostFocus="DualParameterInput_LostFocus"
+                                 KeyUp="DualParameterInput_KeyUp"/>
+                    </Grid>
+                    <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
+                        <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
+                    </WrapPanel>
+                </Grid>
+            </ToggleButton>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="Transparent" Visibility="Collapsed" Width="Auto" Margin="40,20,40,0">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock  Margin="24,0,0,0" Grid.Column="0" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                        <TextBlock  Margin="-21,0,0,0" Grid.Column="1" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                    </Grid>
+                </Grid>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Algos}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:AlgoItem DataContext="{Binding .}" Margin="0,8,0,0" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Separator Grid.Row="2" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

@@ -12,32 +12,12 @@ using System.Text;
 using System.Threading.Tasks;
 using static NhmPackager.PackagerFileDirectoryUtils;
 using static NhmPackager.PackagerPaths;
+using System.Net.Http;
 
 namespace NhmPackager
 {
     class Program
     {
-        private static bool ExecNhmpackerCreateInstallers(string exePath)
-        {
-            using var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = exePath,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
-            };
-            var ok = proc.Start();
-            while (!proc.StandardOutput.EndOfStream)
-            {
-                string line = proc.StandardOutput.ReadLine();
-                Logger.Info("nhmpacker", line);
-            }
-            return ok && proc.ExitCode == 0;
-        }
-
         private static bool Exec7ZipCreatePasswordArchive(string password, string archiveName, string releasePath)
         {
             using var proc = new Process
@@ -60,17 +40,33 @@ namespace NhmPackager
             return ok && proc.ExitCode == 0;
         }
 
-        private static void Add7zToPath()
+        private static async Task EnsurePackerBinsBundle()
         {
-            // Add common folder to path for launched processes
-            var sevenZipPath = GetRootPath("nhmpacker", "bins_bundle", "7z");
-            if (Directory.Exists(sevenZipPath))
+            var packerBins = GetRootPath("packer_bins_bundle");
+            if (Directory.Exists(packerBins)) return;
+            // download and clean scope
             {
-                const string pathKey = "PATH";
-                var pathVar = Environment.GetEnvironmentVariable(pathKey);
-                pathVar += $";{sevenZipPath}";
-                Environment.SetEnvironmentVariable(pathKey, pathVar);
+                using var client = new HttpClient();
+                using var s = await client.GetStreamAsync("https://github.com/nicehash/NHM_MinerPluginsDownloads/releases/download/v18.x/packer_bins_bundle.zip");
+                using var fs = new FileStream(GetRootPath("packer_bins_bundle.zip"), FileMode.CreateNew);
+                await s.CopyToAsync(fs);
             }
+            if (FileHelpers.GetFileSHA256Checksum(GetRootPath("packer_bins_bundle.zip")) != "bd02ea33e8904c9f662dc6176c37badb7ea534cf6ce916be026b50eec498416d") throw new Exception("packer_bins_bundle.zip wrong checksum");
+            ZipFile.ExtractToDirectory(GetRootPath("packer_bins_bundle.zip"), GetRootPath());
+        }
+
+        private static async Task AddPackerBinsBundleToPath()
+        {
+            await EnsurePackerBinsBundle();
+            // Add common folder to path for launched processes
+            var sevenZipPath = GetRootPath("packer_bins_bundle", "7z");
+            var nsisPath = GetRootPath("packer_bins_bundle", "NSIS");
+            if (!Directory.Exists(sevenZipPath)) throw new Exception($"packer_bins_bundle missing path {sevenZipPath}");
+            if (!Directory.Exists(nsisPath)) throw new Exception($"packer_bins_bundle missing path {nsisPath}");
+            const string pathKey = "PATH";
+            var pathVar = Environment.GetEnvironmentVariable(pathKey);
+            pathVar += $";{sevenZipPath};{nsisPath}";
+            Environment.SetEnvironmentVariable(pathKey, pathVar);
         }
 
         private static void CopyInstallerScriptIfAvailable()
@@ -95,13 +91,11 @@ namespace NhmPackager
         {
             try
             {
-                var randomPart = DateTime.UtcNow.Millisecond;
+                var randomPart = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 var tmpWorkFolder = $"tmp_{randomPart}";
                 Logger.ConfigureWithFile(GetRootPath($"{tmpWorkFolder}_log.txt"));
                 Logger.ConfigureConsoleLogging(Level.Info);
-                // TODO check if this already exists
                 SetTemporaryWorkFolder(tmpWorkFolder);
-                Add7zToPath();
 
                 if (args.Contains("-info"))
                 {
@@ -109,14 +103,34 @@ namespace NhmPackager
                     return;
                 }
 
+                await AddPackerBinsBundleToPath();
+
                 // #1
                 // assume we are in installer folder
-                var nhmReleaseFolder = GetRootPath(@"..\", "Release");
-                ExecXCopy(nhmReleaseFolder, GetTemporaryWorkFolder("Release"));
+                Logger.Info("Main", "Preparing Release START");
+                ExecXCopy(GetRootPath(@"..\", "Release"), GetTemporaryWorkFolder("Release"));
+                Logger.Info("Main", "Preparing Release: Removing redundant files");
+                DeletePathIfExists(GetTemporaryWorkFolder("Release", "app", "win10-x64"));
+                DeletePathIfExists(GetTemporaryWorkFolder("Release", "build_settings.json"));
+                Logger.Info("Main", "Preparing Release Checking version and metadata");
+                var (generatedTemplateLauncher, versionLauncher) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));
+                var (generatedTemplate, version) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "app", "app_nhm.exe"));
+                if (generatedTemplateLauncher != generatedTemplate || versionLauncher != version)
+                {
+                    throw new Exception($"Launcher and App TAG or Version missmatch!!!\n{generatedTemplateLauncher} != {generatedTemplate} \n{versionLauncher} != {version}");
+                }
+                Logger.Info("Main", "Versions and metadata OK");
+                var appDirOld = GetTemporaryWorkFolder("Release", "app");
+                var appDirNew = GetTemporaryWorkFolder("Release", $"app_{version}");
+                Logger.Info("Main", $"moving '{appDirOld}' to '{appDirNew}'");
+                Directory.Move(appDirOld, appDirNew);
+                ZipFile.ExtractToDirectory(GetRootPath("EULA.zip"), GetTemporaryWorkFolder("Release"));
+                // TODO HERE EXECUTE CREATE UNINSTALER
+                Logger.Info("Main", "Preparing Release DONE. EXECUTE SIG-STAGE #1 NOW. Press any key to continue\n\n");
+                Console.ReadKey();
 
-                // run the plugins packer in the installer
                 Logger.Info("Main", "MinerPluginsPacker.Execute START");
-                MinerPluginsPacker.Execute(GetRootPath(@"..\", "Release", "PluginsToSign"));
+                MinerPluginsPacker.Execute(GetTemporaryWorkFolder("Release", "PluginsToSign"));
                 Logger.Info("Main", "MinerPluginsPacker.Execute DONE. Press any key to continue\n\n");
                 Console.ReadKey();
 
@@ -131,41 +145,7 @@ namespace NhmPackager
                 Directory.Move(GetPluginsPackagesPath(), GetTemporaryWorkFolder("Release", "plugins_packages"));
 
                 // #2 
-                DeletePathIfExists(GetTemporaryWorkFolder("Release", "build_settings.json"));
                 DeletePathIfExists(GetTemporaryWorkFolder("Release", "PluginsToSign"));
-
-                // #3
-                var (generatedTemplateLauncher, versionLauncher) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "NiceHashMiner.exe"));
-                var (generatedTemplate, version) = VersionInfoHelpers.GenerateVariableTemplate(GetTemporaryWorkFolder("Release", "app", "app_nhm.exe"));
-                if (generatedTemplateLauncher != generatedTemplate || versionLauncher != version)
-                {
-                    throw new Exception($"Launcher and App TAG or Version missmatch!!!\n{generatedTemplateLauncher} != {generatedTemplate} \n{versionLauncher} != {version}");
-                }
-                Logger.Info("Main", "ExecPluginsPacker resumming...");
-                // #4 
-                var appDirOld = GetTemporaryWorkFolder("Release", "app");
-                var appDirNew = GetTemporaryWorkFolder("Release", $"app_{version}");
-                Logger.Info("Main", $"moving '{appDirOld}' to '{appDirNew}'");
-                Directory.Move(appDirOld, appDirNew);
-                // #5
-                ZipFile.ExtractToDirectory(GetRootPath("EULA.zip"), GetTemporaryWorkFolder("Release"));
-                // #6 
-                var filesToPackPath = GetTemporaryWorkFolder("_files_to_pack");
-                RecreateDirectoryIfExists(filesToPackPath);
-                // copy template and exe files
-                ExecXCopy(GetTemporaryWorkFolder("Release"), Path.Combine(filesToPackPath, "bins"));
-                ExecXCopy(GetRootPath("nsis_template"), Path.Combine(filesToPackPath, "nsis"));
-                File.WriteAllText(Path.Combine(filesToPackPath, "nsis", "include_common", "packageDefsGenerated.nsh"), generatedTemplate, new UTF8Encoding(true));
-                File.WriteAllText(Path.Combine(filesToPackPath, "version.txt"), version);
-                // delete previous _files_to_pack from nhmpacker
-                var nhmPackerFilesToPack = GetRootPath("nhmpacker", "_files_to_pack");
-                RecreateDirectoryIfExists(nhmPackerFilesToPack);
-                ExecXCopy(filesToPackPath, nhmPackerFilesToPack);
-                RecreateDirectoryIfExists(GetRootPath("nhmpacker", "_files_to_pack", "assets")); // just so the packer works
-                ExecNhmpackerCreateInstallers(GetRootPath("nhmpacker", "nhmpacker.exe"));
-                File.Move(GetRootPath("nhmpacker", $"nhm_windows_{version}.exe"), GetTemporaryWorkFolder($"nhm_windows_{version}.exe"));
-                File.Move(GetRootPath("nhmpacker", $"nhm_windows_updater_{version}.exe"), GetTemporaryWorkFolder($"nhm_windows_updater_{version}.exe"));
-                // move to the temp folder
 
                 // nhm_windows_1.9.2.18_testnetdev.zip
                 // nhm_windows_1.9.2.18_testnet.zip
@@ -192,6 +172,26 @@ namespace NhmPackager
                     Logger.Info("Main", $"FINISHED {zipFileName}.zip package");
                 }
 
+                // #6 
+                var filesToPackPath = GetTemporaryWorkFolder("_files_to_pack");
+                RecreateDirectoryIfExists(filesToPackPath);
+                // copy template and exe files
+                ExecXCopy(GetRootPath("nsis_template"), Path.Combine(filesToPackPath, "nsis"));
+                File.WriteAllText(Path.Combine(filesToPackPath, "nsis", "include_common", "packageDefsGenerated.nsh"), generatedTemplate, new UTF8Encoding(true));
+                
+                NSIS_Helpers.PrepareUninstaller(Path.Combine(filesToPackPath, "nsis"));
+                Logger.Info("Main", "Uninstaller generated. EXECUTE SIG-STAGE #2 NOW. Press any key to continue\n\n");
+                Console.ReadKey();
+
+                NSIS_Helpers.Exec7ZipPackage(GetTemporaryWorkFolder("Release"), Path.Combine(filesToPackPath, "nsis", "dist"));
+                NSIS_Helpers.CallMakeNSIS_Exe(Path.Combine(filesToPackPath, "nsis", "installer.nsi"));
+                NSIS_Helpers.CallMakeNSIS_Exe(Path.Combine(filesToPackPath, "nsis", "updater.nsi"));
+                File.Move(Path.Combine(filesToPackPath, "nsis", "installer.exe"), GetTemporaryWorkFolder($"nhm_windows_{version}.exe"));
+                File.Move(Path.Combine(filesToPackPath, "nsis", "updater.exe"), GetTemporaryWorkFolder($"nhm_windows_updater_{version}.exe"));
+                Logger.Info("Main", "'installer.exe' and 'updater.exe' generated. EXECUTE SIG-STAGE #3 NOW. Press any key to continue\n\n");
+                Console.ReadKey();
+
+                // move to the temp folder
                 Logger.Info("Main", "Clean up temp files...");
                 Directory.Delete(GetTemporaryWorkFolder("_files_to_pack"), true);
                 Directory.Delete(GetTemporaryWorkFolder("Release"), true);

@@ -17,7 +17,6 @@ namespace NHM.DeviceDetection
         // NVIDIA
         public IReadOnlyList<CUDADevice> CUDADevices { get; internal set; }
         public bool HasCUDADevices => CUDADevices != null && CUDADevices.Count > 0;
-        public bool IsDCHDriver { get; internal set; }
         public Version NvidiaDriver { get; internal set; }
         public bool NVIDIADriverObsolete { get; internal set; }
 
@@ -29,7 +28,6 @@ namespace NHM.DeviceDetection
         // AMD
         public IReadOnlyList<AMDDevice> AMDDevices { get; internal set; }
         public bool HasAMDDevices => AMDDevices != null && AMDDevices.Count > 0;
-        public bool IsOpenClFallback { get; internal set; }
         public Version AmdDriver { get; internal set; }
         public bool AMDDriverObsolete { get; internal set; }
 

@@ -67,16 +67,18 @@ namespace NHMCore.Utils
             }
             try
             {
-                var startInfo = new ProcessStartInfo
+                using var VCRedistInstallationProcess = new Process
                 {
-                    FileName = VCRedistInstallerPath(),
-                    Arguments = "/install /quiet /norestart",
-                    UseShellExecute = false,
-                    RedirectStandardError = false,
-                    RedirectStandardOutput = false,
-                    CreateNoWindow = false
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = VCRedistInstallerPath(),
+                        Arguments = "/install /quiet /norestart",
+                        UseShellExecute = false,
+                        RedirectStandardError = false,
+                        RedirectStandardOutput = false,
+                        CreateNoWindow = false
+                    }
                 };
-                using var VCRedistInstallationProcess = new Process { StartInfo = startInfo };
                 VCRedistInstallationProcess.Start();
             }
             catch (Exception e)

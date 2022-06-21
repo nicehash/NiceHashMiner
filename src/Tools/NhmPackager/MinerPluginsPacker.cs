@@ -11,7 +11,6 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using static NhmPackager.PackagerFileDirectoryUtils;
 using static NhmPackager.PackagerPaths;
@@ -164,7 +163,6 @@ namespace NhmPackager
             PluginBase.IS_CALLED_FROM_PACKER = true;
 
             RecreateDirectoryIfExists(GetPluginsPackagesPath());
-            List<string> temporaryPath = new List<string>();
             // get all managed plugin dll's 
             var plugins = Directory.GetFiles(pluginsSearchRoot, "*.dll", SearchOption.AllDirectories)
                 .Where(PathMustContain)
@@ -181,11 +179,8 @@ namespace NhmPackager
                 var dllPackageZip = GetPluginsPackagesPath(pluginZipFileName);
                 Logger.Info("MinerPluginsPacker", $"Packaging: {dllPackageZip}");
                 var fileName = Path.GetFileName(dllFilePath);
-                temporaryPath.Add(dllPackageZip);
-                using (var archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Create))
-                {
-                    archive.CreateEntryFromFile(dllFilePath, fileName);
-                }
+                using var archive = ZipFile.Open(dllPackageZip, ZipArchiveMode.Create);
+                archive.CreateEntryFromFile(dllFilePath, fileName);
             }
             Logger.Info("MinerPluginsPacker", "Packaging pre inastalled plugins:");
             var preInstalledPlugins = plugins.Where(pair => PreInstalledPlugins.Contains(pair.plugin.PluginUUID));
