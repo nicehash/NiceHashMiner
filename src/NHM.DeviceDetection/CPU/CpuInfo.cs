@@ -1,6 +1,6 @@
 ﻿namespace NHM.DeviceDetection.CPU
 {
-    internal struct CpuInfo
+    internal record CpuInfo
     {
         public string VendorID;
         public string Family;

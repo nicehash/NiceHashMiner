@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using NHMCore;
+﻿using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Nhmws;
 using NHMCore.Utils;
 using System;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -33,7 +31,7 @@ namespace NiceHashMiner.Views.Settings
             stopWatch.Start();
 
             var rigID = ApplicationStateManager.RigID();
-            var res = await QrCodeGenerator.RequestNew_QR_Code(_uuid, rigID);
+            var res = await BTC_FromQrCodeAPI.RequestNew_QR_Code(_uuid, rigID);
 
             if (!res)
             {
@@ -88,28 +86,14 @@ namespace NiceHashMiner.Views.Settings
         {
             try
             {
-                using (var client = new HttpClient())
+                var btc = await BTC_FromQrCodeAPI.GetBTCForUUID(_uuid);
+                if (btc == null) return;
+                var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btc);
+                if (ret == NhmwsSetResult.CHANGED)
                 {
-                    var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{_uuid}");
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        var contentString = await resp.Content.ReadAsStringAsync();
-                        if (!string.IsNullOrEmpty(contentString))
-                        {
-                            var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
-                            if (btcResp.btc != null)
-                            {
-                                var ret = await ApplicationStateManager.SetBTCIfValidOrDifferent(btcResp.btc);
-                                if (ret == NhmwsSetResult.CHANGED)
-                                {
-                                    lbl_qr_status.Visibility = Visibility.Visible;
-                                    btn_gen_qr.Visibility = Visibility.Visible;
-                                    lbl_qr_status.Content = Translations.Tr("BTC Address was changed - this code is already used.");
-                                }
-                                return;
-                            }
-                        }
-                    }
+                    lbl_qr_status.Visibility = Visibility.Visible;
+                    btn_gen_qr.Visibility = Visibility.Visible;
+                    lbl_qr_status.Content = Translations.Tr("BTC Address was changed - this code is already used.");
                 }
             }
             catch (Exception ex)

@@ -247,7 +247,6 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
-                                        <!--<ColumnDefinition Width="Auto"/>-->
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
@@ -256,15 +255,9 @@
                                             Grid.Column="0"
                                             Margin="0,0,15,0"/>
                                     
-                                    <!--<ToggleButton x:Name="NotificationsButton" Style="{DynamicResource local.WindowTabButtonNotification}"-->
-                                     <ToggleButton x:Name="NotificationsButton" Style="{DynamicResource bellWindowStyle}"
+                                    <ToggleButton x:Name="NotificationsButton" Style="{DynamicResource bellWindowStyle}"
                                             Grid.Column="1"
                                             Margin="0,0,14,0"/>
-
-                                    <!--<ToggleButton x:Name="HelpButton" Style="{StaticResource infoWindowStyle}"
-                                            Visibility="Collapsed"
-                                            Grid.Column="2"
-                                            Margin="0,0,14,0"/>-->
 
                                     <Button x:Name="MinimizeButton" Style="{StaticResource minimizeWindowStyle}"
                                             Grid.Column="2"

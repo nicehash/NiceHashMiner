@@ -61,6 +61,21 @@ namespace NHM.CredentialValidatorsTests
         }
 
         [TestMethod]
+        public void TestValidateNiceHashMiningAddress()
+        {
+            var tl = new TestLabel { };
+            bool isValid(string btc, bool isProduction) => ValidateMiningAddress(btc, isProduction);
+            Assert.AreEqual(true, isValid("NHbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", true), tl.label());
+            Assert.AreEqual(true, isValid("PTbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", false), tl.label());
+            Assert.AreEqual(false, isValid("whatever", false), tl.label());
+            Assert.AreEqual(false, isValid("", false), tl.label());
+            Assert.AreEqual(false, isValid(" ", false), tl.label());
+            Assert.AreEqual(false, isValid(null, false), tl.label());
+            Assert.AreEqual(false, isValid("NHbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", false), tl.label());
+            Assert.AreEqual(false, isValid("PTbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", true), tl.label());
+        }
+
+        [TestMethod]
         public void TestValidateBitcoinAddress()
         {
             var tl = new TestLabel{ };
@@ -77,6 +92,8 @@ namespace NHM.CredentialValidatorsTests
             Assert.AreEqual(true, isValid("tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsc", false), tl.label());
             Assert.AreEqual(true, isValid("tc1qw508d6qejxtdg4y5r3zarvary0c5xw7kg3g4ty", false), tl.label());
             Assert.AreEqual(false, isValid("bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t5", true), tl.label());
+            Assert.AreEqual(true, isValid("NHbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", true), tl.label());
+            Assert.AreEqual(true, isValid("PTbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", false), tl.label());
         }
 
     }

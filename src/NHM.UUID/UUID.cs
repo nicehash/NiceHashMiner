@@ -76,7 +76,7 @@ namespace NHM.UUID
             try
             {
                 var readValue = Registry.GetValue("HKEY_LOCAL_MACHINE" + @"\SOFTWARE\Microsoft\Cryptography", "MachineGuid", new object());
-                return (true, (string)readValue);
+                return (true, readValue as string);
             }
             catch (Exception e)
             {
@@ -148,23 +148,22 @@ namespace NHM.UUID
 
         private static string GetCpuID()
         {
-            var serial = "N/A";
             try
             {
-                using (var searcher = new ManagementObjectSearcher("Select ProcessorID from Win32_processor"))
-                using (var query = searcher.Get())
+                using var searcher = new ManagementObjectSearcher("Select ProcessorID from Win32_processor");
+                using var query = searcher.Get();
+                var serial = "N/A";
+                foreach (var item in query)
                 {
-                    foreach (var item in query)
-                    {
-                        serial = item.GetPropertyValue("ProcessorID").ToString();
-                    }
+                    serial = item.GetPropertyValue("ProcessorID").ToString();
                 }
+                return serial;
             }
             catch (Exception e)
             {
                 Logger.Error("NHM.UUID", $"Error GetCpuID(): {e.Message}");
             }
-            return serial;
+            return "N/A";
         }
 
         private static string GetExtraRigSeed()

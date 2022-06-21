@@ -9,18 +9,15 @@ namespace NHMCore.Utils
 
         private static TimeUnitType _unitType = TimeUnitType.Day;
 
-        private static double GetTimeUnit(TimeUnitType type)
+        private static double GetTimeUnit(TimeUnitType type) => type switch
         {
-            switch (type)
-            {
-                case TimeUnitType.Hour: return 1.0 / 24.0;
-                case TimeUnitType.Day: return 1;
-                case TimeUnitType.Week: return 7;
-                case TimeUnitType.Month: return 30;
-                case TimeUnitType.Year: return 365;
-                default: return 1; // Day
-            }
-        }
+            TimeUnitType.Hour => 1.0 / 24.0,
+            TimeUnitType.Day => 1,
+            TimeUnitType.Week => 7,
+            TimeUnitType.Month => 30,
+            TimeUnitType.Year => 365,
+            _ => 1, // Day
+        };
 
         public static TimeUnitType UnitType
         {
@@ -35,9 +32,6 @@ namespace NHMCore.Utils
 
         public static event EventHandler<TimeUnitType> OnUnitTypeChanged;
 
-        public static double ConvertFromDay(double value)
-        {
-            return value * TimeUnit;
-        }
+        public static double ConvertFromDay(double value) => value * TimeUnit;
     }
 }

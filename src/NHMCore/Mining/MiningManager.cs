@@ -732,10 +732,10 @@ namespace NHMCore.Mining
             _isProfitable = currentProfitFIAT >= minProfit;
             if (log)
             {
-                Logger.Info(Tag, $"Current global profit = {currentProfitFIAT.ToString("F8")} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/Day");
+                Logger.Info(Tag, $"Current global profit = {currentProfitFIAT:F8} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/Day");
                 if (!_isProfitable)
                 {
-                    Logger.Info(Tag, $"Current global profit = NOT PROFITABLE, MinProfit: {minProfit.ToString("F8")} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/Day");
+                    Logger.Info(Tag, $"Current global profit = NOT PROFITABLE, MinProfit: {minProfit:F8} {BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/Day");
                 }
                 else
                 {

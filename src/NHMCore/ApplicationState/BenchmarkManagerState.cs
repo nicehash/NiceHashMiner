@@ -61,30 +61,32 @@ namespace NHMCore.ApplicationState
 
         public void ComputeDeviceOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var computeDevice = sender as ComputeDevice;
-            if (computeDevice == null) return;
-            if (e.PropertyName == nameof(ComputeDevice.Enabled))
+            if (sender is ComputeDevice computeDevice && computeDevice is not null)
             {
-                foreach (var algorithmContainer in computeDevice.AlgorithmSettings) SetStatus(algorithmContainer);
-            }
-            if (e.PropertyName == nameof(ComputeDevice.State))
-            {
-                lock (_lock)
+                if (e.PropertyName == nameof(ComputeDevice.Enabled))
                 {
-                    var anyToBench = _algorithmsBenchmarksStates.Where(benchStatus => benchStatus.Key.Contains(computeDevice.Uuid)).Where(pair => pair.Value).Count();
-                    _deviceCanStartBenchmarkingStates[computeDevice.Uuid] = computeDevice.State == DeviceState.Stopped && anyToBench > 0;
-                    OnPropertyChanged(nameof(CanStartBenchmarking));
+                    foreach (var algorithmContainer in computeDevice.AlgorithmSettings) SetStatus(algorithmContainer);
+                }
+                if (e.PropertyName == nameof(ComputeDevice.State))
+                {
+                    lock (_lock)
+                    {
+                        var anyToBench = _algorithmsBenchmarksStates.Where(benchStatus => benchStatus.Key.Contains(computeDevice.Uuid)).Where(pair => pair.Value).Count();
+                        _deviceCanStartBenchmarkingStates[computeDevice.Uuid] = computeDevice.State == DeviceState.Stopped && anyToBench > 0;
+                        OnPropertyChanged(nameof(CanStartBenchmarking));
+                    }
                 }
             }
         }
 
         private void AlgorithmContainerOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var algorithmContainer = sender as AlgorithmContainer;
-            if (algorithmContainer == null) return;
-            if (e.PropertyName == nameof(AlgorithmContainer.Status))
+            if (sender is AlgorithmContainer algorithmContainer && algorithmContainer is not null)
             {
-                SetStatus(algorithmContainer);
+                if (e.PropertyName == nameof(AlgorithmContainer.Status))
+                {
+                    SetStatus(algorithmContainer);
+                }
             }
         }
 

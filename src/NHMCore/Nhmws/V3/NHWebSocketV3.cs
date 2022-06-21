@@ -505,7 +505,7 @@ namespace NHMCore.Nhmws.V3
             return userSetResult switch
             {
                 NhmwsSetResult.CHANGED => true, // we return executed
-                NhmwsSetResult.INVALID => throw new RpcException("Bitcoin address invalid", ErrorCode.InvalidUsername),
+                NhmwsSetResult.INVALID => throw new RpcException("Mining Address invalid", ErrorCode.InvalidUsername),
                 NhmwsSetResult.NOTHING_TO_CHANGE => throw new RpcException($"Nothing to change btc \"{btc}\" already set", ErrorCode.RedundantRpc),
                 _ => throw new RpcException($"", ErrorCode.InternalNhmError),
             };

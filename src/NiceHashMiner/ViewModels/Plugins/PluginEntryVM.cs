@@ -104,21 +104,15 @@ namespace NiceHashMiner.ViewModels.Plugins
 
         private static string GetStateProgressText(PluginInstallProgressState state, int progress)
         {
-            switch (state)
+            return state switch
             {
-                case PluginInstallProgressState.Pending:
-                    return Tr("Pending Install");
-                case PluginInstallProgressState.DownloadingMiner:
-                    return Tr("Downloading Miner: {0}%", progress);
-                case PluginInstallProgressState.DownloadingPlugin:
-                    return Tr("Downloading Plugin: {0}%", progress);
-                case PluginInstallProgressState.ExtractingMiner:
-                    return Tr("Extracting Miner: {0}%", progress);
-                case PluginInstallProgressState.ExtractingPlugin:
-                    return Tr("Extracting Plugin: {0}%", progress);
-                default:
-                    return Tr("Pending Install");
-            }
+                PluginInstallProgressState.Pending => Tr("Pending Install"),
+                PluginInstallProgressState.DownloadingMiner => Tr("Downloading Miner: {0}%", progress),
+                PluginInstallProgressState.DownloadingPlugin => Tr("Downloading Plugin: {0}%", progress),
+                PluginInstallProgressState.ExtractingMiner => Tr("Extracting Miner: {0}%", progress),
+                PluginInstallProgressState.ExtractingPlugin => Tr("Extracting Plugin: {0}%", progress),
+                _ => Tr("Pending Install"),
+            };
         }
 
         protected PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
@@ -191,8 +185,11 @@ namespace NiceHashMiner.ViewModels.Plugins
 
         public void ShowPluginInternals()
         {
-            var pluginPath = Paths.MinerPluginsPath(Plugin.PluginUUID);
-            Process.Start(pluginPath);
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = Paths.MinerPluginsPath(Plugin.PluginUUID),
+                UseShellExecute = true
+            });
         }
 
         private void CommonInstallOnPropertyChanged()

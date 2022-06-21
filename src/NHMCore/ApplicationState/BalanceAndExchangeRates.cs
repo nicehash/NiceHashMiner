@@ -23,14 +23,10 @@ namespace NHMCore.ApplicationState
         // TODO make some sort of an interface where we keep track of all instances that need this handler
         public void GeneralConfig_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (e.PropertyName)
+            if (e.PropertyName == nameof(GeneralConfig.AutoScaleBTCValues))
             {
-                case nameof(GeneralConfig.AutoScaleBTCValues):
-                    // trigger display strings change
-                    SetBTCScaledProperties();
-                    break;
-                default:
-                    break;
+                // trigger display strings change
+                SetBTCScaledProperties();
             }
         }
 

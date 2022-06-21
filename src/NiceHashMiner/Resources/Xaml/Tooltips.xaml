@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     
-    <system:String x:Key="walletAddress">User's bitcoin address for mining.</system:String>
+    <system:String x:Key="walletAddress">User's mining address for mining.</system:String>
     <system:String x:Key="workerName">To identify the user's computer.</system:String>
     <system:String x:Key="timeUnit">Sets the time unit to report BTC rates.</system:String>
     <system:String x:Key="mineRegardless">When checked, NiceHash Miner will mine regardless of profit.</system:String>
@@ -33,7 +33,6 @@
     <system:String x:Key="debugConsole">When checked, it displays debug console.</system:String>
     <system:String x:Key="maxLogSize">Sets the maximum size for the log file.</system:String>
     <system:String x:Key="runScriptCUDAlost">When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost, by default script should restart whole system.</system:String>
-    <system:String x:Key="nvidiaP0State">When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state. This will slightly increase performance on certain algorithms. This feature needs administrator privileges to be activated.</system:String>
     <system:String x:Key="useOptimizationProfiles">When checked, NiceHash Miner will use optimization profiles for Dagger algorithms when supported GPUs are present. Requires running NHM as admin and enabling 3rd-party miners.</system:String>
     <system:String x:Key="switchMinimum">Fixed part of minimal time (in seconds) before miner switches algorithm.</system:String>
     <system:String x:Key="switchMaximum">Fixed part of maximum time (in seconds) before miner switches algorithm.</system:String>

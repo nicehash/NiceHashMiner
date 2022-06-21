@@ -23,7 +23,7 @@ namespace NiceHashMiner.Views.Settings
             ThemeSettings.Visibility = AppRuntimeSettings.ThemeSettingsEnabled ? Visibility.Visible : Visibility.Collapsed;
             CredentialsSettings.Instance.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName == "BitcoinAddress")
+                if (e.PropertyName == nameof(CredentialsSettings.Instance.BitcoinAddress))
                 {
                     this.Dispatcher.Invoke(() =>
                     {
@@ -116,6 +116,7 @@ namespace NiceHashMiner.Views.Settings
             var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
             var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
             ValidateWorkername();
+            WorkernamePanel._enterWorkernameDialog.OnWorkernameChangeHack?.Invoke(this, trimmedWorkerNameText);// hack on a hack
         }
 
         private void TextBoxWorkerName_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)

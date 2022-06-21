@@ -253,12 +253,14 @@ namespace NHM.MinerPluginToolkitV1
         {
             var deviceType = dev.DeviceType;
             var algorithms = GetSupportedAlgorithmsForDeviceType(deviceType);
-            var gpu = dev as IGpuDevice;
-            if (UnsafeLimits() || gpu == null) return algorithms;
-            // GPU RAM filtering
-            var ramLimits = GetCustomMinimumMemoryPerAlgorithm(deviceType);
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms, ramLimits);
-            return filteredAlgorithms;
+            if (dev is IGpuDevice gpu && !UnsafeLimits())
+            {
+                // GPU RAM filtering
+                var ramLimits = GetCustomMinimumMemoryPerAlgorithm(deviceType);
+                var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms, ramLimits);
+                return filteredAlgorithms;
+            }
+            return algorithms;
         }
 
         public virtual string BinsPackagePassword

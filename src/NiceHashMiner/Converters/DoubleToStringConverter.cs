@@ -11,22 +11,23 @@ namespace NiceHashMiner.Converters
     /// </summary>
     public class DoubleToStringConverter : IValueConverter
     {
-        private static (double, bool) ConvertValue(object value)
+        // Allow some other convertible num types
+        private static (bool ok, double num) ConvertValue(object value) => value switch
         {
-            // Allow some other convertible num types
-            switch (value)
-            {
-                case double d: return (d, true);
-                case float f: return (f, true);
-                case int i: return (i, true);
-                default: return (0, false);
-            }
-        }
+            double d => (true, d),
+            float f => (true, f),
+            int i => (true, i),
+            _ => (false, 0),
+        };
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var (d, ok) = ConvertValue(value);
-            if (!ok) return DependencyProperty.UnsetValue;
-            return d < 0 ? Translations.Tr("N/A") : d.ToString("F0");
+            return ConvertValue(value) switch
+            {
+                (false, _) => DependencyProperty.UnsetValue,
+                (true, > 0) r => r.num.ToString("F0"),
+                _ => Translations.Tr("N/A"),
+            };
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
