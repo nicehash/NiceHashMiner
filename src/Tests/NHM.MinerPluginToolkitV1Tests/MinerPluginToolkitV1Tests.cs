@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static NHM.MinerPluginToolkitV1.CommandLine.MinerExtraParameters;
+using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
 namespace NHM.MinerPluginToolkitV1Test
 {
@@ -15,13 +16,6 @@ namespace NHM.MinerPluginToolkitV1Test
     [TestClass]
     public class MinerPluginToolkitV1Tests
     {
-
-        internal class TestLabel
-        {
-            private int _testCount = 0;
-            public string label() => $"#{++_testCount}";
-        }
-
         [TestMethod]
         public void TestJsonDeserializer()
         {
@@ -101,6 +95,25 @@ namespace NHM.MinerPluginToolkitV1Test
 
             string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
             Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test --disable-watchdog 1 --lhr-mode 1,2 --core 451,808", ParseTest(miner, algo, devices));
+        }
+
+        [TestMethod]
+        public void TestConfigReader()
+        {
+            MinerConfig ReadConfig(string path) => ReadConfig(path);
+            Assert.IsNotNull(MinerConfigManager.ReadConfig(@"..\..\..\CommandLine\LolMiner-n12j41kwed8eswafk2.json"));
+        }
+
+        [TestMethod]
+        public void TestConfigWriter()
+        {
+            var data = ReadConfig(@"..\..\..\CommandLine\LolMiner-n12j41kwed8eswafk2.json");
+
+            void WriteConfig(MinerConfig minerConfig) => WriteConfig(minerConfig);
+            data.MinerName = "NBMiner";
+            data.MinerUUID = "dfsv56dfas6gha62fgv9fa2vg6";
+            MinerConfigManager.WriteConfig(data);
+            Assert.IsTrue(true);
         }
     }
 }

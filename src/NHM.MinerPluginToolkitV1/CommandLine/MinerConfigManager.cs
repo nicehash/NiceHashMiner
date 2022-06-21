@@ -18,13 +18,13 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             [JsonProperty("miner_name", Order = 1)]
             public string MinerName { get; set; }
 
-            [JsonProperty("miner_uuid", Order = 1)]
+            [JsonProperty("miner_uuid", Order = 2)]
             public string MinerUUID { get; set; }
 
-            [JsonProperty("miner_command", Order = 2)]
+            [JsonProperty("miner_command", Order = 3)]
             public List<List<string>> MinerCommands = new();
 
-            [JsonProperty("algos", Order = 3)]
+            [JsonProperty("algos", Order = 4)]
             public List<Algo> Algorithms = new();
         }
 
@@ -43,7 +43,10 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
 
         public static void WriteConfig(MinerConfig minerConfig)
         {
-            var path = Paths.ConfigsPath(minerConfig.MinerName + "-" + minerConfig.MinerUUID);
+            //test only path
+            var path = @"..\..\..\CommandLine\" + minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json";
+            //program path
+            //var path = Paths.ConfigsPath(minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json");
             if (!File.Exists(path))
             {
                 File.WriteAllText(path, JsonConvert.SerializeObject(minerConfig, Formatting.Indented));
@@ -52,6 +55,30 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             {
                 var data = ReadConfig(path);
                 data.MinerCommands = minerConfig.MinerCommands;
+
+                foreach (var configAlgo in minerConfig.Algorithms)
+                {
+                    var algoExists = false;
+                    foreach (var dataAlgo in data.Algorithms)
+                    {
+                        if (configAlgo.AlgorithmName == dataAlgo.AlgorithmName)
+                        {
+                            dataAlgo.AlgoCommands = configAlgo.AlgoCommands;
+                            algoExists = true;
+
+                            foreach (var configDevice in configAlgo.Devices)
+                            {
+                                if (dataAlgo.Devices.ContainsKey(configDevice.Key))
+                                {
+                                    dataAlgo.Devices[configDevice.Key] = configDevice.Value;
+                                }
+                                else 
+                                    dataAlgo.Devices.Add(configDevice.Key, configDevice.Value);
+                            }
+                        }
+                    }
+                    if (!algoExists) data.Algorithms.Add(configAlgo);
+                }
                 File.WriteAllText(path, JsonConvert.SerializeObject(data, Formatting.Indented));
             }
         }
