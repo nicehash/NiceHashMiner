@@ -16,7 +16,7 @@ namespace NiceHashMiner.Validators
 
             if (result == NhmwsSetResult.INVALID)
             {
-                return new ValidationResult(false, Translations.Tr("Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
+                return new ValidationResult(false, Translations.Tr("Invalid address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
             }
 
             return ValidationResult.ValidResult;

@@ -166,7 +166,7 @@
                     TextAlignment="Left"
                     Text="Complete your mining setup"/>
                 <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
-                    <Button Style="{StaticResource local.CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Wallet Address" Click="EnterBTCWallet_Button_Click" />
+                    <Button Style="{StaticResource local.CompleteCredentialsButton}" Padding="16,13,16,13" Content="+ Add Mining Address" Click="EnterBTCWallet_Button_Click" />
                 </WrapPanel>
             </StackPanel>
         </Grid>

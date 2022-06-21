@@ -828,86 +828,6 @@
       "ru": "Ошибка!",
       "zh_cn": "错误！"
     },
-    "Error! Please input a benchmark speed that is a number and must be greater than or equal to 0.": {
-      "bg": "Грешка! Въведете стойност за тестов резултат като число, по-голямо или равно на 0.",
-      "es": "¡Error! Por favor introduce una velocidad de benchmark que sea un número y sea mayor o igual a 0.",
-      "it": "Errore! Inserisci una velocità di benchmark che sia un numero maggiore o uguale a 0.",
-      "pl": "Błąd! Upewnij się że Tempo benchmarku to liczba większa lub równa zero.",
-      "pt": "Erro! Digite uma velocidade de benchmark válida maior ou igual a 0.",
-      "ro": "Eroare! Vă rugăm introduceți o viteză benchmark care este un număr cu valoare mai mare sau egală cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, скорость бенчмарка больше или равной 0",
-      "zh_cn": "错误！测的速率必须是非负数值。"
-    },
-    "Error! Please input a device number that is a number and must be greater than or equal to 0.": {
-      "bg": "Грешка! Въведете номер на устройство като число, по-голямо или равно на 0.",
-      "es": "¡Error! Por favor introduzca un número de dispositivo que sea mayor o igual a 0.",
-      "it": "Errore! Inserisci un numero di dispositivo che sia un numero maggiore o uguale a 0.",
-      "pl": "Błąd! Upewnij się że numer urządzenia to liczba większa lub równa zero.",
-      "pt": "Erro! Digite um número de dispositivo válido maior ou igual a 0.",
-      "ro": "Eroare! Vă rugăm introduceți un număr de dispozitiv care este număr și mai mare sau egal cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, номер устройства больше или равным 0.",
-      "zh_cn": "错误！设备号必须是非负数值。"
-    },
-    "Error! Please input a minimum profit that is a number and must be greater than or equal to 0.": {
-      "bg": "Грешка! Въведете стойност за минимална доходност като число, по-голямо или равно на 0.",
-      "es": "¡Error! Por favor introduzca una ganancia mínima que sea un número y sea mayor o igual a 0.",
-      "it": "Errore! Inserisci un profitto minimo che sia un numero maggiore o uguale a 0.",
-      "pl": "Błąd! Upewnij się że minimalny zysk to liczba większa lub równa zero.",
-      "pt": "Erro! Por favor, insira um lucro mínimo válido maior ou igual a 0.",
-      "ro": "Eroare! Vă rugăm introduceți un profit minim care este un număr cu valoare mai mare sau egală cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, минимальный доход больше или равным 0.",
-      "zh_cn": "错误！最小收益必须是非负数值。"
-    },
-    "Error! Please input a valid API port number.": {
-      "bg": "Грешка! Въведете валидна стойност за номера на API порта.",
-      "es": "¡Error! Por favor introduzca un número de puerto para la API válido.",
-      "it": "Errore! Inserisci un numero di porta API valida.",
-      "pl": "Błąd! Wprowadź prawidłowy numer portu API.",
-      "pt": "Erro! Digite um número de porta API válido.",
-      "ro": "Eroare! Vă rugăm introduceți un număr de port API corect.",
-      "ru": "Ошибка! Введите, пожалуйста, допустимый номер порта API.",
-      "zh_cn": "错误！请输入有效的API端口号！"
-    },
-    "Error! Please input a valid number for LessThreads.": {
-      "bg": "Грешка! Въведете валидна стойност за параметъра 'Свободни нишки'.",
-      "es": "¡Error! Por favor introduce un número valido para LessThreads.",
-      "it": "Errore! Inserisci un numero valido per LessThreads.",
-      "pl": "Błąd! Wprowadź prawidłową wartość dla LessThreads.",
-      "pt": "Erro! Digite um número válido para LessThreads.",
-      "ro": "Eroare! Introduceți un număr valid pentru LessThreads.",
-      "ru": "Ошибка! Введите, пожалуйста, допустимое значение для уменьшителя числа потоков.",
-      "zh_cn": "错误！请为LessThreads输入有效的数值。"
-    },
-    "Ethminer API Port AMD": {
-      "es": "Puerto API de ethminer AMD",
-      "it": "Porta API Ethminer AMD",
-      "pl": "Ethminer - Port API AMD",
-      "ro": "Port Ethminer API AMD",
-      "ru": "Ethminer API порт AMD",
-      "zh_cn": "Ethminer API端口 (AMD)"
-    },
-    "Ethminer API Port NVIDIA": {
-      "es": "Puerto API de ethminer NVIDIA",
-      "it": "Porta API Ethminer NVIDIA",
-      "pl": "Ethminer - Port API NVIDIA",
-      "ro": "Port Ethminer API NVIDIA",
-      "ru": "Ethminer API порт NVIDIA",
-      "zh_cn": "Ethminer API端口 (NVIDIA)"
-    },
-    "Ethminer Default Block Height:": {
-      "bg": "Ethminer Default Block Height:",
-      "es": "Bloque de Ethminer:",
-      "it": "Altezza Default Blocco Eth:",
-      "pl": "Domyślny rozmiar bloku Ethminer:",
-      "pt": "Ethminer Default Block Height:",
-      "ro": "Înălțime Bloc Implicită Ethminer:",
-      "ru": "Высота блока ethminer:",
-      "zh_cn": "Ethminer默认区块高度:"
-    },
-    "Europe - Amsterdam": {
-      "ru": "Европа - Амстердам",
-      "zh_cn": "欧洲 - 阿姆斯特丹"
-    },
     "Explanation": {
       "bg": "Обяснение",
       "es": "Explicación",
@@ -946,46 +866,6 @@
       "ru": "Ручная настройка скорости бенчмарка для каждого алгоритма.",
       "zh_cn": "手动调整每一算法的基准测试测得速率。"
     },
-    "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs).\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.": {
-      "bg": "Фиксирана компонента на минималния интервал време (в секунди) преди програмата да превключи изчислителния алгоритъм (допълнително време за AMD видеокарти).\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
-      "es": "Parte fija del tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo (tiempo adicional para targetas gráficas AMD).\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
-      "it": "Tempo minimo fisso (in secondi) prima che il miner cambi algoritmo (tempo supplementare per le GPU AMD).\nIl tempo totale è dato da Passaggio minimo fisso + Passaggio minimo AMD + Passaggio minimo dinamico.",
-      "pl": "Stały czas minimalny pomiędzy przełączeniami algorytmów (w sekundach) dla AMD.\nŁączny czas to Czas stały + Czas dynamiczny + Czas dla AMD.",
-      "pt": "Configuração fixa de tempo mínimo (em segundos) antes de trocar de algoritimo de mineração (tempo adicional para GPUs AMD).\nTempo total é SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
-      "ro": "Partea fixă a timpului minim (în secunde) înainte ca minerul să comute algoritmul (timp adițional pentru GPUuri AMD).\nTimpul total este SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
-      "ru": "Фиксированная часть минимального времени в секундах перед переключением алгоритма майнером (дополнительное время для AMD GPU). \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение AMD\" + \"Мин. переключение дин.\".",
-      "zh_cn": "用于AMD图形处理器的附加最小静态切换间隔（秒）。\n对于AMD设备，挖矿程序在调整算法之前将至少保持运行（最小静态切换间隔 + AMD附加静态切换间隔 + 最小动态切换间隔）秒。"
-    },
-    "Fixed part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.": {
-      "bg": "Фиксирана компонента на минималния интервал време (в секунди) преди програмата да превключи изчислителния алгоритъм.\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
-      "es": "Parte fija de tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo.\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
-      "it": "Tempo minimo fisso (in secondi) prima che il miner cambi algoritmo.\nIl tempo totale è dato da Passaggio minimo fisso + Passaggio minimo dinamico.",
-      "pl": "Stały czas minimalny pomiędzy przełączeniami algorytmów (w sekundach).\nŁączny czas to Czas stały + Czas dynamiczny",
-      "pt": "Configuração fixa de tempo mínimo (em segundos) antes de trocar de algoritimo de mineração\nTempo total é SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
-      "ro": "Partea fixă a timpului minim (în secunde) înainte ca minerul să comute algoritmul.\nTimpul total este SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
-      "ru": "Фиксированная часть минимального времени в секундах перед переключением алгоритма майнером. \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение дин.\".",
-      "zh_cn": "调整算法之前挖矿程序保持运行的最小静态部分时间（秒）。\n挖矿程序在调整算法之前将至少保持运行（最小静态切换间隔 + 最小动态切换间隔）秒。"
-    },
-    "Force CPU Extension:": {
-      "bg": "Force CPU Extension:",
-      "es": "Forzar extensión CPU:",
-      "it": "Forza l'estensione CPU:",
-      "pl": "Wymuś rozszerzenia CPU:",
-      "pt": "Force CPU Extension:",
-      "ro": "Forțează Extensia CPU:",
-      "ru": "Технология CPU принудительно:",
-      "zh_cn": "强制启用CPU指令集扩展:"
-    },
-    "Force certain CPU extension miner.": {
-      "bg": "Принудително използване на определена изчислителна програма при използване на процесора.",
-      "es": "Forzar minero de una extensión en particular.",
-      "it": "Forza certe estensioni della CPU.",
-      "pl": "Wymusza określony zestaw instrukcji procesora",
-      "pt": "Força alguma extensão de mineração para CPU.",
-      "ro": "Forțează anumite extensii CPU ale minerului.",
-      "ru": "Использовать определённую технологию для CPU.",
-      "zh_cn": "强制启用某些CPU指令集扩展。"
-    },
     "General": {
       "bg": "Общи",
       "it": "Generali",
@@ -993,72 +873,6 @@
       "pt": "Geral",
       "ru": "Общие",
       "zh_cn": "通用"
-    },
-    "Getting Bitcoin exchange rate...": {
-      "bg": "Извличане на обменния курс за Bitcoin...",
-      "es": "Obteniendo el ratio de cámbio de Bitcoin...",
-      "it": "Ottenendo tasso di cambio Bitcoin...",
-      "pl": "Pobieranie kursu Bitcoin...",
-      "pt": "Obtendo taxa de câmbio do Bitcoin...",
-      "ro": "Obține cursul de schimb Bitcoin...",
-      "ru": "Получение курса обмена Биткоина…",
-      "zh_cn": "正在获取比特币汇率..."
-    },
-    "Getting NiceHash SMA information...": {
-      "bg": "Извличане на информация за NiceHash SMA...",
-      "es": "Obteniedo la información NiceHash SMA...",
-      "it": "Ottenendo informazioni NiceHash SMA...",
-      "pl": "Pobieranie NiceHash SMA...",
-      "pt": "Obtendo informações do NiceHash SMA...",
-      "ro": "Obține informațiile NiceHash SMA...",
-      "ru": "Получение информации NiceHash SMA…",
-      "zh_cn": "正在获取NiceHash SMA信息..."
-    },
-    "Getting NiceHash balance...": {
-      "bg": "Извличане на NiceHash баланса...",
-      "es": "Obteniendo fondos en NiceHash...",
-      "it": "Ottenendo bilancio NiceHash...",
-      "pl": "Pobieranie salda NiceHash...",
-      "pt": "Obtendo o saldo NiceHash...",
-      "ro": "Obține soldul NiceHash...",
-      "ru": "Получение баланса NiceHash…",
-      "zh_cn": "正在获取NiceHash账户金额..."
-    },
-    "Global rate:": {
-      "bg": "Общо доход:",
-      "es": "Ratio global:",
-      "it": "Rateo:",
-      "pl": "Tempo łączne:",
-      "pt": "Taxa global:",
-      "ro": "Rată globală:",
-      "ru": "Общая ставка:",
-      "zh_cn": "全局收益:"
-    },
-    "Group": {
-      "bg": "Група",
-      "es": "Grupo",
-      "it": "Gruppo",
-      "pl": "Grupa",
-      "pt": "Grupo",
-      "ro": "Grup",
-      "ru": "Группа",
-      "zh_cn": "分组"
-    },
-    "Group/Device Rates:": {
-      "bg": "Резултати за групата/устройствата:",
-      "es": "Grupo/ratios del dispositivo:",
-      "it": "Rapporto Gruppo/Dispositivi:",
-      "pl": "Tempa dla grup/urządzeń:",
-      "pt": "Taxas de Grupo/Dispositivo:",
-      "ro": "Rate Grup/Dispozitiv:",
-      "ru": "Ставки группы/устройства:",
-      "zh_cn": "组/设备收益:"
-    },
-    "H/s": {
-      "ru": "H/s"
-    },
-    "H/s (Secondary)": {
-      "ru": "H/s (контрольная)"
     },
     "Hide Mining Windows": {
       "bg": "Скриване на изчисл. програма",
@@ -3224,13 +3038,13 @@
     "Complete your mining setup": {
       "ru": "Завершите вашу настройку майнинга"
     },
-    "+ Add Wallet Address": {
+    "+ Add Mining Address": {
       "ru": "+ Добавить адрес кошелька"
     },
     "GPU’S": {
       "ru": "GPU’S"
     },
-    "How to create a Wallet Address?": {
+    "How to create a Mining Address?": {
       "ru": "Как создать адрес кошелька?"
     },
     "RESET TO DEFAULT": {
@@ -3543,7 +3357,7 @@
     "Register a New Account": {
       "ru": "Регистрация нового аккаунта"
     },
-    "Enter Bitcoin Address Manually": {
+    "Enter NiceHash Mining Address Manually": {
       "ru": "Ввод Биткоин-адреса вручную"
     },
     "Generate new QR Code": {
