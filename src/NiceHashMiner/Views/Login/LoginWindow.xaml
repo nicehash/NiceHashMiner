@@ -55,7 +55,7 @@
 
 
         <Button Style="{StaticResource local.TextButton}" Margin="0,12,0,0" HorizontalAlignment="Center" Content="Register a New Account" Click="Register_OnClick" />
-        <Button Style="{StaticResource local.TextButton}" Margin="0,12,0,0" HorizontalAlignment="Center" Content="Enter Bitcoin Address Manually" Click="ManuallyEnterBtc_OnClick" />
+        <Button Style="{StaticResource local.TextButton}" Margin="0,12,0,0" HorizontalAlignment="Center" Content="Enter NiceHash Mining Address Manually" Click="ManuallyEnterBtc_OnClick" />
 
 
         <CheckBox Name="CheckBoxMode" HorizontalAlignment="Right" Style="{StaticResource NHMSwitchTheme}" Margin="0,0,24,0" Checked="CheckBoxMode_Checked_Dark" Unchecked="CheckBoxMode_Unchecked_Light" />

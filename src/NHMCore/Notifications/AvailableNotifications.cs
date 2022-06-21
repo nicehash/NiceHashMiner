@@ -307,15 +307,9 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateFailedNVMLInitInfo()
+        public static void CreateFailedNVMLLoadInitInfo()
         {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NVMLInitFail, Tr("Failed NVML Initialization"), Tr("NVML was not initialized. Try to reinstall drivers - recommended standard drivers over DCH. Also you could try to restart Windows."));
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
-        public static void CreateFailedNVMLLoadInfo()
-        {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NVMLLoadFail, Tr("Failed NVML Load"), Tr("NVML was not loaded. Try to reinstall drivers - recommended standard drivers over DCH. Also you could try to restart Windows."));
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NVMLLoadInitFail, Tr("Failed NVML Load/Initialization"), Tr("NVML was not initialized. Try to reinstall drivers. Also you could try to restart Windows."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 

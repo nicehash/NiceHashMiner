@@ -105,13 +105,9 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
                 }
-                if (AvailableDevices.HasNvidia && DeviceDetection.DetectionResult.IsNvidiaNVMLInitializedError)
+                if (AvailableDevices.HasNvidia && (DeviceDetection.DetectionResult.IsNvidiaNVMLLoadedError || DeviceDetection.DetectionResult.IsNvidiaNVMLInitializedError))
                 {
-                    AvailableNotifications.CreateFailedNVMLInitInfo();
-                }
-                if (AvailableDevices.HasNvidia && DeviceDetection.DetectionResult.IsNvidiaNVMLLoadedError)
-                {
-                    AvailableNotifications.CreateFailedNVMLLoadInfo();
+                    AvailableNotifications.CreateFailedNVMLLoadInitInfo();
                 }
                 // no compatible devices? exit
                 if (AvailableDevices.Devices.Count == 0)
