@@ -357,7 +357,7 @@ namespace NHM.MinerPluginToolkitV1
 
                     if (!miningProcess.Start())
                     {
-                        Logger.Info(_logGroup, $"Error occured while starting a new process: {miningProcess.ToString()}");
+                        Logger.Info(_logGroup, $"Error occured while starting a new process: {miningProcess}");
                         startProcessTaskCompletionSource.SetResult(new InvalidOperationException("Could not start process: " + miningProcess));
                         return;
                     }

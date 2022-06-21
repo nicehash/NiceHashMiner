@@ -79,14 +79,7 @@ namespace NHMCore
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
-                if (DeviceDetection.DetectionResult.IsOpenClFallback)
-                {
-                    AvailableNotifications.CreateOpenClFallbackInfo();
-                }
-                if (DeviceDetection.DetectionResult.IsDCHDriver)
-                {
-                    AvailableNotifications.CreateWarningNVIDIADCHInfo();
-                }
+
                 if (!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();

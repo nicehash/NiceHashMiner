@@ -221,15 +221,6 @@ namespace Excavator
         {
             string result = string.Empty;
             var tempQueryPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = binPath,
-                Arguments = $"-wp {tempQueryPort}",
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-            };
             void killProcess(Process handle)
             {
                 try
@@ -246,7 +237,19 @@ namespace Excavator
                 }
             };
 
-            using var excavatorHandle = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
+            using var excavatorHandle = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = binPath,
+                    Arguments = $"-wp {tempQueryPort}",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                },
+                EnableRaisingEvents = true
+            };
             using var ct = new CancellationTokenSource(30 * 1000);
             using var client = new HttpClient();
             excavatorHandle.Start();

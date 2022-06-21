@@ -42,6 +42,7 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged(nameof(PerDeviceDisplayString));
                 OnPropertyChanged(nameof(CPUs));
                 OnPropertyChanged(nameof(GPUs));
+                OnPropertyChanged(nameof(Miners));
             }
         }
 
@@ -77,6 +78,24 @@ namespace NiceHashMiner.ViewModels
             {
                 _miningDevs = value;
                 OnPropertyChanged();
+            }
+        }
+        private IEnumerable<MinerData> _miners;
+        public IEnumerable<MinerData> Miners
+        {
+            get => _miners;
+            set
+            {
+                _miners = value;
+                OnPropertyChanged(nameof(Miners));
+                OnPropertyChanged(nameof(MinerCount));
+            }
+        }
+        public int MinerCount
+        {
+            get
+            {
+                return _miners?.Count() ?? 0;
             }
         }
 
@@ -339,6 +358,46 @@ namespace NiceHashMiner.ViewModels
             _updateTimer.Start();
 
             ConfigManager.CreateBackup();
+            var algoContainers = _devices?.Select(dev => dev.AlgorithmSettingsCollection)?.SelectMany(d => d).ToList();
+            Miners = new ObservableCollection<MinerData>() // MOCK DATA!!!
+            {
+                new MinerData()
+                {
+                    Name = "Excavator",
+                    Algos = new[]
+                    {
+                        new AlgoData()
+                        {
+                            Name = "DaggerHashimoto",
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceData(d))
+                        }
+                    }
+                },
+                new MinerData()
+                {
+                    Name = "NBMiner",
+                    Algos = new[]
+                    {
+                        new AlgoData()
+                        {
+                            Name = "KAWPOW",
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceData(d))
+                        }
+                    }
+                },
+                new MinerData()
+                {
+                    Name = "LolMiner",
+                    Algos = new[]
+                    {
+                        new AlgoData()
+                        {
+                            Name = "KAWPOW",
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceData(d))
+                        }
+                    }
+                }
+            };
 
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();

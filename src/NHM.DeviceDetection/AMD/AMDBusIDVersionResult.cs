@@ -2,8 +2,7 @@
 
 namespace NHM.DeviceDetection.Models.AMDBusIDVersionResult
 {
-    [Serializable]
-    internal class AMDBusIDVersionResult
+    internal record AMDBusIDVersionResult
     {
         public string AdrenalinVersion { get; set; } = "unknown";
         public int BUS_ID { get; set; } = -1;

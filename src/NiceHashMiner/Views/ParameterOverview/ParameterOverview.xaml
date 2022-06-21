@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.ParameterOverview.ParameterOverview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.ParameterOverview"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:MainVM}">
+
+    <UserControl.Resources>
+        <local:PluginsVisibilityConverter x:Key="PluginsVisibilityConverter" />
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter  Property="FontSize" Value="10"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{DynamicResource BackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="40,16,0,16">
+            <WrapPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock Style="{StaticResource StatusColumnTitle}" Foreground="{DynamicResource TextColorBrush}" FontSize="14">Parameter overview:</TextBlock>
+            </WrapPanel>
+        </Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock  Margin="24,0,0,0" Grid.Column="0" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                        <TextBlock  Margin="-21,0,0,0" Grid.Column="1" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                    </Grid>
+                </Grid>
+                <ItemsControl ItemsSource="{Binding Miners}" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:MinerItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Separator Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

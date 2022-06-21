@@ -23,9 +23,7 @@ namespace runnhmasadmin
         {
             try
             {
-                using (var p = Process.Start(path))
-                {
-                }
+                using var p = Process.Start(path);
             }
             catch (Exception)
             {
