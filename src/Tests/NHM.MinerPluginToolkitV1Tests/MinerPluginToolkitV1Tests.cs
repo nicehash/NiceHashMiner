@@ -25,7 +25,7 @@ namespace NHM.MinerPluginToolkitV1Test
         [TestMethod]
         public void TestJsonDeserializer()
         {
-            ElpFormat DeserializeTest(string path) => ReadJson(path);
+            ElpSettings DeserializeTest(string path) => ReadJson(path);
             Assert.IsNotNull(DeserializeTest(@"..\..\..\CommandLine\command_line01.json"));
         }
 

@@ -21,16 +21,9 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
 
     public static class MinerExtraParameters
     {
-        public class ElpFormat
+        public static ElpSettings ReadJson(string path)
         {
-            public Parameters MinerParameters { get; set; }
-            public Parameters AlgorithmParameters { get; set; }
-            public DevicesParametersList DevicesParametersList { get; set; }
-        }
-
-        public static ElpFormat ReadJson(string path)
-        {
-            var elp = JsonConvert.DeserializeObject<ElpFormat>(File.ReadAllText(path));
+            var elp = JsonConvert.DeserializeObject<ElpSettings>(File.ReadAllText(path));
             return elp;
         }
 
