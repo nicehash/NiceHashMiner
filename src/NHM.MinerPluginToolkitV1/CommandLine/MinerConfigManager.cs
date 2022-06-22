@@ -44,9 +44,9 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
         public static void WriteConfig(MinerConfig minerConfig)
         {
             //test only path
-            var path = @"..\..\..\CommandLine\" + minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json";
+            //var path = @"..\..\..\CommandLine\" + minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json";
             //program path
-            //var path = Paths.ConfigsPath(minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json");
+            var path = Paths.ConfigsPath(minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json");
             if (!File.Exists(path))
             {
                 File.WriteAllText(path, JsonConvert.SerializeObject(minerConfig, Formatting.Indented));

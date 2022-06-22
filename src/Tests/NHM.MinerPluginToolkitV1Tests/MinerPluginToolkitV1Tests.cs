@@ -107,11 +107,62 @@ namespace NHM.MinerPluginToolkitV1Test
         [TestMethod]
         public void TestConfigWriter()
         {
-            var data = ReadConfig(@"..\..\..\CommandLine\LolMiner-n12j41kwed8eswafk2.json");
-
+            var data = ReadConfig(@"..\..\..\CommandLine\DummyMiner-dsfr43teskrtg34.json");
             void WriteConfig(MinerConfig minerConfig) => WriteConfig(minerConfig);
             data.MinerName = "NBMiner";
             data.MinerUUID = "dfsv56dfas6gha62fgv9fa2vg6";
+            MinerConfigManager.WriteConfig(data);
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void TestAddDevice()
+        {
+            // always create copy of dummy and rename it and change miner name in json file
+            var data = ReadConfig(@"..\..\..\CommandLine\LolMiner-dsfr43teskrtg34.json");
+            void WriteConfig(MinerConfig minerConfig) => WriteConfig(minerConfig);
+            var device = new List<List<string>>()
+            {
+                new List<string>() { "--watchdog", "1" },
+                new List<string>() { "--gpu-no-sleep" }
+            };
+            //data.Algorithms[0].Devices.Add("device5", device);
+            MinerConfigManager.WriteConfig(data);
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void TestAddAlgorithm()
+        {
+            // always create copy of dummy and rename it and change miner name in json file
+            var data = ReadConfig(@"..\..\..\CommandLine\NanoMiner-dsfr43teskrtg34.json");
+            void WriteConfig(MinerConfig minerConfig) => WriteConfig(minerConfig);
+            var algo = new Algo();
+            algo.AlgorithmName = "Autolykos";
+            var algoCommand = new List<string>()
+            {
+                "--stratum", 
+                "autolykos.auto.net"
+            };
+            var device = new List<List<string>>()
+            {
+                new List<string>() { "--watchdog", "1" },
+                new List<string>() { "--gpu-no-sleep" }
+            };
+            algo.AlgoCommands.Add(algoCommand);
+            algo.Devices.Add("device1", device);
+            //data.Algorithms.Add(algo);
+
+            MinerConfigManager.WriteConfig(data);
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void TestEditDeviceAndAlgorithmELPs()
+        {
+            // always create copy of dummy and rename it and change miner name in json file
+            var data = ReadConfig(@"..\..\..\CommandLine\NanoMiner1-dsfr43teskrtg34.json");
+            void WriteConfig(MinerConfig minerConfig) => WriteConfig(minerConfig);
             MinerConfigManager.WriteConfig(data);
             Assert.IsTrue(true);
         }
