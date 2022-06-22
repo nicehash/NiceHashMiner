@@ -1,0 +1,78 @@
+{
+  "miner_name": "NBMiner",
+  "miner_uuid": "dfsv56dfas6gha62fgv9fa2vg6",
+  "miner_command": [
+    [
+      "--apiport",
+      "4000"
+    ]
+  ],
+  "algos": [
+    {
+      "algo": "DaggerHashimoto",
+      "algorithm_command": [
+        [
+          "--stratum",
+          "daggerhashimoto.auto.net"
+        ]
+      ],
+      "devices": {
+        "device1": [
+          [
+            "--lhr-mode",
+            "1",
+            ","
+          ],
+          [
+            "--zombie-mode",
+            "1"
+          ]
+        ],
+        "device2": [
+          [
+            "--lhr-mode",
+            "2",
+            ","
+          ],
+          [
+            "--zombie-mode",
+            "1"
+          ]
+        ]
+      }
+    },
+    {
+      "algo": "Octopus",
+      "algorithm_command": [
+        [
+          "--stratum",
+          "octopus.auto.net"
+        ]
+      ],
+      "devices": {
+        "device1": [
+          [
+            "--lhr-mode",
+            "1",
+            ","
+          ],
+          [
+            "--zombie-mode",
+            "1"
+          ]
+        ],
+        "device2": [
+          [
+            "--lhr-mode",
+            "2",
+            ","
+          ],
+          [
+            "--zombie-mode",
+            "1"
+          ]
+        ]
+      }
+    }
+  ]
+}
