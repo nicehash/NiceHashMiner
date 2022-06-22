@@ -87,8 +87,6 @@
                 <ColumnDefinition Width="149*" />
                 <ColumnDefinition Width="197*" />
                 <ColumnDefinition Width="197*" />
-                <!--HIDE LAST BTC WALLET-->
-                <!--<ColumnDefinition Width="164*" />-->
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" ToolTip="{StaticResource devicesMining}">
                 <Border BorderThickness="1" Background="{ DynamicResource MiningDevicesBackground }" BorderBrush="Transparent" CornerRadius="4"/>
@@ -154,23 +152,6 @@
                                Text="{Binding BalanceAndExchangeRates.DisplayFiatBalance}"
                                ToolTip="{Binding BalanceAndExchangeRates.ExchangeTooltip}"
                                Visibility="{Binding NHMWSConnected, Converter={StaticResource NulBoolToVisibilityConverter}}"/>
-                </Grid>
-            </Grid>
-            <Grid Grid.Column="3" Margin="16,0,0,0" ToolTip="{Binding BalanceAndExchangeRates.ExchangeTooltip}" Visibility="Collapsed">
-                <Border  BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" CornerRadius="4"/>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <!--content-->
-                    <TextBlock Grid.Row="0" Style="{DynamicResource local.InfoIcon }" Margin="0,12,12,0" />
-                    <TextBlock Grid.Row="1" Style="{ DynamicResource local.InfoTitle }" Margin="24,0,0,0" Text="MY BTC WALLET" />
-                    <WrapPanel Grid.Row="2" Margin="24,10,0,2" Orientation="Horizontal">
-                        <TextBlock Style="{DynamicResource local.InfoBTCValue}" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverterFalse}}" Text="N/A" />
-                        <TextBlock Style="{DynamicResource local.InfoBTCValuePart}" Visibility="{Binding CredentialsSettings.IsBitcoinAddressValid, Converter={StaticResource NulBoolToVisibilityConverter}}" Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}" />
-                    </WrapPanel>
                 </Grid>
             </Grid>
         </Grid>

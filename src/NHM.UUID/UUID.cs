@@ -76,7 +76,7 @@ namespace NHM.UUID
             try
             {
                 var readValue = Registry.GetValue("HKEY_LOCAL_MACHINE" + @"\SOFTWARE\Microsoft\Cryptography", "MachineGuid", new object());
-                return (true, (string)readValue);
+                return (true, readValue as string);
             }
             catch (Exception e)
             {

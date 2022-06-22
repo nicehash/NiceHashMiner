@@ -11,6 +11,7 @@ namespace NHM.Common.Configs
     public static class InternalConfigs
     {
         // All internal configs are JSON based
+        private static readonly string TAG = nameof(InternalConfigs);
 
         /// <summary>
         /// settings for json serialization
@@ -37,7 +38,7 @@ namespace NHM.Common.Configs
             }
             catch (Exception e)
             {
-                Logger.Error("InternalConfigs", $"Error occured while reading file settings from {filePath}: {e.Message}");
+                Logger.Error(TAG, $"Error occured while reading file settings from {filePath}: {e.Message}");
                 return null;
             }
         }
@@ -57,7 +58,7 @@ namespace NHM.Common.Configs
             }
             catch (Exception e)
             {
-                Logger.Error("InternalConfigs", $"Error occured while writing file settings to {filePath}: {e.Message}");
+                Logger.Error(TAG, $"Error occured while writing file settings to {filePath}: {e.Message}");
                 return false;
             }
         }
@@ -80,7 +81,7 @@ namespace NHM.Common.Configs
             }
             catch (Exception e)
             {
-                Logger.Info("InternalConfigs", $"Error occured while writing file settings to {filePath}: {e.Message}");
+                Logger.Info(TAG, $"Error occured while writing file settings to {filePath}: {e.Message}");
                 return false;
             }
         }

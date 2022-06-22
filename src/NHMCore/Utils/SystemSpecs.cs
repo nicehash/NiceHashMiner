@@ -38,28 +38,26 @@ namespace NHMCore.Utils
             var attributesParams = string.Join(",", attributes);
             try
             {
-                using (var searcher = new ManagementObjectSearcher("root\\CIMV2", $"SELECT {attributesParams} FROM Win32_OperatingSystem"))
-                using (var query = searcher.Get())
+                using var searcher = new ManagementObjectSearcher("root\\CIMV2", $"SELECT {attributesParams} FROM Win32_OperatingSystem");
+                using var query = searcher.Get();
+                foreach (var item in query)
                 {
-                    foreach (var item in query)
-                    {
-                        if (!(item is ManagementObject mo)) continue;
-                        FreePhysicalMemory = Convert.ToUInt64(mo.GetPropertyValue("FreePhysicalMemory"));
-                        FreeSpaceInPagingFiles = Convert.ToUInt64(mo.GetPropertyValue("FreeSpaceInPagingFiles"));
-                        FreeVirtualMemory = Convert.ToUInt64(mo.GetPropertyValue("FreeVirtualMemory"));
-                        LargeSystemCache = Convert.ToUInt32(mo.GetPropertyValue("LargeSystemCache"));
-                        MaxNumberOfProcesses = Convert.ToUInt32(mo.GetPropertyValue("MaxNumberOfProcesses"));
-                        MaxProcessMemorySize = Convert.ToUInt64(mo.GetPropertyValue("MaxProcessMemorySize"));
-                        NumberOfLicensedUsers = Convert.ToUInt32(mo.GetPropertyValue("NumberOfLicensedUsers"));
-                        NumberOfProcesses = Convert.ToUInt32(mo.GetPropertyValue("NumberOfProcesses"));
-                        NumberOfUsers = Convert.ToUInt32(mo.GetPropertyValue("NumberOfUsers"));
-                        OperatingSystemSKU = Convert.ToUInt32(mo.GetPropertyValue("OperatingSystemSKU"));
-                        SizeStoredInPagingFiles = Convert.ToUInt64(mo.GetPropertyValue("SizeStoredInPagingFiles"));
-                        SuiteMask = Convert.ToUInt32(mo.GetPropertyValue("SuiteMask"));
-                        TotalSwapSpaceSize = Convert.ToUInt64(mo.GetPropertyValue("TotalSwapSpaceSize"));
-                        TotalVirtualMemorySize = Convert.ToUInt64(mo.GetPropertyValue("TotalVirtualMemorySize"));
-                        TotalVisibleMemorySize = Convert.ToUInt64(mo.GetPropertyValue("TotalVisibleMemorySize"));
-                    }
+                    if (!(item is ManagementObject mo)) continue;
+                    FreePhysicalMemory = Convert.ToUInt64(mo.GetPropertyValue("FreePhysicalMemory"));
+                    FreeSpaceInPagingFiles = Convert.ToUInt64(mo.GetPropertyValue("FreeSpaceInPagingFiles"));
+                    FreeVirtualMemory = Convert.ToUInt64(mo.GetPropertyValue("FreeVirtualMemory"));
+                    LargeSystemCache = Convert.ToUInt32(mo.GetPropertyValue("LargeSystemCache"));
+                    MaxNumberOfProcesses = Convert.ToUInt32(mo.GetPropertyValue("MaxNumberOfProcesses"));
+                    MaxProcessMemorySize = Convert.ToUInt64(mo.GetPropertyValue("MaxProcessMemorySize"));
+                    NumberOfLicensedUsers = Convert.ToUInt32(mo.GetPropertyValue("NumberOfLicensedUsers"));
+                    NumberOfProcesses = Convert.ToUInt32(mo.GetPropertyValue("NumberOfProcesses"));
+                    NumberOfUsers = Convert.ToUInt32(mo.GetPropertyValue("NumberOfUsers"));
+                    OperatingSystemSKU = Convert.ToUInt32(mo.GetPropertyValue("OperatingSystemSKU"));
+                    SizeStoredInPagingFiles = Convert.ToUInt64(mo.GetPropertyValue("SizeStoredInPagingFiles"));
+                    SuiteMask = Convert.ToUInt32(mo.GetPropertyValue("SuiteMask"));
+                    TotalSwapSpaceSize = Convert.ToUInt64(mo.GetPropertyValue("TotalSwapSpaceSize"));
+                    TotalVirtualMemorySize = Convert.ToUInt64(mo.GetPropertyValue("TotalVirtualMemorySize"));
+                    TotalVisibleMemorySize = Convert.ToUInt64(mo.GetPropertyValue("TotalVisibleMemorySize"));
                 }
             }
             catch (Exception e)
@@ -108,12 +106,10 @@ namespace NHMCore.Utils
         {
             try
             {
-                using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT FreePhysicalMemory FROM Win32_OperatingSystem"))
-                using (var query = searcher.Get())
-                {
-                    Logger.Info(Tag, "WMI service seems to be running, ManagementObjectSearcher returned success.");
-                    return true;
-                }
+                using var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT FreePhysicalMemory FROM Win32_OperatingSystem");
+                using var query = searcher.Get();
+                Logger.Info(Tag, "WMI service seems to be running, ManagementObjectSearcher returned success.");
+                return true;
             }
             catch
             {

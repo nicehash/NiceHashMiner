@@ -22,12 +22,11 @@ namespace NiceHashMiner.Views
         {
             InitializeComponent();
 
-            using (var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(NHMCore.Properties.Resources.Eula)))
-            {
-                stream.Position = 0;
-                EulaRtb.SelectAll();
-                EulaRtb.Selection.Load(stream, System.Windows.DataFormats.Rtf);
-            }
+            using var stream = new MemoryStream(ASCIIEncoding.Default.GetBytes(NHMCore.Properties.Resources.Eula));
+            stream.Position = 0;
+            EulaRtb.SelectAll();
+            EulaRtb.Selection.Load(stream, System.Windows.DataFormats.Rtf);
+
             EulaRtb.SelectAll();
             EulaRtb.Selection.ApplyPropertyValue(FontFamilyProperty, FindResource("UbuntuFontFamily") as FontFamily);
         }

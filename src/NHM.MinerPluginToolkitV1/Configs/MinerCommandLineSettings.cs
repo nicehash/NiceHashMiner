@@ -27,13 +27,13 @@ namespace NHM.MinerPluginToolkitV1.Configs
         [JsonProperty("algorithm_command_line")]
         public Dictionary<string, string> AlgorithmCommandLine { get; set; } = new Dictionary<string, string>
         {
-            //{AlgorithmType.DaggerHashimoto.ToString(), $"--user {USERNAME_TEMPLATE} --pool {POOL_URL_TEMPLATE}:{POOL_PORT_TEMPLATE} --algo dagger --apiport {API_PORT_TEMPLATE} --devices {DEVICES_TEMPLATE} {EXTRA_LAUNCH_PARAMETERS_TEMPLATE}"},
+            //{$"{AlgorithmType.DaggerHashimoto}", $"--user {USERNAME_TEMPLATE} --pool {POOL_URL_TEMPLATE}:{POOL_PORT_TEMPLATE} --algo dagger --apiport {API_PORT_TEMPLATE} --devices {DEVICES_TEMPLATE} {EXTRA_LAUNCH_PARAMETERS_TEMPLATE}"},
         };
 
         [JsonProperty("algorithm_command_line_ssl")]
         public Dictionary<string, string> AlgorithmCommandLineSSL { get; set; } = new Dictionary<string, string>
         {
-            //{AlgorithmType.DaggerHashimoto.ToString(), $"--user {USERNAME_TEMPLATE} --pool {POOL_URL_TEMPLATE}:{POOL_PORT_TEMPLATE} --algo dagger --apiport {API_PORT_TEMPLATE} --devices {DEVICES_TEMPLATE} {EXTRA_LAUNCH_PARAMETERS_TEMPLATE}"},
+            //{$"{AlgorithmType.DaggerHashimoto}", $"--user {USERNAME_TEMPLATE} --pool {POOL_URL_TEMPLATE}:{POOL_PORT_TEMPLATE} --algo dagger --apiport {API_PORT_TEMPLATE} --devices {DEVICES_TEMPLATE} {EXTRA_LAUNCH_PARAMETERS_TEMPLATE}"},
         };
 
 
