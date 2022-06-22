@@ -38,6 +38,9 @@
                     <ToggleButton Margin="24,0,0,0" x:Name="AboutButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
                         <TextBlock Text="About" />
                     </ToggleButton>
+                    <ToggleButton Margin="24,0,0,0" x:Name="SchedulerButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
+                        <TextBlock Text="Scheduler" />
+                    </ToggleButton>
                 </StackPanel>
                 <ToggleButton x:Name="QrButton" Width="24" HorizontalAlignment="Right" Style="{StaticResource QrTabButton}"
                               Background="{StaticResource QrLightLogo}"

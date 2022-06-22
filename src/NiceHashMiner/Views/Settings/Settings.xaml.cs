@@ -48,7 +48,7 @@ namespace NiceHashMiner.Views.Settings
             if (tabIndex >= _tabButtonPairs.Length) throw new Exception($"OnScreenChange unknown tab index {tabIndex}");
         }
 
-        private static readonly string[] _buttonNameToTabIndex = { "GeneralButton", "AdvancedButton", "AboutButton", "QrButton" };
+        private static readonly string[] _buttonNameToTabIndex = { "GeneralButton", "AdvancedButton", "AboutButton", "QrButton", "SchedulerButton" };
         private void Btn_Settings_Click(object sender, RoutedEventArgs e)
         {
             try

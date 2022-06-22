@@ -33,6 +33,7 @@ namespace NHMCore.Mining
         private static string _deviceToPauseUuid;
         public static bool IsMiningEnabled => _miningDevices.Any();
 
+        private static Dictionary<string, List<(string, string)>> _schedule;
 
         private static CancellationToken _stopMiningManager = CancellationToken.None;
         #region State for mining
@@ -470,6 +471,7 @@ namespace NHMCore.Mining
                 while (isActive())
                 {
                     if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
+                    // TODO add scheduler check
                     if (handleDeferredCommands() && deferredCommands.Any())
                     {
                         await HandleDeferredCommands(deferredCommands);
@@ -746,9 +748,27 @@ namespace NHMCore.Mining
 
             return _isProfitable;
         }
+
+        private static bool CheckIfIsOnSchedule()
+        {
+            var time = DateTime.Now;
+            var todaysSchedule = _schedule[time.DayOfWeek.ToString()];
+
+            foreach (var (terminFrom, terminTo) in todaysSchedule)
+            {
+                var from = Convert.ToDateTime(terminFrom);
+                var to = Convert.ToDateTime(terminTo);
+                if (from < time && to < time) return true;
+            }
+
+            return false;
+        }
+
         private static bool CheckIfShouldMine(double currentProfit, bool log = true)
         {
             var isProfitable = CheckIfProfitable(currentProfit, log);
+
+            var isOnSchedule = CheckIfIsOnSchedule();
 
             ApplicationStateManager.SetProfitableState(isProfitable);
             ApplicationStateManager.DisplayNoInternetConnection(!_isConnectedToInternet);
@@ -791,6 +811,12 @@ namespace NHMCore.Mining
                 }
             }
             return (currentProfit, prevStateProfit);
+        }
+
+        private static List<(string, string)> GetTodaysSchedule()
+        {
+            var key = DateTime.Now.DayOfWeek.ToString();
+            return _schedule[key];
         }
 
         private static List<AlgorithmContainer> GetMostProfitableAlgorithmContainers()
