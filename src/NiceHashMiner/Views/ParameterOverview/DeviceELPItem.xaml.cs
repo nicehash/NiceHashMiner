@@ -26,8 +26,6 @@ namespace NiceHashMiner.Views.ParameterOverview
         {
             InitializeComponent();
         }
-
-
         private void DeviceValueTextChanged(object sender, TextChangedEventArgs e)
         {
             if (sender is TextBox tb &&

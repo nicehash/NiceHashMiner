@@ -14,7 +14,7 @@ namespace NiceHashMiner.ViewModels.Models
         public event EventHandlerTB ELPValueChanged;
         public void OnELPValueChanged(object sender, EventArgs e, int action) // only in header item!!!
         {
-            if (ELPValueChanged != null && HeaderType == HeaderType.FlagAndDelim) ELPValueChanged(sender, e, action, this);
+            if (ELPValueChanged != null) ELPValueChanged(sender, e, action, this);//todo problem here
         }
         public DeviceELPElement(bool isValue = true)
         {

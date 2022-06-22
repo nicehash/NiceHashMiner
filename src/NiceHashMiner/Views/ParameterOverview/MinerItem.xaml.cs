@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner.ViewModels.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,35 +53,62 @@ namespace NiceHashMiner.Views.ParameterOverview
             AlgorithmsGridToggleButton.IsChecked = true;
             AlgorithmsGridToggleButtonHidden.IsChecked = true;
         }
-        private void CheckDualParamBoxValid()
+        private void CheckDualParamBoxValidAndUpdateIfOK(object sender)
         {
-            var args = DualParameterInput.Text.Trim().Split(' ');
-            if (args.Length <= 0 || (args.Length == 1 && args[0] == string.Empty))
+            if (sender is not TextBox tb) return;
+            var text = tb.Text;
+            if (DataContext is MinerELPData me)
             {
-                DualParameterInput.Style = Application.Current.FindResource("inputBox") as Style;
-                DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
-                return;
+                if (text == string.Empty)
+                {
+                    DualParameterInput.Style = Application.Current.FindResource("inputBox") as Style;
+                    DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
+                    return;
+                }
+                if (me.UpdateDoubleParams(text))
+                {
+                    DualParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                    DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+                    return;
+                }
+                DualParameterInput.Style = Application.Current.FindResource("InputBoxBad") as Style;
+                DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
             }
-            if (args.Length % 2 == 0)
-            {
-                DualParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
-                DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-                return;
-            }
-            DualParameterInput.Style = Application.Current.FindResource("InputBoxBad") as Style;
-            DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
         }
+        private void UpdateSingleParams(object sender)
+        {
+            if (sender is not TextBox tb) return;
+            var text = tb.Text;
+            if (DataContext is MinerELPData me)
+            {
+                if (text == string.Empty)
+                {
+                    SingleParameterInput.Style = Application.Current.FindResource("inputBox") as Style;
+                    SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
+                    return;
+                }
+                SingleParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+                return;
+            }
+        }
+
         private void DualParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CheckDualParamBoxValid();
+            CheckDualParamBoxValidAndUpdateIfOK(sender);
         }
         private void DualParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
-            CheckDualParamBoxValid();
+            CheckDualParamBoxValidAndUpdateIfOK(sender);
         }
-        private void DualParameterInput_KeyUp(object sender, KeyEventArgs e)
+
+        private void SingleParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CheckDualParamBoxValid();
+            UpdateSingleParams(sender);
+        }
+        private void SingleParameterInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            UpdateSingleParams(sender);
         }
     }
 }

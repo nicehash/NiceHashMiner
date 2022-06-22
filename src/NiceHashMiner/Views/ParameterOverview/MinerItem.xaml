@@ -148,11 +148,12 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Style="{StaticResource inputBox}" Margin="0,3,10,3" Width="auto" MinWidth="150" x:Name="SingleParameterInput"/>
+                        <TextBox Grid.Column="0" Style="{StaticResource inputBox}" Margin="0,3,10,3" Width="auto" MinWidth="150" x:Name="SingleParameterInput"
+                                 TextChanged="SingleParameterInput_TextChanged"
+                                 LostFocus="SingleParameterInput_LostFocus"/>
                         <TextBox Grid.Column="1" Style="{StaticResource inputBox}" Margin="0,3,10,3" Width="auto" MinWidth="150" x:Name="DualParameterInput" 
                                  TextChanged="DualParameterInput_TextChanged" 
-                                 LostFocus="DualParameterInput_LostFocus"
-                                 KeyUp="DualParameterInput_KeyUp"/>
+                                 LostFocus="DualParameterInput_LostFocus"/>
                     </Grid>
                     <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
                         <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
