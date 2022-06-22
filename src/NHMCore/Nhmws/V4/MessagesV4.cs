@@ -6,15 +6,6 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Nhmws.V4
 {
-    // TODO this is NOT V4
-    internal class MinerStatusMessage : ISendMessage
-    {
-        [JsonProperty("method")]
-        public string Method => "miner.status";
-        [JsonProperty("params")]
-        public List<JToken> Params { get; set; }
-    }
-
     internal class LoginMessage : ISendMessage
     {
         [JsonProperty("method")]

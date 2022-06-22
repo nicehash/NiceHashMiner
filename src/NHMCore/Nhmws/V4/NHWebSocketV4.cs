@@ -139,7 +139,10 @@ namespace NHMCore.Nhmws.V4
                     }
                     catch (Exception e)
                     {
-                        NHLog.Error("NHWebSocket-WD", $"Error occured: {e.Message}");
+                        // delays re-connect 10 to 30 seconds
+                        var delaySeconds = 10 + random.Next(0, 20);
+                        NHLog.Error("NHWebSocket-WD", $"Attempting reconnect in {delaySeconds} seconds. Error occured: {e.Message}.");
+                        await TaskHelpers.TryDelay(TimeSpan.FromSeconds(delaySeconds), token);
                     }
                 }
             }
