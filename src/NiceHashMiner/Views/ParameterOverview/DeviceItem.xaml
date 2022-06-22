@@ -150,12 +150,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel>
-                                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Value</TextBlock>
-                                        <TextBox Style="{StaticResource inputBox}" LostFocus="DeviceValue_LostFocus" 
-                                                 GotFocus="TextBox_GotFocus" TextChanged="DeviceValueTextChanged" 
-                                                 Margin="0,0,10,3" Width="160" Text="{Binding ., Mode=TwoWay}"/>
-                                    </StackPanel>
+                                    <local:DeviceELPItem DataContext="{Binding .}" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>

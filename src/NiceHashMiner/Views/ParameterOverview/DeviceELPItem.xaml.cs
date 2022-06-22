@@ -17,23 +17,24 @@ using System.Windows.Shapes;
 namespace NiceHashMiner.Views.ParameterOverview
 {
     /// <summary>
-    /// Interaction logic for DeviceItem.xaml
+    /// Interaction logic for DeviceELPItem.xaml
     /// </summary>
-    public partial class DeviceItem : UserControl
+    public partial class DeviceELPItem : UserControl
     {
-        public DeviceItem()
+        private string LastText = string.Empty;
+        public DeviceELPItem()
         {
-            Loaded += Form_Loaded;
             InitializeComponent();
         }
-        private void Form_Loaded(object sender, RoutedEventArgs e)
+
+
+        private void DeviceValueTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (DataContext is DeviceELPData dd)
+            if (sender is TextBox tb &&
+                DataContext is DeviceELPElement ee)
             {
-                foreach(var elp in dd.ELPs)
-                {
-                    elp.ELPValueChanged += dd.InputChanged;
-                }
+                if (tb.Text == String.Empty) ee.OnELPValueChanged(sender, e, 0);
+                ee.OnELPValueChanged(sender, e, 1);// change which will decide on add or just change
             }
         }
     }

@@ -368,7 +368,22 @@ namespace NiceHashMiner.ViewModels
                         new AlgoELPData()
                         {
                             Name = "DaggerHashimoto",
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid)).ToList()
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
+                            {
+                                new DeviceELPElement(){
+                                    ELP = "11"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = "22"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = "33"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = ""
+                                },
+                            }
+                            }).ToList()
                         }
                     }
                 },
@@ -380,7 +395,22 @@ namespace NiceHashMiner.ViewModels
                         new AlgoELPData()
                         {
                             Name = "KAWPOW",
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid)).ToList()
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
+                            {
+                                new DeviceELPElement(){
+                                    ELP = "11"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = "22"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = "33"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = ""
+                                },
+                            }
+                            }).ToList()
                         }
                     }
                 },
@@ -392,16 +422,46 @@ namespace NiceHashMiner.ViewModels
                         new AlgoELPData()
                         {
                             Name = "KAWPOW",
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid)).ToList()
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
+                            {
+                                new DeviceELPElement(){
+                                    ELP = "11"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = "22"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = "33"
+                                },
+                                new DeviceELPElement(){
+                                    ELP = ""
+                                },
+                            }
+                            }).ToList()
                         }
                     }
                 }
             };
-            foreach(var m in Miners)
+            foreach(var m in Miners) // HEADERS
             {
                 foreach(var a in m.Algos)
                 {
-                    a.Devices = a.Devices.Prepend(new DeviceELPData(true)).ToList();
+                    var tempELPs = new ObservableCollection<DeviceELPElement>()
+                    {
+                        new DeviceELPElement(false){
+                            ELP = "--flag1 ,"
+                        },
+                        new DeviceELPElement(false){
+                            ELP = "--flag2 ,"
+                        },
+                        new DeviceELPElement(false){
+                            ELP = "--flag3 ,"
+                        },
+                        new DeviceELPElement(false){
+                            ELP = ""
+                        },
+                    };
+                    a.Devices = a.Devices.Prepend(new DeviceELPData(true) { ELPs = tempELPs }).ToList();
                 }
             }
 

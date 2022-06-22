@@ -5,22 +5,23 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace NiceHashMiner.ViewModels.Models
 {
-    public delegate void EventHandler(object senderInput, EventArgs e, string flag, string newText);
+    public delegate void EventHandler(object senderInput, EventArgs e, int action, DeviceELPData data, DeviceELPElement elt);
     public class DeviceELPData : NotifyChangedBase
     {
         public event EventHandler ELPValueChanged;
         public bool IsDeviceDataHeader { get; init; } = false;
         public string DeviceName { get; set; } = string.Empty;
         public string UUID { get; set; } = string.Empty;
-        public void OnELPValueChanged(object sender, EventArgs e, string flag, string newText) // only in header item!!!
+        public void OnELPValueChanged(object sender, EventArgs e, int action, DeviceELPElement elt) // only in header item!!!
         {
-            if (ELPValueChanged != null && IsDeviceDataHeader) ELPValueChanged(sender, e, flag, newText);
+            if (ELPValueChanged != null && IsDeviceDataHeader) ELPValueChanged(sender, e, action, this, elt);
         }
-        private ObservableCollection<string> _ELPs = new ObservableCollection<string>() { "33", "11", "44", "" };
-        public ObservableCollection<string> ELPs
+        private ObservableCollection<DeviceELPElement> _ELPs = new ObservableCollection<DeviceELPElement>();
+        public ObservableCollection<DeviceELPElement> ELPs
         {
             get { return _ELPs; }
             set
@@ -29,10 +30,16 @@ namespace NiceHashMiner.ViewModels.Models
                 OnPropertyChanged(nameof(ELPs));
             }
         }
-
-        public void RemoveELP(string flag)
+        public void AddELP()
         {
-            ELPs.Remove(flag);
+            //var tempElp = new DeviceELPElement();
+            //tempElp.ELPValueChanged += 
+            //ELPs.Add(new)
+        }
+
+        public void RemoveELP(int column)
+        {
+            ELPs.RemoveAt(column);
             OnPropertyChanged(nameof(ELPs));
         }
         public DeviceELPData(bool isHeader = false)
@@ -43,6 +50,14 @@ namespace NiceHashMiner.ViewModels.Models
         {
             DeviceName = name;
             UUID = uuid;
+        }
+
+        public void InputChanged(object sender, EventArgs e, int action, DeviceELPElement elpE)
+        {
+            if (sender is TextBox tb)
+            {
+                OnELPValueChanged(sender, e, action, elpE);
+            }
         }
     }
 }

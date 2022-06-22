@@ -37,22 +37,33 @@ namespace NiceHashMiner.Views.ParameterOverview
                 }
             }
         }
-        void ChangeValueColumnNumber(object sender, EventArgs e, string flag, string newText)
+        void ChangeValueColumnNumber(object sender, EventArgs e, int action, DeviceELPData de, DeviceELPElement elt)
         {
-            if (DataContext is AlgoELPData ad && sender is TextBox tb)
+            if (DataContext is not AlgoELPData ad) return;
+            if (sender is not TextBox tb) return;
+            if (action == 0)//remove //todo change to enums
             {
-                foreach (var dev in ad.Devices)//change num of columns
+                var column = de.ELPs.IndexOf(elt);
+                if (column == de.ELPs.Count - 1 && tb.Text == String.Empty) return;
+                foreach(var dev in ad.Devices)
                 {
-                    if (flag == string.Empty && dev.ELPs.Last() == string.Empty)
-                    {
-                        if (newText == string.Empty) continue;
-                        dev.ELPs[dev.ELPs.Count - 1] = newText;
-                        dev.ELPs.Add("");
-                        continue;
-                    }
-                    if (dev.ELPs.Count == 1) continue;
-                    dev.RemoveELP(flag);//remove nth item in elp which will trigger removal of that textbox
+                    dev.RemoveELP(column);
                 }
+            }
+            else if(action == 1 && tb.Text != String.Empty)
+            {
+                var column = de.ELPs.IndexOf(elt);
+                if(column == de.ELPs.Count - 1)
+                {
+                    foreach (var dev in ad.Devices)
+                    {
+                        var tempELP = new DeviceELPElement();
+                        if (dev.IsDeviceDataHeader) tempELP = new DeviceELPElement(false);
+                        tempELP.ELPValueChanged += dev.InputChanged;
+                        dev.ELPs.Add(tempELP);
+                    }
+                }
+                de.ELPs[column].ELP = tb.Text;
             }
         }
         private void DropDownDevices_Button_Click(object sender, RoutedEventArgs e)

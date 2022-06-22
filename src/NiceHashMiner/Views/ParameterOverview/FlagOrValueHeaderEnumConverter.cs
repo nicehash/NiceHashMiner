@@ -7,17 +7,18 @@ using System.Text;
 using NHMCore;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {
-    class FlagOrValueHeaderStringConverter : IValueConverter
+    class FlagOrValueHeaderEnumConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is DeviceELPData devELP)
+            if (value is HeaderType ht)
             {
-                if(devELP.IsDeviceDataHeader) return Translations.Tr("Flag");
-                return Translations.Tr("Value");
+                if(ht == HeaderType.Value) return Translations.Tr("Value");
+                return Translations.Tr("Flag & delimiter");
             }
             return string.Empty;
         }
