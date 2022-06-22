@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner.ViewModels.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,36 @@ namespace NiceHashMiner.Views.ParameterOverview
     {
         public AlgoItem()
         {
+            Loaded += Form_Loaded;
             InitializeComponent();
+        }
+        private void Form_Loaded(object sender, RoutedEventArgs e) //todo dynamic modify
+        {
+            if (DataContext is AlgoELPData ad)
+            {
+                foreach(var dev in ad.Devices)
+                {
+                    dev.ELPValueChanged += ChangeValueColumnNumber;
+                }
+            }
+        }
+        void ChangeValueColumnNumber(object sender, EventArgs e, string flag, string newText)
+        {
+            if (DataContext is AlgoELPData ad && sender is TextBox tb)
+            {
+                foreach (var dev in ad.Devices)//change num of columns
+                {
+                    if (flag == string.Empty && dev.ELPs.Last() == string.Empty)
+                    {
+                        if (newText == string.Empty) continue;
+                        dev.ELPs[dev.ELPs.Count - 1] = newText;
+                        dev.ELPs.Add("");
+                        continue;
+                    }
+                    if (dev.ELPs.Count == 1) continue;
+                    dev.RemoveELP(flag);//remove nth item in elp which will trigger removal of that textbox
+                }
+            }
         }
         private void DropDownDevices_Button_Click(object sender, RoutedEventArgs e)
         {

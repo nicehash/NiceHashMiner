@@ -27,7 +27,7 @@
                 <TextBlock Style="{StaticResource StatusColumnTitle}" Foreground="{DynamicResource TextColorBrush}" FontSize="14">Parameter overview:</TextBlock>
             </WrapPanel>
         </Grid>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>

@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.ApplicationState;
@@ -19,11 +20,35 @@ namespace NiceHashMiner.ViewModels.Models
     /// <summary>
     /// Wrapper for <see cref="ComputeDevice"/> to convert for device status DataGrid
     /// </summary>
+    //public delegate void EventHandler(object senderInput, EventArgs e, string flag, string newText);
     public class DeviceData : NotifyChangedBase
     {
+        //public event EventHandler ELPValueChanged;
+        //public void OnELPValueChanged(object sender, EventArgs e, string flag, string newText) // only in header item!!!
+        //{
+        //    if (ELPValueChanged != null && IsDeviceDataHeader) ELPValueChanged(sender, e, flag, newText);
+        //}
+        //private ObservableCollection<string> _ELPs = new ObservableCollection<string>() { "33", "11", "44", "" };
+        //public ObservableCollection<string> ELPs
+        //{
+        //    get { return _ELPs; }
+        //    set
+        //    {
+        //        _ELPs = value;
+        //        OnPropertyChanged(nameof(ELPs));
+        //    }
+        //}
+
+        //public void RemoveELP(string flag)
+        //{
+        //    ELPs.Remove(flag);
+        //    OnPropertyChanged(nameof(ELPs));
+        //}
+
+
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
-
+        //public bool IsDeviceDataHeader { get; init; } = false;
         public List<ComputeDevice> CPUs
         {
             get => AvailableDevices.Devices
@@ -158,7 +183,12 @@ namespace NiceHashMiner.ViewModels.Models
             RefreshDiag();
 
         }
-
+        //public static DeviceData CreateMockObject()
+        //{
+        //    var compDevMock = new ComputeDevice(new BaseDevice() { Name = "HEADER" }, "");
+        //    var temp = new DeviceData(compDevMock) { IsDeviceDataHeader = true };
+        //    return temp;
+        //}
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

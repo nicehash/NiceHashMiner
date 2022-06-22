@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.ViewModels.Models
 {
-    public class MinerData : NotifyChangedBase
+    public class MinerELPData : NotifyChangedBase
     {
         public string Name { get; set; }
         public string UUID { get; set; }
-        private IEnumerable<AlgoData> _algos;
-        public IEnumerable<AlgoData> Algos
+        private IEnumerable<AlgoELPData> _algos;
+        public IEnumerable<AlgoELPData> Algos
         {
             get => _algos;
             set

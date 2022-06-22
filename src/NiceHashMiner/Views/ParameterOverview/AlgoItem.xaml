@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="53"
              d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance Type=viewModels:AlgoData}">
+             d:DataContext="{d:DesignInstance Type=viewModels:AlgoELPData}">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter  Property="FontSize" Value="10"/>
@@ -172,46 +172,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.4*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid Width="auto" Margin="18,0,0,0" Grid.Column="1" x:Name="FlagDelimGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="180"/>
-                        <ColumnDefinition Width="180"/>
-                        <ColumnDefinition Width="180"/>
-                        <ColumnDefinition Width="180"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Flag and delimiter</TextBlock>
-                        <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test4"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1">
-                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Flag and delimiter</TextBlock>
-                        <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test5"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2">
-                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Flag and delimiter</TextBlock>
-                        <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test6"/>
-                    </StackPanel>
-                    <!--<StackPanel Grid.Column="3">
-                        <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3">Flag and delimiter</TextBlock>
-                        <TextBox Style="{StaticResource inputBox}" Margin="0,0,10,3" Width="160" x:Name="test7"/>
-                    </StackPanel>-->
-                </Grid>
-            </Grid>
-            <!--<Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.4*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel x:Name="ValuePanel" Grid.Column="1" Orientation="Horizontal">
-                    <TextBlock Margin="19,0,0,0" Style="{StaticResource StatusColumnTitle}">Values</TextBlock>
-                </StackPanel>
-            </Grid>-->
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding Devices}">
+            <ItemsControl Grid.Row="0" x:Name="DeviceItemControl" ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical"/>
@@ -219,11 +180,11 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:DeviceItem DataContext="{Binding .}" Margin="0,8,0,0" />
+                        <local:DeviceItem DataContext="{Binding .}"  Margin="0,8,0,0" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Separator Grid.Row="2" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
+            <Separator Grid.Row="1" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
         </Grid>
     </Grid>
 </UserControl>

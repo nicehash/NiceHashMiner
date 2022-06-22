@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.ViewModels.Models
 {
-    public class AlgoData
+    public class AlgoELPData
     {
         public string Name { get; set; }
-        private IEnumerable<DeviceData> _devices;
-        public IEnumerable<DeviceData> Devices
+        private List<DeviceELPData> _devices;
+        public AlgoELPData()
+        {
+            _devices = new List<DeviceELPData>();
+            Devices.Add(new DeviceELPData(true));
+        }
+        public List<DeviceELPData> Devices
         {
             get => _devices;
             set

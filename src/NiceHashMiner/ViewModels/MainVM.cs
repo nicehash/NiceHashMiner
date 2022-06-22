@@ -80,8 +80,8 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged();
             }
         }
-        private IEnumerable<MinerData> _miners;
-        public IEnumerable<MinerData> Miners
+        private IEnumerable<MinerELPData> _miners;
+        public IEnumerable<MinerELPData> Miners
         {
             get => _miners;
             set
@@ -359,45 +359,52 @@ namespace NiceHashMiner.ViewModels
 
             ConfigManager.CreateBackup();
             var algoContainers = _devices?.Select(dev => dev.AlgorithmSettingsCollection)?.SelectMany(d => d).ToList();
-            Miners = new ObservableCollection<MinerData>() // MOCK DATA!!!
+            Miners = new ObservableCollection<MinerELPData>() // MOCK DATA!!!
             {
-                new MinerData()
+                new MinerELPData()
                 {
                     Name = "Excavator",
                     Algos = new[]
                     {
-                        new AlgoData()
+                        new AlgoELPData()
                         {
                             Name = "DaggerHashimoto",
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceData(d))
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid)).ToList()
                         }
                     }
                 },
-                new MinerData()
+                new MinerELPData()
                 {
                     Name = "NBMiner",
                     Algos = new[]
                     {
-                        new AlgoData()
+                        new AlgoELPData()
                         {
                             Name = "KAWPOW",
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceData(d))
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid)).ToList()
                         }
                     }
                 },
-                new MinerData()
+                new MinerELPData()
                 {
                     Name = "LolMiner",
                     Algos = new[]
                     {
-                        new AlgoData()
+                        new AlgoELPData()
                         {
                             Name = "KAWPOW",
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceData(d))
+                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid)).ToList()
                         }
                     }
                 }
             };
+            foreach(var m in Miners)
+            {
+                foreach(var a in m.Algos)
+                {
+                    a.Devices = a.Devices.Prepend(new DeviceELPData(true)).ToList();
+                }
+            }
 
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
