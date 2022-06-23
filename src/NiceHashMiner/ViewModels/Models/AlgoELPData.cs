@@ -17,7 +17,7 @@ namespace NiceHashMiner.ViewModels.Models
             _devices = new List<DeviceELPData>();
             Devices.Add(new DeviceELPData(true));
         }
-        private List<string> _singleParams { get; set; }
+        private List<string> _singleParams { get; set; } = new List<string>();
         public List<string> SingleParams
         {
             get { return _singleParams; }
@@ -31,7 +31,7 @@ namespace NiceHashMiner.ViewModels.Models
         {
             SingleParams = Regex.Replace(singleTxt, @"\s+", " ").Trim().Split(" ").ToList();
         }
-        private List<(string name, string value)> _doubleParams { get; set; }
+        private List<(string name, string value)> _doubleParams { get; set; } = new List<(string name, string value)>();
         public List<(string name, string value)> DoubleParams
         {
             get { return _doubleParams; }
@@ -52,7 +52,7 @@ namespace NiceHashMiner.ViewModels.Models
             }
             for (int i = 0; i < doubles.Count; i++)
             {
-                if (i % 2 == 0 && i == 0) continue;
+                if (i % 2 == 0 || i == 0) continue;
                 doubleParams.Add((doubles[i], doubles[i - 1]));
             }
             DoubleParams = doubleParams;
@@ -65,6 +65,20 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 _devices = value;
                 OnPropertyChanged(nameof(Devices));
+            }
+        }
+        public string SingleParamString
+        {
+            get
+            {
+                return String.Join(' ', SingleParams) ?? "";
+            }
+        }
+        public string DoubleParamString
+        {
+            get
+            {
+                return String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
             }
         }
     }

@@ -363,21 +363,28 @@ namespace NiceHashMiner.ViewModels
                 new MinerELPData()
                 {
                     Name = "Excavator",
+                    SingleParams = new List<string>(){"--test1", "--test2", "--test3"},
+                    DoubleParams = new List<(string name, string value)>() {("--d1", "3"), ("--d2", "1")},
                     Algos = new[]
                     {
                         new AlgoELPData()
                         {
                             Name = "DaggerHashimoto",
+                            SingleParams = new List<string>(){"--test4", "--test5"},
+                            DoubleParams= new List<(string name, string value)>() {("--d3", "lol")},
                             Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
                             {
                                 new DeviceELPElement(){
-                                    ELP = "11"
+                                    ELP = "11",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
-                                    ELP = "22"
+                                    ELP = "22",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
-                                    ELP = "33"
+                                    ELP = "33",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = ""
@@ -398,13 +405,16 @@ namespace NiceHashMiner.ViewModels
                             Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
                             {
                                 new DeviceELPElement(){
-                                    ELP = "11"
+                                    ELP = "11",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
-                                    ELP = "22"
+                                    ELP = "22",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
-                                    ELP = "33"
+                                    ELP = "33",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = ""
@@ -425,13 +435,16 @@ namespace NiceHashMiner.ViewModels
                             Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
                             {
                                 new DeviceELPElement(){
-                                    ELP = "11"
+                                    ELP = "11",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
-                                    ELP = "22"
+                                    ELP = "22",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
-                                    ELP = "33"
+                                    ELP = "33",
+                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = ""

@@ -27,17 +27,17 @@ namespace NiceHashMiner.Views.ParameterOverview
             Loaded += Form_Loaded;
             InitializeComponent();
         }
-        private void Form_Loaded(object sender, RoutedEventArgs e) //todo dynamic modify
+        private void Form_Loaded(object sender, RoutedEventArgs e)
         {
             if (DataContext is AlgoELPData ad)
             {
                 foreach(var dev in ad.Devices)
                 {
-                    dev.ELPValueChanged += ChangeValueColumnNumber;
+                    dev.ELPValueChanged += ChangeValueColumn;
                 }
             }
         }
-        void ChangeValueColumnNumber(object sender, EventArgs e, int action, DeviceELPData de, DeviceELPElement elt)
+        void ChangeValueColumn(object sender, EventArgs e, int action, DeviceELPData de, DeviceELPElement elt)
         {
             if (DataContext is not AlgoELPData ad) return;
             if (sender is not TextBox tb) return;
@@ -45,15 +45,15 @@ namespace NiceHashMiner.Views.ParameterOverview
             {
                 var column = de.ELPs.IndexOf(elt);
                 if (column == de.ELPs.Count - 1 && tb.Text == String.Empty) return;
-                foreach(var dev in ad.Devices)
+                foreach (var dev in ad.Devices)
                 {
                     dev.RemoveELP(column);
                 }
             }
-            else if(action == 1 && tb.Text != String.Empty)
+            else if (action == 1 && tb.Text != String.Empty)
             {
                 var column = de.ELPs.IndexOf(elt);
-                if(column == de.ELPs.Count - 1)
+                if (column == de.ELPs.Count - 1)
                 {
                     foreach (var dev in ad.Devices)
                     {
@@ -61,6 +61,15 @@ namespace NiceHashMiner.Views.ParameterOverview
                         if (dev.IsDeviceDataHeader) tempELP = new DeviceELPElement(false);
                         tempELP.ELPValueChanged += dev.InputChanged;
                         dev.ELPs.Add(tempELP);
+                    }
+                }
+                var flagDelim = tb.Text.Trim().Split(' ');
+                //todo clean if not flag_delim?
+                if (flagDelim.Length == 2)
+                {
+                    foreach (var dev in ad.Devices)
+                    {
+                        dev.ELPs[column].DELIMITER = flagDelim[1];
                     }
                 }
                 de.ELPs[column].ELP = tb.Text;
@@ -125,6 +134,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                     SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
                     return;
                 }
+                me.UpdateSingleParams(text);
                 SingleParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
                 SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
                 return;

@@ -16,7 +16,7 @@ namespace NiceHashMiner.ViewModels.Models
         public bool IsDeviceDataHeader { get; init; } = false;
         public string DeviceName { get; set; } = string.Empty;
         public string UUID { get; set; } = string.Empty;
-        public void OnELPValueChanged(object sender, EventArgs e, int action, DeviceELPElement elt) // only in header item!!!
+        public void OnELPValueChanged(object sender, EventArgs e, int action, DeviceELPElement elt)
         {
             if (ELPValueChanged != null && IsDeviceDataHeader) ELPValueChanged(sender, e, action, this, elt);
         }
@@ -51,6 +51,7 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 var elp = ELPs.Where(elp => elp == elpE).FirstOrDefault();
                 elp.ELP = tb.Text;
+                OnPropertyChanged(nameof(ELPs));
                 return;
             }
             OnELPValueChanged(sender, e, action, elpE);

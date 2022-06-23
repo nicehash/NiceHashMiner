@@ -87,6 +87,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                     SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
                     return;
                 }
+                me.UpdateSingleParams(text);
                 SingleParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
                 SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
                 return;

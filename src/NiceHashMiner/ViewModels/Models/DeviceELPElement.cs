@@ -12,9 +12,9 @@ namespace NiceHashMiner.ViewModels.Models
     public class DeviceELPElement : NotifyChangedBase
     {
         public event EventHandlerTB ELPValueChanged;
-        public void OnELPValueChanged(object sender, EventArgs e, int action) // only in header item!!!
+        public void OnELPValueChanged(object sender, EventArgs e, int action)
         {
-            if (ELPValueChanged != null) ELPValueChanged(sender, e, action, this);//todo problem here
+            if (ELPValueChanged != null) ELPValueChanged(sender, e, action, this);
         }
         public DeviceELPElement(bool isValue = true)
         {
@@ -29,6 +29,16 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 _elp = value;
                 OnPropertyChanged(nameof(ELP));
+            }
+        }
+        private string _delimiter { get; set; }
+        public string DELIMITER
+        {
+            get { return _delimiter; }
+            set
+            {
+                _delimiter = value;
+                OnPropertyChanged(nameof(DELIMITER));
             }
         }
     }

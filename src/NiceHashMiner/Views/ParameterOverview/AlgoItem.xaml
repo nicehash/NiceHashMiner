@@ -149,12 +149,12 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBox Style="{StaticResource inputBox}" Margin="0,3,10,3" MinWidth="130" Width="auto" x:Name="SingleParameterInput"
+                            <TextBox Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding SingleParamString, Mode=OneWay}" MinWidth="130" Width="auto" x:Name="SingleParameterInput"
                                 TextChanged="SingleParameterInput_TextChanged"
                                 LostFocus="SingleParameterInput_LostFocus"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1">
-                            <TextBox Style="{StaticResource inputBox}" Margin="0,3,10,3" MinWidth="130" Width="auto" x:Name="DualParameterInput"
+                            <TextBox Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding DoubleParamString, Mode=OneWay}" MinWidth="130" Width="auto" x:Name="DualParameterInput"
                                 TextChanged="DualParameterInput_TextChanged" 
                                 LostFocus="DualParameterInput_LostFocus"/>
                         </StackPanel>

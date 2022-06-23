@@ -21,7 +21,6 @@ namespace NiceHashMiner.Views.ParameterOverview
     /// </summary>
     public partial class DeviceELPItem : UserControl
     {
-        private string LastText = string.Empty;
         public DeviceELPItem()
         {
             InitializeComponent();
@@ -32,7 +31,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                 DataContext is DeviceELPElement ee)
             {
                 if (tb.Text == String.Empty) ee.OnELPValueChanged(sender, e, 0);
-                ee.OnELPValueChanged(sender, e, 1);// change which will decide on add or just change
+                ee.OnELPValueChanged(sender, e, 1);
             }
         }
     }
