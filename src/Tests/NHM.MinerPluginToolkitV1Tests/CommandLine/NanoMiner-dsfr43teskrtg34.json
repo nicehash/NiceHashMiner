@@ -1,0 +1,91 @@
+{
+  "miner_name": "NanoMiner",
+  "miner_uuid": "dsfr43teskrtg34",
+  "miner_command": [
+    [
+      "--apiport",
+      "4802"
+    ]
+  ],
+  "algos": [
+    {
+      "algo": "DaggerHashimoto",
+      "algorithm_command": [
+        [
+          "--stratum",
+          "daggerhashimoto.auto.net"
+        ]
+      ],
+      "devices": {
+        "device1": [
+          [
+            "--lhr-mode",
+            "1",
+            ","
+          ],
+          [
+            "--zombie-mode",
+            "1"
+          ]
+        ]
+      }
+    },
+    {
+      "algo": "Octopus",
+      "algorithm_command": [
+        [
+          "--stratum",
+          "octopus.auto.net"
+        ],
+        [
+          "--coin",
+          "RVN"
+        ]
+      ],
+      "devices": {
+        "device1": [
+          [
+            "--test-edit",
+            "1",
+            ","
+          ],
+          [
+            "--zombie-mode",
+            "2"
+          ]
+        ],
+        "device2": [
+          [
+            "--lhr-mode",
+            "55",
+            ","
+          ],
+          [
+            "--edit-mode",
+            "1"
+          ]
+        ]
+      }
+    },
+    {
+      "algo": "Autolykos",
+      "algorithm_command": [
+        [
+          "--stratum",
+          "autolykos.auto.net"
+        ]
+      ],
+      "devices": {
+        "device1": [
+          [
+            "--watchdog",
+            "1"
+          ],
+          [
+            "--gpu-no-sleep"
+          ]
+        ]
+      }
+    }
+  ]
+}
