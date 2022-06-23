@@ -31,15 +31,5 @@ namespace NiceHashMiner.ViewModels.Models
                 OnPropertyChanged(nameof(ELP));
             }
         }
-        private string _delimiter { get; set; }
-        public string DELIMITER
-        {
-            get { return _delimiter; }
-            set
-            {
-                _delimiter = value;
-                OnPropertyChanged(nameof(DELIMITER));
-            }
-        }
     }
 }

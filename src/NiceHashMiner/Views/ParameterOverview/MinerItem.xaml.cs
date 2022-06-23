@@ -106,10 +106,12 @@ namespace NiceHashMiner.Views.ParameterOverview
         private void SingleParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateSingleParams(sender);
+            if (DataContext is MinerELPData me) me.IterateSubModelsAndSetELPs();
         }
         private void SingleParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             UpdateSingleParams(sender);
+            if (DataContext is MinerELPData me) me.IterateSubModelsAndSetELPs();
         }
     }
 }

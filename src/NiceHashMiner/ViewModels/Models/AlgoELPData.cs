@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.ViewModels.Models
 {
+    public delegate void RescanEventHandler();
     public class AlgoELPData : NotifyChangedBase
     {
+        public event RescanEventHandler InfoModified;
+        protected virtual void OnModified()
+        {
+            if (InfoModified != null) InfoModified();
+        }
         public string Name { get; set; }
         private List<DeviceELPData> _devices;
         public AlgoELPData()
@@ -53,7 +59,7 @@ namespace NiceHashMiner.ViewModels.Models
             for (int i = 0; i < doubles.Count; i++)
             {
                 if (i % 2 == 0 || i == 0) continue;
-                doubleParams.Add((doubles[i], doubles[i - 1]));
+                doubleParams.Add((doubles[i - 1], doubles[i]));
             }
             DoubleParams = doubleParams;
             return true;
@@ -80,6 +86,20 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 return String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
             }
+        }
+        private string _parsedString { get; set; } = string.Empty;
+        public string ParsedString
+        {
+            get => _parsedString;
+            set
+            {
+                _parsedString = value;
+                OnPropertyChanged(nameof(ParsedString));
+            }
+        }
+        public void NotifyMinerForELPRescan()
+        {
+            OnModified();
         }
     }
 }

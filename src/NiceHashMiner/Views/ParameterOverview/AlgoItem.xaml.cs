@@ -49,6 +49,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                 {
                     dev.RemoveELP(column);
                 }
+                ad.NotifyMinerForELPRescan();
             }
             else if (action == 1 && tb.Text != String.Empty)
             {
@@ -63,16 +64,8 @@ namespace NiceHashMiner.Views.ParameterOverview
                         dev.ELPs.Add(tempELP);
                     }
                 }
-                var flagDelim = tb.Text.Trim().Split(' ');
-                //todo clean if not flag_delim?
-                if (flagDelim.Length == 2)
-                {
-                    foreach (var dev in ad.Devices)
-                    {
-                        dev.ELPs[column].DELIMITER = flagDelim[1];
-                    }
-                }
                 de.ELPs[column].ELP = tb.Text;
+                ad.NotifyMinerForELPRescan();
             }
         }
         private void DropDownDevices_Button_Click(object sender, RoutedEventArgs e)
@@ -110,12 +103,14 @@ namespace NiceHashMiner.Views.ParameterOverview
                 {
                     DualParameterInput.Style = Application.Current.FindResource("inputBox") as Style;
                     DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
+                    ad.NotifyMinerForELPRescan();
                     return;
                 }
                 if (ad.UpdateDoubleParams(text))
                 {
                     DualParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
                     DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+                    ad.NotifyMinerForELPRescan();
                     return;
                 }
                 DualParameterInput.Style = Application.Current.FindResource("InputBoxBad") as Style;
@@ -137,7 +132,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                 me.UpdateSingleParams(text);
                 SingleParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
                 SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-                return;
+                me.NotifyMinerForELPRescan();
             }
         }
 

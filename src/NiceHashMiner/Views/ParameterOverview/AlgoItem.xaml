@@ -171,9 +171,10 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ItemsControl Grid.Row="0" x:Name="DeviceItemControl" ItemsSource="{Binding Devices}">
+            <TextBlock Grid.Row="0" Style="{DynamicResource local.TextBoxCol}" Text="{Binding ParsedString}" />
+            <Separator Grid.Row="1" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
+            <ItemsControl Grid.Row="2" x:Name="DeviceItemControl" ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical"/>
@@ -185,7 +186,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Separator Grid.Row="1" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
+            <Separator Grid.Row="3" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
         </Grid>
     </Grid>
 </UserControl>

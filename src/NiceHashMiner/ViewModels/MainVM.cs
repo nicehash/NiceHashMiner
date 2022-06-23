@@ -376,15 +376,12 @@ namespace NiceHashMiner.ViewModels
                             {
                                 new DeviceELPElement(){
                                     ELP = "11",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = "22",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = "33",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = ""
@@ -406,15 +403,12 @@ namespace NiceHashMiner.ViewModels
                             {
                                 new DeviceELPElement(){
                                     ELP = "11",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = "22",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = "33",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = ""
@@ -436,15 +430,12 @@ namespace NiceHashMiner.ViewModels
                             {
                                 new DeviceELPElement(){
                                     ELP = "11",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = "22",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = "33",
-                                    DELIMITER = ","
                                 },
                                 new DeviceELPElement(){
                                     ELP = ""
@@ -459,6 +450,7 @@ namespace NiceHashMiner.ViewModels
             {
                 foreach(var a in m.Algos)
                 {
+                    a.InfoModified += m.IterateSubModelsAndSetELPs;
                     var tempELPs = new ObservableCollection<DeviceELPElement>()
                     {
                         new DeviceELPElement(false){
@@ -477,10 +469,10 @@ namespace NiceHashMiner.ViewModels
                     a.Devices = a.Devices.Prepend(new DeviceELPData(true) { ELPs = tempELPs }).ToList();
                 }
             }
-
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }
+
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
