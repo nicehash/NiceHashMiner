@@ -43,7 +43,7 @@
                         <TextBlock  Margin="-21,0,0,0" Grid.Column="1" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
                     </Grid>
                 </Grid>
-                <ItemsControl ItemsSource="{Binding Miners}" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}">
+                <ItemsControl ItemsSource="{Binding MinerELPs}" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <local:MinerItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />

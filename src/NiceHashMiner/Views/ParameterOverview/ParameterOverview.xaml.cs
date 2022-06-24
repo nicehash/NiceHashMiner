@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,18 @@ namespace NiceHashMiner.Views.ParameterOverview
     {
         public ParameterOverview()
         {
+            Unloaded += UpdateELPConfig;
             InitializeComponent();
         }
+
+        public void UpdateELPConfig(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is not MainVM mvm) return;
+            foreach (var miner in mvm.MinerELPs)
+            {
+                miner.UpdateMinerELPConfig();
+            }
+        }
+
     }
 }

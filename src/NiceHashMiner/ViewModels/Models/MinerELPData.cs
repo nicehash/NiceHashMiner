@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
 namespace NiceHashMiner.ViewModels.Models
 {
@@ -46,9 +47,9 @@ namespace NiceHashMiner.ViewModels.Models
                 DoubleParams = new List<(string name, string value)>();
                 return false;
             }
-            for(int i = 0; i < doubles.Count; i++)
+            for (int i = 0; i < doubles.Count; i++)
             {
-                if(i % 2 == 0 || i == 0) continue;
+                if (i % 2 == 0 || i == 0) continue;
                 doubleParams.Add((doubles[i - 1], doubles[i]));
             }
             DoubleParams = doubleParams;
@@ -108,11 +109,11 @@ namespace NiceHashMiner.ViewModels.Models
                 {
                     if (dev.IsDeviceDataHeader) continue;
                     List<List<string>> oneDevParams = new List<List<string>>();
-                    for(int i = 0; i < dev.ELPs.Count; i++)
+                    for (int i = 0; i < dev.ELPs.Count; i++)
                     {
                         if (header.ELPs[i].ELP == null) continue;
                         var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
-                        if(flagAndDelim.Length != 2) continue;
+                        if (flagAndDelim.Length != 2) continue;
                         oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
                     }
                     devParams.Add(oneDevParams);
@@ -127,6 +128,55 @@ namespace NiceHashMiner.ViewModels.Models
         public void ClearDoubleParams()
         {
             DoubleParams.Clear();
+        }
+        public void UpdateMinerELPConfig()
+        {
+            var config = ConstructConfig();
+            MinerConfigManager.WriteConfig(config);
+        }
+        private MinerConfig ConstructConfig()
+        {
+            var minerConfig = new MinerConfig();
+            minerConfig.MinerName = Name;
+            minerConfig.MinerUUID = UUID;
+            foreach (var single in SingleParams)
+            {
+                minerConfig.MinerCommands.Add(new List<string>() { single });
+            }
+            foreach (var dbl in DoubleParams)
+            {
+                minerConfig.MinerCommands.Add(new List<string>() { dbl.name, dbl.value });
+            }
+            foreach (var algo in Algos)
+            {
+                var tempAlgo = new Algo();
+                tempAlgo.AlgorithmName = algo.Name;
+                foreach (var single in algo.SingleParams)
+                {
+                    tempAlgo.AlgoCommands.Add(new List<string>() { single });
+                }
+                foreach (var dbl in algo.DoubleParams)
+                {
+                    tempAlgo.AlgoCommands.Add(new List<string>() { dbl.name, dbl.value });
+                }
+                var header = algo.Devices.FirstOrDefault();
+                if (header == null || !header.IsDeviceDataHeader) continue;
+                foreach (var dev in algo.Devices)
+                {
+                    var deviceParams = new List<List<string>>();
+                    if (dev.IsDeviceDataHeader) continue;
+                    for (int i = 0; i < dev.ELPs.Count; i++)
+                    {
+                        if (header.ELPs[i].ELP == null) continue;
+                        var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
+                        if (flagAndDelim.Length != 2) continue;
+                        deviceParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
+                    }
+                    tempAlgo.Devices.Add(dev.DeviceName, deviceParams);
+                }
+                minerConfig.Algorithms.Add(tempAlgo);
+            }
+            return minerConfig;
         }
     }
 }

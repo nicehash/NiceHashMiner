@@ -41,7 +41,7 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged(nameof(PerDeviceDisplayString));
                 OnPropertyChanged(nameof(CPUs));
                 OnPropertyChanged(nameof(GPUs));
-                OnPropertyChanged(nameof(Miners));
+                OnPropertyChanged(nameof(MinerELPs));
             }
         }
 
@@ -79,14 +79,14 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged();
             }
         }
-        private IEnumerable<MinerELPData> _miners;
-        public IEnumerable<MinerELPData> Miners
+        private IEnumerable<MinerELPData> _minerELPs;
+        public IEnumerable<MinerELPData> MinerELPs
         {
-            get => _miners;
+            get => _minerELPs;
             set
             {
-                _miners = value;
-                OnPropertyChanged(nameof(Miners));
+                _minerELPs = value;
+                OnPropertyChanged(nameof(MinerELPs));
                 OnPropertyChanged(nameof(MinerCount));
             }
         }
@@ -94,7 +94,7 @@ namespace NiceHashMiner.ViewModels
         {
             get
             {
-                return _miners?.Count() ?? 0;
+                return _minerELPs?.Count() ?? 0;
             }
         }
 
@@ -334,6 +334,10 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
+        void ReadELPConfigIfExists()
+        {
+            //todo continue here
+        }
         public async Task InitializeNhm(IStartupLoader sl)
         {
             Plugins = new ObservableCollection<PluginEntryVM>();
@@ -358,117 +362,123 @@ namespace NiceHashMiner.ViewModels
 
             ConfigManager.CreateBackup();
             var algoContainers = _devices?.Select(dev => dev.AlgorithmSettingsCollection)?.SelectMany(d => d).ToList();
-            Miners = new ObservableCollection<MinerELPData>() // MOCK DATA!!!
-            {
-                new MinerELPData()
-                {
-                    Name = "Excavator",
-                    SingleParams = new List<string>(){"--test1", "--test2", "--test3"},
-                    DoubleParams = new List<(string name, string value)>() {("--d1", "3"), ("--d2", "1")},
-                    Algos = new[]
-                    {
-                        new AlgoELPData()
-                        {
-                            Name = "DaggerHashimoto",
-                            SingleParams = new List<string>(){"--test4", "--test5"},
-                            DoubleParams= new List<(string name, string value)>() {("--d3", "lol")},
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
-                            {
-                                new DeviceELPElement(){
-                                    ELP = "11",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = "22",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = "33",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = ""
-                                },
-                            }
-                            }).ToList()
-                        }
-                    }
-                },
-                new MinerELPData()
-                {
-                    Name = "NBMiner",
-                    Algos = new[]
-                    {
-                        new AlgoELPData()
-                        {
-                            Name = "KAWPOW",
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
-                            {
-                                new DeviceELPElement(){
-                                    ELP = "11",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = "22",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = "33",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = ""
-                                },
-                            }
-                            }).ToList()
-                        }
-                    }
-                },
-                new MinerELPData()
-                {
-                    Name = "LolMiner",
-                    Algos = new[]
-                    {
-                        new AlgoELPData()
-                        {
-                            Name = "KAWPOW",
-                            Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
-                            {
-                                new DeviceELPElement(){
-                                    ELP = "11",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = "22",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = "33",
-                                },
-                                new DeviceELPElement(){
-                                    ELP = ""
-                                },
-                            }
-                            }).ToList()
-                        }
-                    }
-                }
-            };
-            foreach(var m in Miners) // HEADERS
-            {
-                foreach(var a in m.Algos)
-                {
-                    a.InfoModified += m.IterateSubModelsAndConstructELPs;
-                    var tempELPs = new ObservableCollection<DeviceELPElement>()
-                    {
-                        new DeviceELPElement(false){
-                            ELP = "--flag1 ,"
-                        },
-                        new DeviceELPElement(false){
-                            ELP = "--flag2 ,"
-                        },
-                        new DeviceELPElement(false){
-                            ELP = "--flag3 ,"
-                        },
-                        new DeviceELPElement(false){
-                            ELP = ""
-                        },
-                    };
-                    a.Devices = a.Devices.Prepend(new DeviceELPData(true) { ELPs = tempELPs }).ToList();
-                }
-            }
+            
+            ReadELPConfigIfExists();
+            //read configs, if dont exist create them TODO
+            //MinerELPs = new ObservableCollection<MinerELPData>() // MOCK DATA!!!
+            //{
+            //    new MinerELPData()
+            //    {
+            //        Name = "Excavator",
+            //        UUID = "111111111111111111111",
+            //        SingleParams = new List<string>(){"--test1", "--test2", "--test3"},
+            //        DoubleParams = new List<(string name, string value)>() {("--d1", "3"), ("--d2", "1")},
+            //        Algos = new[]
+            //        {
+            //            new AlgoELPData()
+            //            {
+            //                Name = "DaggerHashimoto",
+            //                SingleParams = new List<string>(){"--test4", "--test5"},
+            //                DoubleParams= new List<(string name, string value)>() {("--d3", "lol")},
+            //                Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
+            //                {
+            //                    new DeviceELPElement(){
+            //                        ELP = "11",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = "22",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = "33",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = ""
+            //                    },
+            //                }
+            //                }).ToList()
+            //            }
+            //        }
+            //    },
+            //    new MinerELPData()
+            //    {
+            //        Name = "NBMiner",
+            //        UUID = "2222222222222222222222",
+            //        Algos = new[]
+            //        {
+            //            new AlgoELPData()
+            //            {
+            //                Name = "KAWPOW",
+            //                Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
+            //                {
+            //                    new DeviceELPElement(){
+            //                        ELP = "11",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = "22",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = "33",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = ""
+            //                    },
+            //                }
+            //                }).ToList()
+            //            }
+            //        }
+            //    },
+            //    new MinerELPData()
+            //    {
+            //        Name = "LolMiner",
+            //        UUID = "333333333333333333",
+            //        Algos = new[]
+            //        {
+            //            new AlgoELPData()
+            //            {
+            //                Name = "KAWPOW",
+            //                Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
+            //                {
+            //                    new DeviceELPElement(){
+            //                        ELP = "11",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = "22",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = "33",
+            //                    },
+            //                    new DeviceELPElement(){
+            //                        ELP = ""
+            //                    },
+            //                }
+            //                }).ToList()
+            //            }
+            //        }
+            //    }
+            //};
+            //foreach(var m in MinerELPs) // HEADERS
+            //{
+            //    foreach(var a in m.Algos)
+            //    {
+            //        a.InfoModified += m.IterateSubModelsAndConstructELPs;
+            //        var tempELPs = new ObservableCollection<DeviceELPElement>()
+            //        {
+            //            new DeviceELPElement(false){
+            //                ELP = "--flag1 ,"
+            //            },
+            //            new DeviceELPElement(false){
+            //                ELP = "--flag2 ,"
+            //            },
+            //            new DeviceELPElement(false){
+            //                ELP = "--flag3 ,"
+            //            },
+            //            new DeviceELPElement(false){
+            //                ELP = ""
+            //            },
+            //        };
+            //        a.Devices = a.Devices.Prepend(new DeviceELPData(true) { ELPs = tempELPs }).ToList();
+            //    }
+            //}
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }
