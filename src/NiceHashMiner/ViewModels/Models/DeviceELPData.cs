@@ -18,7 +18,7 @@ namespace NiceHashMiner.ViewModels.Models
         public string UUID { get; set; } = string.Empty;
         public void OnELPValueChanged(object sender, EventArgs e, int action, DeviceELPElement elt)
         {
-            if (ELPValueChanged != null && IsDeviceDataHeader) ELPValueChanged(sender, e, action, this, elt);
+            if (ELPValueChanged != null) ELPValueChanged(sender, e, action, this, elt);
         }
         private ObservableCollection<DeviceELPElement> _ELPs = new ObservableCollection<DeviceELPElement>();
         public ObservableCollection<DeviceELPElement> ELPs
@@ -52,7 +52,6 @@ namespace NiceHashMiner.ViewModels.Models
                 var elp = ELPs.Where(elp => elp == elpE).FirstOrDefault();
                 elp.ELP = tb.Text;
                 OnPropertyChanged(nameof(ELPs));
-                return;
             }
             OnELPValueChanged(sender, e, action, elpE);
         }

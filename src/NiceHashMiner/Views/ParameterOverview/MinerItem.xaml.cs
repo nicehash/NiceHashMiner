@@ -63,6 +63,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                 {
                     DualParameterInput.Style = Application.Current.FindResource("inputBox") as Style;
                     DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
+                    me.ClearDoubleParams();
                     return;
                 }
                 if (me.UpdateDoubleParams(text))
@@ -85,6 +86,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                 {
                     SingleParameterInput.Style = Application.Current.FindResource("inputBox") as Style;
                     SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
+                    me.ClearSingleParams();
                     return;
                 }
                 me.UpdateSingleParams(text);
@@ -97,21 +99,22 @@ namespace NiceHashMiner.Views.ParameterOverview
         private void DualParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
+            if (DataContext is MinerELPData me) me.IterateSubModelsAndConstructELPs();
         }
         private void DualParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
+            if (DataContext is MinerELPData me) me.IterateSubModelsAndConstructELPs();
         }
-
         private void SingleParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateSingleParams(sender);
-            if (DataContext is MinerELPData me) me.IterateSubModelsAndSetELPs();
+            if (DataContext is MinerELPData me) me.IterateSubModelsAndConstructELPs();
         }
         private void SingleParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             UpdateSingleParams(sender);
-            if (DataContext is MinerELPData me) me.IterateSubModelsAndSetELPs();
+            if (DataContext is MinerELPData me) me.IterateSubModelsAndConstructELPs();
         }
     }
 }

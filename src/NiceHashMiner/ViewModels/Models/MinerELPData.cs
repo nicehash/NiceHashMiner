@@ -79,7 +79,7 @@ namespace NiceHashMiner.ViewModels.Models
                 return String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
             }
         }
-        public void IterateSubModelsAndSetELPs()
+        public void IterateSubModelsAndConstructELPs()
         {
             List<List<string>> minerParams = new List<List<string>>();
             foreach (var single in SingleParams)
@@ -110,6 +110,7 @@ namespace NiceHashMiner.ViewModels.Models
                     List<List<string>> oneDevParams = new List<List<string>>();
                     for(int i = 0; i < dev.ELPs.Count; i++)
                     {
+                        if (header.ELPs[i].ELP == null) continue;
                         var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
                         if(flagAndDelim.Length != 2) continue;
                         oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
@@ -118,6 +119,14 @@ namespace NiceHashMiner.ViewModels.Models
                 }
                 algo.ParsedString = MinerExtraParameters.Parse(minerParams, algoParams, devParams);
             }
+        }
+        public void ClearSingleParams()
+        {
+            SingleParams.Clear();
+        }
+        public void ClearDoubleParams()
+        {
+            DoubleParams.Clear();
         }
     }
 }

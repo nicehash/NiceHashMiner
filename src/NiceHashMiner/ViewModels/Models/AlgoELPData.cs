@@ -101,5 +101,13 @@ namespace NiceHashMiner.ViewModels.Models
         {
             OnModified();
         }
+        public void ClearSingleParams()
+        {
+            SingleParams.Clear();
+        }
+        public void ClearDoubleParams()
+        {
+            DoubleParams.Clear();
+        }
     }
 }

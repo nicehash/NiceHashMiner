@@ -450,7 +450,7 @@ namespace NiceHashMiner.ViewModels
             {
                 foreach(var a in m.Algos)
                 {
-                    a.InfoModified += m.IterateSubModelsAndSetELPs;
+                    a.InfoModified += m.IterateSubModelsAndConstructELPs;
                     var tempELPs = new ObservableCollection<DeviceELPElement>()
                     {
                         new DeviceELPElement(false){

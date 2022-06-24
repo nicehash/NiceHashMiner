@@ -41,6 +41,11 @@ namespace NiceHashMiner.Views.ParameterOverview
         {
             if (DataContext is not AlgoELPData ad) return;
             if (sender is not TextBox tb) return;
+            if(!de.IsDeviceDataHeader)
+            {
+                ad.NotifyMinerForELPRescan();
+                return;
+            }
             if (action == 0)//remove //todo change to enums
             {
                 var column = de.ELPs.IndexOf(elt);
@@ -103,14 +108,13 @@ namespace NiceHashMiner.Views.ParameterOverview
                 {
                     DualParameterInput.Style = Application.Current.FindResource("inputBox") as Style;
                     DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
-                    ad.NotifyMinerForELPRescan();
+                    ad.ClearDoubleParams();
                     return;
                 }
                 if (ad.UpdateDoubleParams(text))
                 {
                     DualParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
                     DualParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-                    ad.NotifyMinerForELPRescan();
                     return;
                 }
                 DualParameterInput.Style = Application.Current.FindResource("InputBoxBad") as Style;
@@ -121,36 +125,39 @@ namespace NiceHashMiner.Views.ParameterOverview
         {
             if (sender is not TextBox tb) return;
             var text = tb.Text;
-            if (DataContext is AlgoELPData me)
+            if (DataContext is AlgoELPData ad)
             {
                 if (text == string.Empty)
                 {
                     SingleParameterInput.Style = Application.Current.FindResource("inputBox") as Style;
                     SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
+                    ad.ClearSingleParams();
                     return;
                 }
-                me.UpdateSingleParams(text);
+                ad.UpdateSingleParams(text);
                 SingleParameterInput.Style = Application.Current.FindResource("InputBoxGood") as Style;
                 SingleParameterInput.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-                me.NotifyMinerForELPRescan();
             }
         }
-
         private void DualParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
+            if (DataContext is AlgoELPData ad) ad.NotifyMinerForELPRescan();
         }
         private void DualParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
+            if (DataContext is AlgoELPData ad) ad.NotifyMinerForELPRescan();
         }
         private void SingleParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateSingleParams(sender);
+            if (DataContext is AlgoELPData ad) ad.NotifyMinerForELPRescan();
         }
         private void SingleParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             UpdateSingleParams(sender);
+            if (DataContext is AlgoELPData ad) ad.NotifyMinerForELPRescan();
         }
     }
 }
