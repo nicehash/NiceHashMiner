@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,14 +10,14 @@ using System.Windows.Controls;
 
 namespace NiceHashMiner.ViewModels.Models
 {
-    public delegate void EventHandler(object senderInput, EventArgs e, int action, DeviceELPData data, DeviceELPElement elt);
+    public delegate void EventHandler(object senderInput, EventArgs e, ELPEventActionType action, DeviceELPData data, DeviceELPElement elt);
     public class DeviceELPData : NotifyChangedBase
     {
         public event EventHandler ELPValueChanged;
         public bool IsDeviceDataHeader { get; init; } = false;
         public string DeviceName { get; set; } = string.Empty;
         public string UUID { get; set; } = string.Empty;
-        public void OnELPValueChanged(object sender, EventArgs e, int action, DeviceELPElement elt)
+        public void OnELPValueChanged(object sender, EventArgs e, ELPEventActionType action, DeviceELPElement elt)
         {
             if (ELPValueChanged != null) ELPValueChanged(sender, e, action, this, elt);
         }
@@ -44,7 +45,7 @@ namespace NiceHashMiner.ViewModels.Models
             DeviceName = name;
             UUID = uuid;
         }
-        public void InputChanged(object sender, EventArgs e, int action, DeviceELPElement elpE)
+        public void InputChanged(object sender, EventArgs e, ELPEventActionType action, DeviceELPElement elpE)
         {
             if (sender is not TextBox tb) return;
             if (elpE.HeaderType == NHM.Common.Enums.HeaderType.Value)

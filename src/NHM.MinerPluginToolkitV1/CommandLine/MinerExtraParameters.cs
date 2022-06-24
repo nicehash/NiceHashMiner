@@ -108,7 +108,8 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
 
         public static string Parse(Parameters minerParameters, Parameters algorithmParameters, DevicesParametersList devicesParameters)
         {
-            if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
+            //if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
+            if (devicesParameters == null) return "";
             if (!CheckIfCanGroup(devicesParameters)) return "";
 
             var options = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionIsParameter).SelectMany(x => x).ToList();
@@ -129,7 +130,7 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             if (algo.Any()) elp += " " + string.Join(" ", algo.SelectMany(x => x));
             if (options.Any()) elp += " " + string.Join(" ", options);
 
-            return elp;
+            return elp.Trim();
         }
     }
 }

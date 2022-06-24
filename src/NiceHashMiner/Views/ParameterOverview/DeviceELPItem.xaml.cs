@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {
@@ -30,8 +31,8 @@ namespace NiceHashMiner.Views.ParameterOverview
             if (sender is TextBox tb &&
                 DataContext is DeviceELPElement ee)
             {
-                if (tb.Text == String.Empty) ee.OnELPValueChanged(sender, e, 0);
-                ee.OnELPValueChanged(sender, e, 1);
+                ee.OnELPValueChanged(sender, e, tb.Text == String.Empty ? 
+                    ELPEventActionType.Delete : ELPEventActionType.ModifyOrAdd);
             }
         }
     }

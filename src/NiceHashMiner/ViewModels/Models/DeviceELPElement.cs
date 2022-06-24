@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.ViewModels.Models
 {
-    public delegate void EventHandlerTB(object senderInput, EventArgs e, int action, DeviceELPElement dataContext);
+    public delegate void EventHandlerTB(object senderInput, EventArgs e, ELPEventActionType action, DeviceELPElement dataContext);
     public class DeviceELPElement : NotifyChangedBase
     {
         public event EventHandlerTB ELPValueChanged;
-        public void OnELPValueChanged(object sender, EventArgs e, int action)
+        public void OnELPValueChanged(object sender, EventArgs e, ELPEventActionType action)
         {
             if (ELPValueChanged != null) ELPValueChanged(sender, e, action, this);
         }

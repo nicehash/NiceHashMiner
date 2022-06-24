@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.ViewModels.Models;
+﻿using NHM.Common.Enums;
+using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                 }
             }
         }
-        void ChangeValueColumn(object sender, EventArgs e, int action, DeviceELPData de, DeviceELPElement elt)
+        void ChangeValueColumn(object sender, EventArgs e, ELPEventActionType action, DeviceELPData de, DeviceELPElement elt)
         {
             if (DataContext is not AlgoELPData ad) return;
             if (sender is not TextBox tb) return;
@@ -56,7 +57,7 @@ namespace NiceHashMiner.Views.ParameterOverview
                 }
                 ad.NotifyMinerForELPRescan();
             }
-            else if (action == 1 && tb.Text != String.Empty)
+            else if (action == ELPEventActionType.ModifyOrAdd && tb.Text != String.Empty)
             {
                 var column = de.ELPs.IndexOf(elt);
                 if (column == de.ELPs.Count - 1)
