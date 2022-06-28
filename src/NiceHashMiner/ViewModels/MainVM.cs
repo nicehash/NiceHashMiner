@@ -338,18 +338,43 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
+        private bool IsConfigIntegrityOK(MinerConfig data, PluginEntryVM plugin)
+        {
+            var def = CreateDefaultConfig(plugin);
+            try
+            {
+                if (data.MinerUUID != def.MinerUUID) return false;
+                if (data.MinerName != def.MinerName) return false;
+                if (data.Algorithms.Count != def.Algorithms.Count) return false;
+                for (int i = 0; i < data.Algorithms.Count; i++)
+                {
+                    if (data.Algorithms[i].AlgorithmName != def.Algorithms[i].AlgorithmName) return false;
+                    if (data.Algorithms[i].Devices.Count != def.Algorithms[i].Devices.Count) return false;
+                    for (int j = 0; j < data.Algorithms[i].Devices.Count; j++)
+                    {
+                        if (data.Algorithms[i].Devices.Keys != def.Algorithms[i].Devices.Keys) return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("MainVM",$"IsConfigIntegrityOK {ex.Message}");
+                return false;
+            }
+            return true;
+        }
         private MinerELPData ConstructMinerELPData(MinerConfig cfg)
         {
             var minerELP = new MinerELPData();
-            minerELP.Name = cfg.MinerName;
-            minerELP.UUID = cfg.MinerUUID;
-            foreach(var minerCMD in cfg.MinerCommands)
+            minerELP.Name = cfg?.MinerName;
+            minerELP.UUID = cfg?.MinerUUID;
+            foreach(var minerCMD in cfg?.MinerCommands)
             {
                 if (minerCMD.Count == 1) minerELP.SingleParams.Add(minerCMD.First());
                 if (minerCMD.Count == 2) minerELP.DoubleParams.Add((minerCMD.First(), minerCMD.Last()));
             }
             var algoELPList = new List<AlgoELPData>();
-            foreach(var algo in cfg.Algorithms)
+            foreach(var algo in cfg?.Algorithms)
             {
                 var tempAlgo = new AlgoELPData();
                 var uniqueFlags = algo.Devices.Values
@@ -398,6 +423,11 @@ namespace NiceHashMiner.ViewModels
                 try
                 {
                     MinerConfig data = MinerConfigManager.ReadConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID);
+                    if (!IsConfigIntegrityOK(data, plugin))
+                    {
+                        data = CreateDefaultConfig(plugin);
+                        MinerConfigManager.WriteConfig(data);
+                    }
                     minerELPs.Add(ConstructMinerELPData(data));
                 }
                 catch (FileNotFoundException)
