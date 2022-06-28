@@ -338,30 +338,49 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        private bool IsConfigIntegrityOK(MinerConfig data, PluginEntryVM plugin)
+        private MinerConfig FixConfigIntegrityIfNeeded(MinerConfig data, PluginEntryVM plugin)
         {
             var def = CreateDefaultConfig(plugin);
             try
-            {
-                if (data.MinerUUID != def.MinerUUID) return false;
-                if (data.MinerName != def.MinerName) return false;
-                if (data.Algorithms.Count != def.Algorithms.Count) return false;
-                for (int i = 0; i < data.Algorithms.Count; i++)
+            { 
+                if (data.MinerUUID != def.MinerUUID) data.MinerUUID = def.MinerUUID;
+                if (data.MinerName != def.MinerName) data.MinerName = def.MinerName;
+                def.MinerCommands = data.MinerCommands;
+                if (data.Algorithms.Count != def.Algorithms.Count)
                 {
-                    if (data.Algorithms[i].AlgorithmName != def.Algorithms[i].AlgorithmName) return false;
-                    if (data.Algorithms[i].Devices.Count != def.Algorithms[i].Devices.Count) return false;
-                    for (int j = 0; j < data.Algorithms[i].Devices.Count; j++)
+                    foreach(var algorithm in def.Algorithms)
                     {
-                        if (data.Algorithms[i].Devices.Keys != def.Algorithms[i].Devices.Keys) return false;
+                        var containedAlgo = data.Algorithms.Where(a => a.AlgorithmName == algorithm.AlgorithmName).FirstOrDefault();
+                        if (containedAlgo != null)
+                        {
+                            algorithm.AlgoCommands = containedAlgo.AlgoCommands;
+                            foreach(var dev in algorithm.Devices)
+                            {
+                                var containedDev = containedAlgo.Devices.Where(a => a.Key == dev.Key).FirstOrDefault();
+                                if(containedDev.Value != null) 
+                                {
+                                    algorithm.Devices[dev.Key] = containedDev.Value;
+                                }
+                            }
+                        }
                     }
                 }
+                //for (int i = 0; i < data.Algorithms.Count; i++)
+                //{
+                //    if (data.Algorithms[i].AlgorithmName != def.Algorithms[i].AlgorithmName) return false;
+                //    if (data.Algorithms[i].Devices.Count != def.Algorithms[i].Devices.Count) return false;
+                //    for (int j = 0; j < data.Algorithms[i].Devices.Count; j++)
+                //    {
+                //        if (data.Algorithms[i].Devices.Keys != def.Algorithms[i].Devices.Keys) return false;
+                //    }
+                //}
             }
             catch (Exception ex)
             {
                 Logger.Error("MainVM",$"IsConfigIntegrityOK {ex.Message}");
-                return false;
+                return null;
             }
-            return true;
+            return def;
         }
         private MinerELPData ConstructMinerELPData(MinerConfig cfg)
         {
@@ -414,7 +433,7 @@ namespace NiceHashMiner.ViewModels
             return minerELP;
         }
 
-        void ReadELPConfigsOrCreateIfMissing()
+        public void ReadELPConfigsOrCreateIfMissing()
         {
             var minerELPs = new List<MinerELPData>();
             foreach (var plugin in Plugins)
@@ -423,9 +442,11 @@ namespace NiceHashMiner.ViewModels
                 try
                 {
                     MinerConfig data = MinerConfigManager.ReadConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID);
-                    if (!IsConfigIntegrityOK(data, plugin))
+                    var fixedData = FixConfigIntegrityIfNeeded(data, plugin);
+                    if (fixedData != null)
                     {
-                        data = CreateDefaultConfig(plugin);
+                        data = fixedData;
+                        //data = CreateDefaultConfig(plugin);
                         MinerConfigManager.WriteConfig(data);
                     }
                     minerELPs.Add(ConstructMinerELPData(data));

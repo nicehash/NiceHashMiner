@@ -34,7 +34,7 @@
                         <ColumnDefinition Width="0.2*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="1" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>

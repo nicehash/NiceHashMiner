@@ -88,5 +88,9 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             var path = Paths.ConfigsPath(minerName + "-" + minerUUID + ".json");
             return JsonConvert.DeserializeObject<MinerConfig>(File.ReadAllText(path));
         }
+        public static MinerConfig ReadConfig(string path)
+        {
+            return JsonConvert.DeserializeObject<MinerConfig>(File.ReadAllText(path));
+        }
     }
 }
