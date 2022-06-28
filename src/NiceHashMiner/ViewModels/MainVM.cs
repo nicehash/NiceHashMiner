@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1.CommandLine;
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
@@ -11,13 +12,16 @@ using NHMCore.Switching;
 using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.ViewModels.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
+using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
 namespace NiceHashMiner.ViewModels
 {
@@ -334,10 +338,110 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        void ReadELPConfigIfExists()
+        private MinerELPData ConstructMinerELPData(MinerConfig cfg)
         {
-            //todo continue here
+            var minerELP = new MinerELPData();
+            minerELP.Name = cfg.MinerName;
+            minerELP.UUID = cfg.MinerUUID;
+            foreach(var minerCMD in cfg.MinerCommands)
+            {
+                if (minerCMD.Count == 1) minerELP.SingleParams.Add(minerCMD.First());
+                if (minerCMD.Count == 2) minerELP.DoubleParams.Add((minerCMD.First(), minerCMD.Last()));
+            }
+            var algoELPList = new List<AlgoELPData>();
+            foreach(var algo in cfg.Algorithms)
+            {
+                var tempAlgo = new AlgoELPData();
+                var uniqueFlags = algo.Devices.Values
+                    .Select(v => v.Where(a => a.Count == 3).Select(a => $"{a[0]} {a[2]}"))
+                    .SelectMany(f => f)
+                    .Distinct()
+                    .ToList();
+                uniqueFlags.ForEach(f => tempAlgo.Devices[0].AddELP(f));
+                if (!uniqueFlags.Any()) tempAlgo.Devices[0].ELPs.Add(new DeviceELPElement(false) { ELP = String.Empty });
+                tempAlgo.Name = algo.AlgorithmName;
+                foreach(var dev in algo.Devices)
+                {
+                    var tempELPElts = new DeviceELPElement[uniqueFlags.Count + 1];
+                    tempELPElts[tempELPElts.Length - 1] = new DeviceELPElement() { ELP = String.Empty };
+                    foreach (var arg in dev.Value)
+                    {
+                        if (arg.Count != 3) continue;
+                        var index = uniqueFlags.IndexOf($"{arg[0]} {arg[2]}");
+                        if (index < 0) continue;
+                        tempELPElts[index] = new DeviceELPElement() { ELP = arg[1] };
+                    }
+                    tempAlgo.Devices.Add(new DeviceELPData()
+                    {
+                        DeviceName = dev.Key,
+                        ELPs = new ObservableCollection<DeviceELPElement>(tempELPElts)
+                    });
+                }
+                foreach(var algoCMD in algo.AlgoCommands)
+                {
+                    if (algoCMD.Count == 1) tempAlgo.SingleParams.Add(algoCMD.First());
+                    if (algoCMD.Count == 2) tempAlgo.DoubleParams.Add((algoCMD.First(), algoCMD.Last()));
+                }
+                tempAlgo.InfoModified += minerELP.IterateSubModelsAndConstructELPs;
+                algoELPList.Add(tempAlgo);
+            }
+            minerELP.Algos = algoELPList.ToArray();
+            return minerELP;
         }
+
+        void ReadELPConfigsOrCreateIfMissing()
+        {
+            var minerELPs = new List<MinerELPData>();
+            foreach (var plugin in Plugins)
+            {
+                if (!plugin.Plugin.Installed) continue;
+                try
+                {
+                    MinerConfig data = MinerConfigManager.ReadConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID);
+                    minerELPs.Add(ConstructMinerELPData(data));
+                }
+                catch (FileNotFoundException)
+                {
+                    var defaultCFG = CreateDefaultConfig(plugin);
+                    MinerConfigManager.WriteConfig(defaultCFG);
+                    minerELPs.Add(ConstructMinerELPData(defaultCFG));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("MainVM", e.Message);
+                }
+            }
+            MinerELPs = minerELPs;
+        }
+
+        private MinerConfig CreateDefaultConfig(PluginEntryVM plugin)
+        {
+            MinerConfig defCfg = new();
+            defCfg.MinerName = plugin.Plugin.PluginName;
+            defCfg.MinerUUID = plugin.Plugin.PluginUUID;
+            Dictionary<string, List<string>> algorithmDevicePairs = new();
+            foreach (var devAlgoPair in plugin.Plugin.SupportedDevicesAlgorithms)
+            {
+                foreach(var algo in devAlgoPair.Value)
+                {
+                    if(!algorithmDevicePairs.ContainsKey(algo)) algorithmDevicePairs.Add(algo, new List<string>());
+                    var devs = Devices.Where(dev => dev.Dev.DeviceType.ToString().Contains(devAlgoPair.Key)).Select(dev => dev.Dev.Name);
+                    algorithmDevicePairs[algo].AddRange(devs);
+                }
+            }
+            foreach(var algoPairs in algorithmDevicePairs)
+            {
+                var devicesDict = new Dictionary<string, List<List<string>>>();
+                algoPairs.Value.ForEach(dev => devicesDict.TryAdd(dev, new List<List<string>>()));
+                defCfg.Algorithms.Add(new Algo()
+                {
+                    AlgorithmName = algoPairs.Key,
+                    Devices = devicesDict
+                });
+            }
+            return defCfg;
+        }
+
         public async Task InitializeNhm(IStartupLoader sl)
         {
             Plugins = new ObservableCollection<PluginEntryVM>();
@@ -362,123 +466,8 @@ namespace NiceHashMiner.ViewModels
 
             ConfigManager.CreateBackup();
             var algoContainers = _devices?.Select(dev => dev.AlgorithmSettingsCollection)?.SelectMany(d => d).ToList();
-            
-            ReadELPConfigIfExists();
-            //read configs, if dont exist create them TODO
-            //MinerELPs = new ObservableCollection<MinerELPData>() // MOCK DATA!!!
-            //{
-            //    new MinerELPData()
-            //    {
-            //        Name = "Excavator",
-            //        UUID = "111111111111111111111",
-            //        SingleParams = new List<string>(){"--test1", "--test2", "--test3"},
-            //        DoubleParams = new List<(string name, string value)>() {("--d1", "3"), ("--d2", "1")},
-            //        Algos = new[]
-            //        {
-            //            new AlgoELPData()
-            //            {
-            //                Name = "DaggerHashimoto",
-            //                SingleParams = new List<string>(){"--test4", "--test5"},
-            //                DoubleParams= new List<(string name, string value)>() {("--d3", "lol")},
-            //                Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
-            //                {
-            //                    new DeviceELPElement(){
-            //                        ELP = "11",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = "22",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = "33",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = ""
-            //                    },
-            //                }
-            //                }).ToList()
-            //            }
-            //        }
-            //    },
-            //    new MinerELPData()
-            //    {
-            //        Name = "NBMiner",
-            //        UUID = "2222222222222222222222",
-            //        Algos = new[]
-            //        {
-            //            new AlgoELPData()
-            //            {
-            //                Name = "KAWPOW",
-            //                Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
-            //                {
-            //                    new DeviceELPElement(){
-            //                        ELP = "11",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = "22",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = "33",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = ""
-            //                    },
-            //                }
-            //                }).ToList()
-            //            }
-            //        }
-            //    },
-            //    new MinerELPData()
-            //    {
-            //        Name = "LolMiner",
-            //        UUID = "333333333333333333",
-            //        Algos = new[]
-            //        {
-            //            new AlgoELPData()
-            //            {
-            //                Name = "KAWPOW",
-            //                Devices = AvailableDevices.Devices.Select(d => new DeviceELPData(d.Name, d.Uuid){ ELPs = new ObservableCollection<DeviceELPElement>()
-            //                {
-            //                    new DeviceELPElement(){
-            //                        ELP = "11",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = "22",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = "33",
-            //                    },
-            //                    new DeviceELPElement(){
-            //                        ELP = ""
-            //                    },
-            //                }
-            //                }).ToList()
-            //            }
-            //        }
-            //    }
-            //};
-            //foreach(var m in MinerELPs) // HEADERS
-            //{
-            //    foreach(var a in m.Algos)
-            //    {
-            //        a.InfoModified += m.IterateSubModelsAndConstructELPs;
-            //        var tempELPs = new ObservableCollection<DeviceELPElement>()
-            //        {
-            //            new DeviceELPElement(false){
-            //                ELP = "--flag1 ,"
-            //            },
-            //            new DeviceELPElement(false){
-            //                ELP = "--flag2 ,"
-            //            },
-            //            new DeviceELPElement(false){
-            //                ELP = "--flag3 ,"
-            //            },
-            //            new DeviceELPElement(false){
-            //                ELP = ""
-            //            },
-            //        };
-            //        a.Devices = a.Devices.Prepend(new DeviceELPData(true) { ELPs = tempELPs }).ToList();
-            //    }
-            //}
+
+            ReadELPConfigsOrCreateIfMissing();
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }

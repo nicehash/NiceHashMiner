@@ -36,8 +36,15 @@ namespace NiceHashMiner.ViewModels.Models
             ELPs.RemoveAt(column);
             OnPropertyChanged(nameof(ELPs));
         }
+        public void AddELP(string elp)
+        {
+            if(ELPs.Count == 0) ELPs.Add(new DeviceELPElement(!IsDeviceDataHeader) { ELP = elp });
+            else ELPs[ELPs.Count - 1].ELP = elp;
+            ELPs.Add(new DeviceELPElement(!IsDeviceDataHeader) { ELP = "" });
+        }
         public DeviceELPData(bool isHeader = false)
         {
+            //ELPs.Add(new DeviceELPElement(!isHeader) { ELP = "" });
             IsDeviceDataHeader = isHeader;
         }
         public DeviceELPData(string name, string uuid)
@@ -48,7 +55,7 @@ namespace NiceHashMiner.ViewModels.Models
         public void InputChanged(object sender, EventArgs e, ELPEventActionType action, DeviceELPElement elpE)
         {
             if (sender is not TextBox tb) return;
-            if (elpE.HeaderType == NHM.Common.Enums.HeaderType.Value)
+            if (elpE.HeaderType == HeaderType.Value)
             {
                 var elp = ELPs.Where(elp => elp == elpE).FirstOrDefault();
                 elp.ELP = tb.Text;

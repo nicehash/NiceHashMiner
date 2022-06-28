@@ -53,7 +53,7 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             }
             else
             {
-                var data = ReadConfig(path);
+                var data = ReadConfig(minerConfig.MinerName, minerConfig.MinerUUID);
                 data.MinerCommands = minerConfig.MinerCommands;
 
                 foreach (var configAlgo in minerConfig.Algorithms)
@@ -83,8 +83,9 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             }
         }
 
-        public static MinerConfig ReadConfig(string path)
+        public static MinerConfig ReadConfig(string minerName, string minerUUID)
         {
+            var path = Paths.ConfigsPath(minerName + "-" + minerUUID + ".json");
             return JsonConvert.DeserializeObject<MinerConfig>(File.ReadAllText(path));
         }
     }
