@@ -103,7 +103,7 @@ namespace NHMCore.Nhmws.V4
         public string DisplayName { get; set; }
 
         [JsonProperty("display_group")]
-        public int? DisplayGroup { get; set; }
+        public int? DisplayGroup { get; set; } = 0;
 
         [JsonProperty("display_unit")]
         public string DisplayUnit { get; set; }
@@ -119,6 +119,9 @@ namespace NHMCore.Nhmws.V4
 
         [JsonIgnore]
         public Func<object, Task<object>> ExecuteTask { get; set; }
+
+        [JsonIgnore]
+        public Func<object> GetValue { get; set; }
     }
 
     internal class OptionalMutablePropertyInt : OptionalMutableProperty

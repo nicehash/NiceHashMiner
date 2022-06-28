@@ -314,7 +314,7 @@ namespace NHMCore.Nhmws.V4
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
-            _login = MessageParserV4.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices);
+            _login = MessageParserV4.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
             if (!string.IsNullOrEmpty(btc)) _login.Btc = btc;
             if (worker != null) _login.Worker = worker;
             //if (group != null) _login.Group = group;
@@ -325,7 +325,7 @@ namespace NHMCore.Nhmws.V4
 
         #region Message handling
 
-        private static string CreateMinerStatusMessage() => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(AvailableDevices.Devices));
+        private static string CreateMinerStatusMessage() => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(AvailableDevices.Devices.SortedDevices()));
 
         static private async Task HandleMessage(MessageEventArgs e)
         {
