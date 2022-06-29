@@ -52,7 +52,8 @@ namespace NHMCore.Nhmws.V4
         {
             string getValue<T>(T o) => (typeof(T).Name, o) switch
             {
-                (nameof(ILoad), ILoad g) => $"{g.Load}",
+                (nameof(ILoad), ILoad g) => $"{(int)g.Load}",
+                (nameof(IMemControllerLoad), IMemControllerLoad g) => $"{g.MemoryControllerLoad}",
                 (nameof(ITemp), ITemp g) => $"{g.Temp}",
                 (nameof(IGetFanSpeedPercentage), IGetFanSpeedPercentage g) => $"{g.GetFanSpeedPercentage().percentage}",
                 (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
@@ -65,12 +66,13 @@ namespace NHMCore.Nhmws.V4
             // here sort manually by type 
             var dynamicPropertiesWithValues = new List<(string name, string unit, string value)?>
             {
+                // DELA
                 pairOrNull<ITemp>("Temperature","C"),
+                pairOrNull<IVramTemp>("VRAM T","C"),
                 pairOrNull<ILoad>("Load","%"),
-                pairOrNull<IGetFanSpeedPercentage>("Fan speed percentage","%"),
-                pairOrNull<IPowerUsage>("Power Usage","W"),
-                pairOrNull<IVramTemp>("Vram Temperature","C"),
-                pairOrNull<IHotspotTemp>("Hotspot Temperature","C"),
+                pairOrNull<IMemControllerLoad>("MemCtrlLoad","%"),
+                pairOrNull<IGetFanSpeedPercentage>("Fan","%"),
+                pairOrNull<IPowerUsage>("Power","W"),
             };
 
             var deviceOptionalDynamic = dynamicPropertiesWithValues
@@ -140,12 +142,7 @@ namespace NHMCore.Nhmws.V4
         public static LoginMessage CreateLoginMessage(string btc, string worker, string rigID, IOrderedEnumerable<ComputeDevice> devices)
         {
             var sorted = SortedDevices(devices);
-            if (_loginMessage != null)
-            {
-                _loginMessage.Btc = btc;
-                _loginMessage.Worker = worker;
-                return _loginMessage;
-            }
+            if (_loginMessage != null) return _loginMessage;
 
             List<NhnwsAction> createDefaultActions() =>
                 new List<NhnwsAction>
@@ -233,20 +230,20 @@ namespace NHMCore.Nhmws.V4
                 },
                 Actions = createDefaultActions(),
                 Devices = devices.Select(mapComputeDevice).ToList(),
-                MinerState = GetMinerStateValues(devices),
+                MinerState = GetMinerStateValues(worker, devices),
             };
             return _loginMessage;
         }
 
-        private static JObject GetMinerStateValues(IOrderedEnumerable<ComputeDevice> devices)
+        private static JObject GetMinerStateValues(string workerName, IOrderedEnumerable<ComputeDevice> devices)
         {
-            var json = JObject.FromObject(GetMinerState(devices));
+            var json = JObject.FromObject(GetMinerState(workerName, devices));
             var delProp = json.Property("method");
             delProp.Remove();
             return json;
         }
 
-        internal static MinerState GetMinerState(IOrderedEnumerable<ComputeDevice> devices)
+        internal static MinerState GetMinerState(string workerName, IOrderedEnumerable<ComputeDevice> devices)
         {
             var rig = ApplicationStateManager.CalcRigStatus();
 
@@ -299,7 +296,7 @@ namespace NHMCore.Nhmws.V4
             {
                 MutableDynamicValues = new JArray(rigStateToInt(rig)),
                 OptionalDynamicValues = new JArray(),
-                MandatoryMutableValues = new JArray(rigStateToInt(rig), _loginMessage?.Worker ?? ""),
+                MandatoryMutableValues = new JArray(rigStateToInt(rig), workerName),
                 OptionalMutableValues = new JArray(),
                 Devices = devices.Select(toDeviceState).ToList(),
             };
