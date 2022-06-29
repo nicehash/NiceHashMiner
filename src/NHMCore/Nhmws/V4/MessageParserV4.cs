@@ -66,7 +66,6 @@ namespace NHMCore.Nhmws.V4
             // here sort manually by type 
             var dynamicPropertiesWithValues = new List<(string name, string unit, string value)?>
             {
-                // DELA
                 pairOrNull<ITemp>("Temperature","C"),
                 pairOrNull<IVramTemp>("VRAM T","C"),
                 pairOrNull<ILoad>("Load","%"),
