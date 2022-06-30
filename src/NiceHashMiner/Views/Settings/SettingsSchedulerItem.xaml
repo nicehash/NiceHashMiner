@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Settings.SettingsSchedulerItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel>
+        <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="From" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
+                <TextBox x:Name="textBoxSchedulerFrom" Style="{StaticResource smallInputBox}" Text="" Margin="0,0,24,0"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="To" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"></TextBlock>
+                <TextBox x:Name="textBoxSchedulerTo" Style="{StaticResource smallInputBox}" Text="" Margin="0,0,24,0"/>
+            </StackPanel>
+        </WrapPanel>
+        <StackPanel Orientation="Horizontal">
+            <local:SettingsSchedulerCheckBoxItem
+                                        Label="Mon"/>
+            <local:SettingsSchedulerCheckBoxItem
+                                        Label="Tue"/>
+            <local:SettingsSchedulerCheckBoxItem
+                                        Label="Wed"/>
+            <local:SettingsSchedulerCheckBoxItem
+                                        Label="Thu"/>
+            <local:SettingsSchedulerCheckBoxItem
+                                        Label="Fri"/>
+            <local:SettingsSchedulerCheckBoxItem
+                                        Label="Sat"/>
+            <local:SettingsSchedulerCheckBoxItem
+                                        Label="Sun"/>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

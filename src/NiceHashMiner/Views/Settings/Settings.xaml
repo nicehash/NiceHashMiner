@@ -35,11 +35,11 @@
                     <ToggleButton Margin="24,0,0,0" x:Name="AdvancedButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
                         <TextBlock Text="Advanced" />
                     </ToggleButton>
-                    <ToggleButton Margin="24,0,0,0" x:Name="AboutButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
-                        <TextBlock Text="About" />
-                    </ToggleButton>
                     <ToggleButton Margin="24,0,0,0" x:Name="SchedulerButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
                         <TextBlock Text="Scheduler" />
+                    </ToggleButton>
+                    <ToggleButton Margin="24,0,0,0" x:Name="AboutButton" Style="{StaticResource TabButton}" Click="Btn_Settings_Click">
+                        <TextBlock Text="About" />
                     </ToggleButton>
                 </StackPanel>
                 <ToggleButton x:Name="QrButton" Width="24" HorizontalAlignment="Right" Style="{StaticResource QrTabButton}"
@@ -66,6 +66,11 @@
                     <TabItem Name="QrTab">
                         <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
                             <local:SettingsQrLogin />
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Name="SchedulerTab">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+                            <local:SettingsScheduler />
                         </ScrollViewer>
                     </TabItem>
                 </TabControl>

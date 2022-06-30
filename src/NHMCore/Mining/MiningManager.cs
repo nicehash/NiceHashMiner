@@ -33,7 +33,9 @@ namespace NHMCore.Mining
         private static string _deviceToPauseUuid;
         public static bool IsMiningEnabled => _miningDevices.Any();
 
-        private static Dictionary<string, List<(string, string)>> _schedule;
+        private static bool _useScheduler;
+
+        private static Dictionary<string, List<(string, string)>> _schedule = new Dictionary<string, List<(string, string)>>();
 
         private static CancellationToken _stopMiningManager = CancellationToken.None;
         #region State for mining
@@ -96,6 +98,13 @@ namespace NHMCore.Mining
             public IsSteamGameRunningChangedCommand(bool isSteamGameRunning) { this.isSteamGameRunning = isSteamGameRunning; }
 
             public bool isSteamGameRunning { get; private set; }
+        }
+
+        private class UseSchedulerChangedCommand : MainCommand
+        {
+            public UseSchedulerChangedCommand(bool useScheduler) { this.useScheduler = useScheduler; }
+
+            public bool useScheduler { get; private set; }
         }
 
         private class GPUToPauseChangedCommand : MainCommand
@@ -214,6 +223,14 @@ namespace NHMCore.Mining
             return command.Tsc.Task;
         }
 
+        private static Task UseSchedulerSettingsChanged(bool useScheduler)
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new UseSchedulerChangedCommand(useScheduler);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+
         public static Task MinerRestartLoopNotify()
         {
             if (RunninLoops == null) return Task.CompletedTask;
@@ -294,6 +311,7 @@ namespace NHMCore.Mining
                 nameof(MiningSettings.PauseMiningWhenGamingMode) => PauseMiningWhenGamingModeSettingsChanged(MiningSettings.Instance.PauseMiningWhenGamingMode),
                 nameof(MiningSettings.DeviceToPauseUuid) => SelectedGPUSettingsChanged(MiningSettings.Instance.DeviceToPauseUuid),
                 nameof(MiningSettings.EnableSSLMining) => SSLMiningChanged(),
+                nameof(MiningSettings.UseScheduler) => UseSchedulerSettingsChanged(MiningSettings.Instance.UseScheduler),
                 _ => Task.CompletedTask,
             };
         }
@@ -451,7 +469,6 @@ namespace NHMCore.Mining
 
         private static async Task MiningManagerCommandQueueLoop(CancellationToken stop)
         {
-
             var lastDeferredCommandTime = DateTime.UtcNow;
             var steamWatcher = new SteamWatcher();
             bool handleDeferredCommands() => (DateTime.UtcNow - lastDeferredCommandTime).TotalSeconds >= 0.5;
@@ -751,6 +768,8 @@ namespace NHMCore.Mining
 
         private static bool CheckIfIsOnSchedule()
         {
+            if (!_useScheduler) return true;
+
             var time = DateTime.Now;
             var todaysSchedule = _schedule[time.DayOfWeek.ToString()];
 
@@ -758,7 +777,7 @@ namespace NHMCore.Mining
             {
                 var from = Convert.ToDateTime(terminFrom);
                 var to = Convert.ToDateTime(terminTo);
-                if (from < time && to < time) return true;
+                if (from < time && to > time) return true;
             }
 
             return false;
@@ -778,7 +797,7 @@ namespace NHMCore.Mining
             AvailableNotifications.CreateNotProfitableInfo(isProfitable);
 
             // if profitable and connected to internet mine
-            var shouldMine = isProfitable && _isConnectedToInternet;
+            var shouldMine = isProfitable && isOnSchedule && _isConnectedToInternet;
             return shouldMine;
         }
 
@@ -811,12 +830,6 @@ namespace NHMCore.Mining
                 }
             }
             return (currentProfit, prevStateProfit);
-        }
-
-        private static List<(string, string)> GetTodaysSchedule()
-        {
-            var key = DateTime.Now.DayOfWeek.ToString();
-            return _schedule[key];
         }
 
         private static List<AlgorithmContainer> GetMostProfitableAlgorithmContainers()

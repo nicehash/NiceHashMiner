@@ -32,6 +32,7 @@ namespace NiceHashMiner.Views.Settings
                 (AdvancedTab, AdvancedButton),
                 (AboutTab, AboutButton),
                 (QrTab, QrButton),
+                (SchedulerTab, SchedulerButton)
             };
             OnScreenChange(0);
         }
