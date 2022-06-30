@@ -146,6 +146,7 @@ namespace NiceHashMiner.ViewModels
         public UpdateSettings UpdateSettings => UpdateSettings.Instance;
 
         public GPUProfileManager GPUProfileManager => GPUProfileManager.Instance;
+        public ELPManager ELPManager => ELPManager.Instance;
         #endregion Exposed settings
 
 
@@ -320,6 +321,7 @@ namespace NiceHashMiner.ViewModels
                     OnPropertyChanged(nameof(MinimumProfitString));
                 }
             };
+            ELPManager.Instance.ELPReiteration += ReIterateELPsEvent;
         }
 
 
@@ -338,42 +340,34 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
+        private void ReIterateELPsEvent(object sender, EventArgs e)
+        {
+            ReadELPConfigsOrCreateIfMissing();
+        }
         private MinerConfig FixConfigIntegrityIfNeeded(MinerConfig data, PluginEntryVM plugin)
         {
             var def = CreateDefaultConfig(plugin);
             try
-            { 
+            {
                 if (data.MinerUUID != def.MinerUUID) data.MinerUUID = def.MinerUUID;
                 if (data.MinerName != def.MinerName) data.MinerName = def.MinerName;
                 def.MinerCommands = data.MinerCommands;
-                if (data.Algorithms.Count != def.Algorithms.Count)
+                foreach (var algorithm in def.Algorithms)
                 {
-                    foreach(var algorithm in def.Algorithms)
+                    var containedAlgo = data.Algorithms.Where(a => a.AlgorithmName == algorithm.AlgorithmName).FirstOrDefault();
+                    if (containedAlgo != null)
                     {
-                        var containedAlgo = data.Algorithms.Where(a => a.AlgorithmName == algorithm.AlgorithmName).FirstOrDefault();
-                        if (containedAlgo != null)
+                        algorithm.AlgoCommands = containedAlgo.AlgoCommands;
+                        foreach(var dev in algorithm.Devices)
                         {
-                            algorithm.AlgoCommands = containedAlgo.AlgoCommands;
-                            foreach(var dev in algorithm.Devices)
+                            var containedDev = containedAlgo.Devices.Where(a => a.Key == dev.Key).FirstOrDefault();
+                            if(containedDev.Value != null)
                             {
-                                var containedDev = containedAlgo.Devices.Where(a => a.Key == dev.Key).FirstOrDefault();
-                                if(containedDev.Value != null) 
-                                {
-                                    algorithm.Devices[dev.Key] = containedDev.Value;
-                                }
+                                algorithm.Devices[dev.Key] = containedDev.Value;
                             }
                         }
                     }
                 }
-                //for (int i = 0; i < data.Algorithms.Count; i++)
-                //{
-                //    if (data.Algorithms[i].AlgorithmName != def.Algorithms[i].AlgorithmName) return false;
-                //    if (data.Algorithms[i].Devices.Count != def.Algorithms[i].Devices.Count) return false;
-                //    for (int j = 0; j < data.Algorithms[i].Devices.Count; j++)
-                //    {
-                //        if (data.Algorithms[i].Devices.Keys != def.Algorithms[i].Devices.Keys) return false;
-                //    }
-                //}
             }
             catch (Exception ex)
             {
@@ -435,6 +429,7 @@ namespace NiceHashMiner.ViewModels
 
         public void ReadELPConfigsOrCreateIfMissing()
         {
+            if (Plugins == null) return;
             var minerELPs = new List<MinerELPData>();
             foreach (var plugin in Plugins)
             {
@@ -446,7 +441,6 @@ namespace NiceHashMiner.ViewModels
                     if (fixedData != null)
                     {
                         data = fixedData;
-                        //data = CreateDefaultConfig(plugin);
                         MinerConfigManager.WriteConfig(data);
                     }
                     minerELPs.Add(ConstructMinerELPData(data));
