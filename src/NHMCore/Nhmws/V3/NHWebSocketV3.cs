@@ -279,7 +279,6 @@ namespace NHMCore.Nhmws.V3
 
         static private async Task<bool> HandleReceiveMessage()
         {
-            ELPManager.Instance.NotifyELPReiteration();
             if (_recieveQueue.TryDequeue(out var recieveMsg))
             {
                 await HandleMessage(recieveMsg);

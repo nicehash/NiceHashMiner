@@ -172,7 +172,7 @@ namespace NiceHashMiner.ViewModels.Models
                         if (flagAndDelim.Length != 2) continue;
                         deviceParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
                     }
-                    tempAlgo.Devices.Add(dev.DeviceName, deviceParams);
+                    tempAlgo.Devices.Add(dev.UUID, new Device() { DeviceName = dev.DeviceName, Commands = deviceParams });
                 }
                 minerConfig.Algorithms.Add(tempAlgo);
             }

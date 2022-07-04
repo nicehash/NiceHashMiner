@@ -391,8 +391,8 @@ namespace NiceHashMiner.ViewModels
             {
                 var tempAlgo = new AlgoELPData();
                 var uniqueFlags = algo.Devices.Values
-                    .Select(v => v.Where(a => a.Count == 3).Select(a => $"{a[0]} {a[2]}"))
-                    .SelectMany(f => f)
+                    .Select(v => v.Commands.Where(c => c.Count == 3).Select(a => $"{a[0]} {a[2]}"))
+                    .SelectMany(v => v)
                     .Distinct()
                     .ToList();
                 uniqueFlags.ForEach(f => tempAlgo.Devices[0].AddELP(f));
@@ -402,16 +402,22 @@ namespace NiceHashMiner.ViewModels
                 {
                     var tempELPElts = new DeviceELPElement[uniqueFlags.Count + 1];
                     tempELPElts[tempELPElts.Length - 1] = new DeviceELPElement() { ELP = String.Empty };
-                    foreach (var arg in dev.Value)
+                    foreach (var arg in dev.Value.Commands)
                     {
                         if (arg.Count != 3) continue;
                         var index = uniqueFlags.IndexOf($"{arg[0]} {arg[2]}");
                         if (index < 0) continue;
                         tempELPElts[index] = new DeviceELPElement() { ELP = arg[1] };
                     }
+                    for(int i = 0; i < tempELPElts.Length; i++)
+                    {
+                        if (tempELPElts[i] != null) continue;
+                        tempELPElts[i] = new DeviceELPElement() { ELP = String.Empty };
+                    }
                     tempAlgo.Devices.Add(new DeviceELPData()
                     {
-                        DeviceName = dev.Key,
+                        UUID = dev.Key,
+                        DeviceName = dev.Value.DeviceName,
                         ELPs = new ObservableCollection<DeviceELPElement>(tempELPElts)
                     });
                 }
@@ -437,6 +443,7 @@ namespace NiceHashMiner.ViewModels
                 try
                 {
                     MinerConfig data = MinerConfigManager.ReadConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID);
+                    if (data == null) throw new FileNotFoundException();
                     var fixedData = FixConfigIntegrityIfNeeded(data, plugin);
                     if (fixedData != null)
                     {
@@ -464,20 +471,23 @@ namespace NiceHashMiner.ViewModels
             MinerConfig defCfg = new();
             defCfg.MinerName = plugin.Plugin.PluginName;
             defCfg.MinerUUID = plugin.Plugin.PluginUUID;
-            Dictionary<string, List<string>> algorithmDevicePairs = new();
+            Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new();
             foreach (var devAlgoPair in plugin.Plugin.SupportedDevicesAlgorithms)
             {
                 foreach(var algo in devAlgoPair.Value)
                 {
-                    if(!algorithmDevicePairs.ContainsKey(algo)) algorithmDevicePairs.Add(algo, new List<string>());
-                    var devs = Devices.Where(dev => dev.Dev.DeviceType.ToString().Contains(devAlgoPair.Key)).Select(dev => dev.Dev.Name);
+                    if(!algorithmDevicePairs.ContainsKey(algo)) algorithmDevicePairs.Add(algo, new List<(string,string)>());
+                    var devs = Devices.Where(dev => dev.Dev.DeviceType.ToString().Contains(devAlgoPair.Key))
+                        .Select(dev => new { P = (dev.Dev.Uuid, dev.Dev.FullName)})
+                        .Select(p => p.P);
                     algorithmDevicePairs[algo].AddRange(devs);
                 }
             }
-            foreach(var algoPairs in algorithmDevicePairs)
+            foreach (var algoPairs in algorithmDevicePairs)
             {
-                var devicesDict = new Dictionary<string, List<List<string>>>();
-                algoPairs.Value.ForEach(dev => devicesDict.TryAdd(dev, new List<List<string>>()));
+                var devicesDict = new Dictionary<string, Device>();
+                //var devicesDict = new Dictionary<string, List<List<string>>>();
+                algoPairs.Value.ForEach(dev => devicesDict.TryAdd(dev.uuid, new Device() { DeviceName = dev.name, Commands = new List<List<string>>() }));
                 defCfg.Algorithms.Add(new Algo()
                 {
                     AlgorithmName = algoPairs.Key,

@@ -150,7 +150,7 @@ namespace NHM.MinerPluginToolkitV1Test
                 new List<string>() { "--gpu-no-sleep" }
             };
             algo.AlgoCommands.Add(algoCommand);
-            algo.Devices.Add("device1", device);
+            algo.Devices.Add("device1", new Device() { DeviceName = "device1", Commands = device});
             //data.Algorithms.Add(algo);
 
             MinerConfigManager.WriteConfig(data);

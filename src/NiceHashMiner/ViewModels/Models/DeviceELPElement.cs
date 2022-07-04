@@ -21,7 +21,7 @@ namespace NiceHashMiner.ViewModels.Models
             HeaderType = isValue ? HeaderType.Value : HeaderType.FlagAndDelim;
         }
         public HeaderType HeaderType { get; init; } = HeaderType.Value;
-        private string _elp { get; set; }
+        private string _elp { get; set; } = String.Empty;
         public string ELP
         {
             get { return _elp; }

@@ -38,7 +38,16 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             public List<List<string>> AlgoCommands = new();
 
             [JsonProperty("devices", Order = 3)]
-            public Dictionary<string, List<List<string>>> Devices = new();
+            public Dictionary<string, Device> Devices = new();
+        }
+
+        [Serializable]
+        public class Device
+        {
+            [JsonProperty("device", Order = 1)]
+            public string DeviceName { get; set; }
+            [JsonProperty("commands", Order = 2)]
+            public List<List<string>> Commands = new();
         }
 
         public static void WriteConfig(MinerConfig minerConfig)
