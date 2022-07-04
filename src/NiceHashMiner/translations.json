@@ -3530,6 +3530,18 @@
     },
     "When checked, NiceHash Miner will use optimization profiles for Dagger algorithms when supported GPUs are present. Requires running NHM as admin and enabling 3rd-party miners.": {
 
-    }
+    },
+	"Flag & delimiter":{
+		
+	},
+	"Value":{
+		
+	},
+	"Single parameters":{
+		
+	},
+	"Double parameters":{
+		
+	},
   }
 } 

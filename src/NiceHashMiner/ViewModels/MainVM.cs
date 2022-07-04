@@ -351,14 +351,14 @@ namespace NiceHashMiner.ViewModels
             def.MinerCommands = data.MinerCommands;
             foreach (var algorithm in def.Algorithms)
             {
-                var containedAlgo = data.Algorithms.Where(a => a.AlgorithmName == algorithm.AlgorithmName).FirstOrDefault();
+                var containedAlgo = data.Algorithms?.Where(a => a.AlgorithmName == algorithm.AlgorithmName).FirstOrDefault();
                 if (containedAlgo == null) continue;
                 algorithm.AlgoCommands = containedAlgo.AlgoCommands;
                 foreach (var dev in algorithm.Devices)
                 {
-                    var containedDev = containedAlgo.Devices.Where(a => a.Key == dev.Key).FirstOrDefault();
-                    if (containedDev.Value == null) continue;
-                    algorithm.Devices[dev.Key] = containedDev.Value;
+                    var containedDev = containedAlgo.Devices?.Where(a => a.Key == dev.Key).FirstOrDefault();
+                    if (containedDev == null || containedDev?.Value == null) continue;
+                    algorithm.Devices[dev.Key] = containedDev?.Value;
                 }
             }
             return def;
@@ -391,17 +391,17 @@ namespace NiceHashMiner.ViewModels
             foreach (var algo in cfg?.Algorithms)
             {
                 var tempAlgo = new AlgoELPData();
-                var uniqueFlags = algo.Devices.Values
-                    .Select(v => v.Commands.Where(c => c.Count == 3).Select(a => $"{a[0]} {a[2]}"))
-                    .SelectMany(v => v)
-                    .Distinct()
+                var uniqueFlags = algo.Devices.Values?
+                    .Select(v => v.Commands.Where(c => c.Count == 3)?.Select(a => $"{a[0]} {a[2]}"))?
+                    .SelectMany(v => v)?
+                    .Distinct()?
                     .ToList();
-                uniqueFlags.ForEach(f => tempAlgo.Devices[0].AddELP(f));
+                uniqueFlags?.ForEach(f => tempAlgo.Devices[0].AddELP(f));
                 if (!uniqueFlags.Any()) tempAlgo.Devices[0].ELPs.Add(new DeviceELPElement(false) { ELP = String.Empty });
                 tempAlgo.Name = algo.AlgorithmName;
                 foreach (var dev in algo.Devices)
                 {
-                    var tempELPElts = new DeviceELPElement[uniqueFlags.Count + 1];
+                    var tempELPElts = new DeviceELPElement[uniqueFlags?.Count + 1 ?? 1];
                     tempELPElts[tempELPElts.Length - 1] = new DeviceELPElement() { ELP = String.Empty };
                     foreach (var arg in dev.Value.Commands)
                     {
@@ -470,10 +470,10 @@ namespace NiceHashMiner.ViewModels
         private MinerConfig CreateDefaultConfig(PluginEntryVM plugin)
         {
             MinerConfig defCfg = new();
-            defCfg.MinerName = plugin.Plugin.PluginName;
-            defCfg.MinerUUID = plugin.Plugin.PluginUUID;
+            defCfg.MinerName = plugin?.Plugin?.PluginName;
+            defCfg.MinerUUID = plugin?.Plugin?.PluginUUID;
             Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new();
-            foreach (var devAlgoPair in plugin.Plugin.SupportedDevicesAlgorithms)
+            foreach (var devAlgoPair in plugin?.Plugin?.SupportedDevicesAlgorithms)
             {
                 foreach (var algo in devAlgoPair.Value)
                 {

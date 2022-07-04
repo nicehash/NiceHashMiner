@@ -125,7 +125,6 @@ namespace NiceHashMiner.ViewModels.Models
                 }
                 algo.ParsedString = MinerExtraParameters.Parse(minerParams, algoParams, devParams);
             }
-            var a = 0;
         }
         public void ClearSingleParams()
         {

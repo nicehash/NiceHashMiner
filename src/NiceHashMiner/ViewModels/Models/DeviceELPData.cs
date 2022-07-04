@@ -40,7 +40,7 @@ namespace NiceHashMiner.ViewModels.Models
         {
             if(ELPs.Count == 0) ELPs.Add(new DeviceELPElement(!IsDeviceDataHeader) { ELP = elp });
             else ELPs[ELPs.Count - 1].ELP = elp;
-            ELPs.Add(new DeviceELPElement(!IsDeviceDataHeader) { ELP = "" });
+            ELPs.Add(new DeviceELPElement(!IsDeviceDataHeader) { ELP = String.Empty });
         }
         public DeviceELPData(bool isHeader = false)
         {

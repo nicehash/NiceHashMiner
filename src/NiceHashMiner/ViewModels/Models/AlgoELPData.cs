@@ -17,7 +17,7 @@ namespace NiceHashMiner.ViewModels.Models
             if (InfoModified != null) InfoModified();
         }
         public string Name { get; set; }
-        private List<DeviceELPData> _devices;
+        private List<DeviceELPData> _devices = new List<DeviceELPData>();
         public AlgoELPData()
         {
             _devices = new List<DeviceELPData>();
