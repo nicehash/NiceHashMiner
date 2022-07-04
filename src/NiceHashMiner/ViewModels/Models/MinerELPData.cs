@@ -94,10 +94,12 @@ namespace NiceHashMiner.ViewModels.Models
             foreach (var algo in Algos)
             {
                 List<List<string>> algoParams = new List<List<string>>();
+                if (algo.SingleParams == null) algo.SingleParams = new();
                 foreach (var single in algo.SingleParams)
                 {
                     algoParams.Add(new List<string>() { single });
                 }
+                if(algo.DoubleParams == null) algo.DoubleParams = new();
                 foreach (var dbl in algo.DoubleParams)
                 {
                     algoParams.Add(new List<string>() { dbl.name, dbl.value });
@@ -105,9 +107,12 @@ namespace NiceHashMiner.ViewModels.Models
                 var header = algo.Devices.FirstOrDefault();
                 if (header == null || !header.IsDeviceDataHeader) continue;
                 List<List<List<string>>> devParams = new List<List<List<string>>>();
+                if (algo.Devices == null) algo.Devices = new();
                 foreach (var dev in algo.Devices)
                 {
                     if (dev.IsDeviceDataHeader) continue;
+                    if (header.ELPs == null || dev.ELPs == null) continue;
+                    if (header.ELPs.Count != dev.ELPs.Count) continue;
                     List<List<string>> oneDevParams = new List<List<string>>();
                     for (int i = 0; i < dev.ELPs.Count; i++)
                     {
@@ -120,6 +125,7 @@ namespace NiceHashMiner.ViewModels.Models
                 }
                 algo.ParsedString = MinerExtraParameters.Parse(minerParams, algoParams, devParams);
             }
+            var a = 0;
         }
         public void ClearSingleParams()
         {

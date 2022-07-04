@@ -24,8 +24,18 @@ namespace NiceHashMiner.Views.ParameterOverview
     {
         public DeviceELPItem()
         {
+            Loaded += DeviceELPItem_Loaded;
             InitializeComponent();
         }
+
+        private void DeviceELPItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is DeviceELPElement ee)
+            {
+                ee.OnELPValueChanged(DeviceELPValueTB, e, ELPEventActionType.ModifyOrAdd);
+            }
+        }
+
         private void DeviceValueTextChanged(object sender, TextChangedEventArgs e)
         {
             if (sender is TextBox tb &&

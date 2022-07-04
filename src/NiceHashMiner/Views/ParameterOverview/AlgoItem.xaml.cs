@@ -47,32 +47,40 @@ namespace NiceHashMiner.Views.ParameterOverview
                 ad.NotifyMinerForELPRescan();
                 return;
             }
-            if (action == 0)//remove //todo change to enums
+            if (action == ELPEventActionType.Delete)
             {
-                var column = de.ELPs.IndexOf(elt);
-                if (column == de.ELPs.Count - 1 && tb.Text == String.Empty) return;
-                foreach (var dev in ad.Devices)
-                {
-                    dev.RemoveELP(column);
-                }
-                ad.NotifyMinerForELPRescan();
+                DeleteArgColumnForAllDevices(ad, de, elt, tb);
             }
             else if (action == ELPEventActionType.ModifyOrAdd && tb.Text != String.Empty)
             {
-                var column = de.ELPs.IndexOf(elt);
-                if (column == de.ELPs.Count - 1)
-                {
-                    foreach (var dev in ad.Devices)
-                    {
-                        var tempELP = new DeviceELPElement();
-                        if (dev.IsDeviceDataHeader) tempELP = new DeviceELPElement(false);
-                        tempELP.ELPValueChanged += dev.InputChanged;
-                        dev.ELPs.Add(tempELP);
-                    }
-                }
-                de.ELPs[column].ELP = tb.Text;
-                ad.NotifyMinerForELPRescan();
+                AddNewColumnForAllDevices(ad, de, elt, tb);
             }
+        }
+        private void AddNewColumnForAllDevices(AlgoELPData ad, DeviceELPData de, DeviceELPElement elt, TextBox tb)
+        {
+            var column = de.ELPs.IndexOf(elt);
+            if (column == de.ELPs.Count - 1)
+            {
+                foreach (var dev in ad.Devices)
+                {
+                    var tempELP = new DeviceELPElement();
+                    if (dev.IsDeviceDataHeader) tempELP = new DeviceELPElement(false);
+                    tempELP.ELPValueChanged += dev.InputChanged;
+                    dev.ELPs.Add(tempELP);
+                }
+            }
+            de.ELPs[column].ELP = tb.Text;
+            ad.NotifyMinerForELPRescan();
+        }
+        private void DeleteArgColumnForAllDevices(AlgoELPData ad, DeviceELPData de, DeviceELPElement elt, TextBox tb)
+        {
+            var column = de.ELPs.IndexOf(elt);
+            if (column == de.ELPs.Count - 1 && tb.Text == String.Empty) return;
+            foreach (var dev in ad.Devices)
+            {
+                dev.RemoveELP(column);
+            }
+            ad.NotifyMinerForELPRescan();
         }
         private void DropDownDevices_Button_Click(object sender, RoutedEventArgs e)
         {

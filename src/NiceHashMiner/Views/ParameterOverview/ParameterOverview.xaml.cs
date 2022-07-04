@@ -35,6 +35,5 @@ namespace NiceHashMiner.Views.ParameterOverview
                 miner.UpdateMinerELPConfig();
             }
         }
-
     }
 }

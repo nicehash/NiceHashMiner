@@ -44,7 +44,6 @@ namespace NiceHashMiner.ViewModels.Models
         }
         public DeviceELPData(bool isHeader = false)
         {
-            //ELPs.Add(new DeviceELPElement(!isHeader) { ELP = "" });
             IsDeviceDataHeader = isHeader;
         }
         public DeviceELPData(string name, string uuid)

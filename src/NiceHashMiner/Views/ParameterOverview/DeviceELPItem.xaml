@@ -20,7 +20,7 @@
     <Grid>
         <StackPanel>
             <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3" Text="{Binding HeaderType, Converter={StaticResource FlagOrValueHeaderEnumConverter}}"/>
-            <TextBox Style="{StaticResource inputBox}" TextChanged="DeviceValueTextChanged" 
+            <TextBox Style="{StaticResource inputBox}" x:Name="DeviceELPValueTB" TextChanged="DeviceValueTextChanged" 
                                                  Margin="0,0,10,3" Width="160" Text="{Binding ELP, Mode=TwoWay}"/>
         </StackPanel>
     </Grid>
