@@ -80,9 +80,12 @@ namespace NiceHashMiner.ViewModels.Models
                 return String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
             }
         }
+
+
+
         public void IterateSubModelsAndConstructELPs()
         {
-            List<List<string>> minerParams = new List<List<string>>();
+            List<List<string>> minerParams = new();
             foreach (var single in SingleParams)
             {
                 minerParams.Add(new List<string>() { single });
@@ -93,7 +96,7 @@ namespace NiceHashMiner.ViewModels.Models
             }
             foreach (var algo in Algos)
             {
-                List<List<string>> algoParams = new List<List<string>>();
+                List<List<string>> algoParams = new();
                 if (algo.SingleParams == null) algo.SingleParams = new();
                 foreach (var single in algo.SingleParams)
                 {
@@ -106,14 +109,14 @@ namespace NiceHashMiner.ViewModels.Models
                 }
                 var header = algo.Devices.FirstOrDefault();
                 if (header == null || !header.IsDeviceDataHeader) continue;
-                List<List<List<string>>> devParams = new List<List<List<string>>>();
+                List<List<List<string>>> devParams = new();
                 if (algo.Devices == null) algo.Devices = new();
                 foreach (var dev in algo.Devices)
                 {
                     if (dev.IsDeviceDataHeader) continue;
                     if (header.ELPs == null || dev.ELPs == null) continue;
                     if (header.ELPs.Count != dev.ELPs.Count) continue;
-                    List<List<string>> oneDevParams = new List<List<string>>();
+                    List<List<string>> oneDevParams = new();
                     for (int i = 0; i < dev.ELPs.Count; i++)
                     {
                         if (header.ELPs[i].ELP == null) continue;
@@ -124,6 +127,25 @@ namespace NiceHashMiner.ViewModels.Models
                     devParams.Add(oneDevParams);
                 }
                 algo.ParsedString = MinerExtraParameters.Parse(minerParams, algoParams, devParams);
+
+
+                Dictionary<HashSet<int>, List<List<List<string>>>> deviceParamsGroups = new Dictionary<HashSet<int>, List<List<List<string>>>>();
+                for (int first = 0; first < devParams.Count; first++)
+                {
+                    var isPartOfGroup = deviceParamsGroups.Keys.Any(keys => keys.Contains(first));
+                    if (isPartOfGroup) continue;
+                    var group = new HashSet<int> { first };
+                    for (int second = first+1; second < devParams.Count; second++)
+                    {
+                        if (MinerExtraParameters.CheckIfCanGroup(new List<List<List<string>>> { devParams[first], devParams[second] })) group.Add(second);
+                    }
+                    deviceParamsGroups.Add(group, devParams.Where((_, index) => group.Contains(index)).ToList());
+                }
+
+
+                //var canGroup = MinerExtraParameters.CheckIfCanGroup(devParams);
+
+                //var test = MinerExtraParameters.GetAllInstanceCommands(minerParams, algoParams, devParams);
             }
         }
         public void ClearSingleParams()

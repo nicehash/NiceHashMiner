@@ -27,37 +27,61 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             return elp;
         }
 
-        internal enum ParameterType
+        public enum ParameterType
         {
             OptionIsParameter = 1,
             OptionWithSingleParameter = 2,
             OptionWithMultipleParameters = 3
         }
 
+        internal static ParameterType GetParameterType(Parameter parameter) => (ParameterType)parameter.Count;
         internal static bool IsParameterOfType(Parameter parameter, ParameterType type) => parameter.Count == (int)type;
-        private static Parameters FilterParametersOfType(Parameters parameters, ParameterType type)
+        public static (string flag, string value, string delimiter) ParseParameter(Parameter parameter)
         {
-            return parameters.Where(p => IsParameterOfType(p, type)).ToList();
-        }
-
-        private static bool IsValidParameter(Parameter parameter)
-        {
-            foreach (ParameterType type in Enum.GetValues(typeof(ParameterType)))
+            return GetParameterType(parameter) switch
             {
-                if (IsParameterOfType(parameter, type)) return true;
-            }
-
-            return false;
+                ParameterType.OptionIsParameter => (parameter[0], null, null),
+                ParameterType.OptionWithSingleParameter => (parameter[0], parameter[1], null),
+                ParameterType.OptionWithMultipleParameters => (parameter[0], parameter[1], parameter[2]),
+                _ => (null, null, null),
+            };
         }
 
-        private static bool CheckIfCanGroup(Parameter aP, Parameter bP, ParameterType type)
+        internal static bool IsValidParameter(Parameter parameter, ParameterType type)
         {
-            if (!IsParameterOfType(aP, type) || !IsParameterOfType(bP, type)) return false;
-            if (aP[0] != bP[0]) return false;
-            if (type == ParameterType.OptionWithSingleParameter && aP[1] != bP[1]) return false;
-            if (type == ParameterType.OptionWithMultipleParameters && aP[2] != bP[2]) return false;
+            if (!IsParameterOfType(parameter, type)) return false;
 
-            return true;
+            var (_, value, _) = ParseParameter(parameter);
+            var valid = type switch
+            {
+                ParameterType.OptionWithSingleParameter or ParameterType.OptionWithMultipleParameters => !string.IsNullOrEmpty(value),
+                _ => true,
+            };
+
+            return valid;
+        }
+
+        internal static Parameters FilterValidParametersOfType(Parameters parameters, ParameterType type)
+        {
+            return parameters.Where(p => IsValidParameter(p, type)).ToList();
+        }
+
+        internal static bool CheckIfCanGroup(Parameter aP, Parameter bP, ParameterType type)
+        {
+            if (!IsValidParameter(aP, type) || !IsValidParameter(bP, type)) return false;
+
+            var (aFlag, aValue, aDelimiter) = ParseParameter(aP);
+            var (bFlag, bValue, bDelimiter) = ParseParameter(bP);
+            
+            if (aFlag != bFlag) return false;
+
+            return type switch
+            {
+                ParameterType.OptionIsParameter => true,
+                ParameterType.OptionWithSingleParameter => aValue == bValue,
+                ParameterType.OptionWithMultipleParameters => aDelimiter == bDelimiter,
+                _ => false,
+            };
         }
 
         private static bool CheckIfCanGroup(Parameter aP, Parameters b_Parameters, ParameterType type)
@@ -76,8 +100,8 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
 
             foreach (ParameterType type in Enum.GetValues(typeof(ParameterType)))
             {
-                var a_types = FilterParametersOfType(a, type);
-                var b_types = FilterParametersOfType(b, type);
+                var a_types = FilterValidParametersOfType(a, type);
+                var b_types = FilterValidParametersOfType(b, type);
                 if(!CheckIfCanGroup(a_types, b_types, type) && a_types.Count > 0 && b_types.Count > 0) return false;
             }
 
@@ -95,7 +119,41 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             }
             return true;
         }
-
+        public static List<string> GetAllInstanceCommands(Parameters minerParameters, Parameters algorithmParameters, DevicesParametersList devicesParameterList)
+        {
+            List<string> commands = new();
+            //if (CheckIfCanGroup(devicesParameterList)) return new List<string> { Parse(minerParameters, algorithmParameters, devicesParameterList) };
+            var baseStr = Parse(minerParameters, algorithmParameters, new DevicesParametersList() { new Parameters() });
+            var split = SplitIntoCompatibleBuckets(devicesParameterList);
+            foreach(var group in split)
+            {
+                commands.Add(baseStr + " " + Parse(new Parameters(), new Parameters(), group.Value));
+            }
+            return commands;
+        }
+        private static Dictionary<string, DevicesParametersList> SplitIntoCompatibleBuckets(DevicesParametersList list)
+        {
+            Dictionary<string, DevicesParametersList> buckets = new();
+            var missingValueList = list.Where(list => list.Where(arg => arg.Count == 3)
+                                                         .Where(arg => arg[1].Trim() == String.Empty)
+                                                         .Any());
+            foreach(var missing in missingValueList)
+            {
+                var missingFlags = missing.Where(elt => elt[1] == string.Empty).Select(elt => $"{elt[0]} {elt[2]}").Distinct();
+                var joinedKey = string.Join(" ", missingFlags);
+                missing.RemoveAll(elt => elt[1] == string.Empty);
+                if (buckets.ContainsKey(joinedKey)) buckets[joinedKey].Add(missing);
+                else buckets.TryAdd(joinedKey, new DevicesParametersList() { missing });
+            }
+            var filledValuesList = list.Where(list => list.Where(arg => arg.Count == 3)
+                                              .All(arg => arg[1].Trim() != String.Empty));
+            if (filledValuesList.Count() != 0)
+            {
+                if (buckets.ContainsKey(string.Empty)) buckets[string.Empty].AddRange(filledValuesList);
+                else buckets.TryAdd(string.Empty, new DevicesParametersList(filledValuesList));
+            }
+            return buckets;
+        }
         private static string DevicesStringForFlag(string flag, IEnumerable<Parameters> parameters)
         {
             var flagParams = parameters
@@ -108,14 +166,14 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
 
         public static string Parse(Parameters minerParameters, Parameters algorithmParameters, DevicesParametersList devicesParameters)
         {
-            //if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
+            if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
             if (devicesParameters == null) return "";
             if (!CheckIfCanGroup(devicesParameters)) return "";
 
-            var options = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionIsParameter).SelectMany(x => x).ToList();
-            var singleOptions = FilterParametersOfType(devicesParameters.First(), ParameterType.OptionWithSingleParameter).SelectMany(x => x).ToList();
+            var options = FilterValidParametersOfType(devicesParameters.First(), ParameterType.OptionIsParameter).SelectMany(x => x).ToList();
+            var singleOptions = FilterValidParametersOfType(devicesParameters.First(), ParameterType.OptionWithSingleParameter).SelectMany(x => x).ToList();
             var multipleOptions = devicesParameters
-                .Select(p => FilterParametersOfType(p, ParameterType.OptionWithMultipleParameters));
+                .Select(p => FilterValidParametersOfType(p, ParameterType.OptionWithMultipleParameters));
             var ss = multipleOptions.SelectMany(p => p.Select(x => x[0]));
             var allFlags = new HashSet<string>(ss);
             var deviceFlagValues = allFlags.Select(flag => DevicesStringForFlag(flag, multipleOptions));

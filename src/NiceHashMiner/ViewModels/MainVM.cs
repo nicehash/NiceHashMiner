@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1.CommandLine;
 using NHMCore;
@@ -453,15 +454,15 @@ namespace NiceHashMiner.ViewModels
                     }
                     minerELPs.Add(ConstructMinerELPData(data));
                 }
-                catch (FileNotFoundException)
+                catch (Exception ex)
                 {
-                    var defaultCFG = CreateDefaultConfig(plugin);
-                    MinerConfigManager.WriteConfig(defaultCFG);
-                    minerELPs.Add(ConstructMinerELPData(defaultCFG));
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("MainVM", e.Message);
+                    if(ex is FileNotFoundException || ex is JsonSerializationException)
+                    {
+                        var defaultCFG = CreateDefaultConfig(plugin);
+                        MinerConfigManager.WriteConfig(defaultCFG, true);
+                        minerELPs.Add(ConstructMinerELPData(defaultCFG));
+                    }
+                    else Logger.Error("MainVM", ex.Message);
                 }
             }
             MinerELPs = minerELPs;

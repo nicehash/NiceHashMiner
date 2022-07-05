@@ -17,17 +17,20 @@
         ]
       ],
       "devices": {
-        "device1": [
-          [
-            "--lhr-mode",
-            "1",
-            ","
-          ],
-          [
-            "--zombie-mode",
-            "1"
+        "uuid1": {
+          "device": "dev1",
+          "commands": [
+            [
+              "--lhr-mode",
+              "1",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
           ]
-        ]
+        }
       }
     },
     {
@@ -39,28 +42,34 @@
         ]
       ],
       "devices": {
-        "device1": [
-          [
-            "--lhr-mode",
-            "1",
-            ","
-          ],
-          [
-            "--zombie-mode",
-            "1"
+        "uuid2": {
+          "device": "dev2",
+          "commands": [
+            [
+              "--lhr-mode",
+              "1",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
           ]
-        ],
-        "device2": [
-          [
-            "--lhr-mode",
-            "2",
-            ","
-          ],
-          [
-            "--zombie-mode",
-            "1"
+        },
+        "uuid3": {
+          "device": "dev3",
+          "commands": [
+            [
+              "--lhr-mode",
+              "2",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
           ]
-        ]
+        }
       }
     }
   ]

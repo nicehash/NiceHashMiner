@@ -19,8 +19,191 @@ namespace NHM.MinerPluginToolkitV1Test
         [TestMethod]
         public void TestJsonDeserializer()
         {
-            ElpSettings DeserializeTest(string path) => ReadJson(path);
-            Assert.IsNotNull(DeserializeTest(@"..\..\..\CommandLine\command_line01.json"));
+            Assert.IsNotNull(ReadJson(@"..\..\..\CommandLine\command_line01.json"));
+        }
+
+        //[TestMethod]
+        //public void TestJsonDeserializer()
+        //{
+        //    Assert.IsNotNull(ReadJson(@"..\..\..\CommandLine\command_line01.json"));
+        //}
+
+        [TestMethod]
+        public void TestCheckIfCanGroup()
+        {
+            var deviceParams01 = new List<List<List<string>>>
+            {
+                // dev01
+                new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--flag33",
+                        "2",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flag1",
+                        "6",
+                        ","
+                    }
+                },
+                // dev02
+                new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--flag33",
+                        "3",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flag1",
+                        "", // parameter is not valid
+                        ","
+                    }
+                },
+            };
+
+            
+            Assert.AreEqual(false, MinerExtraParameters.CheckIfCanGroup(deviceParams01));
+
+
+            var deviceParams02 = new List<List<List<string>>>
+            {
+                // dev01
+                new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--flag33",
+                        "2",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flag1",
+                        "6",
+                        ","
+                    }
+                },
+                // dev02
+                new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--flag33",
+                        "3",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flag1",
+                        "8",
+                        ","
+                    }
+                },
+            };
+
+            Assert.AreEqual(true, MinerExtraParameters.CheckIfCanGroup(deviceParams02));
+
+            var deviceParams03 = new List<List<List<string>>>
+            {
+                // dev01
+                new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--flag33",
+                        "2",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flag1",
+                        "6",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flagSingle",
+                        "6",
+                    },
+                },
+                // dev02
+                new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--flag33",
+                        "3",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flag1",
+                        "8",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flagSingle",
+                        "6",
+                    },
+                },
+            };
+
+            Assert.AreEqual(true, MinerExtraParameters.CheckIfCanGroup(deviceParams03));
+
+            var deviceParams04 = new List<List<List<string>>>
+            {
+                // dev01
+                new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--flag33",
+                        "2",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flag1",
+                        "6",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flagSingle",
+                        "6",
+                    },
+                },
+                // dev02
+                new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--flag33",
+                        "3",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flag1",
+                        "8",
+                        ","
+                    },
+                    new List<string>
+                    {
+                        "--flagSingle",
+                        "5",
+                    },
+                },
+            };
+
+            Assert.AreEqual(false, MinerExtraParameters.CheckIfCanGroup(deviceParams04));
         }
 
         [TestMethod]
@@ -31,10 +214,9 @@ namespace NHM.MinerPluginToolkitV1Test
             var algo = elps.AlgorithmParameters;
             var devices = elps.DevicesParametersList;
 
-            string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
-            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
-            Assert.AreNotEqual("--apiport 4000 --coin ETH --zombie-mode 1,2", ParseTest(miner, algo, devices));
-            Assert.AreNotEqual("--apiport 4000 --disablewatchdog 1 --coin ETH --pool nhmp.auto.nicehash.com:443 --makex --test 3 --zombie-mode 1,2", ParseTest(miner, algo, devices));
+            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", Parse(miner, algo, devices));
+            Assert.AreNotEqual("--apiport 4000 --coin ETH --zombie-mode 1,2", Parse(miner, algo, devices));
+            Assert.AreNotEqual("--apiport 4000 --disablewatchdog 1 --coin ETH --pool nhmp.auto.nicehash.com:443 --makex --test 3 --zombie-mode 1,2", Parse(miner, algo, devices));
         }
 
         [TestMethod]
@@ -69,8 +251,8 @@ namespace NHM.MinerPluginToolkitV1Test
             var algo = elps.AlgorithmParameters;
             var devices = elps.DevicesParametersList;
 
-            string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
-            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", ParseTest(miner, algo, devices));
+            //string ParseTest(MinerParameters minerParameters, AlgorithmParameters algoParameters, DevicesParametersList devicesParameters) => Parse(minerParameters, algoParameters, devicesParameters);
+            Assert.AreEqual("--apiport 4109 --coin ETH --pool daggerhashimoto.net --test 55 --lhr-mode 1,2", Parse(miner, algo, devices));
         }
 
         [TestMethod]
@@ -136,23 +318,31 @@ namespace NHM.MinerPluginToolkitV1Test
         {
             // always create copy of dummy and rename it and change miner name in json file
             var data = ReadConfig(@"..\..\..\CommandLine\NanoMiner-dsfr43teskrtg34.json");
-            void WriteConfig(MinerConfig minerConfig) => WriteConfig(minerConfig);
-            var algo = new Algo();
-            algo.AlgorithmName = "Autolykos";
-            var algoCommand = new List<string>()
+            var algo = new Algo()
             {
-                "--stratum", 
-                "autolykos.auto.net"
+                AlgorithmName = "Autolykos",
+                AlgoCommands = new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "--stratum",
+                        "autolykos.auto.net"
+                    }
+                },
+                Devices = new Dictionary<string, Device>
+                {
+                    {
+                        "device1",
+                        new Device() { DeviceName = "device1", 
+                            Commands = new List<List<string>>
+                            {
+                                new List<string>() { "--watchdog", "1" },
+                                new List<string>() { "--gpu-no-sleep" }
+                            }, 
+                        }
+                    }
+                }
             };
-            var device = new List<List<string>>()
-            {
-                new List<string>() { "--watchdog", "1" },
-                new List<string>() { "--gpu-no-sleep" }
-            };
-            algo.AlgoCommands.Add(algoCommand);
-            algo.Devices.Add("device1", new Device() { DeviceName = "device1", Commands = device});
-            //data.Algorithms.Add(algo);
-
             MinerConfigManager.WriteConfig(data);
             Assert.IsTrue(true);
         }

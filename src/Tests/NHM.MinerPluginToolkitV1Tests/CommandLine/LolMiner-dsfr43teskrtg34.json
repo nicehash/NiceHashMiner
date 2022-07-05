@@ -17,26 +17,32 @@
         ]
       ],
       "devices": {
-        "device1": [
-          [
-            "--lhr-mode",
-            "1",
-            ","
-          ],
-          [
-            "--zombie-mode",
-            "1"
+        "uuid1": {
+          "device": "dev1",
+          "commands": [
+            [
+              "--lhr-mode",
+              "1",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
           ]
-        ],
-        "device5": [
-          [
-            "--watchdog",
-            "1"
-          ],
-          [
-            "--gpu-no-sleep"
+        },
+        "uuid2": {
+          "device": "dev2",
+          "commands": [
+            [
+              "--watchdog",
+              "1"
+            ],
+            [
+              "--gpu-no-sleep"
+            ]
           ]
-        ]
+        }
       }
     },
     {
@@ -48,28 +54,34 @@
         ]
       ],
       "devices": {
-        "device1": [
-          [
-            "--lhr-mode",
-            "1",
-            ","
-          ],
-          [
-            "--zombie-mode",
-            "1"
+        "uuid3": {
+          "device": "dev3",
+          "commands": [
+            [
+              "--lhr-mode",
+              "1",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
           ]
-        ],
-        "device2": [
-          [
-            "--lhr-mode",
-            "2",
-            ","
-          ],
-          [
-            "--zombie-mode",
-            "1"
+        },
+        "uuid4": {
+          "device": "dev4",
+          "commands": [
+            [
+              "--lhr-mode",
+              "2",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
           ]
-        ]
+        }
       }
     }
   ]

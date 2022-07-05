@@ -50,13 +50,13 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             public List<List<string>> Commands = new();
         }
 
-        public static void WriteConfig(MinerConfig minerConfig)
+        public static void WriteConfig(MinerConfig minerConfig, bool forceNew = false)
         {
             //test only path
             //var path = @"..\..\..\CommandLine\" + minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json";
             //program path
             var path = Paths.ConfigsPath(minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json");
-            if (!File.Exists(path))
+            if (!File.Exists(path) || forceNew)
             {
                 File.WriteAllText(path, JsonConvert.SerializeObject(minerConfig, Formatting.Indented));
             }
@@ -70,20 +70,15 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
                     var algoExists = false;
                     foreach (var dataAlgo in data.Algorithms)
                     {
-                        if (configAlgo.AlgorithmName == dataAlgo.AlgorithmName)
+                        if (configAlgo.AlgorithmName != dataAlgo.AlgorithmName) continue;
+                        dataAlgo.AlgoCommands = configAlgo.AlgoCommands;
+                        algoExists = true;
+                        foreach (var configDevice in configAlgo.Devices)
                         {
-                            dataAlgo.AlgoCommands = configAlgo.AlgoCommands;
-                            algoExists = true;
-
-                            foreach (var configDevice in configAlgo.Devices)
-                            {
-                                if (dataAlgo.Devices.ContainsKey(configDevice.Key))
-                                {
-                                    dataAlgo.Devices[configDevice.Key] = configDevice.Value;
-                                }
-                                else 
-                                    dataAlgo.Devices.Add(configDevice.Key, configDevice.Value);
-                            }
+                            if (dataAlgo.Devices.ContainsKey(configDevice.Key))
+                                dataAlgo.Devices[configDevice.Key] = configDevice.Value;
+                            else
+                                dataAlgo.Devices.Add(configDevice.Key, configDevice.Value);
                         }
                     }
                     if (!algoExists) data.Algorithms.Add(configAlgo);
