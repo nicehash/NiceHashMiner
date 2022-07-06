@@ -21,28 +21,34 @@
         ]
       ],
       "devices": {
-        "device1": [
-          [
-            "--test-edit",
-            "1",
-            ","
-          ],
-          [
-            "--zombie-mode",
-            "2"
+        "uuid1": {
+          "device": "dev1",
+          "commands": [
+            [
+              "--test-edit",
+              "1",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "2"
+            ]
           ]
-        ],
-        "device2": [
-          [
-            "--lhr-mode",
-            "55",
-            ","
-          ],
-          [
-            "--edit-mode",
-            "1"
+        },
+        "uuid2": {
+          "device": "dev2",
+          "commands": [
+            [
+              "--lhr-mode",
+              "55",
+              ","
+            ],
+            [
+              "--edit-mode",
+              "1"
+            ]
           ]
-        ]
+        }
       }
     }
   ]

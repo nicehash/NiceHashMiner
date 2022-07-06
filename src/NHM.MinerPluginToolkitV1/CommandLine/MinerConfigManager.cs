@@ -58,6 +58,7 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             var path = Paths.ConfigsPath(minerConfig.MinerName + "-" + minerConfig.MinerUUID + ".json");
             if (!File.Exists(path) || forceNew)
             {
+                if (!Directory.Exists(Paths.ConfigsPath())) Directory.CreateDirectory(Paths.ConfigsPath());
                 File.WriteAllText(path, JsonConvert.SerializeObject(minerConfig, Formatting.Indented));
             }
             else

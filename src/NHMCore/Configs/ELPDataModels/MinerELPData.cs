@@ -1,28 +1,21 @@
 ﻿using NHM.Common;
+using NHM.MinerPluginToolkitV1.CommandLine;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
-namespace NiceHashMiner.ViewModels.Models
+namespace NHMCore.Configs.ELPDataModels
 {
-    public delegate void RescanEventHandler();
-    public class AlgoELPData : NotifyChangedBase
+    public class MinerELPData : NotifyChangedBase
     {
-        public event RescanEventHandler InfoModified;
-        protected virtual void OnModified()
-        {
-            if (InfoModified != null) InfoModified();
-        }
         public string Name { get; set; }
-        private List<DeviceELPData> _devices = new List<DeviceELPData>();
-        public AlgoELPData()
-        {
-            _devices = new List<DeviceELPData>();
-            Devices.Add(new DeviceELPData(true));
-        }
+        public string UUID { get; set; }
         private List<string> _singleParams { get; set; } = new List<string>();
         public List<string> SingleParams
         {
@@ -36,6 +29,7 @@ namespace NiceHashMiner.ViewModels.Models
         public void UpdateSingleParams(string singleTxt)
         {
             SingleParams = Regex.Replace(singleTxt, @"\s+", " ").Trim().Split(" ").ToList();
+            ELPManager.Instance.IterateSubModelsAndConstructELPs();
         }
         private List<(string name, string value)> _doubleParams { get; set; } = new List<(string name, string value)>();
         public List<(string name, string value)> DoubleParams
@@ -54,6 +48,7 @@ namespace NiceHashMiner.ViewModels.Models
             if (doubles.Count % 2 != 0)
             {
                 DoubleParams = new List<(string name, string value)>();
+                ELPManager.Instance.IterateSubModelsAndConstructELPs();
                 return false;
             }
             for (int i = 0; i < doubles.Count; i++)
@@ -62,15 +57,18 @@ namespace NiceHashMiner.ViewModels.Models
                 doubleParams.Add((doubles[i - 1], doubles[i]));
             }
             DoubleParams = doubleParams;
+            ELPManager.Instance.IterateSubModelsAndConstructELPs();
             return true;
         }
-        public List<DeviceELPData> Devices
+
+        private IEnumerable<AlgoELPData> _algos;
+        public IEnumerable<AlgoELPData> Algos
         {
-            get => _devices;
+            get => _algos;
             set
             {
-                _devices = value;
-                OnPropertyChanged(nameof(Devices));
+                _algos = value;
+                OnPropertyChanged(nameof(Algos));
             }
         }
         public string SingleParamString
@@ -87,27 +85,21 @@ namespace NiceHashMiner.ViewModels.Models
                 return String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
             }
         }
-        private string _parsedString { get; set; } = string.Empty;
-        public string ParsedString
-        {
-            get => _parsedString;
-            set
-            {
-                _parsedString = value;
-                OnPropertyChanged(nameof(ParsedString));
-            }
-        }
-        public void NotifyMinerForELPRescan()
-        {
-            OnModified();
-        }
+        
         public void ClearSingleParams()
         {
             SingleParams.Clear();
+            ELPManager.Instance.IterateSubModelsAndConstructELPs();
         }
         public void ClearDoubleParams()
         {
             DoubleParams.Clear();
+            ELPManager.Instance.IterateSubModelsAndConstructELPs();
+        }
+        public void UpdateMinerELPConfig()//todo refactor
+        {
+            var config = ELPManager.Instance.ConstructConfig(Name, UUID, SingleParams, DoubleParams, Algos);
+            MinerConfigManager.WriteConfig(config);
         }
     }
 }

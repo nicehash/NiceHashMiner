@@ -1,4 +1,6 @@
 ﻿using NHM.Common.Enums;
+using NHMCore.Configs.ELPDataModels;
+using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -25,63 +27,52 @@ namespace NiceHashMiner.Views.ParameterOverview
     {
         public AlgoItem()
         {
-            Loaded += Form_Loaded;
             InitializeComponent();
         }
-        private void Form_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is AlgoELPData ad)
-            {
-                foreach(var dev in ad.Devices)
-                {
-                    dev.ELPValueChanged += ChangeValueColumn;
-                }
-            }
-        }
-        void ChangeValueColumn(object sender, EventArgs e, ELPEventActionType action, DeviceELPData de, DeviceELPElement elt)
-        {
-            if (DataContext is not AlgoELPData ad) return;
-            if (sender is not TextBox tb) return;
-            if(!de.IsDeviceDataHeader)
-            {
-                ad.NotifyMinerForELPRescan();
-                return;
-            }
-            if (action == ELPEventActionType.Delete)
-            {
-                DeleteArgColumnForAllDevices(ad, de, elt, tb);
-            }
-            else if (action == ELPEventActionType.ModifyOrAdd && tb.Text != String.Empty)
-            {
-                AddNewColumnForAllDevices(ad, de, elt, tb);
-            }
-        }
-        private void AddNewColumnForAllDevices(AlgoELPData ad, DeviceELPData de, DeviceELPElement elt, TextBox tb)
-        {
-            var column = de.ELPs.IndexOf(elt);
-            if (column == de.ELPs.Count - 1)
-            {
-                foreach (var dev in ad.Devices)
-                {
-                    var tempELP = new DeviceELPElement();
-                    if (dev.IsDeviceDataHeader) tempELP = new DeviceELPElement(false);
-                    tempELP.ELPValueChanged += dev.InputChanged;
-                    dev.ELPs.Add(tempELP);
-                }
-            }
-            de.ELPs[column].ELP = tb.Text;
-            ad.NotifyMinerForELPRescan();
-        }
-        private void DeleteArgColumnForAllDevices(AlgoELPData ad, DeviceELPData de, DeviceELPElement elt, TextBox tb)
-        {
-            var column = de.ELPs.IndexOf(elt);
-            if (column == de.ELPs.Count - 1 && tb.Text == String.Empty) return;
-            foreach (var dev in ad.Devices)
-            {
-                dev.RemoveELP(column);
-            }
-            ad.NotifyMinerForELPRescan();
-        }
+        //void ChangeValueColumn(object sender, EventArgs e, ELPEventActionType action, DeviceELPData de, DeviceELPElement elt)
+        //{
+        //    if (DataContext is not AlgoELPData ad) return;
+        //    if (sender is not TextBox tb) return;
+        //    if(!de.IsDeviceDataHeader)
+        //    {
+        //        ad.NotifyMinerForELPRescan();
+        //        return;
+        //    }
+        //    if (action == ELPEventActionType.Delete)
+        //    {
+        //        DeleteArgColumnForAllDevices(ad, de, elt, tb);
+        //    }
+        //    else if (action == ELPEventActionType.ModifyOrAdd && tb.Text != String.Empty)
+        //    {
+        //        AddNewColumnForAllDevices(ad, de, elt, tb);
+        //    }
+        //}
+        //private void AddNewColumnForAllDevices(AlgoELPData ad, DeviceELPData de, DeviceELPElement elt, TextBox tb)
+        //{
+        //    var column = de.ELPs.IndexOf(elt);
+        //    if (column == de.ELPs.Count - 1)
+        //    {
+        //        foreach (var dev in ad.Devices)
+        //        {
+        //            var tempELP = new DeviceELPElement();
+        //            if (dev.IsDeviceDataHeader) tempELP = new DeviceELPElement(false);
+        //            //tempELP.ELPValueChanged += dev.InputChanged;
+        //            dev.ELPs.Add(tempELP);
+        //        }
+        //    }
+        //    de.ELPs[column].ELP = tb.Text;
+        //    ad.NotifyMinerForELPRescan();
+        //}
+        //private void DeleteArgColumnForAllDevices(AlgoELPData ad, DeviceELPData de, DeviceELPElement elt, TextBox tb)
+        //{
+        //    var column = de.ELPs.IndexOf(elt);
+        //    if (column == de.ELPs.Count - 1 && tb.Text == String.Empty) return;
+        //    foreach (var dev in ad.Devices)
+        //    {
+        //        dev.RemoveELP(column);
+        //    }
+        //    ad.NotifyMinerForELPRescan();
+        //}
         private void DropDownDevices_Button_Click(object sender, RoutedEventArgs e)
         {
             var tb = e.Source as ToggleButton;
@@ -151,22 +142,18 @@ namespace NiceHashMiner.Views.ParameterOverview
         private void DualParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
-            if (DataContext is AlgoELPData ad) ad.NotifyMinerForELPRescan();
         }
         private void DualParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
-            if (DataContext is AlgoELPData ad) ad.NotifyMinerForELPRescan();
         }
         private void SingleParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateSingleParams(sender);
-            if (DataContext is AlgoELPData ad) ad.NotifyMinerForELPRescan();
         }
         private void SingleParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             UpdateSingleParams(sender);
-            if (DataContext is AlgoELPData ad) ad.NotifyMinerForELPRescan();
         }
     }
 }

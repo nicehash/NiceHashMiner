@@ -166,7 +166,7 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
 
         public static string Parse(Parameters minerParameters, Parameters algorithmParameters, DevicesParametersList devicesParameters)
         {
-            if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
+            //if (devicesParameters == null || devicesParameters.Count == 0 || minerParameters.Count == 0 || algorithmParameters.Count == 0) return "";
             if (devicesParameters == null) return "";
             if (!CheckIfCanGroup(devicesParameters)) return "";
 

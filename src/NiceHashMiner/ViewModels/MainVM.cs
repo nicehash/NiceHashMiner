@@ -5,6 +5,7 @@ using NHM.MinerPluginToolkitV1.CommandLine;
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.ELPDataModels;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
@@ -84,13 +85,12 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged();
             }
         }
-        private IEnumerable<MinerELPData> _minerELPs;
         public IEnumerable<MinerELPData> MinerELPs
         {
-            get => _minerELPs;
+            get => ELPManager.GetMinerELPs();
             set
             {
-                _minerELPs = value;
+                ELPManager.SetMinerELPs(value);
                 OnPropertyChanged(nameof(MinerELPs));
                 OnPropertyChanged(nameof(MinerCount));
             }
@@ -99,7 +99,7 @@ namespace NiceHashMiner.ViewModels
         {
             get
             {
-                return _minerELPs?.Count() ?? 0;
+                return ELPManager.GetMinerELPs()?.Count() ?? 0;
             }
         }
 
@@ -322,7 +322,7 @@ namespace NiceHashMiner.ViewModels
                     OnPropertyChanged(nameof(MinimumProfitString));
                 }
             };
-            ELPManager.Instance.ELPReiteration += ReIterateELPsEvent;
+            //ELPManager.Instance.ELPReiteration += ReIterateELPsEvent;
         }
 
 
@@ -341,104 +341,15 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        private void ReIterateELPsEvent(object sender, EventArgs e)
-        {
-            ReadELPConfigsOrCreateIfMissing();
-        }
-        private MinerConfig CompareConfigWithDefault(MinerConfig data, MinerConfig def)
-        {
-            if (data.MinerUUID != def.MinerUUID) data.MinerUUID = def.MinerUUID;
-            if (data.MinerName != def.MinerName) data.MinerName = def.MinerName;
-            def.MinerCommands = data.MinerCommands;
-            foreach (var algorithm in def.Algorithms)
-            {
-                var containedAlgo = data.Algorithms?.Where(a => a.AlgorithmName == algorithm.AlgorithmName).FirstOrDefault();
-                if (containedAlgo == null) continue;
-                algorithm.AlgoCommands = containedAlgo.AlgoCommands;
-                foreach (var dev in algorithm.Devices)
-                {
-                    var containedDev = containedAlgo.Devices?.Where(a => a.Key == dev.Key).FirstOrDefault();
-                    if (containedDev == null || containedDev?.Value == null) continue;
-                    algorithm.Devices[dev.Key] = containedDev?.Value;
-                }
-            }
-            return def;
-        }
-        private MinerConfig FixConfigIntegrityIfNeeded(MinerConfig data, PluginEntryVM plugin)
-        {
-            var def = CreateDefaultConfig(plugin);
-            try
-            {
-                def = CompareConfigWithDefault(data, def);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("MainVM", $"IsConfigIntegrityOK {ex.Message}");
-                return null;
-            }
-            return def;
-        }
-        private MinerELPData ConstructMinerELPData(MinerConfig cfg)
-        {
-            var minerELP = new MinerELPData();
-            minerELP.Name = cfg?.MinerName;
-            minerELP.UUID = cfg?.MinerUUID;
-            foreach (var minerCMD in cfg?.MinerCommands)
-            {
-                if (minerCMD.Count == 1) minerELP.SingleParams.Add(minerCMD.First());
-                if (minerCMD.Count == 2) minerELP.DoubleParams.Add((minerCMD.First(), minerCMD.Last()));
-            }
-            var algoELPList = new List<AlgoELPData>();
-            foreach (var algo in cfg?.Algorithms)
-            {
-                var tempAlgo = new AlgoELPData();
-                var uniqueFlags = algo.Devices.Values?
-                    .Select(v => v.Commands.Where(c => c.Count == 3)?.Select(a => $"{a[0]} {a[2]}"))?
-                    .SelectMany(v => v)?
-                    .Distinct()?
-                    .ToList();
-                uniqueFlags?.ForEach(f => tempAlgo.Devices[0].AddELP(f));
-                if (!uniqueFlags.Any()) tempAlgo.Devices[0].ELPs.Add(new DeviceELPElement(false) { ELP = String.Empty });
-                tempAlgo.Name = algo.AlgorithmName;
-                foreach (var dev in algo.Devices)
-                {
-                    var tempELPElts = new DeviceELPElement[uniqueFlags?.Count + 1 ?? 1];
-                    tempELPElts[tempELPElts.Length - 1] = new DeviceELPElement() { ELP = String.Empty };
-                    foreach (var arg in dev.Value.Commands)
-                    {
-                        if (arg.Count != 3) continue;
-                        var index = uniqueFlags.IndexOf($"{arg[0]} {arg[2]}");
-                        if (index < 0) continue;
-                        tempELPElts[index] = new DeviceELPElement() { ELP = arg[1] };
-                    }
-                    for (int i = 0; i < tempELPElts.Length; i++)
-                    {
-                        if (tempELPElts[i] != null) continue;
-                        tempELPElts[i] = new DeviceELPElement() { ELP = String.Empty };
-                    }
-                    tempAlgo.Devices.Add(new DeviceELPData()
-                    {
-                        UUID = dev.Key,
-                        DeviceName = dev.Value.DeviceName,
-                        ELPs = new ObservableCollection<DeviceELPElement>(tempELPElts)
-                    });
-                }
-                foreach (var algoCMD in algo.AlgoCommands)
-                {
-                    if (algoCMD.Count == 1) tempAlgo.SingleParams.Add(algoCMD.First());
-                    if (algoCMD.Count == 2) tempAlgo.DoubleParams.Add((algoCMD.First(), algoCMD.Last()));
-                }
-                tempAlgo.InfoModified += minerELP.IterateSubModelsAndConstructELPs;
-                algoELPList.Add(tempAlgo);
-            }
-            minerELP.Algos = algoELPList.ToArray();
-            return minerELP;
-        }
 
         public void ReadELPConfigsOrCreateIfMissing()
         {
             if (Plugins == null) return;
             var minerELPs = new List<MinerELPData>();
+            var devsList = Devices
+                .Select(dev => new { P = (dev.Dev.FullName, dev.Dev.Uuid, dev.Dev.DeviceType) })
+                .Select(p => p.P)
+                .ToList();
             foreach (var plugin in Plugins)
             {
                 if (!plugin.Plugin.Installed) continue;
@@ -446,21 +357,23 @@ namespace NiceHashMiner.ViewModels
                 {
                     MinerConfig data = MinerConfigManager.ReadConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID);
                     if (data == null) throw new FileNotFoundException();
-                    var fixedData = FixConfigIntegrityIfNeeded(data, plugin);
+                    var fixedData = ELPManager.FixConfigIntegrityIfNeeded(data, plugin.Plugin.PluginName, plugin.Plugin.PluginUUID, 
+                        plugin.Plugin.SupportedDevicesAlgorithms, devsList);
                     if (fixedData != null)
                     {
                         data = fixedData;
                         MinerConfigManager.WriteConfig(data);
                     }
-                    minerELPs.Add(ConstructMinerELPData(data));
+                    minerELPs.Add(ELPManager.ConstructMinerELPData(data));
                 }
                 catch (Exception ex)
                 {
-                    if(ex is FileNotFoundException || ex is JsonSerializationException)
+                    if (ex is FileNotFoundException || ex is JsonSerializationException)
                     {
-                        var defaultCFG = CreateDefaultConfig(plugin);
+                        var defaultCFG = ELPManager.CreateDefaultConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID,
+                            plugin.Plugin.SupportedDevicesAlgorithms, devsList);
                         MinerConfigManager.WriteConfig(defaultCFG, true);
-                        minerELPs.Add(ConstructMinerELPData(defaultCFG));
+                        minerELPs.Add(ELPManager.ConstructMinerELPData(defaultCFG));
                     }
                     else Logger.Error("MainVM", ex.Message);
                 }
@@ -468,34 +381,9 @@ namespace NiceHashMiner.ViewModels
             MinerELPs = minerELPs;
         }
 
-        private MinerConfig CreateDefaultConfig(PluginEntryVM plugin)
+        public void ELPReScan(object sender, EventArgs e)
         {
-            MinerConfig defCfg = new();
-            defCfg.MinerName = plugin?.Plugin?.PluginName;
-            defCfg.MinerUUID = plugin?.Plugin?.PluginUUID;
-            Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new();
-            foreach (var devAlgoPair in plugin?.Plugin?.SupportedDevicesAlgorithms)
-            {
-                foreach (var algo in devAlgoPair.Value)
-                {
-                    if (!algorithmDevicePairs.ContainsKey(algo)) algorithmDevicePairs.Add(algo, new List<(string, string)>());
-                    var devs = Devices.Where(dev => dev.Dev.DeviceType.ToString().Contains(devAlgoPair.Key))
-                        .Select(dev => new { P = (dev.Dev.Uuid, dev.Dev.FullName) })
-                        .Select(p => p.P);
-                    algorithmDevicePairs[algo].AddRange(devs);
-                }
-            }
-            foreach (var algoPairs in algorithmDevicePairs)
-            {
-                var devicesDict = new Dictionary<string, Device>();
-                algoPairs.Value.ForEach(dev => devicesDict.TryAdd(dev.uuid, new Device() { DeviceName = dev.name, Commands = new List<List<string>>() }));
-                defCfg.Algorithms.Add(new Algo()
-                {
-                    AlgorithmName = algoPairs.Key,
-                    Devices = devicesDict
-                });
-            }
-            return defCfg;
+            ReadELPConfigsOrCreateIfMissing();
         }
 
         public async Task InitializeNhm(IStartupLoader sl)
@@ -516,13 +404,12 @@ namespace NiceHashMiner.ViewModels
 
             IdleCheckManager.StartIdleCheck();
 
-            //RefreshPlugins();
-
             _updateTimer.Start();
 
             ConfigManager.CreateBackup();
             var algoContainers = _devices?.Select(dev => dev.AlgorithmSettingsCollection)?.SelectMany(d => d).ToList();
 
+            ELPManager.ELPReiteration += ELPReScan;
             ReadELPConfigsOrCreateIfMissing();
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();

@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NHM.Common.Enums;
+using NHMCore.Configs.ELPDataModels;
+using NHMCore.Utils;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {
@@ -24,25 +26,15 @@ namespace NiceHashMiner.Views.ParameterOverview
     {
         public DeviceELPItem()
         {
-            Loaded += DeviceELPItem_Loaded;
             InitializeComponent();
         }
 
-        private void DeviceELPItem_Loaded(object sender, RoutedEventArgs e)
+        private void DeviceELPValueTB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (DataContext is DeviceELPElement ee)
+            if(DataContext is DeviceELPElement ee && sender is TextBox tb)
             {
-                ee.OnELPValueChanged(DeviceELPValueTB, e, ELPEventActionType.ModifyOrAdd);
-            }
-        }
-
-        private void DeviceValueTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (sender is TextBox tb &&
-                DataContext is DeviceELPElement ee)
-            {
-                ee.OnELPValueChanged(sender, e, tb.Text == String.Empty ? 
-                    ELPEventActionType.Delete : ELPEventActionType.ModifyOrAdd);
+                ee.ELP = tb.Text;
+                ELPManager.Instance.IterateSubModelsAndConstructELPs();
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿using NiceHashMiner.ViewModels.Models;
+﻿using NHMCore.Configs.ELPDataModels;
+using NHMCore.Utils;
+using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,22 +101,18 @@ namespace NiceHashMiner.Views.ParameterOverview
         private void DualParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
-            if (DataContext is MinerELPData me) me.IterateSubModelsAndConstructELPs();
         }
         private void DualParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
-            if (DataContext is MinerELPData me) me.IterateSubModelsAndConstructELPs();
         }
         private void SingleParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateSingleParams(sender);
-            if (DataContext is MinerELPData me) me.IterateSubModelsAndConstructELPs();
         }
         private void SingleParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             UpdateSingleParams(sender);
-            if (DataContext is MinerELPData me) me.IterateSubModelsAndConstructELPs();
         }
     }
 }

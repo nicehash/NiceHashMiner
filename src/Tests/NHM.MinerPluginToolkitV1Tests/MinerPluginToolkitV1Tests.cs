@@ -282,7 +282,6 @@ namespace NHM.MinerPluginToolkitV1Test
         [TestMethod]
         public void TestConfigReader()
         {
-            MinerConfig ReadConfig(string path) => ReadConfig(path);
             Assert.IsNotNull(MinerConfigManager.ReadConfig(@"..\..\..\CommandLine\LolMiner-n12j41kwed8eswafk2.json"));
         }
 
@@ -352,7 +351,6 @@ namespace NHM.MinerPluginToolkitV1Test
         {
             // always create copy of dummy and rename it and change miner name in json file
             var data = ReadConfig(@"..\..\..\CommandLine\NanoMiner1-dsfr43teskrtg34.json");
-            void WriteConfig(MinerConfig minerConfig) => WriteConfig(minerConfig);
             MinerConfigManager.WriteConfig(data);
             Assert.IsTrue(true);
         }

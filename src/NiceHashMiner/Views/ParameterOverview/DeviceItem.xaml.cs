@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.ViewModels.Models;
+﻿using NHMCore.Configs.ELPDataModels;
+using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +24,7 @@ namespace NiceHashMiner.Views.ParameterOverview
     {
         public DeviceItem()
         {
-            Loaded += Form_Loaded;
             InitializeComponent();
-        }
-        private void Form_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is DeviceELPData dd)
-            {
-                foreach(var elp in dd.ELPs)
-                {
-                    elp.ELPValueChanged += dd.InputChanged;
-                }
-            }
         }
     }
 }

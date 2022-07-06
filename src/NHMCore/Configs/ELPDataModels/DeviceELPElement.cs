@@ -6,16 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.ViewModels.Models
+namespace NHMCore.Configs.ELPDataModels
 {
-    public delegate void EventHandlerTB(object senderInput, EventArgs e, ELPEventActionType action, DeviceELPElement dataContext);
     public class DeviceELPElement : NotifyChangedBase
     {
-        public event EventHandlerTB ELPValueChanged;
-        public void OnELPValueChanged(object sender, EventArgs e, ELPEventActionType action)
-        {
-            if (ELPValueChanged != null) ELPValueChanged(sender, e, action, this);
-        }
         public DeviceELPElement(bool isValue = true)
         {
             HeaderType = isValue ? HeaderType.Value : HeaderType.FlagAndDelim;

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels.Models"
+             xmlns:viewModels="clr-namespace:NHMCore.Configs.ELPDataModels;assembly=NHMCore"
              xmlns:local="clr-namespace:NiceHashMiner.Views.ParameterOverview"
              mc:Ignorable="d" 
              d:DesignHeight="53"
@@ -172,7 +172,19 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Style="{DynamicResource local.TextBoxCol}" Text="{Binding ParsedString}" />
+            <ItemsControl Grid.Row="0" x:Name="CommandsListBox" ItemsSource="{Binding ParsedStrings}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding .}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
             <Separator Grid.Row="1" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
             <ItemsControl Grid.Row="2" x:Name="DeviceItemControl" ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemsPanel>
