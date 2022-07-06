@@ -45,8 +45,10 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        private ObservableCollection<Schedule> _schedules;
-        public ObservableCollection<Schedule> Schedules
+        public Schedule Schedule { get; set; }
+
+        private IEnumerable<Schedule> _schedules;
+        public IEnumerable<Schedule> Schedules
         {
             get => _schedules;
             set

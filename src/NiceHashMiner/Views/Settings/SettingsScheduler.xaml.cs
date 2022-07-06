@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -30,7 +31,66 @@ namespace NiceHashMiner.Views.Settings
 
         private void btn_new_slot_Click(object sender, RoutedEventArgs e)
         {
-            SchedulesManager.Instance.AddScheduleToList();
+            var pattern = "[0-9][0-9]:[0-9][0-9]";
+            var rg = new Regex(pattern);
+            var anyDay = (bool)cboxMon.IsChecked || (bool)cboxTue.IsChecked || (bool)cboxWed.IsChecked
+                || (bool)cboxThu.IsChecked || (bool)cboxFri.IsChecked || (bool)cboxSat.IsChecked || (bool)cboxSun.IsChecked;
+            var rightFormat = rg.IsMatch(textBoxSchedulerFrom.Text) && rg.IsMatch(textBoxSchedulerTo.Text);
+            var timeComparation = Convert.ToDateTime(textBoxSchedulerFrom.Text) < Convert.ToDateTime(textBoxSchedulerTo.Text);
+
+            if (anyDay && rightFormat && timeComparation)
+            {
+                var schedule = new Schedule()
+                {
+                    From = textBoxSchedulerFrom.Text,
+                    To = textBoxSchedulerTo.Text,
+                    Days = new Dictionary<string, bool>()
+                    {
+                        ["Monday"] = (bool)cboxMon.IsChecked,
+                        ["Tuesday"] = (bool)cboxTue.IsChecked,
+                        ["Wednesday"] = (bool)cboxWed.IsChecked,
+                        ["Thursday"] = (bool)cboxThu.IsChecked,
+                        ["Friday"] = (bool)cboxFri.IsChecked,
+                        ["Saturday"] = (bool)cboxSat.IsChecked,
+                        ["Sunday"] = (bool)cboxSun.IsChecked,
+                    }
+                };
+                SchedulesManager.Instance.AddScheduleToList(schedule);
+                SetDefaults();
+            }
+        }
+
+        private void SetDefaults()
+        {
+            textBoxSchedulerFrom.Text = "hh:mm";
+            textBoxSchedulerTo.Text = "hh:mm";
+            cboxMon.IsChecked = false;
+            cboxTue.IsChecked = false;
+            cboxWed.IsChecked = false;
+            cboxThu.IsChecked = false;
+            cboxFri.IsChecked = false;
+            cboxSat.IsChecked = false;
+            cboxSun.IsChecked = false;
+        }
+
+        private void textBoxSchedulerFrom_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (textBoxSchedulerFrom.Text == "hh:mm") textBoxSchedulerFrom.Text = "";
+        }
+
+        private void textBoxSchedulerTo_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (textBoxSchedulerTo.Text == "hh:mm") textBoxSchedulerTo.Text = "";
+        }
+
+        private void textBoxSchedulerFrom_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (textBoxSchedulerFrom.Text == "") textBoxSchedulerFrom.Text = "hh:mm";
+        }
+
+        private void textBoxSchedulerTo_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (textBoxSchedulerTo.Text == "") textBoxSchedulerTo.Text = "hh:mm";
         }
     }
 }

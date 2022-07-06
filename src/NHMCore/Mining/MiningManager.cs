@@ -4,6 +4,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Grouping;
 using NHMCore.Notifications;
+using NHMCore.Schedules;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
@@ -34,8 +35,6 @@ namespace NHMCore.Mining
         public static bool IsMiningEnabled => _miningDevices.Any();
 
         private static bool _useScheduler;
-
-        private static Dictionary<string, List<(string, string)>> _schedule = new Dictionary<string, List<(string, string)>>();
 
         private static CancellationToken _stopMiningManager = CancellationToken.None;
         #region State for mining
@@ -272,9 +271,11 @@ namespace NHMCore.Mining
 
             _isPauseMiningWhenGamingEnabled = MiningSettings.Instance.PauseMiningWhenGamingMode;
             _deviceToPauseUuid = MiningSettings.Instance.DeviceToPauseUuid;
+            _useScheduler = MiningSettings.Instance.UseScheduler;
             MiningSettings.Instance.PropertyChanged += MiningSettingsInstance_PropertyChanged;
         }
 
+       
         public static void StartLoops(CancellationToken stop, string username)
         {
             _username = username;
@@ -771,15 +772,12 @@ namespace NHMCore.Mining
             if (!_useScheduler) return true;
 
             var time = DateTime.Now;
-            var todaysSchedule = _schedule[time.DayOfWeek.ToString()];
 
-            foreach (var (terminFrom, terminTo) in todaysSchedule)
+            foreach (var schedule in SchedulesManager.Instance.Schedules)
             {
-                var from = Convert.ToDateTime(terminFrom);
-                var to = Convert.ToDateTime(terminTo);
-                if (from < time && to > time) return true;
+                 if (Convert.ToDateTime(schedule.From) < time && Convert.ToDateTime(schedule.To) > time) return schedule.Days[time.DayOfWeek.ToString()]; 
             }
-
+            
             return false;
         }
 

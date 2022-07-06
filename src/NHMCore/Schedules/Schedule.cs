@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHM.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Schedules
 {
-    public class Schedule
+    public class Schedule : NotifyChangedBase
     {
-        public string From = "";
+        public string From { get; set; } = "";
 
-        public string To = "";
+        public string To { get; set; } = "";
 
-        public Dictionary<string, bool> Days = new()
+        public Dictionary<string, bool> Days { get; set; } = new()
         {
             ["Monday"] = false,
             ["Tuesday"] = false,
