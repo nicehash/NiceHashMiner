@@ -31,7 +31,7 @@ namespace NiceHashMiner.Views.Settings
 
         private void btn_new_slot_Click(object sender, RoutedEventArgs e)
         {
-            var pattern = "[0-9][0-9]:[0-9][0-9]";
+            var pattern = "[0-2][0-9]:[0-5][0-9]";
             var rg = new Regex(pattern);
             var anyDay = (bool)cboxMon.IsChecked || (bool)cboxTue.IsChecked || (bool)cboxWed.IsChecked
                 || (bool)cboxThu.IsChecked || (bool)cboxFri.IsChecked || (bool)cboxSat.IsChecked || (bool)cboxSun.IsChecked;
