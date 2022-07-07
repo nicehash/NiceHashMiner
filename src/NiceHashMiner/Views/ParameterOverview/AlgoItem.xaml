@@ -172,7 +172,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ItemsControl Grid.Row="0" x:Name="CommandsListBox" ItemsSource="{Binding ParsedStrings}">
+            <ItemsControl Grid.Row="0" x:Name="CommandsListBox" ItemsSource="{Binding UniqueCMDs}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical"/>

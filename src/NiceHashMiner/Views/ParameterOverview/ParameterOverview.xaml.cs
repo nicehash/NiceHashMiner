@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.ViewModels;
+﻿using NHMCore.Utils;
+using NiceHashMiner.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +30,7 @@ namespace NiceHashMiner.Views.ParameterOverview
 
         public void UpdateELPConfig(object sender, RoutedEventArgs e)
         {
-            if (DataContext is not MainVM mvm) return;
-            foreach (var miner in mvm.MinerELPs)
-            {
-                miner.UpdateMinerELPConfig();
-            }
+            ELPManager.Instance.UpdateMinerELPConfig();
         }
     }
 }

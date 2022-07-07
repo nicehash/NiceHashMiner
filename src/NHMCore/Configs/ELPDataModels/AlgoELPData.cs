@@ -86,15 +86,20 @@ namespace NHMCore.Configs.ELPDataModels
                 return String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
             }
         }
-        private ObservableCollection<string> _parsedStrings { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<string> ParsedStrings
+        private ObservableCollection<(string uuid, string command)> _allCMDStrings { get; set; } = new ObservableCollection<(string uuid, string command)>();
+        public ObservableCollection<(string uuid, string command)> AllCMDStrings
         {
-            get => _parsedStrings;
+            get => _allCMDStrings;
             set
             {
-                _parsedStrings = value;
-                OnPropertyChanged(nameof(ParsedStrings));
+                _allCMDStrings = value;
+                OnPropertyChanged(nameof(_allCMDStrings));
+                OnPropertyChanged(nameof(UniqueCMDs));
             }
+        }
+        public List<string> UniqueCMDs
+        {
+            get => AllCMDStrings.Select(t => t.command).Distinct().ToList();
         }
         public void ClearSingleParams()
         {

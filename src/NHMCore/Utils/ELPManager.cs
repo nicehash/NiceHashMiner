@@ -2,6 +2,7 @@
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1.CommandLine;
 using NHMCore.Configs.ELPDataModels;
+using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -105,6 +106,39 @@ namespace NHMCore.Utils
             return def;
         }
 
+        public void UpdateMinerELPConfig()
+        {
+            foreach(var miner in _minerELPs)
+            {
+                var config = ConstructConfig(miner.Name, miner.UUID, miner.SingleParams, miner.DoubleParams, miner.Algos);
+                WriteConfig(config);
+            }
+        }
+        public void IterateSubModelsAndConstructELPs()
+        {
+            foreach (var miner in _minerELPs)
+            {
+                IterateSubModelsAndConstructELPsForPlugin(miner);
+            }
+        }
+
+        public DeviceELPData FindAlgoNode(AlgorithmContainer ac, string uuid)
+        {
+            foreach (var miner in _minerELPs)
+            {
+                if (miner.UUID != ac.MinerUUID) continue;
+                foreach(var algo in miner.Algos)
+                {
+                    if (algo.Name != ac.AlgorithmName) continue;
+                    foreach(var dev in algo.Devices)
+                    {
+                        if (dev.UUID == uuid) return dev;
+                    }
+                }
+            }
+            return null;
+        }
+
         //from config to data
         public MinerELPData ConstructMinerELPData(MinerConfig cfg)
         {
@@ -163,7 +197,7 @@ namespace NHMCore.Utils
         }
 
         //this format into config format
-        public MinerConfig ConstructConfig(string name, string uuid, List<string> singleParams, List<(string name, string value)> doubleParams, IEnumerable<AlgoELPData> algos)
+        private MinerConfig ConstructConfig(string name, string uuid, List<string> singleParams, List<(string name, string value)> doubleParams, IEnumerable<AlgoELPData> algos)
         {
             var minerConfig = new MinerConfig();
             minerConfig.MinerName = name;
@@ -208,13 +242,6 @@ namespace NHMCore.Utils
             return minerConfig;
         }
 
-        public void IterateSubModelsAndConstructELPs()
-        {
-            foreach (var miner in _minerELPs)
-            {
-                IterateSubModelsAndConstructELPsForPlugin(miner);
-            }
-        }
 
         private void IterateSubModelsAndConstructELPsForPlugin(MinerELPData miner)
         {
@@ -249,7 +276,7 @@ namespace NHMCore.Utils
                     .FirstOrDefault();
                 bool shouldDelete = false;
                 if(columnToDelete != null) shouldDelete = columnToDelete.index < header.ELPs.Count - 1;
-                List<List<List<string>>> devParams = new();
+                List<(string devUUID, List<List<string>> paramList)> devParams = new();
                 if (algo.Devices == null) algo.Devices = new();
                 foreach (var dev in algo.Devices)
                 {
@@ -274,9 +301,10 @@ namespace NHMCore.Utils
                         if (flagAndDelim.Length != 2) continue;
                         oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
                     }
-                    devParams.Add(oneDevParams);
+                    devParams.Add((dev.UUID, oneDevParams));
+                    dev.ConstructedELPs = oneDevParams;
                 }
-                Dictionary<HashSet<int>, List<List<List<string>>>> deviceParamsGroups = new Dictionary<HashSet<int>, List<List<List<string>>>>();
+                Dictionary<HashSet<int>, List<(string devUUID, List<List<string>> paramList)>> deviceParamsGroups = new();
                 for (int first = 1; first < devParams.Count; first++)
                 {
                     var isPartOfGroup = deviceParamsGroups.Keys.Any(keys => keys.Contains(first));
@@ -284,16 +312,31 @@ namespace NHMCore.Utils
                     var group = new HashSet<int> { first };
                     for (int second = first + 1; second < devParams.Count; second++)
                     {
-                        if (MinerExtraParameters.CheckIfCanGroup(new List<List<List<string>>> { devParams[first], devParams[second] })) group.Add(second);
+                        if (MinerExtraParameters.CheckIfCanGroup(new List<List<List<string>>> { devParams[first].paramList, devParams[second].paramList })) group.Add(second);
                     }
-                    deviceParamsGroups.Add(group, devParams.Where((_, index) => group.Contains(index)).ToList());
+                    var selectionGroup = devParams.Where((_, index) => group.Contains(index)).ToList();
+                    deviceParamsGroups.Add(group,  selectionGroup);
                 }
-                var parsedCommandsPerGroup = new List<string>();
+                var parsedCommandsPerGroup = new List<(string uuid, string command)>();
                 foreach (var dev in deviceParamsGroups)
                 {
-                    parsedCommandsPerGroup.Add(MinerExtraParameters.Parse(minerParams, algoParams, dev.Value));
+                    var uuidList = dev.Value.Select(k => k.devUUID).ToList();
+                    var command = MinerExtraParameters.Parse(minerParams, algoParams, dev.Value.Select(v => v.paramList).ToList());
+                    foreach(var uuid in uuidList)
+                    {
+                        parsedCommandsPerGroup.Add((uuid, command));
+                        //var a = AvailableDevices.Devices
+                        //    .Where(dev => dev.Uuid == uuid)
+                        //    .Select(dev => dev.AlgorithmSettings)
+                        //    .SelectMany(algoContainer => algoContainer)
+                        //    .Where(a => a.AlgorithmName == algo.Name)
+                        //    .Where(a => a.MinerUUID == miner.UUID);
+                        //var b = 0;
+
+                    }
+
                 }
-                algo.ParsedStrings = new ObservableCollection<string>(parsedCommandsPerGroup);
+                algo.AllCMDStrings = new ObservableCollection<(string uuid, string command)>(parsedCommandsPerGroup);
             }
         }
     }

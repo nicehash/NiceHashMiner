@@ -37,5 +37,10 @@ namespace NiceHashMiner.Views.ParameterOverview
                 ELPManager.Instance.IterateSubModelsAndConstructELPs();
             }
         }
+
+        private void DeviceELPValueTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ELPManager.Instance.UpdateMinerELPConfig();
+        }
     }
 }

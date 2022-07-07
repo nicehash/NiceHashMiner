@@ -173,8 +173,8 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock  Margin="24,0,0,0" Grid.Column="0" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
-                        <TextBlock  Margin="-21,0,0,0" Grid.Column="1" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                        <TextBlock  Margin="24,0,0,0" Grid.Column="0" LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                        <TextBlock  Margin="-21,0,0,0" Grid.Column="1" LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
                     </Grid>
                 </Grid>
                 <ItemsControl Grid.Row="1" ItemsSource="{Binding Algos}">

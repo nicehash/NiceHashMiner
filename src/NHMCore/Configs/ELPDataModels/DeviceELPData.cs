@@ -25,11 +25,24 @@ namespace NHMCore.Configs.ELPDataModels
                 OnPropertyChanged(nameof(ELPs));
             }
         }
-        public void RemoveELP(int column)
+
+        private List<List<string>> _constructedELPs = new List<List<string>>();
+        public List<List<string>> ConstructedELPs
         {
-            ELPs.RemoveAt(column);
-            OnPropertyChanged(nameof(ELPs));
+            get { return _constructedELPs; }
+            set
+            {
+                _constructedELPs = value;
+                OnPropertyChanged(nameof(ConstructedELPs));
+            }
         }
+
+
+        //public void RemoveELP(int column)
+        //{
+        //    ELPs.RemoveAt(column);
+        //    OnPropertyChanged(nameof(ELPs));
+        //}
         public void AddELP(string elp)
         {
             if (ELPs.Count == 0) ELPs.Add(new DeviceELPElement(!IsDeviceDataHeader) { ELP = elp });

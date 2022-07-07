@@ -96,10 +96,5 @@ namespace NHMCore.Configs.ELPDataModels
             DoubleParams.Clear();
             ELPManager.Instance.IterateSubModelsAndConstructELPs();
         }
-        public void UpdateMinerELPConfig()//todo refactor
-        {
-            var config = ELPManager.Instance.ConstructConfig(Name, UUID, SingleParams, DoubleParams, Algos);
-            MinerConfigManager.WriteConfig(config);
-        }
     }
 }

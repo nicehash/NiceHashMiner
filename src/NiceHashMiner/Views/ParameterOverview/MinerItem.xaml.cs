@@ -105,6 +105,7 @@ namespace NiceHashMiner.Views.ParameterOverview
         private void DualParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             CheckDualParamBoxValidAndUpdateIfOK(sender);
+            ELPManager.Instance.UpdateMinerELPConfig();
         }
         private void SingleParameterInput_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -113,6 +114,7 @@ namespace NiceHashMiner.Views.ParameterOverview
         private void SingleParameterInput_LostFocus(object sender, RoutedEventArgs e)
         {
             UpdateSingleParams(sender);
+            ELPManager.Instance.UpdateMinerELPConfig();
         }
     }
 }

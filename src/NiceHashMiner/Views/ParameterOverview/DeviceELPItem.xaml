@@ -22,7 +22,8 @@
             <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3" Text="{Binding HeaderType, Converter={StaticResource FlagOrValueHeaderEnumConverter}}"/>
             <TextBox Style="{StaticResource inputBox}" x:Name="DeviceELPValueTB"
                      TextChanged="DeviceELPValueTB_TextChanged"
-                                                 Margin="0,0,10,3" Width="160" Text="{Binding ELP, Mode=TwoWay}"/>
+                     LostFocus="DeviceELPValueTB_LostFocus"
+                     Margin="0,0,10,3" Width="160" Text="{Binding ELP, Mode=TwoWay}"/>
         </StackPanel>
     </Grid>
 

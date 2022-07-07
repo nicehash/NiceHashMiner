@@ -322,7 +322,6 @@ namespace NiceHashMiner.ViewModels
                     OnPropertyChanged(nameof(MinimumProfitString));
                 }
             };
-            //ELPManager.Instance.ELPReiteration += ReIterateELPsEvent;
         }
 
 
@@ -411,6 +410,7 @@ namespace NiceHashMiner.ViewModels
 
             ELPManager.ELPReiteration += ELPReScan;
             ReadELPConfigsOrCreateIfMissing();
+            ELPManager.IterateSubModelsAndConstructELPs();
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }
