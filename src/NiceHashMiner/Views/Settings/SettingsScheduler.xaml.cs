@@ -36,7 +36,9 @@ namespace NiceHashMiner.Views.Settings
             var anyDay = (bool)cboxMon.IsChecked || (bool)cboxTue.IsChecked || (bool)cboxWed.IsChecked
                 || (bool)cboxThu.IsChecked || (bool)cboxFri.IsChecked || (bool)cboxSat.IsChecked || (bool)cboxSun.IsChecked;
             var rightFormat = rg.IsMatch(textBoxSchedulerFrom.Text) && rg.IsMatch(textBoxSchedulerTo.Text);
-            var timeComparation = Convert.ToDateTime(textBoxSchedulerFrom.Text) < Convert.ToDateTime(textBoxSchedulerTo.Text);
+
+            
+            var timeComparation = rightFormat && Convert.ToDateTime(textBoxSchedulerFrom.Text) < Convert.ToDateTime(textBoxSchedulerTo.Text);
 
             if (anyDay && rightFormat && timeComparation)
             {
