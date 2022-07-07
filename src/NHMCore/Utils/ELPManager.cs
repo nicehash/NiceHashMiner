@@ -243,20 +243,33 @@ namespace NHMCore.Utils
                 }
                 var header = algo.Devices.FirstOrDefault();
                 if (header == null || !header.IsDeviceDataHeader) continue;
+                var columnToDelete = header.ELPs
+                    .Select((elp, index) => new { elp, index })
+                    .Where(item => string.IsNullOrEmpty(item.elp.ELP))
+                    .FirstOrDefault();
+                bool shouldDelete = false;
+                if(columnToDelete != null) shouldDelete = columnToDelete.index < header.ELPs.Count - 1;
                 List<List<List<string>>> devParams = new();
                 if (algo.Devices == null) algo.Devices = new();
                 foreach (var dev in algo.Devices)
                 {
-                    if (dev.IsDeviceDataHeader)
+                    if (dev.IsDeviceDataHeader && !string.IsNullOrEmpty(dev.ELPs?.LastOrDefault()?.ELP))
                     {
-
-                    };
+                        shouldAddnewColumn = true;
+                    }
+                    if (shouldAddnewColumn)
+                    {
+                        dev.ELPs.Add(new DeviceELPElement(!dev.IsDeviceDataHeader) { ELP = String.Empty });
+                    }
                     if (header.ELPs == null || dev.ELPs == null) continue;
+                    if(columnToDelete != null && shouldDelete)
+                    {
+                        dev.ELPs.RemoveAt(columnToDelete.index);
+                    }
                     if (header.ELPs.Count != dev.ELPs.Count) continue;
                     List<List<string>> oneDevParams = new();
                     for (int i = 0; i < dev.ELPs.Count; i++)
                     {
-                        if (header.ELPs[i].ELP == null) continue;
                         var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
                         if (flagAndDelim.Length != 2) continue;
                         oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
@@ -264,7 +277,7 @@ namespace NHMCore.Utils
                     devParams.Add(oneDevParams);
                 }
                 Dictionary<HashSet<int>, List<List<List<string>>>> deviceParamsGroups = new Dictionary<HashSet<int>, List<List<List<string>>>>();
-                for (int first = 0; first < devParams.Count; first++)
+                for (int first = 1; first < devParams.Count; first++)
                 {
                     var isPartOfGroup = deviceParamsGroups.Keys.Any(keys => keys.Contains(first));
                     if (isPartOfGroup) continue;

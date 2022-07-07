@@ -157,6 +157,7 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
         private static string DevicesStringForFlag(string flag, IEnumerable<Parameters> parameters)
         {
             var flagParams = parameters
+                .Where(p => p.Count > 0)
                 .Select(p => p.FirstOrDefault(o => o[0] == flag));
             var delimiter = flagParams.FirstOrDefault()[2];
             var values = string.Join(delimiter, flagParams.Select(o => o[1]).ToArray());
