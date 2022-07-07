@@ -489,7 +489,6 @@ namespace NHMCore.Mining
                 while (isActive())
                 {
                     if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
-                    // TODO add scheduler check
                     if (handleDeferredCommands() && deferredCommands.Any())
                     {
                         await HandleDeferredCommands(deferredCommands);
