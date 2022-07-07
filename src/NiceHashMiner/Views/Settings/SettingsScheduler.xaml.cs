@@ -94,5 +94,19 @@ namespace NiceHashMiner.Views.Settings
         {
             if (textBoxSchedulerTo.Text == "") textBoxSchedulerTo.Text = "hh:mm";
         }
+
+        private void textBoxSchedulerFrom_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            var pattern = "[0-9]|:";
+            var rg = new Regex(pattern);
+            if (!rg.IsMatch(e.Text)) e.Handled = true;
+        }
+
+        private void textBoxSchedulerTo_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            var pattern = "[0-9]|:";
+            var rg = new Regex(pattern);
+            if (!rg.IsMatch(e.Text)) e.Handled = true;
+        }
     }
 }

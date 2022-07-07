@@ -770,6 +770,7 @@ namespace NHMCore.Mining
         {
             _useScheduler = MiningSettings.Instance.UseScheduler;
             if (!_useScheduler) return true;
+            if(!SchedulesManager.Instance.Schedules.Any()) return true;
 
             var time = DateTime.Now;
 
