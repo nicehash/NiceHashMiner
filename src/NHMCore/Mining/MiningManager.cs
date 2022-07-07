@@ -768,6 +768,7 @@ namespace NHMCore.Mining
 
         private static bool CheckIfIsOnSchedule()
         {
+            _useScheduler = MiningSettings.Instance.UseScheduler;
             if (!_useScheduler) return true;
 
             var time = DateTime.Now;
