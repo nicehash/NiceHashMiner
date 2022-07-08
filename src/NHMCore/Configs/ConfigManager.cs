@@ -3,6 +3,7 @@ using NHM.Common.Configs;
 using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
+using NHMCore.Schedules;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,7 @@ namespace NHMCore.Configs
         private static GeneralConfig GeneralConfig { get; set; } = new GeneralConfig();
 
         private static string GeneralConfigPath => Paths.ConfigsPath("General.json");
+        private static string ScheduleConfigPath => Paths.ConfigsPath("Schedule.json");
 
         private static object _lock = new object();
 
@@ -136,6 +138,14 @@ namespace NHMCore.Configs
             {
                 InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
                 ShowRestartRequired?.Invoke(null, IsRestartNeeded());
+            });
+        }
+
+        public static void ScheduleConfigFileCommit()
+        {
+            ApplicationStateManager.App.Dispatcher.Invoke(() =>
+            {
+                InternalConfigs.WriteFileSettings(ScheduleConfigPath, SchedulesManager.Instance.Schedules);
             });
         }
 
