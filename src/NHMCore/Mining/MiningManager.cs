@@ -46,77 +46,41 @@ namespace NHMCore.Mining
         #endregion State for mining
 
         
-        private class Command
+        private abstract record Command
         {
-            public TaskCompletionSource<object> Tsc { get; private set; } = new TaskCompletionSource<object>();
+            public TaskCompletionSource<object> Tsc { get; init; } = new TaskCompletionSource<object>();
         }
 
-        private class MainCommand : Command
-        {
-            //public bool IsMain { get; } = true;
-        }
+        private record MainCommand : Command;
 
-        private class NormalizedProfitsUpdateCommand : MainCommand
-        {
-            public NormalizedProfitsUpdateCommand(Dictionary<AlgorithmType, double> normalizedProfits) { this.normalizedProfits = normalizedProfits; }
-            public Dictionary<AlgorithmType, double> normalizedProfits { get; private set; }
-        }
+        private record NormalizedProfitsUpdateCommand(Dictionary<AlgorithmType, double> NormalizedProfits) : MainCommand;
 
-        private class UsernameChangedCommand : MainCommand
-        {
-            public UsernameChangedCommand(string username) { this.username = username; }
-            public string username { get; private set; }
-        }
+        private record UsernameChangedCommand(string Username) : MainCommand;
 
-        private class MiningProfitSettingsChangedCommand : MainCommand
-        { }
+        private record MiningProfitSettingsChangedCommand : MainCommand;
 
-        private class MinerRestartLoopNotifyCommand : MainCommand
-        { }
+        private record MinerRestartLoopNotifyCommand : MainCommand;
 
-        private class UseOptimizationProfilesChangedCommand : MainCommand
-        { }
+        private record UseOptimizationProfilesChangedCommand : MainCommand;
 
-        private class DNSQChangedCommand : MainCommand
-        { }
+        private record DNSQChangedCommand : MainCommand;
 
-        private class SSLMiningChangedCommand : MainCommand
-        { }
+        private record SSLMiningChangedCommand : MainCommand;
 
-        private class PauseMiningWhenGamingModeSettingsChangedCommand : MainCommand
-        {
-            public PauseMiningWhenGamingModeSettingsChangedCommand(bool isPauseMiningWhenGamingModeSettingEnabled) { this.isPauseMiningWhenGamingModeSettingEnabled = isPauseMiningWhenGamingModeSettingEnabled; }
+        private record PauseMiningWhenGamingModeSettingsChangedCommand(bool IsPauseMiningWhenGamingModeSettingEnabled) : MainCommand;
 
-            public bool isPauseMiningWhenGamingModeSettingEnabled { get; private set; }
-        }
+        private record IsSteamGameRunningChangedCommand(bool IsSteamGameRunning) : MainCommand;
 
-        private class IsSteamGameRunningChangedCommand : MainCommand
-        {
-            public IsSteamGameRunningChangedCommand(bool isSteamGameRunning) { this.isSteamGameRunning = isSteamGameRunning; }
-
-            public bool isSteamGameRunning { get; private set; }
-        }
-
-        private class GPUToPauseChangedCommand : MainCommand
-        {
-            public GPUToPauseChangedCommand(string gpuUuid) { this.gpuUuid = gpuUuid; }
-
-            public string gpuUuid { get; private set; }
-        }
+        private record GPUToPauseChangedCommand(string GpuUuid) : MainCommand;
 
         #region Deferred Device Commands
 
-        private class DeferredDeviceCommand : Command
-        {
-            public ComputeDevice device { get; set; }
-        }
+        private abstract record DeferredDeviceCommand(ComputeDevice Device) : Command;
 
         // deffered commands
-        private class StartDeviceCommand : DeferredDeviceCommand
-        { }
+        private record StartDeviceCommand(ComputeDevice Device) : DeferredDeviceCommand(Device);
 
-        private class StopDeviceCommand : DeferredDeviceCommand
-        { }
+        private record StopDeviceCommand(ComputeDevice Device) : DeferredDeviceCommand(Device);
 
         #endregion Deferred Device Commands
 
@@ -138,7 +102,7 @@ namespace NHMCore.Mining
         public static Task StartDevice(ComputeDevice device)
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new StartDeviceCommand { device = device };
+            var command = new StartDeviceCommand(device);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -146,7 +110,7 @@ namespace NHMCore.Mining
         public static Task StopDevice(ComputeDevice device)
         {
             if (RunninLoops == null) return Task.CompletedTask;
-            var command = new StopDeviceCommand { device = device };
+            var command = new StopDeviceCommand(device);
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -299,7 +263,7 @@ namespace NHMCore.Mining
 
         private static async Task StopAndRemoveBenchmark(DeferredDeviceCommand c)
         {
-            var stopBenchmark = _benchmarkingDevices.FirstOrDefault(benchDevice => c.device == benchDevice.Device);
+            var stopBenchmark = _benchmarkingDevices.FirstOrDefault(benchDevice => c.Device == benchDevice.Device);
             if (stopBenchmark != null)
             {
                 await stopBenchmark.StopBenchmark();
@@ -309,7 +273,7 @@ namespace NHMCore.Mining
 
         private static async Task StopAndRemoveMiner(DeferredDeviceCommand c)
         {
-            var stopMiningKey = _runningMiners.Keys.ToArray().Where(key => key.Contains(c.device.Uuid)).FirstOrDefault();
+            var stopMiningKey = _runningMiners.Keys.ToArray().Where(key => key.Contains(c.Device.Uuid)).FirstOrDefault();
             if (stopMiningKey != null)
             {
                 await _runningMiners[stopMiningKey].StopTask();
@@ -322,7 +286,7 @@ namespace NHMCore.Mining
             try
             {
                 var deviceActions = deferredCommands
-                    .GroupBy(ddc => ddc.device)
+                    .GroupBy(ddc => ddc.Device)
                     .Select(g => g.Select(c => c).ToArray())
                     .Select(commands => (finalCommand: commands.LastOrDefault(), redundantCommands: commands.Reverse().Skip(1)))
                     .ToArray();
@@ -341,7 +305,7 @@ namespace NHMCore.Mining
 
                 var partitionedStartCommands = validCommands
                     .Where(c => c is StartDeviceCommand)
-                    .Select(c => (command: c, anyAlgoToBenchmark: c.device.AnyEnabledAlgorithmsNeedBenchmarking(), anyAlgoToMine: c.device.AlgorithmSettings.Any(GroupSetupUtils.IsAlgoMiningCapable)))
+                    .Select(c => (command: c, anyAlgoToBenchmark: c.Device.AnyEnabledAlgorithmsNeedBenchmarking(), anyAlgoToMine: c.Device.AlgorithmSettings.Any(GroupSetupUtils.IsAlgoMiningCapable)))
                     .ToArray();
 
                 var startBenchmarkingCommands = partitionedStartCommands
@@ -374,17 +338,17 @@ namespace NHMCore.Mining
                 // stop all newly obsolete benchmarks
                 foreach (var stopBenchmark in nonBenchmarkingCommands) await StopAndRemoveBenchmark(stopBenchmark);
                 // set the stop and error states
-                foreach (var stop in stopCommands) stop.device.State = DeviceState.Stopped; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
-                foreach (var stop in startErrorCommands) stop.device.State = DeviceState.Error; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+                foreach (var stop in stopCommands) stop.Device.State = DeviceState.Stopped; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+                foreach (var stop in startErrorCommands) stop.Device.State = DeviceState.Error; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
 
                 // start and group devices for mining
                 var devicesToMineChange = startMiningCommands
-                    .Select(c => _miningDevices.FirstOrDefault(miningDev => miningDev.Device == c.device))
+                    .Select(c => _miningDevices.FirstOrDefault(miningDev => miningDev.Device == c.Device))
                     .Any(MiningDevice.ShouldUpdate);
-                bool isValidMiningDevice(ComputeDevice dev) => nonMiningCommands.All(c => c.device != dev);
+                bool isValidMiningDevice(ComputeDevice dev) => nonMiningCommands.All(c => c.Device != dev);
                 var devicesToMine = _miningDevices
                     .Select(md => md.Device)
-                    .Concat(startMiningCommands.Select(c => c.device))
+                    .Concat(startMiningCommands.Select(c => c.Device))
                     .Distinct()
                     .Where(isValidMiningDevice)
                     .ToArray();
@@ -412,10 +376,10 @@ namespace NHMCore.Mining
                     //}
                     await CheckGroupingAndUpdateMiners(new MainCommand());
                 }
-                foreach (var startMining in startMiningCommands) startMining.device.State = DeviceState.Mining; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+                foreach (var startMining in startMiningCommands) startMining.Device.State = DeviceState.Mining; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
 
                 // start devices to benchmark or update existing benchmarks algorithms
-                var devicesToBenchmark = startBenchmarkingCommands.Select(c => c.device)
+                var devicesToBenchmark = startBenchmarkingCommands.Select(c => c.Device)
                     .Select(dev => (dev, benchmarkingDev: _benchmarkingDevices.FirstOrDefault(benchDev => benchDev.Device == dev)))
                     .ToArray();
                 // to update 
@@ -433,12 +397,12 @@ namespace NHMCore.Mining
                         benchDev.StartBenchmark();
                         _benchmarkingDevices.Add(benchDev);
                     });
-                foreach (var startMining in startBenchmarkingCommands) startMining.device.State = DeviceState.Benchmarking;
+                foreach (var startMining in startBenchmarkingCommands) startMining.Device.State = DeviceState.Benchmarking;
 
                 foreach (var c in validCommands)
                 {
                     c.Tsc.TrySetResult(true);
-                    c.device.IsPendingChange = false;
+                    c.Device.IsPendingChange = false;
                 }
             }
             catch (Exception e)
@@ -484,8 +448,8 @@ namespace NHMCore.Mining
                     }
                     if (command is DeferredDeviceCommand deferredCommand)
                     {
-                        deferredCommand.device.IsPendingChange = true; // TODO check if we can be without this one
-                        deferredCommand.device.State = DeviceState.Pending;
+                        deferredCommand.Device.IsPendingChange = true; // TODO check if we can be without this one
+                        deferredCommand.Device.State = DeviceState.Pending;
                         lastDeferredCommandTime = DateTime.UtcNow;
                         deferredCommands.Add(deferredCommand);
                         continue;
@@ -612,15 +576,15 @@ namespace NHMCore.Mining
             Logger.Debug(Tag, $"Command type {commandType}");
             if (command is NormalizedProfitsUpdateCommand normalizedProfitsUpdateCommand)
             {
-                _normalizedProfits = normalizedProfitsUpdateCommand.normalizedProfits;
+                _normalizedProfits = normalizedProfitsUpdateCommand.NormalizedProfits;
             }
             else if (command is UsernameChangedCommand usernameChangedCommand)
             {
-                _username = usernameChangedCommand.username;
+                _username = usernameChangedCommand.Username;
             }
             else if (command is PauseMiningWhenGamingModeSettingsChangedCommand pauseMiningWhenGamingModeSettingsChangedCommand)
             {
-                _isPauseMiningWhenGamingEnabled = pauseMiningWhenGamingModeSettingsChangedCommand.isPauseMiningWhenGamingModeSettingEnabled;
+                _isPauseMiningWhenGamingEnabled = pauseMiningWhenGamingModeSettingsChangedCommand.IsPauseMiningWhenGamingModeSettingEnabled;
                 if (!_isPauseMiningWhenGamingEnabled)
                 {
                     var dev = AvailableDevices.Devices.FirstOrDefault(d => d.IsGaming == true);
@@ -629,11 +593,11 @@ namespace NHMCore.Mining
             }
             else if (command is IsSteamGameRunningChangedCommand isSteamGameRunningChangedCommand)
             {
-                _isGameRunning = isSteamGameRunningChangedCommand.isSteamGameRunning;
+                _isGameRunning = isSteamGameRunningChangedCommand.IsSteamGameRunning;
             }
             else if (command is GPUToPauseChangedCommand gpuToPauseChangedCommand)
             {
-                _deviceToPauseUuid = gpuToPauseChangedCommand.gpuUuid;
+                _deviceToPauseUuid = gpuToPauseChangedCommand.GpuUuid;
                 
                 // unpause device if not mining and not selected
                 var devToUnpause = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
@@ -656,15 +620,12 @@ namespace NHMCore.Mining
                 }
             }
 
-            bool isRestartMinersCommand(Command command) =>
-                command switch
-                {
-                    UsernameChangedCommand => true,
-                    UseOptimizationProfilesChangedCommand => true,
-                    DNSQChangedCommand => true,
-                    SSLMiningChangedCommand => true,
-                    _ => false,
-                };
+            bool isRestartMinersCommand(Command command) => command
+                is UsernameChangedCommand
+                or UseOptimizationProfilesChangedCommand
+                or DNSQChangedCommand
+                or SSLMiningChangedCommand;
+
             // here we do the deciding
             // to mine we need to have the username mining location set and ofc device to mine with
             if (_username == null || _normalizedProfits == null)
