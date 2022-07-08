@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:NiceHashMiner.Resources.Xaml.Controls">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="../Brushes.xaml" />
         <ResourceDictionary Source="../Icons/Icons.xaml"/>
@@ -201,6 +200,78 @@
                             <Setter TargetName="bar" Property="Background" Value="#5856d6" />
                             <Setter TargetName="bar" Property="Opacity" Value="0.5" />
                         </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type CheckBox}" x:Key="NHMCheckBox">
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <BulletDecorator Background="Transparent">
+                        <BulletDecorator.Bullet>
+                            <Border x:Name="Border"  
+                Width="13" 
+                Height="13" 
+                CornerRadius="0" 
+                Background="{DynamicResource BackgroundColor}"
+                BorderThickness="1"
+                BorderBrush="{DynamicResource BorderColor}">
+                                <Path 
+                  Width="9" Height="9" 
+                  x:Name="CheckMark"
+                  HorizontalAlignment="Center"
+                  SnapsToDevicePixels="False" 
+                  Stroke="{StaticResource Brushes.FontColor.White}"
+                  StrokeThickness="2"
+                  Data="F1 M 0.468732,4.66838L 3.03345,7.95443L 7.28127,0.420569" />
+                            </Border>
+                        </BulletDecorator.Bullet>
+                        <ContentPresenter Margin="4,0,0,0"
+              VerticalAlignment="Center"
+              HorizontalAlignment="Left"
+              RecognizesAccessKey="True"/>
+                    </BulletDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BackgroundColor}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter TargetName="CheckMark" Property="Data" Value="F1 M 0.468732,4.66838L 3.03345,7.95443L 7.28127,0.420569" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource Brushes.Gradient}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="True"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryColorBrush}"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}"/>
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsChecked" Value="False"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.Setters>
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource Brushes.Gradient}"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                            </MultiTrigger.Setters>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

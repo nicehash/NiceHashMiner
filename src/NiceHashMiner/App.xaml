@@ -29,6 +29,8 @@
             <DrawingBrush x:Key="QrLightLogo" Drawing="{DynamicResource QrIconDefault}" />
             <DrawingBrush x:Key="QrDarkLogo" Drawing="{DynamicResource QRIcon}" />
 
+            <DrawingBrush x:Key="TrashDarkLogo" Drawing="{DynamicResource TrashLogo}" />
+            <DrawingBrush x:Key="TrashLightLogo" Drawing="{DynamicResource TrashLogoDefault}" />
 
             <DrawingBrush x:Key="LoginCircle" Drawing="{DynamicResource LoginCircleLogoLight}" />
             <DrawingBrush x:Key="LoginQRCircle" Drawing="{DynamicResource LoginQRCircleLight}" />
@@ -185,6 +187,7 @@
             <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
             <converters:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter" />
             <converters:NumberToVisibilityConverterZero x:Key="NumberToVisibilityConverterZero" />
+            <converters:BooleanDaysToStringConverter x:Key="BooleanDaysToStringConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

@@ -92,6 +92,18 @@ namespace NHMCore.Configs
             }
         }
 
+        private bool _useScheduler = false;
+
+        public bool UseScheduler
+        {
+            get => _useScheduler;
+            set
+            {
+                _useScheduler = value;
+                OnPropertyChanged(nameof(UseScheduler));
+            }
+        }
+
         private bool _enableSSLMining = false;
         public bool EnableSSLMining
         {
