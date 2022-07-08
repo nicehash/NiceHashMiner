@@ -129,15 +129,6 @@ namespace NHM.MinerPluginToolkitV1
                 Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
                 throw new InvalidOperationException("Invalid mining initialization");
             }
-            // init ELP, _miningPairs are ordered and ELP parsing keeps ordering
-            if (MinerOptionsPackage != null)
-            {
-                var miningPairsList = _miningPairs.ToList();
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
             // miner specific init
             Init();
         }
@@ -165,6 +156,10 @@ namespace NHM.MinerPluginToolkitV1
                 .Reverse());
             var url = urlWithPort.Replace($":{port}", "");
             return (url, port, int.TryParse(port, out var _));
+        }
+        public void SetExtraLaunchParameters(string elp)
+        {
+            _extraLaunchParameters = elp;
         }
 
         protected virtual string MiningCreateCommandLine()

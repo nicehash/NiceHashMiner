@@ -20,8 +20,6 @@ namespace NHMCore.Mining.Grouping
             if (a.PluginContainer != b.PluginContainer) return false;
             // never group same devices
             if (a.ComputeDevice.Uuid == b.ComputeDevice.Uuid) return false;
-            //send elp strings to IMinerPlugin - new variable for elp string arrays
-
 
             var elpNodeA = a.FindInELPTree(a.ComputeDevice.Uuid);//state?
             var elpNodeB = b.FindInELPTree(b.ComputeDevice.Uuid);

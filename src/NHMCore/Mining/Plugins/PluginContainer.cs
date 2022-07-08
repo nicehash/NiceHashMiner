@@ -407,26 +407,6 @@ namespace NHMCore.Mining.Plugins
             return null;
         }
 
-        public MinerOptionsPackage GetMinerOptionsPackage()
-        {
-            try
-            {
-                if (_plugin is IGetMinerOptionsPackage get) return get.GetMinerOptionsPackage();
-
-                Type typecontroller = typeof(NHM.MinerPluginToolkitV1.PluginBase);
-                var propInfo = typecontroller.GetProperty("MinerOptionsPackage", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty);
-                var propInfo2 = typecontroller.GetProperty("MinerOptionsPackage");
-                if (propInfo != null)
-                {
-                    var ret = (MinerOptionsPackage)propInfo.GetValue(this._plugin);
-                    return ret;
-                }
-            }
-            catch
-            {
-            }
-            return null;
-        }
 
         // generic checker
         #region Generic Safe Checkers

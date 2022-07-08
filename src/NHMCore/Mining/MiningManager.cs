@@ -899,7 +899,8 @@ namespace NHMCore.Mining
             foreach (var startKey in toStartMinerGroupKeys)
             {
                 var miningPairs = newGroupedMiningPairs[startKey];
-                var toStart = Miner.CreateMinerForMining(miningPairs, startKey);
+                var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs.FirstOrDefault());
+                var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
                 if (toStart == null)
                 {
                     Logger.Error(Tag, $"CreateMinerForMining for key='{startKey}' returned <null>");

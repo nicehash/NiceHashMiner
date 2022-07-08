@@ -89,7 +89,7 @@ namespace NHMCore.Mining
                 Algorithm = Algorithm
             };
         }
-        public DeviceELPData FindInELPTree(string deviceUUID) => ELPManager.Instance.FindAlgoNode(this, deviceUUID); 
+        public DeviceELPData FindInELPTree(string deviceUUID) => ELPManager.Instance.FindDeviceNode(this, deviceUUID); 
         public void UpdateConfigVersionIfNeeded()
         {
             if ((_powerUsageHistory.Count >= 2 && _powerUsageHistory.Last() != _powerUsageHistory[_powerUsageHistory.Count - 2]) ||

@@ -122,7 +122,7 @@ namespace NHMCore.Utils
             }
         }
 
-        public DeviceELPData FindAlgoNode(AlgorithmContainer ac, string uuid)
+        public DeviceELPData FindDeviceNode(AlgorithmContainer ac, string uuid)//todo uuid needed?
         {
             foreach (var miner in _minerELPs)
             {
@@ -138,6 +138,24 @@ namespace NHMCore.Utils
             }
             return null;
         }
+        public string FindAppropriateCommandForAlgoContainer(AlgorithmContainer ac)
+        {
+            if(ac == null) return string.Empty;
+            foreach (var miner in _minerELPs)
+            {
+                if (miner.UUID != ac.MinerUUID) continue;
+                foreach (var algo in miner.Algos)
+                {
+                    if (algo.Name != ac.AlgorithmName) continue;
+                    var command = algo.AllCMDStrings.Where(x => x.uuid == ac.ComputeDevice.Uuid)?
+                        .Select(x => x.command)
+                        .FirstOrDefault();
+                    return command;
+                }
+            }
+            return String.Empty;
+        }
+
 
         //from config to data
         public MinerELPData ConstructMinerELPData(MinerConfig cfg)

@@ -19,7 +19,6 @@ namespace NanoMiner
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings

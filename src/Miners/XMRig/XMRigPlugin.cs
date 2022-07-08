@@ -17,7 +17,6 @@ namespace XMRig
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://github.com/xmrig/xmrig
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {

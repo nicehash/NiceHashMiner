@@ -13,8 +13,5 @@ namespace FakePlugin
             GeneralTimeout = DefaultTimeout,
         };
 
-        internal static MinerOptionsPackage MinerOptionsPackage = new MinerOptionsPackage
-        {
-        };
     }
 }

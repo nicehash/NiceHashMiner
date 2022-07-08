@@ -133,22 +133,6 @@ namespace LolMiner
                 Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
                 throw new InvalidOperationException("Invalid mining initialization");
             }
-            // init ELP, _miningPairs are ordered and ELP parsing keeps ordering
-            if (MinerOptionsPackage != null)
-            {
-                var miningPairsList = _miningPairs.ToList();
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var firstPair = miningPairsList.FirstOrDefault();
-                var optionsWithoutLHR = MinerOptionsPackage.GeneralOptions.Where(opt => !opt.ID.Contains("lolMiner_mode")).ToList();
-                var optionsWithLHR = MinerOptionsPackage.GeneralOptions.Where(opt => opt.ID.Contains("lolMiner_mode")).ToList();
-                var generalParamsWithoutLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithoutLHR, ignoreDefaults);
-                var isDagger = firstPair.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto;
-                var generalParamsWithLHR = ExtraLaunchParametersParser.Parse(miningPairsList, optionsWithLHR, !isDagger);
-                var modeOptions = ResolveDeviceMode(miningPairsList, generalParamsWithLHR);
-                var generalParams = generalParamsWithoutLHR + (isDagger ? modeOptions : "");
-                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
             // miner specific init
             Init();
         }

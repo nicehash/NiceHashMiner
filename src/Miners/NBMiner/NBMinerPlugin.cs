@@ -21,7 +21,6 @@ namespace NBMiner
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;

@@ -16,7 +16,7 @@ using InternalConfigsCommon = NHM.Common.Configs.InternalConfigs;
 namespace NHM.MinerPluginToolkitV1
 {
     // TODO add documentation
-    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo, IPluginSupportedAlgorithmsSettings, IGetMinerOptionsPackage, IGetBinsPackagePassword
+    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource, IBinAndCwdPathsGettter, IGetMinerBinaryVersion, IGetPluginMetaInfo, IPluginSupportedAlgorithmsSettings, IGetBinsPackagePassword
     {
         public static bool IS_CALLED_FROM_PACKER { get; set; } = false;
         protected abstract MinerBase CreateMinerBase();
@@ -29,16 +29,7 @@ namespace NHM.MinerPluginToolkitV1
 
         public virtual bool CanGroup(MiningPair a, MiningPair b)
         {
-            var checkELPCompatibility = MinerOptionsPackage?.GroupMiningPairsOnlyWithCompatibleOptions ?? false;
             var isSameAlgoType = MinerToolkit.IsSameAlgorithmType(a.Algorithm, b.Algorithm);
-            if (isSameAlgoType && checkELPCompatibility)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var areGeneralOptionsCompatible = ExtraLaunchParametersParser.CheckIfCanGroup(a, b, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var areTemperatureOptionsCompatible = ExtraLaunchParametersParser.CheckIfCanGroup(a, b, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                return areGeneralOptionsCompatible && areTemperatureOptionsCompatible;
-            }
-
             return isSameAlgoType;
         }
 
@@ -50,7 +41,6 @@ namespace NHM.MinerPluginToolkitV1
             miner.PluginSupportedAlgorithms = this; // dev fee, algo names
             miner.MinerCommandLineSettings = MinerCommandLineSettings;
             // set internal settings
-            if (MinerOptionsPackage != null) miner.MinerOptionsPackage = MinerOptionsPackage;
             if (MinerSystemEnvironmentVariables != null) miner.MinerSystemEnvironmentVariables = MinerSystemEnvironmentVariables;
             if (MinerReservedApiPorts != null) miner.MinerReservedApiPorts = MinerReservedApiPorts;
             if (MinerBenchmarkTimeSettings != null) miner.MinerBenchmarkTimeSettings = MinerBenchmarkTimeSettings;
@@ -168,7 +158,6 @@ namespace NHM.MinerPluginToolkitV1
         #endregion IGetPluginMetaInfo
 
         #region IGetMinerOptionsPackage
-        MinerOptionsPackage IGetMinerOptionsPackage.GetMinerOptionsPackage() => MinerOptionsPackage;
         #endregion IGetMinerOptionsPackage
         #region IPluginSupportedAlgorithmsSettings
         public virtual bool UnsafeLimits()
