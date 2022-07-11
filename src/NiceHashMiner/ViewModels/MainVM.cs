@@ -363,7 +363,7 @@ namespace NiceHashMiner.ViewModels
                         data = fixedData;
                         MinerConfigManager.WriteConfig(data);
                     }
-                    minerELPs.Add(ELPManager.ConstructMinerELPData(data));
+                    minerELPs.Add(ELPManager.ConstructMinerELPDataFromConfig(data));
                 }
                 catch (Exception ex)
                 {
@@ -372,7 +372,7 @@ namespace NiceHashMiner.ViewModels
                         var defaultCFG = ELPManager.CreateDefaultConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID,
                             plugin.Plugin.SupportedDevicesAlgorithms, devsList);
                         MinerConfigManager.WriteConfig(defaultCFG, true);
-                        minerELPs.Add(ELPManager.ConstructMinerELPData(defaultCFG));
+                        minerELPs.Add(ELPManager.ConstructMinerELPDataFromConfig(defaultCFG));
                     }
                     else Logger.Error("MainVM", ex.Message);
                 }

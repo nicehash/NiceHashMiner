@@ -136,7 +136,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <WrapPanel Grid.Column="0" HorizontalAlignment="Left"  VerticalAlignment="Center" Orientation="Horizontal" >
-                        <TextBlock MinWidth="150" MaxWidth="200" MaxHeight="40" Style="{DynamicResource local.TextBoxCol}" Text="{Binding DeviceName}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                        <TextBlock Width="200" MaxHeight="40" Style="{DynamicResource local.TextBoxCol}" Text="{Binding DeviceName}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
                     </WrapPanel>
                     <Grid Grid.Column="1" HorizontalAlignment="Left">
                         <ItemsControl Grid.Row="0" x:Name="DeviceItemControl" ItemsSource="{Binding ELPs}">

@@ -45,42 +45,38 @@ namespace NHMCore.Utils
             MinerConfig defCfg = new();
             defCfg.MinerName = pluginName;
             defCfg.MinerUUID = pluginUUID;
-            Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new();
+            Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new(); 
             foreach (var devAlgoPair in supportedDevicesAlgorithms)
             {
                 foreach (var algo in devAlgoPair.Value)
                 {
                     if (!algorithmDevicePairs.ContainsKey(algo)) algorithmDevicePairs.Add(algo, new List<(string, string)>());
-                    var devs = devices.Where(dev => dev.deviceType.ToString().Contains(devAlgoPair.Key))
-                        .Select(dev => new { P = (dev.Uuid, dev.FullName) })
+                    var devs = devices.Where(dev => dev.deviceType.ToString().Contains(devAlgoPair.Key))?
+                        .Select(dev => new { P = (dev.Uuid, dev.FullName) })?
                         .Select(p => p.P);
-                    algorithmDevicePairs[algo].AddRange(devs);
+                    if(devs != null) algorithmDevicePairs[algo].AddRange(devs);
                 }
             }
             foreach (var algoPairs in algorithmDevicePairs)
             {
                 var devicesDict = new Dictionary<string, Device>();
                 algoPairs.Value.ForEach(dev => devicesDict.TryAdd(dev.uuid, new Device() { DeviceName = dev.name, Commands = new List<List<string>>() }));
-                defCfg.Algorithms.Add(new Algo()
-                {
-                    AlgorithmName = algoPairs.Key,
-                    Devices = devicesDict
-                });
+                defCfg.Algorithms.Add(new Algo() { AlgorithmName = algoPairs.Key, Devices = devicesDict });
             }
             return defCfg;
         }
 
-        private MinerConfig CompareConfigWithDefault(MinerConfig data, MinerConfig def)
+        private MinerConfig CompareConfigWithDefaultAndFixIfNeeded(MinerConfig data, MinerConfig def)
         {
             if (data.MinerUUID != def.MinerUUID) data.MinerUUID = def.MinerUUID;
             if (data.MinerName != def.MinerName) data.MinerName = def.MinerName;
             def.MinerCommands = data.MinerCommands;
-            foreach (var algorithm in def.Algorithms)
+            foreach (var algorithm in def?.Algorithms)
             {
-                var containedAlgo = data.Algorithms?.Where(a => a.AlgorithmName == algorithm.AlgorithmName).FirstOrDefault();
+                var containedAlgo = data.Algorithms?.Where(a => a.AlgorithmName == algorithm.AlgorithmName)?.FirstOrDefault();
                 if (containedAlgo == null) continue;
-                algorithm.AlgoCommands = containedAlgo.AlgoCommands;
-                foreach (var dev in algorithm.Devices)
+                algorithm.AlgoCommands = containedAlgo?.AlgoCommands;
+                foreach (var dev in algorithm?.Devices)
                 {
                     var containedDev = containedAlgo.Devices?.Where(a => a.Key == dev.Key).FirstOrDefault();
                     if (containedDev == null || containedDev?.Value == null) continue;
@@ -96,12 +92,11 @@ namespace NHMCore.Utils
             var def = CreateDefaultConfig(pluginName, pluginUUID, supportedDevicesAlgorithms, devices);
             try
             {
-                def = CompareConfigWithDefault(data, def);
+                def = CompareConfigWithDefaultAndFixIfNeeded(data, def);
             }
             catch (Exception ex)
             {
                 Logger.Error("MainVM", $"IsConfigIntegrityOK {ex.Message}");
-                return null;
             }
             return def;
         }
@@ -110,7 +105,7 @@ namespace NHMCore.Utils
         {
             foreach(var miner in _minerELPs)
             {
-                var config = ConstructConfig(miner.Name, miner.UUID, miner.SingleParams, miner.DoubleParams, miner.Algos);
+                var config = ConstructConfigFromMinerELPData(miner);
                 WriteConfig(config);
             }
         }
@@ -122,54 +117,41 @@ namespace NHMCore.Utils
             }
         }
 
-        public DeviceELPData FindDeviceNode(AlgorithmContainer ac, string uuid)//todo uuid needed?
+        public DeviceELPData FindDeviceNode(AlgorithmContainer ac, string uuid)
         {
-            foreach (var miner in _minerELPs)
-            {
-                if (miner.UUID != ac.MinerUUID) continue;
-                foreach(var algo in miner.Algos)
-                {
-                    if (algo.Name != ac.AlgorithmName) continue;
-                    foreach(var dev in algo.Devices)
-                    {
-                        if (dev.UUID == uuid) return dev;
-                    }
-                }
-            }
-            return null;
+            if (ac == null) return null;
+            return _minerELPs
+                .Where(miner => miner.UUID == ac.MinerUUID)?
+                .FirstOrDefault()?
+                .Algos.Where(algo => algo.Name == ac.AlgorithmName)?
+                .FirstOrDefault()?
+                .Devices.Where(dev => dev.UUID == uuid)?
+                .FirstOrDefault();
         }
         public string FindAppropriateCommandForAlgoContainer(AlgorithmContainer ac)
         {
             if(ac == null) return string.Empty;
-            foreach (var miner in _minerELPs)
-            {
-                if (miner.UUID != ac.MinerUUID) continue;
-                foreach (var algo in miner.Algos)
-                {
-                    if (algo.Name != ac.AlgorithmName) continue;
-                    var command = algo.AllCMDStrings.Where(x => x.uuid == ac.ComputeDevice.Uuid)?
-                        .Select(x => x.command)
-                        .FirstOrDefault();
-                    return command;
-                }
-            }
-            return String.Empty;
+            return _minerELPs
+                .Where(miner => miner.UUID == ac.MinerUUID)?
+                .FirstOrDefault()?
+                .Algos.Where(algo => algo.Name == ac.AlgorithmName)?
+                .FirstOrDefault()?
+                .AllCMDStrings.Where(x => x.uuid == ac.ComputeDevice.Uuid)?
+                .Select(x => x.command)?
+                .FirstOrDefault() ?? String.Empty;
         }
-
-
-        //from config to data
-        public MinerELPData ConstructMinerELPData(MinerConfig cfg)
+        public MinerELPData ConstructMinerELPDataFromConfig(MinerConfig cfg)
         {
             var minerELP = new MinerELPData();
-            minerELP.Name = cfg?.MinerName;
-            minerELP.UUID = cfg?.MinerUUID;
-            foreach (var minerCMD in cfg?.MinerCommands)
+            minerELP.Name = cfg.MinerName;
+            minerELP.UUID = cfg.MinerUUID;
+            foreach (var minerCMD in cfg.MinerCommands)
             {
                 if (minerCMD.Count == 1) minerELP.SingleParams.Add(minerCMD.First());
                 if (minerCMD.Count == 2) minerELP.DoubleParams.Add((minerCMD.First(), minerCMD.Last()));
             }
             var algoELPList = new List<AlgoELPData>();
-            foreach (var algo in cfg?.Algorithms)
+            foreach (var algo in cfg.Algorithms)
             {
                 var tempAlgo = new AlgoELPData();
                 var uniqueFlags = algo.Devices.Values?
@@ -191,11 +173,7 @@ namespace NHMCore.Utils
                         if (index < 0) continue;
                         tempELPElts[index] = new DeviceELPElement() { ELP = arg[1] };
                     }
-                    for (int i = 0; i < tempELPElts.Length; i++)
-                    {
-                        if (tempELPElts[i] != null) continue;
-                        tempELPElts[i] = new DeviceELPElement() { ELP = String.Empty };
-                    }
+                    tempELPElts.Where(elt => elt == null)?.ToList()?.ForEach(elt => elt = new DeviceELPElement() { ELP = string.Empty });
                     tempAlgo.Devices.Add(new DeviceELPData()
                     {
                         UUID = dev.Key,
@@ -213,33 +191,21 @@ namespace NHMCore.Utils
             minerELP.Algos = algoELPList.ToArray();
             return minerELP;
         }
-
-        //this format into config format
-        private MinerConfig ConstructConfig(string name, string uuid, List<string> singleParams, List<(string name, string value)> doubleParams, IEnumerable<AlgoELPData> algos)
+        private MinerConfig ConstructConfigFromMinerELPData(MinerELPData miner)
         {
             var minerConfig = new MinerConfig();
-            minerConfig.MinerName = name;
-            minerConfig.MinerUUID = uuid;
-            foreach (var single in singleParams)
-            {
-                minerConfig.MinerCommands.Add(new List<string>() { single });
-            }
-            foreach (var dbl in doubleParams)
-            {
-                minerConfig.MinerCommands.Add(new List<string>() { dbl.name, dbl.value });
-            }
-            foreach (var algo in algos)
+            minerConfig.MinerName = miner.Name;
+            minerConfig.MinerUUID = miner.UUID;
+            miner.SingleParams.ForEach(single => minerConfig.MinerCommands.Add(new List<string>() { single }));
+            miner.DoubleParams.ForEach(dbl => minerConfig.MinerCommands.Add(new List<string>() { dbl.name, dbl.value }));
+            foreach (var algo in miner.Algos)
             {
                 var tempAlgo = new Algo();
                 tempAlgo.AlgorithmName = algo.Name;
-                foreach (var single in algo.SingleParams)
-                {
-                    tempAlgo.AlgoCommands.Add(new List<string>() { single });
-                }
-                foreach (var dbl in algo.DoubleParams)
-                {
-                    tempAlgo.AlgoCommands.Add(new List<string>() { dbl.name, dbl.value });
-                }
+                if (algo.SingleParams == null) algo.SingleParams = new();
+                algo.SingleParams.ForEach(single => tempAlgo.AlgoCommands.Add(new List<string>() { single }));
+                if (algo.DoubleParams == null) algo.DoubleParams = new();
+                algo.DoubleParams.ForEach(dbl => tempAlgo.AlgoCommands.Add(new List<string>() { dbl.name, dbl.value }));
                 var header = algo.Devices.FirstOrDefault();
                 if (header == null || !header.IsDeviceDataHeader) continue;
                 foreach (var dev in algo.Devices)
@@ -248,7 +214,7 @@ namespace NHMCore.Utils
                     if (dev.IsDeviceDataHeader) continue;
                     for (int i = 0; i < dev.ELPs.Count; i++)
                     {
-                        if (header.ELPs[i].ELP == null) continue;
+                        if (header.ELPs[i] == null || header.ELPs[i].ELP == null) continue;
                         var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
                         if (flagAndDelim.Length != 2) continue;
                         deviceParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
@@ -259,33 +225,19 @@ namespace NHMCore.Utils
             }
             return minerConfig;
         }
-
-
         private void IterateSubModelsAndConstructELPsForPlugin(MinerELPData miner)
         {
             List<List<string>> minerParams = new();
-            foreach (var single in miner.SingleParams)
-            {
-                minerParams.Add(new List<string>() { single });
-            }
-            foreach (var dbl in miner.DoubleParams)
-            {
-                minerParams.Add(new List<string>() { dbl.name, dbl.value });
-            }
+            miner.SingleParams.ForEach(single => minerParams.Add(new List<string>() { single }));
+            miner.DoubleParams.ForEach(dbl => minerParams.Add(new List<string>() { dbl.name, dbl.value }));
             foreach (var algo in miner.Algos)
             {
                 var shouldAddnewColumn = false;
                 List<List<string>> algoParams = new();
                 if (algo.SingleParams == null) algo.SingleParams = new();
-                foreach (var single in algo.SingleParams)
-                {
-                    algoParams.Add(new List<string>() { single });
-                }
+                algo.SingleParams.ForEach(single => algoParams.Add(new List<string>() { single }));
                 if (algo.DoubleParams == null) algo.DoubleParams = new();
-                foreach (var dbl in algo.DoubleParams)
-                {
-                    algoParams.Add(new List<string>() { dbl.name, dbl.value });
-                }
+                algo.DoubleParams.ForEach(dbl => algoParams.Add(new List<string>() { dbl.name, dbl.value }));
                 var header = algo.Devices.FirstOrDefault();
                 if (header == null || !header.IsDeviceDataHeader) continue;
                 var columnToDelete = header.ELPs
@@ -298,19 +250,10 @@ namespace NHMCore.Utils
                 if (algo.Devices == null) algo.Devices = new();
                 foreach (var dev in algo.Devices)
                 {
-                    if (dev.IsDeviceDataHeader && !string.IsNullOrEmpty(dev.ELPs?.LastOrDefault()?.ELP))
-                    {
-                        shouldAddnewColumn = true;
-                    }
-                    if (shouldAddnewColumn)
-                    {
-                        dev.ELPs.Add(new DeviceELPElement(!dev.IsDeviceDataHeader) { ELP = String.Empty });
-                    }
+                    if (dev.IsDeviceDataHeader && !string.IsNullOrEmpty(dev.ELPs?.LastOrDefault()?.ELP)) shouldAddnewColumn = true;
+                    if (shouldAddnewColumn) dev.ELPs.Add(new DeviceELPElement(!dev.IsDeviceDataHeader) { ELP = String.Empty });
                     if (header.ELPs == null || dev.ELPs == null) continue;
-                    if(columnToDelete != null && shouldDelete)
-                    {
-                        dev.ELPs.RemoveAt(columnToDelete.index);
-                    }
+                    if (columnToDelete != null && shouldDelete) dev.ELPs.RemoveAt(columnToDelete.index);
                     if (header.ELPs.Count != dev.ELPs.Count) continue;
                     List<List<string>> oneDevParams = new();
                     for (int i = 0; i < dev.ELPs.Count; i++)
@@ -343,16 +286,7 @@ namespace NHMCore.Utils
                     foreach(var uuid in uuidList)
                     {
                         parsedCommandsPerGroup.Add((uuid, command));
-                        //var a = AvailableDevices.Devices
-                        //    .Where(dev => dev.Uuid == uuid)
-                        //    .Select(dev => dev.AlgorithmSettings)
-                        //    .SelectMany(algoContainer => algoContainer)
-                        //    .Where(a => a.AlgorithmName == algo.Name)
-                        //    .Where(a => a.MinerUUID == miner.UUID);
-                        //var b = 0;
-
                     }
-
                 }
                 algo.AllCMDStrings = new ObservableCollection<(string uuid, string command)>(parsedCommandsPerGroup);
             }
