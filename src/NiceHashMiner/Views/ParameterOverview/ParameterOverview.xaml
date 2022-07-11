@@ -11,6 +11,7 @@
 
     <UserControl.Resources>
         <local:PluginsVisibilityConverter x:Key="PluginsVisibilityConverter" />
+        <local:MiningStatusVisibilityConverter x:Key="MiningStatusVisibilityConverter" />
         <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter  Property="FontSize" Value="10"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
@@ -22,29 +23,33 @@
         </Grid.RowDefinitions>
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.2*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}" >
+                <TextBlock HorizontalAlignment="Center" FontSize="15" Visibility="{Binding IsMining, Converter={StaticResource MiningStatusVisibilityConverter}}" Text="Stop mining/benchmarking to edit extra launch parameters!"/>
+                <StackPanel Visibility="{Binding IsNotMining, Converter={StaticResource MiningStatusVisibilityConverter}}">
+                    <Grid >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock  Margin="24,0,0,0" Grid.Column="0" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
-                        <TextBlock  Margin="-21,0,0,0" Grid.Column="1" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                        <Grid Grid.Column="1" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock  Margin="24,0,0,0" Grid.Column="0" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                            <TextBlock  Margin="-21,0,0,0" Grid.Column="1" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <ItemsControl ItemsSource="{Binding MinerELPs}" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:MinerItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding MinerELPs}" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:MinerItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
                 <Separator Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
             </StackPanel>
         </ScrollViewer>
     </Grid>
+    
 </UserControl>

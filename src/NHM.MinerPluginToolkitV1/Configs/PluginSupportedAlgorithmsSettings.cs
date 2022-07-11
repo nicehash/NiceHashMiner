@@ -45,12 +45,11 @@ namespace NHM.MinerPluginToolkitV1.Configs
             public string ExtraLaunchParameters { get; set; } = null;
             public ulong? NonDefaultRAMLimit { get; set; } = null;
 
-            public (Algorithm algorithm, bool ok) ToAlgorithmV2(string PluginUUID, bool enabled = true, string elp = "")
+            public (Algorithm algorithm, bool ok) ToAlgorithmV2(string PluginUUID, bool enabled = true)
             {
                 var setEnabled = Enabled.HasValue ? Enabled.Value : enabled;
-                var setElp = ExtraLaunchParameters != null ? ExtraLaunchParameters : elp;
                 var (ids, ok) = MinerToolkit.StringToAlgorithmIDs(IDs);
-                var ret = new Algorithm(PluginUUID, ids) { Enabled = setEnabled, ExtraLaunchParameters = setElp };
+                var ret = new Algorithm(PluginUUID, ids) { Enabled = setEnabled };
                 return (ret, ok);
             }
         }

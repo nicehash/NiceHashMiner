@@ -3,6 +3,10 @@
   <ItemGroup>
     <ProjectReference Include="..\NHM.MinerPlugin\NHM.MinerPlugin.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="ExtraLaunchParameters\" />
+  </ItemGroup>
 
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>

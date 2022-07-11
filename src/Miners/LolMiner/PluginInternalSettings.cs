@@ -1,6 +1,5 @@
 ﻿using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using System.Collections.Generic;
 
 namespace LolMiner

@@ -212,22 +212,6 @@ namespace NHMCore.Mining
             }
         }
 
-        /// <summary>
-        /// String containing raw extralaunchparams entered by user
-        /// </summary>
-        public string ExtraLaunchParameters
-        {
-            get
-            {
-                if (Algorithm == null) return "";
-                return Algorithm.ExtraLaunchParameters;
-            }
-            set
-            {
-                if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
-                OnPropertyChanged(nameof(ExtraLaunchParameters));
-            }
-        }
 
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining

@@ -3,7 +3,6 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -69,7 +68,7 @@ namespace NHM.MinerPluginToolkitV1
         { }
 
         public MinerCommandLineSettings MinerCommandLineSettings { get; set; }
-        public MinerOptionsPackage MinerOptionsPackage { get; set; }
+        //public MinerOptionsPackage MinerOptionsPackage { get; set; }
         public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
 
         public MinerReservedPorts MinerReservedApiPorts { get; set; }

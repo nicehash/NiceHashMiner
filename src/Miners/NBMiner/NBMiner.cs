@@ -10,7 +10,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace NBMiner
 {

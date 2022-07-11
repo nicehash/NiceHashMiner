@@ -48,6 +48,8 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged(nameof(CPUs));
                 OnPropertyChanged(nameof(GPUs));
                 OnPropertyChanged(nameof(MinerELPs));
+                OnPropertyChanged(nameof(IsMining));
+                OnPropertyChanged(nameof(IsNotMining));
             }
         }
 
@@ -85,6 +87,15 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool IsMining
+        {
+            get 
+            {
+                if (Devices == null) return false;
+                return Devices.Any(dev => dev.CanStop);
+            }
+        }
+        public bool IsNotMining => !IsMining;
         public IEnumerable<MinerELPData> MinerELPs
         {
             get => ELPManager.GetMinerELPs();
@@ -322,6 +333,18 @@ namespace NiceHashMiner.ViewModels
                     OnPropertyChanged(nameof(MinimumProfitString));
                 }
             };
+
+            MiningState.Instance.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(MiningState.AnyDeviceRunning))
+                {
+                    OnPropertyChanged(nameof(IsMining));
+                    OnPropertyChanged(nameof(IsNotMining));
+                }
+            };
+
+            OnPropertyChanged(nameof(IsMining));
+            OnPropertyChanged(nameof(IsNotMining));
         }
 
 

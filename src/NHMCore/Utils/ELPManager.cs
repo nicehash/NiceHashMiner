@@ -45,6 +45,7 @@ namespace NHMCore.Utils
             MinerConfig defCfg = new();
             defCfg.MinerName = pluginName;
             defCfg.MinerUUID = pluginUUID;
+            if (pluginName.ToLower().Contains("xmr")) defCfg.MinerCommands.Add(new List<string>() { "--cpu-priority",  "0" });
             Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new(); 
             foreach (var devAlgoPair in supportedDevicesAlgorithms)
             {

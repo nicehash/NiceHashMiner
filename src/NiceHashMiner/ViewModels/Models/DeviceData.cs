@@ -309,7 +309,6 @@ namespace NiceHashMiner.ViewModels.Models
                 algoDestination.BenchmarkSpeed = algoSource.BenchmarkSpeed;
                 algoDestination.SecondaryBenchmarkSpeed = algoSource.SecondaryBenchmarkSpeed;
                 algoDestination.PowerUsage = algoSource.PowerUsage;
-                algoDestination.ExtraLaunchParameters = algoSource.ExtraLaunchParameters;
             }
         }
 

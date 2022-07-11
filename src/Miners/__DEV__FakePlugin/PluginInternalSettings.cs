@@ -1,5 +1,4 @@
 ﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using System;
 
 namespace FakePlugin
