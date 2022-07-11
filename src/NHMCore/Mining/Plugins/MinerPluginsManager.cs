@@ -263,41 +263,30 @@ namespace NHMCore.Mining.Plugins
 
         private static class PluginInstaller
         {
-            private static readonly TrivialChannel<IPluginInstallerCommand> Channel = new TrivialChannel<IPluginInstallerCommand>();
-            private interface IPluginInstallerCommand { string PluginUUID { get; set; } };
-            private class RemoveCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } }
-            private class RemovedCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } public bool Success { get; set; } }
-            private class InstallCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } }
-            private class InstalledCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } public bool Success { get; set; } }
+            private static readonly TrivialChannel<PluginInstallerCommand> Channel = new TrivialChannel<PluginInstallerCommand>();
+            private abstract record PluginInstallerCommand(string PluginUUID);
+            private record RemoveCommand(string PluginUUID) : PluginInstallerCommand(PluginUUID);
+            private record RemovedCommand(string PluginUUID, bool Success) : PluginInstallerCommand(PluginUUID);
+            private record InstallCommand(string PluginUUID) : PluginInstallerCommand(PluginUUID);
+            private record InstalledCommand(string PluginUUID, bool Success) : PluginInstallerCommand(PluginUUID);
 
-            private static bool IsRemovalCommand(IPluginInstallerCommand c) => c is RemoveCommand || c is RemovedCommand;
-            private static bool IsInstallationCommand(IPluginInstallerCommand c) => c is InstallCommand || c is InstalledCommand;
+            private static bool IsRemovalCommand(PluginInstallerCommand c) => c is RemoveCommand or RemovedCommand;
+            private static bool IsInstallationCommand(PluginInstallerCommand c) => c is InstallCommand or InstalledCommand;
 
-            public static void RemovePlugin(string pluginUUID)
-            {
-                Channel.Enqueue(new RemoveCommand { PluginUUID = pluginUUID });
-            }
+            public static void RemovePlugin(string pluginUUID) => Channel.Enqueue(new RemoveCommand(pluginUUID));
 
-            public static void RemovedPluginStatus(string pluginUUID, bool success)
-            {
-                Channel.Enqueue(new RemovedCommand { PluginUUID = pluginUUID, Success = success });
-            }
+            public static void RemovedPluginStatus(string pluginUUID, bool success) => Channel.Enqueue(new RemovedCommand(pluginUUID, success));
+            
 
-            public static void InstallPlugin(string pluginUUID)
-            {
-                Channel.Enqueue(new InstallCommand { PluginUUID = pluginUUID });
-            }
+            public static void InstallPlugin(string pluginUUID) => Channel.Enqueue(new InstallCommand(pluginUUID));
 
-            public static void InstalledPluginStatus(string pluginUUID, bool success)
-            {
-                Channel.Enqueue(new InstalledCommand { PluginUUID = pluginUUID, Success = success });
-            }
+            public static void InstalledPluginStatus(string pluginUUID, bool success) => Channel.Enqueue(new InstalledCommand(pluginUUID, success));
 
             public static async Task RestartDevicesStateLoop(CancellationToken stop)
             {
                 var lastCommandTime = DateTime.UtcNow;
                 bool checkCommandsForRestart() => (DateTime.UtcNow - lastCommandTime).TotalSeconds >= 0.5;
-                var pairedCommands = new Dictionary<string, List<IPluginInstallerCommand>>();
+                var pairedCommands = new Dictionary<string, List<PluginInstallerCommand>>();
                 var pluginsToDelete = new List<string>();
                 try
                 {
@@ -350,7 +339,7 @@ namespace NHMCore.Mining.Plugins
                         if (exceptionString != null) Logger.Error("PluginInstaller", $"Channel.ReadAsync error: {exceptionString}");
                         if (command == null) continue;
                         // handle commands
-                        if (!pairedCommands.ContainsKey(command.PluginUUID)) pairedCommands[command.PluginUUID] = new List<IPluginInstallerCommand>() { };
+                        if (!pairedCommands.ContainsKey(command.PluginUUID)) pairedCommands[command.PluginUUID] = new List<PluginInstallerCommand>() { };
                         pairedCommands[command.PluginUUID].Add(command);
                         lastCommandTime = DateTime.UtcNow;
                     }
