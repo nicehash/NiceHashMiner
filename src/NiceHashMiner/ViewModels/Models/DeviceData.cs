@@ -20,7 +20,6 @@ namespace NiceHashMiner.ViewModels.Models
     /// <summary>
     /// Wrapper for <see cref="ComputeDevice"/> to convert for device status DataGrid
     /// </summary>
-    //public delegate void EventHandler(object senderInput, EventArgs e, string flag, string newText);
     public class DeviceData : NotifyChangedBase
     {
         const string MISSING_INFO = "- - -";

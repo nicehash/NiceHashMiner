@@ -32,7 +32,7 @@ namespace NiceHashMiner.Views.ParameterOverview
 
         private void DropDownDevices_Button_Click(object sender, RoutedEventArgs e)
         {
-            var tb = e.Source as ToggleButton;
+            if (e.Source is not ToggleButton tb) return;
             if (tb.IsChecked.Value)
             {
                 Expand();

@@ -51,7 +51,7 @@ namespace NHM.MinerPluginToolkitV1
         #endregion IMinerPlugin
 
         public abstract Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
-
+        
         protected PluginMetaInfo PluginMetaInfo { get; set; } = null;
 
         #region IInitInternals

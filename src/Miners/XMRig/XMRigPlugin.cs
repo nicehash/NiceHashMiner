@@ -3,13 +3,14 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace XMRig
 {
-    public partial class XMRigPlugin : PluginBase
+    public partial class XMRigPlugin : PluginBase, IAdditionalELP
     {
         public XMRigPlugin()
         {
@@ -41,6 +42,19 @@ namespace XMRig
         public override string Name => "XMRig";
 
         public override string Author => "info@nicehash.com";
+
+        private readonly List<List<string>> AdditionalELPs = new List<List<string>>()
+        {
+            new List<string>()
+            {
+                "--cpu-priority",
+                "0"
+            }
+        };
+        public List<List<string>> GetAdditionalELPs()
+        {
+            return AdditionalELPs;
+        }
 
         protected override MinerBase CreateMinerBase()
         {

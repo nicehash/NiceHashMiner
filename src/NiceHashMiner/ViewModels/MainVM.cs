@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.CommandLine;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
@@ -87,14 +89,7 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged();
             }
         }
-        public bool IsMining
-        {
-            get 
-            {
-                if (Devices == null) return false;
-                return Devices.Any(dev => dev.CanStop);
-            }
-        }
+        public bool IsMining => MiningState.AnyDeviceRunning;
         public bool IsNotMining => !IsMining;
         public IEnumerable<MinerELPData> MinerELPs
         {
@@ -375,12 +370,27 @@ namespace NiceHashMiner.ViewModels
             foreach (var plugin in Plugins)
             {
                 if (!plugin.Plugin.Installed) continue;
+                var minerPlugin = Devices?
+                    .Select(dev => dev.AlgorithmSettingsCollection)?
+                    .SelectMany(p => p)?
+                    .Where(algoContainer => algoContainer.PluginContainer.PluginUUID == plugin.Plugin.PluginUUID)?
+                    .Select(algo => algo.PluginContainer)?
+                    .FirstOrDefault()?
+                    .GetPlugin();
+                var specificCmds = minerPlugin is IAdditionalELP additional ? additional.GetAdditionalELPs() : new List<List<string>>();
+                var pluginConfiguration = new PluginConfiguration()
+                {
+                    PluginName = plugin.Plugin.PluginName,
+                    PluginUUID = plugin.Plugin.PluginUUID,
+                    SupportedDevicesAlgorithms = plugin.Plugin.SupportedDevicesAlgorithms,
+                    Devices = devsList,
+                    MinerSpecificCommands = specificCmds
+                };
                 try
                 {
                     MinerConfig data = MinerConfigManager.ReadConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID);
                     if (data == null) throw new FileNotFoundException();
-                    var fixedData = ELPManager.FixConfigIntegrityIfNeeded(data, plugin.Plugin.PluginName, plugin.Plugin.PluginUUID, 
-                        plugin.Plugin.SupportedDevicesAlgorithms, devsList);
+                    var fixedData = ELPManager.FixConfigIntegrityIfNeeded(data, pluginConfiguration);
                     if (fixedData != null)
                     {
                         data = fixedData;
@@ -392,8 +402,7 @@ namespace NiceHashMiner.ViewModels
                 {
                     if (ex is FileNotFoundException || ex is JsonSerializationException)
                     {
-                        var defaultCFG = ELPManager.CreateDefaultConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID,
-                            plugin.Plugin.SupportedDevicesAlgorithms, devsList);
+                        var defaultCFG = ELPManager.CreateDefaultConfig(pluginConfiguration);
                         MinerConfigManager.WriteConfig(defaultCFG, true);
                         minerELPs.Add(ELPManager.ConstructMinerELPDataFromConfig(defaultCFG));
                     }
@@ -429,7 +438,6 @@ namespace NiceHashMiner.ViewModels
             _updateTimer.Start();
 
             ConfigManager.CreateBackup();
-            var algoContainers = _devices?.Select(dev => dev.AlgorithmSettingsCollection)?.SelectMany(d => d).ToList();
 
             ELPManager.ELPReiteration += ELPReScan;
             ReadELPConfigsOrCreateIfMissing();

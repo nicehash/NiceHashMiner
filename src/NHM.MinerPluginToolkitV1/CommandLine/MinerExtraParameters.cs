@@ -119,41 +119,6 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
             }
             return true;
         }
-        public static List<string> GetAllInstanceCommands(Parameters minerParameters, Parameters algorithmParameters, DevicesParametersList devicesParameterList)
-        {
-            List<string> commands = new();
-            //if (CheckIfCanGroup(devicesParameterList)) return new List<string> { Parse(minerParameters, algorithmParameters, devicesParameterList) };
-            var baseStr = Parse(minerParameters, algorithmParameters, new DevicesParametersList() { new Parameters() });
-            var split = SplitIntoCompatibleBuckets(devicesParameterList);
-            foreach(var group in split)
-            {
-                commands.Add(baseStr + " " + Parse(new Parameters(), new Parameters(), group.Value));
-            }
-            return commands;
-        }
-        private static Dictionary<string, DevicesParametersList> SplitIntoCompatibleBuckets(DevicesParametersList list)
-        {
-            Dictionary<string, DevicesParametersList> buckets = new();
-            var missingValueList = list.Where(list => list.Where(arg => arg.Count == 3)
-                                                         .Where(arg => arg[1].Trim() == String.Empty)
-                                                         .Any());
-            foreach(var missing in missingValueList)
-            {
-                var missingFlags = missing.Where(elt => elt[1] == string.Empty).Select(elt => $"{elt[0]} {elt[2]}").Distinct();
-                var joinedKey = string.Join(" ", missingFlags);
-                missing.RemoveAll(elt => elt[1] == string.Empty);
-                if (buckets.ContainsKey(joinedKey)) buckets[joinedKey].Add(missing);
-                else buckets.TryAdd(joinedKey, new DevicesParametersList() { missing });
-            }
-            var filledValuesList = list.Where(list => list.Where(arg => arg.Count == 3)
-                                              .All(arg => arg[1].Trim() != String.Empty));
-            if (filledValuesList.Count() != 0)
-            {
-                if (buckets.ContainsKey(string.Empty)) buckets[string.Empty].AddRange(filledValuesList);
-                else buckets.TryAdd(string.Empty, new DevicesParametersList(filledValuesList));
-            }
-            return buckets;
-        }
         private static string DevicesStringForFlag(string flag, IEnumerable<Parameters> parameters)
         {
             var flagParams = parameters

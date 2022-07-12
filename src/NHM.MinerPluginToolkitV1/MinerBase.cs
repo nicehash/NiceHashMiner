@@ -16,7 +16,7 @@ namespace NHM.MinerPluginToolkitV1
     /// <summary>
     /// MinerBase class implements most common IMiner features and supports MinerOptionsPackage, MinerSystemEnvironmentVariables, MinerReservedApiPorts integration, process watchdog functionality.
     /// </summary>
-    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
+    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter, IExtraLaunchParameterSetter
     {
         /// <summary>
         /// This is internal ID counter used for logging
@@ -68,7 +68,6 @@ namespace NHM.MinerPluginToolkitV1
         { }
 
         public MinerCommandLineSettings MinerCommandLineSettings { get; set; }
-        //public MinerOptionsPackage MinerOptionsPackage { get; set; }
         public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
 
         public MinerReservedPorts MinerReservedApiPorts { get; set; }

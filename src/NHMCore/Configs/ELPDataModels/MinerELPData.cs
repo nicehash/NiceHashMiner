@@ -71,21 +71,9 @@ namespace NHMCore.Configs.ELPDataModels
                 OnPropertyChanged(nameof(Algos));
             }
         }
-        public string SingleParamString
-        {
-            get
-            {
-                return String.Join(' ', SingleParams) ?? "";
-            }
-        }
-        public string DoubleParamString
-        {
-            get
-            {
-                return String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
-            }
-        }
-        
+        public string SingleParamString => String.Join(' ', SingleParams) ?? "";
+        public string DoubleParamString => String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
+
         public void ClearSingleParams()
         {
             SingleParams.Clear();

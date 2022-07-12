@@ -7,7 +7,7 @@ using System.Text;
 using NHMCore;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using NHM.Common.Enums;
+using NHMCore.Configs.ELPDataModels;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {

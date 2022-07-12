@@ -23,8 +23,8 @@
         </Grid.RowDefinitions>
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <StackPanel>
-                <TextBlock HorizontalAlignment="Center" FontSize="15" Visibility="{Binding IsMining, Converter={StaticResource MiningStatusVisibilityConverter}}" Text="Stop mining/benchmarking to edit extra launch parameters!"/>
-                <StackPanel Visibility="{Binding IsNotMining, Converter={StaticResource MiningStatusVisibilityConverter}}">
+                <TextBlock HorizontalAlignment="Center" FontSize="15" Visibility="{Binding MiningState.AnyDeviceRunning, Converter={StaticResource MiningStatusVisibilityConverter}}" Text="Stop mining/benchmarking to edit extra launch parameters!"/>
+                <StackPanel Visibility="{Binding MiningState.IsNotBenchmarkingOrMining, Converter={StaticResource MiningStatusVisibilityConverter}}">
                     <Grid >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.2*"/>

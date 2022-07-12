@@ -3,6 +3,7 @@ using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore.Configs;
 using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
@@ -25,7 +26,7 @@ namespace NHMCore.Mining
                 var plugin = algorithms.First().PluginContainer;
                 if (algorithms.Any(algo => plugin != algo.PluginContainer)) throw new Exception("Different Algorithms PluginContainers. Grouping logic broken.");
                 var miner = new Miner(plugin, algorithms, groupKey);
-                if (miner.GetMiner() is MinerBase mb) mb.SetExtraLaunchParameters(elpCommands);
+                if (miner._miner is IExtraLaunchParameterSetter elp) elp.SetExtraLaunchParameters(elpCommands);
                 return miner;
             }
             catch (Exception e)
@@ -142,10 +143,6 @@ namespace NHMCore.Mining
 
             // API data all good
             return ApiDataStatus.OK;
-        }
-        public IMiner GetMiner()
-        {
-            return _miner;
         }
         private async Task GetSummaryAsync()
         {

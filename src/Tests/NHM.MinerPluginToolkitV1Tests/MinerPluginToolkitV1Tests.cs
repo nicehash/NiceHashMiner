@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static NHM.MinerPluginToolkitV1.CommandLine.MinerExtraParameters;
 using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
+using Newtonsoft.Json;
 
 namespace NHM.MinerPluginToolkitV1Test
 {
@@ -22,187 +23,19 @@ namespace NHM.MinerPluginToolkitV1Test
             Assert.IsNotNull(ReadJson(@"..\..\..\CommandLine\command_line01.json"));
         }
 
-        //[TestMethod]
-        //public void TestJsonDeserializer()
-        //{
-        //    Assert.IsNotNull(ReadJson(@"..\..\..\CommandLine\command_line01.json"));
-        //}
-
         [TestMethod]
         public void TestCheckIfCanGroup()
         {
-            var deviceParams01 = new List<List<List<string>>>
-            {
-                // dev01
-                new List<List<string>>
-                {
-                    new List<string>
-                    {
-                        "--flag33",
-                        "2",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flag1",
-                        "6",
-                        ","
-                    }
-                },
-                // dev02
-                new List<List<string>>
-                {
-                    new List<string>
-                    {
-                        "--flag33",
-                        "3",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flag1",
-                        "", // parameter is not valid
-                        ","
-                    }
-                },
-            };
-
-            
+            var deviceParams01 = JsonConvert.DeserializeObject<List<List<List<string>>>>(File.ReadAllText(@"..\..\..\CommandLine\deviceParams01.json"));
             Assert.AreEqual(false, MinerExtraParameters.CheckIfCanGroup(deviceParams01));
 
-
-            var deviceParams02 = new List<List<List<string>>>
-            {
-                // dev01
-                new List<List<string>>
-                {
-                    new List<string>
-                    {
-                        "--flag33",
-                        "2",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flag1",
-                        "6",
-                        ","
-                    }
-                },
-                // dev02
-                new List<List<string>>
-                {
-                    new List<string>
-                    {
-                        "--flag33",
-                        "3",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flag1",
-                        "8",
-                        ","
-                    }
-                },
-            };
-
+            var deviceParams02 = JsonConvert.DeserializeObject<List<List<List<string>>>>(File.ReadAllText(@"..\..\..\CommandLine\deviceParams02.json"));
             Assert.AreEqual(true, MinerExtraParameters.CheckIfCanGroup(deviceParams02));
 
-            var deviceParams03 = new List<List<List<string>>>
-            {
-                // dev01
-                new List<List<string>>
-                {
-                    new List<string>
-                    {
-                        "--flag33",
-                        "2",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flag1",
-                        "6",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flagSingle",
-                        "6",
-                    },
-                },
-                // dev02
-                new List<List<string>>
-                {
-                    new List<string>
-                    {
-                        "--flag33",
-                        "3",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flag1",
-                        "8",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flagSingle",
-                        "6",
-                    },
-                },
-            };
-
+            var deviceParams03 = JsonConvert.DeserializeObject<List<List<List<string>>>>(File.ReadAllText(@"..\..\..\CommandLine\deviceParams03.json"));
             Assert.AreEqual(true, MinerExtraParameters.CheckIfCanGroup(deviceParams03));
 
-            var deviceParams04 = new List<List<List<string>>>
-            {
-                // dev01
-                new List<List<string>>
-                {
-                    new List<string>
-                    {
-                        "--flag33",
-                        "2",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flag1",
-                        "6",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flagSingle",
-                        "6",
-                    },
-                },
-                // dev02
-                new List<List<string>>
-                {
-                    new List<string>
-                    {
-                        "--flag33",
-                        "3",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flag1",
-                        "8",
-                        ","
-                    },
-                    new List<string>
-                    {
-                        "--flagSingle",
-                        "5",
-                    },
-                },
-            };
-
+            var deviceParams04 = JsonConvert.DeserializeObject<List<List<List<string>>>>(File.ReadAllText(@"..\..\..\CommandLine\deviceParams04.json"));
             Assert.AreEqual(false, MinerExtraParameters.CheckIfCanGroup(deviceParams04));
         }
 

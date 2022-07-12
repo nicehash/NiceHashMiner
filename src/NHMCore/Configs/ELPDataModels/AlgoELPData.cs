@@ -72,20 +72,8 @@ namespace NHMCore.Configs.ELPDataModels
                 OnPropertyChanged(nameof(Devices));
             }
         }
-        public string SingleParamString
-        {
-            get
-            {
-                return String.Join(' ', SingleParams) ?? "";
-            }
-        }
-        public string DoubleParamString
-        {
-            get
-            {
-                return String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
-            }
-        }
+        public string SingleParamString => String.Join(' ', SingleParams) ?? "";
+        public string DoubleParamString => String.Join(' ', DoubleParams.Select(t => $"{t.name} {t.value}")) ?? "";
         private ObservableCollection<(string uuid, string command)> _allCMDStrings { get; set; } = new ObservableCollection<(string uuid, string command)>();
         public ObservableCollection<(string uuid, string command)> AllCMDStrings
         {
@@ -97,10 +85,8 @@ namespace NHMCore.Configs.ELPDataModels
                 OnPropertyChanged(nameof(UniqueCMDs));
             }
         }
-        public List<string> UniqueCMDs
-        {
-            get => AllCMDStrings.Select(t => t.command).Distinct().ToList();
-        }
+        public List<string> UniqueCMDs => AllCMDStrings.Select(t => t.command).Distinct().ToList();
+        
         public void ClearSingleParams()
         {
             SingleParams.Clear();

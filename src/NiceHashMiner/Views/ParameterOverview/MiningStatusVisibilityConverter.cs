@@ -13,10 +13,7 @@ namespace NiceHashMiner.Views.ParameterOverview
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is bool status)
-            {
-                if (status) return Visibility.Visible;
-            }
+            if(value is bool status && status) return Visibility.Visible;
             return Visibility.Collapsed;
         }
 

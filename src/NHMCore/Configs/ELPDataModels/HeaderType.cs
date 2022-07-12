@@ -1,5 +1,4 @@
-﻿
-namespace NHM.Common.Enums
+﻿namespace NHMCore.Configs.ELPDataModels
 {
     public enum HeaderType
     {

@@ -1,14 +1,13 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1.CommandLine;
+using NHMCore.Configs;
 using NHMCore.Configs.ELPDataModels;
 using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
 namespace NHMCore.Utils
@@ -19,6 +18,10 @@ namespace NHMCore.Utils
         private ELPManager() { }
         public static ELPManager Instance { get; } = new ELPManager();
         public event NotifyELPChangeEventHandler ELPReiteration;
+        const int HEADER = 0;
+        const int FLAG = 0;
+        const int VALUE = 1;
+        const int DELIMITER = 2;
 
         private IEnumerable<MinerELPData> _minerELPs;
         public IEnumerable<MinerELPData> GetMinerELPs()
@@ -38,21 +41,19 @@ namespace NHMCore.Utils
         {
             OnChanged(EventArgs.Empty);
         }
-        public MinerConfig CreateDefaultConfig(string pluginName, string pluginUUID,
-            Dictionary<string, List<string>> supportedDevicesAlgorithms,
-            List<(string FullName, string Uuid, DeviceType deviceType)> devices)
+        public MinerConfig CreateDefaultConfig(PluginConfiguration pconf)
         {
             MinerConfig defCfg = new();
-            defCfg.MinerName = pluginName;
-            defCfg.MinerUUID = pluginUUID;
-            if (pluginName.ToLower().Contains("xmr")) defCfg.MinerCommands.Add(new List<string>() { "--cpu-priority",  "0" });
+            defCfg.MinerName = pconf.PluginName;
+            defCfg.MinerUUID = pconf.PluginUUID;
+            defCfg.MinerCommands.AddRange(pconf.MinerSpecificCommands);
             Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new(); 
-            foreach (var devAlgoPair in supportedDevicesAlgorithms)
+            foreach (var devAlgoPair in pconf.SupportedDevicesAlgorithms)
             {
                 foreach (var algo in devAlgoPair.Value)
                 {
                     if (!algorithmDevicePairs.ContainsKey(algo)) algorithmDevicePairs.Add(algo, new List<(string, string)>());
-                    var devs = devices.Where(dev => dev.deviceType.ToString().Contains(devAlgoPair.Key))?
+                    var devs = pconf.Devices.Where(dev => dev.deviceType.ToString().Contains(devAlgoPair.Key))?
                         .Select(dev => new { P = (dev.Uuid, dev.FullName) })?
                         .Select(p => p.P);
                     if(devs != null) algorithmDevicePairs[algo].AddRange(devs);
@@ -86,11 +87,9 @@ namespace NHMCore.Utils
             }
             return def;
         }
-        public MinerConfig FixConfigIntegrityIfNeeded(MinerConfig data, string pluginName, string pluginUUID, 
-            Dictionary<string, List<string>> supportedDevicesAlgorithms,
-            List<(string FullName, string Uuid, DeviceType deviceType)> devices)
+        public MinerConfig FixConfigIntegrityIfNeeded(MinerConfig data, PluginConfiguration pconf)
         {
-            var def = CreateDefaultConfig(pluginName, pluginUUID, supportedDevicesAlgorithms, devices);
+            var def = CreateDefaultConfig(pconf);
             try
             {
                 def = CompareConfigWithDefaultAndFixIfNeeded(data, def);
@@ -156,12 +155,12 @@ namespace NHMCore.Utils
             {
                 var tempAlgo = new AlgoELPData();
                 var uniqueFlags = algo.Devices.Values?
-                    .Select(v => v.Commands.Where(c => c.Count == 3)?.Select(a => $"{a[0]} {a[2]}"))?
+                    .Select(v => v.Commands.Where(c => c.Count == 3)?.Select(a => $"{a[FLAG]} {a[DELIMITER]}"))?
                     .SelectMany(v => v)?
                     .Distinct()?
                     .ToList();
-                uniqueFlags?.ForEach(f => tempAlgo.Devices[0].AddELP(f));
-                if (!uniqueFlags.Any()) tempAlgo.Devices[0].ELPs.Add(new DeviceELPElement(false) { ELP = String.Empty });
+                uniqueFlags?.ForEach(f => tempAlgo.Devices[HEADER].AddELP(f));
+                if (!uniqueFlags.Any()) tempAlgo.Devices[HEADER].ELPs.Add(new DeviceELPElement(false) { ELP = String.Empty });
                 tempAlgo.Name = algo.AlgorithmName;
                 foreach (var dev in algo.Devices)
                 {
@@ -170,9 +169,9 @@ namespace NHMCore.Utils
                     foreach (var arg in dev.Value.Commands)
                     {
                         if (arg.Count != 3) continue;
-                        var index = uniqueFlags.IndexOf($"{arg[0]} {arg[2]}");
+                        var index = uniqueFlags.IndexOf($"{arg[FLAG]} {arg[DELIMITER]}");
                         if (index < 0) continue;
-                        tempELPElts[index] = new DeviceELPElement() { ELP = arg[1] };
+                        tempELPElts[index] = new DeviceELPElement() { ELP = arg[VALUE] };
                     }
                     tempELPElts.Where(elt => elt == null)?.ToList()?.ForEach(elt => elt = new DeviceELPElement() { ELP = string.Empty });
                     tempAlgo.Devices.Add(new DeviceELPData()
