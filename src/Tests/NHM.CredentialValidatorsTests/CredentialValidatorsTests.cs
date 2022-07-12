@@ -73,6 +73,10 @@ namespace NHM.CredentialValidatorsTests
             Assert.AreEqual(false, isValid(null, false), tl.label());
             Assert.AreEqual(false, isValid("NHbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", false), tl.label());
             Assert.AreEqual(false, isValid("PTbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", true), tl.label());
+            Assert.AreEqual(true, isValid("PTbD872cNDn2Z2Y3m57u8FrDdqDtnTSx7AuW", false), tl.label());
+            Assert.AreEqual(false, isValid("PTbD872cNDn2Z2Y3m57u8FrDdqDtnTSx7AuW", true), tl.label());
+            Assert.AreEqual(true, isValid("PTbUDN5nPLDUA34X1aLR24pfuidFZvGRjvhn", false), tl.label());
+            Assert.AreEqual(false, isValid("PTbUDN5nPLDUA34X1aLR24pfuidFZvGRjvhn", true), tl.label());
         }
 
         [TestMethod]
@@ -94,6 +98,8 @@ namespace NHM.CredentialValidatorsTests
             Assert.AreEqual(false, isValid("bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t5", true), tl.label());
             Assert.AreEqual(true, isValid("NHbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", true), tl.label());
             Assert.AreEqual(true, isValid("PTbHJfBFKbm5Uk9HShpgCnbPsCMctkf6tSfP", false), tl.label());
+            Assert.AreEqual(true, isValid("PTbD872cNDn2Z2Y3m57u8FrDdqDtnTSx7AuW", false), tl.label());
+            Assert.AreEqual(true, isValid("PTbUDN5nPLDUA34X1aLR24pfuidFZvGRjvhn", false), tl.label());
         }
 
     }
