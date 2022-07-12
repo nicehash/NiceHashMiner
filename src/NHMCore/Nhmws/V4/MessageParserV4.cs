@@ -41,11 +41,104 @@ namespace NHMCore.Nhmws.V4
             };
         }
 
+        internal static IOrderedEnumerable<ComputeDevice> SortedDevices(this IEnumerable<ComputeDevice> devices)
+        {
+            return devices.OrderBy(d => d.DeviceType)
+                .ThenBy(d => d.BaseDevice is IGpuDevice gpu ? gpu.PCIeBusID : int.MinValue);
+        }
 
+        private static (List<(string name, string unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d)
+        {
+            string getValue<T>(T o) => (typeof(T).Name, o) switch
+            {
+                (nameof(ILoad), ILoad g) => $"{g.Load}",
+                (nameof(ITemp), ITemp g) => $"{g.Temp}",
+                (nameof(IGetFanSpeedPercentage), IGetFanSpeedPercentage g) => $"{g.GetFanSpeedPercentage().percentage}",
+                (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
+                (nameof(IVramTemp), IVramTemp g) => $"{g.VramTemp}",
+                (nameof(IHotspotTemp), IHotspotTemp g) => $"{g.HotspotTemp}",
+                (_, _) => nameof(T),
+            };
+            (string name, string unit, string value)? pairOrNull<T>(string name, string unit) => d.DeviceMonitor is T sensor ? (name, unit, getValue<T>(sensor)) : null;
+
+            // here sort manually by type 
+            var dynamicPropertiesWithValues = new List<(string name, string unit, string value)?>
+            {
+                pairOrNull<ITemp>("Temperature","C"),
+                pairOrNull<ILoad>("Load","%"),
+                pairOrNull<IGetFanSpeedPercentage>("Fan speed percentage","%"),
+                pairOrNull<IPowerUsage>("Power Usage","W"),
+                pairOrNull<IVramTemp>("Vram Temperature","C"),
+                pairOrNull<IHotspotTemp>("Hotspot Temperature","C"),
+            };
+
+            var deviceOptionalDynamic = dynamicPropertiesWithValues
+                .Where(p => p.HasValue)
+                .Select(p => p.Value)
+                .ToArray();
+            var optionalDynamicProperties = deviceOptionalDynamic.Select(p => (p.name, p.unit)).ToList();
+            var values_odv = new JArray(deviceOptionalDynamic.Select(p => p.value));
+            return (optionalDynamicProperties, values_odv);
+        }
+
+        // we cache device properties so we persevere  property IDs
+        private static readonly Dictionary<ComputeDevice, List<OptionalMutableProperty>> _cachedDevicesOptionalMutable = new Dictionary<ComputeDevice, List<OptionalMutableProperty>>();
+        private static (List<OptionalMutableProperty> properties, JArray values) GetDeviceOptionalMutable(ComputeDevice d)
+        {
+            OptionalMutableProperty valueOrNull<T>(OptionalMutableProperty v) => d.DeviceMonitor is T ? v : null;
+            List<OptionalMutableProperty> getOptionalMutableProperties(ComputeDevice d)
+            {
+                // TODO sort by type
+                var optionalProperties = new List<OptionalMutableProperty>
+                    {
+                        valueOrNull<ITDP>(new OptionalMutablePropertyEnum
+                        {
+                            PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
+                            DisplayName = "TDP Simple",
+                            DefaultValue = "Medium",
+                            Range = new List<string>{ "Low", "Medium", "High" },
+                            // TODO action/setter to execute
+                            ExecuteTask = async (object p) =>
+                            {
+                                // #1 validate JSON input
+                                if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
+                                // TODO do something
+                                return Task.FromResult<object>(null);
+                            },
+                            GetValue = () =>
+                            {
+                                var ret = d.TDPSimple switch
+                                {
+                                    TDPSimpleType.LOW => "Low",
+                                    TDPSimpleType.MEDIUM => "Medium",
+                                    TDPSimpleType.HIGH => "High",
+                                    _ => "ERROR",
+                                };
+                                return ret;
+                            }
+                        }),
+                    };
+                return optionalProperties
+                    .Where(p => p != null)
+                    .ToList();
+            }
+
+            List<OptionalMutableProperty> getOptionalMutablePropertiesCached(ComputeDevice d)
+            {
+                if (_cachedDevicesOptionalMutable.TryGetValue(d, out var cachedProps)) return cachedProps;
+                return getOptionalMutableProperties(d);
+            }
+
+            var props = getOptionalMutablePropertiesCached(d);
+            var values_omv = new JArray(props.Select(p => p.GetValue()));
+
+            return (props, values_omv);
+        }
 
         private static LoginMessage _loginMessage = null;
-        public static LoginMessage CreateLoginMessage(string btc, string worker, string rigID, IEnumerable<ComputeDevice> devices)
+        public static LoginMessage CreateLoginMessage(string btc, string worker, string rigID, IOrderedEnumerable<ComputeDevice> devices)
         {
+            var sorted = SortedDevices(devices);
             if (_loginMessage != null)
             {
                 _loginMessage.Btc = btc;
@@ -84,61 +177,19 @@ namespace NHMCore.Nhmws.V4
 
             Device mapComputeDevice(ComputeDevice d)
             {
-                Dictionary<string, object> getStaticPropertiesOptionalValues(ComputeDevice d)
+                List<JArray> getStaticPropertiesOptionalValues(ComputeDevice d)
                 {
                     return d.BaseDevice switch
                     {
-                        IGpuDevice gpu => new Dictionary<string, object>
+                        IGpuDevice gpu => new List<JArray>
                         {
-                            { "bus_id", $"{gpu.PCIeBusID}" },
-                            { "vram", $"{gpu.GpuRam}" },
+                            new JArray("bus_id", $"{gpu.PCIeBusID}"),
+                            new JArray("vram", $"{gpu.GpuRam}"),
                         },
-                        _ => new Dictionary<string, object> { },
+                        _ => new List<JArray> { },
                     };
                 }
-                
-                List<(string name, string unit)> getOptionalDynamicProperties(ComputeDevice d)
-                {
-                    // TODO sort by type
-                    (string name, string unit)? pairOrNull<T>(string name, string unit) => d.DeviceMonitor is T ? (name, unit) : null;
-                    var dynamicProperties = new List<(string name, string unit)?>
-                    {
-                        pairOrNull<ITemp>("Temperature","C"),
-                        pairOrNull<IPowerUsage>("Power Usage","W"),
-                        pairOrNull<ILoad>("Load","%"),
-                        pairOrNull<IGetFanSpeedPercentage>("Fan speed percentage","%"),
-                    };
-                    return dynamicProperties
-                        .Where(p => p.HasValue)
-                        .Select(p => p.Value)
-                        .ToList();
-                }
-                List<OptionalMutableProperty> getOptionalMutableProperties(ComputeDevice d)
-                {
-                    // TODO sort by type
-                    OptionalMutableProperty valueOrNull<T>(OptionalMutableProperty v) => d.DeviceMonitor is T ? v : null;
-                    var optionalProperties = new List<OptionalMutableProperty>
-                    {
-                        valueOrNull<ITDP>(new OptionalMutablePropertyEnum
-                        {
-                            PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
-                            DisplayName = "TDP Simple",
-                            DefaultValue = "Medium",
-                            Range = new List<string>{ "Low", "Medium", "High" },
-                            // TODO action/setter to execute
-                            ExecuteTask = async (object p) =>
-                            {
-                                // #1 validate JSON input
-                                if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
-                                // TODO do something
-                                return Task.FromResult<object>(null);
-                            },
-                        }),
-                    };
-                    return optionalProperties
-                        .Where(p => p != null)
-                        .ToList();
-                }
+
                 return new Device
                 {
                     StaticProperties = new Dictionary<string, object>
@@ -149,8 +200,8 @@ namespace NHMCore.Nhmws.V4
                         { "optional", getStaticPropertiesOptionalValues(d) },
                     },
                     Actions = createDefaultActions(),
-                    OptionalDynamicProperties = getOptionalDynamicProperties(d),
-                    OptionalMutableProperties = getOptionalMutableProperties(d),
+                    OptionalDynamicProperties = GetDeviceOptionalDynamic(d).properties,
+                    OptionalMutableProperties = GetDeviceOptionalMutable(d).properties,
                 };
             }
 
@@ -186,7 +237,7 @@ namespace NHMCore.Nhmws.V4
             return _loginMessage;
         }
 
-        private static JObject GetMinerStateValues(IEnumerable<ComputeDevice> devices)
+        private static JObject GetMinerStateValues(IOrderedEnumerable<ComputeDevice> devices)
         {
             var json = JObject.FromObject(GetMinerState(devices));
             var delProp = json.Property("method");
@@ -194,8 +245,22 @@ namespace NHMCore.Nhmws.V4
             return json;
         }
 
-        internal static MinerState GetMinerState(IEnumerable<ComputeDevice> devices)
+        internal static MinerState GetMinerState(IOrderedEnumerable<ComputeDevice> devices)
         {
+            var rig = ApplicationStateManager.CalcRigStatus();
+
+            int rigStateToInt(RigStatus s) => s switch
+            {
+                RigStatus.Stopped => 1, // READY/IDLE/STOPPED
+                RigStatus.Mining => 2, // MINING/WORKING
+                RigStatus.Benchmarking => 3, // BENCHMARKING
+                RigStatus.Error => 5, // ERROR
+                RigStatus.Pending => 0, // NOT DEFINED
+                RigStatus.Disabled => 4, // DISABLED
+                _ => 0, // UNKNOWN
+            };
+
+
             MinerState.DeviceState toDeviceState(ComputeDevice d)
             {
                 int deviceStateToInt(DeviceState s) => s switch
@@ -215,51 +280,26 @@ namespace NHMCore.Nhmws.V4
                     var speeds = MiningDataStats.GetSpeedForDevice(d.Uuid);
                     return new JArray(state, new JArray(speeds.Select(kvp => new JArray((int)kvp.type, kvp.speed))));
                 }
-                JArray odv(ComputeDevice d)
-                {
-                    string getValue<T>(T o) => (typeof(T).Name, o) switch {
-                        (nameof(ITemp), ITemp g) => $"{g.Temp}",
-                        (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
-                        (nameof(ILoad), ILoad g) => $"{g.Load}",
-                        (nameof(IGetFanSpeedPercentage), IGetFanSpeedPercentage g) => $"{g.GetFanSpeedPercentage().percentage}",
-                        (_, _) => nameof(T),
-                    };
-                    string valueOrNull<T>() => d.DeviceMonitor is T sensor ? getValue<T>(sensor) : null;
-                    var optionalDynamicValues = new List<string>
-                    {
-                        valueOrNull<ITemp>(),
-                        valueOrNull<IPowerUsage>(),
-                        valueOrNull<ILoad>(),
-                        valueOrNull<IGetFanSpeedPercentage>(),
-                    };
-                    return new JArray(optionalDynamicValues
-                        .Where(v => !string.IsNullOrEmpty(v))
-                        .ToList());
-                }
                 JArray mmv(ComputeDevice d)
                 {
-                    return new JArray();
-                }
-                JArray omv(ComputeDevice d)
-                {
-                    return new JArray();
+                    return new JArray(deviceStateToInt(d.State));
                 }
 
                 return new MinerState.DeviceState
                 {
                     MutableDynamicValues = mdv(d),
-                    OptionalDynamicValues = odv(d),
+                    OptionalDynamicValues = GetDeviceOptionalDynamic(d).values, // odv
                     MandatoryMutableValues = mmv(d),
-                    OptionalMutableValues = omv(d),
+                    OptionalMutableValues = GetDeviceOptionalMutable(d).values, // omv
                 };
             }
 
             return new MinerState
             {
-                //MutableDynamicValues
-                //OptionalDynamicValues
-                //MandatoryMutableValues
-                //OptionalMutableValues
+                MutableDynamicValues = new JArray(rigStateToInt(rig)),
+                OptionalDynamicValues = new JArray(),
+                MandatoryMutableValues = new JArray(rigStateToInt(rig), _loginMessage?.Worker ?? ""),
+                OptionalMutableValues = new JArray(),
                 Devices = devices.Select(toDeviceState).ToList(),
             };
         }

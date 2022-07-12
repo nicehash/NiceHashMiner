@@ -15,5 +15,7 @@
         <ResourceDictionary Source="QRIcon.xaml"/>
         <ResourceDictionary Source="NHMLogoBigLight.xaml"/>
         <ResourceDictionary Source="NHMLogoBigDark.xaml"/>
+        <ResourceDictionary Source="TrashLogo.xaml"/>
+        <ResourceDictionary Source="TrashLogoDefault.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

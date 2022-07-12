@@ -74,6 +74,12 @@ namespace NHMCore.Configs.Data
             set => MiningSettings.Instance.DeviceToPauseUuid = value;
         }
 
+        public bool UseScheduler
+        {
+            get => MiningSettings.Instance.UseScheduler;
+            set => MiningSettings.Instance.UseScheduler = value;
+        }
+
         public bool EnableSSLMining
         {
             get => MiningSettings.Instance.EnableSSLMining;
@@ -366,6 +372,7 @@ namespace NHMCore.Configs.Data
             ShowInternetConnectionWarning = true;
             PauseMiningWhenGamingMode = false;
             DeviceToPauseUuid = "";
+            UseScheduler = false;
             EnableSSLMining = false;
             MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;

@@ -9,6 +9,7 @@ using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
+using NHMCore.Schedules;
 using NHMCore.Utils;
 using System;
 using System.Linq;
@@ -247,6 +248,8 @@ namespace NHMCore
                     if (MiscSettings.Instance.UseOptimizationProfiles) AvailableNotifications.CreateOptimizationProfileElevateInfo();
                     else AvailableNotifications.CreateOptimizationProfileNotEnabledInfo();
                 }
+
+                SchedulesManager.Instance.Init();
             }
             catch (Exception e)
             {

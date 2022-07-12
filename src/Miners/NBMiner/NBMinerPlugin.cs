@@ -31,7 +31,8 @@ namespace NBMiner
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v42.2/NBMiner_42.2_Win.zip", // original
+                    //"https://github.com/NebuTech/NBMiner/releases/download/v42.2/NBMiner_42.2_Win.zip", // original
+                    "https://dl.nbminer.com/NBMiner_42.2_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
