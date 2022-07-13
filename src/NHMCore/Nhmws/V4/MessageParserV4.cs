@@ -5,6 +5,7 @@ using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.Mining;
+using NHMCore.Mining.MiningStats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,15 @@ namespace NHMCore.Nhmws.V4
                 .ThenBy(d => d.BaseDevice is IGpuDevice gpu ? gpu.PCIeBusID : int.MinValue);
         }
 
+        private static string GetDevicePlugin(string UUID)
+        {
+            var data = MiningDataStats.GetDevicesMiningStats();
+            var devData = data.FirstOrDefault(dev => dev.DeviceUUID == UUID);
+            if (devData == null) return "";
+
+            return devData.MinerName;
+        }
+
         private static (List<(string name, string unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d)
         {
             string getValue<T>(T o) => (typeof(T).Name, o) switch
@@ -74,10 +84,14 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<IPowerUsage>("Power","W"),
             };
 
+            var devPlugin = ("Miner", "", GetDevicePlugin(d.Uuid));
+
             var deviceOptionalDynamic = dynamicPropertiesWithValues
                 .Where(p => p.HasValue)
                 .Select(p => p.Value)
-                .ToArray();
+                .ToList();
+            deviceOptionalDynamic.Add(devPlugin);
+
             var optionalDynamicProperties = deviceOptionalDynamic.Select(p => (p.name, p.unit)).ToList();
             var values_odv = new JArray(deviceOptionalDynamic.Select(p => p.value));
             return (optionalDynamicProperties, values_odv);
