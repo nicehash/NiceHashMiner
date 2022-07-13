@@ -5,6 +5,7 @@ using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.Mining;
+using NHMCore.Mining.MiningStats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,15 @@ namespace NHMCore.Nhmws.V4
                 .ThenBy(d => d.BaseDevice is IGpuDevice gpu ? gpu.PCIeBusID : int.MinValue);
         }
 
+        private static string GetDevicePlugin(string UUID)
+        {
+            var data = MiningDataStats.GetDevicesMiningStats();
+            var devData = data.FirstOrDefault(dev => dev.DeviceUUID == UUID);
+            if (devData == null) return "";
+
+            return devData.MinerName;
+        }
+
         private static (List<(string name, string unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d)
         {
             string getValue<T>(T o) => (typeof(T).Name, o) switch
@@ -59,9 +69,21 @@ namespace NHMCore.Nhmws.V4
                 (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
                 (nameof(IVramTemp), IVramTemp g) => $"{g.VramTemp}",
                 (nameof(IHotspotTemp), IHotspotTemp g) => $"{g.HotspotTemp}",
-                (_, _) => nameof(T),
+                (_, _) => null,
             };
-            (string name, string unit, string value)? pairOrNull<T>(string name, string unit) => d.DeviceMonitor is T sensor ? (name, unit, getValue<T>(sensor)) : null;
+
+            string getValueForName(string name) => name switch
+            {
+                "Miner" => $"{GetDevicePlugin(d.Uuid)}",
+                _ => null,
+            };
+
+            (string name, string unit, string value)? pairOrNull<T>(string name, string unit)
+            {
+                if (d.DeviceMonitor is T sensor) return (name, unit, getValue<T>(sensor));
+                if (typeof(T) == typeof(string)) return (name, unit, getValueForName(name));
+                return null;
+            }
 
             // here sort manually by type 
             var dynamicPropertiesWithValues = new List<(string name, string unit, string value)?>
@@ -72,12 +94,15 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<IMemControllerLoad>("MemCtrl Load","%"),
                 pairOrNull<IGetFanSpeedPercentage>("Fan","%"),
                 pairOrNull<IPowerUsage>("Power","W"),
+                pairOrNull<string>("Miner", ""),
             };
 
             var deviceOptionalDynamic = dynamicPropertiesWithValues
                 .Where(p => p.HasValue)
+                .Where(p => p.Value.value != null)
                 .Select(p => p.Value)
                 .ToArray();
+
             var optionalDynamicProperties = deviceOptionalDynamic.Select(p => (p.name, p.unit)).ToList();
             var values_odv = new JArray(deviceOptionalDynamic.Select(p => p.value));
             return (optionalDynamicProperties, values_odv);
