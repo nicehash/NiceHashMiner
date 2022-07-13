@@ -268,6 +268,9 @@ namespace NHMCore.Nhmws.V4
                     DeviceState.Error => 5, // ERROR
                     DeviceState.Pending => 0, // NOT DEFINED
                     DeviceState.Disabled => 4, // DISABLED
+#if NHMWS4
+                    DeviceState.Gaming => 6, //GAMING
+#endif
                     _ => 0, // UNKNOWN
                 };
 
