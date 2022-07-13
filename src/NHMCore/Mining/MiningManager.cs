@@ -634,7 +634,7 @@ namespace NHMCore.Mining
             else if (command is GPUToPauseChangedCommand gpuToPauseChangedCommand)
             {
                 _deviceToPauseUuid = gpuToPauseChangedCommand.gpuUuid;
-                
+
                 // unpause device if not mining and not selected
                 var devToUnpause = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
                 if (devToUnpause != null) devToUnpause.IsGaming = false;
@@ -691,6 +691,7 @@ namespace NHMCore.Mining
                 AvailableNotifications.CreateGamingStarted();
                 var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
                 dev.IsGaming = true;
+                dev.State = DeviceState.Gaming;
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }

@@ -193,7 +193,7 @@ namespace NHMCore
             {
                 rigState = RigStatus.Stopped;
             }
-            var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining);
+            var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming);
             if (anyMining)
             {
                 rigState = RigStatus.Mining;

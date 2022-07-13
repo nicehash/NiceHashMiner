@@ -106,7 +106,7 @@ namespace NHMCore.ApplicationState
         {
             // DeviceState Counts
             StoppedDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Stopped);
-            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining);
+            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming);
             BenchmarkingDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Benchmarking);
             ErrorDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Error);
             PendingDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Pending);
@@ -115,7 +115,7 @@ namespace NHMCore.ApplicationState
             AllDeviceEnabled = AvailableDevices.Devices.All(dev => dev.Enabled);
             AnyDeviceEnabled = AvailableDevices.Devices.Any(dev => dev.Enabled);
             AnyDeviceStopped = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Stopped && (dev.State != DeviceState.Disabled));
-            AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
+            AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Gaming);
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;
             IsCurrentlyMining = AnyDeviceRunning;
             IsDemoMining = !CredentialsSettings.Instance.IsBitcoinAddressValid && IsCurrentlyMining;
