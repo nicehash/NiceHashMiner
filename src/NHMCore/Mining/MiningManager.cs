@@ -691,7 +691,9 @@ namespace NHMCore.Mining
                 AvailableNotifications.CreateGamingStarted();
                 var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
                 dev.IsGaming = true;
+#if NHMWS4
                 dev.State = DeviceState.Gaming;
+#endif
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
