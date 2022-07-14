@@ -217,6 +217,13 @@ namespace NiceHashMiner
                 return;
             }
 
+            var quickMinerBTC = CredentialsSettings.Instance.QuickMinerMiningAddress;
+            if (CredentialValidators.ValidateBitcoinAddress(quickMinerBTC) && !CredentialsSettings.Instance.IsBitcoinAddressValid)
+            {
+                var btcMigration = new QuickMinerAddressMigrationWindow { };
+                btcMigration.ShowDialog();
+            }
+
             bool? loginSuccess = null;
 #if ENABLE_LOGIN
             FilterOSSpecific.GetWindowsVersion();

@@ -74,5 +74,22 @@ namespace NHM.CommonWin32
                 return "";
             }
         }
+
+        public static string Get_QM_MiningaddressFromRegistry()
+        {
+            try
+            {
+                using var parent = Registry.LocalMachine.OpenSubKey(@"SOFTWARE", false);
+                using var rkey = parent?.OpenSubKey("NiceHash QuickMiner", false);
+                object obtc = rkey?.GetValue("MiningAddress");
+                return obtc as string;
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("NHMRegistry", $"Exception Get_QM_MiningaddressFromRegistry {ex.Message}");
+            }
+            return null;
+        }
+
     }
 }

@@ -237,6 +237,9 @@
     <Compile Include="Views\Plugins\PluginsConfirmDialog.xaml.cs">
       <DependentUpon>PluginsConfirmDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\QuickMinerAddressMigrationWindow.xaml.cs">
+      <DependentUpon>QuickMinerAddressMigrationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Settings\Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
@@ -580,6 +583,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Plugins\PluginsConfirmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\QuickMinerAddressMigrationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
