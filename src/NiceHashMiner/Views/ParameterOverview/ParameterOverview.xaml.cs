@@ -32,5 +32,10 @@ namespace NiceHashMiner.Views.ParameterOverview
         {
             ELPManager.Instance.UpdateMinerELPConfig();
         }
+
+        private void AddressHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
+        }
     }
 }

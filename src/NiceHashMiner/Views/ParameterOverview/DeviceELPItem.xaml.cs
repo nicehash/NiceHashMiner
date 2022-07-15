@@ -33,6 +33,7 @@ namespace NiceHashMiner.Views.ParameterOverview
         {
             if(DataContext is DeviceELPElement ee && sender is TextBox tb)
             {
+                CheckFlagDelimBoxValidAndUpdateIfOK(sender);
                 ee.ELP = tb.Text;
                 ELPManager.Instance.IterateSubModelsAndConstructELPs();
             }
@@ -41,6 +42,34 @@ namespace NiceHashMiner.Views.ParameterOverview
         private void DeviceELPValueTB_LostFocus(object sender, RoutedEventArgs e)
         {
             ELPManager.Instance.UpdateMinerELPConfig();
+        }
+
+        private void CheckFlagDelimBoxValidAndUpdateIfOK(object sender)
+        {
+            if (sender is not TextBox tb) return;
+            var text = tb.Text;
+            if (DataContext is DeviceELPElement de)
+            {
+                if (de.HeaderType == HeaderType.Value) return;
+                if (string.IsNullOrEmpty(text))
+                {
+                    DeviceELPValueTB.Style = Application.Current.FindResource("inputBox") as Style;
+                    DeviceELPValueTB.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
+                    return;
+                }
+                if (IsParsedTextLenTwo(text))
+                {
+                    DeviceELPValueTB.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                    DeviceELPValueTB.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+                    return;
+                }
+                DeviceELPValueTB.Style = Application.Current.FindResource("InputBoxBad") as Style;
+                DeviceELPValueTB.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
+            }
+        }
+        private bool IsParsedTextLenTwo(string txt)
+        {
+            return txt.Trim().Split(' ').Length == 2;
         }
     }
 }
