@@ -141,8 +141,8 @@ namespace Excavator
         }
         private static string GetServiceLocation(string miningLocation)
         {
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return $"nhmp-ssl-test.{miningLocation}.nicehash.com:443";
-            if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return $"stratum-dev.{miningLocation}.nicehash.com:443";
+            if (BuildOptions.BUILD_TAG == BuildTag.TESTNET) return $"nhmp-test.auto.nicehash.com:443";
+            if (BuildOptions.BUILD_TAG == BuildTag.TESTNETDEV) return $"nhmp-dev.auto.nicehash.com:443";
             //BuildTag.PRODUCTION
             return $"nhmp.auto.nicehash.com:443";
         }

@@ -35,11 +35,11 @@ namespace Excavator
 #if LHR_BUILD_ON
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.7.7.3",
-                ExePath = new List<string> { "NHQM_v0.5.4.3_RC", "excavator.exe" },
+                BinVersion = "v1.7.7.6",
+                ExePath = new List<string> { "NHQM_v0.5.5.0", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.4.3_RC/NHQM_v0.5.4.3_RC.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.5.0/NHQM_v0.5.5.0.zip"
                 }
             };
 #else
