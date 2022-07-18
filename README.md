@@ -26,8 +26,9 @@ NiceHash Miner is an advanced auto-miner that supports the latest algorithms and
 # <a name="features"></a> Features
 
 - Easy one-click CPU mining for CPUs that support at least AES (only works on Windows x64).
-- Easy one-click GPU mining for NVIDIA GPUs using microarchitecture (compute capability) SM 3.0+.
+- Easy one-click GPU mining for NVIDIA GPUs using microarchitecture (compute capability) SM 5.3+.
 - Easy one-click GPU mining for AMD GPUs using any AMD GPU devices that supports OpenCL.
+- Full 100% LHR Unlock with selected plugins.
 - Integrated support for Simple Multi-Algorithm. Always mine most profitable algorithm.
 - Integrated benchmarking tool. Run it only once before you start mining and after every hardware/driver/software upgrade.
 - Watch-feature - automatically restart miner if crashed or hanged.
@@ -41,12 +42,12 @@ NiceHash Miner is an advanced auto-miner that supports the latest algorithms and
 - **[Note: Windows 10 is recommended and will provide you a much better user experience]**
 - For CPU mining a modern CPU with AES support
 - For AMD mining any AMD GPU with OpenCL support
-- For NVIDIA mining any NVIDIA GPU with Compute capability (SM) 3.0 or newer
+- For NVIDIA mining any NVIDIA GPU with Compute capability (SM) 5.3 or newer
 - **up-to-date patches** for OS
 - **up-to-date drivers** for all GPUs
 - **Reliable** internet connectivity
 - For GPU Mining, **paging file size** of 60% of your total GPU VRAM memory
-- Personal **Bitcoin wallet** (you can create one by [registering](https://www.nicehash.com/support/general-help/account/creating-a-new-account) on NiceHash page)
+- Personal **Mining wallet** (you can create one by [registering](https://www.nicehash.com/support/general-help/account/creating-a-new-account) on NiceHash page)
 
 # <a name="run"></a> How to get&run it?
 
@@ -91,7 +92,6 @@ MinimizeMiningWindows | true or false | When set to true, miner console windows 
 MinerAPIQueryInterval | number | Amount of time between each API call to get the latest stats from miner.
 MinerRestartDelayMS | number | Amount of time to delay before trying to restart the miner.
 ApiBindPortPoolStart | number | Set the starting value (default is 4000) for miners API ports. When a new miner is created it will use an avaliable API port starting from the ApiBindPortPoolStart and higher.
-NVIDIAP0State | true or false | When set to true, NiceHashMiner would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.
 PauseMiningWhenGamingMode | true or false | When set to true, on steam game start, the mining with selected GPU will stop.
 DeviceToPauseUuid | text | UUID from GPU, which is selected to pause on gaming.
 EnableSSLMining | true or false | When set to true, it will enable SSL mining for miner plugins that support SSL mining.
@@ -127,7 +127,7 @@ GUIWindowsAlwaysOnTop | true or false | NiceHash Miner window will always remain
 MainFormSize | "X, Y" | Set X and Y sizes for the NiceHash Miner window.
 AllowMultipleInstances | true or false | When set to true, multiple NiceHash Miner instances will be allowed to run at the same time.
 UseSmaCache | true or false | When set to true, received SMA values will be saved to file.
-UseEthlargement | true or false | When set to true, EthlargementPill will be used when possible during mining.
+Use Optimization profiles | true or false | When set to true, memory timings of 1080, 1080ti and Titan XP will be modified for higher speeds.
 RunAtStartup | true or false | When set to true, Nicehash Miner will run on login
 ShowNotifications | {"NotificationID": true or false} | When set to false, specified notification won't be shown anymore in the future.
 DisableVisualCRedistributableCheck | true or false | When set to true, NiceHash Miner won't try to download VC Redist file.
