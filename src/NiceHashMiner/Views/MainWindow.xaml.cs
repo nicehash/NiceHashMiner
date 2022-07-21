@@ -92,10 +92,10 @@ namespace NiceHashMiner.Views
                     ShowContentAsModalDialog(nhmUpdaterDialog);
                 });
             };
+            NotificationsManager.Instance.PropertyChanged += NotificationsManagerInstance_PropertyChanged;
+            MiningState.Instance.PropertyChanged += MiningStateInstance_PropertyChanged;
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
-            NotificationsManager.Instance.PropertyChanged += Instance_PropertyChanged;
-            MiningState.Instance.PropertyChanged += MiningStateInstance_PropertyChanged;
             SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
 
             if (!HasWriteAccessToFolder(Paths.Root))
@@ -128,7 +128,7 @@ namespace NiceHashMiner.Views
             }
         }
 
-        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void NotificationsManagerInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (nameof(NotificationsManager.NotificationNewCount) == e.PropertyName)
             {
