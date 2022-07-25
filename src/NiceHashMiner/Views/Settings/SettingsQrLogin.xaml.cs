@@ -64,12 +64,6 @@ namespace NiceHashMiner.Views.Settings
             }
         }
 
-        [Serializable]
-        private class BtcResponse
-        {
-            public string btc { get; set; }
-        }
-
         private async void btn_gen_qr_Click(object sender, RoutedEventArgs e)
         {
             lbl_qr_status.Visibility = Visibility.Collapsed;

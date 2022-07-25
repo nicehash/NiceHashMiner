@@ -1,0 +1,124 @@
+﻿<nhb:BaseDialogWindow x:Class="NiceHashMiner.Views.QuickMinerAddressMigrationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:nhb="clr-namespace:NiceHashMiner.Views.Common.NHBase"
+        xmlns:local="clr-namespace:NiceHashMiner.Views"
+        mc:Ignorable="d"
+        Title="QuickMinerAddressMigrationWindow"
+        Height="370"
+        Width="392"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="False"
+        Background="Transparent"
+        Icon="../Resources/logo.ico">
+    <Window.Resources>
+        <Style x:Key="local.ExitTextBlock" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource Gray2ColorBrush}" />
+            <Setter Property="Text" Value="&#xF00D;" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryColorBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="local.ExitTextButton" TargetType="Button" BasedOn="{StaticResource ButtonTextBlock}">
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource local.ExitTextBlock}" />
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="local.WalletHeader" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.24" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource Gray1ColorBrush}" />
+        </Style>
+
+
+        <Style x:Key="local.WalletSubHeader" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+        </Style>
+    </Window.Resources>
+    <Grid Background="{DynamicResource BackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0"
+                Style="{StaticResource local.ExitTextButton}"
+                Content="&#xF00D;"
+                Margin="0,20,20,0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                Visibility="Hidden"
+                Click="CloseDialog"/>
+        <TextBlock Grid.Row="1"
+                   Style="{StaticResource local.WalletHeader}"
+                   TextWrapping="Wrap"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Left"
+                   Margin="57,0,0,20"
+                   Text="NiceHashQuickMiner Mining Address Detected" Grid.RowSpan="2"/>
+        <TextBlock Grid.Row="2"
+                   Style="{StaticResource local.WalletSubHeader}"
+                   x:Name="BTC"
+                   FontWeight="Bold"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   TextAlignment="Left"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   Text="We found this mining address in the registry, do you want to use it?"
+                   Margin="0,24,0,10" Width="300" Grid.RowSpan="2"/>
+
+        <WrapPanel Grid.Row="5" Margin="25,24,24,24" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Button
+                    x:Name="CancelButton"
+                    Style="{DynamicResource CancelDangerButton}"
+                    Visibility="{Binding CancelVisible}"
+                    FontSize="10"
+                    Width="136"
+                    Height="24"
+                    Content="Add new Mining Address"
+                    ToolTip="Add new Mining Address"
+                    Click="NewMiningAddressClicked" />
+            <Button
+                    x:Name="SaveButton"
+                    Style="{DynamicResource OKButton}"
+                    Visibility="{Binding OkVisible}"
+                    FontSize="10"
+                    Width="136"
+                    Height="24"
+                    Content="CONFIRM"
+                    Click="ConfirmButtonClicked"
+                    Margin="25,0,0,0"/>
+        </WrapPanel>
+
+    </Grid>
+</nhb:BaseDialogWindow>

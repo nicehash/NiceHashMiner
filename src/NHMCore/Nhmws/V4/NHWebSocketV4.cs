@@ -323,7 +323,7 @@ namespace NHMCore.Nhmws.V4
 
         #region Message handling
 
-        private static string CreateMinerStatusMessage() => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(AvailableDevices.Devices.SortedDevices()));
+        private static string CreateMinerStatusMessage() => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices()));
 
         static private async Task HandleMessage(MessageEventArgs e)
         {

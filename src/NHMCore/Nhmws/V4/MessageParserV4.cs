@@ -5,6 +5,7 @@ using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.Mining;
+using NHMCore.Mining.MiningStats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,35 +48,60 @@ namespace NHMCore.Nhmws.V4
                 .ThenBy(d => d.BaseDevice is IGpuDevice gpu ? gpu.PCIeBusID : int.MinValue);
         }
 
+        private static string GetDevicePlugin(string UUID)
+        {
+            var data = MiningDataStats.GetDevicesMiningStats();
+            var devData = data.FirstOrDefault(dev => dev.DeviceUUID == UUID);
+            if (devData == null) return "";
+
+            return devData.MinerName;
+        }
+
         private static (List<(string name, string unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d)
         {
             string getValue<T>(T o) => (typeof(T).Name, o) switch
             {
-                (nameof(ILoad), ILoad g) => $"{g.Load}",
+                (nameof(ILoad), ILoad g) => $"{(int)g.Load}",
+                (nameof(IMemControllerLoad), IMemControllerLoad g) => $"{g.MemoryControllerLoad}",
                 (nameof(ITemp), ITemp g) => $"{g.Temp}",
                 (nameof(IGetFanSpeedPercentage), IGetFanSpeedPercentage g) => $"{g.GetFanSpeedPercentage().percentage}",
                 (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
                 (nameof(IVramTemp), IVramTemp g) => $"{g.VramTemp}",
                 (nameof(IHotspotTemp), IHotspotTemp g) => $"{g.HotspotTemp}",
-                (_, _) => nameof(T),
+                (_, _) => null,
             };
-            (string name, string unit, string value)? pairOrNull<T>(string name, string unit) => d.DeviceMonitor is T sensor ? (name, unit, getValue<T>(sensor)) : null;
+
+            string getValueForName(string name) => name switch
+            {
+                "Miner" => $"{GetDevicePlugin(d.Uuid)}",
+                _ => null,
+            };
+
+            (string name, string unit, string value)? pairOrNull<T>(string name, string unit)
+            {
+                if (d.DeviceMonitor is T sensor) return (name, unit, getValue<T>(sensor));
+                if (typeof(T) == typeof(string)) return (name, unit, getValueForName(name));
+                return null;
+            }
 
             // here sort manually by type 
             var dynamicPropertiesWithValues = new List<(string name, string unit, string value)?>
             {
-                pairOrNull<ITemp>("Temperature","C"),
+                pairOrNull<ITemp>("Temp.","C"),
+                pairOrNull<IVramTemp>("VRAM T.","C"),
                 pairOrNull<ILoad>("Load","%"),
-                pairOrNull<IGetFanSpeedPercentage>("Fan speed percentage","%"),
-                pairOrNull<IPowerUsage>("Power Usage","W"),
-                pairOrNull<IVramTemp>("Vram Temperature","C"),
-                pairOrNull<IHotspotTemp>("Hotspot Temperature","C"),
+                pairOrNull<IMemControllerLoad>("MemCtrl Load","%"),
+                pairOrNull<IGetFanSpeedPercentage>("Fan","%"),
+                pairOrNull<IPowerUsage>("Power","W"),
+                pairOrNull<string>("Miner", ""),
             };
 
             var deviceOptionalDynamic = dynamicPropertiesWithValues
                 .Where(p => p.HasValue)
+                .Where(p => p.Value.value != null)
                 .Select(p => p.Value)
                 .ToArray();
+
             var optionalDynamicProperties = deviceOptionalDynamic.Select(p => (p.name, p.unit)).ToList();
             var values_odv = new JArray(deviceOptionalDynamic.Select(p => p.value));
             return (optionalDynamicProperties, values_odv);
@@ -139,12 +165,7 @@ namespace NHMCore.Nhmws.V4
         public static LoginMessage CreateLoginMessage(string btc, string worker, string rigID, IOrderedEnumerable<ComputeDevice> devices)
         {
             var sorted = SortedDevices(devices);
-            if (_loginMessage != null)
-            {
-                _loginMessage.Btc = btc;
-                _loginMessage.Worker = worker;
-                return _loginMessage;
-            }
+            if (_loginMessage != null) return _loginMessage;
 
             List<NhnwsAction> createDefaultActions() =>
                 new List<NhnwsAction>
@@ -232,20 +253,20 @@ namespace NHMCore.Nhmws.V4
                 },
                 Actions = createDefaultActions(),
                 Devices = devices.Select(mapComputeDevice).ToList(),
-                MinerState = GetMinerStateValues(devices),
+                MinerState = GetMinerStateValues(worker, devices),
             };
             return _loginMessage;
         }
 
-        private static JObject GetMinerStateValues(IOrderedEnumerable<ComputeDevice> devices)
+        private static JObject GetMinerStateValues(string workerName, IOrderedEnumerable<ComputeDevice> devices)
         {
-            var json = JObject.FromObject(GetMinerState(devices));
+            var json = JObject.FromObject(GetMinerState(workerName, devices));
             var delProp = json.Property("method");
             delProp.Remove();
             return json;
         }
 
-        internal static MinerState GetMinerState(IOrderedEnumerable<ComputeDevice> devices)
+        internal static MinerState GetMinerState(string workerName, IOrderedEnumerable<ComputeDevice> devices)
         {
             var rig = ApplicationStateManager.CalcRigStatus();
 
@@ -271,6 +292,9 @@ namespace NHMCore.Nhmws.V4
                     DeviceState.Error => 5, // ERROR
                     DeviceState.Pending => 0, // NOT DEFINED
                     DeviceState.Disabled => 4, // DISABLED
+#if NHMWS4
+                    DeviceState.Gaming => 6, //GAMING
+#endif
                     _ => 0, // UNKNOWN
                 };
 
@@ -298,7 +322,7 @@ namespace NHMCore.Nhmws.V4
             {
                 MutableDynamicValues = new JArray(rigStateToInt(rig)),
                 OptionalDynamicValues = new JArray(),
-                MandatoryMutableValues = new JArray(rigStateToInt(rig), _loginMessage?.Worker ?? ""),
+                MandatoryMutableValues = new JArray(rigStateToInt(rig), workerName),
                 OptionalMutableValues = new JArray(),
                 Devices = devices.Select(toDeviceState).ToList(),
             };

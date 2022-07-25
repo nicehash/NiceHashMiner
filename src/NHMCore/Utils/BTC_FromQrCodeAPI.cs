@@ -11,21 +11,14 @@ namespace NHMCore.Utils
     {
         private static readonly string TAG = nameof(BTC_FromQrCodeAPI);
 
-        private class RigUUIDRequest
-        {
-            public string qrId { get; set; }
-            public string rigId { get; set; }
-        }
-        private class BtcResponse
-        {
-            public string btc { get; set; }
-        }
+        private record RigUUIDRequest(string qrId, string rigId);
+        private record BtcResponse(string btc);
 
         public static async Task<bool> RequestNew_QR_Code(string uuid, string rigId)
         {
             try
             {
-                var requestBody = JsonConvert.SerializeObject(new RigUUIDRequest { qrId = uuid, rigId = rigId });
+                var requestBody = JsonConvert.SerializeObject(new RigUUIDRequest(qrId: uuid, rigId: rigId));
                 using var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
                 using var client = new HttpClient();
                 var response = await client.PostAsync("https://api2.nicehash.com/api/v2/organization/nhmqr", content);
