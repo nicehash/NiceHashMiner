@@ -16,6 +16,19 @@
             <Setter  Property="FontSize" Value="10"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
         </Style>
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -35,8 +48,14 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock  Margin="24,0,0,0" Grid.Column="0" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
-                            <TextBlock  Margin="-21,0,0,0" Grid.Column="1" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                            <StackPanel Orientation="Horizontal" Margin="24,0,0,0" Grid.Column="0" >
+                                <TextBlock Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="-21,0,0,0" Grid.Column="1">
+                                <TextBlock Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
+                            </StackPanel>
                         </Grid>
                     </Grid>
                     <ItemsControl ItemsSource="{Binding MinerELPs}" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}">
@@ -48,7 +67,7 @@
                     </ItemsControl>
                     <TextBlock Margin="0,8,0,0" HorizontalAlignment="Center">
                         <!--TODO CHANGE URL-->
-                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://github.com/nicehash/NiceHashMiner/blob/dot_net_update/doc/Advanced/ManualBenchmarking.md" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://github.com/nicehash/NiceHashMiner/blob/NiceHashMiner_Simplify_ELP_Dotnet6/doc/Advanced/ELPTab/ELPTab.md" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                             Need Help?
                         </Hyperlink>
                     </TextBlock>

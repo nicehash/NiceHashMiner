@@ -10,6 +10,19 @@
              d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=viewModels:MinerELPData}">
     <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
         <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter  Property="FontSize" Value="10"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
@@ -173,8 +186,14 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock  Margin="24,0,0,0" Grid.Column="0" LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
-                        <TextBlock  Margin="-21,0,0,0" Grid.Column="1" LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                        <StackPanel Orientation="Horizontal" Margin="24,0,0,0" Grid.Column="0" >
+                            <TextBlock LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                            <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="-21,0,0,0" Grid.Column="1">
+                            <TextBlock  LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                            <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
+                        </StackPanel>
                     </Grid>
                 </Grid>
                 <ItemsControl Grid.Row="1" ItemsSource="{Binding Algos}">

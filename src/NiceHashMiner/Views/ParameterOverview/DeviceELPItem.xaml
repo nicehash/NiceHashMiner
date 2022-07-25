@@ -15,15 +15,32 @@
             <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
         </Style>
         <local:FlagOrValueHeaderEnumConverter x:Key="FlagOrValueHeaderEnumConverter"/>
+        <local:FlagOrValueTooltipConverter x:Key="FlagOrValueTooltipConverter"/>
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
 
     </UserControl.Resources>
     <Grid>
-        <StackPanel>
-            <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3" Text="{Binding HeaderType, Converter={StaticResource FlagOrValueHeaderEnumConverter}}"/>
+        <StackPanel Margin="0,0,10,3">
+            <StackPanel Width="160" Orientation="Horizontal">
+                <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3" Text="{Binding HeaderType, Converter={StaticResource FlagOrValueHeaderEnumConverter}}"/>
+                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="{Binding HeaderType, Converter={StaticResource FlagOrValueTooltipConverter}}"/>
+            </StackPanel>
             <TextBox Style="{StaticResource inputBox}" x:Name="DeviceELPValueTB"
                      TextChanged="DeviceELPValueTB_TextChanged"
                      LostFocus="DeviceELPValueTB_LostFocus"
-                     Margin="0,0,10,3" Width="160" Text="{Binding ELP, Mode=TwoWay}"/>
+                     Width="160" Text="{Binding ELP, Mode=TwoWay}"/>
         </StackPanel>
     </Grid>
 
