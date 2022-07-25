@@ -5,9 +5,11 @@ This tab allows advanced users to set extra launch parameters per-miner/per-algo
 - If you mess something up, you can just delete the above mentioned files and nhm will generate new ones on restart.
 
 Here is an example of config files, specifically for lolMiner and NBMiner
+
 ![Config example](5.jpg)
 
 It is recommended you do not edit the file itself, rather do it through the interface. The interface is built in the following hierarchy:
+
 ![Hierarchy](1.jpg)
 
 Every correct entry will trigger a preview update under each algo.
@@ -20,10 +22,10 @@ We can also see the correct usage of the device parameters. They are `MULTI-PARA
 
 Please note that if flags cannot group, as shown below (there is a blank space in the second device), there will be multiple instances while mining.
 #### It is your responsibility to make sure the flags have correct values.
-The below example will not work, because --multiValueFlag2 will be treated as a double parameter flag in a separate instance.
+The below example shows INCORRECT USAGE, because --multiValueFlag2 will be treated as a double parameter flag in a separate instance.
 
 ![Multi instances](3.jpg)
 
-The correct value would be to fill a blank textbox with a default value, such as in the next image. Keep in mind, that you must see the documentation for a specific miner to see what the default values are
+The correct value would be to fill a blank textbox with a default value, such as in the next image. Keep in mind, that you must check out the documentation for a specific miner to see what the default values are for your situation.
 
 ![Multi instances2](4.jpg)
