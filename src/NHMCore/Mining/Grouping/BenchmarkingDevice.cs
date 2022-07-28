@@ -58,8 +58,9 @@ namespace NHMCore.Mining.Grouping
                 using var powerHelper = new PowerHelper(algo.ComputeDevice);
                 var plugin = algo.PluginContainer;
                 miner = plugin.CreateMiner();
-
                 GPUProfileManager.Instance.Start(miningPairs);
+                await Task.Delay(2000);
+
                 miner.InitMiningPairs(miningPairs);
                 // fill service since the benchmark might be online. DemoUser.BTC must be used
                 miner.InitMiningLocationAndUsername("auto", DemoUser.BTC);

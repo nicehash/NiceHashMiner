@@ -116,12 +116,19 @@ namespace NHMCore.Utils
             lock (_startStopLock)
             {
                 var unique = GetViableCudaDevices(miningPairs);
+                Logger.Info(Tag, "Unique count: " + unique.Count);
                 foreach (var gpu in unique)
                 {
                     var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == gpu.UUID).FirstOrDefault();
-                    if (computeDev != null) computeDev.TryResetMemoryTimings();
+                    if (computeDev == null)
+                    {
+                        Logger.Info(Tag, "ComputeDev is null, skipping");
+                        continue;
+                    }
+                    computeDev.PrintMemoryTimings();
+                    Logger.Info(Tag, "Stopping " + gpu.PCIeBusID);
+                    computeDev.TryResetMemoryTimings();
                 }
-                Logger.Info(Tag, "Gpu settings reset back to normal");
             }
         }
         private Device GetDeviceProfile(string deviceName)
@@ -158,6 +165,7 @@ namespace NHMCore.Utils
                 var memoryTimings = BuildMTString(foundProfile);
                 if (memoryTimings == string.Empty) continue;
                 var ret = device.TrySetMemoryTimings(memoryTimings);
+                device.PrintMemoryTimings();
                 //TODO SET OTHER STUFF FOR DEVICE HERE
                 if (ret >= RET_OK) return true;
                 return false;
