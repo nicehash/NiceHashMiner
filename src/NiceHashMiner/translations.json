@@ -115,10 +115,10 @@
       "ru": "Майнинг"
     },
     "Starting": {
-      "ru": "Запуск"
+      "ru": "Запускается"
     },
     "Stopping": {
-      "ru": "Остановка"
+      "ru": "Останавливается"
     },
     "API Bind port pool start:": {
       "bg": "Начален порт за API връзка:",
@@ -185,7 +185,7 @@
       "pl": "Czas (w milisekundach) przez który NiceHash Miner czeka przed przełączeniem górnika.",
       "pt": "Quantidade de tempo (em milissegundos) que NiceHash Miner aguardará antes de reiniciar o minerador.",
       "ro": "Timp (în milisecunde) în care NiceHash Miner așteaptă înainte de repornirea minerului.",
-      "ru": "Количество времени в миллисекундах, которое NiceHash Miner будет ждать перед перезапуском майнера.",
+      "ru": "Время в миллисекундах, которое NiceHash Miner будет ждать перед перезапуском майнера.",
       "zh_cn": "切换算法时，NiceHash Miner自中止到重启挖矿程序之间等待的延迟（毫秒）。"
     },
     "Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically.": {
@@ -195,7 +195,7 @@
       "pl": "Jeśteś pewny, że chcesz zresetować wszystkie ustawienia? To spowoduje automatyczny restart NiceHash Miner",
       "pt": "Tem certeza de que deseja configurar tudo de volta aos padrões? Isso irá reiniciar o NiceHash Miner automaticamente.",
       "ro": "Sunteți sigur că doriți revenirea la setările implicite? Acest lucru o să repornească NiceHash Miner automat.",
-      "ru": "Вы уверены, что хотите вернуть все настройки по умолчанию? Это перезапустит NiceHash Miner.",
+      "ru": "Вы уверены, что хотите сбросить все настройки к начальным? Это перезапустит NiceHash Miner.",
       "zh_cn": "您确定要恢复所有设置为默认吗？NiceHash Miner将会自动重启。"
     },
     "Automatically start mining when computer is idle and stop mining when computer is being used.": {
@@ -260,7 +260,7 @@
       "pl": "Limity czasów benchmarków",
       "pt": "Tempo limite para Benchmark",
       "ro": "Limite Timp Benchmark",
-      "ru": "Лимит времени бенчмарка",
+      "ru": "Предел времени бенчмарка",
       "zh_cn": "基准测试时限"
     },
     "Benchmark Time Limits:": {
@@ -270,7 +270,7 @@
       "pl": "Limity czasów pomiarów:",
       "pt": "Tempo limite de Benchmark:",
       "ro": "Limite Timp Benchmark:",
-      "ru": "Лимит времени бенчмарка:",
+      "ru": "Предел времени бенчмарка:",
       "zh_cn": "基准测试时限:"
     },
     "Benchmark Type:": {
@@ -280,7 +280,7 @@
       "pl": "Typ benchmarku:",
       "pt": "Tipo de Benchmark:",
       "ro": "Tip Benchmark:",
-      "ru": "Тип бенчмарка:",
+      "ru": "Тип теста:",
       "zh_cn": "基准测试策略:"
     },
     "Benchmark finished report": {
@@ -344,7 +344,7 @@
       "pl": "OBECNIE KOPANIE NIE JEST OPŁACALNE.",
       "pt": "A MINERAÇÃO NÃO É RENTAVEL AGORA.",
       "ro": "ACUM MINAREA NU ESTE PROFITABILĂ.",
-      "ru": "МАЙНИНГ НЕ ПРИБЫЛЬНЫЙ НА ДАННЫЙ МОМЕНТ.",
+      "ru": "МАЙНИНГ НЕПРИБЫЛЬНЫЙ В ДАННЫЙ МОМЕНТ.",
       "zh_cn": "警告：当前挖矿无收益。"
     },
     "CURRENTLY NOT MINING. NO INTERNET CONNECTION.": {
@@ -364,7 +364,7 @@
       "pl": "Ustawia domyślny język dla {0}.",
       "pt": "Muda o idioma do {0}.",
       "ro": "Schimbă limba implicită pentru {0}.",
-      "ru": "Изменяет язык по умолчанию для {0}.",
+      "ru": "Меняет стандартный язык {0}.",
       "zh_cn": "更改{0}的默认界面语言"
     },
     "Changing all supported NVIDIA GPUs to P0 state...": {
@@ -374,7 +374,7 @@
       "pl": "Ustawianie trybu P0 dla kart NVIDIA...",
       "pt": "Alterando todas as GPUs NVIDIA suportadas para o estado P0...",
       "ro": "Schimbă toate NVIDIA GPU suportate la starea P0...",
-      "ru": "Изменение всех поддерживаемых NVIDIA GPU в статус P0…",
+      "ru": "Изменение всех поддерживаемых ГП NVIDIA в статус P0…",
       "zh_cn": "正在调整所有已知NVIDIA图形处理器至 P0 状态..."
     },
     "Check _profitability": {
@@ -452,7 +452,7 @@
       "pl": "Zaznacz, jeśli chcesz pomijać wykrywanie GPU {0}",
       "pt": "Marque se você quiser pular a detecção de {0} GPUs.",
       "ro": "Bifați dacă doriți să săriți peste detecția GPU-urilor {0}.",
-      "ru": "Отметьте, если хотите пропускать определение {0} GPU.",
+      "ru": "Отметьте, если хотите пропускать определение ГП {0}.",
       "zh_cn": "选择此处来跳过对 {0} 图形处理器的检测。"
     },
     "Check it, to log console output to file.": {
@@ -462,7 +462,7 @@
       "pl": "Zaznacz, aby zapisywać okna konsol do plików.",
       "pt": "Marque para registrar a saída do console no arquivo.",
       "ro": "Bifați, pentru a înregistra ieșirea consolei în fișier.",
-      "ru": "Отметьте для записи выводов консоли в файл.",
+      "ru": "Отметьте для записи вывода консоли в файл.",
       "zh_cn": "选择此处保存控制台输出至日志文件。"
     },
     "Check my stats online!": {
@@ -482,7 +482,7 @@
       "pl": "Sprawdzanie kart AMD OpenCL",
       "pt": "Consultando GPUs AMD OpenCL",
       "ro": "Verificare GPUuri AMD OpenCL",
-      "ru": "Проверка GPU AMD OpenCL",
+      "ru": "Проверка ГП AMD OpenCL",
       "zh_cn": "正在检测AMD OpenCL图形处理器"
     },
     "Checking for latest version...": {
@@ -518,7 +518,7 @@
       "it": "Scegli quale GPU creerà un file DAG.\nCome regola, scegli la GPU più veloce disponibile.",
       "pl": "Wybierz na którym GPU będzie utworzony plik DAG.\nNajlepiej wybrać najszybszą.",
       "ro": "Alegeți care GPU o să creeze fișierul DAG.\nCa regulă, alegeți cel mai rapid GPU care este disponibil.",
-      "ru": "Выберите какая GPU будет создавать DAG-файл.\nСоветуем выбрать самую быструю из доступных.",
+      "ru": "Выберите какой ГП будет создавать DAG-файл.\nСоветуем выбрать самый быстрый из доступных.",
       "zh_cn": "选择负责生成DAG文件的图形处理器。\n一般情况下应选择最快的图形处理器承担此任务。"
     },
     "ClaymoreDual Tuning": {
@@ -561,7 +561,7 @@
       "pl": "Kopiowanie ustawień dla benchmarków, algorytmów itd. ...",
       "pt": "Copiar configurações de (Benchmarks, parametros de algoritimo, ...)",
       "ro": "Copiază Setări De La (Benchmark, parametrii algoritm, ...)",
-      "ru": "Скопировать настройки из (Бенчмарк, параметры алгоритмов, …)",
+      "ru": "Скопировать настройки из (тесты бенчмарка, параметры алгоритмов, …)",
       "zh_cn": "从（基准测试，算法参数）复制配置"
     },
     "Copy tuning settings only": {
@@ -590,7 +590,7 @@
       "es": "Dispositivo que generará el DAG",
       "it": "Genera dispositivo Dagger Hashimoto",
       "pl": "Urządzenie dla Dagger Hashimoto",
-      "ru": "Устройство генерации DaggerHashimoto",
+      "ru": "Устройство генерации Dagger Hashimoto",
       "zh_cn": "Dagger Hashimoto生成设备"
     },
     "Day": {
@@ -663,7 +663,7 @@
       "pl": "Wyłącz domyślne optymalizacje",
       "pt": "Desativar Otimizações Padrão",
       "ro": "Dezactivează Optimizările Implicite",
-      "ru": "Отключить оптимизацию",
+      "ru": "Отключить стандартные оптимизации",
       "zh_cn": "禁用默认优化"
     },
     "Disable Detection of {0}": {
@@ -699,7 +699,7 @@
       "pl": "Wyłącz raportowanie błędów Windows",
       "pt": "Desativar Relatórios de Erros do Windows",
       "ro": "Dezactivează Windows Error Reporting",
-      "ru": "Откл. отчёты об ошибках Windows",
+      "ru": "Отключить отчёты об ошибках Windows",
       "zh_cn": "禁用Windows错误报告"
     },
     "Disabled": {
@@ -732,7 +732,7 @@
       "pl": "Wyświetlana waluta:",
       "pt": "Mostrar Moeda:",
       "ro": "Moneda afișată:",
-      "ru": "Валюта:",
+      "ru": "Валюта отображения:",
       "zh_cn": "显示货币:"
     },
     "Downloading miners": {
@@ -742,7 +742,7 @@
       "pl": "Pobieranie górników",
       "pt": "Baixando mineradores",
       "ro": "Descărcare mineri",
-      "ru": "Загрузка майнеров",
+      "ru": "Загружаются майнеры",
       "zh_cn": "正在下载挖矿程序"
     },
     "Editing additional settings is for advanced users.\r\n\r\nIf {0} crashes due to bad config value you can restore it by deleting 'config.json' file.\r\n\r\nContinue with editing settings?": {
@@ -785,7 +785,7 @@
       "pl": "Włącz tylko test porównawczy",
       "pt": "Ativar apenas o benchmarking",
       "ro": "Activează doar Benchmarked",
-      "ru": "Включить прошедшие бенчмарк",
+      "ru": "Включить только прошедшие тест",
       "zh_cn": "仅启用基准测试"
     },
     "Enable Device": {
@@ -1116,7 +1116,7 @@
       "pl": "Proszę czekać, będzie kopanie...",
       "pt": "Carregando, por favor aguarde...",
       "ro": "Încărcare, vă rugăm așteptați...",
-      "ru": "Загрузка, пожалуйста, подождите…",
+      "ru": "Загружается, пожалуйста, подождите…",
       "zh_cn": "加载中，请稍后..."
     },
     "Localization:": {
@@ -1136,7 +1136,7 @@
       "pl": "Maks. rozmiar logu [bajty]:",
       "pt": "Tamanho Maximo [bytes]:",
       "ro": "Dimensiune Fișier Log Maximă [bytes]:",
-      "ru": "Размер лог-файла [байты]:",
+      "ru": "Макс. размер файла журнала [байты]:",
       "zh_cn": "最大日志文件大小 [字节]:"
     },
     "Log To File": {
@@ -1146,7 +1146,7 @@
       "pl": "Logi do plików",
       "pt": "Salvar Log",
       "ro": "Log În Fișier",
-      "ru": "Запись в файл",
+      "ru": "Записывать журнал в файл",
       "zh_cn": "保存日志文件"
     },
     "Logging:": {
@@ -1155,7 +1155,7 @@
       "pl": "Logi:",
       "pt": "Configurações de Log:",
       "ro": "Înregistrare:",
-      "ru": "Логирование:",
+      "ru": "Журналирование:",
       "zh_cn": "日志:"
     },
     "Lower bound for the randomly chosen profit check interval.\nDo not set too low.": {
@@ -1179,7 +1179,7 @@
       "it": "Abbuono API Miner [s]",
       "pl": "Opóźnienie API górnika [s]",
       "ro": "Grație Miner API [s]",
-      "ru": "Ожидание API [с]",
+      "ru": "Ожидание API майнера [с]",
       "zh_cn": "矿工API宽限 [秒]"
     },
     "Miner API Query Interval [s]:": {
@@ -1234,7 +1234,7 @@
       "pl": "Minimalizuj do ikony",
       "pt": "Minimizar para Bandeja",
       "ro": "Minimizare În Tray",
-      "ru": "Свернуть в трей",
+      "ru": "Сворачивать в трей",
       "zh_cn": "最小化至托盘"
     },
     "Minimum Idle [s]:": {
@@ -1470,7 +1470,7 @@
       "pl": "Zliczanie urządzeń CUDA",
       "pt": "Consultando dispositivos CUDA",
       "ro": "Interogare dispozitive CUDA",
-      "ru": "Проверка устройств CUDA",
+      "ru": "Опрос устройств CUDA",
       "zh_cn": "正在检测CUDA设备"
     },
     "Querying OpenCL devices": {
@@ -1480,7 +1480,7 @@
       "pl": "Zliczanie urządzeń OpenCL",
       "pt": "Consultando dispositivos OpenCL",
       "ro": "Interogare dispozitive OpenCL",
-      "ru": "Проверка устройств OpenCL",
+      "ru": "Опрос устройств OpenCL",
       "zh_cn": "正在检测OpenCL设备"
     },
     "Quick:": {
@@ -1526,7 +1526,7 @@
       "pl": "Zmniejsza ilośc pracujących wątków procesora o wartość LessThreads.",
       "pt": "Reduza o número de threads usados em cada CPU por LessThreads.",
       "ro": "Reduceți numărul de threaduri folosite de fiecare CPU cu LessThreads.",
-      "ru": "Уменьшает число потоков (ядер), используемых на каждом CPU.",
+      "ru": "Уменьшает число потоков (ядер), используемых на каждом ЦП.",
       "zh_cn": "在每个处理器上减少运行LessThreads个线程。"
     },
     "Restart Notice": {
@@ -1556,7 +1556,7 @@
       "pl": "Uruchom z Windows",
       "pt": "Executar com o Windows",
       "ro": "Rulează cu Windows",
-      "ru": "Запуск с Windows",
+      "ru": "Запускать с Windows",
       "zh_cn": "开机自动启动"
     },
     "Run script when CUDA GPU is lost": {
@@ -1746,7 +1746,7 @@
       "pl": "Ustawianie górników",
       "pt": "Configurando mineradores",
       "ro": "Setare mineri",
-      "ru": "Установка майнеров",
+      "ru": "Настройка майнеров",
       "zh_cn": "正在设置挖矿程序"
     },
     "Settings": {
@@ -1786,7 +1786,7 @@
       "pl": "Ostrzegaj o sterownikach",
       "pt": "Mostrar Aviso da Versão do Driver",
       "ro": "Afișează Avertizare Versiune Driver",
-      "ru": "Предупреждать о версии драйвера",
+      "ru": "Показывать предупреждение о версии драйвера",
       "zh_cn": "显示驱动版本警告"
     },
     "Show Internet Connection Warning": {
@@ -1814,7 +1814,7 @@
       "pl": "Pomiń sprawdzanie kart AMD OpenCL",
       "pt": "Pular consulta de GPUs AMD OpenCL",
       "ro": "Sări verificarea GPUuri AMD OpenCL",
-      "ru": "Пропустить проверку GPU AMD OpenCL",
+      "ru": "Пропустить проверку ГП AMD OpenCL",
       "zh_cn": "略过检测AMD OpenCL图形处理器"
     },
     "Speed": {
@@ -1834,7 +1834,7 @@
       "pl": "Tempo:",
       "pt": "Velocidade:",
       "ro": "Viteză:",
-      "ru": "Скор:",
+      "ru": "Скорость:",
       "zh_cn": "速率:"
     },
     "Speeds": {
@@ -2239,7 +2239,7 @@
       "pl": "Odwiedź nas na www.nicehash.com",
       "pt": "Visite o site @ www.nicehash.com",
       "ro": "Vizitează-ne @ www.nicehash.com",
-      "ru": "Посетите нас @ www.nicehash.com",
+      "ru": "Посетите нас на www.nicehash.com",
       "zh_cn": "访问我们的网站 @ www.nicehash.com"
     },
     "Waiting benchmark": {
@@ -2288,7 +2288,7 @@
       "pl": "Uwaga! Kontroler video nie pracuje poprawnie",
       "pt": "Atenção! O controlador de vídeo não está bem",
       "ro": "Avertizare! Controllerul Video nu funcíonează corect",
-      "ru": "Предупреждение! Видеоконтроллер не в порядке",
+      "ru": "Предупреждение! Видеоконтроллер неисправен",
       "zh_cn": "警告！图形处理器工作异常"
     },
     "Warning! You are choosing to close settings without saving. Are you sure you would like to continue?": {
@@ -2483,7 +2483,7 @@
       "pl": "Możesz używać poprzednie wyniki. Wybierz Tak aby to zrobić albo Nie aby wykonać nowe pomiary.",
       "pt": "Você poderia usar valores previamente comparados. Escolha Sim para usar valores obtidos previamente ou escolha Não para re-executar o benchmark.",
       "ro": "Puteți să folosiți valorile benchmark anterioare. Alegeți Da pentru folosirea valorilor benchmark anterioare sau alegeți Nu pentru a rula benchmark din nou.",
-      "ru": "Вы можете использовать прежние значения бенчмарка. Выберите «Да», для использования прежних значений бенчмарка или выберите «Нет» для перезапуска бенчмарка.",
+      "ru": "Вы можете использовать прежние значения бенчмарка. Выберите «Да» для использования прежних значений бенчмарка или выберите «Нет» для перезапуска бенчмарка.",
       "zh_cn": "您可以使用之前的测试结果。请点击“是”使用之前的结果，或点击“否”重新执行测试。"
     },
     "You have not entered a bitcoin address. {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
@@ -2522,7 +2522,7 @@
       "pl": "{0} wyłaczy się. To nowe okno ustawień jest w fazie beta i {0} potrzebuje restartu aby działać.",
       "pt": "{0} will exit now. This new settings dialog is still in beta and {0} needs to restart to take effect.",
       "ro": "{0} se va închide acum. Acest nou dialog de setări este încă în beta și {0} trebuie repornit pentru a avea efect.",
-      "ru": "Работа {0} завершится. Этот новое диалоговое окно ещё тестируется и {0} нужен перезапуск для результата.",
+      "ru": "Работа {0} завершится. Этот новое диалоговое окно ещё тестируется, и {0} нужен перезапуск для результата.",
       "zh_cn": "{0} 现在将退出。此新版设置对话还处于测试阶段，{0} 需重启方可生效。"
     },
     "{0}% : Benchmarking {1}.. Please wait..": {
@@ -2532,7 +2532,7 @@
       "pl": "{0}% : Benchmark {1}.. Proszę czekać..",
       "pt": "{0}% : Benchmarking {1}.. Por favor aguarde..",
       "ro": "{0}% : Rulează benchmark {1}.. Vă rugăm așteptați..",
-      "ru": "{0}% : Бенчмарк {1}… Подождите, пожалуйста…",
+      "ru": "{0}% : Тестируется {1}… Подождите, пожалуйста…",
       "zh_cn": "{0}% : 正在测试{1}.. 请稍后.."
     },
     "{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of {3} might be needed.": {
@@ -2546,13 +2546,13 @@
       "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载{3}。"
     },
     "Click yes if you with to run {0} as Administrator.": {
-      "ru": "Нажмите «Да», если хотите запустить {0} от имени Администратора."
+      "ru": "Нажмите «Да», если хотите запустить {0} от имени администратора."
     },
     "Show GPU PCIe Bus IDs": {
-      "ru": "Отображать ID шин PCIe для видеокарт"
+      "ru": "Отображать ИД шин PCIe для видеокарт"
     },
     "When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.": {
-      "ru": "Если отмечено, ID шин PCIe для видеокарт будут отображаться рядом с именем устройства."
+      "ru": "Если отмечено, идентификаторы шин PCIe для видеокарт будут отображаться рядом с именем устройства."
     },
     "Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
       "ru": "Неверный Биткоин-адрес! {0} начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!"
@@ -2607,13 +2607,13 @@
       "ru": "Настройка режима энергопотребления отключена из-за отсутствия разрешений. Если вы хотите использовать эту функцию, вам необходимо запустить программу от имени Администратора."
     },
     "Run As Administrator": {
-      "ru": "Запуск от имени Администратора"
+      "ru": "Запуск от имени администратора"
     },
     "NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner.": {
       "ru": "NiceHash Miner запрашивает интернет-соединение для работы. Убедитесь, что вы подключены к интернету перед запуском NiceHash Miner."
     },
     "No enabled devices": {
-      "ru": "Включенные устройства отсутствуют"
+      "ru": "Включённые устройства отсутствуют"
     },
     "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {
       "ru": "NiceHash Miner не может начать майнинг. Убедитесь, что хотя бы одно устройство включено с хотя бы одним включённым и прошедшим бенчмарк алгоритмом."
@@ -2652,13 +2652,13 @@
       "ru": "Посетите страницу выпуска"
     },
     "NiceHash Miner was Updated": {
-      "ru": "NiceHash Miner был обновлен"
+      "ru": "NiceHash Miner был обновлён"
     },
     "NiceHash Miner was updated to the latest version.": {
-      "ru": "NiceHash Miner был обновлен до последней версии."
+      "ru": "NiceHash Miner был обновлён до последней версии."
     },
     "NiceHash Miner was not updated to the latest version.": {
-      "ru": "NiceHash Miner не был обновлен до последней версии."
+      "ru": "NiceHash Miner не был обновлён до последней версии."
     },
     "New version of {0} {1}.\n": {
       "ru": "Новая версия {0} {1}.\n"
@@ -2718,7 +2718,7 @@
       "ru": "Сбой бенчмарка"
     },
     "Some benchmarks for {0} failed to execute. Check benchmark tab for more info.": {
-      "ru": "Произошел сбой некоторых тестов для {0}. Проверьте вкладку Бенчмарк для получения дополнительной информации."
+      "ru": "Произошёл сбой некоторых тестов для {0}. Проверьте вкладку Бенчмарк для подробностей."
     },
     "Primary mining location unavailable": {
       "ru": "Основная локация майнинга недоступна"
@@ -2745,7 +2745,7 @@
       "ru": "Пожалуйста, убедитесь, что драйверы AMD установлены правильно. Если это так, пожалуйста, удалите драйвер Intel."
     },
     "Wallet": {
-      "ru": "Кошелек"
+      "ru": "Кошелёк"
     },
     "Wallet Address": {
       "ru": "Адрес кошелька"
@@ -2793,19 +2793,19 @@
       "ru": "Обновление NiceHash Miner и плагинов"
     },
     "Auto update NiceHash Miner": {
-      "ru": "Автоматическое обновление NiceHash Miner"
+      "ru": "Автоматически обновлять NiceHash Miner"
     },
     "Auto update installed plugins": {
-      "ru": "Автоматическое обновление установленных плагинов"
+      "ru": "Автоматически обновлять установленные плагины"
     },
     "Report a bug": {
-      "ru": "Отчет об ошибке"
+      "ru": "Сообщить об ошибке"
     },
     "Create a log report": {
-      "ru": "Создать отчет"
+      "ru": "Создать журнал отчёта"
     },
     "Miscellaneous": {
-      "ru": "Разные"
+      "ru": "Прочее"
     },
     "Run On Startup": {
       "ru": "Запуск при загрузке системы"
@@ -2820,13 +2820,13 @@
       "ru": "Мониторинг устройств"
     },
     "Logging": {
-      "ru": "Логирование"
+      "ru": "Журналирование"
     },
     "Enable Debug Console": {
       "ru": "Включить консоль отладки"
     },
     "Log Max File Size (bytes)": {
-      "ru": "Макс. размер лог-файла (байты)"
+      "ru": "Макс. размер файла журнала (байты)"
     },
     "Idle Mining": {
       "ru": "Простой майнинга"
@@ -2838,7 +2838,7 @@
       "ru": "Минимальный простой [с]"
     },
     "Switching": {
-      "ru": "Переключение"
+      "ru": "Переключение майнеров"
     },
     "Switch Minimum [s]": {
       "ru": "Минимум переключения [с]"
@@ -2868,7 +2868,7 @@
       "ru": "Изменяет язык по умолчанию для NiceHash Miner."
     },
     "Choose in which theme you would like to see NiceHash Miner.": {
-      "ru": "Выберите в какой теме вы хотели бы видеть NiceHash Miner."
+      "ru": "Выберите тему отображения NiceHash Miner."
     },
     "When checked, NiceHash Miner will get automatically updated.": {
       "ru": "Если отмечено, NiceHash Miner будет обновляться автоматически."
@@ -2928,16 +2928,16 @@
       "ru": "Количество процессоров в вашей системе."
     },
     "Amount of BTC not yet paid to you.": {
-      "ru": "Количество BTC, которое еще не было выплачено вам."
+      "ru": "Количество BTC, которое ещё не было выплачено вам."
     },
     "Estimated current profitability of your system.": {
       "ru": "Приблизительная текущая прибыльность вашей системы."
     },
     "Number of devices that are currently mining.": {
-      "ru": "Количество устройств, которые на данный момент майнят."
+      "ru": "Число устройств, которые на данный момент майнят."
     },
     "Include this alrogithm in benchmark sessions (on next benchmark or device start). This will ensure the best possible hash rate.": {
-      "ru": "Включает этот алгоритм в процесс бенчмарка при следующем запуске бенчмарка или майнинга. Это обеспечит наилучший хэшрейт."
+      "ru": "Включает этот алгоритм в процесс тестирования при следующем запуске бенчмарка или майнинга. Это обеспечит наилучший хэшрейт."
     },
     "If enabled NiceHash Miner will stop mining without internet connectivity": {
       "ru": "Если отмечено, NiceHash Miner будет останавливать майнинг при отсутствии доступа к интернету."
@@ -2946,13 +2946,13 @@
       "ru": "NiceHash Miner отключит проверку Visual Studio C++ Redistributable."
     },
     "{0}.{1} (Online)": {
-      "ru": "{0}.{1} (Онлайн)"
+      "ru": "{0}.{1} (в сети)"
     },
     "{0}.{1} (Latest)": {
-      "ru": "{0}.{1} (Последний)"
+      "ru": "{0}.{1} (свежий)"
     },
     "{0}.{1} (Local)": {
-      "ru": "{0}.{1} (Локальный)"
+      "ru": "{0}.{1} (локальный)"
     },
     "Not Supported": {
       "ru": "Не поддерживается"
@@ -2988,13 +2988,13 @@
       "ru": "Извлечение плагина: {0}%"
     },
     "Details": {
-      "ru": "Подробности"
+      "ru": "Подробнее"
     },
     "Show Internals": {
       "ru": "Показать содержимое"
     },
     "Autoupdate Plugin": {
-      "ru": "Автообновление плагина"
+      "ru": "Автообновлять плагин"
     },
     "Uninstall": {
       "ru": "Удалить"
@@ -3039,13 +3039,13 @@
       "ru": "Завершите вашу настройку майнинга"
     },
     "+ Add Mining Address": {
-      "ru": "+ Добавить адрес кошелька"
+      "ru": "+ Добавить адрес майнинга"
     },
     "GPU’S": {
-      "ru": "GPU’S"
+      "ru": "Видеокарты"
     },
     "How to create a Mining Address?": {
-      "ru": "Как создать адрес кошелька?"
+      "ru": "Как создать адрес майнинга?"
     },
     "RESET TO DEFAULT": {
       "ru": "СБРОСИТЬ НАСТРОЙКИ"
@@ -3123,7 +3123,7 @@
       "ru": "ВЫБРАТЬ ВСЕ"
     },
     "Pending Benchmarks: {0}": {
-      "ru": "Ждущие тестирования: {0}"
+      "ru": "Ожидают теста: {0}"
     },
     "START BENCHMARK": {
       "ru": "НАЧАТЬ БЕНЧМАРК"
@@ -3132,7 +3132,7 @@
       "ru": "Начать бенчмарк"
     },
     "Stop Benchmark": {
-      "ru": "Стоп бенчмарк"
+      "ru": "Остановить бенчмарк"
     },
     "Clear all speeds": {
       "ru": "Очистить все скорости"
@@ -3175,13 +3175,13 @@
       "ru": "Включить только этот алгоритм"
     },
     "Secondary Benchmark Speed (H/s)": {
-      "ru": "Вторая скорость бенчмарка (H/s)"
+      "ru": "Вторичная скорость бенчмарка (H/с)"
     },
     "Speed for the secondary algorithm when using dual mining.": {
       "ru": "Скорость для второго алгоритма при использовании двойного майнинга."
     },
     "Schedule for re-benchmarking": {
-      "ru": "Повторный бенчмарк"
+      "ru": "Добавить для повторного теста"
     },
     "Are you sure you would like to clear all speeds for {0}?": {
       "ru": "Вы уверены, что хотите сбросить все скорости для {0}?"
@@ -3190,7 +3190,7 @@
       "ru": "Да"
     },
     "No": {
-      "ru": "нет"
+      "ru": "Нет"
     },
     "Stop Benchmarking": {
       "ru": "Остановить бенчмарк"
@@ -3211,16 +3211,16 @@
       "ru": "Загрузка {0}%"
     },
     "Sit tight, NiceHash Miner will start soon...": {
-      "ru": "Будьте терпеливы, NiceHash Miner скоро запустится..."
+      "ru": "Подождите, NiceHash Miner скоро запустится..."
     },
     "Checking CPU Info": {
       "ru": "Проверка информации о процессоре"
     },
     "Checking Windows Video Controllers": {
-      "ru": "Проверка видеоконтроллера Windows"
+      "ru": "Проверка видеоконтроллеров Windows"
     },
     "Checking System Specs": {
-      "ru": "Проверка системных спецификаций"
+      "ru": "Проверка системных характеристик"
     },
     "Initializing device monitoring": {
       "ru": "Инициализация мониторинга устройств"
@@ -3244,7 +3244,7 @@
       "ru": "Обновление исполнительных файлов майнера..."
     },
     "Cross referencing miner device IDs...": {
-      "ru": "Перекрёстные ссылки ID устройств майнера..."
+      "ru": "Перекрёстные ссылки ИД устройств майнера..."
     },
     " / Hour": {
       "ru": " / Час"
@@ -3262,7 +3262,7 @@
       "ru": " / Год"
     },
     "Pack and upload log files?": {
-      "ru": "Запаковать и загрузить лог-файлы?"
+      "ru": "Запаковать и отправить файлы журналов?"
     },
     "This will restart your program and create a zip file on Desktop.": {
       "ru": "Это перезапустит вашу программу и создаст zip-файл на рабочем столе."
@@ -3274,7 +3274,7 @@
       "ru": "OK"
     },
     "Folder lacks permissions": {
-      "ru": "Недостаточно разрешений"
+      "ru": "У папки нет разрешений"
     },
     "NiceHash Miner folder doesn't have write access. This can prevent some features from working.": {
       "ru": "Для папки NiceHash Miner отсутствуют права на запись. Это может помешать работе некоторых функций."
@@ -3295,16 +3295,16 @@
       "ru": "прочитайте эту статью."
     },
     "By running the NiceHash Miner or NHM (in short) you are connecting your PC or a mining rig to NiceHash hash-power marketplace. NiceHash Miner enables you to rent out the computing power of your machine and in return, you earn bitcoins. To learn more about how NiceHash works, ": {
-      "ru": "Запуская NiceHash Miner или сокращенно NHM, вы подключаете ваш ПК или риг для майнинга к рынку мощности NiceHash. NiceHash Miner позволяет вам сдавать в аренду вычислительную мощность вашего оборудования и взамен зарабатывать биткоины. Чтобы узнать больше о том, как работает NiceHash, "
+      "ru": "Запуская NiceHash Miner или сокращённо NHM, вы подключаете ваш ПК или риг для майнинга к рынку мощности NiceHash. NiceHash Miner позволяет вам сдавать в аренду вычислительную мощность вашего оборудования и взамен зарабатывать биткоины. Чтобы узнать больше о том, как работает NiceHash, "
     },
     "About": {
       "ru": "О нас"
     },
     "Use NiceHash Mobile app and scan this QR code to add this rig to your Rig Manager automatically.": {
-      "ru": "Используйте мобильное приложение NiceHash и сканируйте QR-код, чтобы добавить этот риг в менеджер ригов автоматически."
+      "ru": "Используйте мобильное приложение NiceHash и отсканируйте QR-код, чтобы добавить этот риг в менеджер ригов автоматически."
     },
     "Version Information": {
-      "ru": "Информация о версии"
+      "ru": "Сведения о версии"
     },
     "Resources": {
       "ru": "Ресурсы"
@@ -3325,16 +3325,16 @@
       "ru": "Социальные сети"
     },
     "This will upload log report to our server.": {
-      "ru": "Это загрузит лог-отчет на наш сервер."
+      "ru": "Это отправит журнал отчёта на наш сервер."
     },
     "Click the button to create a zip file and upload it to the server.": {
-      "ru": "Нажмите кнопку для создания zip-файла и загрузки его на сервер."
+      "ru": "Нажмите кнопку для создания zip-файла и отправки его на сервер."
     },
     "Bug report ID": {
-      "ru": "ID отчета об ошибке"
+      "ru": "ИД отчёта об ошибке"
     },
     "Use following ID for bug reporting.\n{0}": {
-      "ru": "Используйте следующий ID для сообщения об ошибке.\n{0}"
+      "ru": "Используйте следующий ИД для сообщения об ошибке.\n{0}"
     },
     "Copy to clipboard": {
       "ru": "Копировать в буфер обмена"
@@ -3358,7 +3358,7 @@
       "ru": "Регистрация нового аккаунта"
     },
     "Enter NiceHash Mining Address Manually": {
-      "ru": "Ввод Биткоин-адреса вручную"
+      "ru": "Ввод адреса майнинга NiceHash вручную"
     },
     "Generate new QR Code": {
       "ru": "Генерация нового QR-кода"
@@ -3376,28 +3376,28 @@
       "ru": "На данный момент вы майните в режиме Демо. "
     },
     "Add your Wallet Address ": {
-      "ru": "Добавьте ваш адрес кошелька "
+      "ru": "Добавьте ваш адрес кошелька, "
     },
     "to start earning Bitcoins.": {
       "ru": "чтобы начать зарабатывать биткоины."
     },
     "If you continue without adding your Wallet Address you will be mining in ": {
-      "ru": "РЕЖИМЕ ДЕМО и не заработаете за это биткоинов!"
+      "ru": "Если вы продолжите без добавления вашего адреса кошелька, то майнинг запустится в "
     },
     "DEMO MINING": {
       "ru": "ДЕМО МАЙНИНГ"
     },
     "DEMO MODE and will not earn Bitcoins!": {
-      "ru": "РЕЖИМЕ ДЕМО и не заработаете за это биткоинов!"
+      "ru": "РЕЖИМЕ ДЕМО, и вы не заработаете за это биткоинов!"
     },
     "QR Code timeout. Please generate new one.": {
-      "ru": "Срок действия QR-кода истек. Пожалуйста, сгенерируйте новый."
+      "ru": "Срок действия QR-кода истёк. Пожалуйста, создайте новый."
     },
     "BTC Address was changed - this code is already used.": {
-      "ru": "Биткоин-адрес был изменен — этот код уже используется."
+      "ru": "Биткоин-адрес был изменён — этот код уже используется."
     },
     "NHMWS not connected": {
-      "ru": "NHMWS не подключен"
+      "ru": "NHMWS не подключён"
     },
     "Not connected to NHMWS. Please check your internet connection.": {
       "ru": "Нет подключения к NHMWS. Пожалуйста, проверьте ваше подключение к интернету."
@@ -3421,16 +3421,16 @@
       "ru": "Мы настоятельно рекомендуем использовать адрес кошелька, предоставленный платформой NiceHash."
     },
     "Using any other Bitcoin wallet address will result in a higher 5% fee and infrequent payouts.": {
-      "ru": "Использование адреса любого другого Биткоин-кошелька приведет к высшей комиссии в размере 5% и редким выплатам."
+      "ru": "Использование адреса любого другого Биткоин-кошелька приведёт к повышенной комиссии в размере 5% и редким выплатам."
     },
     "DEMO mode will not earn Bitcoins!": {
       "ru": "В режиме ДЕМО не зарабатываются биткоины!"
     },
     "Check this setting if you would like NiceHash Miner to check for missing GPUs every 5 minutes.": {
-      "ru": "Включите эту настройку, если вы хотели бы, чтобы NiceHash Miner каждые 5 минут проверял, работают ли видеокарты."
+      "ru": "Включите эту настройку, если вы хотите, чтобы NiceHash Miner каждые 5 минут проверял, работают ли видеокарты."
     },
     "Check this setting if you would like to run 'OnGPUsLost.bat' script when GPU is lost. By default the script restarts Windows. Users can modify the script for custom behaviour.": {
-      "ru": "Включите эту настройку, если вы хотели бы запускать скрипт 'OnGPUsLost.bat' при потере видеокарты. По умолчанию скрипт перезагружает Windows. Пользователи могут изменять поведение скрипта."
+      "ru": "Включите эту настройку, если вы хотели бы запускать скрипт «OnGPUsLost.bat» при потере видеокарты. По умолчанию скрипт перезагружает Windows. Пользователи могут изменять поведение скрипта."
     },
     "Missing GPUs": {
       "ru": "Видеокарты отсутствуют"
@@ -3481,54 +3481,127 @@
 
     },
     "Miner was restarted due to big difference between benchmarked speed and miner speed. Please re-benchmark GPU #{0} {1} with {2}. Otherwise, please reinstall the GPU drivers by following this guide.": {
+      "ru": "Майнер был перезапущен ввиду заметной разницы между протестированной скоростью и текущей скоростью майнера. Пожалуйста, повторите бенчмарк ГП #{0} {1} с {2}. В ином случае, пожалуйста, переустановите драйвера ГП согласно следующему руководству."
 
     },
     "Checksum validation failed": {
+      "ru": "Проверка контрольной суммы не удалась"
 
     },
     "The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.": {
+      "ru": "Загруженная контрольная сумма {0} не соответствует нашей проверке безопасности. Пожалуйста, удостоверьтесь, что вы загружаете с доверенного источника."
 
     },
     "There are no available algorithms to mine with GPU #{0} {1}. Please check you rig stability and stability of installed plugins.": {
+      "ru": "Нет доступных алгоритмов для майнинга на ГП #{0} {1}. Пожалуйста, проверьте стабильность вашего рига и стабильность установленных плагинов."
 
     },
     "No available algorithms": {
+      "ru": "Нет доступных алгоритмов"
 
     },
     "NiceHash Miner can't obtain CPU information": {
+      "ru": "NiceHash Miner не смог получить сведения о ЦП"
 
     },
     "Start NiceHash Miner with administrator rights.": {
+      "ru": "Запустить NiceHash Miner с правами администратора."
 
     },
     "NiceHash Miner can’t monitor CPU": {
+      "ru": "NiceHash Miner не может следить за ЦП"
 
     },
     "Your motherboard is not reporting fan speed, temperature, or the load of the CPU. Most likely your CPU is not compatible with the NHM CPU monitoring tool.": {
+      "ru": "Ваша материнская плата не сообщает о скорости вращения вентилятора, температуре или нагрузке процессора. Скорее всего, ваш ЦП несовместим с инструментом мониторинга ЦП NHM."
 
     },
     "Currently mining is not profitable. Mining will be resumed once it will be profitable again.": {
+      "ru": "В настоящее время майнинг нерентабелен. Майнинг будет возобновлён, как только он снова станет прибыльным."
 
     },
     "The latest online version of this plugin is not compatible with your current version of NiceHash miner. Please update NiceHash miner to the latest version.": {
+      "ru": "Последняя версия этого плагина в сети несовместима с вашей текущей версией майнера NiceHash. Пожалуйста, обновите майнер NiceHash до последней версии."
 
     },
     "This plugin is not compatible with NiceHash miner. Please update this plugin to the latest version.": {
+      "ru": "Этот плагин не совместим с майнером NiceHash. Пожалуйста, обновите этот плагин до последней версии."
 
     },
     "Optimization profiles Insufficient Permissions": {
+      "ru": "Не хватает разрешений для профилей оптимизации"
 
     },
     "Can't run optimization profiles due to insufficient permissions. If you want to use this feature you need to run as Administrator.": {
+      "ru": "Не удаётся запустить профили оптимизации из-за недостаточных разрешений. Если вы хотите использовать эту функцию, вам нужно работать от имени администратора."
 
     },
     "Optimization profiles not enabled": {
+      "ru": "Профили оптимизации не включены"
 
     },
     "Optimization profiles are not enabled. Enable for optimization of some GPUs for a bigger hash rate. Run NiceHash Miner as an Administrator and enable Optimization profiles in advanced settings.": {
+      "ru": "Профили оптимизации не включены. Включите их с целью оптимизации некоторых графических процессоров для повышенного хешрейта. Запустите NiceHash Miner от имени администратора и включите профили оптимизации в расширенных настройках."
 
     },
     "When checked, NiceHash Miner will use optimization profiles for Dagger algorithms when supported GPUs are present. Requires running NHM as admin and enabling 3rd-party miners.": {
+      "ru": "Если включено, NiceHash Miner будет использовать профили оптимизации для алгоритмов Dagger при наличии поддерживаемых графических процессоров. Требуется запуск NHM от имени администратора и включение сторонних майнеров."
+
+    },
+    "Check every 5 minutes for missing GPUs": {
+      "ru": "Проверять каждые 5 минут потерю связи с ГП"
+
+    },
+    "Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)": {
+      "ru": "Запускать скрипт «OnGPUsLost.bat» при потери ГП (перезапустит Windows)"
+
+    },
+    "Pause mining when Steam game is started": {
+      "ru": "Приостанавливать майнинг при запуске игры в Steam"
+
+    },
+    "Resolve NiceHash domains to IPs via Cloudflare": {
+      "ru": "Разрешать доменные имена NiceHash в IP с помощью Cloudflare"
+
+    },
+    "Enable SSL Mining": {
+      "ru": "Включить майнинг по SSL"
+
+    },
+    "NiceHash Miner will detect when the game is started and will pause mining. Once the game is closed, mining will resume.": {
+      "ru": "NiceHash Miner будет определять запуск игры и остановит майнинг. По закрытии игры майнинг продолжится."
+	  
+    },
+    "This will resolve NiceHash domains to IPs via cloudflare in case of DNS sinkholing.": {
+      "ru": "Это позволит преобразовывать домены NiceHash в IP-адреса через Сloudflare в случае провала DNS."
+
+    },
+    "This will enable SSL mining for miner plugins that have SSL mining support. Some miner plugins might not have this feature implemented.": {
+      "ru": "Это включит майнинг по SSL для плагинов, которые поддерживают его. В некоторых плагинах майнера эта функция может быть не реализована."
+
+    },
+    "Source": {
+      "ru": "Источник"
+
+    },
+    "Miner source:": {
+      "ru": "Источник майнера:"
+
+    },
+    "ReBenchmark": {
+      "ru": "Повтор теста"
+
+    },
+    "Standard": {
+      "ru": "Стандартный"
+	  
+    },
+    "Quick (can be inaccurate)": {
+      "ru": "Быстрый (неточный)"
+	  
+    },
+    "Precise (will take longer)": {
+      "ru": "Точный (долгий)"
 
     }
   }
