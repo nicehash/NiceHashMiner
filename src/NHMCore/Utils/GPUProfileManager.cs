@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using NHM.Common;
 using System.IO;
 using System.Linq;
-using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHM.Common.Device;
@@ -15,11 +14,10 @@ using System.Threading;
 
 namespace NHMCore.Utils
 {
-    public class GPUProfileManager : NotifyChangedBase, IBackgroundService
+    public class GPUProfileManager : NotifyChangedBase
     {
         private GPUProfileManager() { }
         private static readonly int NDEF = Int32.MinValue;
-        private static readonly int RET_OK = 0;
         private readonly string Tag = "GPUProfileManager";
         private bool TriedInit = false;
         private bool SuccessInit = false;
@@ -89,7 +87,7 @@ namespace NHMCore.Utils
                 .Where(m => m.Count == 2)
                 .Select(item => $"{item[0]}={item[1]}"));
         }
-        public void Start(IEnumerable<MiningPair> miningPairs)
+        public void Start(IEnumerable<MiningPair> miningPairs, CancellationToken stop)
         {
             if (!CanUseProfiles) return;
             lock (_startStopLock)
@@ -106,7 +104,7 @@ namespace NHMCore.Utils
                 if (devicesWithProfilesToOptimize.Count == 0) return;
                 foreach (var gpuProfilePair in devicesWithProfilesToOptimize)
                 {
-                    FindProfileNumForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile);
+                    FindProfileNumForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile, stop);
                 }
             }
         }
@@ -156,7 +154,7 @@ namespace NHMCore.Utils
             }
             return null;
         }
-        public void FindProfileNumForDeviceAndSetIfExists(ComputeDevice device, Device profile)
+        public void FindProfileNumForDeviceAndSetIfExists(ComputeDevice device, Device profile, CancellationToken stop)
         {
             foreach (var profileID in ExistingProfiles.Reverse())
             {
@@ -164,55 +162,35 @@ namespace NHMCore.Utils
                 if (foundProfile == null) continue;
                 var memoryTimings = BuildMTString(foundProfile);
                 if (memoryTimings == string.Empty) continue;
-                WaitForGpuUtilizationAndTrySet(device, memoryTimings);
+                _ = WaitForGpuUtilizationAndTrySet(device, memoryTimings, stop);
+                return;
             }
         }
 
-        //private async Task WaitForGpuUtilizationAndTrySet(ComputeDevice dev, string memoryTimings)
-        //{
-        //    await Task.Run(() =>
-        //    {
-        //        List<float> lastUtilization = new();
-        //        var maxTries = 30;
-        //        while(maxTries > 0)
-        //        {
-        //            var currentLoad = dev.Load;
-        //            lastUtilization.Add(currentLoad);
-        //            var isPass = lastUtilization.Count > 4 && Enumerable.Reverse(lastUtilization).Take(4).ToList().All(u => u >= 60);
-        //            if (isPass)
-        //            {
-        //                dev.TrySetMemoryTimings(memoryTimings);
-        //                return;
-        //            }
-        //            maxTries--;
-        //            Task.Delay(300);
-        //        }
-        //    });
-        //}
-
-        private void WaitForGpuUtilizationAndTrySet(ComputeDevice dev, string memoryTimings)
+        private async Task WaitForGpuUtilizationAndTrySet(ComputeDevice dev, string memoryTimings, CancellationToken stop)
         {
-            new Thread(() =>
+            await Task.Run(async () =>
             {
-                Thread.CurrentThread.IsBackground = true;
                 List<float> lastUtilization = new();
                 var maxTries = 100;
                 var takeItems = 10;
                 while (maxTries > 0)
                 {
+                    if (stop.IsCancellationRequested) return;
                     var currentLoad = dev.Load;
                     lastUtilization.Add(currentLoad);
-                    var isPass = lastUtilization.Count > takeItems && Enumerable.Reverse(lastUtilization).Take(takeItems).ToList().All(u => u >= 80);
+                    var isPass = lastUtilization.Count > takeItems && Enumerable.Reverse(lastUtilization).Take(takeItems).ToList().All(u => u >= 60);
                     if (isPass)
                     {
                         dev.TrySetMemoryTimings(memoryTimings);
-                        Logger.Warn(Tag, $"Tried to set after {100-maxTries} tries");
+                        Logger.Warn(Tag, $"Tried to set profile");
                         return;
                     }
                     maxTries--;
-                    Thread.Sleep(150);
+                    await Task.Delay(150);
                 }
-            }).Start();
+                Logger.Info(Tag, $"Profile setting failed for {dev.Name}({dev.ID})");
+            });
         }
         protected bool IsSupportedDeviceName(string deviceName)
         {
