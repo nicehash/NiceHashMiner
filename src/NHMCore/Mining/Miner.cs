@@ -217,9 +217,9 @@ namespace NHMCore.Mining
         {
             _miner.InitMiningLocationAndUsername("auto", username);
             _miner.InitMiningPairs(_miningPairs);
-            GPUProfileManager.Instance.Start(_miningPairs);
-            await Task.Delay(2000);
             var ret = await _miner.StartMiningTask(stop);
+            await Task.Delay(500);
+            GPUProfileManager.Instance.Start(_miningPairs);
             var maxTimeout = _plugin.GetApiMaxTimeout(_miningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
             _algos.ForEach(a => a.IsCurrentlyMining = true);
@@ -230,10 +230,9 @@ namespace NHMCore.Mining
         private async Task StopAsync()
         {
             // TODO thing about this case, closing opening on switching
-            GPUProfileManager.Instance.Stop(_miningPairs);
-            await Task.Delay(2000);
             MinerApiWatchdog.RemoveGroup(GroupKey);
             MiningDataStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
+            GPUProfileManager.Instance.Stop(_miningPairs);
             await _miner.StopMiningTask();
             _algos.ForEach(a => a.IsCurrentlyMining = false);
             if (_miner is IDisposable d) d.Dispose();

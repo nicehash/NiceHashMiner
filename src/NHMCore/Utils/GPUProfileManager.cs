@@ -10,6 +10,8 @@ using NHMCore.Mining;
 using NHM.Common.Device;
 using NHMCore.Configs;
 using NHM.Common.Enums;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace NHMCore.Utils
 {
@@ -30,7 +32,7 @@ namespace NHMCore.Utils
         public bool ServiceEnabled { get; set; } = false;
         private static object _startStopLock = new object();
         public static GPUProfileManager Instance { get; } = new GPUProfileManager();
-        public List<string> SupportedDeviceNames { get; set; } = new List<string> { "1080", "1080 ti", "titan xp"};
+        public List<string> SupportedDeviceNames { get; } = new List<string> { "1080", "1080 ti", "titan xp"};
         public void Init()
         {
             if (TriedInit) return;
@@ -80,7 +82,7 @@ namespace NHMCore.Utils
                     .ToList();
         }
 
-        public string BuildMTString(OptimizationProfile prof)
+        private string BuildMTString(OptimizationProfile prof)
         {
             if (prof.mt == null) return string.Empty;
             return string.Join(";", prof.mt
@@ -102,12 +104,10 @@ namespace NHMCore.Utils
                 }
                 Logger.Info(Tag, $"Can optimize {devicesWithProfilesToOptimize.Count}/{miningPairs.Count()} devices");
                 if (devicesWithProfilesToOptimize.Count == 0) return;
-                int setCount = 0;
                 foreach (var gpuProfilePair in devicesWithProfilesToOptimize)
                 {
-                    if (FindProfileNumForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile)) setCount++;
+                    FindProfileNumForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile);
                 }
-                Logger.Info(Tag, $"Optimized {setCount}/{miningPairs.Count()} devices");
             }
         }
         public void Stop(IEnumerable<MiningPair> miningPairs = null)
@@ -125,9 +125,9 @@ namespace NHMCore.Utils
                         Logger.Info(Tag, "ComputeDev is null, skipping");
                         continue;
                     }
-                    computeDev.PrintMemoryTimings();
                     Logger.Info(Tag, "Stopping " + gpu.PCIeBusID);
-                    computeDev.TryResetMemoryTimings();
+                    var retReset = computeDev.TryResetMemoryTimings();
+                    Logger.Info(Tag, $"TryResetMemoryTimings returned {retReset}");
                 }
             }
         }
@@ -156,7 +156,7 @@ namespace NHMCore.Utils
             }
             return null;
         }
-        public bool FindProfileNumForDeviceAndSetIfExists(ComputeDevice device, Device profile)
+        public void FindProfileNumForDeviceAndSetIfExists(ComputeDevice device, Device profile)
         {
             foreach (var profileID in ExistingProfiles.Reverse())
             {
@@ -164,13 +164,55 @@ namespace NHMCore.Utils
                 if (foundProfile == null) continue;
                 var memoryTimings = BuildMTString(foundProfile);
                 if (memoryTimings == string.Empty) continue;
-                var ret = device.TrySetMemoryTimings(memoryTimings);
-                device.PrintMemoryTimings();
-                //TODO SET OTHER STUFF FOR DEVICE HERE
-                if (ret >= RET_OK) return true;
-                return false;
+                WaitForGpuUtilizationAndTrySet(device, memoryTimings);
             }
-            return false;
+        }
+
+        //private async Task WaitForGpuUtilizationAndTrySet(ComputeDevice dev, string memoryTimings)
+        //{
+        //    await Task.Run(() =>
+        //    {
+        //        List<float> lastUtilization = new();
+        //        var maxTries = 30;
+        //        while(maxTries > 0)
+        //        {
+        //            var currentLoad = dev.Load;
+        //            lastUtilization.Add(currentLoad);
+        //            var isPass = lastUtilization.Count > 4 && Enumerable.Reverse(lastUtilization).Take(4).ToList().All(u => u >= 60);
+        //            if (isPass)
+        //            {
+        //                dev.TrySetMemoryTimings(memoryTimings);
+        //                return;
+        //            }
+        //            maxTries--;
+        //            Task.Delay(300);
+        //        }
+        //    });
+        //}
+
+        private void WaitForGpuUtilizationAndTrySet(ComputeDevice dev, string memoryTimings)
+        {
+            new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+                List<float> lastUtilization = new();
+                var maxTries = 100;
+                var takeItems = 10;
+                while (maxTries > 0)
+                {
+                    var currentLoad = dev.Load;
+                    lastUtilization.Add(currentLoad);
+                    var isPass = lastUtilization.Count > takeItems && Enumerable.Reverse(lastUtilization).Take(takeItems).ToList().All(u => u >= 80);
+                    if (isPass)
+                    {
+                        dev.TrySetMemoryTimings(memoryTimings);
+                        Logger.Warn(Tag, $"Tried to set after {100-maxTries} tries");
+                        return;
+                    }
+                    maxTries--;
+                    Thread.Sleep(150);
+                }
+            }).Start();
         }
         protected bool IsSupportedDeviceName(string deviceName)
         {
