@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHM.CommonWin32;
 using NHMCore.Utils;
 
 namespace NHMCore.Configs
@@ -71,6 +72,8 @@ namespace NHMCore.Configs
         }
 
         public bool IsCredentialValid => IsBitcoinAddressValid && IsWorkerNameValid;
+
+        public string QuickMinerMiningAddress => NHMRegistry.Get_QM_MiningaddressFromRegistry();
 
         //C#7
         public (string btc, string worker, string group) GetCredentials()

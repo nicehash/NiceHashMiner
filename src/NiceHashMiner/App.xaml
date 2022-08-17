@@ -29,6 +29,8 @@
             <DrawingBrush x:Key="QrLightLogo" Drawing="{DynamicResource QrIconDefault}" />
             <DrawingBrush x:Key="QrDarkLogo" Drawing="{DynamicResource QRIcon}" />
 
+            <DrawingBrush x:Key="TrashDarkLogo" Drawing="{DynamicResource TrashLogo}" />
+            <DrawingBrush x:Key="TrashLightLogo" Drawing="{DynamicResource TrashLogoDefault}" />
 
             <DrawingBrush x:Key="LoginCircle" Drawing="{DynamicResource LoginCircleLogoLight}" />
             <DrawingBrush x:Key="LoginQRCircle" Drawing="{DynamicResource LoginQRCircleLight}" />
@@ -37,6 +39,7 @@
             <Style TargetType="views:EulaWindowFirstLong" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:ChooseLanguageWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:EulaWindowSecondShort" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
+            <Style TargetType="views:QuickMinerAddressMigrationWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <!--comment out if no login-->
             <Style TargetType="login:LoginWindow" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
             <Style TargetType="views:DemoBTCNotice" BasedOn="{StaticResource BaseDialogWindowStyle}"/>
@@ -185,6 +188,7 @@
             <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
             <converters:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter" />
             <converters:NumberToVisibilityConverterZero x:Key="NumberToVisibilityConverterZero" />
+            <converters:BooleanDaysToStringConverter x:Key="BooleanDaysToStringConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

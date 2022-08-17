@@ -71,17 +71,14 @@ namespace NiceHashMiner
                 g.DrawImage(overlay, new Point(x, y));
 
                 //bmp to bmpimg
-                BitmapImage bitmapImage;
-                using (var memory = new MemoryStream())
-                {
-                    bitMap.Save(memory, ImageFormat.Png);
-                    memory.Position = 0;
-                    bitmapImage = new BitmapImage();
-                    bitmapImage.BeginInit();
-                    bitmapImage.StreamSource = memory;
-                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapImage.EndInit();
-                }
+                using var memory = new MemoryStream();
+                bitMap.Save(memory, ImageFormat.Png);
+                memory.Position = 0;
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memory;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
                 // end of bmp to bmpimg
 
                 var brush = new ImageBrush(bitmapImage);

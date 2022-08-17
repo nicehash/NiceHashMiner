@@ -84,7 +84,7 @@
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="24,0,0,0"
-                   Text="Enter Bitcoin Address Manually"/>
+                   Text="Enter NiceHash Mining Address Manually"/>
         <TextBlock Grid.Row="2"
                    Style="{StaticResource local.WalletSubHeader}"
                    TextWrapping="WrapWithOverflow"
@@ -92,10 +92,9 @@
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="25,8,6,0">
-            <Run Text="Add your " />
-            <Run Text="Bitcoin Wallet Address" FontWeight="Bold"/>
+            <Run Text="Add your" />
+            <Run Text="NiceHash Mining Address" FontWeight="Bold"/>
             <Run Text="to start earning Bitcoins." />
-            <Run Text="We strongly suggest using the wallet address provided on the NiceHash platform."/>
         </TextBlock>
 
         <TextBox Grid.Row="3"

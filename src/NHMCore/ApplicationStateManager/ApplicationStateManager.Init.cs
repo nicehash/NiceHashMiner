@@ -9,6 +9,7 @@ using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
+using NHMCore.Schedules;
 using NHMCore.Utils;
 using System;
 using System.Linq;
@@ -61,17 +62,13 @@ namespace NHMCore
                 // STEP +3
                 string detectionStepMessage(DeviceDetectionStep step)
                 {
-                    switch (step)
+                    return step switch
                     {
-                        case DeviceDetectionStep.CPU:
-                            return Tr("Checking CPU Info");
-                        case DeviceDetectionStep.NVIDIA_CUDA:
-                            return Tr("Querying CUDA devices");
-                        case DeviceDetectionStep.AMD_OpenCL:
-                            return Tr("Checking AMD OpenCL GPUs");
-                        default: //DeviceDetectionStep.WMIWMIVideoControllers
-                            return Tr("Checking Windows Video Controllers");
-                    }
+                        DeviceDetectionStep.CPU => Tr("Checking CPU Info"),
+                        DeviceDetectionStep.NVIDIA_CUDA => Tr("Querying CUDA devices"),
+                        DeviceDetectionStep.AMD_OpenCL => Tr("Checking AMD OpenCL GPUs"),
+                        _ => Tr("Checking Windows Video Controllers"), //DeviceDetectionStep.WMIWMIVideoControllers
+                    };
                 };
                 var devDetectionProgress = new Progress<DeviceDetectionStep>(step =>
                 {
@@ -79,10 +76,7 @@ namespace NHMCore
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
-                if (DeviceDetection.DetectionResult.IsOpenClFallback)
-                {
-                    AvailableNotifications.CreateOpenClFallbackInfo();
-                }
+
                 if (!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
@@ -112,13 +106,9 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
                 }
-                if (AvailableDevices.HasNvidia && DeviceDetection.DetectionResult.IsNvidiaNVMLInitializedError)
+                if (AvailableDevices.HasNvidia && (DeviceDetection.DetectionResult.IsNvidiaNVMLLoadedError || DeviceDetection.DetectionResult.IsNvidiaNVMLInitializedError))
                 {
-                    AvailableNotifications.CreateFailedNVMLInitInfo();
-                }
-                if (AvailableDevices.HasNvidia && DeviceDetection.DetectionResult.IsNvidiaNVMLLoadedError)
-                {
-                    AvailableNotifications.CreateFailedNVMLLoadInfo();
+                    AvailableNotifications.CreateFailedNVMLLoadInitInfo();
                 }
                 // no compatible devices? exit
                 if (AvailableDevices.Devices.Count == 0)
@@ -258,6 +248,8 @@ namespace NHMCore
                     if (MiscSettings.Instance.UseOptimizationProfiles) AvailableNotifications.CreateOptimizationProfileElevateInfo();
                     else AvailableNotifications.CreateOptimizationProfileNotEnabledInfo();
                 }
+
+                SchedulesManager.Instance.Init();
             }
             catch (Exception e)
             {

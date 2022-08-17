@@ -6,8 +6,8 @@ using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
-using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
+using NHMCore.Schedules;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
@@ -42,6 +42,19 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged(nameof(PerDeviceDisplayString));
                 OnPropertyChanged(nameof(CPUs));
                 OnPropertyChanged(nameof(GPUs));
+            }
+        }
+
+        public Schedule Schedule { get; set; }
+
+        private IEnumerable<Schedule> _schedules;
+        public IEnumerable<Schedule> Schedules
+        {
+            get => _schedules;
+            set
+            {
+                _schedules = value;
+                OnPropertyChanged(nameof(Schedules));
             }
         }
 
@@ -124,6 +137,7 @@ namespace NiceHashMiner.ViewModels
         public UpdateSettings UpdateSettings => UpdateSettings.Instance;
 
         public GPUProfileManager GPUProfileManager => GPUProfileManager.Instance;
+        public SchedulesManager SchedulesManager => SchedulesManager.Instance;
         #endregion Exposed settings
 
 
@@ -282,6 +296,7 @@ namespace NiceHashMiner.ViewModels
             //MinerPluginsManager.OnCrossReferenceInstalledWithOnlinePlugins += OnCrossReferenceInstalledWithOnlinePlugins;
             MinerPluginsManagerState.Instance.PropertyChanged += MinerPluginsManagerState_PropertyChanged;
             NotificationsManager.Instance.PropertyChanged += RefreshNotifications_PropertyChanged;
+            SchedulesManager.Instance.PropertyChanged += Schedules_PropertyChanged;
 
             OnPropertyChanged(nameof(NHMWSConnected));
             ApplicationStateManager.OnNhmwsConnectionChanged += (_, nhmwsConnected) =>
@@ -298,6 +313,15 @@ namespace NiceHashMiner.ViewModels
                     OnPropertyChanged(nameof(MinimumProfitString));
                 }
             };
+        }
+
+        private void Schedules_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            lock (_lock)
+            {
+                Schedules = new ObservableCollection<Schedule>(SchedulesManager.Instance.Schedules);
+                OnPropertyChanged(nameof(Schedules));
+            }
         }
 
 
@@ -325,11 +349,13 @@ namespace NiceHashMiner.ViewModels
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData)d));
             DevicesTDP = new ObservableCollection<DeviceDataTDP>(AvailableDevices.Devices.Select(d => new DeviceDataTDP(d)));
             MiningDevs = new ObservableCollection<MiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
+            Schedules = new ObservableCollection<Schedule>(SchedulesManager.Schedules);
 
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
             BindingOperations.EnableCollectionSynchronization(Plugins, _lock);
             BindingOperations.EnableCollectionSynchronization(HelpNotificationList, _lock);
+            BindingOperations.EnableCollectionSynchronization(Schedules, _lock);
             MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
 
             IdleCheckManager.StartIdleCheck();

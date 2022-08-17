@@ -33,6 +33,7 @@ namespace NBMiner
                 Urls = new List<string>
                 {
                     "https://github.com/NebuTech/NBMiner/releases/download/v42.2/NBMiner_42.2_Win.zip", // original
+                    "https://dl.nbminer.com/NBMiner_42.2_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -166,7 +167,7 @@ namespace NBMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().cwdPath;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe" });
         }
 

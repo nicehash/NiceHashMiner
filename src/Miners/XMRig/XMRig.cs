@@ -70,7 +70,7 @@ namespace XMRig
         }
         void IBeforeStartMining.BeforeStartMining()
         {
-            var binCwd = GetBinAndCwdPaths().Item2;
+            var binCwd = GetBinAndCwdPaths().cwdPath;
             var txtFiles = Directory.GetFiles(binCwd, "*.json", SearchOption.AllDirectories)
                 .Where(file => IsDeleteConfigFile(file))
                 .ToArray();

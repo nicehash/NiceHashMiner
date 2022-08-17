@@ -74,17 +74,11 @@ namespace NiceHashMiner.Views.Login
             Helpers.VisitUrlLink($"{Links.Login}?nhmv4=1");
         }
 
-        [Serializable]
-        internal class BtcResponse
-        {
-            public string btc { get; set; }
-        }
-
         private async Task InitQRCode()
         {
             // this is vaild for 10 minutes
             _uuid = System.Guid.NewGuid().ToString();
-            _gotQRCode = await QrCodeGenerator.RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
+            _gotQRCode = await BTC_FromQrCodeAPI.RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
             if (_gotQRCode)
             {
                 var isLight = GUISettings.Instance.DisplayTheme == "Light";
@@ -119,15 +113,8 @@ namespace NiceHashMiner.Views.Login
         {
             try
             {
-                using var client = new HttpClient();
                 Logger.Info("LoginWindow.GetBTCForUUID", "Waiting for btc address");
-                using var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{uuid}");
-                if (!resp.IsSuccessStatusCode) return null;
-                var contentString = await resp.Content.ReadAsStringAsync();
-                var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
-                var setBtc = btcResp?.btc;
-                Logger.Info("LoginWindow.GetBTCForUUID", $"GetBTCForUUID Got btc address: {setBtc} for response: '{contentString}'");
-                return setBtc;
+                return await BTC_FromQrCodeAPI.GetBTCForUUID(uuid);
             }
             catch (Exception ex)
             {

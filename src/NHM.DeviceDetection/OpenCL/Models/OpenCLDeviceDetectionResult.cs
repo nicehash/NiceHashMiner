@@ -1,5 +1,4 @@
-﻿using NHM.DeviceDetection.Models.AMDBusIDVersionResult
-;
+﻿using NHM.DeviceDetection.Models.AMDBusIDVersionResult;
 using System;
 using System.Collections.Generic;
 

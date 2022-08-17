@@ -77,13 +77,13 @@
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="24,0,0,0"
-                   Text="Wallet"/>
+                   Text="Mining Address"/>
                 <TextBlock Grid.Row="2"
                    Style="{StaticResource local.WalletSubHeader}"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="25,8,0,0"
-                   Text="Wallet Address"/>
+                   Text="Mining Address"/>
                 <TextBox Grid.Row="3"
                  Style="{StaticResource inputBox}"
                  x:Name="textBoxBTCAddress"
@@ -95,7 +95,7 @@
                 <TextBlock Grid.Row="4"
                    Margin="25,8,0,0">
                     <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
-                        How to create a Wallet Address?
+                        How to create a Mining Address?
                     </Hyperlink>
                 </TextBlock>
                 <Button Grid.Row="5"

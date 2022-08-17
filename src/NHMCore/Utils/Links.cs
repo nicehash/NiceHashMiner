@@ -5,117 +5,55 @@ namespace NHMCore.Utils
 {
     public static class Links
     {
-        public static string AddWDExclusionHelp_PRODUCTION => "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%3F?utm_source=NHM&utm_medium=Guide";
-        public static string VisitUrl
+        public static string VisitUrl => BuildOptions.BUILD_TAG switch
         {
-            get
-            {
-                switch (BuildOptions.BUILD_TAG)
-                {
-                    case BuildTag.TESTNET: return "https://test.nicehash.com";
-                    case BuildTag.TESTNETDEV: return "https://test-dev.nicehash.com";
-                    // BuildTag.PRODUCTION
-                    default: return "https://nicehash.com";
-                }
-            }
-        }
+            BuildTag.TESTNET => "https://test.nicehash.com",
+            BuildTag.TESTNETDEV => "https://test-dev.nicehash.com",
+            _ => "https://nicehash.com", // BuildTag.PRODUCTION
+        };
 
-        public static string CheckStats
+        public static string CheckStats => BuildOptions.BUILD_TAG switch
         {
-            get
-            {
-                switch (BuildOptions.BUILD_TAG)
-                {
-                    case BuildTag.TESTNET: return "https://test.nicehash.com/mining/stats";
-                    case BuildTag.TESTNETDEV: return "https://test-dev.nicehash.com/mining/stats";
-                    // BuildTag.PRODUCTION
-                    default: return "https://nicehash.com/my/mining/stats";
-                }
-            }
-        }
-        public static string CheckStatsRig
-        {
-            get
-            {
-                switch (BuildOptions.BUILD_TAG)
-                {
-                    case BuildTag.TESTNET: return "https://test.nicehash.com/my/mining/rigs/{RIG_ID}";
-                    case BuildTag.TESTNETDEV: return "https://test-dev.nicehash.com/my/mining/rigs/{RIG_ID}";
-                    // BuildTag.PRODUCTION
-                    default: return "https://www.nicehash.com/my/mining/rigs/{RIG_ID}?utm_source=NHM&utm_medium=ViewStatsOnline";
-                }
-            }
-        }
+            BuildTag.TESTNET => "https://test.nicehash.com/mining/stats",
+            BuildTag.TESTNETDEV => "https://test-dev.nicehash.com/mining/stats",
+            _ => "https://nicehash.com/my/mining/stats", // BuildTag.PRODUCTION
+        };
 
-        public static string Register
+        public static string CheckStatsRig => BuildOptions.BUILD_TAG switch
         {
-            get
-            {
-                // TODO missing
-                switch (BuildOptions.BUILD_TAG)
-                {
-                    case BuildTag.TESTNET: return "NO_URL";
-                    case BuildTag.TESTNETDEV: return "NO_URL";
-                    // BuildTag.PRODUCTION
-                    default: return "https://nicehash.com/my/register";
-                }
-            }
-        }
+            BuildTag.TESTNET => "https://test.nicehash.com/my/mining/rigs/{RIG_ID}",
+            BuildTag.TESTNETDEV => "https://test-dev.nicehash.com/my/mining/rigs/{RIG_ID}",
+            _ => "https://www.nicehash.com/my/mining/rigs/{RIG_ID}?utm_source=NHM&utm_medium=ViewStatsOnline", // BuildTag.PRODUCTION
+        };
+
+
+        public static string Register => BuildOptions.BUILD_TAG switch
+        {
+            BuildTag.TESTNET => "NO_URL",
+            BuildTag.TESTNETDEV => "NO_URL",
+            _ => "https://nicehash.com/my/register", // BuildTag.PRODUCTION
+        };
 
         // ?nhm=1 - LoginNHM
-        public static string Login
+        public static string Login => BuildOptions.BUILD_TAG switch
         {
-            get
-            {
-                switch (BuildOptions.BUILD_TAG)
-                {
-                    case BuildTag.TESTNET: return "https://test.nicehash.com/my/login";
-                    case BuildTag.TESTNETDEV: return "https://test-dev.nicehash.com/my/login";
-                    // BuildTag.PRODUCTION
-                    default: return "https://www.nicehash.com/my/login";
-                }
-            }
-        }
+            BuildTag.TESTNET => "https://test.nicehash.com/my/login",
+            BuildTag.TESTNETDEV => "https://test-dev.nicehash.com/my/login",
+            _ => "https://www.nicehash.com/my/login", // BuildTag.PRODUCTION
+        };
 
-        public static string NhmPayingFaq
+        public static string NhmPayingFaq => BuildOptions.BUILD_TAG switch
         {
-            get
-            {
-                // TODO same for all builds
-                switch (BuildOptions.BUILD_TAG)
-                {
-                    case BuildTag.TESTNET: return "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
-                    case BuildTag.TESTNETDEV: return "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
-                    // BuildTag.PRODUCTION
-                    default: return "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid?utm_source=NHM&utm_medium=Guide";
-                }
-            }
-        }
+            BuildTag.TESTNET => "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid",
+            BuildTag.TESTNETDEV => "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid",
+            _ => "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid?utm_source=NHM&utm_medium=Guide", // BuildTag.PRODUCTION
+        };
 
-        public static string AMDComputeModeHelp
+        public static string PluginsJsonApiUrl => BuildOptions.IS_PLUGINS_TEST_SOURCE switch
         {
-            get
-            {
-                // TODO same for all builds
-                switch (BuildOptions.BUILD_TAG)
-                {
-                    case BuildTag.TESTNET: return "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F";
-                    case BuildTag.TESTNETDEV: return "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate%3F";
-                    // BuildTag.PRODUCTION
-                    default: return "https://www.nicehash.com/blog/post/how-to-enable-compute-mode-on-amd-cards-and-double-your-hash-rate?utm_source=NHM&utm_medium=Guide";
-                }
-            }
-        }
-
-
-        public static string PluginsJsonApiUrl
-        {
-            get
-            {
-                if (BuildOptions.IS_PLUGINS_TEST_SOURCE) return "https://miner-plugins-test-dev.nicehash.com/api/plugins";
-                return "https://miner-plugins.nicehash.com/api/plugins";
-            }
-        }
+            true => "https://miner-plugins-test-dev.nicehash.com/api/plugins",
+            _ => "https://miner-plugins.nicehash.com/api/plugins",
+        };
 
 
         // add version

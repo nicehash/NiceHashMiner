@@ -32,10 +32,10 @@ namespace NiceHashMiner.ViewModels.Models
         public DeviceDataTDP(ComputeDevice dev)
         {
             Dev = dev;
-            _tdpMon = dev.DeviceMonitor as ITDP;
-            HasTPDSettings = _tdpMon != null;
-            if (HasTPDSettings)
+            if (dev.DeviceMonitor is ITDP tdpMon && tdpMon is not null)
             {
+                _tdpMon = tdpMon;
+                HasTPDSettings = true;
                 UpdateValues();
             }
         }

@@ -23,7 +23,7 @@ namespace NiceHashMiner.Views.Settings
             ThemeSettings.Visibility = AppRuntimeSettings.ThemeSettingsEnabled ? Visibility.Visible : Visibility.Collapsed;
             CredentialsSettings.Instance.PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName == "BitcoinAddress")
+                if (e.PropertyName == nameof(CredentialsSettings.Instance.BitcoinAddress))
                 {
                     this.Dispatcher.Invoke(() =>
                     {

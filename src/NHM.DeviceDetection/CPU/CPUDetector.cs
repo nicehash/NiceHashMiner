@@ -81,6 +81,7 @@ namespace NHM.DeviceDetection.CPU
                     SupportedCpuExtensions = CpuUtils.SupportedExtensions(cpuID),
                     CpuID = cpuID,
                 };
+                CPUDevice.RawDetectionOutput = cpuJSON;
                 return cpu;
             });
         }
