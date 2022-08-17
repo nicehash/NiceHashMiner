@@ -6,7 +6,6 @@ using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using NiceHashMiner.Views.Common.NHBase;
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,30 +17,22 @@ namespace NiceHashMiner.Views.Login
     /// </summary>
     public partial class LoginWindow : BaseDialogWindow
     {
-        private LoginBrowser _loginBrowser;
         private string _uuid;
         private bool _gotQRCode = false;
 
         public LoginWindow()
         {
             InitializeComponent();
-            Unloaded += LoginBrowser_Unloaded;
             Loaded += LoginWindow_Loaded;
+            Unloaded += LoginWindow_Unloaded;
             HideIconAndTitle = true;
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             if (GUISettings.Instance.DisplayTheme == "Dark") CheckBoxMode.IsChecked = true;
         }
 
-        private void LoginBrowser_Unloaded(object sender, RoutedEventArgs e)
+        private void LoginWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (_loginBrowser != null) _loginBrowser.AllowClose = true;
-                _loginBrowser?.ForceCleanup();
-                _loginBrowser?.Close();
-            }
-            catch
-            { }
+            BtcHttpServer.Stop();
         }
 
         public bool? LoginSuccess { get; private set; } = null;
@@ -80,22 +71,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Login_OnClick(object sender, RoutedEventArgs e)
         {
-            Hide();
-            if (_loginBrowser == null) _loginBrowser = new LoginBrowser();
-            _loginBrowser.Top = this.Top;
-            _loginBrowser.Left = this.Left;
-            _loginBrowser.ShowDialog();
-            LoginSuccess = _loginBrowser.LoginSuccess;
-            this.Top = _loginBrowser.Top;
-            this.Left = _loginBrowser.Left;
-            if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
-            {
-                ShowDialog();
-            }
-            else
-            {
-                Close();
-            }
+            Helpers.VisitUrlLink($"{Links.Login}?nhmv4=1");
         }
 
         [Serializable]
@@ -143,17 +119,15 @@ namespace NiceHashMiner.Views.Login
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    Logger.Info("LoginWindow.GetBTCForUUID", "Waiting for btc address");
-                    var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{uuid}");
-                    if (!resp.IsSuccessStatusCode) return null;
-                    var contentString = await resp.Content.ReadAsStringAsync();
-                    var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
-                    var setBtc = btcResp?.btc;
-                    Logger.Info("LoginWindow.GetBTCForUUID", $"GetBTCForUUID Got btc address: {setBtc} for response: '{contentString}'");
-                    return setBtc;
-                }
+                using var client = new HttpClient();
+                Logger.Info("LoginWindow.GetBTCForUUID", "Waiting for btc address");
+                using var resp = await client.GetAsync($"https://api2.nicehash.com/api/v2/organization/nhmqr/{uuid}");
+                if (!resp.IsSuccessStatusCode) return null;
+                var contentString = await resp.Content.ReadAsStringAsync();
+                var btcResp = JsonConvert.DeserializeObject<BtcResponse>(contentString);
+                var setBtc = btcResp?.btc;
+                Logger.Info("LoginWindow.GetBTCForUUID", $"GetBTCForUUID Got btc address: {setBtc} for response: '{contentString}'");
+                return setBtc;
             }
             catch (Exception ex)
             {
@@ -181,6 +155,8 @@ namespace NiceHashMiner.Views.Login
         private async void LoginWindow_Loaded(object sender, RoutedEventArgs e)
         {
             await InitQRCode();
+            // background Task
+            BtcHttpServer.RunBackgrounTask();
         }
     }
 }
