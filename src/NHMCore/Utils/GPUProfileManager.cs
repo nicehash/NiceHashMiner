@@ -184,7 +184,7 @@ namespace NHMCore.Utils
                     if (isPass)
                     {
                         dev.TrySetMemoryTimings(memoryTimings);
-                        Logger.Warn(Tag, $"Tried to set profile");
+                        Logger.Warn(Tag, $"Tried to set profile for {dev.Name} ({dev.ID})");
                         return;
                     }
                     maxTries--;
