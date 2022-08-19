@@ -4,20 +4,20 @@ using Newtonsoft.Json;
 using NHM.Common;
 using System.IO;
 using System.Linq;
-using NHM.MinerPluginToolkitV1.Interfaces;
 using NHM.MinerPlugin;
 using NHMCore.Mining;
 using NHM.Common.Device;
 using NHMCore.Configs;
 using NHM.Common.Enums;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace NHMCore.Utils
 {
-    public class GPUProfileManager : NotifyChangedBase, IBackgroundService
+    public class GPUProfileManager : NotifyChangedBase
     {
         private GPUProfileManager() { }
         private static readonly int NDEF = Int32.MinValue;
-        private static readonly int RET_OK = 0;
         private readonly string Tag = "GPUProfileManager";
         private bool TriedInit = false;
         private bool SuccessInit = false;
@@ -30,7 +30,7 @@ namespace NHMCore.Utils
         public bool ServiceEnabled { get; set; } = false;
         private static object _startStopLock = new object();
         public static GPUProfileManager Instance { get; } = new GPUProfileManager();
-        public List<string> SupportedDeviceNames { get; set; } = new List<string> { "1080", "1080 ti", "titan xp"};
+        public List<string> SupportedDeviceNames { get; } = new List<string> { "1080", "1080 ti", "titan x", "titan xp"};
         public void Init()
         {
             if (TriedInit) return;
@@ -43,7 +43,8 @@ namespace NHMCore.Utils
                 if (ProfileData != null) SuccessInit = true;
                 if (SuccessInit)
                 {
-                    _systemContainsSupportedDevices = AvailableDevices.Devices.Any(dev => IsSupportedDeviceName(dev.Name));
+                    var devs = AvailableDevices.Devices.Where(dev => IsSupportedDeviceName(dev.Name)).ToList();
+                    _systemContainsSupportedDevices = devs.Any();
                     OnPropertyChanged(nameof(SystemContainsSupportedDevices));
                     OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
                 }
@@ -80,14 +81,14 @@ namespace NHMCore.Utils
                     .ToList();
         }
 
-        public string BuildMTString(OptimizationProfile prof)
+        private string BuildMTString(OptimizationProfile prof)
         {
             if (prof.mt == null) return string.Empty;
             return string.Join(";", prof.mt
                 .Where(m => m.Count == 2)
                 .Select(item => $"{item[0]}={item[1]}"));
         }
-        public void Start(IEnumerable<MiningPair> miningPairs)
+        public void Start(IEnumerable<MiningPair> miningPairs, CancellationToken stop)
         {
             if (!CanUseProfiles) return;
             lock (_startStopLock)
@@ -102,12 +103,10 @@ namespace NHMCore.Utils
                 }
                 Logger.Info(Tag, $"Can optimize {devicesWithProfilesToOptimize.Count}/{miningPairs.Count()} devices");
                 if (devicesWithProfilesToOptimize.Count == 0) return;
-                int setCount = 0;
                 foreach (var gpuProfilePair in devicesWithProfilesToOptimize)
                 {
-                    if (FindProfileNumForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile)) setCount++;
+                    FindProfileNumForDeviceAndSetIfExists(gpuProfilePair.device, gpuProfilePair.profile, stop);
                 }
-                Logger.Info(Tag, $"Optimized {setCount}/{miningPairs.Count()} devices");
             }
         }
         public void Stop(IEnumerable<MiningPair> miningPairs = null)
@@ -116,12 +115,19 @@ namespace NHMCore.Utils
             lock (_startStopLock)
             {
                 var unique = GetViableCudaDevices(miningPairs);
+                Logger.Info(Tag, "Unique count: " + unique.Count);
                 foreach (var gpu in unique)
                 {
                     var computeDev = AvailableDevices.Devices.Where(x => x.Uuid == gpu.UUID).FirstOrDefault();
-                    if (computeDev != null) computeDev.TryResetMemoryTimings();
+                    if (computeDev == null)
+                    {
+                        Logger.Info(Tag, "ComputeDev is null, skipping");
+                        continue;
+                    }
+                    Logger.Info(Tag, "Stopping " + gpu.PCIeBusID);
+                    var retReset = computeDev.TryResetMemoryTimings();
+                    Logger.Info(Tag, $"TryResetMemoryTimings returned {retReset}");
                 }
-                Logger.Info(Tag, "Gpu settings reset back to normal");
             }
         }
         private Device GetDeviceProfile(string deviceName)
@@ -149,7 +155,7 @@ namespace NHMCore.Utils
             }
             return null;
         }
-        public bool FindProfileNumForDeviceAndSetIfExists(ComputeDevice device, Device profile)
+        public void FindProfileNumForDeviceAndSetIfExists(ComputeDevice device, Device profile, CancellationToken stop)
         {
             foreach (var profileID in ExistingProfiles.Reverse())
             {
@@ -157,12 +163,35 @@ namespace NHMCore.Utils
                 if (foundProfile == null) continue;
                 var memoryTimings = BuildMTString(foundProfile);
                 if (memoryTimings == string.Empty) continue;
-                var ret = device.TrySetMemoryTimings(memoryTimings);
-                //TODO SET OTHER STUFF FOR DEVICE HERE
-                if (ret >= RET_OK) return true;
-                return false;
+                _ = WaitForGpuUtilizationAndTrySet(device, memoryTimings, stop);
+                return;
             }
-            return false;
+        }
+
+        private async Task WaitForGpuUtilizationAndTrySet(ComputeDevice dev, string memoryTimings, CancellationToken stop)
+        {
+            await Task.Run(async () =>
+            {
+                List<float> lastUtilization = new();
+                var maxTries = 100;
+                var takeItems = 10;
+                while (maxTries > 0)
+                {
+                    if (stop.IsCancellationRequested) return;
+                    var currentLoad = dev.Load;
+                    lastUtilization.Add(currentLoad);
+                    var isPass = lastUtilization.Count > takeItems && Enumerable.Reverse(lastUtilization).Take(takeItems).ToList().All(u => u >= 60);
+                    if (isPass)
+                    {
+                        dev.TrySetMemoryTimings(memoryTimings);
+                        Logger.Warn(Tag, $"Tried to set profile for {dev.Name} ({dev.ID})");
+                        return;
+                    }
+                    maxTries--;
+                    await Task.Delay(150);
+                }
+                Logger.Info(Tag, $"Profile setting failed for {dev.Name}({dev.ID})");
+            });
         }
         protected bool IsSupportedDeviceName(string deviceName)
         {

@@ -248,5 +248,9 @@ namespace NHM.DeviceMonitoring
                 return -1;
             }
         }
+        public void PrintMemoryTimings()
+        {
+            NVIDIA_MON.nhm_nvidia_device_print_memory_timings(BusID);
+        }
     }
 }
