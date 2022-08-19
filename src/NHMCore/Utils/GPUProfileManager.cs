@@ -30,7 +30,7 @@ namespace NHMCore.Utils
         public bool ServiceEnabled { get; set; } = false;
         private static object _startStopLock = new object();
         public static GPUProfileManager Instance { get; } = new GPUProfileManager();
-        public List<string> SupportedDeviceNames { get; } = new List<string> { "1080", "1080 ti", "titan xp"};
+        public List<string> SupportedDeviceNames { get; } = new List<string> { "1080", "1080 ti", "titan x", "titan xp"};
         public void Init()
         {
             if (TriedInit) return;
@@ -43,7 +43,8 @@ namespace NHMCore.Utils
                 if (ProfileData != null) SuccessInit = true;
                 if (SuccessInit)
                 {
-                    _systemContainsSupportedDevices = AvailableDevices.Devices.Any(dev => IsSupportedDeviceName(dev.Name));
+                    var devs = AvailableDevices.Devices.Where(dev => IsSupportedDeviceName(dev.Name)).ToList();
+                    _systemContainsSupportedDevices = devs.Any();
                     OnPropertyChanged(nameof(SystemContainsSupportedDevices));
                     OnPropertyChanged(nameof(SystemContainsSupportedDevicesNotSystemElevated));
                 }
