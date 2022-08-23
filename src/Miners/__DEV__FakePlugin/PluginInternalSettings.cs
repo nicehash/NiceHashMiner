@@ -1,5 +1,4 @@
 ﻿using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using System;
 
 namespace FakePlugin
@@ -13,8 +12,5 @@ namespace FakePlugin
             GeneralTimeout = DefaultTimeout,
         };
 
-        internal static MinerOptionsPackage MinerOptionsPackage = new MinerOptionsPackage
-        {
-        };
     }
 }

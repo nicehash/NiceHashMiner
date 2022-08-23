@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.ApplicationState;
@@ -23,7 +24,6 @@ namespace NiceHashMiner.ViewModels.Models
     {
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
-
         public List<ComputeDevice> CPUs
         {
             get => AvailableDevices.Devices
@@ -158,7 +158,6 @@ namespace NiceHashMiner.ViewModels.Models
             RefreshDiag();
 
         }
-
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -309,7 +308,6 @@ namespace NiceHashMiner.ViewModels.Models
                 algoDestination.BenchmarkSpeed = algoSource.BenchmarkSpeed;
                 algoDestination.SecondaryBenchmarkSpeed = algoSource.SecondaryBenchmarkSpeed;
                 algoDestination.PowerUsage = algoSource.PowerUsage;
-                algoDestination.ExtraLaunchParameters = algoSource.ExtraLaunchParameters;
             }
         }
 

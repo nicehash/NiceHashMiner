@@ -1,8 +1,13 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.CommandLine;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.ELPDataModels;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
@@ -12,13 +17,16 @@ using NHMCore.Switching;
 using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.ViewModels.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
+using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
 namespace NiceHashMiner.ViewModels
 {
@@ -42,6 +50,9 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged(nameof(PerDeviceDisplayString));
                 OnPropertyChanged(nameof(CPUs));
                 OnPropertyChanged(nameof(GPUs));
+                OnPropertyChanged(nameof(MinerELPs));
+                OnPropertyChanged(nameof(IsMining));
+                OnPropertyChanged(nameof(IsNotMining));
             }
         }
 
@@ -92,6 +103,25 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged();
             }
         }
+        public bool IsMining => MiningState.AnyDeviceRunning;
+        public bool IsNotMining => !IsMining;
+        public IEnumerable<MinerELPData> MinerELPs
+        {
+            get => ELPManager.GetMinerELPs();
+            set
+            {
+                ELPManager.SetMinerELPs(value);
+                OnPropertyChanged(nameof(MinerELPs));
+                OnPropertyChanged(nameof(MinerCount));
+            }
+        }
+        public int MinerCount
+        {
+            get
+            {
+                return ELPManager.GetMinerELPs()?.Count() ?? 0;
+            }
+        }
 
         /// <summary>
         /// Elements of <see cref="MiningDevs"/> that represent actual devices (i.e. not total rows) and
@@ -138,6 +168,7 @@ namespace NiceHashMiner.ViewModels
 
         public GPUProfileManager GPUProfileManager => GPUProfileManager.Instance;
         public SchedulesManager SchedulesManager => SchedulesManager.Instance;
+        public ELPManager ELPManager => ELPManager.Instance;
         #endregion Exposed settings
 
 
@@ -313,8 +344,19 @@ namespace NiceHashMiner.ViewModels
                     OnPropertyChanged(nameof(MinimumProfitString));
                 }
             };
-        }
 
+            MiningState.Instance.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(MiningState.AnyDeviceRunning))
+                {
+                    OnPropertyChanged(nameof(IsMining));
+                    OnPropertyChanged(nameof(IsNotMining));
+                }
+            };
+
+            OnPropertyChanged(nameof(IsMining));
+            OnPropertyChanged(nameof(IsNotMining));
+        }
         private void Schedules_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             lock (_lock)
@@ -340,6 +382,65 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
+
+        public void ReadELPConfigsOrCreateIfMissing()
+        {
+            if (Plugins == null) return;
+            var minerELPs = new List<MinerELPData>();
+            var devsList = Devices
+                .Select(dev => new { P = (dev.Dev.FullName, dev.Dev.Uuid, dev.Dev.DeviceType) })
+                .Select(p => p.P)
+                .ToList();
+            foreach (var plugin in Plugins)
+            {
+                if (!plugin.Plugin.Installed) continue;
+                var minerPlugin = Devices?
+                    .Select(dev => dev.AlgorithmSettingsCollection)?
+                    .SelectMany(p => p)?
+                    .Where(algoContainer => algoContainer.PluginContainer.PluginUUID == plugin.Plugin.PluginUUID)?
+                    .Select(algo => algo.PluginContainer)?
+                    .FirstOrDefault()?
+                    .GetPlugin();
+                var specificCmds = minerPlugin is IAdditionalELP additional ? additional.GetAdditionalELPs() : new List<List<string>>();
+                var pluginConfiguration = new PluginConfiguration()
+                {
+                    PluginName = plugin.Plugin.PluginName,
+                    PluginUUID = plugin.Plugin.PluginUUID,
+                    SupportedDevicesAlgorithms = plugin.Plugin.SupportedDevicesAlgorithms,
+                    Devices = devsList,
+                    MinerSpecificCommands = specificCmds
+                };
+                try
+                {
+                    MinerConfig data = MinerConfigManager.ReadConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID);
+                    if (data == null) throw new FileNotFoundException();
+                    var fixedData = ELPManager.FixConfigIntegrityIfNeeded(data, pluginConfiguration);
+                    if (fixedData != null)
+                    {
+                        data = fixedData;
+                        MinerConfigManager.WriteConfig(data);
+                    }
+                    minerELPs.Add(ELPManager.ConstructMinerELPDataFromConfig(data));
+                }
+                catch (Exception ex)
+                {
+                    if (ex is FileNotFoundException || ex is JsonSerializationException)
+                    {
+                        var defaultCFG = ELPManager.CreateDefaultConfig(pluginConfiguration);
+                        MinerConfigManager.WriteConfig(defaultCFG, true);
+                        minerELPs.Add(ELPManager.ConstructMinerELPDataFromConfig(defaultCFG));
+                    }
+                    else Logger.Error("MainVM", ex.Message);
+                }
+            }
+            MinerELPs = minerELPs;
+        }
+
+        public void ELPReScan(object sender, EventArgs e)
+        {
+            ReadELPConfigsOrCreateIfMissing();
+        }
+
         public async Task InitializeNhm(IStartupLoader sl)
         {
             Plugins = new ObservableCollection<PluginEntryVM>();
@@ -360,15 +461,17 @@ namespace NiceHashMiner.ViewModels
 
             IdleCheckManager.StartIdleCheck();
 
-            //RefreshPlugins();
-
             _updateTimer.Start();
 
             ConfigManager.CreateBackup();
 
+            ELPManager.ELPReiteration += ELPReScan;
+            ReadELPConfigsOrCreateIfMissing();
+            ELPManager.IterateSubModelsAndConstructELPs();
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }
+
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

@@ -11,6 +11,7 @@
         xmlns:pluginsNew="clr-namespace:NiceHashMiner.Views.Plugins"
         xmlns:settingsNew="clr-namespace:NiceHashMiner.Views.Settings"
         xmlns:notifications="clr-namespace:NiceHashMiner.Views.Notifications"
+        xmlns:parameterOverview="clr-namespace:NiceHashMiner.Views.ParameterOverview"
         xmlns:help="clr-namespace:NiceHashMiner.Views.Help"
         xmlns:local="clr-namespace:NiceHashMiner.Views"
         xmlns:eula="clr-namespace:NiceHashMiner.Views.EULA"
@@ -55,6 +56,9 @@
             </TabItem>
             <TabItem Header="Benchmarks" Name="BenchmarkButton">
                 <benchmark:Benchmarks DataContext="{Binding .}"/>
+            </TabItem>
+            <TabItem Header="Miner Overview" Name="ParameterOverviewButton">
+                <parameterOverview:ParameterOverview DataContext="{Binding .}" />
             </TabItem>
             <TabItem Header="Plugins" Name="PluginsButton">
                 <pluginsNew:Plugins DataContext="{Binding .}" />

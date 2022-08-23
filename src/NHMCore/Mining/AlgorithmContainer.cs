@@ -4,7 +4,9 @@ using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.ELPDataModels;
 using NHMCore.Mining.Plugins;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +89,7 @@ namespace NHMCore.Mining
                 Algorithm = Algorithm
             };
         }
-
+        public DeviceELPData FindInELPTree(string deviceUUID) => ELPManager.Instance.FindDeviceNode(this, deviceUUID); 
         public void UpdateConfigVersionIfNeeded()
         {
             if ((_powerUsageHistory.Count >= 2 && _powerUsageHistory.Last() != _powerUsageHistory[_powerUsageHistory.Count - 2]) ||
@@ -210,22 +212,6 @@ namespace NHMCore.Mining
             }
         }
 
-        /// <summary>
-        /// String containing raw extralaunchparams entered by user
-        /// </summary>
-        public string ExtraLaunchParameters
-        {
-            get
-            {
-                if (Algorithm == null) return "";
-                return Algorithm.ExtraLaunchParameters;
-            }
-            set
-            {
-                if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
-                OnPropertyChanged(nameof(ExtraLaunchParameters));
-            }
-        }
 
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining

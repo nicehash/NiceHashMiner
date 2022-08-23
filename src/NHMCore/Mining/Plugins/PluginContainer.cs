@@ -3,7 +3,6 @@ using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore.Notifications;
 using NHMCore.Switching;
@@ -220,7 +219,6 @@ namespace NHMCore.Mining.Plugins
                         // set plugin algo
                         algo.Speeds = pluginConf.Speeds;
                         algo.Enabled = pluginConf.Enabled;
-                        algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                         algo.PowerUsage = pluginConf.PowerUsage;
                         algo.ConfigVersion = pluginConf.GetVersion();
                         // check if re-bench is needed
@@ -407,26 +405,6 @@ namespace NHMCore.Mining.Plugins
             return null;
         }
 
-        public MinerOptionsPackage GetMinerOptionsPackage()
-        {
-            try
-            {
-                if (_plugin is IGetMinerOptionsPackage get) return get.GetMinerOptionsPackage();
-
-                Type typecontroller = typeof(NHM.MinerPluginToolkitV1.PluginBase);
-                var propInfo = typecontroller.GetProperty("MinerOptionsPackage", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty);
-                var propInfo2 = typecontroller.GetProperty("MinerOptionsPackage");
-                if (propInfo != null)
-                {
-                    var ret = (MinerOptionsPackage)propInfo.GetValue(this._plugin);
-                    return ret;
-                }
-            }
-            catch
-            {
-            }
-            return null;
-        }
 
         // generic checker
         #region Generic Safe Checkers

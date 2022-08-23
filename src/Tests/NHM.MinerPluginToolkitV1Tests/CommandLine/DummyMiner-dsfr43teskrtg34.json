@@ -1,0 +1,76 @@
+{
+  "miner_name": "DummyMiner",
+  "miner_uuid": "dsfr43teskrtg34",
+  "miner_command": [
+    [
+      "--apiport",
+      "4000"
+    ]
+  ],
+  "algos": [
+    {
+      "algo": "DaggerHashimoto",
+      "algorithm_command": [
+        [
+          "--stratum",
+          "daggerhashimoto.auto.net"
+        ]
+      ],
+      "devices": {
+        "uuid1": {
+          "device": "dev1",
+          "commands": [
+            [
+              "--lhr-mode",
+              "1",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "algo": "Octopus",
+      "algorithm_command": [
+        [
+          "--stratum",
+          "octopus.auto.net"
+        ]
+      ],
+      "devices": {
+        "uuid2": {
+          "device": "dev2",
+          "commands": [
+            [
+              "--lhr-mode",
+              "1",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
+          ]
+        },
+        "uuid3": {
+          "device": "dev3",
+          "commands": [
+            [
+              "--lhr-mode",
+              "2",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "1"
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}

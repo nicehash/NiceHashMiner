@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using NHM.MinerPluginToolkitV1.CommandLine;
+using NHMCore.Configs.ELPDataModels;
+using NHMCore.Utils;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NHMCore.Mining.Grouping
@@ -18,7 +21,12 @@ namespace NHMCore.Mining.Grouping
             if (a.PluginContainer != b.PluginContainer) return false;
             // never group same devices
             if (a.ComputeDevice.Uuid == b.ComputeDevice.Uuid) return false;
-            return a.PluginContainer.CanGroupAlgorithmContainer(a, b);
+
+            var elpNodeA = a.FindInELPTree(a.ComputeDevice.Uuid) ?? new DeviceELPData();//state?
+            var elpNodeB = b.FindInELPTree(b.ComputeDevice.Uuid) ?? new DeviceELPData();
+
+            return a.PluginContainer.CanGroupAlgorithmContainer(a, b) && 
+                MinerExtraParameters.CheckIfCanGroup(new List<List<List<string>>> { elpNodeA.ConstructedELPs, elpNodeB.ConstructedELPs });
         }
 
         public static Dictionary<string, List<AlgorithmContainer>> GetGroupedAlgorithmContainers(List<AlgorithmContainer> profitableAlgorithmContainers)

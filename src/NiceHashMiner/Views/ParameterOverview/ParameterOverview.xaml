@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.ParameterOverview.ParameterOverview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.ParameterOverview"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:MainVM}">
+
+    <UserControl.Resources>
+        <local:PluginsVisibilityConverter x:Key="PluginsVisibilityConverter" />
+        <local:MiningStatusVisibilityConverter x:Key="MiningStatusVisibilityConverter" />
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter  Property="FontSize" Value="10"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="{DynamicResource BackgroundColor}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Center" FontSize="15" Visibility="{Binding MiningState.AnyDeviceRunning, Converter={StaticResource MiningStatusVisibilityConverter}}" Text="Stop mining/benchmarking to edit extra launch parameters!"/>
+                <StackPanel Visibility="{Binding MiningState.IsNotBenchmarkingOrMining, Converter={StaticResource MiningStatusVisibilityConverter}}">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Margin="24,0,0,0" Grid.Column="0" >
+                                <TextBlock Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="-21,0,0,0" Grid.Column="1">
+                                <TextBlock Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                    <ItemsControl ItemsSource="{Binding MinerELPs}" Visibility="{Binding MinerCount, Converter={StaticResource PluginsVisibilityConverter}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:MinerItem DataContext="{Binding .}" HorizontalAlignment="Stretch" Margin="0,8,0,0" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock Margin="0,8,0,0" HorizontalAlignment="Center">
+                        <!--TODO CHANGE URL-->
+                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://github.com/nicehash/NiceHashMiner/blob/NiceHashMiner_Simplify_ELP_Dotnet6/doc/Advanced/ELPTab/ELPTab.md" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                            Need Help?
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <Separator Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+    
+</UserControl>

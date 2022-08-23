@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHMCore.Mining.Plugins;
+using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -194,6 +195,7 @@ namespace NiceHashMiner.ViewModels.Plugins
 
         private void CommonInstallOnPropertyChanged()
         {
+            ELPManager.Instance.NotifyELPReiteration();
             OnPropertyChanged(nameof(InstallString));
             OnPropertyChanged(nameof(InstallButtonEnabled));
             OnPropertyChanged(nameof(ActionsButtonVisibility));

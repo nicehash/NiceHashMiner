@@ -3,7 +3,6 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHM.MinerPluginToolkitV1.Configs;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace NHM.MinerPluginToolkitV1
     /// <summary>
     /// MinerBase class implements most common IMiner features and supports MinerOptionsPackage, MinerSystemEnvironmentVariables, MinerReservedApiPorts integration, process watchdog functionality.
     /// </summary>
-    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
+    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter, IExtraLaunchParameterSetter
     {
         /// <summary>
         /// This is internal ID counter used for logging
@@ -69,7 +68,6 @@ namespace NHM.MinerPluginToolkitV1
         { }
 
         public MinerCommandLineSettings MinerCommandLineSettings { get; set; }
-        public MinerOptionsPackage MinerOptionsPackage { get; set; }
         public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
 
         public MinerReservedPorts MinerReservedApiPorts { get; set; }
@@ -129,15 +127,6 @@ namespace NHM.MinerPluginToolkitV1
                 Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
                 throw new InvalidOperationException("Invalid mining initialization");
             }
-            // init ELP, _miningPairs are ordered and ELP parsing keeps ordering
-            if (MinerOptionsPackage != null)
-            {
-                var miningPairsList = _miningPairs.ToList();
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
             // miner specific init
             Init();
         }
@@ -165,6 +154,10 @@ namespace NHM.MinerPluginToolkitV1
                 .Reverse());
             var url = urlWithPort.Replace($":{port}", "");
             return (url, port, int.TryParse(port, out var _));
+        }
+        public void SetExtraLaunchParameters(string elp)
+        {
+            _extraLaunchParameters = elp;
         }
 
         protected virtual string MiningCreateCommandLine()
