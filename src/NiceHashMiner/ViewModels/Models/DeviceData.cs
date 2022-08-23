@@ -109,7 +109,7 @@ namespace NiceHashMiner.ViewModels.Models
             get
             {
                 var enabledAlgos = Dev.AlgorithmSettings.Count(a => a.Enabled);
-                return $"{Dev.AlgorithmSettings.Count} / {enabledAlgos}";
+                return $"{enabledAlgos} / {Dev.AlgorithmSettings.Count}";
             }
         }
 
@@ -118,7 +118,7 @@ namespace NiceHashMiner.ViewModels.Models
             get
             {
                 var benchedAlgos = Dev.AlgorithmSettings.Count(a => !a.BenchmarkNeeded);
-                return $"{Dev.AlgorithmSettings.Count} / {benchedAlgos}";
+                return $"{benchedAlgos} / {Dev.AlgorithmSettings.Count}";
             }
         }
 

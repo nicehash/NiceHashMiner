@@ -16,7 +16,7 @@ using System.Windows;
 
 namespace NiceHashMiner.Views.Login
 {
-    internal class BtcHttpServer
+    class BtcHttpServer
     {
         private static string TAG = nameof(BtcHttpServer);
         private static CancellationTokenSource _stopServer = new CancellationTokenSource();
