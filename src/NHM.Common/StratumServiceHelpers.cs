@@ -87,8 +87,8 @@ namespace NHM.Common
         {
             if (algorithmType < 0) return ("", false);
             var (name, ok) = algorithmType.GetName();
-            var algoPoolName = GetPoolAliasForAlgoOrDefault(name.ToLower());
-            return (algoPoolName, ok);
+            // return lowercase
+            return (name.ToLower(), ok);
         }
 
         private static (string prefix, int port) GetProtocolPrefixAndPort(NhmConectionType conectionType, BuildTag buildTag)
@@ -160,13 +160,6 @@ namespace NHM.Common
                 }
             }
             return url;
-        }
-        private static readonly Dictionary<string, string> PoolAliasList = new Dictionary<string, string>(){
-            {"etchash", "daggerhashimotoetc"},
-        };
-        public static string GetPoolAliasForAlgoOrDefault(string algoName)
-        {
-            return PoolAliasList.ContainsKey(algoName) ? PoolAliasList[algoName] : algoName;
         }
     }
 }
