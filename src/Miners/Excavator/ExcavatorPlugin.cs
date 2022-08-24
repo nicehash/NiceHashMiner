@@ -61,7 +61,7 @@ namespace Excavator
         }
 
 #if LHR_BUILD_ON
-        public override Version Version => new Version(17, 2);
+        public override Version Version => new Version(18, 0);
 #else
         public override Version Version => new Version(16, 3);
 #endif
