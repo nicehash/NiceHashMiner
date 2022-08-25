@@ -85,6 +85,11 @@ namespace NHMCore.Configs.Data
             get => MiningSettings.Instance.EnableSSLMining;
             set => MiningSettings.Instance.EnableSSLMining = value;
         }
+        public bool AdvancedMode
+        {
+            get => MiscSettings.Instance.AdvancedMode;
+            set => MiscSettings.Instance.AdvancedMode = value;
+        }
         #endregion MiningSettings
 
         #region IdleMiningSettings
@@ -412,6 +417,7 @@ namespace NHMCore.Configs.Data
 
             AutoUpdateNiceHashMiner2 = false;
             AutoUpdateMinerPlugins = true;
+            AdvancedMode = false;
         }
 
         public void FixSettingBounds()

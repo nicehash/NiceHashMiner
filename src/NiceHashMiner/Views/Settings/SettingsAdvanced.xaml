@@ -210,5 +210,17 @@
                                         Label="Minimize Mining Windows"
                                         Description="{StaticResource minimizeMiningWindows}"/>
         </WrapPanel>
+        <!-- ADVANCED -->
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="advancedWP">
+            <Label Content="For experts" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <WrapPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" ToolTip="This feature enables advanced mode which allows users to have more control over NHM.">
+                    <local:SettingsCheckBoxItem 
+                        Enabled="{Binding MiscSettings.AdvancedMode}"
+                        Description="{StaticResource advancedMode}"
+                        Label="Advanced mode"/>
+                </StackPanel>
+            </WrapPanel>
+        </WrapPanel>
     </StackPanel>
 </UserControl>

@@ -229,13 +229,13 @@
                                                 Margin="24,0,0,0">
                                             <TextBlock Text="Benchmark" />
                                         </ToggleButton>
-                                        <ToggleButton x:Name="ParameterOverviewButton" Style="{StaticResource TabButton}"
-                                                Margin="24,0,0,0">
-                                            <TextBlock Text="Parameter overview" />
-                                        </ToggleButton>
                                         <ToggleButton x:Name="PluginsButton" Style="{StaticResource TabButton}"
                                                 Margin="24,0,0,0">
                                             <TextBlock Text="Plugins" />
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="ParameterOverviewButton" Style="{StaticResource TabButton}"
+                                                Margin="24,0,0,0">
+                                                <TextBlock Text="Parameter overview" />
                                         </ToggleButton>
                                     </StackPanel>
 

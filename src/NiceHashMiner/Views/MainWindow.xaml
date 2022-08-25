@@ -57,11 +57,11 @@
             <TabItem Header="Benchmarks" Name="BenchmarkButton">
                 <benchmark:Benchmarks DataContext="{Binding .}"/>
             </TabItem>
-            <TabItem Header="Miner Overview" Name="ParameterOverviewButton">
-                <parameterOverview:ParameterOverview DataContext="{Binding .}" />
-            </TabItem>
             <TabItem Header="Plugins" Name="PluginsButton">
                 <pluginsNew:Plugins DataContext="{Binding .}" />
+            </TabItem>
+            <TabItem Header="Parameter Overview" Name="ParameterOverviewButton">
+                <parameterOverview:ParameterOverview DataContext="{Binding .}" />
             </TabItem>
             <TabItem Header="LEFT_SETTINGS" Name="SettingsButton">
                 <settingsNew:Settings DataContext="{Binding .}"/>

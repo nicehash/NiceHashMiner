@@ -62,5 +62,6 @@
     <system:String x:Key="Tooltip.IdleMining.MinIdleSeconds">When StartMiningWhenIdle is checked, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.</system:String>
     <system:String x:Key="Tooltip.DisableVisualCRedistributableCheck">NiceHash Miner will disable Visual Studio C++ Redistributable checking.</system:String>
     <system:String x:Key="textAboutNH">By running the NiceHash Miner or NHM (in short) you are connecting your PC or a mining rig to NiceHash hash-power marketplace. NiceHash Miner enables you to rent out the computing power of your machine and in return, you earn bitcoins. To learn more about how NiceHash works,</system:String>
+    <system:String x:Key="advancedMode">This setting enables more advanced settings and allows users to have more control over NHM via more settings</system:String>
 
 </ResourceDictionary>
