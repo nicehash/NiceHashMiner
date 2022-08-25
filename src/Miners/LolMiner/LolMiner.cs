@@ -189,7 +189,7 @@ namespace LolMiner
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var isDaggerNvidia = _miningPairs.Any(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
-            var defaultTimes = isDaggerNvidia ? new List<int> { 180, 240, 300 } : new List<int> { 90, 120, 180 };
+            var defaultTimes = new List<int> { 90, 120, 180 };
             int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(defaultTimes, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
             var isLhr = isDaggerNvidia && IsLhrGPU(_miningPairs.Select(mp => mp.Device).FirstOrDefault());
             using var tickCancelSource = new CancellationTokenSource();

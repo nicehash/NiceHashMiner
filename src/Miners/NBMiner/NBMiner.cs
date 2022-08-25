@@ -39,7 +39,7 @@ namespace NBMiner
             // determine benchmark time 
             // settup times
             var isDaggerNvidia = _algorithmType == AlgorithmType.DaggerHashimoto && _miningPairs.Any(mp => mp.Device.DeviceType == DeviceType.NVIDIA);
-            var defaultTimes = isDaggerNvidia ? new List<int> { 180, 240, 300 } : new List<int> { 40, 60, 140 };
+            var defaultTimes = new List<int> { 40, 60, 140 };
             int benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(defaultTimes, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
             var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
             var maxTicksEnabled = MinerBenchmarkTimeSettings.MaxTicksEnabled && !isDaggerNvidia;

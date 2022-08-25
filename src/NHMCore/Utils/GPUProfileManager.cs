@@ -75,7 +75,9 @@ namespace NHMCore.Utils
                     .Select(g => g.First())
                     .Distinct()
                     .Where(mp => mp.Device is CUDADevice)
-                    .Where(mp => mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto)
+                    .Where(mp => 
+                        (mp.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) || 
+                        (mp.Algorithm.FirstAlgorithmType == AlgorithmType.EtcHash))
                     .Select(mp => mp.Device)
                     .Cast<CUDADevice>()
                     .ToList();
