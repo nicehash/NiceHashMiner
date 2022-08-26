@@ -42,6 +42,10 @@ namespace NBMiner
                 {
                     $"{AlgorithmType.Autolykos}",
                     $"-a ergo -o stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.EtcHash}",
+                    $"-a etchash -o nicehash+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
                 }
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
@@ -69,6 +73,10 @@ namespace NBMiner
                 {
                     $"{AlgorithmType.Autolykos}",
                     $"-a ergo -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                },                
+                {
+                    $"{AlgorithmType.EtcHash}",
+                    $"-a etchash -o nicehash+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
                 }
             }
         };

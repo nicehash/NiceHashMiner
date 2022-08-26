@@ -16,6 +16,7 @@ namespace NBMiner
             {
                 { $"{AlgorithmType.DaggerHashimoto}", 1.0 },
                 { $"{AlgorithmType.Octopus}", 3.0 },
+                { $"{AlgorithmType.EtcHash}", 1.0 },
             },
 #if LHR_BUILD_ON
             Algorithms = new Dictionary<DeviceType, List<SAS>>
@@ -42,6 +43,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                         new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  4UL << 30 },
                     }
                 },
                 {
@@ -51,6 +53,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.KAWPOW) {NonDefaultRAMLimit = KAWPOW_RamLimit },
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  4UL << 30 }
                         //new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                     }
                 }
