@@ -43,13 +43,8 @@ namespace NBMiner
             };
         }
 
-#if LHR_BUILD_ON
-        public override string PluginUUID => "NBMiner_LHR";
-        public override string Name => "NBMiner_LHR";
-#else
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
         public override string Name => "NBMiner";
-#endif
 
         public override Version Version => new Version(18, 0);
         
@@ -86,17 +81,7 @@ namespace NBMiner
             {
                 Logger.Error("NBMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
             }
-#if LHR_BUILD_ON
-            var gpus = devices
-                .Where(dev => dev is CUDADevice)
-                .Cast<CUDADevice>()
-                .Where(dev => supportedNVIDIA_Driver && IsSupportedNvidiaDevice(dev))
-                .Where(dev => IsLHR(dev.Name))
-                .OrderBy(gpu => gpu.PCIeBusID)
-                .Cast<BaseDevice>()
-                .Select((gpu, minerDeviceId) => (gpu, minerDeviceId))
-                .ToArray();
-#else
+
             var gpus = devices
                 .Where(dev => dev is IGpuDevice)
                 .Where(dev => IsSupportedAMDDevice(dev) || (supportedNVIDIA_Driver && IsSupportedNvidiaDevice(dev)))
@@ -105,8 +90,6 @@ namespace NBMiner
                 .Cast<BaseDevice>()
                 .Select((gpu, minerDeviceId) => (gpu, minerDeviceId))
                 .ToArray();
-#endif
-
 
             // NBMiner sortes devices by PCIe and indexes are 0 based
             foreach (var (gpu, minerDeviceId) in gpus)
@@ -202,11 +185,7 @@ namespace NBMiner
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-#if LHR_BUILD_ON
-            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(512, 15));
-#else
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
-#endif
         }
 
     public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
