@@ -84,5 +84,15 @@ namespace NHMCore.Configs
                 OnPropertyChanged(nameof(ResolveNiceHashDomainsToIPs));
             }
         }
+        private bool _advancedMode = false;
+        public bool AdvancedMode
+        {
+            get => _advancedMode;
+            set
+            {
+                _advancedMode = value;
+                OnPropertyChanged(nameof(AdvancedMode));
+            }
+        }
     }
 }

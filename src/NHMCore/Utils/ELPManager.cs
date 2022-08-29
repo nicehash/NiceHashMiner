@@ -23,7 +23,7 @@ namespace NHMCore.Utils
         const int VALUE = 1;
         const int DELIMITER = 2;
 
-        private IEnumerable<MinerELPData> _minerELPs;
+        private IEnumerable<MinerELPData> _minerELPs = Enumerable.Empty<MinerELPData>();
         public IEnumerable<MinerELPData> GetMinerELPs()
         {
             return _minerELPs;

@@ -107,6 +107,26 @@ namespace NiceHashMiner.Views.Common.NHBase
             Tabs[initTab].IsChecked = true;
             OnTabSelected(initTab);
         }
+        protected void DisableELPTabButton()
+        {
+            foreach (var kvp in Tabs)
+            {
+                if (kvp.Key != ToggleButtonType.ParameterOverviewButton) continue;
+                kvp.Value.IsEnabled = false;
+                kvp.Value.Visibility = Visibility.Collapsed;
+                return;
+            }
+        }
+        protected void EnableELPTabButton()
+        {
+            foreach (var kvp in Tabs)
+            {
+                if (kvp.Key != ToggleButtonType.ParameterOverviewButton) continue;
+                kvp.Value.IsEnabled = true;
+                kvp.Value.Visibility = Visibility.Visible;
+                return;
+            }
+        }
 
         private void TabButtonButton_Click(object sender, RoutedEventArgs e)
         {

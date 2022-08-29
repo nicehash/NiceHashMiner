@@ -67,7 +67,7 @@
                     </ItemsControl>
                     <TextBlock Margin="0,8,0,0" HorizontalAlignment="Center">
                         <!--TODO CHANGE URL-->
-                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://github.com/nicehash/NiceHashMiner/blob/NiceHashMiner_Simplify_ELP_Dotnet6/doc/Advanced/ELPTab/ELPTab.md" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://github.com/nicehash/NiceHashMiner/blob/dot_net_update/doc/Advanced/ELPTab/ELPTab.md" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                             Need Help?
                         </Hyperlink>
                     </TextBlock>

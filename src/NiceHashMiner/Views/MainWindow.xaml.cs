@@ -11,6 +11,7 @@ using NiceHashMiner.Views.Common.NHBase;
 using NiceHashMiner.Views.TDPSettings;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,6 +19,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace NiceHashMiner.Views
 {
@@ -96,6 +98,8 @@ namespace NiceHashMiner.Views
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
             NotificationsManager.Instance.PropertyChanged += Instance_PropertyChanged;
             MiningState.Instance.PropertyChanged += MiningStateInstance_PropertyChanged;
+            MiscSettings.Instance.PropertyChanged += MiscSettings_PropertyChanged_HandleELPTabVisibility;
+            SetELPTabVisibilityAccordingToSettings();
             SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
 
             if (!HasWriteAccessToFolder(Paths.Root))
@@ -114,6 +118,15 @@ namespace NiceHashMiner.Views
                     ShowContentAsModalDialog(nhmNoPermissions);
                 });
             }
+        }
+        private void MiscSettings_PropertyChanged_HandleELPTabVisibility(object sender, PropertyChangedEventArgs e)
+        {
+            SetELPTabVisibilityAccordingToSettings();
+        }
+        private void SetELPTabVisibilityAccordingToSettings()
+        {
+            if (MiscSettings.Instance.AdvancedMode) EnableELPTabButton();
+            else DisableELPTabButton();
         }
 
         private void MiningStateInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
