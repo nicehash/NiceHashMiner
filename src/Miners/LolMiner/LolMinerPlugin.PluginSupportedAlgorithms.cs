@@ -7,7 +7,6 @@ namespace LolMiner
 {
     public partial class LolMinerPlugin
     {
-#if !LHR_BUILD_ON
         const ulong AMD_8GBMemory = 7UL << 30; // 7GB but really 8GB
         const ulong AMD_6GBMemory = 5UL << 30; // 5GB but really 6GB
         const ulong AMD_3GBMemory = 3UL << 30; // 3GB but really 4GB
@@ -34,7 +33,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.ZelHash),
                     };
         }
-#endif
+
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // fixed fee
@@ -44,18 +43,6 @@ namespace LolMiner
                 { $"{AlgorithmType.DaggerHashimoto}", 0.7 },
                 { $"{AlgorithmType.EtcHash}", 0.7 }
             },
-#if LHR_BUILD_ON
-            Algorithms = new Dictionary<DeviceType, List<SAS>>
-            {
-                {
-                    DeviceType.NVIDIA,
-                    new List<SAS>
-                    {
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                    }
-                }
-            }
-#else
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 // don't use NVIDIA OpenCL backend
@@ -75,14 +62,13 @@ namespace LolMiner
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.ZelHash),
                         new SAS(AlgorithmType.EtcHash){NonDefaultRAMLimit =  4UL << 30 }
-    }
+                    }
                 },
                 {
                     DeviceType.AMD,
                     SupportedAMDAlgos()
                 }
             }
-#endif
         };
     }
 }
