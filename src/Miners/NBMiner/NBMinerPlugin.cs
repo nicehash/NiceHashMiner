@@ -42,15 +42,11 @@ namespace NBMiner
             };
         }
 
-#if LHR_BUILD_ON
-        public override string PluginUUID => "NBMiner_LHR";
-        public override string Name => "NBMiner_LHR";
-#else
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
-        public override string Name => "NBMiner";
-#endif
 
-        public override Version Version => new Version(18, 0);
+        public override string Name => "NBMiner";
+
+        public override Version Version => new Version(19, 0);
         
 
         public override string Author => "info@nicehash.com";
@@ -85,17 +81,7 @@ namespace NBMiner
             {
                 Logger.Error("NBMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
             }
-#if LHR_BUILD_ON
-            var gpus = devices
-                .Where(dev => dev is CUDADevice)
-                .Cast<CUDADevice>()
-                .Where(dev => supportedNVIDIA_Driver && IsSupportedNvidiaDevice(dev))
-                .Where(dev => IsLHR(dev.Name))
-                .OrderBy(gpu => gpu.PCIeBusID)
-                .Cast<BaseDevice>()
-                .Select((gpu, minerDeviceId) => (gpu, minerDeviceId))
-                .ToArray();
-#else
+
             var gpus = devices
                 .Where(dev => dev is IGpuDevice)
                 .Where(dev => IsSupportedAMDDevice(dev) || (supportedNVIDIA_Driver && IsSupportedNvidiaDevice(dev)))
@@ -104,8 +90,6 @@ namespace NBMiner
                 .Cast<BaseDevice>()
                 .Select((gpu, minerDeviceId) => (gpu, minerDeviceId))
                 .ToArray();
-#endif
-
 
             // NBMiner sortes devices by PCIe and indexes are 0 based
             foreach (var (gpu, minerDeviceId) in gpus)
@@ -170,12 +154,6 @@ namespace NBMiner
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe" });
         }
 
-        private static bool IsLHR(string name)
-        {
-            var nonLHR_GPUs = new string[] { "GeForce RTX 3050", "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
-            return nonLHR_GPUs.Any(name.Contains);
-        }
-
         //private static bool IsLHR_Ignore(CUDADevice dev)
         //{
         //    const ulong maxGPU_VRAM = 11UL << 30; // 11GB
@@ -189,7 +167,6 @@ namespace NBMiner
                 if (ids.Count() == 0) return false;
                 if (device.DeviceType != DeviceType.NVIDIA) return false;
                 if (ids.FirstOrDefault() != AlgorithmType.DaggerHashimoto) return false;
-                if (!IsLHR(device.Name)) return false;
                 return benchmarkedPluginVersion < Version;
             }
             catch (Exception e)
@@ -201,11 +178,7 @@ namespace NBMiner
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
-#if LHR_BUILD_ON
-            return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(512, 15));
-#else
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
-#endif
         }
 
     public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)

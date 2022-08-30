@@ -20,9 +20,9 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <InformationalVersion></InformationalVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(DefineConstants)' == 'LHR_BUILD_ON' ">
+  <!--PropertyGroup Condition=" '$(DefineConstants)' == 'LHR_BUILD_ON' "-->
     <!--<TargetName>MP.ExcavatorLHR</TargetName>-->
-  </PropertyGroup>
+  <!--/PropertyGroup-->
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="If NOT exist &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot; mkdir &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot;&#xD;&#xA;If exist &quot;$(TargetPath)&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)$(Configuration)\PluginsToSign\&quot;" />

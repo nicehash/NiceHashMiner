@@ -18,19 +18,6 @@ namespace NBMiner
                 { $"{AlgorithmType.Octopus}", 3.0 },
                 { $"{AlgorithmType.EtcHash}", 1.0 },
             },
-#if LHR_BUILD_ON
-            Algorithms = new Dictionary<DeviceType, List<SAS>>
-            {
-                {
-                    DeviceType.NVIDIA,
-                    new List<SAS>
-                    {
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.Autolykos),
-                    }
-                },
-            }
-#else
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
                 {
@@ -58,7 +45,6 @@ namespace NBMiner
                     }
                 }
             }
-#endif
         };
     }
 }
