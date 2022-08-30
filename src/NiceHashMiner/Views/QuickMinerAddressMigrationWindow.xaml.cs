@@ -30,7 +30,7 @@ namespace NiceHashMiner.Views
         {
             InitializeComponent();
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
-            BTC.Text = Translations.Tr("We found {0} mining address in the registry, do you want to use it?", CredentialsSettings.Instance.QuickMinerMiningAddress);
+            BTC.Text = CredentialsSettings.Instance.QuickMinerMiningAddress;
         }
 
         private void CloseDialog(object sender, RoutedEventArgs e)

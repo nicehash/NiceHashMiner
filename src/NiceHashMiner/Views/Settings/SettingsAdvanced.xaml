@@ -156,7 +156,8 @@
             </StackPanel>
         </WrapPanel>
         <!-- NVIDIA/CUDA -->
-        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="wp_cuda">
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="wp_cuda"
+                   Visibility="{Binding GPUProfileManager.SystemContainsSupportedDevices, Converter={StaticResource NulBoolToVisibilityConverter}, Mode=OneWay}">
             <Label Content="NVIDIA/CUDA" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
             <WrapPanel Orientation="Horizontal">
                 <local:SettingsCheckBoxItem Enabled="{Binding MiscSettings.UseOptimizationProfiles}"

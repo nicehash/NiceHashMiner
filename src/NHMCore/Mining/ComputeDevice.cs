@@ -564,5 +564,12 @@ namespace NHMCore.Mining
             }
             return -1;
         }
+        public void PrintMemoryTimings()
+        {
+            if (DeviceMonitor is IMemoryTimings mp)
+            {
+                mp.PrintMemoryTimings();
+            }
+        }
     }
 }

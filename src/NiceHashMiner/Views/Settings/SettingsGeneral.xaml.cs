@@ -31,17 +31,23 @@ namespace NiceHashMiner.Views.Settings
                     });
                 }
             };
-            if (CredentialsSettings.Instance.IsBitcoinAddressValid)
-            {
-                textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
-                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
-                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-            }
-            if (CredentialsSettings.Instance.IsWorkerNameValid)
-            {
-                textBoxWorkerName.Style = Application.Current.FindResource("InputBoxGood") as Style;
-                textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-            }
+
+            var (btcStyle, btcBrush) = GetStyleBrush(CredentialsSettings.Instance.IsBitcoinAddressValid);
+            if (CredentialsSettings.Instance.IsBitcoinAddressValid) textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
+            textBoxBTCAddress.Style = btcStyle;
+            textBoxBTCAddress.BorderBrush = btcBrush;
+            var (workerStyle, workerBrush) = GetStyleBrush(CredentialsSettings.Instance.IsWorkerNameValid);
+            textBoxWorkerName.Style = workerStyle;
+            textBoxWorkerName.BorderBrush = workerBrush;
+        }
+
+        private (Style style, Brush brush) GetStyleBrush(bool isGood)
+        {
+            var (styleName, brushName) = isGood ? ("InputBoxGood", "NastyGreenBrush") : ("InputBoxBad", "RedDangerColorBrush");
+            return (
+                Application.Current.FindResource(styleName) as Style,
+                (Brush)Application.Current.FindResource(brushName)
+                );
         }
 
         private string _reportId = null;
@@ -55,17 +61,11 @@ namespace NiceHashMiner.Views.Settings
         {
             var trimmedBtcText = textBoxBTCAddress.Text.Trim();
             var btcOK = CredentialValidators.ValidateBitcoinAddress(trimmedBtcText);
-            if (btcOK)
-            {
-                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
-                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-            }
-            else
-            {
-                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxBad") as Style;
-                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
-            }
+            var (style, brush) = GetStyleBrush(btcOK);
+            textBoxBTCAddress.Style = style;
+            textBoxBTCAddress.BorderBrush = brush;
         }
+
 
         private async void TextBoxBitcoinAddress_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -81,33 +81,22 @@ namespace NiceHashMiner.Views.Settings
 
         private void TextBoxBitcoinAddress_LostFocus(object sender, RoutedEventArgs e)
         {
+            var (style, brush) = GetStyleBrush(CredentialsSettings.Instance.IsBitcoinAddressValid);
             if (CredentialsSettings.Instance.IsBitcoinAddressValid)
             {
                 textBoxBTCAddress.Text = CredentialsSettings.Instance.BitcoinAddress;
-                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
-                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
             }
-            else
-            {
-                textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
-                textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-            }
+            textBoxBTCAddress.Style = style;
+            textBoxBTCAddress.BorderBrush = brush;
         }
 
         private void ValidateWorkername()
         {
             var trimmedWorkername = textBoxWorkerName.Text.Trim();
-            var btcOK = CredentialValidators.ValidateWorkerName(trimmedWorkername);
-            if (btcOK)
-            {
-                textBoxWorkerName.Style = Application.Current.FindResource("InputBoxGood") as Style;
-                textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-            }
-            else
-            {
-                textBoxWorkerName.Style = Application.Current.FindResource("InputBoxBad") as Style;
-                textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
-            }
+            var workernameOK = CredentialValidators.ValidateWorkerName(trimmedWorkername);
+            var (style, brush) = GetStyleBrush(workernameOK);
+            textBoxWorkerName.Style = style;
+            textBoxWorkerName.BorderBrush = brush;
         }
 
         // TODO validator can be outside from setting
@@ -126,18 +115,6 @@ namespace NiceHashMiner.Views.Settings
 
         private void TextBoxWorkerName_LostFocus(object sender, RoutedEventArgs e)
         {
-            //if (CredentialsSettings.Instance.IsWorkerNameValid)
-            //{
-            //    //// TODO we break binding if we assing this
-            //    //textBoxWorkerName.Text = CredentialsSettings.Instance.WorkerName;
-            //    textBoxWorkerName.Style = Application.Current.FindResource("InputBoxGood") as Style;
-            //    textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-            //}
-            //else
-            //{
-            //    textBoxWorkerName.Style = Application.Current.FindResource("InputBoxGood") as Style;
-            //    textBoxWorkerName.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
-            //}
             ValidateWorkername();
         }
 
@@ -181,10 +158,10 @@ namespace NiceHashMiner.Views.Settings
 
         private void RevertTheme()
         {
-            this.ThemeSelect.SelectionChanged -= new System.Windows.Controls.SelectionChangedEventHandler(this.ThemeComboBox_SelectionChanged);
+            this.ThemeSelect.SelectionChanged -= new SelectionChangedEventHandler(this.ThemeComboBox_SelectionChanged);
             GUISettings.Instance.RevertTheme();
             ConfigManager.GeneralConfigFileCommit();
-            this.ThemeSelect.SelectionChanged += new System.Windows.Controls.SelectionChangedEventHandler(this.ThemeComboBox_SelectionChanged);
+            this.ThemeSelect.SelectionChanged += new SelectionChangedEventHandler(this.ThemeComboBox_SelectionChanged);
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)

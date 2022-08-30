@@ -8,7 +8,7 @@ namespace NHM.Common
         internal static string BuildTagNhmSocketAddress() => 
             BuildOptions.BUILD_TAG switch {
                 BuildTag.TESTNET => "wss://nhmws-test.nicehash.com/v3/nhml",
-                BuildTag.TESTNETDEV => "wss://nhmws-test-dev.nicehash.com/v3/nhml",
+                BuildTag.TESTNETDEV => "wss://nhmws-dev.nicehash.com/v3/nhml",
                 _ => "wss://nhmws.nicehash.com/v3/nhml", // BuildTag.PRODUCTION
             };
 

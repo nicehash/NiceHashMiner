@@ -58,12 +58,12 @@ namespace NHMCore.Mining.Grouping
                 var plugin = algo.PluginContainer;
                 miner = plugin.CreateMiner();
 
-                GPUProfileManager.Instance.Start(miningPairs);
                 miner.InitMiningPairs(miningPairs);
                 // fill service since the benchmark might be online. DemoUser.BTC must be used
                 miner.InitMiningLocationAndUsername("auto", DemoUser.BTC);
                 powerHelper.Start();
                 algo.ComputeDevice.State = DeviceState.Benchmarking;
+                GPUProfileManager.Instance.Start(miningPairs, stop);
                 var result = await miner.StartBenchmark(stop, BenchmarkManagerState.Instance.SelectedBenchmarkType);
                 GPUProfileManager.Instance.Stop(miningPairs);
                 if (stop.IsCancellationRequested) return false;
@@ -84,9 +84,12 @@ namespace NHMCore.Mining.Grouping
                     algo.SetBenchmarkError(result.ErrorMessage);
                 }
             }
-            finally
+            catch
             {
                 GPUProfileManager.Instance.Stop(miningPairs);
+            }
+            finally
+            {
                 algo.ClearBenchmarkPending();
                 algo.IsBenchmarking = false;
                 if(miner != null && miner is IDisposable disp) disp?.Dispose();

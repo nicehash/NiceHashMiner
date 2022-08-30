@@ -130,6 +130,10 @@ namespace NHM.Common.Enums
         Autolykos = 57,
         //[Obsolete("UNUSED Algorithm")]
         ZelHash = 58,
+        [Obsolete("DISABLED Algorithm", true)]
+        Kadena = 59,
+        //[Obsolete("UNUSED Algorithm")]
+        EtcHash = 60
         #endregion // NiceHashAPI
     }
 

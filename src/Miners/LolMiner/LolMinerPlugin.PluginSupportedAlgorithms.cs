@@ -21,6 +21,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.ZelHash),
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  4UL << 30 }
                     };
         }
 
@@ -40,7 +41,8 @@ namespace LolMiner
             DefaultFee = 1.0,
             AlgorithmFeesV2 = new Dictionary<string, double>
             {
-                { $"{AlgorithmType.DaggerHashimoto}", 0.7 }
+                { $"{AlgorithmType.DaggerHashimoto}", 0.7 },
+                { $"{AlgorithmType.EtcHash}", 0.7 }
             },
 #if LHR_BUILD_ON
             Algorithms = new Dictionary<DeviceType, List<SAS>>
@@ -72,7 +74,8 @@ namespace LolMiner
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.ZelHash),
-                    }
+                        new SAS(AlgorithmType.EtcHash){NonDefaultRAMLimit =  4UL << 30 }
+    }
                 },
                 {
                     DeviceType.AMD,

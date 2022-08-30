@@ -141,7 +141,7 @@ namespace NiceHashMiner.Views
             }
         }
 
-        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void NotificationsManagerInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (nameof(NotificationsManager.NotificationNewCount) == e.PropertyName)
             {
