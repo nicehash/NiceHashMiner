@@ -32,7 +32,7 @@ namespace NiceHashMiner.Views.Login
 
         private void LoginWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            BtcHttpServer.Stop();
+            BtcHttpServer.Instance.Stop();
         }
 
         public bool? LoginSuccess { get; private set; } = null;
@@ -106,6 +106,7 @@ namespace NiceHashMiner.Views.Login
 
         private async void Confirm_Scan_Click(object sender, RoutedEventArgs e)
         {
+            if(CredentialsSettings.Instance.IsBitcoinAddressValid) Close();
             await Confirm_Scan_ClickTask();
         }
 
@@ -143,7 +144,13 @@ namespace NiceHashMiner.Views.Login
         {
             await InitQRCode();
             // background Task
-            BtcHttpServer.RunBackgrounTask();
+            BtcHttpServer.Instance.SuccessfulHTTPLogin += ConfirmLogin;
+            BtcHttpServer.Instance.RunBackgrounTask();
+        }
+
+        public void ConfirmLogin(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(() => Close());
         }
     }
 }

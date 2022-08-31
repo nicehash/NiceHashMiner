@@ -16,16 +16,33 @@ using System.Windows;
 
 namespace NiceHashMiner.Views.Login
 {
+    public delegate void SuccessfulHTTPLogin(object sender, EventArgs e);
     class BtcHttpServer
     {
+        private static readonly BtcHttpServer instance = new BtcHttpServer();
+        public event SuccessfulHTTPLogin SuccessfulHTTPLogin;
         private static string TAG = nameof(BtcHttpServer);
         private static CancellationTokenSource _stopServer = new CancellationTokenSource();
         private static HttpListener _listener;
         private static string _url = "http://localhost:18000/";
+        static BtcHttpServer(){}
+        private BtcHttpServer(){}
+        public static BtcHttpServer Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
 
         record BtcResponse(string addr);
 
-        public static async Task HandleIncomingConnections(CancellationToken stop)
+        protected void OnSuccessLogin(EventArgs e)
+        {
+            if (SuccessfulHTTPLogin != null) SuccessfulHTTPLogin(this, e);
+        }
+
+        public async Task HandleIncomingConnections(CancellationToken stop)
         {
             bool runServer() => !stop.IsCancellationRequested;
 
@@ -123,14 +140,15 @@ namespace NiceHashMiner.Views.Login
 
                 if (CredentialValidators.ValidateBitcoinAddress(btc))
                 {
-                    Logger.Info(TAG, $"BTC VALUE IS {btc}");
-
+                    Logger.Info(TAG, $"BTC address received = {btc}");
+                    CredentialsSettings.Instance.SetBitcoinAddress(btc);
+                    OnSuccessLogin(EventArgs.Empty);
                 }
             }
         }
 
 
-        public static async Task Run(CancellationToken stop)
+        public async Task Run(CancellationToken stop)
         {
             // Create a Http server and start listening for incoming connections
             _listener = new HttpListener();
@@ -145,12 +163,12 @@ namespace NiceHashMiner.Views.Login
             _listener.Close();
         }
 
-        public static void RunBackgrounTask()
+        public void RunBackgrounTask()
         {
             _ = Task.Run(async () => await Run(_stopServer.Token));
         }
 
-        public static void Stop()
+        public void Stop()
         {
             try
             {
