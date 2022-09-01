@@ -30,10 +30,5 @@ namespace NiceHashMiner.Views.Devices
             }
             throw new Exception("ComputeDeviceItem DataContext be of type DeviceData");
         }
-
-        private async void StartStopButton(object sender, RoutedEventArgs e)
-        {
-            await _deviceData?.StartStopClick();
-        }
     }
 }
