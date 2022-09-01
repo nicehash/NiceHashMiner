@@ -39,18 +39,14 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(18, 0);
+        public override Version Version => new Version(19, 0);
 
         public override string Author => "info@nicehash.com";
-#if LHR_BUILD_ON
-        public override string Name => "lolMiner_LHR";
 
-        public override string PluginUUID => "lolMiner_LHR";
-#else
         public override string Name => "lolMiner";
 
         public override string PluginUUID => "eb75e920-94eb-11ea-a64d-17be303ea466";
-#endif
+
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)

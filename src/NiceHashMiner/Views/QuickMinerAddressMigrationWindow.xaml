@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:NiceHashMiner.Views"
         mc:Ignorable="d"
         Title="QuickMinerAddressMigrationWindow"
-        Height="370"
+        Height="250"
         Width="392"
         ResizeMode="NoResize"
         WindowStyle="None"
@@ -83,21 +83,28 @@
                    TextWrapping="Wrap"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
-                   Margin="57,0,0,20"
-                   Text="NiceHashQuickMiner Mining Address Detected" Grid.RowSpan="2"/>
+                   Margin="50,0,0,20"
+                   Text="NiceHashQuickMiner Mining Address Detected"/>
         <TextBlock Grid.Row="2"
+                   Style="{StaticResource local.WalletSubHeader}"
+                   x:Name="FoundText"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   TextAlignment="Left"
+                   Text="We found this mining address in the registry, do you want to use it?"
+                   Margin="50,0,20,10"/>
+        <TextBlock Grid.Row="3"
                    Style="{StaticResource local.WalletSubHeader}"
                    x:Name="BTC"
                    FontWeight="Bold"
                    FontSize="14"
                    TextWrapping="Wrap"
                    TextAlignment="Left"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Text="We found this mining address in the registry, do you want to use it?"
-                   Margin="0,24,0,10" Width="300" Grid.RowSpan="2"/>
+                   Text=""
+                   Margin="50,5,20,10"/>
+                   
 
-        <WrapPanel Grid.Row="5" Margin="25,24,24,24" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+        <WrapPanel Grid.Row="4" Margin="25,60,24,24" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Button
                     x:Name="CancelButton"
                     Style="{DynamicResource CancelDangerButton}"

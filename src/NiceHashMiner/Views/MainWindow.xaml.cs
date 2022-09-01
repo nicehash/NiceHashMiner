@@ -96,7 +96,7 @@ namespace NiceHashMiner.Views
             };
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
-            NotificationsManager.Instance.PropertyChanged += Instance_PropertyChanged;
+            NotificationsManager.Instance.PropertyChanged += NotificationsManagerInstance_PropertyChanged;
             MiningState.Instance.PropertyChanged += MiningStateInstance_PropertyChanged;
             MiscSettings.Instance.PropertyChanged += MiscSettings_PropertyChanged_HandleELPTabVisibility;
             SetELPTabVisibilityAccordingToSettings();
@@ -141,7 +141,7 @@ namespace NiceHashMiner.Views
             }
         }
 
-        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void NotificationsManagerInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (nameof(NotificationsManager.NotificationNewCount) == e.PropertyName)
             {

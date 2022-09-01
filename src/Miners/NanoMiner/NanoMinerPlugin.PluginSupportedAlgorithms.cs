@@ -12,16 +12,6 @@ namespace NanoMiner
             DefaultFee = 2.0,
             Algorithms = new Dictionary<DeviceType, List<SAS>>
             {
-#if LHR_BUILD_ON
-                {
-                    DeviceType.NVIDIA,
-                    new List<SAS>
-                    {
-                        new SAS(AlgorithmType.DaggerHashimoto)
-                    }
-                }
-            },
-#else
                 {
                     DeviceType.AMD,
                     new List<SAS>
@@ -29,6 +19,7 @@ namespace NanoMiner
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  4UL << 30 }
                     }
                 },
                 {
@@ -39,16 +30,17 @@ namespace NanoMiner
                         new SAS(AlgorithmType.Octopus),
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  4UL << 30 }
                     }
                 }
             },
-#endif
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
                 { AlgorithmType.KAWPOW, "Kawpow" },
                 { AlgorithmType.Octopus, "Octopus" },
                 { AlgorithmType.DaggerHashimoto, "Ethash" },
                 { AlgorithmType.Autolykos, "autolykos" },
+                { AlgorithmType.EtcHash, "Etchash" }
             }
         };
     }

@@ -33,13 +33,14 @@ namespace NHM.Common
                     .Select(a => (algorithmType: a, name: GetAlgorithmUrlName(a).name))
                     .ToArray();
                 var stratumTemplates = new Dictionary<AlgorithmType, StratumTemplateEntry>();
+                var port = GetProtocolPrefixAndPort(NhmConectionType.NONE, BuildOptions.BUILD_TAG).port;
                 foreach (var (algorithmType, name) in nonDepricatedAlgorithms)
                 {
                     stratumTemplates[algorithmType] = new StratumTemplateEntry
                     {
                         // we get something like this "{PREFIX://}daggerhashimoto.{LOCATION}.nicehash.com{:PORT}"
-                        Template = $"{PREFIX_TEMPLATE}{name}.auto.nicehash.com{PORT_TEMPLATE}",
-                        Port = 9200 // 9200 or 443
+                        Template = GetAlgorithmURL(BuildOptions.BUILD_TAG, PREFIX_TEMPLATE, name, PORT_TEMPLATE),
+                        Port = port // 9200 or 443
                     };
                 }
                 return new ServiceCustomSettings
@@ -49,19 +50,19 @@ namespace NHM.Common
                 };
             }
 
-            internal string GetLocationUrl(AlgorithmType algorithmType, NhmConectionType conectionType)
+            internal string GetLocationUrl(AlgorithmType algorithmType, NhmConectionType conectionType, BuildTag buildTag)
             {
                 if (StratumEndpointTemplatesByAlgorithmType.ContainsKey(algorithmType))
                 {
                     var customEndpointTemplateEntry = StratumEndpointTemplatesByAlgorithmType[algorithmType];
-                    return GetCustomUrl(customEndpointTemplateEntry, conectionType);
+                    return GetCustomUrl(customEndpointTemplateEntry, conectionType, buildTag);
                 }
                 return "";
             }
 
-            private static string GetCustomUrl(StratumTemplateEntry customEndpointTemplateEntry, NhmConectionType conectionType)
+            private static string GetCustomUrl(StratumTemplateEntry customEndpointTemplateEntry, NhmConectionType conectionType, BuildTag buildTag)
             {
-                var (prefix, _) = GetProtocolPrefixAndPort(conectionType);
+                var (prefix, _) = GetProtocolPrefixAndPort(conectionType, buildTag);
                 var customPort = customEndpointTemplateEntry.Port;
 
                 var customEndpointTemplate = customEndpointTemplateEntry.Template
@@ -90,9 +91,14 @@ namespace NHM.Common
             return (name.ToLower(), ok);
         }
 
-        private static (string prefix, int port) GetProtocolPrefixAndPort(NhmConectionType conectionType)
+        private static (string prefix, int port) GetProtocolPrefixAndPort(NhmConectionType conectionType, BuildTag buildTag)
         {
-            int port = conectionType == NhmConectionType.STRATUM_SSL ? 443 : 9200;
+            int port = (conectionType, buildTag) switch
+            {
+                (NhmConectionType.STRATUM_SSL, _) => 443,
+                (_, BuildTag.TESTNETDEV) => 9300,
+                _ => 9200,
+            };
             return conectionType switch
             {
                 NhmConectionType.STRATUM_TCP => ("stratum+tcp://", port),
@@ -101,11 +107,21 @@ namespace NHM.Common
             };
         }
 
+        private static string GetAlgorithmURL(BuildTag buildTag, string prefix, string name, string port)
+        {
+            return buildTag switch
+            {
+                BuildTag.TESTNET => $"{prefix}{name}-test.auto.nicehash.com{port}",
+                BuildTag.TESTNETDEV => $"{prefix}{name}-dev.auto.nicehash.com{port}",
+                _ => $"{prefix}{name}.auto.nicehash.com{port}",
+            };
+        }
+
         private static string GetLocationUrlInner(AlgorithmType algorithmType, NhmConectionType conectionType)
         {
             try
             {
-                if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrl(algorithmType, conectionType);
+                if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return _serviceCustomSettings.GetLocationUrl(algorithmType, conectionType, BuildOptions.BUILD_TAG);
 
                 var (name, okName) = GetAlgorithmUrlName(algorithmType);
                 // if name is not ok return
@@ -114,13 +130,8 @@ namespace NHM.Common
                     return "";
                 }
                 
-                var (prefix, port) = GetProtocolPrefixAndPort(conectionType);
-                var ret = BuildOptions.BUILD_TAG switch
-                {
-                    BuildTag.TESTNET => $"{prefix}{name}-test.auto.nicehash.com:{port}",
-                    BuildTag.TESTNETDEV => $"{prefix}{name}-dev.auto.nicehash.com:{port}",
-                    _ => $"{prefix}{name}.auto.nicehash.com:{port}",
-                };
+                var (prefix, port) = GetProtocolPrefixAndPort(conectionType, BuildOptions.BUILD_TAG);
+                var ret = GetAlgorithmURL(BuildOptions.BUILD_TAG, prefix, name, $":{port}");
                 return ret;
             }
             catch (Exception e)

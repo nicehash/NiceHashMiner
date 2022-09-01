@@ -220,8 +220,9 @@ namespace NHMCore.Mining
         {
             _miner.InitMiningLocationAndUsername("auto", username);
             _miner.InitMiningPairs(_miningPairs);
-            GPUProfileManager.Instance.Start(_miningPairs);
             var ret = await _miner.StartMiningTask(stop);
+            await Task.Delay(500);
+            GPUProfileManager.Instance.Start(_miningPairs, stop);
             var maxTimeout = _plugin.GetApiMaxTimeout(_miningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
             _algos.ForEach(a => a.IsCurrentlyMining = true);
@@ -233,6 +234,7 @@ namespace NHMCore.Mining
         {
             // TODO thing about this case, closing opening on switching
             GPUProfileManager.Instance.Stop(_miningPairs);
+            await Task.Delay(500);
             MinerApiWatchdog.RemoveGroup(GroupKey);
             MiningDataStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             await _miner.StopMiningTask();

@@ -17,11 +17,8 @@ using System.Diagnostics;
 
 namespace Excavator
 {
-#if LHR_BUILD_ON
-    public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
-#else
     public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference
-#endif
+
     {
         public ExcavatorPlugin()
         {
@@ -31,27 +28,16 @@ namespace Excavator
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
-#if LHR_BUILD_ON
+
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.7.7.6",
-                ExePath = new List<string> { "NHQM_v0.5.5.0", "excavator.exe" },
+                BinVersion = "v1.7.7.7",
+                ExePath = new List<string> { "NHQM_v0.5.5.1_RC", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.5.0/NHQM_v0.5.5.0.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.5.1_RC/NHQM_v0.5.5.1_RC.zip"
                 }
             };
-#else
-            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
-            {
-                BinVersion = "v1.7.6.5",
-                ExePath = new List<string> { "NHQM_v0.5.3.6", "excavator.exe" },
-                Urls = new List<string>
-                {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.3.6/NHQM_v0.5.3.6.zip"
-                }
-            };
-#endif
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Excavator NVIDIA/AMD GPU miner from NiceHash",
@@ -59,11 +45,7 @@ namespace Excavator
             };
         }
 
-#if LHR_BUILD_ON
-        public override Version Version => new Version(18, 0);
-#else
-        public override Version Version => new Version(18, 0);
-#endif
+        public override Version Version => new Version(19, 0);
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";
