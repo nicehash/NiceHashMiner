@@ -3530,6 +3530,22 @@
     },
     "When checked, NiceHash Miner will use optimization profiles for Dagger algorithms when supported GPUs are present. Requires running NHM as admin and enabling 3rd-party miners.": {
 
+    },
+    "NiceHash QuickMiner Mining Address Detected": {
+      "ru": "Обнаружен адрес для майнинга NiceHash QuickMiner",
+      "pt": "Endereço de Mineração do NiceHash QuickMiner Detetado"
+    },
+    "We found this mining address in the registry, do you want to use it?": {
+      "ru": "Мы нашли этот адрес для майнинга в реестре, хотите использовать его?",
+      "pt": "Encontramos este endereço de mineração no registro, deseja utilizá-lo?"
+    },
+    "Add new Mining Address": {
+      "ru": "Добавить новый адрес для майнинга",
+      "pt": "Adicionar novo Endereço de Mineração"
+    },
+    "CONFIRM": {
+      "ru": "ПОДТВЕРДИТЬ",
+      "pt": "CONFIRMAR"
     }
   }
 } 

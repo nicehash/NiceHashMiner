@@ -84,7 +84,7 @@
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="50,0,0,20"
-                   Text="NiceHashQuickMiner Mining Address Detected"/>
+                   Text="NiceHash QuickMiner Mining Address Detected"/>
         <TextBlock Grid.Row="2"
                    Style="{StaticResource local.WalletSubHeader}"
                    x:Name="FoundText"
