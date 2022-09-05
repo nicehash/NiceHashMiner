@@ -27,12 +27,12 @@ namespace NBMiner
             // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v42.2",
+                BinVersion = "v42.3",
                 ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v42.2/NBMiner_42.2_Win.zip", // original
-                    "https://dl.nbminer.com/NBMiner_42.2_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v42.3/NBMiner_42.3_Win.zip", // original
+                    "https://dl.nbminer.com/NBMiner_42.3_Win.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
