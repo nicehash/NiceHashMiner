@@ -275,22 +275,6 @@ namespace NiceHashMiner.ViewModels.Models
             OnPropertyChanged(nameof(FanSpeed));
         }
 
-        public async Task StartStopClick()
-        {
-            switch (Dev.State)
-            {
-                case DeviceState.Stopped:
-                    await ApplicationStateManager.StartSingleDevicePublic(Dev);
-                    break;
-                case DeviceState.Mining:
-                case DeviceState.Benchmarking:
-                    await ApplicationStateManager.StopSingleDevicePublic(Dev);
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public void ClearAllSpeeds()
         {
             foreach (var a in Dev.AlgorithmSettings)
