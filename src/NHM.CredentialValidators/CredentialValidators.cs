@@ -37,5 +37,16 @@ namespace NHM.CredentialValidators
             if (!isProduction) return address.StartsWith("tb1") && BTC_Bech32.ValidateBitcoinAddress(address);
             return address.StartsWith("bc1") && BTC_Bech32.ValidateBitcoinAddress(address);
         }
+        public static bool ValidateInternalBitcoinAddress(string address, bool isProduction = true)
+        {
+            bool isProductionValidPrefix() => isProduction && (address.StartsWith("NH") || (address.StartsWith("3")));
+            bool isTestnetValidPrefix() => !isProduction && (address.StartsWith("PT") || (address.StartsWith("2")));
+
+            if (IsInvalidString(address)) return false;
+            if (!isProductionValidPrefix() && !isTestnetValidPrefix()) return false;
+            return BTC_Bech32.ValidateBitcoinAddress(address)
+                || BTC_Base58.ValidateBitcoinAddress(address)
+                || BTC_Base58.ValidateBitcoinAddress(address.Substring(2));
+        }
     }
 }

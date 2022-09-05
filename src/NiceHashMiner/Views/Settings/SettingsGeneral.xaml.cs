@@ -61,6 +61,7 @@ namespace NiceHashMiner.Views.Settings
         {
             var trimmedBtcText = textBoxBTCAddress.Text.Trim();
             var btcOK = CredentialValidators.ValidateBitcoinAddress(trimmedBtcText);
+            if (btcOK) ValidateInternalBTCAddress();
             var (style, brush) = GetStyleBrush(btcOK);
             textBoxBTCAddress.Style = style;
             textBoxBTCAddress.BorderBrush = brush;
@@ -88,6 +89,18 @@ namespace NiceHashMiner.Views.Settings
             }
             textBoxBTCAddress.Style = style;
             textBoxBTCAddress.BorderBrush = brush;
+        }
+        private void ValidateInternalBTCAddress()
+        {
+            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
+            if (!CredentialValidators.ValidateInternalBitcoinAddress(trimmedBtcText))
+            {
+                invalidBTCAddressWarningIcon.Visibility = Visibility.Visible;
+                externalAddressHelp.Visibility = Visibility.Visible;
+                return;
+            }
+            invalidBTCAddressWarningIcon.Visibility = Visibility.Collapsed;
+            externalAddressHelp.Visibility = Visibility.Collapsed;
         }
 
         private void ValidateWorkername()
