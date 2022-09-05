@@ -3531,23 +3531,39 @@
     "When checked, NiceHash Miner will use optimization profiles for Dagger algorithms when supported GPUs are present. Requires running NHM as admin and enabling 3rd-party miners.": {
 
     },
-	"Flag & delimiter":{
+    "NiceHash QuickMiner Mining Address Detected": {
+      "ru": "Обнаружен адрес для майнинга NiceHash QuickMiner",
+      "pt": "Endereço de Mineração do NiceHash QuickMiner Detetado"
+    },
+    "We found this mining address in the registry, do you want to use it?": {
+      "ru": "Мы нашли этот адрес для майнинга в реестре, хотите использовать его?",
+      "pt": "Encontramos este endereço de mineração no registro, deseja utilizá-lo?"
+    },
+    "Add new Mining Address": {
+      "ru": "Добавить другой адрес",
+      "pt": "Usar outro Endereço"
+    },
+    "CONFIRM": {
+      "ru": "ПОДТВЕРДИТЬ",
+      "pt": "CONFIRMAR"
+    },
+	  "Flag & delimiter":{
 		
-	},
-	"Value":{
+	  },
+	  "Value":{
 		
-	},
-	"Single parameters":{
+	  },
+	  "Single parameters":{
 		
-	},
-	"Double parameters":{
+	  },
+	  "Double parameters":{
 		
-	},
-	"Value part of this specific device, usually a number":{
+	  },
+	  "Value part of this specific device, usually a number":{
 		
-	},
-	"Flag and delimiter separated by a single space, for example '--exampleFlag ,'":{
+	  },
+	  "Flag and delimiter separated by a single space, for example '--exampleFlag ,'":{
 		
-	},
+	  }
   }
 } 

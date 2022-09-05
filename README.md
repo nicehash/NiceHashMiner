@@ -13,7 +13,7 @@
 
 # <a name="introduction"></a> Introduction
 
-NiceHash Miner is a continuation of NiceHash Miner Legacy. This version is intended for beginners or experienced miners that want the quickest updates and highest hashrates, and are okay with customization of the antivirus. Please check out quick [guide](https://storage.googleapis.com/public-prod-data/marketing%2FNHM%20User%20Guide2.pdf) about NiceHash Miner, so that your experience will be even better.
+NiceHash Miner is a continuation of NiceHash Miner Legacy. This version is intended for beginners or experienced miners that want the quickest updates and highest hashrates, and are okay with customization of the antivirus. Please check out quick [guide](https://www.nicehash.com/guide/nicehash-miner-user-guide) about NiceHash Miner, so that your experience will be even better.
 
 <img src="Resources/NHM_screenshot.PNG" />
 

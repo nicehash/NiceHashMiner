@@ -32,7 +32,7 @@ namespace NanoMiner
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "Nanominer is a versatile tool for mining cryptocurrencies which are based on Ethash, Ubqhash, Cuckoo Cycle (Сortex coin),RandomX (Monero), KawPow (Ravencoin) and RandomHash (PascalCoin) algorithms.",
+                PluginDescription = "Nanominer is a versatile tool for mining cryptocurrencies which are based on Etchash, Ubqhash, Cuckoo Cycle (Сortex coin),RandomX (Monero), KawPow (Ravencoin) and RandomHash (PascalCoin) algorithms.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }

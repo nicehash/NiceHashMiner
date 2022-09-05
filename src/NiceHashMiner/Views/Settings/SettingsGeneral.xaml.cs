@@ -99,8 +99,8 @@ namespace NiceHashMiner.Views.Settings
                 externalAddressHelp.Visibility = Visibility.Visible;
                 return;
             }
-            invalidBTCAddressWarningIcon.Visibility = Visibility.Collapsed;
-            externalAddressHelp.Visibility = Visibility.Collapsed;
+            if (invalidBTCAddressWarningIcon != null) invalidBTCAddressWarningIcon.Visibility = Visibility.Collapsed;
+            if (externalAddressHelp != null) externalAddressHelp.Visibility = Visibility.Collapsed;
         }
 
         private void ValidateWorkername()
