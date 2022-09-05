@@ -28,14 +28,23 @@
                          LostFocus="TextBoxBitcoinAddress_LostFocus"
                          MinWidth="344"
                          Width="Auto"
-                         >
-                </TextBox>
+                         />
+                <TextBlock Visibility="Collapsed" 
+                       Margin="8,0,0,0"
+                       x:Name="invalidBTCAddressWarningIcon" 
+                       Style="{StaticResource AlertIcon}"
+                       ToolTip="This is an external mining wallet address. We do not recommend mining to an external address."/>
             </StackPanel>
 
             <TextBlock Margin="0,8,0,0">
                     <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                         How to create a Wallet Address?
                     </Hyperlink>
+            </TextBlock>
+            <TextBlock Visibility="Collapsed" x:Name="externalAddressHelp" Margin="0,8,0,0">
+                <Hyperlink RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                    Read more about external BTC addresses here
+                </Hyperlink>
             </TextBlock>
         </WrapPanel>
         <!--WORKER-->

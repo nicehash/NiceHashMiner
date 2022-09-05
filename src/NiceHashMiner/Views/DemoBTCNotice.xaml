@@ -97,7 +97,8 @@
             <Run Text="to start earning Bitcoins." />
         </TextBlock>
 
-        <TextBox Grid.Row="3"
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBox 
                  Style="{StaticResource inputBox}"
                  x:Name="textBoxBTCAddress"
                  Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
@@ -105,8 +106,14 @@
                  KeyUp="TextBoxBitcoinAddress_KeyUp"
                  LostFocus="TextBoxBitcoinAddress_LostFocus"
                  Margin="6,8,6,0"
-                 MinWidth="322"
-                 Width="Auto" />
+                 MinWidth="250"
+                 Width="400" />
+            <TextBlock Visibility="Collapsed" 
+                       x:Name="invalidBTCAddressWarningIcon" 
+                       Style="{StaticResource AlertIcon}"
+                       ToolTip="This is an external mining wallet address. We do not recommend mining to an external address."/>
+        </StackPanel>
+
         <TextBlock Grid.Row="4"
                    TextWrapping="WrapWithOverflow"
                    TextAlignment="Left"
@@ -114,6 +121,7 @@
                    HorizontalAlignment="Left"
                    Margin="25,8,0,0">
             <Run  Text="Using any other Bitcoin wallet address will result in a higher 5% fee and infrequent payouts." />
+            <Hyperlink RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/mining-help/earnings-and-payments/can-i-get-paid-to-an-external-wallet-address?utm_source=nhm%26utm_medium=onboarding%26utm_campaign=externalWallet" >Read more here</Hyperlink>
             <LineBreak/>
             <Run Text="DEMO mode will not earn Bitcoins!" />
             <LineBreak />
