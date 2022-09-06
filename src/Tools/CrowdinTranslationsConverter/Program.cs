@@ -45,9 +45,9 @@ namespace CrowdinTranslationsConverter
 
         private void TranslationsSerializer(string path)
         {
-            var counter = 1;
+            var counter = 0;
             var crowdin = new Dictionary<string, Dictionary<string, string>>();
-            var langs = new Dictionary<string, string> { { "en", "English" }, { "ru", "Русский" }, { "bg", "Български" }, { "es", "Español" }, { "it", "Italiano" }, { "pl", "Polski" }, { "pt", "Português" }, { "ro", "Română" }, { "zh_cn", "简体中文" } };
+            var langs = new Dictionary<string, string> { { "en", "English" }, { "ru", "Русский" }, { "de", "Deutsch" }, { "fr", "Français" }, { "es", "Español" }, { "pt", "Português" }, { "jp", "日本語" }, { "zh_cn", "简体中文" }, { "si", "Slovenski" } };
 
             TranslationFile translationFile = new()
             {
@@ -67,7 +67,7 @@ namespace CrowdinTranslationsConverter
 
             foreach (var item in crowdin.Values.First())
             {
-                var translationKey = "translation_" + counter;
+                var translationKey = "k_" + counter.ToString().PadLeft(3, '0');
                 var englishKey = crowdin["en"][translationKey];
                 translationFile.Translations.Add(englishKey, new Dictionary<string, string>());
 
@@ -84,7 +84,8 @@ namespace CrowdinTranslationsConverter
         }
         static async Task Main(string[] args)
         {
-
+            var p = new Program();
+            p.TranslationsSerializer(@"C:\Programming\nicehash\NiceHashMiner\src\Tools\CrowdinTranslationsConverter");
         }
     }
 }
