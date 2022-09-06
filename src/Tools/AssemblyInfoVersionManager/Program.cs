@@ -15,9 +15,9 @@ namespace AssemblyInfoVersionManager
         static void DisplayHelp()
         {
             var helpStr = "Help:\n";
-            helpStr += "\t--help, -h         -> HELP\n";
-            helpStr += "\t--next, -n         -> Increments next minor version\n";
-            helpStr += "\t--set, -s -> Custom version in format \"INT.INT.INT.INT\" without brackets\n";
+            helpStr += "\t--help, -h          -> HELP (this text)\n";
+            helpStr += "\t--next, -n          -> Increments next revision version\n";
+            helpStr += "\t--set, -s <VERSION> -> Custom version in format \"INT.INT.INT.INT\" without brackets\n";
             Console.WriteLine(helpStr);
         }
         static (bool ok, string[] files) ScanAssemblyInfoFiles(string path, string pattern, Regex versionRegex)

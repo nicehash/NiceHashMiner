@@ -18,7 +18,7 @@
         xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
         mc:Ignorable="d"
         Title="MainWindowNew2" Height="600" Width="800"
-        MinHeight="500" MinWidth="540"
+        MinHeight="500" MinWidth="680"
         ResizeMode="CanResize"
         WindowStyle="None"
         AllowsTransparency="False"

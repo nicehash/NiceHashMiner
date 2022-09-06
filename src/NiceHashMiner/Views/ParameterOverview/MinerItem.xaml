@@ -183,14 +183,15 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" Margin="24,0,0,0" Grid.Column="0" >
+                        <StackPanel Orientation="Horizontal" Margin="24,0,0,0" Grid.Column="1" >
                             <TextBlock LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
                             <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="-21,0,0,0" Grid.Column="1">
+                        <StackPanel Orientation="Horizontal" Margin="-21,0,0,0" Grid.Column="2">
                             <TextBlock  LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
                             <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
                         </StackPanel>
