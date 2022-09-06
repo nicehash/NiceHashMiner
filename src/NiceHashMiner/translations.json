@@ -6210,6 +6210,46 @@
       "jp": "{0}：ファイル {1} が見つかりません！\n\nファイルがアクセス可能であること、アンチウィルスソフトがアプリケーションをブロックしていないことを確認してください。\nトラブルシューティングセクション ({2}) の「アンチウイルスソフトがアプリケーションをブロックしている」を参照してください。\n\n{3} の再ダウンロードが必要な場合があります。",
       "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载{3}。",
       "si": "{0}: Datoteke {1} ni mogoče najti!\n\nPrepričajte se, da je datoteka dostopna in da vaš protivirusni program ne blokira aplikacije.\nOglejte si razdelek »Moj protivirusni program blokira aplikacijo« v razdelku Odpravljanje težav ({2}).\n\nMorda bo potreben ponovni prenos {3}."
+    },
+    "NiceHashQuickMiner Mining Address Detected":{
+      "ru": "Обнаружен адрес для майнинга NiceHashQuickMiner",
+      "de": "NiceHashQuickMiner Mining-Adresse wurde erkannt",
+      "fr": "NiceHashQuickMiner Adresse de minage détectée",
+      "es": "Endereço de Mineração do NiceHash QuickMiner Detetado",
+      "pt": "NiceHashQuickMiner Endereço de Mineração Detectado",
+      "jp": "NiceHashQuickMinerのマイニングアドレスが検出されました",
+      "zh_cn": "识别到NiceHashQuickMiner挖矿地址",
+      "si": "NiceHash QuickMiner Rudarski Naslov Zaznan"
+    },
+    "We found this mining address in the registry, do you want to use it?":{
+      "ru": "Мы нашли этот адрес для майнинга в реестре, хотите использовать его?",
+      "de": "Wir haben diese Mining-Adresse in der Registrierung gefunden, möchten Sie sie verwenden?",
+      "fr": "Nous avons trouvé cette adresse de minage dans le registre, voulez-vous l'utiliser?",
+      "es": "Encontrámos este endereço de mineração no registo, deseja utilizá-lo?",
+      "pt": "Encontramos este endereço de mineração no registro, quer usá-lo?",
+      "jp": "レジストリに保存されていたアドレスを検出しました。このアドレスを使いますか？",
+      "zh_cn": "该挖矿地址已注册，是否要继续使用？",
+      "si": "V registru smo našli ta naslov, ga želite uporabiti?"
+    },
+    "Add new Mining Address":{
+      "ru": "Добавить новый адрес для майнинга",
+      "de": "Neue Mining-Adresse hinzufügen",
+      "fr": "Ajouter une nouvelle adresse de minage",
+      "es": "Adicionar novo Endereço de Mineração",
+      "pt": "Adicione um novo Endereço de Mineração",
+      "jp": "新しいマイニングアドレスを追加",
+      "zh_cn": "添加新的挖矿地址",
+      "si": "Dodaj novi naslov"
+    },
+    "CONFIRM":{
+      "ru": "ПОДТВЕРДИТЬ",
+      "de": "BESTÄTIGEN",
+      "fr": "CONFIRMER",
+      "es": "CONFIRMAR",
+      "pt": "CONFIRMAR",
+      "jp": "確認",
+      "zh_cn": "确认",
+      "si": "POTRDI"
     }
   }
 }
