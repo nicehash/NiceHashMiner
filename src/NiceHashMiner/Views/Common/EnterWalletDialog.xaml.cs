@@ -28,8 +28,16 @@ namespace NiceHashMiner.Views.Common
             SaveButton.IsEnabled = btcOK;
             if (btcOK)
             {
+                if (!CredentialValidators.ValidateInternalBitcoinAddress(trimmedBtcText))
+                {
+                    textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxBad") as Style;
+                    textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
+                    invalidBTCAddressWarningIcon.Visibility = Visibility.Visible;
+                    return;
+                }
                 textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
                 textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+                invalidBTCAddressWarningIcon.Visibility = Visibility.Collapsed;
             }
             else
             {
