@@ -84,14 +84,20 @@
                    HorizontalAlignment="Left"
                    Margin="25,8,0,0"
                    Text="Mining Address"/>
-                <TextBox Grid.Row="3"
-                 Style="{StaticResource inputBox}"
-                 x:Name="textBoxBTCAddress"
-                 Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
-                 TextChanged="TextBoxBitcoinAddress_TextChanged"
-                 KeyUp="TextBoxBitcoinAddress_KeyUp"
-                 LostFocus="TextBoxBitcoinAddress_LostFocus"
-                 Margin="0,8,0,0" />
+                <StackPanel HorizontalAlignment="Center" Grid.Row="3" Orientation="Horizontal">
+                    <TextBox Style="{StaticResource inputBox}"
+                             x:Name="textBoxBTCAddress"
+                             Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
+                             TextChanged="TextBoxBitcoinAddress_TextChanged"
+                             KeyUp="TextBoxBitcoinAddress_KeyUp"
+                             LostFocus="TextBoxBitcoinAddress_LostFocus"
+                             Margin="0,8,0,0"
+                             MaxWidth="310"/>
+                    <TextBlock Visibility="Collapsed" 
+                       x:Name="invalidBTCAddressWarningIcon" 
+                       Style="{StaticResource AlertIcon}"
+                       ToolTip="This is an external mining wallet address. We do not recommend mining to an external address."/>
+                </StackPanel>
                 <TextBlock Grid.Row="4"
                    Margin="25,8,0,0">
                     <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">

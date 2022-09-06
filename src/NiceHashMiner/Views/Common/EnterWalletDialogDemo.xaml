@@ -96,32 +96,38 @@
                    HorizontalAlignment="Left"
                    Margin="25,8,0,0"
                    Text="NiceHash Mining Address"/>
-                <TextBox Grid.Row="4"
-                 Style="{StaticResource inputBox}"
-                 x:Name="textBoxBTCAddress"
-                 Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
-                 TextChanged="TextBoxBitcoinAddress_TextChanged"
-                 KeyUp="TextBoxBitcoinAddress_KeyUp"
-                 LostFocus="TextBoxBitcoinAddress_LostFocus"
-                 Margin="0,8,0,0" />
+                <StackPanel HorizontalAlignment="Center" Grid.Row="4" Orientation="Horizontal">
+                    <TextBox Style="{StaticResource inputBox}"
+                             x:Name="textBoxBTCAddress"
+                             Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
+                             TextChanged="TextBoxBitcoinAddress_TextChanged"
+                             KeyUp="TextBoxBitcoinAddress_KeyUp"
+                             LostFocus="TextBoxBitcoinAddress_LostFocus"
+                             Margin="0,8,0,0"
+                             MaxWidth="310"/>
+                    <TextBlock Visibility="Collapsed" 
+                       x:Name="invalidBTCAddressWarningIcon" 
+                       Style="{StaticResource AlertIcon}"
+                       ToolTip="This is an external mining wallet address. We do not recommend mining to an external address."/>
+                </StackPanel>
                 <TextBlock Grid.Row="5"
-                   Margin="25,8,0,0">
-            <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
-                How to create a Mining Address?
-            </Hyperlink>
+                    Margin="25,8,0,0">
+                    <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                        How to create a Mining Address?
+                    </Hyperlink>
                 </TextBlock>
                 <Button Grid.Row="6"
-                x:Name="SaveButton"
-                Style="{DynamicResource OKButton}"
-                FontSize="10"
-                Width="136"
-                Height="24"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Right"
-                Content="SAVE"
-                IsEnabled="False"
-                Click="SaveButtonClicked"
-                Margin="25,24,24,24"/>
+                    x:Name="SaveButton"
+                    Style="{DynamicResource OKButton}"
+                    FontSize="10"
+                    Width="136"
+                    Height="24"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    Content="SAVE"
+                    IsEnabled="False"
+                    Click="SaveButtonClicked"
+                    Margin="25,24,24,24"/>
             </Grid>
         </Border>
     </Grid>
