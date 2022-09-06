@@ -141,7 +141,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <WrapPanel  HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
-                        <TextBlock MinWidth="100" MaxHeight="40" Style="{DynamicResource local.TextBoxCol}" Text="{Binding Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                        <TextBlock Width="100" MaxHeight="40" Style="{DynamicResource local.TextBoxCol}" Text="{Binding Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
                     </WrapPanel>
                     <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
