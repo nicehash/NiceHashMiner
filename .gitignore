@@ -295,6 +295,7 @@ installer/*.zip
 installer/*.exe
 !installer/EULA.zip
 installer/miner_plugins/*
+installer/version_manager/
 
 # pre_compiled_libs
 !pre_compiled_libs/device_detection_x64/device_detection.exe
