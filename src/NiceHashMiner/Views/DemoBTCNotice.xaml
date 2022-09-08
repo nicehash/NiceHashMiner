@@ -123,6 +123,7 @@
             <Run  Text="Using any other Bitcoin wallet address will result in a higher 5% fee and infrequent payouts." />
             <Hyperlink RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/mining-help/earnings-and-payments/can-i-get-paid-to-an-external-wallet-address?utm_source=nhm%26utm_medium=onboarding%26utm_campaign=externalWallet" >Read more here</Hyperlink>
             <LineBreak/>
+            <LineBreak />
             <Run Text="DEMO mode will not earn Bitcoins!" />
             <LineBreak />
             <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">

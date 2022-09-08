@@ -20,7 +20,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.ZelHash),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  4UL << 30 }
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) }
                     };
         }
 
@@ -61,7 +61,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.ZelHash),
-                        new SAS(AlgorithmType.EtcHash){NonDefaultRAMLimit =  4UL << 30 }
+                        new SAS(AlgorithmType.EtcHash){NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) }
                     }
                 },
                 {
