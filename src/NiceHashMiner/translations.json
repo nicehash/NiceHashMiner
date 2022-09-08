@@ -5521,14 +5521,14 @@
       "zh_cn": "When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only).",
       "si": "Kadar je ta opcija Vključena, NiceHash Miner ne bo poskušal spreminjati nastavitev načina napajanja naprave (trenutno samo NVIDIA)."
     },
-    "When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {
+    "When checked, NiceHash Miner will not retrieve CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {
       "ru": "Если отмечено, NiceHash Miner не будет возвращать статус устройств AMD, NVIDIA и процессоров (температуру, нагрузку, скорость вращения вентиляторов и потребление мощности).",
       "de": "Wenn diese Option aktiviert ist, ruft der NiceHash Miner den CPU-, AMD- und NVIDIA-Gerätestatus (Temperatur, Last, Lüftergeschwindigkeit und Stromverbrauch) nicht ab.",
       "fr": "Lorsqu'il est coché, NiceHash Miner ne récupère pas le CPU, État des appareils AMD et NVIDIA (Température, Charge, Vitesse du Ventilateur et Consommation d'énergie).",
       "es": "Cuando está marcada, NiceHash Miner no recupera el estado de la CPU, de los dispositivos AMD y NVIDIA (temperatura, carga, velocidad del ventilador y uso de la energía).",
       "pt": "Quando selecionado, o NiceHash Miner não irá ler os estado dos dispositivos como CPU, AMD e NVIDIA (Temperatura, Carga, Velocidade do Ventilador e Uso de Energia).",
       "jp": "これにチェックを入れると、NiceHash MinerはCPU・AMD・NVIDIAデバイス状態 (温度、負荷、ファンスピード、電力使用量) を再取得しません。",
-      "zh_cn": "When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).",
+      "zh_cn": "When checked, NiceHash Miner will not retrieve CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).",
       "si": "Kadar je ta opcija Vključena, NiceHash Miner ne bo poizkušal pridobiti stanja naprav CPU, AMD in NVIDIA (temperatura, obremenitev, hitrost ventilatorja in poraba energije)."
     },
     "When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost, by default script should restart whole system.": {

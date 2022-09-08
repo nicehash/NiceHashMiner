@@ -28,7 +28,7 @@
     <system:String x:Key="pcieBusIDs">When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.</system:String>
     <system:String x:Key="checkForMissingGPUs">Check this setting if you would like NiceHash Miner to check for missing GPUs every 5 minutes.</system:String>
     <system:String x:Key="runOnGPUsLost">Check this setting if you would like to run 'OnGPUsLost.bat' script when GPU is lost. By default the script restarts Windows. Users can modify the script for custom behaviour.</system:String>
-    <system:String x:Key="disableDeviceStatus">When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).</system:String>
+    <system:String x:Key="disableDeviceStatus">When checked, NiceHash Miner will not retrieve CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).</system:String>
     <system:String x:Key="disableDevicePowerMode">When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only).</system:String>
     <system:String x:Key="logToFile">Check it, to log console output to file.</system:String>
     <system:String x:Key="debugConsole">When checked, it displays debug console.</system:String>
@@ -62,6 +62,6 @@
     <system:String x:Key="Tooltip.IdleMining.MinIdleSeconds">When StartMiningWhenIdle is checked, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.</system:String>
     <system:String x:Key="Tooltip.DisableVisualCRedistributableCheck">NiceHash Miner will disable Visual Studio C++ Redistributable checking.</system:String>
     <system:String x:Key="textAboutNH">By running the NiceHash Miner or NHM (in short) you are connecting your PC or a mining rig to NiceHash hash-power marketplace. NiceHash Miner enables you to rent out the computing power of your machine and in return, you earn bitcoins. To learn more about how NiceHash works,</system:String>
-    <system:String x:Key="advancedMode">This setting enables more advanced settings and allows users to have more control over NHM via more settings</system:String>
+    <system:String x:Key="advancedMode">This setting enables more advanced settings and allows users to have more control over NHM with more settings</system:String>
 
 </ResourceDictionary>
