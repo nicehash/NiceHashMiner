@@ -19,7 +19,7 @@ namespace NanoMiner
                         new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.Autolykos),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  4UL << 30 }
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit = (4UL << 29) + (5UL << 28) + (1UL << 26) }
                     }
                 },
                 {
@@ -30,7 +30,7 @@ namespace NanoMiner
                         new SAS(AlgorithmType.Octopus),
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.Autolykos),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  4UL << 30 }
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) }
                     }
                 }
             },
