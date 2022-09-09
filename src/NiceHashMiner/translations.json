@@ -5931,7 +5931,7 @@
       "zh_cn": "Your program will be restarted in order to completely change the theme of NiceHash Miner.",
       "si": "Vaš program bo ponovno zagnan, kar bo omogočilo popolno spremembo teme NiceHash Miner."
     },
-    "_Precise (will take longer)": {
+    "Precise (will take longer)": {
       "ru": "_Точный (долгий)",
       "de": "_Präzise (dauert länger)",
       "fr": "_Précis (cela prendra plus de temps)",
@@ -5941,7 +5941,7 @@
       "zh_cn": "精确（较慢）(_P)",
       "si": "_Natančno (lahko traja dlje)"
     },
-    "_Quick (can be inaccurate)": {
+    "Quick (can be inaccurate)": {
       "ru": "_Быстрый (неточный)",
       "de": "_Schnell (kann ungenau sein)",
       "fr": "_Rapide (peut être imprécis)",
@@ -5951,7 +5951,7 @@
       "zh_cn": "快速（可能较不精确）(_Q)",
       "si": "_Hitro (rezulatati so lahko netočni)"
     },
-    "_Reset": {
+    "Reset": {
       "ru": "Сбр_осить",
       "de": "_Zurücksetzen",
       "fr": "_Réinitialiser",
@@ -5961,7 +5961,7 @@
       "zh_cn": "重置 (_R)",
       "si": "_Reset"
     },
-    "_Retry": {
+    "Retry": {
       "ru": "_Повторить",
       "de": "_Wiederholen",
       "fr": "_Réessayez",
@@ -5971,7 +5971,7 @@
       "zh_cn": "重试 (_R)",
       "si": "_Pizkusi ponovno"
     },
-    "_Save and Close": {
+    "Save and Close": {
       "ru": "_Сохранить и выйти",
       "de": "_Speichern und Schließen",
       "fr": "_Enregistrer et Fermer",
@@ -5981,7 +5981,7 @@
       "zh_cn": "保存并关闭 (_S)",
       "si": "_Shrani in Zapri"
     },
-    "_Standard": {
+    "Standard": {
       "ru": "Ст_андартный",
       "de": "_Standard",
       "fr": "_Standard",
@@ -5991,7 +5991,7 @@
       "zh_cn": "普通 (_S)",
       "si": "_Standardno"
     },
-    "_Start All": {
+    "Start All": {
       "ru": "_Запустить все",
       "de": "_Alles starten",
       "fr": "_Démarrer Tout",
@@ -6001,7 +6001,7 @@
       "zh_cn": "_Start All",
       "si": "_Zaženi Vse"
     },
-    "_Stop All": {
+    "Stop All": {
       "ru": "_Остановить все",
       "de": "_Alles stoppen",
       "fr": "_Arrête Tout",
@@ -6250,6 +6250,102 @@
       "jp": "確認",
       "zh_cn": "确认",
       "si": "POTRDI"
+    },
+    "How to create a Wallet Address?":{
+
+    },
+    "For experts":{
+
+    },
+    "Advanced mode":{
+
+    },
+    "This setting enables more advanced settings and allows users to have more control over NHM with more settings":{
+
+    },
+    "Check every 5 minutes for missing GPUs":{
+
+    },
+    "Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)":{
+
+    },
+    "Pause mining when Steam game is started":{
+    
+    },
+    "NiceHash Miner will detect when the game is started and will pause mining. Once the game is closed, mining will resume.":{
+
+    },
+    "Resolve NiceHash domains to IPs via Cloudflare":{
+
+    },
+    "This will resolve NiceHash domains to IPs via Cloudflare in case of DNS sinkholing.":{
+
+    },
+    "Enable SSL Mining":{
+
+    },
+    "This will enable SSL mining for miner plugins that have SSL mining support. Some miner plugins might not have this feature implemented.":{
+      
+    },
+    "Scheduler":{
+
+    },
+    "Use Scheduler":{
+
+    },
+    "NiceHash Miner will be mining only inside selected time slots.":{
+
+    },
+    "Schedule Slots":{
+
+    },
+    "No slots yet.":{
+
+    },
+    "Add new Slot":{
+      
+    },
+    "From":{
+
+    },
+    "To":{
+
+    },
+    "Days":{
+
+    },
+    "Mon":{
+
+    },
+    "Tue":{
+
+    },
+    "Wed":{
+
+    },
+    "Thu":{
+
+    },
+    "Fri":{
+
+    },
+    "Sat":{
+
+    },
+    "Sun":{
+
+    },
+    "ADD NEW TIME SLOT":{
+
+    },
+    "Uptime:":{
+
+    },
+    "NiceHash Miner Version:":{
+
+    },
+    "Online NiceHash Miner Version:":{
+      
     }
   }
 }

@@ -14,7 +14,7 @@ namespace CrowdinTranslationsConverter
         {
             var crowdin = new Dictionary<string, Dictionary<string, string>>();
 
-            var counter = 1;
+            var counter = 0;
             var data = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(path + @"\translations.json"));
 
             foreach (var lang in data.Languages.Keys)
@@ -32,7 +32,7 @@ namespace CrowdinTranslationsConverter
                 foreach (var langKey in crowdin.Keys)
                 {
                     var translation = translations.ContainsKey(langKey) ? translations[langKey] : "";
-                    crowdin[langKey].Add("translation_" + counter, translation);
+                    crowdin[langKey].Add("k_" + counter.ToString().PadLeft(3, '0'), translation);
                 }
                 counter++;
             }
@@ -85,7 +85,7 @@ namespace CrowdinTranslationsConverter
         static async Task Main(string[] args)
         {
             var p = new Program();
-            p.TranslationsSerializer(@"C:\Programming\nicehash\NiceHashMiner\src\Tools\CrowdinTranslationsConverter");
+            p.TranslationsDeserializer(@"C:\Programming\nicehash\NiceHashMiner\src\Tools\CrowdinTranslationsConverter");
         }
     }
 }
