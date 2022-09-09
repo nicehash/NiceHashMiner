@@ -14,7 +14,7 @@ namespace CrowdinTranslationsConverter
         {
             var crowdin = new Dictionary<string, Dictionary<string, string>>();
 
-            var counter = 0;
+            var counter = 1;
             var data = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(path + @"\translations.json"));
 
             foreach (var lang in data.Languages.Keys)
