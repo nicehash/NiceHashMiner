@@ -150,7 +150,7 @@ namespace NhmPackager
                 // nhm_windows_1.9.2.18_testnetdev.zip
                 // nhm_windows_1.9.2.18_testnet.zip
                 // TODO create these settings instead of copying them
-                var buildSettings = new List<BuildTag> { BuildTag.PRODUCTION, BuildTag.TESTNET, BuildTag.TESTNETDEV };
+                var buildSettings = new List<BuildTag> { BuildTag.TESTNETDEV, BuildTag.TESTNET, BuildTag.PRODUCTION };
                 foreach (var build in buildSettings)
                 {
                     DeletePathIfExists(GetTemporaryWorkFolder("Release", "build_settings.json"));

@@ -101,6 +101,14 @@ namespace NHMCore.Configs
             }
             else
             {
+                var fromFileInfo = InternalConfigs.ReadFileSettings<GeneralConfigOld>(GeneralConfigPath);
+                if(fromFileInfo != null)
+                {
+                    GeneralConfig.SetValues(fromFileInfo);
+                    GeneralConfig.FixSettingBounds();
+                    GeneralConfig.PropertyChanged += BalanceAndExchangeRates.Instance.GeneralConfig_PropertyChanged;
+                }
+                
                 GeneralConfigFileCommit();
             }
         }

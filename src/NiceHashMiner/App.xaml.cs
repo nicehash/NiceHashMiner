@@ -83,8 +83,6 @@ namespace NiceHashMiner
             var isDevelop = Environment.GetCommandLineArgs().Contains("-dev");
             var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
             var launcherPID = ParseLauncherPID();
-            Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
-            Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
             Launcher.SetIsLauncher(isLauncher);
 
             var (ok, rootPath, appRootPath) = GetPaths(isLauncher, isDevelop);

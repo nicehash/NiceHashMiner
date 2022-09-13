@@ -41,6 +41,9 @@ namespace NHMCore
         {
             try
             {
+                Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
+                Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
+
                 var allSteps = 14;
                 var currentStep = 0;
                 int nextProgPerc()
