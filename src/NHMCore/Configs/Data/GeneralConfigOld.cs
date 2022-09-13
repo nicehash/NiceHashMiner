@@ -1,17 +1,20 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
 using NHM.Common.Enums;
 using NHMCore.Switching;
-using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Reflection;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace NHMCore.Configs.Data
 {
     [Serializable]
-    public class GeneralConfig : NotifyChangedBase
+    public class GeneralConfigOld
     {
+        [JsonIgnore]
         public Version ConfigFileVersion;
 
         #region CredentialsSettings
@@ -74,21 +77,10 @@ namespace NHMCore.Configs.Data
             set => MiningSettings.Instance.DeviceToPauseUuid = value;
         }
 
-        public bool UseScheduler
-        {
-            get => MiningSettings.Instance.UseScheduler;
-            set => MiningSettings.Instance.UseScheduler = value;
-        }
-
         public bool EnableSSLMining
         {
             get => MiningSettings.Instance.EnableSSLMining;
             set => MiningSettings.Instance.EnableSSLMining = value;
-        }
-        public bool AdvancedMode
-        {
-            get => MiscSettings.Instance.AdvancedMode;
-            set => MiscSettings.Instance.AdvancedMode = value;
         }
         #endregion MiningSettings
 
@@ -353,205 +345,5 @@ namespace NHMCore.Configs.Data
         }
         #endregion UpdateSettings
 
-        // methods
-        public void SetDefaults()
-        {
-            ConfigFileVersion = new Version(NHMApplication.ProductVersion);
-            BitcoinAddress = "";
-            WorkerName = "worker1";
-            RigGroup = "";
-            Language = "";
-            TimeUnit = TimeUnitType.Day;
-            AutoStartMining = false;
-            //LessThreads = 0;
-            DebugConsole = false;
-            HideMiningWindows = false;
-            MinimizeMiningWindows = false;
-            MinimizeToTray = false;
-            AutoScaleBTCValues = true;
-            StartMiningWhenIdle = false;
-            LogToFile = true;
-            LogMaxFileSize = 1048576;
-            ShowDriverVersionWarning = true;
-            DisableWindowsErrorReporting = true;
-            ShowInternetConnectionWarning = true;
-            PauseMiningWhenGamingMode = false;
-            DeviceToPauseUuid = "";
-            UseScheduler = false;
-            EnableSSLMining = false;
-            MinerAPIQueryInterval = 5;
-            MinerRestartDelayMS = 500;
-            SwitchProfitabilityThreshold = 0.02; // percent
-            MinIdleSeconds = 60;
-            DisplayCurrency = "USD";
-            ApiBindPortPoolStart = 4000;
-            MinimumProfit = 0;
-            IdleWhenNoInternetAccess = true;
-            IdleCheckType = IdleCheckType.SessionLock;
-            AllowMultipleInstances = false;
-            UseIFTTT = false;
-            IFTTTKey = "";
-            CoolDownCheckEnabled = true;
-            CheckForMissingGPUs = false;
-            RestartMachineOnLostGPU = false;
-            SwitchSmaTimeChangeSeconds = new Interval(34, 55);
-            SwitchSmaTicksStable = new Interval(2, 3);
-            SwitchSmaTicksUnstable = new Interval(5, 13);
-            ShowPowerColumns = false;
-            ShowDiagColumns = true;
-            UseOptimizationProfiles = false;
-            Hwid = "";
-            KwhPrice = 0;
-            DisplayPureProfit = false;
-            DisplayTheme = "Light";
-            ShowGPUPCIeBusIDs = false;
-            ShowNotifications = new Dictionary<string, bool>();
-
-            ResolveNiceHashDomainsToIPs = true;
-
-            RunAtStartup = false;
-            GUIWindowsAlwaysOnTop = false;
-            DisableDeviceStatusMonitoring = false;
-            DisableDevicePowerModeSettings = true;
-            MineRegardlessOfProfit = true;
-
-            AutoUpdateNiceHashMiner2 = false;
-            AutoUpdateMinerPlugins = true;
-            AdvancedMode = false;
-        }
-
-        public void SetValues(GeneralConfigOld configOld)
-        {
-            ConfigFileVersion = new Version(NHMApplication.ProductVersion);
-            BitcoinAddress = configOld.BitcoinAddress;
-            WorkerName = configOld.WorkerName;
-            RigGroup = configOld.RigGroup;
-            Language = configOld.Language;
-            TimeUnit = configOld.TimeUnit;
-            AutoStartMining = configOld.AutoStartMining;
-            //LessThreads = 0;
-            DebugConsole = configOld.DebugConsole;
-            HideMiningWindows = configOld.HideMiningWindows;
-            MinimizeMiningWindows = configOld.MinimizeMiningWindows;
-            MinimizeToTray = configOld.MinimizeToTray;
-            AutoScaleBTCValues = configOld.AutoScaleBTCValues;
-            StartMiningWhenIdle = configOld.StartMiningWhenIdle;
-            LogToFile = configOld.LogToFile;
-            LogMaxFileSize = configOld.LogMaxFileSize;
-            ShowDriverVersionWarning = configOld.ShowDriverVersionWarning;
-            DisableWindowsErrorReporting = configOld.DisableWindowsErrorReporting;
-            ShowInternetConnectionWarning = configOld.ShowInternetConnectionWarning;
-            PauseMiningWhenGamingMode = configOld.PauseMiningWhenGamingMode;
-            DeviceToPauseUuid = configOld.DeviceToPauseUuid;
-            UseScheduler = false;
-            EnableSSLMining = configOld.EnableSSLMining;
-            MinerAPIQueryInterval = configOld.MinerAPIQueryInterval;
-            MinerRestartDelayMS = configOld.MinerRestartDelayMS;
-            SwitchProfitabilityThreshold = configOld.SwitchProfitabilityThreshold;
-            MinIdleSeconds = configOld.MinIdleSeconds;
-            DisplayCurrency = configOld.DisplayCurrency;
-            ApiBindPortPoolStart = configOld.ApiBindPortPoolStart;
-            MinimumProfit = configOld.MinimumProfit;
-            IdleWhenNoInternetAccess = configOld.IdleWhenNoInternetAccess;
-            IdleCheckType = configOld.IdleCheckType;
-            AllowMultipleInstances = configOld.AllowMultipleInstances;
-            UseIFTTT = configOld.UseIFTTT;
-            IFTTTKey = configOld.IFTTTKey;
-            CoolDownCheckEnabled = configOld.CoolDownCheckEnabled;
-            CheckForMissingGPUs = configOld.CheckForMissingGPUs;
-            RestartMachineOnLostGPU = configOld.RestartMachineOnLostGPU;
-            SwitchSmaTimeChangeSeconds = configOld.SwitchSmaTimeChangeSeconds;
-            SwitchSmaTicksStable = configOld.SwitchSmaTicksStable;
-            SwitchSmaTicksUnstable = configOld.SwitchSmaTicksUnstable;
-            ShowPowerColumns = configOld.ShowPowerColumns;
-            ShowDiagColumns = configOld.ShowDiagColumns;
-            UseOptimizationProfiles = configOld.UseOptimizationProfiles;
-            Hwid = configOld.Hwid;
-            KwhPrice = configOld.KwhPrice;
-            DisplayPureProfit = configOld.DisplayPureProfit;
-            DisplayTheme = configOld.DisplayTheme;
-            ShowGPUPCIeBusIDs = configOld.ShowGPUPCIeBusIDs;
-            ShowNotifications = configOld.ShowNotifications;
-
-            ResolveNiceHashDomainsToIPs = configOld.ResolveNiceHashDomainsToIPs;
-
-            RunAtStartup = configOld.RunAtStartup;
-            GUIWindowsAlwaysOnTop = configOld.GUIWindowsAlwaysOnTop;
-            DisableDeviceStatusMonitoring = configOld.DisableDeviceStatusMonitoring;
-            DisableDevicePowerModeSettings = configOld.DisableDevicePowerModeSettings;
-            MineRegardlessOfProfit = configOld.MineRegardlessOfProfit;
-
-            AutoUpdateNiceHashMiner2 = configOld.AutoUpdateNiceHashMiner2;
-            AutoUpdateMinerPlugins = configOld.AutoUpdateMinerPlugins;
-            AdvancedMode = false;
-        }
-
-        public void FixSettingBounds()
-        {
-            ConfigFileVersion = new Version(NHMApplication.ProductVersion);
-            if (string.IsNullOrEmpty(DisplayCurrency)
-                || string.IsNullOrWhiteSpace(DisplayCurrency))
-            {
-                DisplayCurrency = "USD";
-            }
-            if (CredentialValidators.ValidateBitcoinAddress(BitcoinAddress) == false)
-            {
-                BitcoinAddress = "";
-            }
-            if (CredentialValidators.ValidateWorkerName(WorkerName) == false)
-            {
-                WorkerName = "worker1";
-            }
-            if (MinerAPIQueryInterval <= 0)
-            {
-                MinerAPIQueryInterval = 5;
-            }
-            if (MinerRestartDelayMS <= 0)
-            {
-                MinerRestartDelayMS = 500;
-            }
-            if (MinIdleSeconds <= 0)
-            {
-                MinIdleSeconds = 60;
-            }
-            if (LogMaxFileSize <= 0)
-            {
-                LogMaxFileSize = 1048576;
-            }
-            // check port start number, leave about 2000 ports pool size, huge yea!
-            if (ApiBindPortPoolStart > (65535 - 2000))
-            {
-                ApiBindPortPoolStart = 5100;
-            }
-
-            if (KwhPrice < 0)
-            {
-                KwhPrice = 0;
-            }
-            // for backward compatibility fix the new setting to language codes
-            var langCodes = new Dictionary<string, string> {
-                { "0", "en" },
-                { "1", "ru" },
-                { "2", "es" },
-                { "3", "pt" },
-                { "4", "bg" },
-                { "5", "it" },
-                { "6", "pl" },
-                { "7", "zh_cn" },
-                { "8", "ro" },
-            };
-            if (Language == null)
-            {
-                Language = "en";
-            }
-            else if (langCodes.ContainsKey(Language))
-            {
-                Language = langCodes[Language];
-            }
-
-            SwitchSmaTimeChangeSeconds.FixRange();
-            SwitchSmaTicksStable.FixRange();
-            SwitchSmaTicksUnstable.FixRange();
-        }
     }
 }
