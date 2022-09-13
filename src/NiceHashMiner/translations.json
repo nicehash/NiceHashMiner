@@ -6211,7 +6211,7 @@
       "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载{3}。",
       "si": "{0}: Datoteke {1} ni mogoče najti!\n\nPrepričajte se, da je datoteka dostopna in da vaš protivirusni program ne blokira aplikacije.\nOglejte si razdelek »Moj protivirusni program blokira aplikacijo« v razdelku Odpravljanje težav ({2}).\n\nMorda bo potreben ponovni prenos {3}."
     },
-    "NiceHashQuickMiner Mining Address Detected":{
+    "NiceHashQuickMiner Mining Address Detected": {
       "ru": "Обнаружен адрес для майнинга NiceHashQuickMiner",
       "de": "NiceHashQuickMiner Mining-Adresse wurde erkannt",
       "fr": "NiceHashQuickMiner Adresse de minage détectée",
@@ -6221,7 +6221,7 @@
       "zh_cn": "识别到NiceHashQuickMiner挖矿地址",
       "si": "NiceHash QuickMiner Rudarski Naslov Zaznan"
     },
-    "We found this mining address in the registry, do you want to use it?":{
+    "We found this mining address in the registry, do you want to use it?": {
       "ru": "Мы нашли этот адрес для майнинга в реестре, хотите использовать его?",
       "de": "Wir haben diese Mining-Adresse in der Registrierung gefunden, möchten Sie sie verwenden?",
       "fr": "Nous avons trouvé cette adresse de minage dans le registre, voulez-vous l'utiliser?",
@@ -6231,7 +6231,7 @@
       "zh_cn": "该挖矿地址已注册，是否要继续使用？",
       "si": "V registru smo našli ta naslov, ga želite uporabiti?"
     },
-    "Add new Mining Address":{
+    "Add new Mining Address": {
       "ru": "Добавить новый адрес для майнинга",
       "de": "Neue Mining-Adresse hinzufügen",
       "fr": "Ajouter une nouvelle adresse de minage",
@@ -6241,7 +6241,7 @@
       "zh_cn": "添加新的挖矿地址",
       "si": "Dodaj novi naslov"
     },
-    "CONFIRM":{
+    "CONFIRM": {
       "ru": "ПОДТВЕРДИТЬ",
       "de": "BESTÄTIGEN",
       "fr": "CONFIRMER",
@@ -6251,101 +6251,325 @@
       "zh_cn": "确认",
       "si": "POTRDI"
     },
-    "How to create a Wallet Address?":{
-
+    "How to create a Wallet Address?": {
+      "ru": "Как создать адрес кошелька?",
+      "de": "Wie erstellt man eine Geldbörsen-Adresse?",
+      "fr": "Comment créer une Adresse de Portefeuille?",
+      "es": "¿Cómo crear una dirección de billetera?",
+      "pt": "Como criar um Endereço de Carteira?",
+      "jp": "ウォレットアドレスの作り方",
+      "zh_cn": "如何创建一个钱包地址?",
+      "si": "Kako ustvariti novo Denarnico?"
     },
-    "For experts":{
-
+    "For experts": {
+      "ru": "Для экспертов",
+      "de": "Für Experten",
+      "fr": "Pour experts",
+      "es": "Para expertos",
+      "pt": "Para utilizadores experientes",
+      "jp": "例えば",
+      "zh_cn": "面向专家",
+      "si": "Za strokovnjake"
     },
-    "Advanced mode":{
-
+    "Advanced mode": {
+      "ru": "Продвинутый режим",
+      "de": "Fortgeschrittener Modus",
+      "fr": "Mode avancé",
+      "es": "Modo avanzado",
+      "pt": "Modo avançado",
+      "jp": "アドバンスモード",
+      "zh_cn": "进阶模式",
+      "si": "Napreden način"
     },
-    "This setting enables more advanced settings and allows users to have more control over NHM with more settings":{
-
+    "This setting enables more advanced settings and allows users to have more control over NHM with more settings": {
+      "ru": "Этот параметр включает дополнительные настройки и позволяет пользователям лучше контролировать NHM",
+      "de": "Diese Einstellung ermöglicht fortgeschrittenere Einstellungen und ermöglicht Benutzern mit mehr Einstellungen eine größere Kontrolle über den NHM",
+      "fr": "Ce paramètre active des paramètres plus avancés et permet aux utilisateurs d'avoir plus de contrôle sur NHM avec plus de paramètres",
+      "es": "Este ajuste permite una configuración más avanzada y permite a los usuarios tener un mayor control sobre NHM con más ajustes",
+      "pt": "Esta opção permite configurações mais avançadas e permite que os utilizadores tenham mais controle sobre o NHM com mais opções",
+      "jp": "より高度な設定が可能になり、NHMでより多くの設定を行えるようになります",
+      "zh_cn": "该设置为用户带来了更多的进阶功能设定，可为用户提供对NHM更高的控制权",
+      "si": "Ta nastavitev omogoča naprednejše nastavitve in omogoča uporabnikom večji nadzor nad NHM z več nastavitvami"
     },
-    "Check every 5 minutes for missing GPUs":{
-
+    "Check every 5 minutes for missing GPUs": {
+      "ru": "Каждые 5 минут проверять отстутствующие видеокарты",
+      "de": "Alle 5 Minuten auf fehlende GPUs überprüfen",
+      "fr": "Vérifier chaque les 5 minutes pour les GPU manquants",
+      "es": "Comprueba cada 5 minutos si faltan GPUs",
+      "pt": "Verifica a cada 5 minutos por GPUs ausentes",
+      "jp": "5分ごとにGPU接続をチェック",
+      "zh_cn": "每5分钟检查丢失的显卡",
+      "si": "Vsakih 5 minut preverite manjkajoče GPU"
     },
-    "Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)":{
-
+    "Run 'OnGPUsLost.bat' script when GPUs are missing (restarts Windows)": {
+      "ru": "Запускать скрипт 'OnGPUsLost.bat', когда видеокарты отсутствуют (перезапускает Windows)",
+      "de": "Führen Sie das Skript „OnGPUsLost.bat“ aus, wenn GPUs fehlen (startet Windows neu)",
+      "fr": "Exécutez 'OnGPUsLost.bat' script lorsque des GPU sont manquants (redémarre Windows)",
+      "es": "Ejecuta el script 'OnGPUsLost.bat' cuando faltan GPUs (reiniciar Windows)",
+      "pt": "Executa o guião 'OnGPUsLost.bat' quando existirem GPUs ausentes (reinicia o Windows)",
+      "jp": "GPU接続がなくなった時に「OnGPUsLost.bat」を実行 (restarts Windows)",
+      "zh_cn": "当显卡丢失时运行'OnGPUsLost.bat'脚本(重启Windows)",
+      "si": "Zaženi skripto 'OnGPUsLost.bat', kadar manjkajo GPU-ji (znova zažene Windows)"
     },
-    "Pause mining when Steam game is started":{
-    
+    "Pause mining when Steam game is started": {
+      "ru": "Приостанавливать майнинг, когда запущена игра Steam",
+      "de": "Unterbrechen Sie das Mining, wenn das Steam-Spiel gestartet wird",
+      "fr": "Suspendre le minage au démarrage du jeu Steam",
+      "es": "Ponga en pausa la minería cuando se inicie un juego de Steam",
+      "pt": "Pausa a mineração quando for iniciado um jogo Steam",
+      "jp": "Steam実行時にマイニングを停止",
+      "zh_cn": "当Steam客户端启用游戏时暂停挖坑作业",
+      "si": "Zaustavi rudarjenje, kadar se zažene igra Steam"
     },
-    "NiceHash Miner will detect when the game is started and will pause mining. Once the game is closed, mining will resume.":{
-
+    "NiceHash Miner will detect when the game is started and will pause mining. Once the game is closed, mining will resume.": {
+      "ru": "NiceHash Miner обнаружит, когда запущена игра, и приостановит майнинг. После закрытия игры, майнинг продолжится.",
+      "de": "Der NiceHash Miner erkennt, wenn das Spiel gestartet wird und unterbricht dann das Mining. Sobald das Spiel geschlossen wird, wird das Mining fortgesetzt.",
+      "fr": "NiceHash Miner détectera le démarrage du jeu et mettra en pause le minage. Une fois le jeu fermé, le minage reprendra.",
+      "es": "NiceHash Miner detectará cuando se inicie un juego y detendrá la minería. Una vez que el juego se cierre, la minería se reanudará.",
+      "pt": "O NiceHash Miner detetará quando o jogo for iniciado e pausará a mineração. Assim que o jogo for fechado, a mineração será retomada.",
+      "jp": "ゲームの起動をNiceHash Minerが検知するとマイニングを停止し、ゲーム終了時にマイニングを再開します。",
+      "zh_cn": "NiceHash Miner将在识别到系统启动了游戏时暂停挖矿作业，当游戏关闭时，则挖矿将继续。",
+      "si": "NiceHash Miner bo samodejno zaznal zaznal igre in ustavil rudarjenje. Ko se bo igra zaprla, se bo rudarjenje nadaljevalo."
     },
-    "Resolve NiceHash domains to IPs via Cloudflare":{
-
+    "Resolve NiceHash domains to IPs via Cloudflare": {
+      "ru": "Разрешать домены NiceHash в IP через Cloudflare",
+      "de": "Auflösen der NiceHash-Domäne in IPs über Cloudflare",
+      "fr": "Résoudre les domaines NiceHash en IPs via Cloudflare",
+      "es": "Resolver los dominios de NiceHash a IPs a través de Cloudflare",
+      "pt": "Resolve os domínios NiceHash para IPs através da Cloudflare",
+      "jp": "NiceHashドメインをCloudflare経由でIPに解決",
+      "zh_cn": "通过Cloudflare将NiceHash域解析为IP地址",
+      "si": "Pretvori NiceHash domene v IP naslov preko storitve Cloudflare"
     },
-    "This will resolve NiceHash domains to IPs via Cloudflare in case of DNS sinkholing.":{
-
+    "This will resolve NiceHash domains to IPs via Cloudflare in case of DNS sinkholing.": {
+      "ru": "Это будет разрешать домены NiceHash в IP через Cloudflare в случае воронки DNS.",
+      "de": "Dadurch werden NiceHash-Domänen in IPs, im Falle von DNS-Sinkholing, über Cloudflare aufgelöst.",
+      "fr": "Cela résoudra les domaines NiceHash en IPs via Cloudflare en cas de gouffre DNS.",
+      "es": "Esto resolverá los dominios de NiceHash a IPs a través de Cloudflare en caso de sinkholing de DNS.",
+      "pt": "Isto vai resolver os domínios da NiceHash para IPs através da Cloudflare no caso de afundamento do DNS.",
+      "jp": "DNS sinkholingの場合、NiceHashドメインをCloudflare経由でIPに解決します",
+      "zh_cn": "在DNS sinkholing的情况下，将通过Cloudflare将NiceHash域名解析为IP地址。",
+      "si": "To bo prevedlo domene NiceHash v IP naslove preko storitve Cloudflare v primeru težav DNS."
     },
-    "Enable SSL Mining":{
-
+    "Enable SSL Mining": {
+      "ru": "Включить майнинг SSL",
+      "de": "SSL-Mining aktivieren",
+      "fr": "Activer le Minage SSL",
+      "es": "Activar la minería SSL",
+      "pt": "Habilitar Mineração com SSL",
+      "jp": "SSLマイニングの有効化",
+      "zh_cn": "启用SSL挖矿",
+      "si": "Omogoči SSL rudarjenje"
     },
-    "This will enable SSL mining for miner plugins that have SSL mining support. Some miner plugins might not have this feature implemented.":{
-      
+    "This will enable SSL mining for miner plugins that have SSL mining support. Some miner plugins might not have this feature implemented.": {
+      "ru": "Это включит майнинг SSL для плагинов майнеров, у которых есть поддержка майнинга SSL. У некоторых плагинов майнеров может не быть этой функции.",
+      "de": "Dadurch wird das SSL-Mining für Miner-Plugins aktiviert, die SSL-Mining-Unterstützung haben. Bei einigen Miner-Plugins ist diese Funktion möglicherweise nicht implementiert.",
+      "fr": "Cela activera le minage SSL pour les plugins de minage prenant en charge le minage SSL. Certains plugins de mineur peuvent ne pas avoir cette fonctionnalité implémentée.",
+      "es": "Esto habilitará la minería SSL para los plugins de minería que tienen soporte de minería SSL. Algunos plugins de minería pueden no tener esta función implementada.",
+      "pt": "Isto habilitará a mineração usando SSL para plugins de mineração que tenham suporte à mineração com SSL. Alguns plugins de mineração podem não ter esse recurso implementado.",
+      "jp": "SSLマイニングに対応しているマイナープラグインで、SSLマイニングが可能になります。一部のマイナープラグインでは、この機能が実装されていない場合があります。",
+      "zh_cn": "这将为支持SSL挖矿的Miner插件启用SSL挖矿功能，但部分Miner插件可能不支持该特性。",
+      "si": "To bo omogočilo rudarjenje SSL za plugine (vtičnike) rudarjev, ki podpirajo rudarjenje SSL. Nekateri plugini (vtičniki) rudarjev morda nimajo implementirane te funkcije."
     },
-    "Scheduler":{
-
+    "Scheduler": {
+      "ru": "Планировщик",
+      "de": "Planer",
+      "fr": "Planificateur",
+      "es": "Planificador",
+      "pt": "Agendador",
+      "jp": "スケジューラー",
+      "zh_cn": "计划任务",
+      "si": "Urnik"
     },
-    "Use Scheduler":{
-
+    "Use Scheduler": {
+      "ru": "Использовать планировщик",
+      "de": "Planer verwenden",
+      "fr": "Utiliser le Planificateur",
+      "es": "Utilizar planificador",
+      "pt": "Utilizar o Agendador",
+      "jp": "スケジューラーを使用",
+      "zh_cn": "使用计划任务",
+      "si": "Uporabi Urnik"
     },
-    "NiceHash Miner will be mining only inside selected time slots.":{
-
+    "NiceHash Miner will be mining only inside selected time slots.": {
+      "ru": "NiceHash Miner будет майнить только в пределах выбранных временных интервалов.",
+      "de": "Der NiceHash Miner wird nur innerhalb der ausgewählten Zeitfenster minen.",
+      "fr": "NiceHash Miner sera miner uniquement dans des créneaux horaires sélectionnés.",
+      "es": "NiceHash Miner minará sólo dentro de las franjas horarias seleccionadas.",
+      "pt": "O NiceHash Miner vai minerar apenas nos intervalos de tempo selecionados.",
+      "jp": "NiceHash Minerは、選択した時間枠でのみマイニングを行います。",
+      "zh_cn": "NiceHash Miner将只在选定的时间区间里进行挖矿作业。",
+      "si": "NiceHash Miner bo rudaril samo znotraj izbranih časovnih obdobij."
     },
-    "Schedule Slots":{
-
+    "Schedule Slots": {
+      "ru": "Расписание интервалов",
+      "de": "Zeitfenster planen",
+      "fr": "Programme Slots",
+      "es": "Horario de las franjas horarias",
+      "pt": "Slots do Agendador",
+      "jp": "スケジュール枠",
+      "zh_cn": "计划任务区间",
+      "si": "Intervali"
     },
-    "No slots yet.":{
-
+    "No slots yet.": {
+      "ru": "Интервалов пока нет.",
+      "de": "Noch keine Zeitfenster.",
+      "fr": "Pas encore de slot.",
+      "es": "Todavía no hay franjas horarias.",
+      "pt": "Ainda não há slots.",
+      "jp": "時間枠がありません",
+      "zh_cn": "暂无设置。",
+      "si": "Ni intervalov."
     },
-    "Add new Slot":{
-      
+    "Add new Slot": {
+      "ru": "Добавить новый интервал",
+      "de": "Neues Zeitfenster hinzufügen",
+      "fr": "Ajouter un nouveau Slot",
+      "es": "Añadir nueva franja horaria",
+      "pt": "Adicionar novo Slot",
+      "jp": "新しい枠を追加",
+      "zh_cn": "添加新的时间区间",
+      "si": "Dodaj nov Interval"
     },
-    "From":{
-
+    "From": {
+      "ru": "Из",
+      "de": "Von",
+      "fr": "À partir de",
+      "es": "Desde",
+      "pt": "De",
+      "jp": "出金元",
+      "zh_cn": "自",
+      "si": "Iz"
     },
-    "To":{
-
+    "To": {
+      "ru": "Кому",
+      "de": "Bis",
+      "fr": "À",
+      "es": "Hacia",
+      "pt": "Para",
+      "jp": "出金先",
+      "zh_cn": "至",
+      "si": "Na"
     },
-    "Days":{
-
+    "Days": {
+      "ru": "Дни",
+      "de": "Tage",
+      "fr": "Jours",
+      "es": "Días",
+      "pt": "Dias",
+      "jp": "日",
+      "zh_cn": "天",
+      "si": "Dnevi"
     },
-    "Mon":{
-
+    "Mon": {
+      "ru": "Пн",
+      "de": "Mo",
+      "fr": "Lun",
+      "es": "Lun",
+      "pt": "Seg",
+      "jp": "月",
+      "zh_cn": "周一",
+      "si": "Pon"
     },
-    "Tue":{
-
+    "Tue": {
+      "ru": "Вт",
+      "de": "Die",
+      "fr": "Mar",
+      "es": "Mar",
+      "pt": "Ter",
+      "jp": "火",
+      "zh_cn": "周二",
+      "si": "Tor"
     },
-    "Wed":{
-
+    "Wed": {
+      "ru": "Ср",
+      "de": "Mitt",
+      "fr": "Mer",
+      "es": "Mie",
+      "pt": "Qua",
+      "jp": "水",
+      "zh_cn": "周三",
+      "si": "Sre"
     },
-    "Thu":{
-
+    "Thu": {
+      "ru": "Чт",
+      "de": "Don",
+      "fr": "Jeu",
+      "es": "Jue",
+      "pt": "Qui",
+      "jp": "木",
+      "zh_cn": "周四",
+      "si": "Čet"
     },
-    "Fri":{
-
+    "Fri": {
+      "ru": "Пт",
+      "de": "Frei",
+      "fr": "Ven",
+      "es": "Vie",
+      "pt": "Sex",
+      "jp": "金",
+      "zh_cn": "周五",
+      "si": "Pet"
     },
-    "Sat":{
-
+    "Sat": {
+      "ru": "Сб",
+      "de": "Sam",
+      "fr": "Sam",
+      "es": "Sab",
+      "pt": "Sab",
+      "jp": "土",
+      "zh_cn": "周六",
+      "si": "Sob"
     },
-    "Sun":{
-
+    "Sun": {
+      "ru": "Вс",
+      "de": "Son",
+      "fr": "Dim",
+      "es": "Dom",
+      "pt": "Dom",
+      "jp": "日",
+      "zh_cn": "周日",
+      "si": "Ned"
     },
-    "ADD NEW TIME SLOT":{
-
+    "ADD NEW TIME SLOT": {
+      "ru": "ДОБАВИТЬ ВРЕМЕННОЙ ИНТЕРВАЛ",
+      "de": "NEUES ZEITFENSTER HINZUFÜGEN",
+      "fr": "AJOUTER UN NOUVEAU CRÉNEAU HORAIRE",
+      "es": "AÑADIR UNA NUEVA FRANJA HORARIA",
+      "pt": "ADICIONAR NOVO SLOT POR HORÁRIO",
+      "jp": "新しい時間枠を追加",
+      "zh_cn": "添加新的时间区间",
+      "si": "DODAJ NOV INTERVAL"
     },
-    "Uptime:":{
-
+    "Uptime:": {
+      "ru": "Работает:",
+      "de": "Betriebszeit:",
+      "fr": "Disponibilité:",
+      "es": "Tiempo de actividad:",
+      "pt": "Tempo de atividade:",
+      "jp": "稼働時間：",
+      "zh_cn": "运行时间:",
+      "si": "Čas delovanja:"
     },
-    "NiceHash Miner Version:":{
-
+    "NiceHash Miner Version:": {
+      "ru": "Версия NiceHash Miner:",
+      "de": "NiceHash-Miner-Version:",
+      "fr": "NiceHash Miner Version:",
+      "es": "Versión de NiceHash Miner:",
+      "pt": "Versão do NiceHash Miner:",
+      "jp": "NiceHash Miner バージョン：",
+      "zh_cn": "NiceHash Miner版本:",
+      "si": "Različica NiceHash Minerja:"
     },
-    "Online NiceHash Miner Version:":{
-      
+    "Online NiceHash Miner Version:": {
+      "ru": "Версия NiceHash Miner онлайн:",
+      "de": "Online NiceHash-Miner-Version:",
+      "fr": "Version en ligne de NiceHash Miner:",
+      "es": "Versión de NiceHash Miner en línea:",
+      "pt": "Versão do NiceHash Miner Online:",
+      "jp": "Online NiceHash Miner バージョン：",
+      "zh_cn": "在线NiceHash Miner版本:",
+      "si": "Različica spletne verzije NiceHash Minerja:"
     }
   }
 }
