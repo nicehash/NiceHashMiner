@@ -23,7 +23,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         {
             InitializeComponent();
             DataContextChanged += QuickActionMenu_DataContextChanged;
-            WindowUtils.Translate(this);
         }
 
 
