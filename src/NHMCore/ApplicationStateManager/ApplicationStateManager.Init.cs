@@ -79,6 +79,10 @@ namespace NHMCore
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
+                if(DeviceDetection.DetectionResult.CUDADevices.Any(dev => dev.IsLHR) && !Helpers.IsElevated)
+                {
+                    AvailableNotifications.CreateLHRPresentAdminRunRequired();
+                }
 
                 if (!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
                 {

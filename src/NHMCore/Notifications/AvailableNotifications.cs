@@ -507,5 +507,16 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.MotherboardNotCompatible, Tr("NiceHash Miner can’t monitor CPU"), Tr("Your motherboard is not reporting fan speed, temperature, or the load of the CPU. Most likely your CPU is not compatible with the NHM CPU monitoring tool."));
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateLHRPresentAdminRunRequired()
+        {
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.RequireAdminForLHR, Tr("LHR Insufficient Permissions"), Tr("At least one LHR GPU was detected on your rig. To achieve full LHR unlock you need to run NMH as Administrator."));
+            notification.Action = new NotificationAction
+            {
+                Info = Tr("Run As Administrator"),
+                Action = () => { RunAsAdmin.SelfElevate(); }
+            };
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }
