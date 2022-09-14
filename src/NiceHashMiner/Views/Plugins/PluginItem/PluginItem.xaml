@@ -152,17 +152,18 @@
             <Grid Grid.Row="0" HorizontalAlignment="Stretch" Height="Auto" MinHeight="50" MaxHeight="100">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="70*"/>
-                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="67*"/>
+                    <ColumnDefinition Width="30*"/>
                 </Grid.ColumnDefinitions>
 
                 <local:PluginIcon Grid.Column="0"
                                   IsEnabled="{Binding Plugin.HasSupportedDevices}"
                                   Style="{StaticResource local.PluginIconStyle}"
-                                  Margin="16,9" />
+                                  Margin="6,9" />
 
                 <UniformGrid Grid.Column="1" Columns="5">
                     <TextBlock
+                        MinWidth="300"
                         IsEnabled="{Binding Plugin.HasSupportedDevices}"
                         Style="{StaticResource local.TextBoxPluginName}"
                         Text="{ Binding Plugin.PluginName }"
