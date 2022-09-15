@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Nhmws
 {
-#if USE_NHMWS4
+#if NHMWS4
     using NHWebSocketImpl = NHMCore.Nhmws.V4.NHWebSocketV4;
 #else
     using NHWebSocketImpl = NHMCore.Nhmws.V3.NHWebSocketV3;
@@ -30,7 +30,7 @@ namespace NHMCore.Nhmws
                 get
                 {
                     if (BuildOptions.CUSTOM_ENDPOINTS_ENABLED) return StratumServiceHelpers.NhmSocketAddress;
-#if USE_NHMWS4
+#if NHMWS4
                     return BuildTagNhmSocketAddressV4();
 #else
                     return NHM.Common.Nhmws.NhmSocketAddress;
