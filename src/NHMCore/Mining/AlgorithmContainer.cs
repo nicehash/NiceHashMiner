@@ -68,6 +68,8 @@ namespace NHMCore.Mining
             ComputeDevice = computeDevice;
 
             computeDevice.PropertyChanged += ComputeDevice_PropertyChanged;
+            SwitchSettings.Instance.PropertyChanged += SettingsChanged;
+            GUISettings.Instance.PropertyChanged += SettingsChanged;
             OnPropertyChanged(nameof(IsUserEditable));
         }
 
@@ -250,6 +252,11 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(HasBenchmark));
         }
+        protected void NotifyPowerChanged()
+        {
+            OnPropertyChanged(nameof(CurrentEstimatedProfit));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
+        }
 
         #endregion
 
@@ -314,6 +321,11 @@ namespace NHMCore.Mining
 
             get
             {
+                if (GUISettings.Instance.DisplayPureProfit)
+                {
+                    var power = (PowerUsage / 1000 * BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) * 24;
+                    return (CurrentEstimatedProfit - power).ToString("0.00000000");
+                }
                 var currentEstimatedProfit = CurrentEstimatedProfit;
                 // WPF or null
                 if (currentEstimatedProfit < 0) return "---";
@@ -378,6 +390,7 @@ namespace NHMCore.Mining
                 _powerUsage = value;
                 UpdateConfigVersionIfNeeded();
                 OnPropertyChanged(nameof(PowerUsage));
+                NotifyPowerChanged();
             }
         }
 
@@ -507,6 +520,10 @@ namespace NHMCore.Mining
                 // Now we subtract from profit, which may make profit negative
                 CurrentNormalizedProfit -= power;
             }
+        }
+        void SettingsChanged(object sender, EventArgs e)
+        {
+            NotifyPowerChanged();
         }
 
         #endregion

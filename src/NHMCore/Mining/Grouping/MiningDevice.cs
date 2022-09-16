@@ -3,6 +3,7 @@ using NHMCore.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NHM.Common;
 
 namespace NHMCore.Mining.Grouping
 {
@@ -80,12 +81,19 @@ namespace NHMCore.Mining.Grouping
             // save last state
             PrevProfitableAlgorithmStringID = MostProfitableAlgorithmStringID;
             // calculate new profits
-             foreach (var algo in Algorithms) algo.UpdateCurrentNormalizedProfit(profits);
+            foreach (var algo in Algorithms) algo.UpdateCurrentNormalizedProfit(profits);
 
             // find max paying value and save key
             var mostProfitable = Algorithms.Where(algo => algo.IgnoreUntil <= DateTime.UtcNow)
                 .OrderByDescending(algo => algo.CurrentNormalizedProfit)
                 .FirstOrDefault();
+            if(mostProfitable.CurrentNormalizedProfit <= 0) // no sma yet
+            {
+                Logger.Warn("MiningDevice", "Profits array is all zeros, selecting algo with best ESTIMATED profit (will switch later if needed).");
+                mostProfitable = Algorithms.Where(algo => algo.IgnoreUntil <= DateTime.UtcNow)
+                    .OrderByDescending(algo => algo.CurrentEstimatedProfit)
+                    .FirstOrDefault();
+            }
 
             if(Device.IsGaming == true)
             {
