@@ -29,6 +29,17 @@
             <Setter Property="Opacity" Value="0.75"/>
             <Setter Property="Text" Value="&#xF05A;"/>
         </Style>
+        <Style x:Key="local.WalletSubHeader" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -36,7 +47,11 @@
         </Grid.RowDefinitions>
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <StackPanel>
-                <TextBlock HorizontalAlignment="Center" FontSize="15" Visibility="{Binding MiningState.AnyDeviceRunning, Converter={StaticResource MiningStatusVisibilityConverter}}" Text="Stop mining/benchmarking to edit extra launch parameters!"/>
+                <TextBlock Style="{StaticResource local.WalletSubHeader}"  
+                           HorizontalAlignment="Center" 
+                           FontSize="15" 
+                           Visibility="{Binding MiningState.AnyDeviceRunning, Converter={StaticResource MiningStatusVisibilityConverter}}" 
+                           Text="Stop mining/benchmarking to edit extra launch parameters!"/>
                 <StackPanel Visibility="{Binding MiningState.IsNotBenchmarkingOrMining, Converter={StaticResource MiningStatusVisibilityConverter}}">
                     <Grid >
                         <Grid.ColumnDefinitions>
