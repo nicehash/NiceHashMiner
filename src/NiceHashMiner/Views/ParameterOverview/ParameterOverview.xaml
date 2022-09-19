@@ -52,7 +52,7 @@
                            FontSize="15" 
                            Visibility="{Binding MiningState.AnyDeviceRunning, Converter={StaticResource MiningStatusVisibilityConverter}}" 
                            Text="Stop mining/benchmarking to edit extra launch parameters!"/>
-                <StackPanel Visibility="{Binding MiningState.IsNotBenchmarkingOrMining, Converter={StaticResource MiningStatusVisibilityConverter}}">
+                <StackPanel>
                     <Grid >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.2*"/>

@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,6 @@ namespace NHMCore.Configs.ELPDataModels
                 OnPropertyChanged(nameof(ELP));
             }
         }
+        public MiningState MiningState => MiningState.Instance;
     }
 }

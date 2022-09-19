@@ -40,7 +40,8 @@
             <TextBox Style="{StaticResource inputBox}" x:Name="DeviceELPValueTB"
                      TextChanged="DeviceELPValueTB_TextChanged"
                      LostFocus="DeviceELPValueTB_LostFocus"
-                     Width="160" Text="{Binding ELP, Mode=TwoWay}"/>
+                     Width="160" Text="{Binding ELP, Mode=TwoWay}"
+                     IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
         </StackPanel>
     </Grid>
 
