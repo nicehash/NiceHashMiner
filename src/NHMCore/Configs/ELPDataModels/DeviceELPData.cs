@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -51,5 +52,6 @@ namespace NHMCore.Configs.ELPDataModels
             DeviceName = name;
             UUID = uuid;
         }
+        public MiningState MiningState => MiningState.Instance;
     }
 }

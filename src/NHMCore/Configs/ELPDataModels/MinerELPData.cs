@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHM.MinerPluginToolkitV1.CommandLine;
+using NHMCore.ApplicationState;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -84,5 +85,6 @@ namespace NHMCore.Configs.ELPDataModels
             DoubleParams.Clear();
             ELPManager.Instance.IterateSubModelsAndConstructELPs();
         }
+        public MiningState MiningState => MiningState.Instance;
     }
 }
