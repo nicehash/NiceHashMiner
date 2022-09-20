@@ -15,6 +15,19 @@ namespace NHMCore.Configs.ELPDataModels
     {
         public string Name { get; set; }
         private List<DeviceELPData> _devices = new List<DeviceELPData>();
+        private string _combinedParams = string.Empty;
+        public string CombinedParams
+        {
+            get
+            {
+                return _combinedParams;
+            }
+            set
+            {
+                _combinedParams = value;
+                OnPropertyChanged(nameof(CombinedParams));
+            }
+        }
         public AlgoELPData()
         {
             _devices = new List<DeviceELPData>();

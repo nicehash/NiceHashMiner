@@ -238,6 +238,7 @@ namespace NHMCore.Utils
                 algo.SingleParams.ForEach(single => algoParams.Add(new List<string>() { single }));
                 if (algo.DoubleParams == null) algo.DoubleParams = new();
                 algo.DoubleParams.ForEach(dbl => algoParams.Add(new List<string>() { dbl.name, dbl.value }));
+                algo.CombinedParams = MinerExtraParameters.ParseAlgoPreview(minerParams, algoParams);
                 var header = algo.Devices.FirstOrDefault();
                 if (header == null || !header.IsDeviceDataHeader) continue;
                 var columnToDelete = header.ELPs

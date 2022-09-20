@@ -156,5 +156,24 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
 
             return elp.Trim();
         }
+
+        public static string ParseAlgoPreview(Parameters minerParameters, Parameters algorithmParameters)
+        {
+            Parameters uniqueSingle = new();
+            var uniqueSingles = minerParameters.Where(p => p.Count == 1).Concat(algorithmParameters.Where(p => p.Count == 1));
+            foreach (var sng in uniqueSingles)
+            {
+                if (!uniqueSingle.Select(x => x[0]).Any(i => i == sng[0])) uniqueSingle.Add(new() { sng[0] });
+            }
+            Parameters uniqueDouble = new();
+            var doublesAlgo = algorithmParameters.Where(p => p.Count == 2);
+            var doublesMiner = minerParameters.Where(p => p.Count == 2);
+            foreach(var dbl in doublesAlgo) uniqueDouble.Add(new() { dbl[0], dbl[1] });
+            foreach(var dbl in doublesMiner)
+            {
+                if (!uniqueDouble.Select(x => x[0]).Any(i => i == dbl[0])) uniqueDouble.Add(new() { dbl[0], dbl[1] });
+            }
+            return $"{string.Join(' ', uniqueSingle.SelectMany(x => x))} {string.Join(' ', uniqueDouble.SelectMany(x => x))}";
+        }
     }
 }
