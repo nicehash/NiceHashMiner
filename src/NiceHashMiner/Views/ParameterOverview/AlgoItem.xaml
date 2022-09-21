@@ -12,6 +12,18 @@
     <UserControl.Resources>
         <local:PreviewContentToVisibilityConverter x:Key="PreviewContentToVisibilityConverter" />
         <local:MultipleInstanceToVisibilityConverter x:Key="MultipleInstanceToVisibilityConverter" />
+        <Style TargetType="Grid" x:Key="previewGrid">
+            <Setter Property="Background" Value="{DynamicResource ELPPreviewColorBG}" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+        <Style TargetType="StackPanel" x:Key="previewStackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5,10,5,10" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="previewTBHeader" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
         <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter  Property="FontSize" Value="10"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
@@ -76,7 +88,7 @@
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="RenderTransform">
                         <Setter.Value>
-                            <RotateTransform Angle="90" />
+                            <RotateTransform Angle="180" />
                         </Setter.Value>
                     </Setter>
                 </Trigger>
@@ -164,7 +176,7 @@
                         </StackPanel>
                     </Grid>
                     <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
-                        <ToggleButton x:Name="DevicesGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownDevices_Button_Click" Margin="0,0,16,0" />
+                        <ToggleButton x:Name="DevicesGridToggleButton" Content="&#xf107;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownDevices_Button_Click" Margin="0,0,16,0" />
                     </WrapPanel>
                 </Grid>
             </ToggleButton>
@@ -177,18 +189,18 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-
-            <Button 
-                Grid.Row="0"
-                Style="{StaticResource BigButtonPrimary}"
-                Padding="10,3,10,3"
-                Margin="3, 2, 3, 5"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}"
-                Content="{Binding CombinedParams}"
-                />
-
+            <Grid Grid.Row="0" 
+                  Style="{StaticResource previewGrid}"
+                  Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}">
+                <StackPanel Style="{StaticResource previewStackPanel}">
+                    <TextBlock 
+                        Style="{StaticResource previewTBHeader}"
+                        Text="Preview: "/>
+                    <TextBlock 
+                        Style="{StaticResource local.TextBoxCol}"
+                        Text="{Binding CombinedParams}"/>
+                </StackPanel>
+            </Grid>
             <Separator Grid.Row="1" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
             <ItemsControl Grid.Row="2" x:Name="DeviceItemControl" ItemsSource="{Binding Devices}">
                 <ItemsControl.ItemsPanel>
@@ -202,11 +214,11 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <TextBlock Grid.Row="3" Style="{StaticResource AlertIcon}"
+            <!--<TextBlock Grid.Row="3" Style="{StaticResource AlertIcon}"
                            Visibility="{Binding UniqueCMDs, Converter={StaticResource MultipleInstanceToVisibilityConverter}}"
                            Margin="12,0,0,0"
                            HorizontalAlignment="Left"
-                           ToolTip="Multiple instances of this miner will start due to multiple-argument parameter incompatibility."/>
+                           ToolTip="Multiple instances of this miner will start due to multiple-argument parameter incompatibility."/>-->
             <ItemsControl Grid.Row="3"  x:Name="CommandsListBox" ItemsSource="{Binding UniqueCMDs}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -215,15 +227,12 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button 
-                            Style="{StaticResource BigButtonPrimary}"
-                            Padding="10,3,10,3"
-                            Margin="3, 2, 3, 2"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Content="{Binding .}"
-                            Visibility="{Binding ., Converter={StaticResource PreviewContentToVisibilityConverter}}"
-                        />
+                        <Grid Style="{StaticResource previewGrid}" Margin="0,10,0,0" Visibility="{Binding ., Converter={StaticResource PreviewContentToVisibilityConverter}}">
+                            <StackPanel Style="{StaticResource previewStackPanel}">
+                                <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
+                                <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding .}"/>
+                            </StackPanel>
+                        </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

@@ -18,6 +18,21 @@ namespace NHMCore.Configs.ELPDataModels
         public string Name { get; set; }
         public string UUID { get; set; }
         public string CombinedParams => $"{SingleParamString} {DoubleParamString}";
+        public void UpdateProperties()
+        {
+            OnPropertyChanged(nameof(HasAnyContentSet));
+        }
+        public bool HasAnyContentSet
+        {
+            get
+            {
+                foreach(var algo in Algos)
+                {
+                    if (algo.AllCMDStrings.Select(str => str.command).Any(cmd => cmd.Trim() != String.Empty)) return true;
+                }
+                return false;
+            }
+        }
         private List<string> _singleParams { get; set; } = new List<string>();
         public List<string> SingleParams
         {

@@ -11,6 +11,18 @@
              d:DataContext="{d:DesignInstance Type=viewModels:MinerELPData}">
     <UserControl.Resources>
         <local:PreviewContentToVisibilityConverter x:Key="PreviewContentToVisibilityConverter" />
+        <Style TargetType="Grid" x:Key="previewGrid">
+            <Setter Property="Background" Value="{DynamicResource ELPPreviewColorBG}" />
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+        <Style TargetType="StackPanel" x:Key="previewStackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5,10,5,10" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="previewTBHeader" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
         <Style TargetType="TextBlock" x:Key="local.InfoIcon">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -88,7 +100,7 @@
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="RenderTransform">
                         <Setter.Value>
-                            <RotateTransform Angle="90" />
+                            <RotateTransform Angle="180" />
                         </Setter.Value>
                     </Setter>
                 </Trigger>
@@ -156,6 +168,10 @@
                     </Grid.ColumnDefinitions>
                     <WrapPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
                         <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                        <TextBlock Visibility="{Binding HasAnyContentSet, Converter={StaticResource NulBoolToVisibilityConverter}}" 
+                                   Style="{StaticResource GreenCircle}" 
+                                   FontSize="5"
+                                   Margin="5,0,5,0"/>
                     </WrapPanel>
                     <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
@@ -172,7 +188,7 @@
                                  IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
                     </Grid>
                     <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
-                        <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
+                        <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xf107;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
                     </WrapPanel>
                 </Grid>
             </ToggleButton>
@@ -184,16 +200,18 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button 
-                Grid.Row="0"
-                Style="{StaticResource BigButtonPrimary}"
-                Padding="10,3,10,3"
-                Margin="3, 2, 3, 5"
-                Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Content="{Binding CombinedParams}"
-                />
+            <Grid Grid.Row="0" 
+                  Style="{StaticResource previewGrid}"
+                  Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}">
+                <StackPanel Style="{StaticResource previewStackPanel}">
+                    <TextBlock 
+                        Style="{StaticResource previewTBHeader}"
+                        Text="Preview: "/>
+                    <TextBlock 
+                        Style="{StaticResource local.TextBoxCol}"
+                        Text="{Binding CombinedParams}"/>
+                </StackPanel>
+            </Grid>
             <Grid Grid.Row="1" x:Name="headerGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.2*"/>
@@ -206,11 +224,11 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" Margin="24,0,0,0" Grid.Column="1" >
-                        <TextBlock LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                        <TextBlock LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Commands without a value</TextBlock>
                         <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="-21,0,0,0" Grid.Column="2">
-                        <TextBlock  LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                        <TextBlock  LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Commands with a value</TextBlock>
                         <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
                     </StackPanel>
                 </Grid>

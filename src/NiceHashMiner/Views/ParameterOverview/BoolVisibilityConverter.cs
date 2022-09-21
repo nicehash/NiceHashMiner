@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {
-    internal class MiningStatusVisibilityConverter : IValueConverter
+    internal class BoolVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

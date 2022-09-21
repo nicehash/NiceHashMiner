@@ -22,5 +22,8 @@
     <!--#endregion Grey colors-->
 
     <Color x:Key="Colors.Light.Border">#EEEEEE</Color>
-
+        
+    <!--#region ELP colors-->
+    <Color x:Key="Colors.Light.ELP.ELPPreviewColorBG">#EEEEEE</Color>
+    <!--#endregion ELP colors-->
 </ResourceDictionary>

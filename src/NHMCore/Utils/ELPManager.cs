@@ -114,6 +114,7 @@ namespace NHMCore.Utils
             foreach (var miner in _minerELPs)
             {
                 IterateSubModelsAndConstructELPsForPlugin(miner);
+                miner.UpdateProperties();
             }
         }
 

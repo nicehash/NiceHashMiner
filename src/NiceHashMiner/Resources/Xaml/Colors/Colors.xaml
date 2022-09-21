@@ -49,4 +49,9 @@
     <SolidColorBrush x:Key="TextColorBrush-White" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
     <!--#endregion Dynamic Text Colors-->
 
+    <SolidColorBrush x:Key="ELPPreviewColorBG.Light" Color="{DynamicResource Colors.Light.ELP.ELPPreviewColorBG}" />
+
+    <SolidColorBrush x:Key="ELPPreviewColorBG.Dark" Color="{DynamicResource Colors.Dark.ELP.ELPPreviewColorBG}" />
+
+    <SolidColorBrush x:Key="ELPPreviewColorBG" Color="{DynamicResource Colors.Light.ELP.ELPPreviewColorBG}" />
 </ResourceDictionary>

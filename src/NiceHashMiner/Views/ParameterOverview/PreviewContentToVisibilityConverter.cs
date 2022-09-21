@@ -17,7 +17,7 @@ namespace NiceHashMiner.Views.ParameterOverview
             {
                 return Visibility.Visible;
             }
-            return Visibility.Hidden;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

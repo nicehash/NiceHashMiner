@@ -11,7 +11,7 @@
 
     <UserControl.Resources>
         <local:PluginsVisibilityConverter x:Key="PluginsVisibilityConverter" />
-        <local:MiningStatusVisibilityConverter x:Key="MiningStatusVisibilityConverter" />
+        <local:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
         <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
             <Setter  Property="FontSize" Value="10"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
@@ -48,10 +48,11 @@
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <StackPanel>
                 <TextBlock Style="{StaticResource local.WalletSubHeader}"  
-                           HorizontalAlignment="Center" 
+                           HorizontalAlignment="Left" 
+                           Margin="40, 25, 10, 25"
                            FontSize="15" 
-                           Visibility="{Binding MiningState.AnyDeviceRunning, Converter={StaticResource MiningStatusVisibilityConverter}}" 
-                           Text="Stop mining/benchmarking to edit extra launch parameters!"/>
+                           Text="Editing Extra Commands is not possible when mining or benchmarking."
+                           Visibility="{Binding MiningState.AnyDeviceRunning, Converter={StaticResource BoolVisibilityConverter}}"/>
                 <StackPanel>
                     <Grid >
                         <Grid.ColumnDefinitions>
@@ -64,11 +65,11 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Orientation="Horizontal" Margin="24,0,0,0" Grid.Column="0" >
-                                <TextBlock Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
+                                <TextBlock Style="{StaticResource StatusColumnTitle}">Commands without a value</TextBlock>
                                 <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="-21,0,0,0" Grid.Column="1">
-                                <TextBlock Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
+                                <TextBlock Style="{StaticResource StatusColumnTitle}">Commands with a value</TextBlock>
                                 <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
                             </StackPanel>
                         </Grid>
@@ -81,8 +82,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                     <TextBlock Margin="0,8,0,0" HorizontalAlignment="Center">
-                        <!--TODO CHANGE URL-->
-                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://github.com/nicehash/NiceHashMiner/blob/dot_net_update/doc/Advanced/ELPTab/ELPTab.md" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/blog/post/how-to-use-nicehash-miner-extra-commands?lang=en" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                             Need Help?
                         </Hyperlink>
                     </TextBlock>
