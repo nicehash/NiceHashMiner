@@ -45,7 +45,7 @@
                 </StackPanel>
                 <TextBox Style="{StaticResource inputBox}" x:Name="DeviceELPValueTB"
                      TextChanged="DeviceELPValueTB_TextChanged"
-                     LostFocus="DeviceELPValueTB_LostFocus"
+                     LostFocus="TB_LostFocus"
                      Width="180" Text="{Binding ELP, Mode=TwoWay}"
                      IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
             </StackPanel>
@@ -63,9 +63,9 @@
                 <TextBox Style="{StaticResource inputBox}" x:Name="FlagInput"
                      HorizontalAlignment="Left"
                      Width="120"
-                     TextChanged="DeviceELPValueTB_TextChanged"
-                     LostFocus="DeviceELPValueTB_LostFocus"
-                     Text="{Binding ELP, Mode=TwoWay}"
+                     TextChanged="HeaderFlagELPValueTB_TextChanged"
+                     LostFocus="TB_LostFocus"
+                     Text="{Binding FLAG, Mode=TwoWay}"
                      IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Margin="10,0,0,3">
@@ -75,9 +75,9 @@
                 </StackPanel>
                 <TextBox Style="{StaticResource inputBox}" x:Name="DelimiterInput"
                      Width="45"
-                     TextChanged="DeviceELPValueTB_TextChanged"
-                     LostFocus="DeviceELPValueTB_LostFocus"
-                     Text="{Binding ELP, Mode=TwoWay}"
+                     TextChanged="HeaderDelimELPValueTB_TextChanged"
+                     LostFocus="TB_LostFocus"
+                     Text="{Binding DELIM, Mode=TwoWay}"
                      IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
             </StackPanel>
         </Grid>

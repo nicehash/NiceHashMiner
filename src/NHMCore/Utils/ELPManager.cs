@@ -244,7 +244,7 @@ namespace NHMCore.Utils
                 if (header == null || !header.IsDeviceDataHeader) continue;
                 var columnToDelete = header.ELPs
                     .Select((elp, index) => new { elp, index })
-                    .Where(item => string.IsNullOrEmpty(item.elp.ELP))
+                    .Where(item => string.IsNullOrEmpty(item.elp.ELP.Trim()))
                     .FirstOrDefault();
                 bool shouldDelete = false;
                 if(columnToDelete != null) shouldDelete = columnToDelete.index < header.ELPs.Count - 1;

@@ -31,16 +31,34 @@ namespace NiceHashMiner.Views.ParameterOverview
 
         private void DeviceELPValueTB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(DataContext is DeviceELPElement ee && sender is TextBox tb)
+            if(DataContext is DeviceELPElement ee && sender is TextBox tb && !ee.IsHeader)
             {
                 CheckFlagDelimBoxValidAndUpdateIfOK(sender);
                 ee.ELP = tb.Text;
                 ELPManager.Instance.IterateSubModelsAndConstructELPs();
             }
         }
-
-        private void DeviceELPValueTB_LostFocus(object sender, RoutedEventArgs e)
+        private void HeaderFlagELPValueTB_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (DataContext is DeviceELPElement ee && sender is TextBox tb && ee.IsHeader)
+            {
+                ee.FLAG = tb.Text;
+                ee.SafeSetELP();
+                ELPManager.Instance.IterateSubModelsAndConstructELPs();
+            }
+        }
+        private void HeaderDelimELPValueTB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (DataContext is DeviceELPElement ee && sender is TextBox tb && ee.IsHeader)
+            {
+                ee.DELIM = tb.Text;
+                ee.SafeSetELP();
+                ELPManager.Instance.IterateSubModelsAndConstructELPs();
+            }
+        }
+        private void TB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ELPManager.Instance.IterateSubModelsAndConstructELPs();
             ELPManager.Instance.UpdateMinerELPConfig();
         }
 

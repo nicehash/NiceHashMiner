@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NHMCore.Configs.ELPDataModels
@@ -24,10 +25,21 @@ namespace NHMCore.Configs.ELPDataModels
             set
             {
                 _elp = value;
+                var split = Regex.Replace(_elp, @"\s+", " ").Split(' ');
+                if (IsHeader && split.Length == 2)
+                {
+                    _flag = split[0];
+                    _delim = split[1];
+                    OnPropertyChanged(nameof(FLAG));
+                    OnPropertyChanged(nameof(DELIM));
+                }
                 OnPropertyChanged(nameof(ELP));
-                OnPropertyChanged(nameof(FLAG));
-                OnPropertyChanged(nameof(DELIM));
             }
+        }
+        public void SafeSetELP()
+        {
+            ELP = $"{_flag} {_delim}";
+            OnPropertyChanged(nameof(ELP));
         }
         private string _flag { get; set; } = string.Empty;
         public string FLAG
@@ -36,7 +48,7 @@ namespace NHMCore.Configs.ELPDataModels
             set
             {
                 _flag = value;
-                OnPropertyChanged(nameof(DELIM));
+                OnPropertyChanged(nameof(FLAG));
             }
         }
         private string _delim { get; set; } = string.Empty;
