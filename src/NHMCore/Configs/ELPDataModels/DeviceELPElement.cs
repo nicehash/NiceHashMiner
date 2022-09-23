@@ -15,6 +15,7 @@ namespace NHMCore.Configs.ELPDataModels
         {
             HeaderType = isValue ? HeaderType.Value : HeaderType.FlagAndDelim;
         }
+        public bool IsHeader => HeaderType == HeaderType.FlagAndDelim;
         public HeaderType HeaderType { get; init; } = HeaderType.Value;
         private string _elp { get; set; } = String.Empty;
         public string ELP
@@ -24,6 +25,28 @@ namespace NHMCore.Configs.ELPDataModels
             {
                 _elp = value;
                 OnPropertyChanged(nameof(ELP));
+                OnPropertyChanged(nameof(FLAG));
+                OnPropertyChanged(nameof(DELIM));
+            }
+        }
+        private string _flag { get; set; } = string.Empty;
+        public string FLAG
+        {
+            get { return _flag; }
+            set
+            {
+                _flag = value;
+                OnPropertyChanged(nameof(DELIM));
+            }
+        }
+        private string _delim { get; set; } = string.Empty;
+        public string DELIM
+        {
+            get { return _delim; }
+            set
+            {
+                _delim = value;
+                OnPropertyChanged(nameof(DELIM));
             }
         }
         public MiningState MiningState => MiningState.Instance;

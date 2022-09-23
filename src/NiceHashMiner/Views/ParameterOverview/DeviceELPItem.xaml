@@ -50,7 +50,7 @@
                      IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="1" x:Name="DeviceGrid" Visibility="{Binding IsValue, Converter={StaticResource NulBoolToVisibilityConverterFalse}}">
+        <Grid Grid.Row="1" x:Name="DeviceGrid" Visibility="{Binding IsHeader, Converter={StaticResource NulBoolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="125"/>
                 <ColumnDefinition Width="60"/>
