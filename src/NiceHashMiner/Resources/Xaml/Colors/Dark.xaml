@@ -25,5 +25,6 @@
     <Color x:Key="Colors.Dark.Border">#40494F</Color>
     <!--#region ELP colors-->
     <Color x:Key="Colors.Dark.ELP.ELPPreviewColorBG">#252525</Color>
+    <Color x:Key="Colors.Dark.ELP.ELPElementBG">#141414</Color>
     <!--#endregion ELP colors-->
 </ResourceDictionary>
