@@ -16,7 +16,7 @@
         <WrapPanel Margin="24,0,24,16" Orientation="Vertical">
             <Label Content="Wallet" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
             <StackPanel Orientation="Horizontal" ToolTip="{StaticResource walletAddress}">
-                <Label Content="Wallet Address" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                <Label Content="Mining Address" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
                 <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -38,7 +38,7 @@
 
             <TextBlock Margin="0,8,0,0">
                     <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
-                        How to create a Wallet Address?
+                        How to create a Mining Address?
                     </Hyperlink>
             </TextBlock>
             <TextBlock Visibility="Collapsed" x:Name="externalAddressHelp" Margin="0,8,0,0">
