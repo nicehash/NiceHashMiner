@@ -148,7 +148,7 @@
                 </Border.Style>
             </Border>
             <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="DevicesGridToggleButtonHidden" Click="DropDownDevices_Button_Click" HorizontalContentAlignment="Stretch">
-                <Grid Background="Transparent" HorizontalAlignment="Stretch" >
+                <Grid Background="{DynamicResource ELPElementBG}" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.2*" />
                         <ColumnDefinition Width="*" />
@@ -203,41 +203,54 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Separator Grid.Row="0" Margin="0,5,40,15" Background="{DynamicResource BorderColor}" />
+                    
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0*"/>
+                            <ColumnDefinition Width="100*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Rectangle Grid.Column="0" Grid.RowSpan="3" HorizontalAlignment="Right" VerticalAlignment="Stretch"  Width="1"  Stroke="{DynamicResource BorderColor}" />
 
-                    <ItemsControl Grid.Row="1" x:Name="DeviceItemControl" ItemsSource="{Binding Devices}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <local:DeviceItem DataContext="{Binding .}"  Margin="0,8,0,0" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <!--<TextBlock Grid.Row="3" Style="{StaticResource AlertIcon}"
+                        <ItemsControl Grid.Column="1" Grid.Row="1" x:Name="DeviceItemControl" ItemsSource="{Binding Devices}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <local:DeviceItem DataContext="{Binding .}"  Margin="0,8,0,0" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <!--<TextBlock Grid.Row="3" Style="{StaticResource AlertIcon}"
                            Visibility="{Binding UniqueCMDs, Converter={StaticResource MultipleInstanceToVisibilityConverter}}"
                            Margin="12,0,0,0"
                            HorizontalAlignment="Left"
                            ToolTip="Multiple instances of this miner will start due to multiple-argument parameter incompatibility."/>-->
-                    <ItemsControl Grid.Row="2"  x:Name="CommandsListBox" ItemsSource="{Binding UniqueCMDs}" Margin="60,6,40,20">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Style="{StaticResource previewGrid}" Margin="0,10,0,0" Visibility="{Binding ., Converter={StaticResource PreviewContentToVisibilityConverter}}">
-                                    <StackPanel Style="{StaticResource previewStackPanel}">
-                                        <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
-                                        <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding .}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        <ItemsControl Grid.Row="2" Grid.Column="1"  x:Name="CommandsListBox" ItemsSource="{Binding UniqueCMDs}" Margin="60,6,40,20">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Style="{StaticResource previewGrid}" Margin="0,10,0,0" Visibility="{Binding ., Converter={StaticResource PreviewContentToVisibilityConverter}}">
+                                        <StackPanel Style="{StaticResource previewStackPanel}">
+                                            <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
+                                            <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding .}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>

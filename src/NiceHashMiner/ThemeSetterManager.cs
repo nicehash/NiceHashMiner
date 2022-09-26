@@ -65,6 +65,7 @@ namespace NiceHashMiner
                 Application.Current.Resources["MODAL_WINDOW_BLUR_Background"] = Application.Current.FindResource("MODAL_WINDOW_BLUR_Background.Light");
                 Application.Current.Resources["ELPPreviewColorBG"] = Application.Current.FindResource("ELPPreviewColorBG.Light");
                 Application.Current.Resources["ELPElementBG"] = Application.Current.FindResource("ELPElementBG.Light");
+                Application.Current.Resources["BorderColor"] = Application.Current.FindResource("BorderColor.Light");
             }
             else
             {
@@ -82,6 +83,7 @@ namespace NiceHashMiner
                 Application.Current.Resources["MODAL_WINDOW_BLUR_Background"] = Application.Current.FindResource("MODAL_WINDOW_BLUR_Background.Dark");
                 Application.Current.Resources["ELPPreviewColorBG"] = Application.Current.FindResource("ELPPreviewColorBG.Dark");
                 Application.Current.Resources["ELPElementBG"] = Application.Current.FindResource("ELPElementBG.Dark");
+                Application.Current.Resources["BorderColor"] = Application.Current.FindResource("BorderColor.Dark");
             }
             // Set the value
             foreach (var setter in _themeSetters)

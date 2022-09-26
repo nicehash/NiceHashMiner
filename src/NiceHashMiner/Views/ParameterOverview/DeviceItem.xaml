@@ -130,7 +130,7 @@
                 </Border.Style>
             </Border>
             <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="DeviceEntry"  HorizontalContentAlignment="Stretch">
-                <Grid Background="Transparent" HorizontalAlignment="Stretch" >
+                <Grid Background="{DynamicResource ELPElementBG}" HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.4*"/>
                         <ColumnDefinition Width="*"/>

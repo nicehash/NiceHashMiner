@@ -143,7 +143,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" MinWidth="320" MinHeight="56" Margin="40,0,40,0">
+        <Grid  Grid.Row="0" MinWidth="320" MinHeight="56" Margin="40,0,40,0">
             <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
                 <Border.Style>
                     <Style TargetType="Border">
@@ -160,7 +160,7 @@
                 </Border.Style>
             </Border>
             <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click"  HorizontalContentAlignment="Stretch">
-                <Grid Background="Transparent" HorizontalAlignment="Stretch" >
+                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.2*" />
                         <ColumnDefinition Width="*" />

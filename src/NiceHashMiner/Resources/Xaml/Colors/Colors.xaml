@@ -8,7 +8,6 @@
 
     <!--#region DynamicColors-->
     <SolidColorBrush x:Key="BackgroundColor" Color="{DynamicResource Colors.Light.Grey.Grey4Background}" />
-    <SolidColorBrush x:Key="BorderColor" Color="{DynamicResource Colors.Light.Border}" />
     <SolidColorBrush x:Key="TextColorBrush" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
     <!--#endregion DynamicColors-->
 
@@ -51,10 +50,13 @@
 
     <SolidColorBrush x:Key="ELPPreviewColorBG.Light" Color="{DynamicResource Colors.Light.ELP.ELPPreviewColorBG}" />
     <SolidColorBrush x:Key="ELPElementBG.Light" Color="{DynamicResource Colors.Light.ELP.ELPElementBG}"/>
+    <SolidColorBrush x:Key="BorderColor.Light" Color="{DynamicResource Colors.Light.Border}" />
 
     <SolidColorBrush x:Key="ELPPreviewColorBG.Dark" Color="{DynamicResource Colors.Dark.ELP.ELPPreviewColorBG}" />
     <SolidColorBrush x:Key="ELPElementBG.Dark" Color="{DynamicResource Colors.Dark.ELP.ELPElementBG}" />
+    <SolidColorBrush x:Key="BorderColor.Dark" Color="{DynamicResource Colors.Dark.Border}"/>
 
     <SolidColorBrush x:Key="ELPPreviewColorBG" Color="{DynamicResource Colors.Light.ELP.ELPPreviewColorBG}" />
     <SolidColorBrush x:Key="ELPElementBG" Color="{DynamicResource Colors.Light.ELP.ELPElementBG}" />
+    <SolidColorBrush x:Key="BorderColor" Color="{DynamicResource Colors.Light.Border}"/>
 </ResourceDictionary>

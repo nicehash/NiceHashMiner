@@ -14,8 +14,7 @@
             <Setter  Property="FontSize" Value="10"/>
             <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
         </Style>
-        <local:FlagOrValueHeaderEnumConverter x:Key="FlagOrValueHeaderEnumConverter"/>
-        <local:FlagOrValueTooltipConverter x:Key="FlagOrValueTooltipConverter"/>
+
         <local:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
         <Style TargetType="TextBlock" x:Key="local.InfoIcon">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
@@ -33,15 +32,21 @@
 
     </UserControl.Resources>
     <Grid Width="200">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="100*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" x:Name="HeaderGrid" Visibility="{Binding IsHeader, Converter={StaticResource NulBoolToVisibilityConverterFalse}}">
+        <Rectangle Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Stretch"  Width="1"  Stroke="{DynamicResource BorderColor}" />
+
+        <Grid Grid.Row="0" Grid.Column="1" x:Name="ValueGrid" Visibility="{Binding IsHeader, Converter={StaticResource NulBoolToVisibilityConverterFalse}}">
             <StackPanel  Margin="0,0,10,3">
                 <StackPanel Width="160" Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="-10,0,0,3" Text="{Binding HeaderType, Converter={StaticResource FlagOrValueHeaderEnumConverter}}"/>
-                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="{Binding HeaderType, Converter={StaticResource FlagOrValueTooltipConverter}}"/>
+                    <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="-10,0,0,3" Text="Value" />
+                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Enter a value that will be used for this device with the flag above" />
                 </StackPanel>
                 <TextBox Style="{StaticResource inputBox}" x:Name="DeviceELPValueTB"
                      TextChanged="DeviceELPValueTB_TextChanged"
@@ -50,15 +55,15 @@
                      IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="1" x:Name="DeviceGrid" Visibility="{Binding IsHeader, Converter={StaticResource NulBoolToVisibilityConverter}}">
+        <Grid Grid.Row="1" Grid.Column="1" x:Name="DeviceGrid" Visibility="{Binding IsHeader, Converter={StaticResource NulBoolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="125"/>
                 <ColumnDefinition Width="60"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Margin="5,0,0,3">
                 <StackPanel Width="160" Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3" Text="{Binding HeaderType, Converter={StaticResource FlagOrValueHeaderEnumConverter}}"/>
-                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="{Binding HeaderType, Converter={StaticResource FlagOrValueTooltipConverter}}"/>
+                    <TextBlock Style="{StaticResource StatusColumnTitle}" Text="Flag" Margin="0,0,0,3" />
+                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Enter a multi-value flag here" />
                 </StackPanel>
                 <TextBox Style="{StaticResource inputBox}" x:Name="FlagInput"
                      HorizontalAlignment="Left"
@@ -70,8 +75,8 @@
             </StackPanel>
             <StackPanel Grid.Column="1" Margin="10,0,0,3">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="0,0,0,3" Text="{Binding HeaderType, Converter={StaticResource FlagOrValueHeaderEnumConverter}}"/>
-                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="{Binding HeaderType, Converter={StaticResource FlagOrValueTooltipConverter}}"/>
+                    <TextBlock Style="{StaticResource StatusColumnTitle}" Text="Delim." Margin="0,0,0,3" />
+                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Enter a delimiter used to split the multi-value flag"/>
                 </StackPanel>
                 <TextBox Style="{StaticResource inputBox}" x:Name="DelimiterInput"
                      Width="45"
