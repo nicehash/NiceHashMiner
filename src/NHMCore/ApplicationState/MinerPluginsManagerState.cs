@@ -22,5 +22,15 @@ namespace NHMCore.ApplicationState
                 OnPropertyChanged();
             }
         }
+        private List<PluginPackageInfoCR> _userPlugins = new();
+        public List<PluginPackageInfoCR> UserPlugins
+        {
+            get => _userPlugins;
+            set
+            {
+                _userPlugins = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }
