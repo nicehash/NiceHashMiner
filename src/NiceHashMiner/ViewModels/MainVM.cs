@@ -312,32 +312,6 @@ namespace NiceHashMiner.ViewModels
             {
                 MinerPluginsManagerStateChanged(Plugins, MinerPluginsManagerState.Instance.RankedPlugins);
                 MinerPluginsManagerStateChanged(UserPlugins, MinerPluginsManagerState.Instance.UserPlugins);
-                //if (Plugins == null) return;
-                //var rankedPlugins = MinerPluginsManagerState.Instance.RankedPlugins;
-                //var rankedPluginsArray = rankedPlugins.ToArray();
-                //// add new
-                //foreach (var plugin in rankedPluginsArray)
-                //{
-                //    var vm = Plugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
-                //    if (vm != null) continue;
-                //    Plugins.Add(new PluginEntryVM(plugin));
-                //    //add here
-                //}
-                //// remove missing
-                //var remove = Plugins.Where(plugin => rankedPlugins.FirstOrDefault(rankedPlugin => rankedPlugin.PluginUUID == plugin.Plugin.PluginUUID) == null).ToArray();
-                //foreach (var rem in remove)
-                //{
-                //    Plugins.Remove(rem);
-                //}
-                //// sort
-                //var removeUUIDs = remove.Select(rem => rem.Plugin.PluginUUID);
-                //var sorted = rankedPlugins.Where(rankedPlugin => !removeUUIDs.Contains(rankedPlugin.PluginUUID)).ToList();
-                //var pluginsToSort = Plugins.ToList();
-                //for (int i = 0; i < sorted.Count; i++)
-                //{
-                //    var oldIndex = pluginsToSort.FindIndex(p => p.Plugin == sorted[i]);
-                //    Plugins.Move(oldIndex, i);
-                //}
             }
         }
 
