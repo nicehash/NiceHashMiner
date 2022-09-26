@@ -255,7 +255,6 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <!--<Separator Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="3" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />-->
                 </Grid>
             </Grid>
 

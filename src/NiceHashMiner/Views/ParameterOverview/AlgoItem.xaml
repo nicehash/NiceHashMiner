@@ -228,11 +228,6 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <!--<TextBlock Grid.Row="3" Style="{StaticResource AlertIcon}"
-                           Visibility="{Binding UniqueCMDs, Converter={StaticResource MultipleInstanceToVisibilityConverter}}"
-                           Margin="12,0,0,0"
-                           HorizontalAlignment="Left"
-                           ToolTip="Multiple instances of this miner will start due to multiple-argument parameter incompatibility."/>-->
                         <ItemsControl Grid.Row="2" Grid.Column="1"  x:Name="CommandsListBox" ItemsSource="{Binding UniqueCMDs}" Margin="60,6,40,20">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
