@@ -55,6 +55,8 @@ namespace NanoMiner
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID);
 
+            var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();  
+
             int pcieId = -1;
             foreach (var gpu in gpus) _mappedIDs[gpu.UUID] = ++pcieId;
             var minDrivers = new Version(455, 23);
@@ -70,6 +72,12 @@ namespace NanoMiner
                 .Select(gpu => (gpu, algorithms: GetSupportedAlgorithmsForDevice(gpu)))
                 .Where(p => p.algorithms.Any())
                 .ToDictionary(p => p.gpu, p => p.algorithms);
+            
+            foreach (var cpu in cpus)
+            {
+                supported.Add(cpu, GetSupportedAlgorithmsForDevice(cpu));
+            }
+
             return supported;
         }
 

@@ -32,6 +32,13 @@ namespace NanoMiner
                         new SAS(AlgorithmType.Autolykos),
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) }
                     }
+                },
+                {
+                    DeviceType.CPU,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.VerusHash)
+                    }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
@@ -40,7 +47,8 @@ namespace NanoMiner
                 { AlgorithmType.Octopus, "Octopus" },
                 { AlgorithmType.DaggerHashimoto, "Ethash" },
                 { AlgorithmType.Autolykos, "autolykos" },
-                { AlgorithmType.EtcHash, "Etchash" }
+                { AlgorithmType.EtcHash, "Etchash" },
+                { AlgorithmType.VerusHash, "Verushash" },
             }
         };
     }
