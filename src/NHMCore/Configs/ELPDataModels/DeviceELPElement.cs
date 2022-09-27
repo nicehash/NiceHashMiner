@@ -24,7 +24,7 @@ namespace NHMCore.Configs.ELPDataModels
             get { return _elp; }
             set
             {
-                _elp = value;
+                _elp = value.Trim();
                 var split = Regex.Replace(_elp, @"\s+", " ").Split(' ');
                 if (IsHeader && split.Length == 2)
                 {
@@ -47,7 +47,7 @@ namespace NHMCore.Configs.ELPDataModels
             get { return _flag; }
             set
             {
-                _flag = value;
+                _flag = value.Trim();
                 OnPropertyChanged(nameof(FLAG));
             }
         }
@@ -57,7 +57,7 @@ namespace NHMCore.Configs.ELPDataModels
             get { return _delim; }
             set
             {
-                _delim = value;
+                _delim = value.Trim();
                 OnPropertyChanged(nameof(DELIM));
             }
         }

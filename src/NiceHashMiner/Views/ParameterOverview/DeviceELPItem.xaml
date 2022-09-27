@@ -76,7 +76,7 @@
             <StackPanel Grid.Column="1" Margin="10,0,0,3">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource StatusColumnTitle}" Text="Delim." Margin="0,0,0,3" />
-                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Enter a delimiter used to split the multi-value flag"/>
+                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Enter a delimiter used to split the multi-value flag. If the delimiter is a space, please look for alternative delimiters in the miner documentation."/>
                 </StackPanel>
                 <TextBox Style="{StaticResource inputBox}" x:Name="DelimiterInput"
                      Width="45"

@@ -41,7 +41,7 @@
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
     </UserControl.Resources>
-    <Grid Background="{DynamicResource BackgroundColor}">
+    <Grid Margin="0,20,0,0" Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -82,7 +82,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                     <TextBlock Margin="0,8,0,0" HorizontalAlignment="Center">
-                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/blog/post/how-to-use-nicehash-miner-extra-commands?lang=en" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                        <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/blog/post/how-to-use-nicehash-miner-extra-commands" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                             Need Help?
                         </Hyperlink>
                     </TextBlock>

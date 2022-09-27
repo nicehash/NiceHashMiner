@@ -6593,7 +6593,7 @@
     "Enter a multi-value flag here": {
 
     },
-    "Enter a delimiter used to split the multi-value flag": {
+    "Enter a delimiter used to split the values. If the delimiter is a space, please look for alternative delimiters in the miner documentation.": {
 
     }
   }
