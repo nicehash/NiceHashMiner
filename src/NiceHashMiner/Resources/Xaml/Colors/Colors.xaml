@@ -5,7 +5,6 @@
         <ResourceDictionary Source="Dark.xaml"/>
         <ResourceDictionary Source="Light.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-
     <!--#region DynamicColors-->
     <SolidColorBrush x:Key="BackgroundColor" Color="{DynamicResource Colors.Light.Grey.Grey4Background}" />
     <SolidColorBrush x:Key="TextColorBrush" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
@@ -40,7 +39,6 @@
     <SolidColorBrush x:Key="TextColorBrush-White.Dark" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
 
     <!--#region Dynamic Text Colors-->
-
     <SolidColorBrush x:Key="TextColorBrush-Primary" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
     <SolidColorBrush x:Key="TextColorBrush-Regular" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
     <SolidColorBrush x:Key="TextColorBrush-Secondary" Color="{DynamicResource Colors.Light.Grey.MainBlack}" />
