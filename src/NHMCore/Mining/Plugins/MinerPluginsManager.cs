@@ -77,6 +77,7 @@ namespace NHMCore.Mining.Plugins
         // API data
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
         private static Dictionary<string, PluginPackageInfoCR> PluginsPackagesInfosCRs { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
+        private static Dictionary<string, PluginPackageInfoCR> PluginsPackagesInternal { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
 
         //public static PluginPackageInfoCR GetPluginPackageInfoCR(string pluginUUID)
         //{
@@ -93,6 +94,15 @@ namespace NHMCore.Mining.Plugins
                     .OrderByDescending(info => info.HasNewerVersion)
                     .ThenByDescending(info => info.SupportedDeviceCount)
                     .ThenBy(info => info.PluginName);
+            }
+        }
+        public static IEnumerable<PluginPackageInfoCR> RankedUserPlugins
+        {
+            get
+            {
+                return PluginsPackagesInternal
+                    .Select(kvp => kvp.Value)
+                    .OrderBy(info => info.PluginName);
             }
         }
 
@@ -611,37 +621,29 @@ namespace NHMCore.Mining.Plugins
                 //.Where(p => p.Enabled) // we can have installed plugins that are obsolete
                 .Where(p => !_integratedPlugins.Any(integrated => integrated.PluginUUID == p.PluginUUID)) // ignore integrated
                 .ToArray();
+            //integrated zone TODO MAKE FUNCTION
+            var integratedPlugins = PluginContainer.PluginContainers
+                .Where(p => _integratedPlugins.Any(integrated => integrated.PluginUUID == p.PluginUUID))?
+                .ToArray();
+            foreach(var integrated in integratedPlugins)
+            {
+                var (uuid, localPluginInfo) = CreateLocalPackageInfo(integrated);
+                if (PluginsPackagesInternal.ContainsKey(uuid) == false)
+                {
+                    PluginsPackagesInternal[uuid] = new PluginPackageInfoCR(uuid);
+                }
+                PluginsPackagesInternal[uuid].LocalInfo = localPluginInfo;
+            }
+            //end integrated zone
             foreach (var installed in installedPlugins)
             {
-                var uuid = installed.PluginUUID;
-                var localPluginInfo = new PluginPackageInfo
-                {
-                    PluginAuthor = installed.Author,
-                    PluginName = installed.Name,
-                    PluginUUID = uuid,
-                    PluginVersion = installed.Version,
-                    // other stuff is not inside the plugin
-                };
-                if (installed.GetPlugin() is PluginBase pb)
-                {
-                    localPluginInfo.MinerPackageURL = pb.GetMinerBinsUrlsForPlugin().FirstOrDefault();
-                    localPluginInfo.PluginDescription = ConstructLocalPluginDescription(pb);
-                    localPluginInfo.SupportedDevicesAlgorithms = new Dictionary<string, List<string>>();
-                    localPluginInfo.PackagePassword = pb.BinsPackagePassword;
-                    var supportedList = pb.SupportedDevicesAlgorithmsDict();
-                    foreach (var supported in supportedList)
-                    {
-                        var algos = supported.Value.Select(algo => Enum.GetName(typeof(AlgorithmType), algo)).ToList();
-                        localPluginInfo.SupportedDevicesAlgorithms.Add(Enum.GetName(typeof(DeviceType), supported.Key), algos);
-                    }
-                }
+                var (uuid, localPluginInfo) = CreateLocalPackageInfo(installed);
                 if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
                 {
                     PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
                 }
                 PluginsPackagesInfosCRs[uuid].LocalInfo = localPluginInfo;
             }
-
             // get online list and check what we have and what is online
             if (OnlinePlugins == null) return;
 
@@ -658,7 +660,34 @@ namespace NHMCore.Mining.Plugins
             {
                 PluginsPackagesInfosCRs[plugin.Key].SupportedDeviceCount = GetPluginDeviceRank(plugin.Value.GetInfoSource());
             }
+            MinerPluginsManagerState.Instance.UserPlugins = RankedUserPlugins.ToList();
             MinerPluginsManagerState.Instance.RankedPlugins = RankedPlugins.ToList();
+        }
+        private static (string uuid, PluginPackageInfo packageInfo) CreateLocalPackageInfo(PluginContainer pluginContainer)
+        {
+            var uuid = pluginContainer.PluginUUID;
+            var localPluginInfo = new PluginPackageInfo
+            {
+                PluginAuthor = pluginContainer.Author,
+                PluginName = pluginContainer.Name,
+                PluginUUID = uuid,
+                PluginVersion = pluginContainer.Version,
+                // other stuff is not inside the plugin
+            };
+            if (pluginContainer.GetPlugin() is PluginBase pb)
+            {
+                localPluginInfo.MinerPackageURL = pb.GetMinerBinsUrlsForPlugin().FirstOrDefault();
+                localPluginInfo.PluginDescription = ConstructLocalPluginDescription(pb);
+                localPluginInfo.SupportedDevicesAlgorithms = new Dictionary<string, List<string>>();
+                localPluginInfo.PackagePassword = pb.BinsPackagePassword;
+                var supportedList = pb.SupportedDevicesAlgorithmsDict();
+                foreach (var supported in supportedList)
+                {
+                    var algos = supported.Value.Select(algo => Enum.GetName(typeof(AlgorithmType), algo)).ToList();
+                    localPluginInfo.SupportedDevicesAlgorithms.Add(Enum.GetName(typeof(DeviceType), supported.Key), algos);
+                }
+            }
+            return (uuid,localPluginInfo);
         }
 
         private static async Task<bool> GetOnlineMinerPlugins()

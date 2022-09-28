@@ -63,6 +63,9 @@ namespace NiceHashMiner
                 Application.Current.Resources["TextBoxBackGroundColor"] = Application.Current.FindResource("TextBoxBackGroundColor.Light");
                 Application.Current.Resources["ComboBoxBackGroundColor"] = Application.Current.FindResource("ComboBoxBackGroundColor.Light");
                 Application.Current.Resources["MODAL_WINDOW_BLUR_Background"] = Application.Current.FindResource("MODAL_WINDOW_BLUR_Background.Light");
+                Application.Current.Resources["ELPPreviewColorBG"] = Application.Current.FindResource("ELPPreviewColorBG.Light");
+                Application.Current.Resources["ELPElementBG"] = Application.Current.FindResource("ELPElementBG.Light");
+                Application.Current.Resources["BorderColor"] = Application.Current.FindResource("BorderColor.Light");
             }
             else
             {
@@ -78,6 +81,9 @@ namespace NiceHashMiner
                 Application.Current.Resources["TextBoxBackGroundColor"] = Application.Current.FindResource("TextBoxBackGroundColor.Dark");
                 Application.Current.Resources["ComboBoxBackGroundColor"] = Application.Current.FindResource("ComboBoxBackGroundColor.Dark");
                 Application.Current.Resources["MODAL_WINDOW_BLUR_Background"] = Application.Current.FindResource("MODAL_WINDOW_BLUR_Background.Dark");
+                Application.Current.Resources["ELPPreviewColorBG"] = Application.Current.FindResource("ELPPreviewColorBG.Dark");
+                Application.Current.Resources["ELPElementBG"] = Application.Current.FindResource("ELPElementBG.Dark");
+                Application.Current.Resources["BorderColor"] = Application.Current.FindResource("BorderColor.Dark");
             }
             // Set the value
             foreach (var setter in _themeSetters)

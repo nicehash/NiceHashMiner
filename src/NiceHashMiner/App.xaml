@@ -183,6 +183,17 @@
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
+            <Style TargetType="TextBlock" x:Key="GreenCircle">
+                <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontStyle" Value="Normal" />
+                <Setter Property="FontStretch" Value="Normal" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="Foreground" Value="{StaticResource NastyGreenBrush}" />
+                <Setter Property="Text" Value="&#xf111;" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
 
             <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
             <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />

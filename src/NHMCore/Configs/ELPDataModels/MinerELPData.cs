@@ -17,6 +17,22 @@ namespace NHMCore.Configs.ELPDataModels
     {
         public string Name { get; set; }
         public string UUID { get; set; }
+        public string CombinedParams => $"{SingleParamString} {DoubleParamString}";
+        public void UpdateProperties()
+        {
+            OnPropertyChanged(nameof(HasAnyContentSet));
+        }
+        public bool HasAnyContentSet
+        {
+            get
+            {
+                foreach(var algo in Algos)
+                {
+                    if (algo.AllCMDStrings.Select(str => str.command).Any(cmd => cmd.Trim() != String.Empty)) return true;
+                }
+                return false;
+            }
+        }
         private List<string> _singleParams { get; set; } = new List<string>();
         public List<string> SingleParams
         {
@@ -30,6 +46,7 @@ namespace NHMCore.Configs.ELPDataModels
         public void UpdateSingleParams(string singleTxt)
         {
             SingleParams = Regex.Replace(singleTxt, @"\s+", " ").Trim().Split(" ").ToList();
+            OnPropertyChanged(nameof(CombinedParams));
             ELPManager.Instance.IterateSubModelsAndConstructELPs();
         }
         private List<(string name, string value)> _doubleParams { get; set; } = new List<(string name, string value)>();
@@ -58,6 +75,7 @@ namespace NHMCore.Configs.ELPDataModels
                 doubleParams.Add((doubles[i - 1], doubles[i]));
             }
             DoubleParams = doubleParams;
+            OnPropertyChanged(nameof(CombinedParams));
             ELPManager.Instance.IterateSubModelsAndConstructELPs();
             return true;
         }
@@ -79,11 +97,13 @@ namespace NHMCore.Configs.ELPDataModels
         {
             SingleParams.Clear();
             ELPManager.Instance.IterateSubModelsAndConstructELPs();
+            OnPropertyChanged(nameof(CombinedParams));
         }
         public void ClearDoubleParams()
         {
             DoubleParams.Clear();
             ELPManager.Instance.IterateSubModelsAndConstructELPs();
+            OnPropertyChanged(nameof(CombinedParams));
         }
         public MiningState MiningState => MiningState.Instance;
     }

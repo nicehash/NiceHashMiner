@@ -9,11 +9,14 @@ using System.Windows.Data;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {
-    internal class MiningStatusVisibilityConverter : IValueConverter
+    public class PreviewContentToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value is bool status && status) return Visibility.Visible;
+            if (value is string preview && preview.Trim() != String.Empty)
+            {
+                return Visibility.Visible;
+            }
             return Visibility.Collapsed;
         }
 

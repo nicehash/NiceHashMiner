@@ -114,6 +114,7 @@ namespace NHMCore.Utils
             foreach (var miner in _minerELPs)
             {
                 IterateSubModelsAndConstructELPsForPlugin(miner);
+                miner.UpdateProperties();
             }
         }
 
@@ -238,11 +239,12 @@ namespace NHMCore.Utils
                 algo.SingleParams.ForEach(single => algoParams.Add(new List<string>() { single }));
                 if (algo.DoubleParams == null) algo.DoubleParams = new();
                 algo.DoubleParams.ForEach(dbl => algoParams.Add(new List<string>() { dbl.name, dbl.value }));
+                algo.CombinedParams = MinerExtraParameters.ParseAlgoPreview(minerParams, algoParams);
                 var header = algo.Devices.FirstOrDefault();
                 if (header == null || !header.IsDeviceDataHeader) continue;
                 var columnToDelete = header.ELPs
                     .Select((elp, index) => new { elp, index })
-                    .Where(item => string.IsNullOrEmpty(item.elp.ELP))
+                    .Where(item => string.IsNullOrEmpty(item.elp.ELP.Trim()))
                     .FirstOrDefault();
                 bool shouldDelete = false;
                 if(columnToDelete != null) shouldDelete = columnToDelete.index < header.ELPs.Count - 1;
@@ -260,6 +262,7 @@ namespace NHMCore.Utils
                     {
                         var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
                         if (flagAndDelim.Length != 2) continue;
+                        if (dev.ELPs[i].ELP == String.Empty) continue;
                         oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
                     }
                     devParams.Add((dev.UUID, oneDevParams));

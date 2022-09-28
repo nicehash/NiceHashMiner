@@ -23,4 +23,8 @@
 
     <Color x:Key="Colors.Light.Border">#EEEEEE</Color>
 
+    <!--#region ELP colors-->
+    <Color x:Key="Colors.Light.ELP.ELPPreviewColorBG">#EEEEEE</Color>
+    <Color x:Key="Colors.Light.ELP.ELPElementBG">Transparent</Color>
+    <!--#endregion ELP colors-->
 </ResourceDictionary>

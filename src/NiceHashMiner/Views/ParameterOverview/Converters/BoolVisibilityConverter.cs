@@ -1,26 +1,20 @@
-﻿using NiceHashMiner.ViewModels.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using NHMCore;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
-using NHMCore.Configs.ELPDataModels;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {
-    class FlagOrValueHeaderEnumConverter : IValueConverter
+    internal class BoolVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is HeaderType ht)
-            {
-                if(ht == HeaderType.Value) return Translations.Tr("Value");
-                return Translations.Tr("Flag & delimiter");
-            }
-            return string.Empty;
+            if(value is bool status && status) return Visibility.Visible;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

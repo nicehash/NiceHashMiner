@@ -6570,6 +6570,31 @@
       "jp": "Online NiceHash Miner バージョン：",
       "zh_cn": "在线NiceHash Miner版本:",
       "si": "Različica spletne verzije NiceHash Minerja:"
+    },
+    "Commands without a value": {
+
+    },
+    "Commands with a value": {
+
+    },
+    "Command": {
+
+    },
+    //delimiter
+    "Delim.": {
+
+    },
+    "Value": {
+
+    },
+    "Enter a value that will be used for this device with the flag above": {
+
+    },
+    "Enter a multi-value flag here": {
+
+    },
+    "Enter a delimiter used to split the values. If the delimiter is a space, please look for alternative delimiters in the miner documentation.": {
+
     }
   }
 }

@@ -11,6 +11,7 @@ using NHMCore.Configs.ELPDataModels;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
+using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
 using NHMCore.Schedules;
 using NHMCore.Switching;
@@ -267,36 +268,50 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged();
             }
         }
+        private ObservableCollection<PluginEntryVM> _userPlugins;
+        public ObservableCollection<PluginEntryVM> UserPlugins
+        {
+            get => _userPlugins;
+            set
+            {
+                _userPlugins = value;
+                OnPropertyChanged();
+            }
+        }
+        private void MinerPluginsManagerStateChanged(ObservableCollection<PluginEntryVM> ListOfPlugins, List<PluginPackageInfoCR> pluginPackageList)
+        {
+            if (ListOfPlugins == null || pluginPackageList == null) return;
 
+            var rankedPluginsArray = pluginPackageList.ToArray();
+            // add new
+            foreach (var plugin in rankedPluginsArray)
+            {
+                var vm = ListOfPlugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
+                if (vm != null) continue;
+                ListOfPlugins.Add(new PluginEntryVM(plugin));
+            }
+            // remove missing
+            var remove = ListOfPlugins.Where(plugin => pluginPackageList.FirstOrDefault(rankedPlugin => rankedPlugin.PluginUUID == plugin.Plugin.PluginUUID) == null).ToArray();
+            foreach (var rem in remove)
+            {
+                ListOfPlugins.Remove(rem);
+            }
+            // sort
+            var removeUUIDs = remove.Select(rem => rem.Plugin.PluginUUID);
+            var sorted = pluginPackageList.Where(rankedPlugin => !removeUUIDs.Contains(rankedPlugin.PluginUUID)).ToList();
+            var pluginsToSort = ListOfPlugins.ToList();
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                var oldIndex = pluginsToSort.FindIndex(p => p.Plugin == sorted[i]);
+                ListOfPlugins.Move(oldIndex, i);
+            }
+        }
         private void MinerPluginsManagerState_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             lock (_lock)
             {
-                if (Plugins == null) return;
-                var rankedPlugins = MinerPluginsManagerState.Instance.RankedPlugins;
-                var rankedPluginsArray = rankedPlugins.ToArray();
-                // add new
-                foreach (var plugin in rankedPluginsArray)
-                {
-                    var vm = Plugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
-                    if (vm != null) continue;
-                    Plugins.Add(new PluginEntryVM(plugin));
-                }
-                // remove missing
-                var remove = Plugins.Where(plugin => rankedPlugins.FirstOrDefault(rankedPlugin => rankedPlugin.PluginUUID == plugin.Plugin.PluginUUID) == null).ToArray();
-                foreach (var rem in remove)
-                {
-                    Plugins.Remove(rem);
-                }
-                // sort
-                var removeUUIDs = remove.Select(rem => rem.Plugin.PluginUUID);
-                var sorted = rankedPlugins.Where(rankedPlugin => !removeUUIDs.Contains(rankedPlugin.PluginUUID)).ToList();
-                var pluginsToSort = Plugins.ToList();
-                for (int i = 0; i < sorted.Count; i++)
-                {
-                    var oldIndex = pluginsToSort.FindIndex(p => p.Plugin == sorted[i]);
-                    Plugins.Move(oldIndex, i);
-                }
+                MinerPluginsManagerStateChanged(Plugins, MinerPluginsManagerState.Instance.RankedPlugins);
+                MinerPluginsManagerStateChanged(UserPlugins, MinerPluginsManagerState.Instance.UserPlugins);
             }
         }
 
@@ -383,6 +398,7 @@ namespace NiceHashMiner.ViewModels
         }
 
 
+
         public void ReadELPConfigsOrCreateIfMissing()
         {
             if (Plugins == null) return;
@@ -391,7 +407,7 @@ namespace NiceHashMiner.ViewModels
                 .Select(dev => new { P = (dev.Dev.FullName, dev.Dev.Uuid, dev.Dev.DeviceType) })
                 .Select(p => p.P)
                 .ToList();
-            foreach (var plugin in Plugins)
+            foreach (var plugin in Plugins.Concat(UserPlugins))
             {
                 if (!plugin.Plugin.Installed) continue;
                 var minerPlugin = Devices?
@@ -444,6 +460,7 @@ namespace NiceHashMiner.ViewModels
         public async Task InitializeNhm(IStartupLoader sl)
         {
             Plugins = new ObservableCollection<PluginEntryVM>();
+            UserPlugins = new ObservableCollection<PluginEntryVM>();
             HelpNotificationList = new ObservableCollection<Notification>();
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
@@ -455,6 +472,7 @@ namespace NiceHashMiner.ViewModels
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
             BindingOperations.EnableCollectionSynchronization(Plugins, _lock);
+            BindingOperations.EnableCollectionSynchronization(UserPlugins, _lock);
             BindingOperations.EnableCollectionSynchronization(HelpNotificationList, _lock);
             BindingOperations.EnableCollectionSynchronization(Schedules, _lock);
             MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;

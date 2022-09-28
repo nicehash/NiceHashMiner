@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using NHM.Common.Enums;
 using NHMCore.Configs.ELPDataModels;
 using NHMCore.Utils;
+using Windows.UI;
 
 namespace NiceHashMiner.Views.ParameterOverview
 {
@@ -31,45 +32,64 @@ namespace NiceHashMiner.Views.ParameterOverview
 
         private void DeviceELPValueTB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(DataContext is DeviceELPElement ee && sender is TextBox tb)
+            if(DataContext is DeviceELPElement ee && sender is TextBox tb && !ee.IsHeader)
             {
-                CheckFlagDelimBoxValidAndUpdateIfOK(sender);
+                CheckValueValidAndUpdateIfOK(sender);
                 ee.ELP = tb.Text;
                 ELPManager.Instance.IterateSubModelsAndConstructELPs();
             }
         }
-
-        private void DeviceELPValueTB_LostFocus(object sender, RoutedEventArgs e)
+        private void HeaderFlagELPValueTB_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (DataContext is DeviceELPElement ee && sender is TextBox tb && ee.IsHeader)
+            {
+                ee.FLAG = tb.Text;
+                CheckValueValidAndUpdateIfOK(sender);
+                ee.SafeSetELP();
+                ELPManager.Instance.IterateSubModelsAndConstructELPs();
+            }
+        }
+        private void HeaderDelimELPValueTB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (DataContext is DeviceELPElement ee && sender is TextBox tb && ee.IsHeader)
+            {
+                ee.DELIM = tb.Text;
+                CheckValueValidAndUpdateIfOK(sender);
+                ee.SafeSetELP();
+                ELPManager.Instance.IterateSubModelsAndConstructELPs();
+            }
+        }
+        private void TB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ELPManager.Instance.IterateSubModelsAndConstructELPs();
             ELPManager.Instance.UpdateMinerELPConfig();
         }
 
-        private void CheckFlagDelimBoxValidAndUpdateIfOK(object sender)
+        private void CheckValueValidAndUpdateIfOK(object sender)
         {
             if (sender is not TextBox tb) return;
             var text = tb.Text;
             if (DataContext is DeviceELPElement de)
             {
-                if (de.HeaderType == HeaderType.Value) return;
                 if (string.IsNullOrEmpty(text))
                 {
-                    DeviceELPValueTB.Style = Application.Current.FindResource("inputBox") as Style;
-                    DeviceELPValueTB.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
+                    tb.Style = Application.Current.FindResource("inputBox") as Style;
+                    tb.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
                     return;
                 }
-                if (IsParsedTextLenTwo(text))
+                if (IsParsedTextLenOne(text))
                 {
-                    DeviceELPValueTB.Style = Application.Current.FindResource("InputBoxGood") as Style;
-                    DeviceELPValueTB.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+                    tb.Style = Application.Current.FindResource("InputBoxGood") as Style;
+                    tb.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
                     return;
                 }
-                DeviceELPValueTB.Style = Application.Current.FindResource("InputBoxBad") as Style;
-                DeviceELPValueTB.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
+                tb.Style = Application.Current.FindResource("InputBoxBad") as Style;
+                tb.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
             }
         }
-        private bool IsParsedTextLenTwo(string txt)
+        private bool IsParsedTextLenOne(string txt)
         {
-            return txt.Trim().Split(' ').Length == 2;
+            return txt.Trim().Split(' ').Length == 1;
         }
     }
 }

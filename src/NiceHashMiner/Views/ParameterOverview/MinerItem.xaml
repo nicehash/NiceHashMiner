@@ -10,6 +10,19 @@
              d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=viewModels:MinerELPData}">
     <UserControl.Resources>
+        <local:PreviewContentToVisibilityConverter x:Key="PreviewContentToVisibilityConverter" />
+        <Style TargetType="Grid" x:Key="previewGrid">
+            <Setter Property="Background" Value="{DynamicResource ELPPreviewColorBG}" />
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+        <Style TargetType="StackPanel" x:Key="previewStackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5,10,5,10" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="previewTBHeader" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
         <Style TargetType="TextBlock" x:Key="local.InfoIcon">
             <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -87,7 +100,7 @@
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="RenderTransform">
                         <Setter.Value>
-                            <RotateTransform Angle="90" />
+                            <RotateTransform Angle="180" />
                         </Setter.Value>
                     </Setter>
                 </Trigger>
@@ -130,7 +143,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" MinWidth="320" MinHeight="56" Margin="40,0,40,0">
+        <Grid  Grid.Row="0" MinWidth="320" MinHeight="56" Margin="40,0,40,0">
             <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
                 <Border.Style>
                     <Style TargetType="Border">
@@ -147,7 +160,7 @@
                 </Border.Style>
             </Border>
             <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click"  HorizontalContentAlignment="Stretch">
-                <Grid Background="Transparent" HorizontalAlignment="Stretch" >
+                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.2*" />
                         <ColumnDefinition Width="*" />
@@ -155,6 +168,10 @@
                     </Grid.ColumnDefinitions>
                     <WrapPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
                         <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                        <TextBlock Visibility="{Binding HasAnyContentSet, Converter={StaticResource NulBoolToVisibilityConverter}}" 
+                                   Style="{StaticResource GreenCircle}" 
+                                   FontSize="5"
+                                   Margin="5,0,5,0"/>
                     </WrapPanel>
                     <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
@@ -171,48 +188,75 @@
                                  IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
                     </Grid>
                     <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
-                        <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xF105;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
+                        <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xf107;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
                     </WrapPanel>
                 </Grid>
             </ToggleButton>
         </Grid>
-        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="Transparent" Visibility="Collapsed" Width="Auto" Margin="40,20,40,0">
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.2*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1">
+        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="Transparent" Visibility="Collapsed" Width="Auto" Margin="0,20,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="40,0,40,0">
+                <Grid Grid.Row="0" Style="{StaticResource previewGrid}"
+                      Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}">
+                    <StackPanel Style="{StaticResource previewStackPanel}">
+                        <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
+                        <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding CombinedParams}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Separator Grid.Row="1" Margin="40,0,40,20" Background="{DynamicResource BorderColor}" />
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0*"/>
+                    <ColumnDefinition Width="100*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="0" Margin="40,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="1"  Stroke="{DynamicResource BorderColor}" />
+
+                <Grid Grid.Column="1" Margin="60,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1" x:Name="headerGrid">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="0.2*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" Margin="24,0,0,0" Grid.Column="1" >
-                            <TextBlock LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Single parameters</TextBlock>
-                            <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="-21,0,0,0" Grid.Column="2">
-                            <TextBlock  LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Double parameters</TextBlock>
-                            <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
-                        </StackPanel>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Margin="-20,0,0,0" Grid.Column="1" >
+                                <TextBlock LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Commands without a value</TextBlock>
+                                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="-40,0,0,0" Grid.Column="2">
+                                <TextBlock  LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Commands with a value</TextBlock>
+                                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
+                    <ItemsControl Grid.Row="2" Margin="0,0,0,20" ItemsSource="{Binding Algos}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:AlgoItem DataContext="{Binding .}" Margin="0,8,0,0" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding Algos}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:AlgoItem DataContext="{Binding .}" Margin="0,8,0,0" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-                <Separator Grid.Row="2" Margin="0,16,0,8" Background="{DynamicResource BorderColor}" />
-            </StackPanel>
+            </Grid>
 
         </Grid>
 
