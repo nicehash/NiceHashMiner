@@ -114,6 +114,7 @@ namespace NHM.MinerPluginToolkitV1.CommandLine
                 foreach (var b in devicesParameters)
                 {
                     if (a == b) continue;
+                    if(a.Count == 0 || b.Count == 0) return false;
                     if (!CheckIfCanGroup(a, b)) return false;
                 }
             }
