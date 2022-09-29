@@ -31,14 +31,15 @@ namespace NiceHashMiner.Views.Settings
 
         private void btn_new_slot_Click(object sender, RoutedEventArgs e)
         {
-            var pattern = "[0-2][0-9]:[0-5][0-9]";
+            var pattern = "[0-1][0-9]:[0-5][0-9]";
+            var pattern2 = "[2][0-3]:[0-5][0-9]";
             var rg = new Regex(pattern);
+            var rg2 = new Regex(pattern2);
             var anyDay = (bool)cboxMon.IsChecked || (bool)cboxTue.IsChecked || (bool)cboxWed.IsChecked
                 || (bool)cboxThu.IsChecked || (bool)cboxFri.IsChecked || (bool)cboxSat.IsChecked || (bool)cboxSun.IsChecked;
-            var rightFormat = rg.IsMatch(textBoxSchedulerFrom.Text) && rg.IsMatch(textBoxSchedulerTo.Text);
+            var rightFormat = (rg.IsMatch(textBoxSchedulerFrom.Text) || rg2.IsMatch(textBoxSchedulerFrom.Text)) && (rg.IsMatch(textBoxSchedulerTo.Text) || rg2.IsMatch(textBoxSchedulerTo.Text));
 
-            
-            var timeComparation = rightFormat && Convert.ToDateTime(textBoxSchedulerFrom.Text) < Convert.ToDateTime(textBoxSchedulerTo.Text);
+            var timeComparation = rightFormat ? Convert.ToDateTime(textBoxSchedulerFrom.Text) < Convert.ToDateTime(textBoxSchedulerTo.Text) : false;
 
             if (anyDay && rightFormat && timeComparation)
             {

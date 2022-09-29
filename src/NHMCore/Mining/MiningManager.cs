@@ -744,6 +744,8 @@ namespace NHMCore.Mining
                     shouldStop = true;
             }
 
+            if (!shouldStart && !shouldStop) return;
+
             if (shouldStop && _runningMiners.Any())
             {
                 var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
