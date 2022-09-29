@@ -732,22 +732,25 @@ namespace NHMCore.Mining
             if (!_useScheduler) return;
             if(!SchedulesManager.Instance.Schedules.Any()) return;
 
-            var onSchedule = false;
+            var shouldStart = false;
+            var shouldStop = false;
             var time = DateTime.Now;
 
             foreach (var schedule in SchedulesManager.Instance.Schedules)
             {
-                if (Convert.ToDateTime(schedule.From) < time && Convert.ToDateTime(schedule.To) > time && schedule.Days[time.DayOfWeek.ToString()])
-                    onSchedule = true;
+                if (Convert.ToDateTime(schedule.From).ToString() == time.ToString() && schedule.Days[time.DayOfWeek.ToString()])
+                    shouldStart = true;
+                if (Convert.ToDateTime(schedule.To).ToString() == time.ToString() && schedule.Days[time.DayOfWeek.ToString()])
+                    shouldStop = true;
             }
 
-            if (!onSchedule && _runningMiners.Any())
+            if (shouldStop && _runningMiners.Any())
             {
                 var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
                 foreach (var dev in devicesToStop) await StopDevice(dev);
                 await StopAllMinersTask();
             }
-            else if (onSchedule && !_runningMiners.Any())
+            else if (shouldStart && !_runningMiners.Any())
             {
                 var devicesToStart = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Stopped);
                 foreach (var dev in devicesToStart) await StartDevice(dev);

@@ -12,52 +12,50 @@
                                         Label="Use Scheduler"
                                         Description="{StaticResource useScheduler}"
                                         Margin="16,16,0,0"/>
-        <StackPanel IsEnabled="{Binding MiningSettings.UseScheduler}">
-            <Label Content="Schedule Slots" Style="{StaticResource FontsTypography.Heading3/Secondary}" Margin="14,46,0,0"/>
-            <TextBlock Text="No slots yet." Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" Margin="16,14,0,0" Visibility="{Binding Schedules.Count, Converter={StaticResource NumberToVisibilityConverterZero}}"/>
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="16,0,0,0">
-                <ItemsControl ItemsSource="{Binding Schedules}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <local:SettingsSchedulerItem DataContext="{Binding .}" Margin="0,8,8,0"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-            <Label Content="Add new Slot" Style="{StaticResource FontsTypography.Heading3/Secondary}" Margin="14,46,0,0"/>
-            <StackPanel Margin="16,26,0,0">
-                <WrapPanel Orientation="Horizontal" Margin="0,0,0,0">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="From" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
-                        <TextBox x:Name="textBoxSchedulerFrom" Style="{StaticResource smallInputBox}" Text="hh:mm" Margin="0,0,24,0" GotKeyboardFocus="textBoxSchedulerFrom_GotKeyboardFocus" LostKeyboardFocus="textBoxSchedulerFrom_LostKeyboardFocus" PreviewTextInput="textBoxSchedulerFrom_PreviewTextInput"/>
-                    </StackPanel>
-                    <Line X1="0" Y1="38" X2="22" Y2="38" Stroke="{StaticResource Brushes.Light.Grey.Grey1}" StrokeThickness="1" />
-                    <StackPanel Orientation="Vertical" Margin="24,0,0,0">
-                        <TextBlock Text="To" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"></TextBlock>
-                        <TextBox x:Name="textBoxSchedulerTo" Style="{StaticResource smallInputBox}" Text="hh:mm" Margin="0,0,24,0" GotKeyboardFocus="textBoxSchedulerTo_GotKeyboardFocus" LostKeyboardFocus="textBoxSchedulerTo_LostKeyboardFocus" PreviewTextInput="textBoxSchedulerTo_PreviewTextInput"/>
-                    </StackPanel>
-                </WrapPanel>
-                <TextBlock Text="Days" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,16,16,8"/>
-                <StackPanel Orientation="Horizontal">
-                    <CheckBox x:Name="cboxMon" Style="{StaticResource NHMCheckBox}" Content="Mon" Width="50"/>
-                    <CheckBox x:Name="cboxTue" Style="{StaticResource NHMCheckBox}" Content="Tue" Width="50" Margin="19,0,0,0"/>
-                    <CheckBox x:Name="cboxWed" Style="{StaticResource NHMCheckBox}" Content="Wed" Width="50" Margin="19,0,0,0"/>
-                    <CheckBox x:Name="cboxThu" Style="{StaticResource NHMCheckBox}" Content="Thu" Width="50" Margin="19,0,0,0"/>
-                    <CheckBox x:Name="cboxFri" Style="{StaticResource NHMCheckBox}" Content="Fri" Width="50" Margin="19,0,0,0"/>
-                    <CheckBox x:Name="cboxSat" Style="{StaticResource NHMCheckBox}" Content="Sat" Width="50" Margin="19,0,0,0"/>
-                    <CheckBox x:Name="cboxSun" Style="{StaticResource NHMCheckBox}" Content="Sun" Width="50" Margin="19,0,0,0"/>
+        <Label Content="Schedule Slots" Style="{StaticResource FontsTypography.Heading3/Secondary}" Margin="14,46,0,0"/>
+        <TextBlock Text="No slots yet." Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" Margin="16,14,0,0" Visibility="{Binding Schedules.Count, Converter={StaticResource NumberToVisibilityConverterZero}}"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="16,0,0,0">
+            <ItemsControl ItemsSource="{Binding Schedules}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:SettingsSchedulerItem DataContext="{Binding .}" Margin="0,8,8,0"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Label Content="Add new Slot" Style="{StaticResource FontsTypography.Heading3/Secondary}" Margin="14,46,0,0"/>
+        <StackPanel Margin="16,26,0,0">
+            <WrapPanel Orientation="Horizontal" Margin="0,0,0,0">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="From" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
+                    <TextBox x:Name="textBoxSchedulerFrom" Style="{StaticResource smallInputBox}" Text="hh:mm" Margin="0,0,24,0" GotKeyboardFocus="textBoxSchedulerFrom_GotKeyboardFocus" LostKeyboardFocus="textBoxSchedulerFrom_LostKeyboardFocus" PreviewTextInput="textBoxSchedulerFrom_PreviewTextInput"/>
                 </StackPanel>
+                <Line X1="0" Y1="38" X2="22" Y2="38" Stroke="{StaticResource Brushes.Light.Grey.Grey1}" StrokeThickness="1" />
+                <StackPanel Orientation="Vertical" Margin="24,0,0,0">
+                    <TextBlock Text="To" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"></TextBlock>
+                    <TextBox x:Name="textBoxSchedulerTo" Style="{StaticResource smallInputBox}" Text="hh:mm" Margin="0,0,24,0" GotKeyboardFocus="textBoxSchedulerTo_GotKeyboardFocus" LostKeyboardFocus="textBoxSchedulerTo_LostKeyboardFocus" PreviewTextInput="textBoxSchedulerTo_PreviewTextInput"/>
+                </StackPanel>
+            </WrapPanel>
+            <TextBlock Text="Days" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,16,16,8"/>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox x:Name="cboxMon" Style="{StaticResource NHMCheckBox}" Content="Mon" Width="50"/>
+                <CheckBox x:Name="cboxTue" Style="{StaticResource NHMCheckBox}" Content="Tue" Width="50" Margin="19,0,0,0"/>
+                <CheckBox x:Name="cboxWed" Style="{StaticResource NHMCheckBox}" Content="Wed" Width="50" Margin="19,0,0,0"/>
+                <CheckBox x:Name="cboxThu" Style="{StaticResource NHMCheckBox}" Content="Thu" Width="50" Margin="19,0,0,0"/>
+                <CheckBox x:Name="cboxFri" Style="{StaticResource NHMCheckBox}" Content="Fri" Width="50" Margin="19,0,0,0"/>
+                <CheckBox x:Name="cboxSat" Style="{StaticResource NHMCheckBox}" Content="Sat" Width="50" Margin="19,0,0,0"/>
+                <CheckBox x:Name="cboxSun" Style="{StaticResource NHMCheckBox}" Content="Sun" Width="50" Margin="19,0,0,0"/>
             </StackPanel>
-            <Button
+        </StackPanel>
+        <Button
                     Width="136" Height="24"
                     Margin="16,22,0,16"
                     HorizontalAlignment="Left"
                     x:Name="btnAddNewSlot" Click="btn_new_slot_Click">
-                <Button.Resources>
-                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonPrimary}" />
-                </Button.Resources>
-                <Label FontFamily="{StaticResource UbuntuFontFamily}" Style="{StaticResource FontsTypography.TinyBold/White}">ADD NEW TIME SLOT</Label>
-            </Button>
-        </StackPanel>
+            <Button.Resources>
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BigButtonPrimary}" />
+            </Button.Resources>
+            <Label FontFamily="{StaticResource UbuntuFontFamily}" Style="{StaticResource FontsTypography.TinyBold/White}">ADD NEW TIME SLOT</Label>
+        </Button>
     </StackPanel>
 </UserControl>
