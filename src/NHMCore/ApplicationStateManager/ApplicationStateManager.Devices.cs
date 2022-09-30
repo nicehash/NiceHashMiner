@@ -1,6 +1,7 @@
 using NHMCore.Mining;
 using System.Linq;
 using System.Threading.Tasks;
+using NHM.Common.Enums;
 
 namespace NHMCore
 {
@@ -11,6 +12,10 @@ namespace NHMCore
         {
             if (!enabled) await StopDeviceTask(dev);
             dev.Enabled = enabled;
+
+            var rigStatus = CalcRigStatus();
+            if (enabled && (rigStatus == RigStatus.Mining || rigStatus == RigStatus.Benchmarking)) await StartDeviceTask(dev);
+
             Configs.ConfigManager.CommitBenchmarksForDevice(dev);
         }
 
