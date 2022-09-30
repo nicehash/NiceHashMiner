@@ -132,10 +132,12 @@ namespace NiceHashMiner.Views.Settings
         {
             var pattern = "[0-1][0-9]:[0-5][0-9]";
             var pattern2 = "[2][0-3]:[0-5][0-9]";
+            var pattern3 = "[1-9]:[0-5][0-9]";
             var rg = new Regex(pattern);
             var rg2 = new Regex(pattern2);
+            var rg3 = new Regex(pattern3);
 
-            return rg.IsMatch(hour) || rg2.IsMatch(hour);
+            return rg.IsMatch(hour) || rg2.IsMatch(hour) || rg3.IsMatch(hour);
         }
 
         private void textBoxSchedulerFrom_KeyUp(object sender, KeyEventArgs e)
