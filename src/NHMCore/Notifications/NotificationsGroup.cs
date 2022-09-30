@@ -51,6 +51,7 @@ namespace NHMCore.Notifications
         DriverVersionProblem,
         OptimizationWithProfilesDisabled,
         OptimizationProfilesElevate,
-        RequireAdminForLHR
+        RequireAdminForLHR,
+        NoPowerInfo
     }
 }
