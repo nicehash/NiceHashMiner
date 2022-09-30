@@ -31,13 +31,9 @@ namespace NiceHashMiner.Views.Settings
 
         private void btn_new_slot_Click(object sender, RoutedEventArgs e)
         {
-            var pattern = "[0-1][0-9]:[0-5][0-9]";
-            var pattern2 = "[2][0-3]:[0-5][0-9]";
-            var rg = new Regex(pattern);
-            var rg2 = new Regex(pattern2);
             var anyDay = (bool)cboxMon.IsChecked || (bool)cboxTue.IsChecked || (bool)cboxWed.IsChecked
                 || (bool)cboxThu.IsChecked || (bool)cboxFri.IsChecked || (bool)cboxSat.IsChecked || (bool)cboxSun.IsChecked;
-            var rightFormat = (rg.IsMatch(textBoxSchedulerFrom.Text) || rg2.IsMatch(textBoxSchedulerFrom.Text)) && (rg.IsMatch(textBoxSchedulerTo.Text) || rg2.IsMatch(textBoxSchedulerTo.Text));
+            var rightFormat = ValidateHour(textBoxSchedulerFrom.Text) && ValidateHour(textBoxSchedulerTo.Text);
 
             var timeComparation = rightFormat ? Convert.ToDateTime(textBoxSchedulerFrom.Text) < Convert.ToDateTime(textBoxSchedulerTo.Text) : false;
 
@@ -89,11 +85,25 @@ namespace NiceHashMiner.Views.Settings
         private void textBoxSchedulerFrom_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (textBoxSchedulerFrom.Text == "") textBoxSchedulerFrom.Text = "hh:mm";
+            else
+            {
+                var hourOK = ValidateHour(textBoxSchedulerFrom.Text);
+                var (style, brush) = GetStyleBrush(hourOK);
+                textBoxSchedulerFrom.Style = style;
+                textBoxSchedulerFrom.BorderBrush = brush;
+            }
         }
 
         private void textBoxSchedulerTo_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (textBoxSchedulerTo.Text == "") textBoxSchedulerTo.Text = "hh:mm";
+            else
+            {
+                var hourOK = ValidateHour(textBoxSchedulerTo.Text);
+                var (style, brush) = GetStyleBrush(hourOK);
+                textBoxSchedulerTo.Style = style;
+                textBoxSchedulerTo.BorderBrush = brush;
+            }
         }
 
         private void textBoxSchedulerFrom_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -108,6 +118,56 @@ namespace NiceHashMiner.Views.Settings
             var pattern = "[0-9]|:";
             var rg = new Regex(pattern);
             if (!rg.IsMatch(e.Text)) e.Handled = true;
+        }
+        private (Style style, Brush brush) GetStyleBrush(bool isGood)
+        {
+            var (styleName, brushName) = isGood ? ("InputBoxGoodSmall", "NastyGreenBrush") : ("InputBoxBadSmall", "RedDangerColorBrush");
+            return (
+                Application.Current.FindResource(styleName) as Style,
+                (Brush)Application.Current.FindResource(brushName)
+                );
+        }
+
+        private bool ValidateHour(string hour)
+        {
+            var pattern = "[0-1][0-9]:[0-5][0-9]";
+            var pattern2 = "[2][0-3]:[0-5][0-9]";
+            var rg = new Regex(pattern);
+            var rg2 = new Regex(pattern2);
+
+            return rg.IsMatch(hour) || rg2.IsMatch(hour);
+        }
+
+        private void textBoxSchedulerFrom_KeyUp(object sender, KeyEventArgs e)
+        {
+            var hourOK = ValidateHour(textBoxSchedulerFrom.Text);
+            var (style, brush) = GetStyleBrush(hourOK);
+            textBoxSchedulerFrom.Style = style;
+            textBoxSchedulerFrom.BorderBrush = brush;
+        }
+
+        private void textBoxSchedulerTo_KeyUp(object sender, KeyEventArgs e)
+        {
+            var hourOK = ValidateHour(textBoxSchedulerTo.Text);
+            var (style, brush) = GetStyleBrush(hourOK);
+            textBoxSchedulerTo.Style = style;
+            textBoxSchedulerTo.BorderBrush = brush;
+        }
+
+        private void textBoxSchedulerFrom_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var hourOK = ValidateHour(textBoxSchedulerFrom.Text);
+            var (style, brush) = GetStyleBrush(hourOK);
+            textBoxSchedulerFrom.Style = style;
+            textBoxSchedulerFrom.BorderBrush = brush;
+        }
+
+        private void textBoxSchedulerTo_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var hourOK = ValidateHour(textBoxSchedulerTo.Text);
+            var (style, brush) = GetStyleBrush(hourOK);
+            textBoxSchedulerTo.Style = style;
+            textBoxSchedulerTo.BorderBrush = brush;
         }
     }
 }

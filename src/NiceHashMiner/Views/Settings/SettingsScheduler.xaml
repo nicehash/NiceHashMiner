@@ -28,12 +28,12 @@
             <WrapPanel Orientation="Horizontal" Margin="0,0,0,0">
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="From" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
-                    <TextBox x:Name="textBoxSchedulerFrom" Style="{StaticResource smallInputBox}" Text="hh:mm" Margin="0,0,24,0" GotKeyboardFocus="textBoxSchedulerFrom_GotKeyboardFocus" LostKeyboardFocus="textBoxSchedulerFrom_LostKeyboardFocus" PreviewTextInput="textBoxSchedulerFrom_PreviewTextInput"/>
+                    <TextBox x:Name="textBoxSchedulerFrom" Style="{StaticResource smallInputBox}" Text="hh:mm" Margin="0,0,24,0" GotKeyboardFocus="textBoxSchedulerFrom_GotKeyboardFocus" LostKeyboardFocus="textBoxSchedulerFrom_LostKeyboardFocus" PreviewTextInput="textBoxSchedulerFrom_PreviewTextInput" KeyUp="textBoxSchedulerFrom_KeyUp" TextChanged="textBoxSchedulerFrom_TextChanged"/>
                 </StackPanel>
                 <Line X1="0" Y1="38" X2="22" Y2="38" Stroke="{StaticResource Brushes.Light.Grey.Grey1}" StrokeThickness="1" />
                 <StackPanel Orientation="Vertical" Margin="24,0,0,0">
                     <TextBlock Text="To" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"></TextBlock>
-                    <TextBox x:Name="textBoxSchedulerTo" Style="{StaticResource smallInputBox}" Text="hh:mm" Margin="0,0,24,0" GotKeyboardFocus="textBoxSchedulerTo_GotKeyboardFocus" LostKeyboardFocus="textBoxSchedulerTo_LostKeyboardFocus" PreviewTextInput="textBoxSchedulerTo_PreviewTextInput"/>
+                    <TextBox x:Name="textBoxSchedulerTo" Style="{StaticResource smallInputBox}" Text="hh:mm" Margin="0,0,24,0" GotKeyboardFocus="textBoxSchedulerTo_GotKeyboardFocus" LostKeyboardFocus="textBoxSchedulerTo_LostKeyboardFocus" PreviewTextInput="textBoxSchedulerTo_PreviewTextInput" KeyUp="textBoxSchedulerTo_KeyUp" TextChanged="textBoxSchedulerTo_TextChanged"/>
                 </StackPanel>
             </WrapPanel>
             <TextBlock Text="Days" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,16,16,8"/>
