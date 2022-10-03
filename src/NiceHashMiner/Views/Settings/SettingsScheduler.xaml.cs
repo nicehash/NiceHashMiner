@@ -36,26 +36,69 @@ namespace NiceHashMiner.Views.Settings
             var anyDay = (bool)cboxMon.IsChecked || (bool)cboxTue.IsChecked || (bool)cboxWed.IsChecked
                 || (bool)cboxThu.IsChecked || (bool)cboxFri.IsChecked || (bool)cboxSat.IsChecked || (bool)cboxSun.IsChecked;
             var rightFormat = ValidateHour(schedulerFrom) && ValidateHour(schedulerTo);
-           
+            var isNotSame = schedulerFrom != schedulerTo;
 
-            if (anyDay && rightFormat)
+            if (anyDay && rightFormat && isNotSame)
             {
-                var schedule = new Schedule()
+                var isNextDay = Convert.ToDateTime(schedulerTo) < Convert.ToDateTime(schedulerFrom);
+                if (isNextDay)
                 {
-                    From = schedulerFrom,
-                    To = schedulerTo,
-                    Days = new Dictionary<string, bool>()
+                    var schedule = new Schedule()
                     {
-                        ["Monday"] = (bool)cboxMon.IsChecked,
-                        ["Tuesday"] = (bool)cboxTue.IsChecked,
-                        ["Wednesday"] = (bool)cboxWed.IsChecked,
-                        ["Thursday"] = (bool)cboxThu.IsChecked,
-                        ["Friday"] = (bool)cboxFri.IsChecked,
-                        ["Saturday"] = (bool)cboxSat.IsChecked,
-                        ["Sunday"] = (bool)cboxSun.IsChecked,
-                    }
-                };
-                SchedulesManager.Instance.AddScheduleToList(schedule);
+                        From = schedulerFrom,
+                        To = schedulerTo,
+                        DaysFrom = new Dictionary<string, bool>()
+                        {
+                            ["Monday"] = (bool)cboxMon.IsChecked,
+                            ["Tuesday"] = (bool)cboxTue.IsChecked,
+                            ["Wednesday"] = (bool)cboxWed.IsChecked,
+                            ["Thursday"] = (bool)cboxThu.IsChecked,
+                            ["Friday"] = (bool)cboxFri.IsChecked,
+                            ["Saturday"] = (bool)cboxSat.IsChecked,
+                            ["Sunday"] = (bool)cboxSun.IsChecked,
+                        },
+                        DaysTo = new Dictionary<string, bool>()
+                        {
+                            ["Monday"] = (bool)cboxSun.IsChecked,
+                            ["Tuesday"] = (bool)cboxMon.IsChecked,
+                            ["Wednesday"] = (bool)cboxTue.IsChecked,
+                            ["Thursday"] = (bool)cboxWed.IsChecked,
+                            ["Friday"] = (bool)cboxThu.IsChecked,
+                            ["Saturday"] = (bool)cboxFri.IsChecked,
+                            ["Sunday"] = (bool)cboxSat.IsChecked,
+                        }
+                    };
+                    SchedulesManager.Instance.AddScheduleToList(schedule);
+                }
+                else
+                {
+                    var schedule = new Schedule()
+                    {
+                        From = schedulerFrom,
+                        To = schedulerTo,
+                        DaysFrom = new Dictionary<string, bool>()
+                        {
+                            ["Monday"] = (bool)cboxMon.IsChecked,
+                            ["Tuesday"] = (bool)cboxTue.IsChecked,
+                            ["Wednesday"] = (bool)cboxWed.IsChecked,
+                            ["Thursday"] = (bool)cboxThu.IsChecked,
+                            ["Friday"] = (bool)cboxFri.IsChecked,
+                            ["Saturday"] = (bool)cboxSat.IsChecked,
+                            ["Sunday"] = (bool)cboxSun.IsChecked,
+                        },
+                        DaysTo = new Dictionary<string, bool>()
+                        {
+                            ["Monday"] = (bool)cboxMon.IsChecked,
+                            ["Tuesday"] = (bool)cboxTue.IsChecked,
+                            ["Wednesday"] = (bool)cboxWed.IsChecked,
+                            ["Thursday"] = (bool)cboxThu.IsChecked,
+                            ["Friday"] = (bool)cboxFri.IsChecked,
+                            ["Saturday"] = (bool)cboxSat.IsChecked,
+                            ["Sunday"] = (bool)cboxSun.IsChecked,
+                        }
+                    };
+                    SchedulesManager.Instance.AddScheduleToList(schedule);
+                }
                 SetDefaults();
             }
         }
@@ -109,14 +152,14 @@ namespace NiceHashMiner.Views.Settings
 
         private void textBoxSchedulerFrom_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            var pattern = "[0-9]|:|/";
+            var pattern = "[0-9]|:";
             var rg = new Regex(pattern);
             if (!rg.IsMatch(e.Text)) e.Handled = true;
         }
 
         private void textBoxSchedulerTo_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            var pattern = "[0-9]|:|/";
+            var pattern = "[0-9]|:";
             var rg = new Regex(pattern);
             if (!rg.IsMatch(e.Text)) e.Handled = true;
         }
@@ -131,14 +174,14 @@ namespace NiceHashMiner.Views.Settings
 
         private bool ValidateHour(string hour)
         {
-            var pattern = "[0-1][0-9]:[0-5][0-9]";
-            var pattern2 = "[2][0-3]:[0-5][0-9]";
-            var pattern3 = "[0-9]:[0-5][0-9]";
+            var pattern = "^[0-1][0-9]:[0-5][0-9]$";
+            var pattern2 = "^[2][0-3]:[0-5][0-9]$";
+            var pattern3 = "^[0-9]:[0-5][0-9]$";
             var rg = new Regex(pattern);
             var rg2 = new Regex(pattern2);
             var rg3 = new Regex(pattern3);
 
-            return rg.IsMatch(hour) || rg2.IsMatch(hour) || rg3.IsMatch(hour) || hour == "/";
+            return rg.IsMatch(hour) || rg2.IsMatch(hour) || rg3.IsMatch(hour);
         }
 
         private bool ShouldPrepend(string hour)

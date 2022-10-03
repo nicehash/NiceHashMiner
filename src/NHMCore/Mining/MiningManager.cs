@@ -738,9 +738,9 @@ namespace NHMCore.Mining
 
             foreach (var schedule in SchedulesManager.Instance.Schedules)
             {
-                if (schedule.From != "/" && Convert.ToDateTime(schedule.From).ToString() == time.ToString() && schedule.Days[time.DayOfWeek.ToString()])
+                if (Convert.ToDateTime(schedule.From).ToString() == time.ToString() && schedule.DaysFrom[time.DayOfWeek.ToString()])
                     shouldStart = true;
-                if (schedule.To != "/" && Convert.ToDateTime(schedule.To).ToString() == time.ToString() && schedule.Days[time.DayOfWeek.ToString()])
+                if (Convert.ToDateTime(schedule.To).ToString() == time.ToString() && schedule.DaysTo[time.DayOfWeek.ToString()])
                     shouldStop = true;
             }
 
