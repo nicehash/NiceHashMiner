@@ -31,18 +31,19 @@ namespace NiceHashMiner.Views.Settings
 
         private void btn_new_slot_Click(object sender, RoutedEventArgs e)
         {
+            var schedulerFrom = ShouldPrepend(textBoxSchedulerFrom.Text) ? "0" + textBoxSchedulerFrom.Text : textBoxSchedulerFrom.Text;
+            var schedulerTo = ShouldPrepend(textBoxSchedulerTo.Text) ? "0" + textBoxSchedulerTo.Text : textBoxSchedulerTo.Text;
             var anyDay = (bool)cboxMon.IsChecked || (bool)cboxTue.IsChecked || (bool)cboxWed.IsChecked
                 || (bool)cboxThu.IsChecked || (bool)cboxFri.IsChecked || (bool)cboxSat.IsChecked || (bool)cboxSun.IsChecked;
-            var rightFormat = ValidateHour(textBoxSchedulerFrom.Text) && ValidateHour(textBoxSchedulerTo.Text);
+            var rightFormat = ValidateHour(schedulerFrom) && ValidateHour(schedulerTo);
+           
 
-            var timeComparation = rightFormat ? Convert.ToDateTime(textBoxSchedulerFrom.Text) < Convert.ToDateTime(textBoxSchedulerTo.Text) : false;
-
-            if (anyDay && rightFormat && timeComparation)
+            if (anyDay && rightFormat)
             {
                 var schedule = new Schedule()
                 {
-                    From = textBoxSchedulerFrom.Text,
-                    To = textBoxSchedulerTo.Text,
+                    From = schedulerFrom,
+                    To = schedulerTo,
                     Days = new Dictionary<string, bool>()
                     {
                         ["Monday"] = (bool)cboxMon.IsChecked,
@@ -108,14 +109,14 @@ namespace NiceHashMiner.Views.Settings
 
         private void textBoxSchedulerFrom_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            var pattern = "[0-9]|:";
+            var pattern = "[0-9]|:|/";
             var rg = new Regex(pattern);
             if (!rg.IsMatch(e.Text)) e.Handled = true;
         }
 
         private void textBoxSchedulerTo_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            var pattern = "[0-9]|:";
+            var pattern = "[0-9]|:|/";
             var rg = new Regex(pattern);
             if (!rg.IsMatch(e.Text)) e.Handled = true;
         }
@@ -132,12 +133,23 @@ namespace NiceHashMiner.Views.Settings
         {
             var pattern = "[0-1][0-9]:[0-5][0-9]";
             var pattern2 = "[2][0-3]:[0-5][0-9]";
-            var pattern3 = "[1-9]:[0-5][0-9]";
+            var pattern3 = "[0-9]:[0-5][0-9]";
             var rg = new Regex(pattern);
             var rg2 = new Regex(pattern2);
             var rg3 = new Regex(pattern3);
 
-            return rg.IsMatch(hour) || rg2.IsMatch(hour) || rg3.IsMatch(hour);
+            return rg.IsMatch(hour) || rg2.IsMatch(hour) || rg3.IsMatch(hour) || hour == "/";
+        }
+
+        private bool ShouldPrepend(string hour)
+        {
+            var pattern = "[0-9]:[0-5][0-9]";
+            var pattern1 = "[0-2][0-9]:[0-5][0-9]";
+            var rg = new Regex(pattern);
+            var rg1 = new Regex(pattern1);
+            if (rg.IsMatch(hour) && !rg1.IsMatch(hour))
+                return true;
+            return false;
         }
 
         private void textBoxSchedulerFrom_KeyUp(object sender, KeyEventArgs e)
