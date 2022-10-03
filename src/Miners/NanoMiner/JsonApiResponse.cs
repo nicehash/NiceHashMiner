@@ -118,5 +118,10 @@ namespace NanoMiner
             }
             return ret;
         }
+
+        public static HashrateStats ParseCPUJsonApiResponse(JsonApiResponse apiResponse)
+        {
+            return JsonConvert.DeserializeObject<HashrateStats>(apiResponse.Algorithms.FirstOrDefault().Values.FirstOrDefault().Where(key => key.Key == "CPU").FirstOrDefault().Value.ToString());
+        }
     }
 }

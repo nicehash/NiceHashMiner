@@ -23,11 +23,11 @@ namespace NanoMiner
             // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.7.0",
-                ExePath = new List<string> { "nanominer-windows-3.7.0-cuda11", "nanominer.exe" },
+                BinVersion = "v3.7.3",
+                ExePath = new List<string> { "nanominer-windows-3.7.3-cuda11", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v3.7.0/nanominer-windows-3.7.0-cuda11.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v3.7.3/nanominer-windows-3.7.3-cuda11.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -41,7 +41,7 @@ namespace NanoMiner
 
         public override string Name => "NanoMiner";
 
-        public override Version Version => new Version(19, 0);
+        public override Version Version => new Version(19, 1);
 
         public override string Author => "info@nicehash.com";
 
@@ -54,6 +54,11 @@ namespace NanoMiner
                 .Where(dev => dev is IGpuDevice)
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID);
+
+            var cpus = devices
+                .Where(dev => dev is CPUDevice)
+                .Cast<CPUDevice>()
+                .Where(p => !p.Name.ToLower().Contains("celeron") && !p.Name.ToLower().Contains("pentium"));
 
             int pcieId = -1;
             foreach (var gpu in gpus) _mappedIDs[gpu.UUID] = ++pcieId;
@@ -70,6 +75,12 @@ namespace NanoMiner
                 .Select(gpu => (gpu, algorithms: GetSupportedAlgorithmsForDevice(gpu)))
                 .Where(p => p.algorithms.Any())
                 .ToDictionary(p => p.gpu, p => p.algorithms);
+            
+            foreach (var cpu in cpus)
+            {
+                supported.Add(cpu, GetSupportedAlgorithmsForDevice(cpu));
+            }
+
             return supported;
         }
 

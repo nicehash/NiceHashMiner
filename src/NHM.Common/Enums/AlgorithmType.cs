@@ -133,7 +133,9 @@ namespace NHM.Common.Enums
         [Obsolete("DISABLED Algorithm", true)]
         Kadena = 59,
         //[Obsolete("UNUSED Algorithm")]
-        EtcHash = 60
+        EtcHash = 60,
+        //[Obsolete("UNUSED Algorithm")]
+        VerusHash = 61,
         #endregion // NiceHashAPI
     }
 

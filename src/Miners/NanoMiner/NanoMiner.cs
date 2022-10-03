@@ -47,36 +47,60 @@ namespace NanoMiner
                 var result = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/stats");
                 api.ApiResponse = result;
                 var apiResponse = JsonConvert.DeserializeObject<JsonApiResponse>(result);
-                var parsedApiResponse = JsonApiHelpers.ParseJsonApiResponse(apiResponse, _mappedDeviceIds);
 
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
-                var perDevicePowerInfo = new Dictionary<string, int>();
-                var totalSpeed = 0d;
-                var totalPowerUsage = 0;
+                if (apiResponse.Algorithms.FirstOrDefault().ContainsKey("Verushash")){
+                    var parsedApiResponse = JsonApiHelpers.ParseCPUJsonApiResponse(apiResponse);
+                    var totalSpeed = 0d;
+                    var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
+                    var perDevicePowerInfo = new Dictionary<string, int>();
+                    // init per device sums
+                    foreach (var pair in _miningPairs)
+                    {
+                        var uuid = pair.Device.UUID;
+                        var currentSpeed = parsedApiResponse.Hashrate;  
+                        totalSpeed += currentSpeed;
+                        perDeviceSpeedInfo.Add(uuid, new List<(AlgorithmType type, double speed)>() { (_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
+                        // no power usage info
+                        perDevicePowerInfo.Add(uuid, -1);
+                    }
 
-                foreach (var miningPair in _miningPairs)
-                {
-                    var deviceUUID = miningPair.Device.UUID;
-                    if (parsedApiResponse.ContainsKey(deviceUUID))
-                    {
-                        var stat = parsedApiResponse[deviceUUID];
-                        var currentPower = (int)stat.Power;
-                        totalPowerUsage += currentPower;
-                        var hashrate = stat.Hashrate * (1 - DevFee * 0.01);
-                        totalSpeed += hashrate;
-                        perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, hashrate) });
-                        perDevicePowerInfo.Add(deviceUUID, currentPower);
-                    }
-                    else
-                    {
-                        perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, 0) });
-                        perDevicePowerInfo.Add(deviceUUID, 0);
-                    }
+                    api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                    api.PowerUsagePerDevice = perDevicePowerInfo;
+                    api.PowerUsageTotal = -1;
                 }
+                else
+                {
+                    var parsedApiResponse = JsonApiHelpers.ParseJsonApiResponse(apiResponse, _mappedDeviceIds);
 
-                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-                api.PowerUsagePerDevice = perDevicePowerInfo;
-                api.PowerUsageTotal = totalPowerUsage;
+                    var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
+                    var perDevicePowerInfo = new Dictionary<string, int>();
+                    var totalSpeed = 0d;
+                    var totalPowerUsage = 0;
+
+                    foreach (var miningPair in _miningPairs)
+                    {
+                        var deviceUUID = miningPair.Device.UUID;
+                        if (parsedApiResponse.ContainsKey(deviceUUID))
+                        {
+                            var stat = parsedApiResponse[deviceUUID];
+                            var currentPower = (int)stat.Power;
+                            totalPowerUsage += currentPower;
+                            var hashrate = stat.Hashrate * (1 - DevFee * 0.01);
+                            totalSpeed += hashrate;
+                            perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, hashrate) });
+                            perDevicePowerInfo.Add(deviceUUID, currentPower);
+                        }
+                        else
+                        {
+                            perDeviceSpeedInfo.Add(deviceUUID, new List<(AlgorithmType type, double speed)>() { (_algorithmType, 0) });
+                            perDevicePowerInfo.Add(deviceUUID, 0);
+                        }
+                    }
+
+                    api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                    api.PowerUsagePerDevice = perDevicePowerInfo;
+                    api.PowerUsageTotal = totalPowerUsage;
+                }
             }
             catch (Exception e)
             {
@@ -110,18 +134,20 @@ namespace NanoMiner
                 }
             }
 
-            var devs = string.Join(",", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
+            var devs = algo == "Verushash" ? "" : string.Join(",", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
+            var path = algo == "Verushash" ? $"config_nh.ini" : $"config_nh_{devs}.ini";
 
-            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\nrigName=\r\ndevices={devs}\r\npool1={url}";
+            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\nrigName=\r\npool1={url}";
+            if (devs != "") configString += $"\r\ndevices={devs}";
             try
             {
-                File.WriteAllText(Path.Combine(cwdPath, $"config_nh_{devs}.ini"), configString);
+                File.WriteAllText(Path.Combine(cwdPath, $"{path}"), configString);
             }
             catch (Exception e)
             {
                 Logger.Error(_logGroup, $"Unable to create config file: {e.Message}");
             }
-            return $"config_nh_{devs}.ini";
+            return $"{path}";
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
