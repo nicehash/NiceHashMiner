@@ -55,7 +55,10 @@ namespace NanoMiner
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID);
 
-            var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();  
+            var cpus = devices
+                .Where(dev => dev is CPUDevice)
+                .Cast<CPUDevice>()
+                .Where(p => !p.Name.ToLower().Contains("celeron") && !p.Name.ToLower().Contains("pentium"));
 
             int pcieId = -1;
             foreach (var gpu in gpus) _mappedIDs[gpu.UUID] = ++pcieId;
