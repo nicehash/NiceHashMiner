@@ -448,6 +448,7 @@ namespace NHMCore.Mining
                 while (isActive())
                 {
                     if (isActive()) await TaskHelpers.TryDelay(checkWaitTime, stop);
+                    CheckIfIsOnSchedule();
                     if (handleDeferredCommands() && deferredCommands.Any())
                     {
                         await HandleDeferredCommands(deferredCommands);
@@ -725,27 +726,42 @@ namespace NHMCore.Mining
             return _isProfitable;
         }
 
-        private static bool CheckIfIsOnSchedule()
+        async private static void CheckIfIsOnSchedule()
         {
             _useScheduler = MiningSettings.Instance.UseScheduler;
-            if (!_useScheduler) return true;
-            if(!SchedulesManager.Instance.Schedules.Any()) return true;
+            if (!_useScheduler) return;
+            if(!SchedulesManager.Instance.Schedules.Any()) return;
 
+            var shouldStart = false;
+            var shouldStop = false;
             var time = DateTime.Now;
 
             foreach (var schedule in SchedulesManager.Instance.Schedules)
             {
-                 if (Convert.ToDateTime(schedule.From) < time && Convert.ToDateTime(schedule.To) > time) return schedule.Days[time.DayOfWeek.ToString()]; 
+                if (Convert.ToDateTime(schedule.From).ToString() == time.ToString() && schedule.DaysFrom[time.DayOfWeek.ToString()])
+                    shouldStart = true;
+                if (Convert.ToDateTime(schedule.To).ToString() == time.ToString() && schedule.DaysTo[time.DayOfWeek.ToString()])
+                    shouldStop = true;
             }
-            
-            return false;
+
+            if (!shouldStart && !shouldStop) return;
+
+            if (shouldStop && _runningMiners.Any())
+            {
+                var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
+                foreach (var dev in devicesToStop) await StopDevice(dev);
+                await StopAllMinersTask();
+            }
+            else if (shouldStart && !_runningMiners.Any())
+            {
+                var devicesToStart = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Stopped);
+                foreach (var dev in devicesToStart) await StartDevice(dev);
+            }
         }
 
         private static bool CheckIfShouldMine(double currentProfit, bool log = true)
         {
             var isProfitable = CheckIfProfitable(currentProfit, log);
-
-            var isOnSchedule = CheckIfIsOnSchedule();
 
             ApplicationStateManager.SetProfitableState(isProfitable);
             ApplicationStateManager.DisplayNoInternetConnection(!_isConnectedToInternet);
@@ -755,7 +771,7 @@ namespace NHMCore.Mining
             AvailableNotifications.CreateNotProfitableInfo(isProfitable);
 
             // if profitable and connected to internet mine
-            var shouldMine = isProfitable && isOnSchedule && _isConnectedToInternet;
+            var shouldMine = isProfitable && _isConnectedToInternet;
             return shouldMine;
         }
 
