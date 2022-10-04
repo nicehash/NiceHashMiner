@@ -518,5 +518,38 @@ namespace NHMCore.Notifications
             };
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateNoPowerInfo(string pluginName, string algorithmName, string deviceName)
+        {
+            var content = Tr("Try reinstalling the GPU drivers.\n\n {0}/{1} power usage for {2} is missing.", pluginName, algorithmName, deviceName);
+            try
+            {
+                var powerNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NoPowerInfo).FirstOrDefault();
+                if (powerNotification != null)
+                {
+                    if (powerNotification.NotificationNew == true)
+                    {
+                        //check if the same sentence was already written to notification
+                        var newSentence = Tr("{0}/{1} power usage for {2} is missing.\n", pluginName, algorithmName, deviceName);
+                        if (powerNotification.NotificationContent.Contains(newSentence))
+                        {
+                            return;
+                        }
+
+                        //add new content to prev content
+                        content = powerNotification.NotificationContent + newSentence;
+                    }
+                }
+                //clean previous notification
+                NotificationsManager.Instance.Notifications.Remove(powerNotification);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Notifications", ex.Message);
+            }
+
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.NoPowerInfo, Tr("One or more benchmarks failed to save power usage"), content);
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }
