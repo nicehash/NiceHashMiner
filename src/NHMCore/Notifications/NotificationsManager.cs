@@ -1,5 +1,10 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
+using NHM.Common.Configs;
+using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
+using System.IO;
 using System.Linq;
 
 namespace NHMCore.Notifications
@@ -8,7 +13,8 @@ namespace NHMCore.Notifications
     {
         public static NotificationsManager Instance { get; } = new NotificationsManager();
         private static readonly object _lock = new object();
-
+        private Random _random = new Random();
+        private string TAG = "NotificationManager";
         private NotificationsManager()
         { }
 
@@ -44,6 +50,7 @@ namespace NHMCore.Notifications
             }
             OnPropertyChanged(nameof(Notifications));
             OnPropertyChanged(nameof(NotificationNewCount));
+            WriteNotification(notification);
         }
 
         private void Notification_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -76,6 +83,39 @@ namespace NHMCore.Notifications
                 _notificationNewCount = value;
                 OnPropertyChanged(nameof(NotificationNewCount));
             }
+        }
+        public void WriteNotification(Notification notification)
+        {
+            if (notification.NotificationUUID == String.Empty)
+            {
+                notification.NotificationUUID = $"{(DateTime.UtcNow - new DateTime(1970, 1, 1)).Milliseconds}{_random.Next()}";
+            }
+            var notifRecord = NotificationRecord.NotificationToRecord(notification);
+            var path = Paths.AppRootPath("notifications.json");
+            List<NotificationRecord> recordList = new();
+            try
+            {
+                using StreamReader reader = new(path);
+                var text = reader.ReadToEnd();
+                var existingRecord = JsonConvert.DeserializeObject<List<NotificationRecord>>(text);
+                if (existingRecord != null) recordList = existingRecord;
+            }
+            catch(Exception e)
+            {
+                Logger.Warn(TAG, e.Message);
+            }
+            recordList.Add(notifRecord);
+            using StreamWriter writer = new(path);
+            try
+            {
+                var textToWrite = JsonConvert.SerializeObject(recordList, Formatting.Indented);
+                writer.Write(textToWrite);
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(TAG, e.Message);
+            }
+
         }
     }
 }
