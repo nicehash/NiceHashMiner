@@ -521,7 +521,7 @@ namespace NHMCore.Notifications
 
         public static void CreateNoPowerInfo(string pluginName, string algorithmName, string deviceName)
         {
-            var content = Tr("Try reinstalling the GPU drivers.\n\n {0}/{1} power usage for {2} is missing.", pluginName, algorithmName, deviceName);
+            var content = Tr("Try reinstalling the GPU drivers or run NHM as administrator.\n\n{0}/{1} power usage for {2} is missing.\n", pluginName, algorithmName, deviceName);
             try
             {
                 var powerNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NoPowerInfo).FirstOrDefault();
@@ -548,7 +548,7 @@ namespace NHMCore.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
 
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.NoPowerInfo, Tr("One or more benchmarks failed to save power usage"), content);
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.NoPowerInfo, Tr("Some benchmarks failed to save power usage"), content);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

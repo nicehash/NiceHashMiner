@@ -24,6 +24,7 @@ namespace NiceHashMiner.Views.Settings
     /// </summary>
     public partial class SettingsScheduler : UserControl
     {
+        public string Placeholder = "hh:mm";
         public SettingsScheduler()
         {
             InitializeComponent();
@@ -213,6 +214,8 @@ namespace NiceHashMiner.Views.Settings
 
         private void textBoxSchedulerFrom_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (textBoxSchedulerFrom == null) return;
+            if (textBoxSchedulerFrom.Text == Placeholder) return;
             var hourOK = ValidateHour(textBoxSchedulerFrom.Text);
             var (style, brush) = GetStyleBrush(hourOK);
             textBoxSchedulerFrom.Style = style;
@@ -221,6 +224,8 @@ namespace NiceHashMiner.Views.Settings
 
         private void textBoxSchedulerTo_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (textBoxSchedulerTo == null) return;
+            if (textBoxSchedulerTo.Text == Placeholder) return;
             var hourOK = ValidateHour(textBoxSchedulerTo.Text);
             var (style, brush) = GetStyleBrush(hourOK);
             textBoxSchedulerTo.Style = style;
