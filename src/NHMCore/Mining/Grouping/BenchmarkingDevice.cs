@@ -53,6 +53,7 @@ namespace NHMCore.Mining.Grouping
             IMiner miner = null;
             try
             {
+                AvailableNotifications.CreateNoPowerInfo(algo.PluginName, algo.AlgorithmName, algo.ComputeDevice.FullName);
                 algo.IsBenchmarking = true;
                 using var powerHelper = new PowerHelper(algo.ComputeDevice);
                 var plugin = algo.PluginContainer;
