@@ -26,12 +26,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\..\Debug\app\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;INTEGRATE_Joker_PLUGIN;NHMWS4</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;INTEGRATE_Joker_PLUGIN</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\..\Release\app\</OutputPath>
-    <DefineConstants>TRACE;INTEGRATE_Joker_PLUGIN;NHMWS4</DefineConstants>
+    <DefineConstants>TRACE;INTEGRATE_Joker_PLUGIN</DefineConstants>
     <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
