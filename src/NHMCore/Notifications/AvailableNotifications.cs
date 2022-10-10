@@ -17,33 +17,21 @@ namespace NHMCore.Notifications
         public static void CreateDeviceMonitoringNvidiaElevateInfo()
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.MonitoringNvidiaElevate, Tr("NVIDIA TDP Settings Insufficient Permissions"), Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Run As Administrator"),
-                Action = () => { RunAsAdmin.SelfElevate(); }
-            };
+            notification.Action = AvailableActions.ActionRunAsAdmin();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateOptimizationProfileElevateInfo()
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.OptimizationProfilesElevate, Tr("Optimization profiles Insufficient Permissions"), Tr("Can't run optimization profiles due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Run As Administrator"),
-                Action = () => { RunAsAdmin.SelfElevate(); }
-            };
+            notification.Action = AvailableActions.ActionRunAsAdmin();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateOptimizationProfileNotEnabledInfo()
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.OptimizationWithProfilesDisabled, Tr("Optimization profiles not enabled"), Tr("Optimization profiles are not enabled. Enable for optimization of some GPUs for a bigger hash rate. Run NiceHash Miner as an Administrator and enable Optimization profiles in advanced settings."));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Run As Administrator"),
-                Action = () => { RunAsAdmin.SelfElevate(); }
-            };
+            notification.Action = AvailableActions.ActionRunAsAdmin();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -88,11 +76,7 @@ namespace NHMCore.Notifications
         public static void CreateNoSupportedDevicesInfo()
         {
             var notification = new Notification(NotificationsType.Fatal, NotificationsGroup.NoSupportedDevices, Tr("No Supported Devices"), Tr("No supported devices are found."));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.NhmNoDevHelp); }
-            };
+            notification.Action = AvailableActions.ActionNHMNoDevHelp();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -111,28 +95,7 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmUpdate, Tr("NiceHash Miner Update"), Tr("New version of NiceHash Miner is available."));
             if (!Configs.UpdateSettings.Instance.AutoUpdateNiceHashMiner)
             {
-                notification.Action = new NotificationAction
-                {
-                    Info = Tr("Download updater"),
-                    Action = () =>
-                    {
-                        ApplicationStateManager.App.Dispatcher.Invoke(async () =>
-                        {
-                            var ok = await UpdateHelpers.StartDownloadingUpdater(isInstallerVersion);
-                            if (!ok)
-                            {
-                                CreateNhmUpdateAttemptFail();
-                            }
-                            else
-                            {
-                                NotificationsManager.Instance.RemoveNotificationFromList(notification);
-                                CreateNhmUpdateInfoUpdate();
-                            }
-                        });
-                    },
-                    IsSingleShotAction = true,
-                    BindProgress = true,
-                };
+                notification.Action = AvailableActions.ActionDownloadUpdater(isInstallerVersion, notification);
             }
 
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -143,19 +106,7 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmUpdate, Tr("NiceHash Miner Update"), Tr("New version of NiceHash Miner is available."));
             if (!Configs.UpdateSettings.Instance.AutoUpdateNiceHashMiner)
             {
-                notification.Action = new NotificationAction
-                {
-                    Info = Tr("Start updater"),
-                    Action = () =>
-                    {
-                        ApplicationStateManager.App.Dispatcher.Invoke(async () =>
-                        {
-                            var ok = await UpdateHelpers.StartUpdateProcess();
-                            if (!ok) CreateNhmUpdateAttemptFail();
-                        });
-                    },
-                    IsSingleShotAction = true,
-                };
+                notification.Action = AvailableActions.ActionStartUpdater();
             }
 
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -164,11 +115,7 @@ namespace NHMCore.Notifications
         public static void CreateNhmUpdateAttemptFail()
         {
             var notificationIfUnsuccessfull = new Notification(NotificationsType.Warning, NotificationsGroup.NhmUpdateFailed, Tr("NiceHash Miner Update Failed"), Tr("Update procedure failed please install manually. Please make sure that the file is accessible and that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Please check the following blog post: {0}", Links.AVHelp));
-            notificationIfUnsuccessfull.Action = new NotificationAction
-            {
-                Info = Tr("Visit release Page"),
-                Action = () => { Helpers.VisitUrlLink(Links.VisitReleasesUrl); }
-            };
+            notificationIfUnsuccessfull.Action = AvailableActions.ActionVisitReleasePage();
             NotificationsManager.Instance.AddNotificationToList(notificationIfUnsuccessfull);
             var notification = NotificationsManager.Instance.Notifications.FirstOrDefault(n => n.Group == NotificationsGroup.NhmUpdate);
             if (notification != null) NotificationsManager.Instance.RemoveNotificationFromList(notification);
@@ -223,22 +170,14 @@ namespace NHMCore.Notifications
         public static void CreateMissingMinerBinsInfo(string pluginName)
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.MissingMinerBins, Tr("Missing miner binaries"), Tr("Some of the {0} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application.", pluginName));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.AVHelp); }
-            };
+            notification.Action = AvailableActions.ActionVisitAVHelp();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateEnableLargePagesInfo()
         {
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.LargePages, Tr("Enable large pages for randomx"), Tr("Would you like to enable large pages when mining with RandomX(CPU)?"));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.LargePagesHelp); }
-            };
+            notification.Action = AvailableActions.ActionLargePagesHelp();
             notification.NotificationUUID = "LargePagesNotification";
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
@@ -246,22 +185,14 @@ namespace NHMCore.Notifications
         public static void CreateIncreaseVirtualMemoryInfo()
         {
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.VirtualMemory, Tr("Increase virtual memory"), Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine. Would you like to increase virtual memory?"));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.VirtualMemoryHelp); }
-            };
+            notification.Action = AvailableActions.ActionVisitMemoryHelp();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
         public static void CreateFailedBenchmarksInfo(ComputeDevice device)
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info.", device.Name));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.FailedBenchmarkHelp); }
-            };
+            notification.Action = AvailableActions.ActionFailedBenchmarksHelp();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -299,11 +230,7 @@ namespace NHMCore.Notifications
             var sentence = Tr("was uploaded.");
             if (!success) sentence = Tr("was not uploaded. Please contact our support team for help.");
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.LogArchiveUpload, Tr("Log archive upload result"), Tr("The log archive with the following ID: {0}", uuid) + " " + sentence);
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Copy to clipboard"),
-                Action = () => { Clipboard.SetText(uuid); }
-            };
+            notification.Action = AvailableActions.ActionCopyToClipBoard(uuid);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -494,11 +421,7 @@ namespace NHMCore.Notifications
         public static void CreateAdminRunRequired()
         {
             var notification = new Notification(NotificationsType.Error, NotificationsGroup.AdminRunRequired, Tr("NiceHash Miner can't obtain CPU information"), Tr("Start NiceHash Miner with administrator rights."));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Run As Administrator"),
-                Action = () => { RunAsAdmin.SelfElevate(); }
-            };
+            notification.Action = AvailableActions.ActionRunAsAdmin();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
@@ -511,11 +434,7 @@ namespace NHMCore.Notifications
         public static void CreateLHRPresentAdminRunRequired()
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.RequireAdminForLHR, Tr("LHR Insufficient Permissions"), Tr("At least one LHR GPU was detected on your rig. To achieve full LHR unlock you need to run NMH as Administrator."));
-            notification.Action = new NotificationAction
-            {
-                Info = Tr("Run As Administrator"),
-                Action = () => { RunAsAdmin.SelfElevate(); }
-            };
+            notification.Action = AvailableActions.ActionRunAsAdmin();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }
