@@ -37,7 +37,7 @@ namespace NBMiner
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "GPU Miner for GRIN, AE and ETH mining.",
+                PluginDescription = "GPU Miner for ETC mining.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
@@ -46,7 +46,7 @@ namespace NBMiner
 
         public override string Name => "NBMiner";
 
-        public override Version Version => new Version(19, 0);
+        public override Version Version => new Version(19, 1);
         
 
         public override string Author => "info@nicehash.com";
