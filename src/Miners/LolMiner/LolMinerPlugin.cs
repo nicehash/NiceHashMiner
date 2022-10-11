@@ -39,7 +39,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(19, 0);
+        public override Version Version => new Version(19, 1);
 
         public override string Author => "info@nicehash.com";
 

@@ -24,7 +24,6 @@ namespace NBMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit },
                         new SAS(AlgorithmType.BeamV3),
