@@ -11,6 +11,7 @@ namespace NHMCore.Notifications
 {
     public enum ActionID
     {
+        ActionNONE = -1,
         ActionRunAsAdmin,
         ActionNHMNoDevHelp,
         ActionDownloadUpdater,
@@ -35,16 +36,18 @@ namespace NHMCore.Notifications
             ActionID.ActionVisitReleasePage => ActionVisitReleasePage(),
             ActionID.ActionVisitAVHelp => ActionVisitAVHelp(),
             ActionID.ActionLargePagesHelp => ActionLargePagesHelp(),
+            ActionID.ActionVisitMemoryHelp => ActionVisitMemoryHelp(),
             ActionID.ActionFailedBenchmarksHelp => ActionFailedBenchmarksHelp(),
-            ActionID.ActionCopyToClipBoard => ActionCopyToClipBoard(uuid)
+            ActionID.ActionCopyToClipBoard => ActionCopyToClipBoard(uuid),
+            _ => new NotificationAction()
         };
-
         public static NotificationAction ActionRunAsAdmin()
         {
             return new NotificationAction
             {
                 Info = Tr("Run As Administrator"),
-                Action = () => { RunAsAdmin.SelfElevate(); }
+                Action = () => { RunAsAdmin.SelfElevate(); },
+                ActionID = ActionID.ActionRunAsAdmin
             };
         }
         public static NotificationAction ActionNHMNoDevHelp()
@@ -52,7 +55,8 @@ namespace NHMCore.Notifications
             return new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.NhmNoDevHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.NhmNoDevHelp); },
+                ActionID = ActionID.ActionNHMNoDevHelp
             };
         }
         public static NotificationAction ActionDownloadUpdater(bool isInstallerVersion, Notification notification)
@@ -76,6 +80,7 @@ namespace NHMCore.Notifications
                         }
                     });
                 },
+                ActionID = ActionID.ActionDownloadUpdater,
                 IsSingleShotAction = true,
                 BindProgress = true,
             };
@@ -93,6 +98,7 @@ namespace NHMCore.Notifications
                         if (!ok) AvailableNotifications.CreateNhmUpdateAttemptFail();
                     });
                 },
+                ActionID = ActionID.ActionStartUpdater,
                 IsSingleShotAction = true,
             };
         }
@@ -101,7 +107,8 @@ namespace NHMCore.Notifications
             return new NotificationAction
             {
                 Info = Tr("Visit release Page"),
-                Action = () => { Helpers.VisitUrlLink(Links.VisitReleasesUrl); }
+                Action = () => { Helpers.VisitUrlLink(Links.VisitReleasesUrl); },
+                ActionID = ActionID.ActionVisitReleasePage
             };
         }
         public static NotificationAction ActionVisitAVHelp()
@@ -109,7 +116,8 @@ namespace NHMCore.Notifications
             return new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.AVHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.AVHelp); },
+                ActionID = ActionID.ActionVisitAVHelp
             };
         }
         public static NotificationAction ActionLargePagesHelp()
@@ -117,7 +125,8 @@ namespace NHMCore.Notifications
             return new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.LargePagesHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.LargePagesHelp); },
+                ActionID = ActionID.ActionLargePagesHelp
             };
         }
         public static NotificationAction ActionVisitMemoryHelp()
@@ -125,7 +134,8 @@ namespace NHMCore.Notifications
             return new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.VirtualMemoryHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.VirtualMemoryHelp); },
+                ActionID = ActionID.ActionVisitMemoryHelp
             };
         }
         public static NotificationAction ActionFailedBenchmarksHelp()
@@ -133,7 +143,8 @@ namespace NHMCore.Notifications
             return new NotificationAction
             {
                 Info = Tr("Help"),
-                Action = () => { Helpers.VisitUrlLink(Links.FailedBenchmarkHelp); }
+                Action = () => { Helpers.VisitUrlLink(Links.FailedBenchmarkHelp); },
+                ActionID = ActionID.ActionFailedBenchmarksHelp
             };
         }
         public static NotificationAction ActionCopyToClipBoard(string uuid)
@@ -141,7 +152,9 @@ namespace NHMCore.Notifications
             return new NotificationAction
             {
                 Info = Tr("Copy to clipboard"),
-                Action = () => { Clipboard.SetText(uuid); }
+                Action = () => { Clipboard.SetText(uuid); },
+                ActionID = ActionID.ActionCopyToClipBoard,
+                Extra = uuid
             };
         }
     }

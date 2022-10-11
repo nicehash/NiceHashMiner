@@ -8,7 +8,7 @@ namespace NHMCore.Notifications
 {
     public record NotificationRecord
     {
-        //public Notification Notification { get; set; } = null;
+        public long NumericUID { get; set; } = -1;
         public string Name { get; set; } = string.Empty;
         public NotificationsType Type { get; set; } = NotificationsType.Info;
         public NotificationsGroup Group { get; set; } = NotificationsGroup.Misc;
@@ -20,13 +20,15 @@ namespace NHMCore.Notifications
         public bool IsVisible { get; set; } = true; //?
         public bool NotificationNew { get; set; } = true; //?
         public string NotificationUUID { get; set; } = string.Empty;
-        //public NotificationAction Action { get; internal set; } = null;
+        public ActionID Action { get; set; }
+        public string Action_Extra = string.Empty;
 
 
         public static NotificationRecord NotificationToRecord(Notification notification)
         {
             return new NotificationRecord()
             {
+                NumericUID = notification.NumericUID,
                 Name = notification.Name,
                 Type = notification.Type,
                 Group = notification.Group,
@@ -38,7 +40,8 @@ namespace NHMCore.Notifications
                 NotificationNew = notification.NotificationNew,
                 NotificationUUID = notification.NotificationUUID,
                 IsVisible = notification.IsVisible,
-                //Action = notification.Action
+                Action = notification.Action?.ActionID ?? ActionID.ActionNONE,
+                Action_Extra = notification.Action.Extra
             };
         }
         public static Notification NotificationFromRecord(NotificationRecord notificationRecord)
@@ -50,9 +53,11 @@ namespace NHMCore.Notifications
                 NotificationEpochTime = notificationRecord.NotificationEpochTime,
                 NotificationNew = notificationRecord.NotificationNew,
                 NotificationUUID = notificationRecord.NotificationUUID,
-                IsVisible = notificationRecord.IsVisible
+                IsVisible = notificationRecord.IsVisible,
+                NumericUID = notificationRecord.NumericUID,
             };
-            //notif.Action = notificationRecord.Action;
+            notif.Action = AvailableActions.ToAction(notificationRecord.Action);
+            notif.Action.Extra = notificationRecord.Action_Extra;
             return notif;
         }
     }

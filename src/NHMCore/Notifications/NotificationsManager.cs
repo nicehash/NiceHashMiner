@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Formats.Asn1;
 using System.IO;
 using System.Linq;
+using Windows.UI.Notifications;
 
 namespace NHMCore.Notifications
 {
@@ -15,6 +16,8 @@ namespace NHMCore.Notifications
         private static readonly object _lock = new object();
         private Random _random = new Random();
         private string TAG = "NotificationManager";
+        private readonly string _notificationFile = "notifications.json";
+        private readonly int _notificationQuota = 15;
         private NotificationsManager()
         { }
 
@@ -32,27 +35,36 @@ namespace NHMCore.Notifications
             }
         }
 
-        public void AddNotificationToList(Notification notification)
+        public void AddNotificationToList(Notification notification, bool shouldWrite = true)
         {
             Configs.MiscSettings.Instance.ShowNotifications.TryGetValue(notification.NotificationUUID, out var shouldNotAdd);
             if (shouldNotAdd) return;
-
-            //only have 1 notification of same type
-            var groupNotifications = _notifications.Where(notif => notif.Group == notification.Group)
-                                                    .Where(notif => notif.Domain == notification.Domain).ToList();
-            if (groupNotifications.Count != 0) return;
-
+            if (_notifications.Any(notif => notif.NumericUID == notification.NumericUID)) return;
             lock (_lock)
             {
                 notification.NotificationNew = true;
                 _notifications.Insert(0, notification);
                 notification.PropertyChanged += Notification_PropertyChanged;
             }
+            CheckNotificationQuotaForEachGroupAndDeleteExcess(notification.Group, notification.Domain);
+            if (shouldWrite) WriteNotifications();
             OnPropertyChanged(nameof(Notifications));
             OnPropertyChanged(nameof(NotificationNewCount));
-            WriteNotification(notification);
         }
-
+        private void CheckNotificationQuotaForEachGroupAndDeleteExcess(NotificationsGroup group, string domain)
+        {
+            var groupNotifications = _notifications.Where(notif => notif.Group == group)
+                                        .Where(notif => notif.Domain == domain).ToList();
+            if (groupNotifications.Count < _notificationQuota) return;
+            var numToDelete = (int)Math.Floor(0.4 * groupNotifications.Count);
+            int count = 0;
+            foreach(var notification in groupNotifications)
+            {
+                if (count > numToDelete) break;
+                RemoveNotificationFromList(notification);
+                count++;
+            }
+        }
         private void Notification_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (nameof(Notification.NotificationNew) == e.PropertyName)
@@ -69,6 +81,8 @@ namespace NHMCore.Notifications
                 ok = _notifications.Remove(notification);
                 notification.PropertyChanged -= Notification_PropertyChanged;
             }
+            CheckNotificationQuotaForEachGroupAndDeleteExcess(notification.Group, notification.Domain);
+            WriteNotifications();
             OnPropertyChanged(nameof(Notifications));
             OnPropertyChanged(nameof(NotificationNewCount));
             return ok;
@@ -84,14 +98,9 @@ namespace NHMCore.Notifications
                 OnPropertyChanged(nameof(NotificationNewCount));
             }
         }
-        public void WriteNotification(Notification notification)
+        (bool ok, List<NotificationRecord> list) ReadNotifications()
         {
-            if (notification.NotificationUUID == String.Empty)
-            {
-                notification.NotificationUUID = $"{(DateTime.UtcNow - new DateTime(1970, 1, 1)).Milliseconds}{_random.Next()}";
-            }
-            var notifRecord = NotificationRecord.NotificationToRecord(notification);
-            var path = Paths.AppRootPath("notifications.json");
+            var path = Paths.AppRootPath(_notificationFile);
             List<NotificationRecord> recordList = new();
             try
             {
@@ -100,22 +109,40 @@ namespace NHMCore.Notifications
                 var existingRecord = JsonConvert.DeserializeObject<List<NotificationRecord>>(text);
                 if (existingRecord != null) recordList = existingRecord;
             }
-            catch(Exception e)
-            {
-                Logger.Warn(TAG, e.Message);
-            }
-            recordList.Add(notifRecord);
-            using StreamWriter writer = new(path);
-            try
-            {
-                var textToWrite = JsonConvert.SerializeObject(recordList, Formatting.Indented);
-                writer.Write(textToWrite);
-            }
             catch (Exception e)
             {
                 Logger.Warn(TAG, e.Message);
+                return (false, null);
             }
-
+            return (true, recordList);
+        }
+        public void WriteNotifications()
+        {
+            var path = Paths.AppRootPath(_notificationFile);
+            var recordList = new List<NotificationRecord>();
+            _notifications.ForEach(item => recordList.Add(NotificationRecord.NotificationToRecord(item)));
+            lock (_lock)
+            {
+                using StreamWriter writer = new(path);
+                try
+                {
+                    var textToWrite = JsonConvert.SerializeObject(recordList, Formatting.Indented);
+                    writer.Write(textToWrite);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(TAG, e.Message);
+                }
+            }
+        }
+        public void ReadLoggedNotifications()
+        {
+            var res = ReadNotifications();
+            if (!res.ok) return;
+            foreach(var log in res.list)
+            {
+                AddNotificationToList(NotificationRecord.NotificationFromRecord(log), false);
+            }
         }
     }
 }

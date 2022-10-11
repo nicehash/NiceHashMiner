@@ -15,6 +15,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
@@ -24,6 +25,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
@@ -34,6 +36,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
@@ -45,6 +48,7 @@ namespace NHMCore.Notifications
             NotificationContent = content;
             NotificationUrl = url;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
@@ -56,6 +60,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
 
         public NotificationAction Action { get; internal set; } = null;
@@ -103,6 +108,16 @@ namespace NHMCore.Notifications
         //        OnPropertyChanged(nameof(NotificationTime));
         //    }
         //}
+        public long _numericUID { get; internal set; } = -1;
+        public long NumericUID
+        {
+            get { return _numericUID; }
+            set
+            {
+                _numericUID = value;
+                OnPropertyChanged(nameof(NumericUID));
+            }
+        }
 
         private bool _isVisible { get; set; } = false;
         public bool IsVisible
