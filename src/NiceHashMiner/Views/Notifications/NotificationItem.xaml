@@ -74,6 +74,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" MinHeight="64" Height="Auto">
@@ -119,7 +121,7 @@
                         Padding="20,0,22,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        x:Name="RemoveButton" Click="RemoveNotification" Content="Remove" />
+                        x:Name="RemoveButton" Click="RemoveNotification" Content="Clear" />
                     <Button Style="{StaticResource BigButtonPrimaryNotifications}"
                         MinWidth="88"
                         Width="Auto" Height="24"
@@ -159,6 +161,16 @@
                     </WrapPanel>
                 </WrapPanel>
             </Grid>
+            <StackPanel Grid.Row="3" x:Name="NotificationHistoryGrid" Visibility="{Binding IsVisible, Converter={StaticResource NulBoolToVisibilityConverter}}">
+                <Separator Margin="0,0,0,10" Background="{DynamicResource BorderColor}"/>
+                <ItemsControl x:Name="ic_notificationHistory" ItemsSource="{Binding OlderNotificationsOfSameType}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:NotificationHistoryItem DataContext="{Binding .}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </Grid>
     </Border>
 </UserControl>

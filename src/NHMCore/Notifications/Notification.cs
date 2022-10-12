@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using System;
+using System.Collections.Generic;
 using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
@@ -97,17 +98,19 @@ namespace NHMCore.Notifications
                 OnPropertyChanged(nameof(NotificationNew));
             }
         }
-
-        //private string _notificationTime { get; set; }
-        //public string NotificationTime
-        //{
-        //    get => _notificationTime;
-        //    set
-        //    {
-        //        _notificationTime = value;
-        //        OnPropertyChanged(nameof(NotificationTime));
-        //    }
-        //}
+        public List<Notification> _olderNotificationsOfSameType = new();
+        public List<Notification> OlderNotificationsOfSameType
+        {
+            get
+            {
+                return _olderNotificationsOfSameType;
+            }
+            set
+            {
+                _olderNotificationsOfSameType = value;
+                OnPropertyChanged(nameof(OlderNotificationsOfSameType));
+            }
+        }
         public long _numericUID { get; internal set; } = -1;
         public long NumericUID
         {
@@ -152,7 +155,7 @@ namespace NHMCore.Notifications
             }
         }
 
-        public void UpdateNotificationTimeString()
+        public void SetTimeString()
         {
             var returnTime = "";
             DateTimeOffset dateTimeOffSet = DateTimeOffset.FromUnixTimeSeconds(NotificationEpochTime);
@@ -168,6 +171,11 @@ namespace NHMCore.Notifications
             else if (secondsDiff < 604800) returnTime = Tr("{0} at {1}", dateTimeOfNotification.DayOfWeek, dateTimeOfNotification.TimeOfDay);
             else returnTime = Tr("{0} at {1}", dateTimeOfNotification.Date.ToString("dd-MM-yyyy"), dateTimeOfNotification.TimeOfDay);
             NotificationTime = returnTime;
+        }
+        public void UpdateNotificationTimeString()
+        {
+            SetTimeString();
+            OlderNotificationsOfSameType.ForEach(notif => notif.SetTimeString());
         }
 
         private string _notificationContent { get; set; }

@@ -51,7 +51,7 @@ namespace NiceHashMiner.Views.Notifications
 
         private void RemoveNotification(object sender, RoutedEventArgs e)
         {
-            _notification.RemoveNotification();
+            NotificationsManager.Instance.RemoveAllNotificationsOfThisType(_notification);
             if (!string.IsNullOrEmpty(_notification.NotificationUUID))
             {
                 MiscSettings.Instance.ShowNotifications.Remove(_notification.NotificationUUID);

@@ -34,6 +34,20 @@ namespace NHMCore.Notifications
                 }
             }
         }
+        public List<Notification> LatestNotifications
+        {
+            get
+            {
+                var ret = new List<Notification>();
+                var ordered = Notifications.OrderByDescending(notif => notif.NotificationEpochTime);
+                foreach(NotificationsGroup group in Enum.GetValues(typeof(NotificationsGroup)))
+                {
+                    var found = Notifications.FirstOrDefault(notif => notif.Group == group);
+                    if (found != null) ret.Add(found);
+                }
+                return ret;
+            }
+        }
 
         public void AddNotificationToList(Notification notification, bool shouldWrite = true)
         {
@@ -47,9 +61,11 @@ namespace NHMCore.Notifications
                 notification.PropertyChanged += Notification_PropertyChanged;
             }
             CheckNotificationQuotaForEachGroupAndDeleteExcess(notification.Group, notification.Domain);
+            SearchForNewestNotificationOfTypeAndSetHistory(notification);
             if (shouldWrite) WriteNotifications();
             OnPropertyChanged(nameof(Notifications));
             OnPropertyChanged(nameof(NotificationNewCount));
+            OnPropertyChanged(nameof(LatestNotifications));
         }
         private void CheckNotificationQuotaForEachGroupAndDeleteExcess(NotificationsGroup group, string domain)
         {
@@ -72,6 +88,15 @@ namespace NHMCore.Notifications
                 OnPropertyChanged(nameof(NotificationNewCount));
             }
         }
+        private void ReManageNotificationProperties(Notification notification)
+        {
+            CheckNotificationQuotaForEachGroupAndDeleteExcess(notification.Group, notification.Domain);
+            SearchForNewestNotificationOfTypeAndSetHistory(notification);
+            WriteNotifications();
+            OnPropertyChanged(nameof(Notifications));
+            OnPropertyChanged(nameof(NotificationNewCount));
+            OnPropertyChanged(nameof(LatestNotifications));
+        }
 
         public bool RemoveNotificationFromList(Notification notification)
         {
@@ -81,11 +106,50 @@ namespace NHMCore.Notifications
                 ok = _notifications.Remove(notification);
                 notification.PropertyChanged -= Notification_PropertyChanged;
             }
-            CheckNotificationQuotaForEachGroupAndDeleteExcess(notification.Group, notification.Domain);
+            ReManageNotificationProperties(notification);
+            return ok;
+        }
+        public bool RemoveAllNotificationsOfThisType(Notification notification)
+        {
+            var ok = false;
+            lock (_lock)
+            {
+                var sameTypeNotifications = _notifications.Where(notif => notif.Group == notification.Group);
+                foreach (var notif in sameTypeNotifications)
+                {
+                    notif.PropertyChanged -= Notification_PropertyChanged;
+                }
+                _notifications.RemoveAll(notif => notif.Group == notification.Group);
+            }
+            ReManageNotificationProperties(notification);
+            return ok;
+        }
+        public bool ClearAllNotifications()
+        {
+            var ok = false;
+            lock (_lock)
+            {
+                Notifications.ForEach(notif => notif.PropertyChanged -= Notification_PropertyChanged);
+                _notifications.Clear();
+            }
             WriteNotifications();
             OnPropertyChanged(nameof(Notifications));
             OnPropertyChanged(nameof(NotificationNewCount));
+            OnPropertyChanged(nameof(LatestNotifications));
             return ok;
+        }
+        private void SearchForNewestNotificationOfTypeAndSetHistory(Notification notification)
+        {
+            var newest = _notifications
+                .Where(notif => notif.Group == notification.Group)
+                .OrderByDescending(notif => notif.NotificationEpochTime)
+                .FirstOrDefault();
+            if (newest == null) return;//todo?
+            var olderNotifications = _notifications
+                .Where(notif => notif.Group == notification.Group)
+                .Where(notif => notif != newest)
+                .OrderByDescending(notif => notif.NotificationEpochTime);
+            newest.OlderNotificationsOfSameType = olderNotifications.ToList();
         }
 
         private int _notificationNewCount { get; set; }
@@ -98,7 +162,7 @@ namespace NHMCore.Notifications
                 OnPropertyChanged(nameof(NotificationNewCount));
             }
         }
-        (bool ok, List<NotificationRecord> list) ReadNotifications()
+        private (bool ok, List<NotificationRecord> list) ReadNotifications()
         {
             var path = Paths.AppRootPath(_notificationFile);
             List<NotificationRecord> recordList = new();
@@ -116,7 +180,7 @@ namespace NHMCore.Notifications
             }
             return (true, recordList);
         }
-        public void WriteNotifications()
+        private void WriteNotifications()
         {
             var path = Paths.AppRootPath(_notificationFile);
             var recordList = new List<NotificationRecord>();
