@@ -14,9 +14,8 @@ namespace NHMCore.Notifications
     {
         public static NotificationsManager Instance { get; } = new NotificationsManager();
         private static readonly object _lock = new object();
-        private Random _random = new Random();
         private string TAG = "NotificationManager";
-        private readonly string _notificationFile = "notifications.json";
+        private readonly string _notificationFile = Paths.RootPath("logs/notifications.json");
         private readonly int _notificationQuota = 15;
         private NotificationsManager()
         { }
@@ -60,26 +59,34 @@ namespace NHMCore.Notifications
                 _notifications.Insert(0, notification);
                 notification.PropertyChanged += Notification_PropertyChanged;
             }
-            CheckNotificationQuotaForEachGroupAndDeleteExcess(notification.Group, notification.Domain);
+            CheckNotificationQuotaForGroupAndDeleteExcess(notification.Group, notification.Domain);
             SearchForNewestNotificationOfTypeAndSetHistory(notification);
             if (shouldWrite) WriteNotifications();
             OnPropertyChanged(nameof(Notifications));
             OnPropertyChanged(nameof(NotificationNewCount));
             OnPropertyChanged(nameof(LatestNotifications));
         }
-        private void CheckNotificationQuotaForEachGroupAndDeleteExcess(NotificationsGroup group, string domain)
+        private void CheckNotificationQuotaForGroupAndDeleteExcess(NotificationsGroup group, string domain)
         {
-            var groupNotifications = _notifications.Where(notif => notif.Group == group)
-                                        .Where(notif => notif.Domain == domain).ToList();
+            var groupNotifications = Notifications
+                .Where(notif => notif.Group == group)
+                .Where(notif => notif.Domain == domain)
+                .ToList();
             if (groupNotifications.Count < _notificationQuota) return;
             var numToDelete = (int)Math.Floor(0.4 * groupNotifications.Count);
-            int count = 0;
-            foreach(var notification in groupNotifications)
+            lock (_lock)
             {
-                if (count > numToDelete) break;
-                RemoveNotificationFromList(notification);
-                count++;
+                var toDelete = Notifications.TakeLast(numToDelete);
+                foreach (var notif in toDelete)
+                {
+                    notif.PropertyChanged -= Notification_PropertyChanged;
+                    _notifications.Remove(notif);
+                }
             }
+            WriteNotifications();
+            OnPropertyChanged(nameof(Notifications));
+            OnPropertyChanged(nameof(NotificationNewCount));
+            OnPropertyChanged(nameof(LatestNotifications));
         }
         private void Notification_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -90,7 +97,7 @@ namespace NHMCore.Notifications
         }
         private void ReManageNotificationProperties(Notification notification)
         {
-            CheckNotificationQuotaForEachGroupAndDeleteExcess(notification.Group, notification.Domain);
+            CheckNotificationQuotaForGroupAndDeleteExcess(notification.Group, notification.Domain);
             SearchForNewestNotificationOfTypeAndSetHistory(notification);
             WriteNotifications();
             OnPropertyChanged(nameof(Notifications));
@@ -140,16 +147,19 @@ namespace NHMCore.Notifications
         }
         private void SearchForNewestNotificationOfTypeAndSetHistory(Notification notification)
         {
-            var newest = _notifications
+            var newest = Notifications
                 .Where(notif => notif.Group == notification.Group)
                 .OrderByDescending(notif => notif.NotificationEpochTime)
                 .FirstOrDefault();
-            if (newest == null) return;//todo?
-            var olderNotifications = _notifications
+            if (newest == null) return;
+            var olderNotifications = Notifications
                 .Where(notif => notif.Group == notification.Group)
                 .Where(notif => notif != newest)
                 .OrderByDescending(notif => notif.NotificationEpochTime);
+            foreach (var notif in olderNotifications) notif.NotificationNew = false;
             newest.OlderNotificationsOfSameType = olderNotifications.ToList();
+            OnPropertyChanged(nameof(Notifications));
+            OnPropertyChanged(nameof(LatestNotifications));
         }
 
         private int _notificationNewCount { get; set; }
@@ -164,11 +174,10 @@ namespace NHMCore.Notifications
         }
         private (bool ok, List<NotificationRecord> list) ReadNotifications()
         {
-            var path = Paths.AppRootPath(_notificationFile);
             List<NotificationRecord> recordList = new();
             try
             {
-                using StreamReader reader = new(path);
+                using StreamReader reader = new(_notificationFile);
                 var text = reader.ReadToEnd();
                 var existingRecord = JsonConvert.DeserializeObject<List<NotificationRecord>>(text);
                 if (existingRecord != null) recordList = existingRecord;
@@ -182,12 +191,11 @@ namespace NHMCore.Notifications
         }
         private void WriteNotifications()
         {
-            var path = Paths.AppRootPath(_notificationFile);
             var recordList = new List<NotificationRecord>();
-            _notifications.ForEach(item => recordList.Add(NotificationRecord.NotificationToRecord(item)));
+            Notifications.ForEach(item => recordList.Add(NotificationRecord.NotificationToRecord(item)));
             lock (_lock)
             {
-                using StreamWriter writer = new(path);
+                using StreamWriter writer = new(_notificationFile);
                 try
                 {
                     var textToWrite = JsonConvert.SerializeObject(recordList, Formatting.Indented);
