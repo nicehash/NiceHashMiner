@@ -15,7 +15,7 @@
                 <TextBlock Text="-" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" Margin="1,0,1,0"/>
                 <TextBlock Text="{Binding To}" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
             </WrapPanel>
-            <TextBlock Margin="37,0,0,0" Width="210" Text="{Binding Days, Converter={StaticResource BooleanDaysToStringConverter}}" Style="{StaticResource FontsTypography.Caption-Primary}"/>
+            <TextBlock Margin="37,0,0,0" Width="210" Text="{Binding DaysFrom, Converter={StaticResource BooleanDaysToStringConverter}}" Style="{StaticResource FontsTypography.Caption-Primary}"/>
             <ToggleButton Margin="60,0,0,0" x:Name="DeleteSchedule" Height="16" Width="14" HorizontalAlignment="Right" Style="{StaticResource QrTabButton}"
                               Background="{StaticResource  TrashLightLogo}"
                               Click="DeleteSchedule_Click" MouseEnter="DeleteSchedule_MouseEnter" MouseLeave="DeleteSchedule_MouseLeave" />

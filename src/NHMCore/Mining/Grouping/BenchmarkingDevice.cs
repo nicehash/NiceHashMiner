@@ -76,6 +76,7 @@ namespace NHMCore.Mining.Grouping
                     algo.Speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.speed).ToList();
                     algo.PowerUsage = power;
                     ConfigManager.CommitBenchmarksForDevice(algo.ComputeDevice);
+                    if (power == 0) AvailableNotifications.CreateNoPowerInfo(algo.PluginName, algo.AlgorithmName, algo.ComputeDevice.FullName);
                 }
                 else
                 {
