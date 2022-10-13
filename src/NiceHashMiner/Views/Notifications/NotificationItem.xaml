@@ -12,6 +12,19 @@
     <UserControl.Resources>
         <localConv:NewVisibilityConverter x:Key="NewVisibilityConv" />
         <localConv:CheckVisibilityConverter x:Key="CheckVisibilityConv" />
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
         <Style TargetType="TextBlock" x:Key="local.DefaultTextBlock" >
             <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
@@ -149,7 +162,6 @@
                     </Style>
                 </Grid.Style>
                 <WrapPanel Orientation="Vertical">
-                    <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource CheckBoxNormal}" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
                     <TextBlock Text="{Binding NotificationTime, Mode=TwoWay}" />
                     <WrapPanel Margin="0,8,0,0">
                         <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>
@@ -159,6 +171,10 @@
                             </Hyperlink>
                         </TextBlock>
                     </WrapPanel>
+                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}">
+                        <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not this type of notification again" Style="{StaticResource CheckBoxNormal}" />
+                        <TextBlock VerticalAlignment="Center" Style="{StaticResource local.InfoIcon}" ToolTip="Upon removal, notifications of this type will not be visible anymore. If you wish to undo this action later, you will need to manually remove this notification from the General.json file" />
+                    </StackPanel>
                 </WrapPanel>
             </Grid>
             <StackPanel Grid.Row="3" x:Name="NotificationHistoryGrid" Visibility="{Binding IsVisible, Converter={StaticResource NulBoolToVisibilityConverter}}">

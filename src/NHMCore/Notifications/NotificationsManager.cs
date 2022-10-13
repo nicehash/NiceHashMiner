@@ -56,7 +56,7 @@ namespace NHMCore.Notifications
             if (_notifications.Any(notif => notif.NumericUID == notification.NumericUID)) return;
             lock (_lock)
             {
-                notification.NotificationNew = true;
+                notification.NotificationNew = shouldWrite;
                 _notifications.Insert(0, notification);
                 notification.PropertyChanged += Notification_PropertyChanged;
             }
