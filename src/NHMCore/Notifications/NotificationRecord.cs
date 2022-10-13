@@ -41,7 +41,7 @@ namespace NHMCore.Notifications
                 NotificationUUID = notification.NotificationUUID,
                 IsVisible = notification.IsVisible,
                 Action = notification.Action?.ActionID ?? ActionID.ActionNONE,
-                Action_Extra = notification.Action.Extra
+                Action_Extra = notification.Action?.Extra ?? string.Empty,
             };
         }
         public static Notification NotificationFromRecord(NotificationRecord notificationRecord)
