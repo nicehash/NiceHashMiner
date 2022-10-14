@@ -231,7 +231,7 @@ namespace NHMCore.Nhmws.V4
                 Btc = btc,
                 Worker = worker,
                 RigID = rigID,
-                Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", "NA/NA" },
+                Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
                 OptionalMutableProperties = new List<OptionalMutableProperty>
                 {
                     new OptionalMutablePropertyString
