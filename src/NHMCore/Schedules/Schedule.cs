@@ -1,9 +1,5 @@
 ﻿using NHM.Common;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NHMCore.Schedules
 {
@@ -34,5 +30,17 @@ namespace NHMCore.Schedules
             ["Saturday"] = false,
             ["Sunday"] = false
         };
+
+        public Schedule SetValues(ScheduleOld scheduleOld)
+        {
+            var scheduleNew = new Schedule()
+            {
+                From = scheduleOld.From,
+                To = scheduleOld.To,
+                DaysFrom = scheduleOld.Days,
+                DaysTo = scheduleOld.Days,
+            };
+            return scheduleNew;
+        }
     }
 }
