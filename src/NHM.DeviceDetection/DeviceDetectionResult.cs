@@ -15,7 +15,7 @@ namespace NHM.DeviceDetection
         public CPUDevice CPU { get; internal set; }
 
         // NVIDIA
-        public IReadOnlyList<CUDADevice> CUDADevices { get; internal set; }
+        public IReadOnlyList<CUDADevice> CUDADevices { get; internal set; } = new List<CUDADevice>();
         public bool HasCUDADevices => CUDADevices != null && CUDADevices.Count > 0;
         public Version NvidiaDriver { get; internal set; }
         public bool NVIDIADriverObsolete { get; internal set; }
@@ -26,7 +26,7 @@ namespace NHM.DeviceDetection
         public IReadOnlyList<CUDADevice> UnsupportedCUDADevices { get; internal set; }
 
         // AMD
-        public IReadOnlyList<AMDDevice> AMDDevices { get; internal set; }
+        public IReadOnlyList<AMDDevice> AMDDevices { get; internal set; } = new List<AMDDevice>();
         public bool HasAMDDevices => AMDDevices != null && AMDDevices.Count > 0;
         public Version AmdDriver { get; internal set; }
         public bool AMDDriverObsolete { get; internal set; }
