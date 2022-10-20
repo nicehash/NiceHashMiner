@@ -510,7 +510,7 @@ namespace NHMCore.Notifications
 
         public static void CreateLHRPresentAdminRunRequired()
         {
-            var notification = new Notification(NotificationsType.Info, NotificationsGroup.RequireAdminForLHR, Tr("LHR Insufficient Permissions"), Tr("At least one LHR GPU was detected on your rig. To achieve full LHR unlock you need to run NMH as Administrator."));
+            var notification = new Notification(NotificationsType.Info, NotificationsGroup.RequireAdminForLHR, Tr("LHR Insufficient Permissions"), Tr("At least one LHR GPU was detected on your rig. To achieve full GPU speed, you need to run NHM as an Administrator or install NVIDIA driver version 522.25 or newer."));
             notification.Action = new NotificationAction
             {
                 Info = Tr("Run As Administrator"),
