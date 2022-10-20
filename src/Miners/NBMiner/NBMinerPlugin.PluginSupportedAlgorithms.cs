@@ -30,6 +30,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                         new SAS(AlgorithmType.Autolykos),
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
+                        new SAS(AlgorithmType.CuckooCycle)
                     }
                 },
                 {
@@ -39,7 +40,8 @@ namespace NBMiner
                         new SAS(AlgorithmType.KAWPOW) {NonDefaultRAMLimit = KAWPOW_RamLimit },
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.Autolykos),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) }
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
+                        new SAS(AlgorithmType.CuckooCycle)
                         //new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                     }
                 }
