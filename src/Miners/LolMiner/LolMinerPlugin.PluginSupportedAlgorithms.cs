@@ -14,12 +14,12 @@ namespace LolMiner
         {
             return new List<SAS>
                     {
-                        new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory, Enabled = false},
-                        new SAS(AlgorithmType.GrinCuckatoo32) {Enabled = false},
-                        new SAS(AlgorithmType.ZHash) {Enabled = false},
+                        new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory},
+                        new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
+                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
                         new SAS(AlgorithmType.ZelHash)
                     };
         }
@@ -58,8 +58,8 @@ namespace LolMiner
                         new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.BeamV3),
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.EtcHash){NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
+                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
+                        new SAS(AlgorithmType.EtcHash){NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
                         new SAS(AlgorithmType.ZelHash)
                     }
                 },
