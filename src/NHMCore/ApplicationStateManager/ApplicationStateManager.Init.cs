@@ -88,7 +88,6 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
-                OutsideProcessMonitor.Init(ExitApplication.Token);
                 // add devices
                 string getDeviceNameCount(DeviceType deviceType, int index) => 
                     deviceType switch

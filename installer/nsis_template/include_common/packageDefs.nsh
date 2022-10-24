@@ -5,6 +5,8 @@
 !define PRODUCT_NAME "${BASE_NAME}"
 # restore to "${BASE_NAME}" after old platform is dead
 !define PRODUCT_FILENAME "NiceHashMiner"
+# app_nhm is the main program and needs to be closed too
+!define APPLICATION_FILENAME "app_nhm"
 
 !define REQUEST_EXECUTION_LEVEL "user"
 !define COMPRESS "auto"

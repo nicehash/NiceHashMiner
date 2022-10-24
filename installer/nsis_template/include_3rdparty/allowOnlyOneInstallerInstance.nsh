@@ -36,6 +36,7 @@
       doStopProcess:
         DetailPrint "Closing running ${PRODUCT_NAME} ..."
         ${nsProcess::KillProcess} "${APP_EXECUTABLE_FILENAME}" $R0
+		${nsProcess::KillProcess} "${MAIN_APPLICATION_FILENAME}" $R0
         DetailPrint "Waiting for ${PRODUCT_NAME} to close."
         Sleep 2000
     ${endIf}
