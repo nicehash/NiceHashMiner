@@ -56,7 +56,8 @@ namespace NHMCore.Notifications
             lock (_lock)
             {
                 notification.NotificationNew = shouldWrite;
-                _notifications.Insert(0, notification);
+                if (shouldWrite) _notifications.Insert(0, notification);
+                else _notifications.Add(notification);
                 notification.PropertyChanged += Notification_PropertyChanged;
             }
             CheckNotificationQuotaForGroupAndDeleteExcess(notification.Group, notification.Domain);

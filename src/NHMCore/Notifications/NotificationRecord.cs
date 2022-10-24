@@ -56,8 +56,12 @@ namespace NHMCore.Notifications
                 IsVisible = notificationRecord.IsVisible,
                 NumericUID = notificationRecord.NumericUID,
             };
-            notif.Action = AvailableActions.ToAction(notificationRecord.Action);
-            notif.Action.Extra = notificationRecord.Action_Extra;
+            if (notificationRecord.Action == ActionID.ActionNONE) notif.Action = null;
+            else
+            {
+                notif.Action = AvailableActions.ToAction(notificationRecord.Action);
+                notif.Action.Extra = notificationRecord.Action_Extra;
+            }
             return notif;
         }
     }

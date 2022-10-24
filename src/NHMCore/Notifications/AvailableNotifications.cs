@@ -137,9 +137,7 @@ namespace NHMCore.Notifications
 
         public static void CreateNhmWasUpdatedInfo(bool success)
         {
-            var sentence = "was updated";
-            if (!success) sentence = "was not updated";
-
+            var sentence = success ? "was updated" : "was not updated";
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmWasUpdated, Tr("NiceHash Miner was updated"), Tr($"NiceHash Miner {sentence} to the latest version."));
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.NhmWasUpdated);
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -147,37 +145,8 @@ namespace NHMCore.Notifications
 
         public static void CreatePluginUpdateInfo(string pluginName, bool success)
         {
-            var sentence = "was installed";
-            if (!success) sentence = "was not installed";
-
+            var sentence = success ? "was installed" : "was not installed";
             var content = Tr("New version of {0} {1}.\n", pluginName, Tr(sentence));
-
-            try
-            {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.PluginUpdate).FirstOrDefault();
-                if (pluginNotification != null)
-                {
-                    if (pluginNotification.NotificationNew == true)
-                    {
-                        //check if the same sentence was already written to notification
-                        var newSentence = Tr("New version of {0} {1}.\n", pluginName, Tr(sentence));
-                        if (pluginNotification.NotificationContent.Contains(newSentence))
-                        {
-                            return;
-                        }
-
-                        //add new content to prev content
-                        content = pluginNotification.NotificationContent + newSentence;
-                    }
-                }
-                //clean previous notification
-                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Notifications", ex.Message);
-            }
-
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.PluginUpdate, Tr("Miner Plugin Update"), content);
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.PluginUpdate);
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -217,16 +186,6 @@ namespace NHMCore.Notifications
 
         public static void CreateNotProfitableInfo(bool shouldClear)
         {
-            // clear old state
-            try
-            {
-                var profitNotification = NotificationsManager.Instance.Notifications.FirstOrDefault(notif => notif.Group == NotificationsGroup.Profit);
-                if (profitNotification != null) NotificationsManager.Instance.Notifications.Remove(profitNotification);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Notifications", ex.Message);
-            }
             if (!shouldClear)
             {
                 var notification = new Notification(NotificationsType.Warning, NotificationsGroup.Profit, Tr("Mining not profitable"), Tr("Currently mining is not profitable. Mining will be resumed once it will be profitable again."));
@@ -248,8 +207,7 @@ namespace NHMCore.Notifications
             var logUploadNotifications = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.LogArchiveUpload).FirstOrDefault();
             if (logUploadNotifications != null) logUploadNotifications.RemoveNotification();
 
-            var sentence = Tr("was uploaded.");
-            if (!success) sentence = Tr("was not uploaded. Please contact our support team for help.");
+            var sentence = success ? Tr("was uploaded.") : Tr("was not uploaded. Please contact our support team for help.");
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.LogArchiveUpload, Tr("Log archive upload result"), Tr("The log archive with the following ID: {0}", uuid) + " " + sentence);
             notification.Action = AvailableActions.ActionCopyToClipBoard(uuid);
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.LogArchiveUpload);
@@ -266,28 +224,6 @@ namespace NHMCore.Notifications
         public static void CreateFailedDownloadWrongHashBinary(string pluginName)
         {
             var content = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
-            try
-            {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumBinary)
-                                                                                    .Where(notif => notif.Domain == pluginName)
-                                                                                    .FirstOrDefault();
-                if (pluginNotification != null)
-                {
-                    var newSentence = Tr("The downloaded {0} checksum does not meet our security verification. Please make sure that you are downloading the source from a trustworthy source.", pluginName);
-                    if (pluginNotification.NotificationNew == true)
-                    {
-                        //add new content to prev content
-                        content = pluginNotification.NotificationContent + "\n" + newSentence;
-                    }
-                }
-                //clean previous notification
-                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Notifications", ex.Message);
-            }
-
             var notification = new Notification(NotificationsType.Error, pluginName, NotificationsGroup.WrongChecksumBinary, Tr("Checksum validation failed"), content);
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.WrongChecksumBinary);
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -296,28 +232,6 @@ namespace NHMCore.Notifications
         public static void CreateFailedDownloadWrongHashDll(string pluginName)
         {
             var content = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
-            try
-            {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.WrongChecksumDll)
-                                                                                    .Where(notif => notif.Domain == pluginName)
-                                                                                    .FirstOrDefault();
-                if (pluginNotification != null)
-                {
-                    var newSentence = Tr("The used {0} plugin .dll checksum does not meet our security verification. Please make sure that you are using an official .dll.", pluginName);
-                    if (pluginNotification.NotificationNew == true)
-                    {
-                        //add new content to prev content
-                        content = pluginNotification.NotificationContent + "\n" + newSentence;
-                    }
-                }
-                //clean previous notification
-                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Notifications", ex.Message);
-            }
-
             var notification = new Notification(NotificationsType.Error, pluginName, NotificationsGroup.WrongChecksumDll, Tr("Checksum validation failed dll"), content);
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.WrongChecksumDll);
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -326,24 +240,6 @@ namespace NHMCore.Notifications
         public static void CreateRestartedMinerInfo(DateTime dateTime, string minerName)
         {
             var content = Tr("Miner \"{0}\" was restarted at {1}", minerName, dateTime.ToString("HH:mm:ss MM/dd/yyyy"));
-            try
-            {
-                var restartNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.MinerRestart)
-                                                                                     .Where(notif => notif.Domain == minerName)
-                                                                                     .FirstOrDefault();
-                if (restartNotification != null)
-                {
-                    //add new content to prev content
-                    content = restartNotification.NotificationContent + "\n" + content;
-                }
-                //clean previous notification
-                NotificationsManager.Instance.Notifications.Remove(restartNotification);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Notifications", ex.Message);
-            }
-
             var notification = new Notification(NotificationsType.Info, minerName, NotificationsGroup.MinerRestart, Tr("Miner restarted"), Tr(content));
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.MinerRestart);
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -352,28 +248,6 @@ namespace NHMCore.Notifications
         public static void CreateNullChecksumError(string pluginName)
         {
             var content = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
-            try
-            {
-                var pluginNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NullChecksum)
-                                                                                    .Where(notif => notif.Domain == pluginName)
-                                                                                    .FirstOrDefault();
-                if (pluginNotification != null)
-                {
-                    var newSentence = Tr("Unable to download file for {0}, check your antivirus.", pluginName);
-                    if (pluginNotification.NotificationNew == true)
-                    {
-                        //add new content to prev content
-                        content = pluginNotification.NotificationContent + "\n" + newSentence;
-                    }
-                }
-                //clean previous notification
-                NotificationsManager.Instance.Notifications.Remove(pluginNotification);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Notifications", ex.Message);
-            }
-
             var notification = new Notification(NotificationsType.Error, pluginName, NotificationsGroup.NullChecksum, Tr("Checksum validation null"), content);
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.NullChecksum);
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -381,19 +255,12 @@ namespace NHMCore.Notifications
 
         public static void CreateGamingStarted()
         {
-            var gamingFinishedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingFinished).FirstOrDefault();
-            if (gamingFinishedNotification != null) gamingFinishedNotification.RemoveNotification();
-
-
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingStarted, Tr("Game started, mining is paused"), Tr("NiceHash Miner detected game is running and paused the mining. Mining will resume after the game is closed."));
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.GamingStarted);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
         public static void CreateGamingFinished()
         {
-            var gamingStartedNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.GamingStarted).FirstOrDefault();
-            if (gamingStartedNotification != null) gamingStartedNotification.RemoveNotification();
-
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.GamingFinished, Tr("Game stopped, mining has started"), Tr("NiceHash Miner resumed mining."));
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.GamingFinished);
             NotificationsManager.Instance.AddNotificationToList(notification);
@@ -476,33 +343,8 @@ namespace NHMCore.Notifications
         public static void CreateNoPowerInfo(string pluginName, string algorithmName, string deviceName)
         {
             var content = Tr("Try reinstalling the GPU drivers or run NHM as administrator.\n\n{0}/{1} power usage for {2} is missing.\n", pluginName, algorithmName, deviceName);
-            try
-            {
-                var powerNotification = NotificationsManager.Instance.Notifications.Where(notif => notif.Group == NotificationsGroup.NoPowerInfo).FirstOrDefault();
-                if (powerNotification != null)
-                {
-                    if (powerNotification.NotificationNew == true)
-                    {
-                        //check if the same sentence was already written to notification
-                        var newSentence = Tr("{0}/{1} power usage for {2} is missing.\n", pluginName, algorithmName, deviceName);
-                        if (powerNotification.NotificationContent.Contains(newSentence))
-                        {
-                            return;
-                        }
-
-                        //add new content to prev content
-                        content = powerNotification.NotificationContent + newSentence;
-                    }
-                }
-                //clean previous notification
-                NotificationsManager.Instance.Notifications.Remove(powerNotification);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("Notifications", ex.Message);
-            }
-
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NoPowerInfo, Tr("Some benchmarks failed to save power usage"), content);
+            notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.DriverVersionProblem);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }
