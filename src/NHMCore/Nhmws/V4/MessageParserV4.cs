@@ -3,6 +3,8 @@ using Newtonsoft.Json.Linq;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
+using NHM.DeviceMonitoring.Core_clock;
+using NHM.DeviceMonitoring.Memory_clock;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.Configs;
 using NHMCore.Mining;
@@ -97,6 +99,9 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan","%"),
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power","W"),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", ""),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "OC Profile", ""),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "Fan profile", ""),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "ELP profile", "")
             };
             var deviceOptionalDynamic = dynamicPropertiesWithValues
                 .Where(p => p.HasValue)
@@ -135,7 +140,7 @@ namespace NHMCore.Nhmws.V4
                 // TODO sort by type
                 var optionalProperties = new List<OptionalMutableProperty>
                     {
-                        valueOrNull<ITDP>(new OptionalMutablePropertyEnum
+                        valueOrNull<ITDP>(new OptionalMutablePropertyEnum //TODO is always included?
                         {
                             PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
                             DisplayName = "TDP Simple",
@@ -162,6 +167,23 @@ namespace NHMCore.Nhmws.V4
                             }
                         }),
                     };
+                //TODO
+                //if(d.DeviceMonitor is ICoreClockSet)
+                //{
+
+                //}
+                //if(d.DeviceMonitor is ICoreClockDeltaSet)
+                //{
+
+                //}
+                //if(d.DeviceMonitor is IMemoryClockSet)
+                //{
+
+                //}
+                //if (d.DeviceMonitor is IMemoryClockDeltaSet) 
+                //{
+
+                //}
                 return optionalProperties
                     .Where(p => p != null)
                     .ToList();

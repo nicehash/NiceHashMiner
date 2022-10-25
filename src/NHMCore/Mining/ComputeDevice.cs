@@ -2,6 +2,8 @@
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
+using NHM.DeviceMonitoring.Core_clock;
+using NHM.DeviceMonitoring.Memory_clock;
 using NHM.DeviceMonitoring.TDP;
 using NHM.UUID;
 using NHMCore.ApplicationState;
@@ -266,6 +268,38 @@ namespace NHMCore.Mining
                 return -1;
             }
         }
+        public int CoreClock
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClock get) return get.CoreClock;
+                return -1;
+            }
+        }
+        public int CoreClockDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClockDelta get) return get.CoreClockDelta;
+                return -1;
+            }
+        }
+        public int MemoryClock
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClock get) return get.MemoryClock;
+                return -1;
+            }
+        }
+        public int MemoryClockDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockDelta get) return get.MemoryClockDelta;
+                return -1;
+            }
+        }
         #endregion Getters
 
         #region Setters
@@ -273,6 +307,26 @@ namespace NHMCore.Mining
         public bool SetPowerMode(TDPSimpleType level)
         {
             if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDPSimple(level);
+            return false;
+        }
+        public bool SetCoreClock(int coreClock)
+        {
+            if(CanSetTDP && DeviceMonitor is ICoreClockSet set) return set.SetCoreClock(coreClock);
+            return false;
+        }
+        public bool SetCoreClockDelta(int coreClockDelta)
+        {
+            if(CanSetTDP && DeviceMonitor is ICoreClockDeltaSet set) return set.SetCoreClockDelta(coreClockDelta);
+            return false;
+        }
+        public bool SetMemoryClock(int memoryClock)
+        {
+            if(CanSetTDP && DeviceMonitor is IMemoryClockSet set) return set.SetMemoryClock(memoryClock);
+            return false;
+        }
+        public bool SetMemoryClockDelta(int memoryClockDelta)
+        {
+            if(CanSetTDP && DeviceMonitor is IMemoryClockDeltaSet set) return set.SetMemoryClockDelta(memoryClockDelta);
             return false;
         }
 

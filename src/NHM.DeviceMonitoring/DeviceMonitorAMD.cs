@@ -1,13 +1,18 @@
 ﻿using NHM.Common;
 using NHM.DeviceMonitoring.AMD;
+using NHM.DeviceMonitoring.Core_clock;
+using NHM.DeviceMonitoring.Memory_clock;
+using NHM.DeviceMonitoring.NVIDIA;
 using NHM.DeviceMonitoring.TDP;
 using System;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange
     {
         public int BusID { get; private set; }
+        private const int RET_OK = 0;
+
 
         private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(0.5);
 
@@ -217,6 +222,17 @@ namespace NHM.DeviceMonitoring
             return (-1, -1);
         }
 
+        public bool SetMemoryClock(int memoryClock)
+        {
+            return AMD_ODN.nhm_amd_device_set_memory_clocks(BusID, memoryClock) == 0 ? true : false;
+        }
+
+        public bool SetCoreClock(int coreClock)
+        {
+            return AMD_ODN.nhm_amd_device_set_core_clocks(BusID, coreClock) == 0 ? true : false;
+        }
+
+
         public int HotspotTemp
         {
             get
@@ -242,5 +258,61 @@ namespace NHM.DeviceMonitoring
                 return -1;
             }
         }
+
+        public int MemoryClock
+        {
+            get
+            {
+                int memoryClock = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_memory_clocks(BusID, ref memoryClock);
+                if (ok == RET_OK) return memoryClock;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_memory_clocks failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
+        public int CoreClock
+        {
+            get
+            {
+                int coreClock = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_core_clocks(BusID, ref coreClock);
+                if (ok == RET_OK) return coreClock;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_core_clocks failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
+        public (int min, int max) GetMemoryClockRange
+        {
+            get
+            {
+                int dmcMin = 0;
+                int dmcMax = 0;
+                int def = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_memory_clocks_min_max_default(BusID, ref dmcMin, ref dmcMax, ref def);
+                if (ok == RET_OK) return (dmcMin, dmcMax);
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_memory_clocks_min_max_default failed with error code {ok}", _delayedLogging);
+                return (-1, -1);
+            }
+        }
+
+        public (int min, int max) GetMemoryClockDeltaRange => (-1, -1);
+
+        public (int min, int max) CoreClockRange
+        {
+            get
+            {
+                int dmcMin = 0;
+                int dmcMax = 0;
+                int def = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_core_clocks_min_max_default(BusID, ref dmcMin, ref dmcMax, ref def);
+                if (ok == RET_OK) return (dmcMin, dmcMax);
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_core_clocks_min_max_default failed with error code {ok}", _delayedLogging);
+                return (-1, -1);
+            }
+        }
+
+        public (int min, int max) CoreClockDeltaRange => (-1, -1);
     }
 }
