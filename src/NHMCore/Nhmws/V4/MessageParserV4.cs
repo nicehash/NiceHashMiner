@@ -4,12 +4,15 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.DeviceMonitoring.TDP;
+using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Contacts;
 
 namespace NHMCore.Nhmws.V4
 {
@@ -57,7 +60,7 @@ namespace NHMCore.Nhmws.V4
             return devData.MinerName;
         }
 
-        private static (List<(string name, string unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d)
+        private static (List<(string name, string unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isLogin)
         {
             string getValue<T>(T o) => (typeof(T).Name, o) switch
             {
@@ -77,31 +80,46 @@ namespace NHMCore.Nhmws.V4
                 _ => null,
             };
 
-            (string name, string unit, string value)? pairOrNull<T>(string name, string unit)
+            (DeviceDynamicProperties type, string name, string unit, string value)? pairOrNull<T>(DeviceDynamicProperties type, string name, string unit)
             {
-                if (d.DeviceMonitor is T sensor) return (name, unit, getValue<T>(sensor));
-                if (typeof(T) == typeof(string)) return (name, unit, getValueForName(name));
+                if (d.DeviceMonitor is T sensor) return (type, name, unit, getValue<T>(sensor));
+                if (typeof(T) == typeof(string)) return (type, name, unit, getValueForName(name));
                 return null;
             }
 
             // here sort manually by type 
-            var dynamicPropertiesWithValues = new List<(string name, string unit, string value)?>
+            var dynamicPropertiesWithValues = new List<(DeviceDynamicProperties type, string name, string unit, string value)?>
             {
-                pairOrNull<ITemp>("Temp.","C"),
-                pairOrNull<IVramTemp>("VRAM T.","C"),
-                pairOrNull<ILoad>("Load","%"),
-                pairOrNull<IMemControllerLoad>("MemCtrl Load","%"),
-                pairOrNull<IGetFanSpeedPercentage>("Fan","%"),
-                pairOrNull<IPowerUsage>("Power","W"),
-                pairOrNull<string>("Miner", ""),
+                pairOrNull<ITemp>(DeviceDynamicProperties.Temperature ,"Temperature","C"),
+                pairOrNull<IVramTemp>(DeviceDynamicProperties.VramTemp,"VRAM Temperature","C"),
+                pairOrNull<ILoad>(DeviceDynamicProperties.Load,"Load","%"),
+                pairOrNull<IMemControllerLoad>(DeviceDynamicProperties.MemoryControllerLoad, "MemCtrl Load","%"),
+                pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan","%"),
+                pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power","W"),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", ""),
             };
-
             var deviceOptionalDynamic = dynamicPropertiesWithValues
                 .Where(p => p.HasValue)
                 .Where(p => p.Value.value != null)
                 .Select(p => p.Value)
-                .ToArray();
+                .ToList();
 
+            if (isLogin)
+            {
+                bool shouldRemoveDynamicVal((DeviceDynamicProperties type, string name, string unit, string value) dynamicVal)
+                {
+                    if (dynamicVal.unit == String.Empty) return false;
+                    var ok = Int32.TryParse(dynamicVal.value, out var res);
+                    if (ok && res < 0) return true;
+                    return false;
+                };
+                deviceOptionalDynamic.RemoveAll(dynamVal => shouldRemoveDynamicVal(dynamVal));
+                deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
+            }
+            foreach (DeviceDynamicProperties i in Enum.GetValues(typeof(DeviceDynamicProperties)))
+            {
+                if (!d.SupportedDynamicProperties.Contains(i)) deviceOptionalDynamic.RemoveAll(prop => prop.type == i);
+            }
             var optionalDynamicProperties = deviceOptionalDynamic.Select(p => (p.name, p.unit)).ToList();
             var values_odv = new JArray(deviceOptionalDynamic.Select(p => p.value));
             return (optionalDynamicProperties, values_odv);
@@ -221,7 +239,7 @@ namespace NHMCore.Nhmws.V4
                         { "optional", getStaticPropertiesOptionalValues(d) },
                     },
                     Actions = createDefaultActions(),
-                    OptionalDynamicProperties = GetDeviceOptionalDynamic(d).properties,
+                    OptionalDynamicProperties = GetDeviceOptionalDynamic(d, true).properties,
                     OptionalMutableProperties = GetDeviceOptionalMutable(d).properties,
                 };
             }
@@ -232,7 +250,17 @@ namespace NHMCore.Nhmws.V4
                 Worker = worker,
                 RigID = rigID,
                 Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
-                OptionalMutableProperties = new List<OptionalMutableProperty>
+                OptionalMutableProperties = GetRigOptionalMutableValuesLogin(btc, worker),
+                OptionalDynamicProperties = GetRigOptionalDynamicValuesLogin(),
+                Actions = createDefaultActions(),
+                Devices = devices.Select(mapComputeDevice).ToList(),
+                MinerState = GetMinerStateValues(worker, devices),
+            };
+            return _loginMessage;
+        }
+        private static List<OptionalMutableProperty> GetRigOptionalMutableValuesLogin(string btc, string worker)
+        {
+            return new List<OptionalMutableProperty>
                 {
                     new OptionalMutablePropertyString
                     {
@@ -240,7 +268,7 @@ namespace NHMCore.Nhmws.V4
                         DisplayGroup = 0,
                         DisplayName = "User name",
                         DefaultValue = btc,
-                        Range = (64, null),
+                        Range = (64, String.Empty),
                     },
                     new OptionalMutablePropertyString
                     {
@@ -248,14 +276,32 @@ namespace NHMCore.Nhmws.V4
                         DisplayGroup = 0,
                         DisplayName = "Worker name",
                         DefaultValue = worker,
-                        Range = (64, null),
+                        Range = (64, String.Empty),
                     },
-                },
-                Actions = createDefaultActions(),
-                Devices = devices.Select(mapComputeDevice).ToList(),
-                MinerState = GetMinerStateValues(worker, devices),
-            };
-            return _loginMessage;
+                };
+        }
+        private static List<List<string>> GetRigOptionalDynamicValuesLogin()
+        {
+            return new List<List<string>>
+                {
+                    new List<string>
+                    {
+                        "Uptime",
+                        "s"
+                    },
+                    new List<string>
+                    {
+                        "IP address"
+                    },
+                    new List<string>
+                    {
+                        "Profiles bundle id"
+                    },
+                    new List<string>
+                    {
+                        "Profiles bundle name"
+                    }
+                };
         }
 
         private static JObject GetMinerStateValues(string workerName, IOrderedEnumerable<ComputeDevice> devices)
@@ -264,6 +310,26 @@ namespace NHMCore.Nhmws.V4
             var delProp = json.Property("method");
             delProp.Remove();
             return json;
+        }
+        private static List<string> GetRigOptionalDynamicValues()
+        {
+            var list = new List<string>
+            {
+                Helpers.GetElapsedSecondsSinceStart().ToString(),
+                Helpers.GetLocalIP().ToString(),
+                String.Empty, //todo
+                String.Empty
+            };
+            return list;
+        }
+        private static List<string> GetRigOptionalMutableValues()
+        {
+            var list = new List<string>
+            {
+                CredentialsSettings.Instance.BitcoinAddress,
+                CredentialsSettings.Instance.WorkerName
+            };
+            return list;
         }
 
         internal static MinerState GetMinerState(string workerName, IOrderedEnumerable<ComputeDevice> devices)
@@ -311,8 +377,8 @@ namespace NHMCore.Nhmws.V4
 
                 return new MinerState.DeviceState
                 {
-                    MutableDynamicValues = mdv(d),
-                    OptionalDynamicValues = GetDeviceOptionalDynamic(d).values, // odv
+                    MandatoryDynamicValues = mdv(d),
+                    OptionalDynamicValues = GetDeviceOptionalDynamic(d, false).values, // odv
                     MandatoryMutableValues = mmv(d),
                     OptionalMutableValues = GetDeviceOptionalMutable(d).values, // omv
                 };
@@ -321,9 +387,9 @@ namespace NHMCore.Nhmws.V4
             return new MinerState
             {
                 MutableDynamicValues = new JArray(rigStateToInt(rig)),
-                OptionalDynamicValues = new JArray(),
+                OptionalDynamicValues = new JArray(GetRigOptionalDynamicValues()),
                 MandatoryMutableValues = new JArray(rigStateToInt(rig), workerName),
-                OptionalMutableValues = new JArray(),
+                OptionalMutableValues = new JArray(GetRigOptionalMutableValues()),
                 Devices = devices.Select(toDeviceState).ToList(),
             };
         }

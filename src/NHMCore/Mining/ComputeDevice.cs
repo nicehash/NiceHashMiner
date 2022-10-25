@@ -58,6 +58,7 @@ namespace NHMCore.Mining
                 OnPropertyChanged();
             }
         }
+        public List<DeviceDynamicProperties> SupportedDynamicProperties { get; set; } = new();
 
         // disabled state check
         public bool IsDisabled => (!Enabled || State == DeviceState.Disabled);

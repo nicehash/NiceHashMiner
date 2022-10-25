@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,7 +27,8 @@ namespace NHMCore.Nhmws.V4
         // "static_properties": { ... },
 
         // "optional_dynamic_properties": [ ... ],
-
+        [JsonProperty("optional_dynamic_properties")]
+        public List<List<string>> OptionalDynamicProperties { get; set; }
         [JsonProperty("optional_mutable_properties")]
         public List<OptionalMutableProperty> OptionalMutableProperties { get; set; }
 
@@ -213,7 +215,7 @@ namespace NHMCore.Nhmws.V4
         internal class DeviceState
         {
             [JsonProperty("mdv")]
-            public JArray MutableDynamicValues { get; set; }
+            public JArray MandatoryDynamicValues { get; set; }
 
             [JsonProperty("odv")]
             public JArray OptionalDynamicValues { get; set; }

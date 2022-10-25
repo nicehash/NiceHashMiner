@@ -72,7 +72,7 @@ namespace NHMCore.Nhmws.V4
 
         static private LoginMessage _login = new LoginMessage
         {
-            Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", "NA/NA" },
+            Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
             Btc = DemoUser.BTC,
         };
 

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace NHMCore.Utils
         public static bool Is64BitOperatingSystem = Is64BitProcess || InternalCheckIsWow64();
 
         public static readonly bool IsElevated;
+        private static int StartEpoch = 0;
 
 
         static Helpers()
@@ -26,6 +28,7 @@ namespace NHMCore.Utils
             using var identity = WindowsIdentity.GetCurrent();
             var principal = new WindowsPrincipal(identity);
             IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            StartEpoch = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
         }
 
         public static bool InternalCheckIsWow64()
@@ -281,6 +284,15 @@ namespace NHMCore.Utils
                 Logger.Error("Log-Report", $"Unable to post log archive: {ex.Message}");
                 return false;
             }
+        }
+        public static int GetElapsedSecondsSinceStart()
+        {
+            var elapsed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds - StartEpoch;
+            return elapsed;
+        }
+        public static IPAddress GetLocalIP()
+        {
+            return IPAddress.Parse(Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString()) ?? IPAddress.None;
         }
     }
 }
