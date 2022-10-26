@@ -15,14 +15,12 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding NotificationTime}" />
-        <TextBlock VerticalAlignment="Center" Grid.Column="1" Margin="20,0,0,0" Text="{Binding Name}" Style="{DynamicResource BaseUbuntuTextBlockBold}"  />
-        <TextBlock VerticalAlignment="Center" Grid.Column="2" Margin="20,0,0,0" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow"/>
-        <Button VerticalAlignment="Center" Grid.Column="3" Style="{StaticResource ButtonNoBorder}" Content="X" Click="RemoveSingleNotification"/>
+        <TextBlock VerticalAlignment="Center" Grid.Column="1" Margin="20,0,0,0" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow"/>
+        <Button VerticalAlignment="Center" Margin="40,0,0,0" Grid.Column="2" Style="{StaticResource ButtonNoBorder}" Content="X" Click="RemoveSingleNotification"/>
 
 
     </Grid>

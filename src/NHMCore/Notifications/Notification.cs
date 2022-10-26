@@ -98,17 +98,17 @@ namespace NHMCore.Notifications
                 OnPropertyChanged(nameof(NotificationNew));
             }
         }
-        public List<Notification> _olderNotificationsOfSameType = new();
-        public List<Notification> OlderNotificationsOfSameType
+        public List<Notification> _subNotificationList = new();
+        public List<Notification> SubNotificationList
         {
             get
             {
-                return _olderNotificationsOfSameType;
+                return _subNotificationList;
             }
             set
             {
-                _olderNotificationsOfSameType = value;
-                OnPropertyChanged(nameof(OlderNotificationsOfSameType));
+                _subNotificationList = value;
+                OnPropertyChanged(nameof(SubNotificationList));
             }
         }
         public long _numericUID { get; internal set; } = -1;
@@ -175,7 +175,7 @@ namespace NHMCore.Notifications
         public void UpdateNotificationTimeString()
         {
             SetTimeString();
-            OlderNotificationsOfSameType.ForEach(notif => notif.SetTimeString());
+            SubNotificationList.ForEach(notif => notif.SetTimeString());
         }
 
         private string _notificationContent { get; set; }

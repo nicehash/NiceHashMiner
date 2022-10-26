@@ -158,7 +158,7 @@ namespace NHMCore.Notifications
                 .Where(notif => notif != newest)
                 .OrderByDescending(notif => notif.NotificationEpochTime);
             foreach (var notif in olderNotifications) notif.NotificationNew = false;
-            newest.OlderNotificationsOfSameType = olderNotifications.ToList();
+            newest.SubNotificationList = olderNotifications.ToList();
             OnPropertyChanged(nameof(Notifications));
             OnPropertyChanged(nameof(LatestNotifications));
         }

@@ -146,7 +146,7 @@ namespace NHMCore.Notifications
         public static void CreatePluginUpdateInfo(string pluginName, bool success)
         {
             var sentence = success ? "was installed" : "was not installed";
-            var content = Tr("New version of {0} {1}.\n", pluginName, Tr(sentence));
+            var content = Tr("New version of {0} {1}.", pluginName, Tr(sentence));
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.PluginUpdate, Tr("Miner Plugin Update"), content);
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.PluginUpdate);
             NotificationsManager.Instance.AddNotificationToList(notification);

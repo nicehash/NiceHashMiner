@@ -98,5 +98,13 @@ namespace NiceHashMiner.Views.Notifications
         {
             Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
         }
+
+        private void RemoveThisNotification_click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is Notification notification)
+            {
+                NotificationsManager.Instance.RemoveNotificationFromList(notification);
+            }
+        }
     }
 }
