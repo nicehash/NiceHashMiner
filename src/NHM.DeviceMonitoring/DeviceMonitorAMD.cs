@@ -8,7 +8,7 @@ using System;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage
     {
         public int BusID { get; private set; }
         private const int RET_OK = 0;
@@ -224,14 +224,27 @@ namespace NHM.DeviceMonitoring
 
         public bool SetMemoryClock(int memoryClock)
         {
-            return AMD_ODN.nhm_amd_device_set_memory_clocks(BusID, memoryClock) == 0 ? true : false;
+            var ok = AMD_ODN.nhm_amd_device_set_memory_clocks(BusID, memoryClock);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_memory_clocks failed with error code {ok}", _delayedLogging);
+            return false;
         }
 
         public bool SetCoreClock(int coreClock)
         {
-            return AMD_ODN.nhm_amd_device_set_core_clocks(BusID, coreClock) == 0 ? true : false;
+            var ok = AMD_ODN.nhm_amd_device_set_core_clocks(BusID, coreClock);
+            if(ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_core_clocks failed with error code {ok}", _delayedLogging);
+            return false;
         }
 
+        public bool SetFanSpeedPercentage(int percentage)
+        {
+            var ok = AMD_ODN.nhm_amd_device_set_fan_speed_percentage(BusID, percentage);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_fan_speed_percentage failed with error code {ok}", _delayedLogging);
+            return false;
+        }
 
         public int HotspotTemp
         {

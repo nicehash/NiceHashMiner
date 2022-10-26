@@ -329,6 +329,16 @@ namespace NHMCore.Mining
             if(CanSetTDP && DeviceMonitor is IMemoryClockDeltaSet set) return set.SetMemoryClockDelta(memoryClockDelta);
             return false;
         }
+        public bool SetFanSpeedPercentage(int percent)
+        {
+            if(DeviceMonitor is ISetFanSpeedPercentage set) return set.SetFanSpeedPercentage(percent);
+            return false;
+        }
+        public bool ResetFanSpeed()
+        {
+            if (DeviceMonitor is IResetFanSpeed set) return set.ResetFanSpeedPercentage();
+            return false;
+        }
 
         #endregion
 

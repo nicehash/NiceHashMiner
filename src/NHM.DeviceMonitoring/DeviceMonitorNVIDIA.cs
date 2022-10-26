@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClockDelta, IMemoryClockDelta, ICoreClock, IMemoryClock, ICoreClockSet, ICoreClockDeltaSet, IMemoryClockDeltaSet, IMemoryClockRange, ICoreClockRange
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClockDelta, IMemoryClockDelta, ICoreClock, IMemoryClock, ICoreClockSet, ICoreClockDeltaSet, IMemoryClockDeltaSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed
     {
         private const int RET_OK = 0;
         public static object _lock = new object();
@@ -131,6 +131,17 @@ namespace NHM.DeviceMonitoring
             if (ok != RET_OK)
             {
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_set_fan_speed_rpm failed with error code {ok}", _delayedLogging);
+                return false;
+            }
+            return true;
+        }
+
+        public bool ResetFanSpeedPercentage()
+        {
+            int ok = NVIDIA_MON.nhm_nvidia_device_restore_fan_speed(BusID);
+            if(ok != RET_OK)
+            {
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_restore_fan_speed failed with error code {ok}", _delayedLogging);
                 return false;
             }
             return true;
