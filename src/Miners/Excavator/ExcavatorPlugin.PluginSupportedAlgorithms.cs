@@ -16,20 +16,29 @@ namespace Excavator
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.DaggerHashimoto)
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.EtcHash),
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW) { Enabled = false }
                     }
                 },
                 {
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.DaggerHashimoto)
+                        new SAS(AlgorithmType.DaggerHashimoto),
+                        new SAS(AlgorithmType.EtcHash),
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW) { Enabled = false }
                     }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
             {
-                { AlgorithmType.DaggerHashimoto, "daggerhashimoto" }
+                { AlgorithmType.DaggerHashimoto, "daggerhashimoto" },
+                { AlgorithmType.EtcHash, "etchash" },
+                { AlgorithmType.Autolykos, "autolykos" },
+                { AlgorithmType.KAWPOW, "kawpow" }
             }
         };
     }

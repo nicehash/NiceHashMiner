@@ -13,7 +13,6 @@
         WindowStyle="None"
         AllowsTransparency="False"
         Background="Transparent"
-        Loaded="BaseDialogWindow_Loaded"
         Icon="../Resources/logo.ico">
     <Window.Resources>
         <Style x:Key="local.ExitTextBlock" TargetType="TextBlock">
