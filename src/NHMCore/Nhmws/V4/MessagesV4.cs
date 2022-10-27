@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Nhmws.V4
 {
+    public enum Type : int
+    {
+        Int = 0,
+        Bool = 1,
+        Enum = 2,
+        String = 3,
+    }
     internal class LoginMessage : ISendMessage
     {
         [JsonProperty("method")]
@@ -33,7 +40,7 @@ namespace NHMCore.Nhmws.V4
         public List<OptionalMutableProperty> OptionalMutableProperties { get; set; }
 
         [JsonProperty("actions")]
-        public List<NhnwsAction> Actions { get; set; }
+        public List<NhmwsAction> Actions { get; set; }
 
         [JsonProperty("devices")]
         public List<Device> Devices { get; set; }
@@ -87,14 +94,6 @@ namespace NHMCore.Nhmws.V4
 
     internal abstract class OptionalMutableProperty
     {
-        public enum Type : int
-        {
-            Int = 0,
-            Bool = 1,
-            Enum = 2,
-            String = 3,
-        }
-
         private static int _nextPropertyId = 100;
         internal static int NextPropertyId() => _nextPropertyId++;
 
@@ -174,7 +173,7 @@ namespace NHMCore.Nhmws.V4
         public (int len, string charset) Range { get; set; }
     }
 
-    internal class NhnwsAction
+    internal class NhmwsAction
     {
         private static int _actionId = 0;
         internal static int NextActionId() => _actionId++;
@@ -187,6 +186,8 @@ namespace NHMCore.Nhmws.V4
 
         [JsonProperty("display_group")]
         public int DisplayGroup { get; set; }
+        [JsonProperty("parameters")]
+        public List<Parameter> Parameters { get; set; } = new();
 
         [JsonIgnore]
         public Func<Task<object>> ExecuteTask { get; set; }
@@ -206,7 +207,7 @@ namespace NHMCore.Nhmws.V4
         public List<OptionalMutableProperty> OptionalMutableProperties { get; set; }
 
         [JsonProperty("actions")]
-        public List<NhnwsAction> Actions { get; set; }
+        public List<NhmwsAction> Actions { get; set; }
 
     }
 
@@ -244,6 +245,102 @@ namespace NHMCore.Nhmws.V4
 
         [JsonProperty("devices")]
         public List<DeviceState> Devices { get; set; }
+    }
+
+    internal abstract class Parameter
+    {
+        [JsonProperty("display_name")]
+        public string DisplayName { get; set; }
+        [JsonProperty("display_group")]
+        public int DisplayGroup { get; set; }
+        [JsonProperty("display_unit")]
+        public string DisplayUnit { get; set; }
+        [JsonProperty("type")]
+        abstract public Type PropertyType { get; }
+    }
+    internal class ParameterInteger : Parameter
+    {
+        [JsonProperty("type")]
+        public override Type PropertyType => Type.Int;
+
+        [JsonProperty("default")]
+        public int DefaultValue { get; set; }
+
+        [JsonProperty("range")]
+        [JsonConverter(typeof(Nhmws4JSONConverter))]
+        public (int min, int max) Range { get; set; }
+    }
+    internal class ParameterBool : Parameter
+    {
+        [JsonProperty("type")]
+        public override Type PropertyType => Type.Bool;
+
+        [JsonProperty("default")]
+        public bool DefaultValue { get; set; }
+    }
+    internal class ParameterEnum : Parameter
+    {
+        [JsonProperty("type")]
+        public override Type PropertyType => Type.Enum;
+
+        [JsonProperty("default")]
+        public string DefaultValue { get; set; }
+
+        [JsonProperty("range")]
+        public List<string> Range { get; set; }
+    }
+    internal class ParameterString : Parameter
+    {
+        [JsonProperty("type")]
+        public override Type PropertyType => Type.String;
+
+        [JsonProperty("default")]
+        public string DefaultValue { get; set; }
+
+        [JsonProperty("range")]
+        [JsonConverter(typeof(Nhmws4JSONConverter))]
+        public (int len, string charset) Range { get; set; }
+    }
+    internal abstract class ActionParameter
+    {
+        [JsonProperty("device_name")]
+        public string DeviceName { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("type")]
+        public int Type { get; set; }
+    }
+    internal class Property
+    {
+        [JsonProperty("prop_id")]
+        public int PropId { get; set; }
+    }
+    internal class PropertyInt : Property
+    {
+        [JsonProperty("value")]
+        public int Value { get; set; }
+    }
+    internal class PropertyBool : Property
+    {
+        [JsonProperty("value")]
+        public bool Value { get; set; }
+    }
+    internal class PropertyEnum : Property
+    {
+        [JsonProperty("value")]
+        public Type Value { get; set; }
+    }
+    internal class PropertyString : Property
+    {
+        [JsonProperty("value")]
+        public string Value { get; set; }
+    }
+    internal class Miner
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("algorithms")]
+        public List<string> Algos { get; set; } = new List<string>();
     }
 
 }

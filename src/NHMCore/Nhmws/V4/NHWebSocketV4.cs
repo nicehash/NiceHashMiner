@@ -673,7 +673,23 @@ namespace NHMCore.Nhmws.V4
                 _ => throw new RpcException($"RpcMessage MinerReset operation not supported for level '{level}'", ErrorCode.UnableToHandleRpc),
             };
         }
-
+        private static Task<string> CallAction(MinerCallAction action)
+        {
+            var deserializedParams = new List<Parameter>();
+            foreach(var param in action.Parameters)
+            {
+               //TODO override abstract class ActionParameter to desired form
+                //deserializedParams.Add(JsonConvert.DeserializeObject<Parameter>(param));
+            }
+            //some switch to determine command
+            //handle each param in request
+            //return result
+            return Task.FromResult("");
+        }
+        private static Task<string> SetMutable(MinerSetMutable mutableCmd)
+        {
+            return Task.FromResult("");
+        }
         #endregion RpcMessages
 
         static private async Task HandleRpcMessage(IReceiveRpcMessage rpcMsg)
@@ -699,6 +715,8 @@ namespace NHMCore.Nhmws.V4
                     MiningStop m => await StopMining(m.Device),
                     MiningSetPowerMode m => await SetPowerMode(m.Device, (TDPSimpleType)m.PowerMode),
                     MinerReset m => await MinerReset(m.Level), // rpcAnswer
+                    MinerCallAction m => await CallAction(m),
+                    MinerSetMutable m => await SetMutable(m),
                     _ => throw new RpcException($"RpcMessage operation not supported for method '{rpcMsg.Method}'", ErrorCode.UnableToHandleRpc),
                 };
 

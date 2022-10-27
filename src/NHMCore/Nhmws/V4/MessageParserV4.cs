@@ -42,6 +42,8 @@ namespace NHMCore.Nhmws.V4
                 "mining.stop" => JsonConvert.DeserializeObject<MiningStop>(jsonData),
                 "mining.set.power_mode" => JsonConvert.DeserializeObject<MiningSetPowerMode>(jsonData),
                 "miner.reset" => JsonConvert.DeserializeObject<MinerReset>(jsonData),
+                "miner.call.action" => JsonConvert.DeserializeObject<MinerCallAction>(jsonData),
+                "miner.set.mutable" => JsonConvert.DeserializeObject<MinerSetMutable>(jsonData),
                 // non supported
                 _ => throw new Exception($"Unable to deserialize '{jsonData}' got method '{method}'."),
             };
@@ -79,6 +81,9 @@ namespace NHMCore.Nhmws.V4
             string getValueForName(string name) => name switch
             {
                 "Miner" => $"{GetDevicePlugin(d.Uuid)}",
+                "OC profile" => $"", //TODO
+                "Fan profile" => $"", //TODO
+                "ELP profile" => $"", //TODO
                 _ => null,
             };
 
@@ -99,7 +104,7 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan","%"),
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power","W"),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", ""),
-                pairOrNull<string>(DeviceDynamicProperties.NONE, "OC Profile", ""),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile", ""),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "Fan profile", ""),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "ELP profile", "")
             };
@@ -138,40 +143,54 @@ namespace NHMCore.Nhmws.V4
             List<OptionalMutableProperty> getOptionalMutableProperties(ComputeDevice d)
             {
                 // TODO sort by type
-                var optionalProperties = new List<OptionalMutableProperty>
+                var optionalProperties = new List<OptionalMutableProperty>();
+                optionalProperties.Add(new OptionalMutablePropertyString
+                {
+                    PropertyID = OptionalMutableProperty.NextPropertyId(),
+                    DisplayGroup = 0,
+                    DisplayName = "Miners settings",
+                    DefaultValue = "",
+                    Range = (2048, "")
+                });
+                if (d.DeviceMonitor is ITDP tdp)
+                {
+                    optionalProperties.Add(valueOrNull<ITDP>(new OptionalMutablePropertyEnum //TODO is always included?
                     {
-                        valueOrNull<ITDP>(new OptionalMutablePropertyEnum //TODO is always included?
+                        PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
+                        DisplayName = "TDP Simple",
+                        DefaultValue = "Medium",
+                        Range = new List<string> { "Low", "Medium", "High" },
+                        // TODO action/setter to execute
+                        ExecuteTask = async (object p) =>
                         {
-                            PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
-                            DisplayName = "TDP Simple",
-                            DefaultValue = "Medium",
-                            Range = new List<string>{ "Low", "Medium", "High" },
-                            // TODO action/setter to execute
-                            ExecuteTask = async (object p) =>
+                            // #1 validate JSON input
+                            if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
+                            // TODO do something
+                            return Task.FromResult<object>(null);
+                        },
+                        GetValue = () =>
+                        {
+                            var ret = d.TDPSimple switch
                             {
-                                // #1 validate JSON input
-                                if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
-                                // TODO do something
-                                return Task.FromResult<object>(null);
-                            },
-                            GetValue = () =>
-                            {
-                                var ret = d.TDPSimple switch
-                                {
-                                    TDPSimpleType.LOW => "Low",
-                                    TDPSimpleType.MEDIUM => "Medium",
-                                    TDPSimpleType.HIGH => "High",
-                                    _ => "ERROR",
-                                };
-                                return ret;
-                            }
-                        }),
-                    };
-                //TODO
-                //if(d.DeviceMonitor is ICoreClockSet)
-                //{
-
-                //}
+                                TDPSimpleType.LOW => "Low",
+                                TDPSimpleType.MEDIUM => "Medium",
+                                TDPSimpleType.HIGH => "High",
+                                _ => "ERROR",
+                            };
+                            return ret;
+                        }
+                    }));
+                }
+                if (d.DeviceMonitor is ICoreClockSet)
+                {
+                    optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
+                    {
+                        PropertyID = OptionalMutableProperty.NextPropertyId(),
+                        DisplayName = "Core clock",
+                        DefaultValue = 0,// WHAT HERE? value now? probaBLY not it can reconnect or was ever
+                        Range = (0, 100)// HERE MIN MAX DEF
+                    }));
+                }
                 //if(d.DeviceMonitor is ICoreClockDeltaSet)
                 //{
 
@@ -207,49 +226,11 @@ namespace NHMCore.Nhmws.V4
             var sorted = SortedDevices(devices);
             if (_loginMessage != null) return _loginMessage;
 
-            List<NhnwsAction> createDefaultActions() =>
-                new List<NhnwsAction>
-                {
-                    new NhnwsAction
-                    {
-                        ActionID = NhnwsAction.NextActionId(),
-                        DisplayName = "Mining start",
-                        DisplayGroup = 1,
-                    },
-                    new NhnwsAction
-                    {
-                        ActionID = NhnwsAction.NextActionId(),
-                        DisplayName = "Mining stop",
-                        DisplayGroup = 1,
-                    },
-                    new NhnwsAction
-                    {
-                        ActionID = NhnwsAction.NextActionId(),
-                        DisplayName = "Mining enable",
-                        DisplayGroup = 1,
-                    },
-                    new NhnwsAction
-                    {
-                        ActionID = NhnwsAction.NextActionId(),
-                        DisplayName = "Mining disable",
-                        DisplayGroup = 1,
-                    },
-                };
+
 
             Device mapComputeDevice(ComputeDevice d)
             {
-                List<JArray> getStaticPropertiesOptionalValues(ComputeDevice d)
-                {
-                    return d.BaseDevice switch
-                    {
-                        IGpuDevice gpu => new List<JArray>
-                        {
-                            new JArray("bus_id", $"{gpu.PCIeBusID}"),
-                            new JArray("vram", $"{gpu.GpuRam}"),
-                        },
-                        _ => new List<JArray> { },
-                    };
-                }
+
 
                 return new Device
                 {
@@ -258,9 +239,9 @@ namespace NHMCore.Nhmws.V4
                         { "device_id", d.B64Uuid },
                         { "class", $"{(int)d.DeviceType}" },
                         { "name", d.Name },
-                        { "optional", getStaticPropertiesOptionalValues(d) },
+                        { "optional", GetStaticPropertiesOptionalValues(d) },
                     },
-                    Actions = createDefaultActions(),
+                    Actions = CreateDefaultDeviceActions(),
                     OptionalDynamicProperties = GetDeviceOptionalDynamic(d, true).properties,
                     OptionalMutableProperties = GetDeviceOptionalMutable(d).properties,
                 };
@@ -274,7 +255,7 @@ namespace NHMCore.Nhmws.V4
                 Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
                 OptionalMutableProperties = GetRigOptionalMutableValuesLogin(btc, worker),
                 OptionalDynamicProperties = GetRigOptionalDynamicValuesLogin(),
-                Actions = createDefaultActions(),
+                Actions = CreateDefaultRigActions(),
                 Devices = devices.Select(mapComputeDevice).ToList(),
                 MinerState = GetMinerStateValues(worker, devices),
             };
@@ -415,6 +396,145 @@ namespace NHMCore.Nhmws.V4
                 Devices = devices.Select(toDeviceState).ToList(),
             };
         }
+        private static List<NhmwsAction> CreateDefaultDeviceActions()
+        {
+            return new List<NhmwsAction>
+            {
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "Device enable",
+                    DisplayGroup = 0,
+                },
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "Device disable",
+                    DisplayGroup = 0,
+                },
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "OC profile test",
+                    DisplayGroup = 1,
+                    Parameters = new List<Parameter>()
+                    {
+                        new ParameterString()
+                        {
+                            DisplayName = "OC profile",
+                            DefaultValue = "",
+                            Range = (1024, "")
+                        }
+                    }
+                },
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "Fan profile test",
+                    DisplayGroup = 1,
+                    Parameters = new List<Parameter>()
+                    {
+                        new ParameterString()
+                        {
+                            DisplayName = "Fan profile",
+                            DefaultValue = "",
+                            Range = (1024, "")
+                        }
+                    }
+                },
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "ELP profile test",
+                    DisplayGroup = 1,
+                    Parameters = new List<Parameter>()
+                    {
+                        new ParameterString()
+                        {
+                            DisplayName = "ELP profile",
+                            DefaultValue = "",
+                            Range = (1024, "")
+                        }
+                    }
+                }
+            };
+        } 
+        private static List<NhmwsAction> CreateDefaultRigActions()
+        {
+            return new List<NhmwsAction>
+            {
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "Mining start",
+                    DisplayGroup = 1,
+                },
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "Mining stop",
+                    DisplayGroup = 1,
+                },
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "Profiles bundle set",
+                    DisplayGroup = 1,
+                    Parameters = new List<Parameter>()
+                    {
+                        new ParameterString()
+                        {
+                            DisplayName = "Bundle profiles",
+                            DefaultValue = "",
+                            Range = (4096, "")
+                        }
+                    }
+                },
+                new NhmwsAction
+                {
+                    ActionID = NhmwsAction.NextActionId(),
+                    DisplayName = "Profiles bundle reset",
+                    DisplayGroup = 1,
+                },
+            };
+        }
+        private static List<JArray> GetStaticPropertiesOptionalValues(ComputeDevice d)
+        {
+            return d.BaseDevice switch
+            {
+                IGpuDevice gpu => new List<JArray>
+                        {
+                            new JArray("bus_id", $"{gpu.PCIeBusID}"),
+                            new JArray("vram", $"{gpu.GpuRam}"),
+                            new JArray("miners", FormatForOptionalValues("miners", GetMinersForDevice(d))),//todo make function
+                            //new JArray("limits", $"{GetLimitsForDevice(d)}"),
+                        },
+                _ => new List<JArray> { },
+            };
+        }
 
+        private static string FormatForOptionalValues(string name, string content)
+        {
+            return "{\""+ name +"\":" + content + "}";
+        }
+
+        private static string GetMinersForDevice(ComputeDevice d)
+        {
+            List<Miner> miners = new List<Miner>();
+            var uniquePlugins = d.AlgorithmSettings?.Select(item => item.PluginName)?.Distinct()?.Where(item => !string.IsNullOrEmpty(item));
+            if (uniquePlugins == null) return String.Empty;
+            foreach(var plugin in uniquePlugins)
+            {
+                var uniqueAlgos = d.AlgorithmSettings?.Where(item => item.PluginName == plugin)?.Select(item => item.AlgorithmName)?.Distinct();
+                if(uniqueAlgos == null) uniqueAlgos = new List<string>();
+                miners.Add(new Miner() { Id = plugin, Algos = uniqueAlgos.ToList() });
+            }
+            var json = JsonConvert.SerializeObject(miners);
+            return json;
+        }
+        private static string GetLimitsForDevice(ComputeDevice d)
+        {
+            return "";
+        }
     }
 }
