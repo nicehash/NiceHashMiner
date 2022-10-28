@@ -9,6 +9,5 @@ namespace NHM.DeviceMonitoring.Memory_clock
     public interface IMemoryClockRange
     {
         (int min, int max) GetMemoryClockRange { get; }
-        (int min, int max) GetMemoryClockDeltaRange { get; }
     }
 }

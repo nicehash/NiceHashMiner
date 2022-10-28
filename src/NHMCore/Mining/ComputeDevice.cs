@@ -276,14 +276,6 @@ namespace NHMCore.Mining
                 return -1;
             }
         }
-        public int CoreClockDelta
-        {
-            get
-            {
-                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClockDelta get) return get.CoreClockDelta;
-                return -1;
-            }
-        }
         public int MemoryClock
         {
             get
@@ -292,12 +284,16 @@ namespace NHMCore.Mining
                 return -1;
             }
         }
-        public int MemoryClockDelta
+        public (uint min, uint max, uint def) TDPLimits
         {
             get
             {
-                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockDelta get) return get.MemoryClockDelta;
-                return -1;
+                if(!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITDPLimits get)
+                {
+                    var ret = get.GetTDPLimits();
+                    return (ret.min, ret.max, ret.def);
+                }
+                return (0, 0, 0);
             }
         }
         #endregion Getters
@@ -314,19 +310,9 @@ namespace NHMCore.Mining
             if(CanSetTDP && DeviceMonitor is ICoreClockSet set) return set.SetCoreClock(coreClock);
             return false;
         }
-        public bool SetCoreClockDelta(int coreClockDelta)
-        {
-            if(CanSetTDP && DeviceMonitor is ICoreClockDeltaSet set) return set.SetCoreClockDelta(coreClockDelta);
-            return false;
-        }
         public bool SetMemoryClock(int memoryClock)
         {
             if(CanSetTDP && DeviceMonitor is IMemoryClockSet set) return set.SetMemoryClock(memoryClock);
-            return false;
-        }
-        public bool SetMemoryClockDelta(int memoryClockDelta)
-        {
-            if(CanSetTDP && DeviceMonitor is IMemoryClockDeltaSet set) return set.SetMemoryClockDelta(memoryClockDelta);
             return false;
         }
         public bool SetFanSpeedPercentage(int percent)

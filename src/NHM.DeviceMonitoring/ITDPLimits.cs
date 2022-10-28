@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NHM.DeviceMonitoring.Core_clock
+namespace NHM.DeviceMonitoring
 {
-    public interface ICoreClockDelta
+    public interface ITDPLimits
     {
-        int CoreClockDelta { get; }
+        (bool ok, uint min, uint max, uint def) GetTDPLimits();
     }
 }

@@ -9,6 +9,5 @@ namespace NHM.DeviceMonitoring.Core_clock
     public interface ICoreClockRange
     {
         (int min, int max) CoreClockRange { get; }
-        (int min, int max) CoreClockDeltaRange { get; }
     }
 }

@@ -46,19 +46,11 @@ namespace NHM.DeviceMonitoring.NVIDIA
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_set_core_clocks(int bus_number, int core_clocks);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_nvidia_device_set_core_clocks_delta(int bus_number, int core_clocks_delta);
-        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_memory_clocks(int bus_number, ref int memory_clocks);
-        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_nvidia_device_set_memory_clocks_delta(int bus_number, int memory_clocks_delta);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_memory_info(int bus_number, ref ulong free, ref ulong total, ref ulong used);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_restore_fan_speed(int bus_number);
-        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_nvidia_device_get_clocks_delta(int bus_number, ref int core_clock, ref int mem_clock);
-        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_nvidia_device_get_oc_limits_delta(int bus_number, ref int delta_core_min, ref int delta_core_max, ref int delta_mem_min, ref int delta_mem_max);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_set_memory_timings(int bus_number, string memory_timings);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
@@ -69,14 +61,11 @@ namespace NHM.DeviceMonitoring.NVIDIA
         public static extern int nhm_nvidia_device_get_memory_controller_load(int bus_number, ref int mem_ctrl_load);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_print_memory_timings(int bus_number);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_get_core_clocks_min_max_default(int bus_number, ref int min, ref int max, ref int def);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_get_memory_clocks_min_max_default(int bus_number, ref int min, ref int max, ref int def);
 
-        //Excavator no longer has these functions (or they have been moved)
-        //[DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        //public static extern int nhm_amd_device_set_memory_clocks(int bus_number, int memory_clocks);
-        //[DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        //public static extern int nhm_amd_device_get_core_clocks_min_max_default(int bus_number, ref int min, ref int max, ref int defaultV);
-        //[DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        //public static extern int nhm_amd_device_get_memory_clocks_min_max_default(int bus_number, ref int min, ref int max, ref int defaultV);
 
     }
 }

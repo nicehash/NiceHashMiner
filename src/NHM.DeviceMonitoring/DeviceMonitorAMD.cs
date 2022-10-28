@@ -310,8 +310,6 @@ namespace NHM.DeviceMonitoring
             }
         }
 
-        public (int min, int max) GetMemoryClockDeltaRange => (-1, -1);
-
         public (int min, int max) CoreClockRange
         {
             get
@@ -325,7 +323,5 @@ namespace NHM.DeviceMonitoring
                 return (-1, -1);
             }
         }
-
-        public (int min, int max) CoreClockDeltaRange => (-1, -1);
     }
 }

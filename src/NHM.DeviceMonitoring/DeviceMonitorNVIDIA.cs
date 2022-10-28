@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClockDelta, IMemoryClockDelta, ICoreClock, IMemoryClock, ICoreClockSet, ICoreClockDeltaSet, IMemoryClockDeltaSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits
     {
         private const int RET_OK = 0;
         public static object _lock = new object();
@@ -285,32 +285,6 @@ namespace NHM.DeviceMonitoring
                 return -1;
             }
         }
-
-        public int CoreClockDelta
-        {
-            get
-            {
-                int coreClockDelta = 0;
-                int memClockDelta = 0;
-                int ok = NVIDIA_MON.nhm_nvidia_device_get_clocks_delta(BusID, ref coreClockDelta, ref memClockDelta);
-                if (ok == RET_OK) return coreClockDelta;
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_clocks_delta failed with error code {ok}", _delayedLogging);
-                return -1;
-            }
-        }
-        public int MemoryClockDelta
-        {
-            get
-            {
-                int coreClockDelta = 0;
-                int memClockDelta = 0;
-                int ok = NVIDIA_MON.nhm_nvidia_device_get_clocks_delta(BusID, ref coreClockDelta, ref memClockDelta);
-                if (ok == RET_OK) return memClockDelta;
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_clocks_delta failed with error code {ok}", _delayedLogging);
-                return -1;
-            }
-        }
-
         public void PrintMemoryTimings()
         {
             NVIDIA_MON.nhm_nvidia_device_print_memory_timings(BusID);
@@ -320,46 +294,21 @@ namespace NHM.DeviceMonitoring
         {
             return NVIDIA_MON.nhm_nvidia_device_set_core_clocks(BusID, coreClock) == 0 ? true : false;
         }
-        public bool SetCoreClockDelta(int coreClockDelta)
+        public (bool ok, uint min, uint max, uint def) GetTDPLimits()
         {
-            return NVIDIA_MON.nhm_nvidia_device_set_core_clocks_delta(BusID, coreClockDelta) == 0 ? true : false;
+            uint min = 0;
+            uint max = 0;
+            uint def = 0;
+            var ok = NVIDIA_MON.nhm_nvidia_device_get_tdp_min_max_default(BusID, ref min, ref max, ref def);
+            if (ok == RET_OK) return (true, min, max, def);
+            Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp_min_max_default failed with error code {ok}", _delayedLogging);
+            return (false, 0, 0, 0);
         }
 
-        public bool SetMemoryClockDelta(int memoryClockDelta)
-        {
-            return NVIDIA_MON.nhm_nvidia_device_set_memory_clocks_delta(BusID, memoryClockDelta) == 0 ? true : false;
-        }
         [Obsolete("Not implemented for NVIDIA")]
         public (int min, int max) GetMemoryClockRange => (-1, -1);
-        public (int min, int max) GetMemoryClockDeltaRange
-        {
-            get
-            {
-                int dmcMin = 0;
-                int dmcMax = 0;
-                int dccMin = 0;
-                int dccMax = 0;
-                int ok = NVIDIA_MON.nhm_nvidia_device_get_oc_limits_delta(BusID, ref dccMin, ref dccMax, ref dmcMin, ref dmcMax);
-                if(ok == RET_OK) return (dmcMin, dmcMax);
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_oc_limits_delta failed with error code {ok}", _delayedLogging);
-                return (-1, -1);
-            }
-        }
+
         [Obsolete("Not implemented for NVIDIA")]
         public (int min, int max) CoreClockRange => (-1, -1);
-        public (int min, int max) CoreClockDeltaRange
-        {
-            get
-            {
-                int dmcMin = 0;
-                int dmcMax = 0;
-                int dccMin = 0;
-                int dccMax = 0;
-                int ok = NVIDIA_MON.nhm_nvidia_device_get_oc_limits_delta(BusID, ref dccMin, ref dccMax, ref dmcMin, ref dmcMax);
-                if (ok == RET_OK) return (dccMin, dccMax);
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_oc_limits_delta failed with error code {ok}", _delayedLogging);
-                return (-1, -1);
-            }
-        }
     }
 }
