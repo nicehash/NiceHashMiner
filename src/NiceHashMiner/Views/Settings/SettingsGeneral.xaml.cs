@@ -2,6 +2,7 @@
 using NHMCore.Configs;
 using NHMCore.Notifications;
 using NHMCore.Utils;
+using NiceHashMiner.ViewModels;
 using NiceHashMiner.Views.Common;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -266,6 +267,16 @@ namespace NiceHashMiner.Views.Settings
             nhmConfirmDialog.OnExit += (s, e1) => RevertTheme();//reverts even when click ok because it exits...
 
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+        }
+        private void NetProfitToggle_click(object sender, RoutedEventArgs e) //TODO for this to work change datacontext in xaml for this
+        {
+            if(DataContext is MainVM mvm && mvm.Devices != null)
+            {
+                foreach(var dev in mvm.Devices)
+                {
+                    dev?.OrderAlgorithmsByPaying();
+                }
+            }
         }
     }
 }
