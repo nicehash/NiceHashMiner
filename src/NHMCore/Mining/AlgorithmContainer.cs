@@ -248,6 +248,7 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(AnnotatedSpeeds));
             OnPropertyChanged(nameof(BenchmarkNeeded));
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(HasBenchmark));
@@ -256,6 +257,7 @@ namespace NHMCore.Mining
         {
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
         }
 
         #endregion
@@ -281,6 +283,7 @@ namespace NHMCore.Mining
             // notify changed
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
             OnPropertyChanged(nameof(Status));
         }
 
@@ -309,11 +312,22 @@ namespace NHMCore.Mining
                         var paying = _lastEstimatedProfitSMA[speed.Algo];
                         newProfit += paying * speed.Value * Mult;
                     }
-                    // TODO estimate profit subtraction ???
                     return Math.Round(newProfit, 8);
                 }
                 // we can't calculate 
                 return -1;
+            }
+        }
+        public double CurrentEstimatedProfitPure
+        {
+            get
+            {
+                if (GUISettings.Instance.DisplayPureProfit)
+                {
+                    var power = (PowerUsage / 1000 * BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) * 24;
+                    return (CurrentEstimatedProfit - power);
+                }
+                return CurrentEstimatedProfit;
             }
         }
         public string CurrentEstimatedProfitStr

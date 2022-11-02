@@ -345,7 +345,7 @@ namespace NiceHashMiner.ViewModels.Models
                 algo => algo.AlgorithmName,
                 algo => algo.PluginName,
                 algo => algo.BenchmarkSpeed, // FIRST SPEED FIX only
-                algo => algo.CurrentEstimatedProfit,
+                algo => algo.CurrentEstimatedProfitPure,
                 algo => algo.Status, // TODO STATUS doesn't exist yet
                 algo => algo.Enabled,
             };
