@@ -30,7 +30,14 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Label Content="Notifications" Margin="12,0,0,0" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="Notifications" Margin="12,0,0,0" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+                    <Button Grid.Column="1" Style="{StaticResource WindowButtonStyle}" Content="Clear All" Click="ClearAllNotifications"/>
+                </Grid>
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="6,0,0,0">
                     <ItemsControl x:Name="ic_NotificationsList" ItemsSource="{Binding HelpNotificationList}">
                         <ItemsControl.ItemTemplate>

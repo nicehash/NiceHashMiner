@@ -190,7 +190,7 @@ namespace NiceHashMiner.ViewModels
             lock (_lock)
             {
                 // TODO keep it like this for now but update the collection view in the future
-                HelpNotificationList = new ObservableCollection<Notification>(NotificationsManager.Instance.Notifications);
+                HelpNotificationList = new ObservableCollection<Notification>(NotificationsManager.Instance.LatestNotifications);
                 OnPropertyChanged(nameof(HelpNotificationList));
             }
         }

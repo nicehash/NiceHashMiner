@@ -200,6 +200,7 @@
             <converters:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter" />
             <converters:NumberToVisibilityConverterZero x:Key="NumberToVisibilityConverterZero" />
             <converters:BooleanDaysToStringConverter x:Key="BooleanDaysToStringConverter" />
+            <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
 
         </ResourceDictionary>
     </Application.Resources>
