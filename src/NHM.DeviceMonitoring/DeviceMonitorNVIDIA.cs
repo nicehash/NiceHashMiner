@@ -305,10 +305,32 @@ namespace NHM.DeviceMonitoring
             return (false, 0, 0, 0);
         }
 
-        [Obsolete("Not implemented for NVIDIA")]
-        public (int min, int max) GetMemoryClockRange => (-1, -1);
+        public (bool ok, int min, int max, int def) CoreClockRange
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_min_max_default(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks_min_max_default failed with error code {ok}", _delayedLogging);
+                return (false, 0, 0, 0);
 
-        [Obsolete("Not implemented for NVIDIA")]
-        public (int min, int max) CoreClockRange => (-1, -1);
+            }
+        }
+        public (bool ok, int min, int max, int def) MemoryClockRange
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_min_max_default(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_min_max_default failed with error code {ok}", _delayedLogging);
+                return (false, 0, 0, 0);
+            }
+        }
     }
 }

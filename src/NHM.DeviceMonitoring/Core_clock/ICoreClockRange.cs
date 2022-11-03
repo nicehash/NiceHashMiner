@@ -8,6 +8,6 @@ namespace NHM.DeviceMonitoring.Core_clock
 {
     public interface ICoreClockRange
     {
-        (int min, int max) CoreClockRange { get; }
+        (bool ok, int min, int max, int def) CoreClockRange { get; }
     }
 }

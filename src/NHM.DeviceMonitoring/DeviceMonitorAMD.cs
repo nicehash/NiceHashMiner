@@ -296,31 +296,31 @@ namespace NHM.DeviceMonitoring
             }
         }
 
-        public (int min, int max) GetMemoryClockRange
+        public (bool ok, int min, int max, int def) MemoryClockRange
         {
             get
             {
-                int dmcMin = 0;
-                int dmcMax = 0;
+                int min = 0;
+                int max = 0;
                 int def = 0;
-                int ok = AMD_ODN.nhm_amd_device_get_memory_clocks_min_max_default(BusID, ref dmcMin, ref dmcMax, ref def);
-                if (ok == RET_OK) return (dmcMin, dmcMax);
+                int ok = AMD_ODN.nhm_amd_device_get_memory_clocks_min_max_default(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
                 Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_memory_clocks_min_max_default failed with error code {ok}", _delayedLogging);
-                return (-1, -1);
+                return (false, -1, -1, -1);
             }
         }
 
-        public (int min, int max) CoreClockRange
+        public (bool ok, int min, int max, int def) CoreClockRange
         {
             get
             {
-                int dmcMin = 0;
-                int dmcMax = 0;
+                int min = 0;
+                int max = 0;
                 int def = 0;
-                int ok = AMD_ODN.nhm_amd_device_get_core_clocks_min_max_default(BusID, ref dmcMin, ref dmcMax, ref def);
-                if (ok == RET_OK) return (dmcMin, dmcMax);
+                int ok = AMD_ODN.nhm_amd_device_get_core_clocks_min_max_default(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
                 Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_core_clocks_min_max_default failed with error code {ok}", _delayedLogging);
-                return (-1, -1);
+                return (false, -1, -1, -1);
             }
         }
     }

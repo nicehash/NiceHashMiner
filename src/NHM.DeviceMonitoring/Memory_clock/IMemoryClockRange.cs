@@ -8,6 +8,6 @@ namespace NHM.DeviceMonitoring.Memory_clock
 {
     public interface IMemoryClockRange
     {
-        (int min, int max) GetMemoryClockRange { get; }
+        (bool ok, int min, int max, int def) MemoryClockRange { get; }
     }
 }

@@ -296,6 +296,30 @@ namespace NHMCore.Mining
                 return (0, 0, 0);
             }
         }
+        public (bool ok, int min, int max, int def) CoreClockRange
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClockRange get)
+                {
+                    var ret = get.CoreClockRange;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
+        public (bool ok, int min, int max, int def) MemoryClockRange
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockRange get)
+                {
+                    var ret = get.MemoryClockRange;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
         #endregion Getters
 
         #region Setters
