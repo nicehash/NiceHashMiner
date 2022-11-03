@@ -25,15 +25,13 @@ namespace MP.GMiner
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
-            // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v42.3",
-                ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
+                BinVersion = "v3.12",
+                ExePath = new List<string> { "", "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v42.3/NBMiner_42.3_Win.zip", // original
-                    "https://dl.nbminer.com/NBMiner_42.3_Win.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/3.12/gminer_3_12_windows64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -43,11 +41,11 @@ namespace MP.GMiner
             };
         }
 
-        public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
+        public override string PluginUUID => "d8ddcaf2-95c5-4f9a-b65f-c123a0d4fbc2";
 
         public override string Name => "GMiner";
 
-        public override Version Version => new Version(19, 2);
+        public override Version Version => new Version(19, 0);
 
 
         public override string Author => "info@nicehash.com";
@@ -56,7 +54,7 @@ namespace MP.GMiner
 
         private static bool isSupportedVersion(int major, int minor)
         {
-            var nbMinerSMSupportedVersions = new List<Version>
+            var gMinerSMSupportedVersions = new List<Version>
             {
                 new Version(6,0),
                 new Version(6,1),
@@ -66,7 +64,7 @@ namespace MP.GMiner
                 new Version(8,6),
             };
             var cudaDevSMver = new Version(major, minor);
-            foreach (var supportedVer in nbMinerSMSupportedVersions)
+            foreach (var supportedVer in gMinerSMSupportedVersions)
             {
                 if (supportedVer == cudaDevSMver) return true;
             }
@@ -126,7 +124,7 @@ namespace MP.GMiner
             {
                 if (_mappedIDs.Count == 0) return;
                 var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
-                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json --no-watchdog"); // AMD + NVIDIA
+                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices --watchdog 0"); // AMD + NVIDIA
                 var dumpFile = $"d{DateTime.UtcNow.Ticks}.txt";
                 try
                 {
@@ -154,12 +152,6 @@ namespace MP.GMiner
             var pluginRootBinsPath = GetBinAndCwdPaths().cwdPath;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe" });
         }
-
-        //private static bool IsLHR_Ignore(CUDADevice dev)
-        //{
-        //    const ulong maxGPU_VRAM = 11UL << 30; // 11GB
-        //    return dev.Name.Contains("GeForce RTX 3080") && dev.GpuRam > maxGPU_VRAM;
-        //}
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {

@@ -23,56 +23,80 @@ namespace MP.GMiner
             {
                 {
                     $"{AlgorithmType.DaggerHashimoto}",
-                    $"-a ethash -o nicehash+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a ethash -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.EtcHash}",
-                    $"-a etchash -o nicehash+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a etchash -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.KAWPOW}",
-                    $"-a kawpow -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a kawpow -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.Autolykos}",
-                    $"-a ergo -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a ergo -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.KHeavyHash}",
-                    $"-a kheavyhash -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a kheavyhash -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.BeamV3}",
-                    $"-a beamhash -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a beamhash -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.CuckooCycle}",
+                    $"-a aeternity -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.ZelHash}",
+                    $"-a equihash125_4 -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.GrinCuckatoo32}",
+                    $"-a cuckatoo32 -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 }
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
             {
                 {
                     $"{AlgorithmType.DaggerHashimoto}",
-                    $"-a ethash -o nicehash+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a ethash -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.EtcHash}",
-                    $"-a etchash -o nicehash+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a etchash -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.KAWPOW}",
-                    $"-a kawpow -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a kawpow -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.Autolykos}",
-                    $"-a ergo -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a ergo -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.KHeavyHash}",
-                    $"-a kheavyhash -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a kheavyhash -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.BeamV3}",
-                    $"-a beamhash -o stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --no-watchdog {_extraLaunchParameters}"
+                    $"-a beamhash -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.CuckooCycle}",
+                    $"-a aeternity -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.ZelHash}",
+                    $"-a equihash125_4 -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.GrinCuckatoo32}",
+                    $"-a cuckatoo32 -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 }
-                
+
             }
         };
 

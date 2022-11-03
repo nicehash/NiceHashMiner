@@ -135,15 +135,14 @@ namespace NhmPackager
                 "TeamRedMiner",
                 "SRBMiner",
                 "Phoenix",
-                "MiniZ",
-                "GMiner",
+                "MiniZ"
             };
         private static bool PathMustNOTContain(string path) => _pathMustNOTContain.All(subDir => !path.Contains(subDir));
 
         public static readonly IReadOnlyList<string> PreInstalledPlugins = new string[]
             {
                 //"e294f620-94eb-11ea-a64d-17be303ea466", // CryptoDredge
-                //"e7a58030-94eb-11ea-a64d-17be303ea466", // GMinerPlugin
+                "d8ddcaf2-95c5-4f9a-b65f-c123a0d4fbc2", // GMiner
                 "eb75e920-94eb-11ea-a64d-17be303ea466", // LolMiner
                 //"eda6abd0-94eb-11ea-a64d-17be303ea466", // MiniZ - BROKEN
                 //"f25fee20-94eb-11ea-a64d-17be303ea466", // NanoMiner

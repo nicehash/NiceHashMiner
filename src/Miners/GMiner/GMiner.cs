@@ -42,7 +42,6 @@ namespace MP.GMiner
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
-                var totalSpeed2 = 0d;
                 var totalPowerUsage = 0;
 
                 var apiDevices = summary.devices;
@@ -82,8 +81,8 @@ namespace MP.GMiner
 
         protected override void Init()
         {
-            // separator ","
-            _devices = string.Join(MinerCommandLineSettings.DevicesSeparator, _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
+            // separator " "
+            _devices = string.Join(" ", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
         }
         private bool _disposed = false;
         public virtual void Dispose()
