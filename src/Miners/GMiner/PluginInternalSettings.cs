@@ -56,6 +56,10 @@ namespace MP.GMiner
                 {
                     $"{AlgorithmType.GrinCuckatoo32}",
                     $"-a cuckatoo32 -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.ZHash}",
+                    $"-a equihash144_5 -s stratum+tcp://{_urlPort} -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 }
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
@@ -95,6 +99,10 @@ namespace MP.GMiner
                 {
                     $"{AlgorithmType.GrinCuckatoo32}",
                     $"-a cuckatoo32 -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
+                },
+                {
+                    $"{AlgorithmType.ZHash}",
+                    $"-a equihash144_5 -s stratum+ssl://{_url}:443 -u {_username} --api 127.0.0.1:{_apiPort} -d {_devices} --watchdog 0 {_extraLaunchParameters}"
                 }
 
             }
