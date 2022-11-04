@@ -3,7 +3,10 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 
 namespace NHMCore.Nhmws.V4
 {
@@ -342,5 +345,100 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("algorithms")]
         public List<string> Algos { get; set; } = new List<string>();
     }
+
+    internal class Bundle
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("oc")]
+        public List<OcBundle> OcBundles { get; set; } = new List<OcBundle>();
+        [JsonProperty("fan")]
+        public List<FanBundle> FanBundles { get; set; } = new List<FanBundle>();
+        [JsonProperty("elp")]
+        public List<ElpBundle> ElpBundles { get; set; } = new List<ElpBundle>();
+    }
+    internal class ElpBundle
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("device_name")]
+        public string DeviceName { get; set; }
+        [JsonProperty("miner_id")]
+        public string MinerId { get; set; }
+        [JsonProperty("algorithm_id")]
+        public string AlgoId { get; set; }
+        [JsonProperty("elp")]
+        public string Elp { get; set; }
+    }
+    internal class OcBundle
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("device_name")]
+        public string DeviceName { get; set; }
+        [JsonProperty("miner_id", Required = Required.AllowNull)]
+        public string? MinerId { get; set; }
+        [JsonProperty("algorithm_id", Required = Required.AllowNull)]
+        public string? AlgoId { get; set; }
+        [JsonProperty("core_clock")]
+        public int CoreClock { get; set; }
+        [JsonProperty("memory_clock")]
+        public int MemoryClock { get; set; }
+        [JsonProperty("tdp")]
+        public int TDP { get; set; }
+    }
+
+    internal abstract class FanBundle
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("device_name")]
+        public string DeviceName { get; set; }
+        [JsonProperty("miner_id", Required = Required.AllowNull)]
+        public string? MinerId { get; set; }
+        [JsonProperty("algorithm_id", Required = Required.AllowNull)]
+        public string? AlgoId { get; set; }
+        [JsonProperty("type")]
+        abstract public int Type { get; set; }
+    }
+    internal class FanBundleFixed : FanBundle
+    {
+        [JsonProperty("type")]
+        public override int Type { get; set; } = 0;
+        [JsonProperty("fan_speed")]
+        public int FanSpeed { get; set; }
+    }
+    internal class FanBundleGPUTemp : FanBundle
+    {
+        [JsonProperty("type")]
+        public override int Type { get; set; } = 1;
+        [JsonProperty("gpu_temp")]
+        public int GpuTemp { get; set; }
+    }
+    internal class FanBundleVramAndGPUTemp : FanBundle
+    {
+        [JsonProperty("type")]
+        public override int Type { get; set; } = 2;
+        [JsonProperty("gpu_temp")]
+        public int GpuTemp { get; set; }
+        [JsonProperty("vram_temp")]
+        public int VramTemp { get; set; }
+        [JsonProperty("max_fan_speed")]
+        public int MaxFanSpeed { get; set; }
+    }
+    //internal class Limit
+    //{
+    //    [JsonProperty("name")]
+    //    public string Name { get; set; }
+    //    [JsonProperty("unit")]
+    //    public string Unit { get; set; }
+    //    [JsonProperty("default")]
+    //    public int def { get; set; }
+    //    [JsonProperty("range")]
+    //    [JsonConverter(typeof(Nhmws4JSONConverter))]
+    //    public (int min, int max) range { get; set; }
+    //}
 
 }

@@ -181,28 +181,34 @@ namespace NHMCore.Nhmws.V4
                         }
                     }));
                 }
-                if (d.DeviceMonitor is ICoreClockSet)
+                if (d.DeviceMonitor is ICoreClockSet && d.DeviceMonitor is ICoreClockRange rangeCore)
                 {
-                    optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
+                    var ret = rangeCore.CoreClockRange;
+                    if (ret.ok)
                     {
-                        PropertyID = OptionalMutableProperty.NextPropertyId(),
-                        DisplayName = "Core clock",
-                        DefaultValue = 0,// WHAT HERE? value now? probaBLY not it can reconnect or was ever
-                        Range = (0, 100)// HERE MIN MAX DEF
-                    }));
+                        optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
+                        {
+                            PropertyID = OptionalMutableProperty.NextPropertyId(),
+                            DisplayName = "Core clock",
+                            DefaultValue = ret.def,
+                            Range = (ret.min, ret.max)
+                        }));
+                    }
                 }
-                //if(d.DeviceMonitor is ICoreClockDeltaSet)
-                //{
-
-                //}
-                //if(d.DeviceMonitor is IMemoryClockSet)
-                //{
-
-                //}
-                //if (d.DeviceMonitor is IMemoryClockDeltaSet) 
-                //{
-
-                //}
+                if (d.DeviceMonitor is IMemoryClockSet && d.DeviceMonitor is IMemoryClockRange rangeMem)
+                {
+                    var ret = rangeMem.MemoryClockRange;
+                    if (ret.ok)
+                    {
+                        optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
+                        {
+                            PropertyID = OptionalMutableProperty.NextPropertyId(),
+                            DisplayName = "Memory clock",
+                            DefaultValue = ret.def,
+                            Range = (ret.min, ret.max)
+                        }));
+                    }
+                }
                 return optionalProperties
                     .Where(p => p != null)
                     .ToList();
@@ -225,13 +231,8 @@ namespace NHMCore.Nhmws.V4
         {
             var sorted = SortedDevices(devices);
             if (_loginMessage != null) return _loginMessage;
-
-
-
             Device mapComputeDevice(ComputeDevice d)
             {
-
-
                 return new Device
                 {
                     StaticProperties = new Dictionary<string, object>
@@ -532,9 +533,23 @@ namespace NHMCore.Nhmws.V4
             var json = JsonConvert.SerializeObject(miners);
             return json;
         }
-        private static string GetLimitsForDevice(ComputeDevice d)
-        {
-            return "";
-        }
+        //private static string GetLimitsForDevice(ComputeDevice d)
+        //{
+        //    List<Limit> limits = new List<Limit>();
+        //    if(d.DeviceMonitor is ITDP)
+        //    {
+        //        //todo need monitor here
+        //        //if(d.DeviceMonitor.)
+        //        //limits.Add(new Limit() { Name = "Power mode", Unit = "%" });
+        //    }
+        //    if(d.DeviceMonitor is ICoreClockSet)
+        //    {
+
+        //    }
+        //    if(d.DeviceMonitor is IMemoryClockSet)
+        //    {
+
+        //    }
+        //}
     }
 }
