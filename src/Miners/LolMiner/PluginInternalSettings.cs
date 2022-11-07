@@ -50,6 +50,10 @@ namespace LolMiner
                 {
                     $"{AlgorithmType.EtcHash}",
                     $"--algo ETCHASH --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters} --ethstratum ETHV1"
+                },
+                {
+                    $"{AlgorithmType.KHeavyHash}",
+                    $"--algo KASPA --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 }
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
@@ -85,6 +89,10 @@ namespace LolMiner
                 {
                     $"{AlgorithmType.EtcHash}",
                     $"--algo ETCHASH --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters} --ethstratum ETHV1"
+                },
+                {
+                    $"{AlgorithmType.KHeavyHash}",
+                    $"--algo KASPA --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 }
             }
         };
