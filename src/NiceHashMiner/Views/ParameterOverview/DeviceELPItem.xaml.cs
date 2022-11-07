@@ -71,16 +71,16 @@ namespace NiceHashMiner.Views.ParameterOverview
             var text = tb.Text;
             if (DataContext is DeviceELPElement de)
             {
-                if (string.IsNullOrEmpty(text))
-                {
-                    tb.Style = Application.Current.FindResource("inputBox") as Style;
-                    tb.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
-                    return;
-                }
                 if (IsParsedTextLenOne(text))
                 {
                     tb.Style = Application.Current.FindResource("InputBoxGood") as Style;
                     tb.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+                    return;
+                }
+                if (string.IsNullOrEmpty(text))
+                {
+                    tb.Style = Application.Current.FindResource("inputBox") as Style;
+                    tb.BorderBrush = (Brush)Application.Current.FindResource("BorderColor");
                     return;
                 }
                 tb.Style = Application.Current.FindResource("InputBoxBad") as Style;
@@ -89,6 +89,7 @@ namespace NiceHashMiner.Views.ParameterOverview
         }
         private bool IsParsedTextLenOne(string txt)
         {
+            if (txt.Length == 1 && txt == " ") return true; 
             return txt.Trim().Split(' ').Length == 1;
         }
     }
