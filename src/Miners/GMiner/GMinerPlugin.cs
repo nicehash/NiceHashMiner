@@ -36,7 +36,7 @@ namespace MP.GMiner
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "GPU Miner for ETC mining.",
+                PluginDescription = "GPU Miner for multiple algorithms.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
