@@ -150,65 +150,93 @@ namespace NHMCore.Nhmws.V4
                     DisplayGroup = 0,
                     DisplayName = "Miners settings",
                     DefaultValue = "",
-                    Range = (2048, "")
+                    Range = (2048, ""),
+                    //ExecuteTask = async (object p) =>
+                    //{
+                    //    //todo
+                    //    return null;
+                    //},
+                    GetValue = () =>
+                    {
+                        //todo?
+                        return string.Empty;
+                    }
                 });
-                if (d.DeviceMonitor is ITDP tdp)
-                {
-                    optionalProperties.Add(valueOrNull<ITDP>(new OptionalMutablePropertyEnum //TODO is always included?
-                    {
-                        PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
-                        DisplayName = "TDP Simple",
-                        DefaultValue = "Medium",
-                        Range = new List<string> { "Low", "Medium", "High" },
-                        // TODO action/setter to execute
-                        ExecuteTask = async (object p) =>
-                        {
-                            // #1 validate JSON input
-                            if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
-                            // TODO do something
-                            return Task.FromResult<object>(null);
-                        },
-                        GetValue = () =>
-                        {
-                            var ret = d.TDPSimple switch
-                            {
-                                TDPSimpleType.LOW => "Low",
-                                TDPSimpleType.MEDIUM => "Medium",
-                                TDPSimpleType.HIGH => "High",
-                                _ => "ERROR",
-                            };
-                            return ret;
-                        }
-                    }));
-                }
-                if (d.DeviceMonitor is ICoreClockSet && d.DeviceMonitor is ICoreClockRange rangeCore)
-                {
-                    var ret = rangeCore.CoreClockRange;
-                    if (ret.ok)
-                    {
-                        optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
-                        {
-                            PropertyID = OptionalMutableProperty.NextPropertyId(),
-                            DisplayName = "Core clock",
-                            DefaultValue = ret.def,
-                            Range = (ret.min, ret.max)
-                        }));
-                    }
-                }
-                if (d.DeviceMonitor is IMemoryClockSet && d.DeviceMonitor is IMemoryClockRange rangeMem)
-                {
-                    var ret = rangeMem.MemoryClockRange;
-                    if (ret.ok)
-                    {
-                        optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
-                        {
-                            PropertyID = OptionalMutableProperty.NextPropertyId(),
-                            DisplayName = "Memory clock",
-                            DefaultValue = ret.def,
-                            Range = (ret.min, ret.max)
-                        }));
-                    }
-                }
+                //if (d.DeviceMonitor is ITDP tdp)
+                //{
+                //    optionalProperties.Add(valueOrNull<ITDP>(new OptionalMutablePropertyEnum //TODO is always included?
+                //    {
+                //        PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
+                //        DisplayName = "TDP Simple",
+                //        DefaultValue = "Medium",
+                //        Range = new List<string> { "Low", "Medium", "High" },
+                //        // TODO action/setter to execute
+                //        ExecuteTask = async (object p) =>
+                //        {
+                //            // #1 validate JSON input
+                //            if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
+                //            // TODO do something
+                //            return Task.FromResult<object>(null);
+                //        },
+                //        GetValue = () =>
+                //        {
+                //            var ret = d.TDPSimple switch
+                //            {
+                //                TDPSimpleType.LOW => "Low",
+                //                TDPSimpleType.MEDIUM => "Medium",
+                //                TDPSimpleType.HIGH => "High",
+                //                _ => "ERROR",
+                //            };
+                //            return ret;
+                //        }
+                //    }));
+                //}
+                //if (d.DeviceMonitor is ICoreClockSet && d.DeviceMonitor is ICoreClockRange rangeCore)
+                //{
+                //    var ret = rangeCore.CoreClockRange;
+                //    if (ret.ok)
+                //    {
+                //        optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
+                //        {
+                //            PropertyID = OptionalMutableProperty.NextPropertyId(),
+                //            DisplayName = "Core clock",
+                //            DefaultValue = ret.def,
+                //            Range = (ret.min, ret.max),
+                //            //ExecuteTask = async (object p) =>
+                //            //{
+                //            //todo
+                //            //}
+                //            GetValue = () =>
+                //            {
+                //                //todo?
+                //                return string.Empty;
+                //            }
+                //        }));
+                //    }
+                //}
+                //if (d.DeviceMonitor is IMemoryClockSet && d.DeviceMonitor is IMemoryClockRange rangeMem)
+                //{
+                //    var ret = rangeMem.MemoryClockRange;
+                //    if (ret.ok)
+                //    {
+                //        optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
+                //        {
+                //            PropertyID = OptionalMutableProperty.NextPropertyId(),
+                //            DisplayName = "Memory clock",
+                //            DefaultValue = ret.def,
+                //            Range = (ret.min, ret.max),
+                //            //ExecuteTask = async (object p) =>
+                //            //{
+                //            //todo
+                //            //}
+                //            GetValue = () =>
+                //            {
+                //                //todo?
+                //                return string.Empty;
+                //            }
+                //        }));
+                //    }
+                //}
                 return optionalProperties
                     .Where(p => p != null)
                     .ToList();
@@ -401,102 +429,21 @@ namespace NHMCore.Nhmws.V4
         {
             return new List<NhmwsAction>
             {
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "Device enable",
-                    DisplayGroup = 0,
-                },
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "Device disable",
-                    DisplayGroup = 0,
-                },
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "OC profile test",
-                    DisplayGroup = 1,
-                    Parameters = new List<Parameter>()
-                    {
-                        new ParameterString()
-                        {
-                            DisplayName = "OC profile",
-                            DefaultValue = "",
-                            Range = (1024, "")
-                        }
-                    }
-                },
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "Fan profile test",
-                    DisplayGroup = 1,
-                    Parameters = new List<Parameter>()
-                    {
-                        new ParameterString()
-                        {
-                            DisplayName = "Fan profile",
-                            DefaultValue = "",
-                            Range = (1024, "")
-                        }
-                    }
-                },
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "ELP profile test",
-                    DisplayGroup = 1,
-                    Parameters = new List<Parameter>()
-                    {
-                        new ParameterString()
-                        {
-                            DisplayName = "ELP profile",
-                            DefaultValue = "",
-                            Range = (1024, "")
-                        }
-                    }
-                }
+                NhmwsAction.ActionDeviceEnable(),
+                NhmwsAction.ActionDeviceDisable(),
+                NhmwsAction.ActionOcProfileTest(),
+                NhmwsAction.ActionFanProfileTest(),
+                NhmwsAction.ActionElpProfileTest(),
             };
         } 
         private static List<NhmwsAction> CreateDefaultRigActions()
         {
             return new List<NhmwsAction>
             {
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "Mining start",
-                    DisplayGroup = 1,
-                },
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "Mining stop",
-                    DisplayGroup = 1,
-                },
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "Profiles bundle set",
-                    DisplayGroup = 1,
-                    Parameters = new List<Parameter>()
-                    {
-                        new ParameterString()
-                        {
-                            DisplayName = "Bundle profiles",
-                            DefaultValue = "",
-                            Range = (4096, "")
-                        }
-                    }
-                },
-                new NhmwsAction
-                {
-                    ActionID = NhmwsAction.NextActionId(),
-                    DisplayName = "Profiles bundle reset",
-                    DisplayGroup = 1,
-                },
+                NhmwsAction.ActionStartMining(),
+                NhmwsAction.ActionStopMining(),
+                NhmwsAction.ActionProfilesBundleSet(),
+                NhmwsAction.ActionProfilesBundleReset(),
             };
         }
         private static List<JArray> GetStaticPropertiesOptionalValues(ComputeDevice d)

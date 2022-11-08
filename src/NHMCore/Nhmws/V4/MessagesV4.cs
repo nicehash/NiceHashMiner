@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Threading.Tasks;
 using System.Windows.Media.Animation;
+using Windows.Devices.Sensors;
 
 namespace NHMCore.Nhmws.V4
 {
@@ -16,6 +17,22 @@ namespace NHMCore.Nhmws.V4
         Bool = 1,
         Enum = 2,
         String = 3,
+    }
+    public enum SupportedAction : int
+    {
+        ActionUnsupported = -1,
+        ActionStartMining,
+        ActionStopMining,
+        ActionProfilesBundleSet,
+        ActionProfilesBundleReset,
+        ActionDeviceEnable,
+        ActionDeviceDisable,
+        ActionOcProfileTest,
+        ActionFanProfileTest,
+        ActionElpProfileTest,
+
+
+
     }
     internal class LoginMessage : ISendMessage
     {
@@ -49,7 +66,7 @@ namespace NHMCore.Nhmws.V4
         public List<Device> Devices { get; set; }
 
         [JsonProperty("miner.state")]
-        public JObject MinerState { get; set; } 
+        public JObject MinerState { get; set; }
     }
 
 
@@ -84,15 +101,15 @@ namespace NHMCore.Nhmws.V4
     internal interface IStaticMandatoryProperty { }
 
     internal interface IStaticOptionalProperty { }
-    
+
     internal interface IDynamicMandatoryProperty { }
-    
+
     internal interface IDynamicOptionalProperty { }
 
     internal interface IMutableMandatoryProperty { }
-    
+
     internal interface IMutableOptionalProperty { }
-    
+
     internal interface IAction { }
 
     internal abstract class OptionalMutableProperty
@@ -176,7 +193,7 @@ namespace NHMCore.Nhmws.V4
         public (int len, string charset) Range { get; set; }
     }
 
-    internal class NhmwsAction
+    public class NhmwsAction
     {
         private static int _actionId = 0;
         internal static int NextActionId() => _actionId++;
@@ -190,10 +207,163 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("display_group")]
         public int DisplayGroup { get; set; }
         [JsonProperty("parameters")]
-        public List<Parameter> Parameters { get; set; } = new();
-
+        public List<ParameterLogin> Parameters { get; set; } = new();
         [JsonIgnore]
-        public Func<Task<object>> ExecuteTask { get; set; }
+        public SupportedAction ActionType { get; set; }
+        [JsonIgnore]
+        public Func<object, Task<object>> ExecuteTask { get; set; }
+        public static NhmwsAction ActionDeviceEnable()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Device enable",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionDeviceEnable,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionDeviceDisable()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Device disable",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionDeviceDisable,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionOcProfileTest()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "OC profile test",
+                DisplayGroup = 1,
+                Parameters = new List<ParameterLogin>()
+                {
+                    new ParameterStringLogin()
+                    {
+                        DisplayName = "OC profile",
+                        DefaultValue = "",
+                        Range = (1024, "")
+                    }
+                },
+                ActionType = SupportedAction.ActionOcProfileTest,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionFanProfileTest()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Fan profile test",
+                DisplayGroup = 1,
+                Parameters = new List<ParameterLogin>()
+                {
+                    new ParameterStringLogin()
+                    {
+                        DisplayName = "Fan profile",
+                        DefaultValue = "",
+                        Range = (1024, "")
+                    }
+                },
+                ExecuteTask = async (object p) =>
+                {
+                    if (p is FanBundle fb && fb is not null) //todo fan bundle call here
+                    {
+                        var a = 0;
+                    }
+                    return 0;
+                },
+                ActionType = SupportedAction.ActionFanProfileTest,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionElpProfileTest()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "ELP profile test",
+                DisplayGroup = 1,
+                Parameters = new List<ParameterLogin>()
+                {
+                    new ParameterStringLogin()
+                    {
+                        DisplayName = "ELP profile",
+                        DefaultValue = "",
+                        Range = (1024, "")
+                    }
+                },
+                ActionType= SupportedAction.ActionElpProfileTest,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionStartMining()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Mining start",
+                DisplayGroup = 1,
+                ActionType = SupportedAction.ActionStartMining,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionStopMining()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Mining stop",
+                DisplayGroup = 1,
+                ActionType = SupportedAction.ActionStopMining,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionProfilesBundleSet()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Profiles bundle set",
+                DisplayGroup = 1,
+                Parameters = new List<ParameterLogin>()
+                {
+                    new ParameterStringLogin()
+                    {
+                        DisplayName = "Bundle profiles",
+                        DefaultValue = "",
+                        Range = (4096, "")
+                    }
+                },
+                ActionType = SupportedAction.ActionProfilesBundleSet,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionProfilesBundleReset()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Profiles bundle reset",
+                DisplayGroup = 1,
+                ActionType= SupportedAction.ActionProfilesBundleReset,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
     }
 
     internal class Device
@@ -250,7 +420,7 @@ namespace NHMCore.Nhmws.V4
         public List<DeviceState> Devices { get; set; }
     }
 
-    internal abstract class Parameter
+    public abstract class ParameterLogin
     {
         [JsonProperty("display_name")]
         public string DisplayName { get; set; }
@@ -261,7 +431,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("type")]
         abstract public Type PropertyType { get; }
     }
-    internal class ParameterInteger : Parameter
+    internal class ParameterIntegerLogin : ParameterLogin
     {
         [JsonProperty("type")]
         public override Type PropertyType => Type.Int;
@@ -273,7 +443,7 @@ namespace NHMCore.Nhmws.V4
         [JsonConverter(typeof(Nhmws4JSONConverter))]
         public (int min, int max) Range { get; set; }
     }
-    internal class ParameterBool : Parameter
+    internal class ParameterBoolLogin : ParameterLogin
     {
         [JsonProperty("type")]
         public override Type PropertyType => Type.Bool;
@@ -281,7 +451,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("default")]
         public bool DefaultValue { get; set; }
     }
-    internal class ParameterEnum : Parameter
+    internal class ParameterEnumLogin : ParameterLogin
     {
         [JsonProperty("type")]
         public override Type PropertyType => Type.Enum;
@@ -292,7 +462,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("range")]
         public List<string> Range { get; set; }
     }
-    internal class ParameterString : Parameter
+    internal class ParameterStringLogin : ParameterLogin
     {
         [JsonProperty("type")]
         public override Type PropertyType => Type.String;
@@ -378,9 +548,9 @@ namespace NHMCore.Nhmws.V4
         public string Name { get; set; }
         [JsonProperty("device_name")]
         public string DeviceName { get; set; }
-        [JsonProperty("miner_id", Required = Required.AllowNull)]
+        [JsonProperty("miner_id")]
         public string? MinerId { get; set; }
-        [JsonProperty("algorithm_id", Required = Required.AllowNull)]
+        [JsonProperty("algorithm_id")]
         public string? AlgoId { get; set; }
         [JsonProperty("core_clock")]
         public int CoreClock { get; set; }
@@ -389,38 +559,20 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("tdp")]
         public int TDP { get; set; }
     }
-
-    internal abstract class FanBundle
+    internal class FanBundle
     {
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("device_name")]
         public string DeviceName { get; set; }
-        [JsonProperty("miner_id", Required = Required.AllowNull)]
+        [JsonProperty("miner_id")]
         public string? MinerId { get; set; }
-        [JsonProperty("algorithm_id", Required = Required.AllowNull)]
+        [JsonProperty("algorithm_id")]
         public string? AlgoId { get; set; }
         [JsonProperty("type")]
-        abstract public int Type { get; set; }
-    }
-    internal class FanBundleFixed : FanBundle
-    {
-        [JsonProperty("type")]
-        public override int Type { get; set; } = 0;
+        public int Type { get; set; }
         [JsonProperty("fan_speed")]
         public int FanSpeed { get; set; }
-    }
-    internal class FanBundleGPUTemp : FanBundle
-    {
-        [JsonProperty("type")]
-        public override int Type { get; set; } = 1;
-        [JsonProperty("gpu_temp")]
-        public int GpuTemp { get; set; }
-    }
-    internal class FanBundleVramAndGPUTemp : FanBundle
-    {
-        [JsonProperty("type")]
-        public override int Type { get; set; } = 2;
         [JsonProperty("gpu_temp")]
         public int GpuTemp { get; set; }
         [JsonProperty("vram_temp")]

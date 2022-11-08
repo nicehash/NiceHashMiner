@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
@@ -593,6 +594,10 @@ namespace NHMCore.Nhmws.V4
         }
         #endregion Stop
 
+        #region Actions
+    
+        #endregion Actions
+
         private static Task<bool> SetPowerMode(string device, TDPSimpleType level)
         {
             if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCode.UnableToHandleRpc);
@@ -675,17 +680,90 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<string> CallAction(MinerCallAction action)
         {
-            var deserializedParams = new List<Parameter>();
+            var actionRecord = ActionMap.ActionList.Where(a => a.ActionID == action.ActionId).FirstOrDefault();
+            if (actionRecord == null)
+            {
+                NHM.Common.Logger.Error("NHWebSocketV4", "Action not found");
+                return Task.FromResult(string.Empty);
+            }
+            //var typeOfParams = 
             foreach(var param in action.Parameters)
             {
-               //TODO override abstract class ActionParameter to desired form
-                //deserializedParams.Add(JsonConvert.DeserializeObject<Parameter>(param));
+                ParseAndCallAction(actionRecord.ActionType, param);
             }
             //some switch to determine command
             //handle each param in request
             //return result
             return Task.FromResult("");
         }
+        private static Task ParseAndCallAction(SupportedAction typeOfAction, string parameters)
+        {
+            switch (typeOfAction)
+            {
+                case SupportedAction.ActionStartMining:
+                    break;
+                case SupportedAction.ActionStopMining:
+                    break;
+                case SupportedAction.ActionProfilesBundleSet:
+                    break;
+                case SupportedAction.ActionProfilesBundleReset:
+                    break;
+                case SupportedAction.ActionDeviceEnable:
+                    break;
+                case SupportedAction.ActionDeviceDisable:
+                    break;
+                case SupportedAction.ActionOcProfileTest:
+                    object jobjectOc = JsonConvert.DeserializeObject(parameters);
+                    if (jobjectOc is not JObject jsonObjOC) break;
+                    if (jsonObjOC.ToObject<OcBundle>() is OcBundle ob) ExecuteOCBundle(ob);
+                    break;
+                case SupportedAction.ActionFanProfileTest:
+                    object jobjectFan = JsonConvert.DeserializeObject(parameters);
+                    if (jobjectFan is not JObject jsonObjFan) break;
+                    if (jsonObjFan.ToObject<FanBundle>() is FanBundle fb) ExecuteFanBundle(fb);
+                    break;
+                case SupportedAction.ActionElpProfileTest:
+                    object jobjectELP = JsonConvert.DeserializeObject(parameters);
+                    if (jobjectELP is not JObject jsonObjELP) break;
+                    if (jsonObjELP.ToObject<ElpBundle>() is ElpBundle eb) ExecuteELPBundle(eb);
+                    break;
+                default:
+                    break;
+            }
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteOCBundle(OcBundle ocBundle)
+        {
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteELPBundle(ElpBundle elpBundle)
+        {
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteFanBundle(FanBundle fanBundle)
+        {
+            object t = fanBundle.Type switch
+            {
+                0 => ExecuteFanBundleFixed(fanBundle),
+                1 => ExecuteFanBundleTargetGPUTemp(fanBundle),
+                2 => ExecuteFanBundleTargetGPUVRAMTemp(fanBundle),
+                _ => throw new RpcException($"Fan bundle type not supported for method '{fanBundle.Type}'", ErrorCode.UnableToHandleRpc),
+            };
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteFanBundleFixed(FanBundle fanBundle)
+        {
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteFanBundleTargetGPUTemp(FanBundle fanBundle)
+        {
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteFanBundleTargetGPUVRAMTemp(FanBundle fanBundle)
+        {
+            return Task.CompletedTask;
+        }
+
         private static Task<string> SetMutable(MinerSetMutable mutableCmd)
         {
             return Task.FromResult("");
@@ -715,7 +793,7 @@ namespace NHMCore.Nhmws.V4
                     MiningStop m => await StopMining(m.Device),
                     MiningSetPowerMode m => await SetPowerMode(m.Device, (TDPSimpleType)m.PowerMode),
                     MinerReset m => await MinerReset(m.Level), // rpcAnswer
-                    MinerCallAction m => await CallAction(m),
+                    MinerCallAction m => await CallAction(m), // call decision from here!!!
                     MinerSetMutable m => await SetMutable(m),
                     _ => throw new RpcException($"RpcMessage operation not supported for method '{rpcMsg.Method}'", ErrorCode.UnableToHandleRpc),
                 };
