@@ -125,7 +125,7 @@
             <LineBreak />
             <Run Text="DEMO mode will not earn Bitcoins!" />
             <LineBreak />
-            <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+            <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/mining-help/general-help/how-to-get-nicehash-mining-address" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
                 How to create a Mining Address?
             </Hyperlink>
             <LineBreak />
