@@ -21,7 +21,8 @@ namespace LolMiner
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
                         new SAS(AlgorithmType.ZelHash),
-                        new SAS(AlgorithmType.KHeavyHash)
+                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
                     };
         }
 
@@ -62,7 +63,8 @@ namespace LolMiner
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
                         new SAS(AlgorithmType.EtcHash){NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
                         new SAS(AlgorithmType.ZelHash),
-                        new SAS(AlgorithmType.KHeavyHash)
+                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
                     }
                 },
                 {
