@@ -31,7 +31,7 @@ namespace MP.GMiner
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
                         new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit, Enabled = false },
                         new SAS(AlgorithmType.Autolykos) {Enabled = false},
-                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.KHeavyHash) { NonDefaultRAMLimit = (2UL << 29) },
                         // new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.ZelHash) { Enabled = false } ,
                         // new SAS(AlgorithmType.GrinCuckatoo32),
