@@ -170,7 +170,7 @@ namespace NHM.DeviceMonitoring
 
                     ISensor sensor = null;
                     if (groupedSensors.Any(sg => sg.Count() == 2)) sensor = groupedSensors.FirstOrDefault(sg => sg.Count() == 2).FirstOrDefault(s => s.SensorType == SensorType.Control);
-                    if (!sensor.Value.HasValue || sensor == null) isCompatible = false;
+                    if (sensor == null || !sensor.Value.HasValue) isCompatible = false;
                 }
                 if (cpuSensor == null || !cpuSensor.Value.HasValue) isCompatible =  false;
             }
