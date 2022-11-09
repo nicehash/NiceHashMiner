@@ -27,30 +27,30 @@ namespace MP.GMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
-                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit },
-                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.DaggerHashimoto) {Enabled = false},
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
+                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit, Enabled = false },
+                        new SAS(AlgorithmType.Autolykos) {Enabled = false},
                         new SAS(AlgorithmType.KHeavyHash),
                         // new SAS(AlgorithmType.CuckooCycle),
-                        new SAS(AlgorithmType.ZelHash),
+                        new SAS(AlgorithmType.ZelHash) { Enabled = false } ,
                         // new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.ZHash)
+                        new SAS(AlgorithmType.ZHash) { Enabled = false }
                     }
                 },
                 {
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
-                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit },
-                        new SAS(AlgorithmType.Autolykos),
-                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) , Enabled = false},
+                        new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit , Enabled = false},
+                        //new SAS(AlgorithmType.Autolykos),
+                        //new SAS(AlgorithmType.KHeavyHash),
                         // new SAS(AlgorithmType.CuckooCycle),
-                        new SAS(AlgorithmType.ZelHash),
+                        new SAS(AlgorithmType.ZelHash) { Enabled = false },
                         // new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.ZHash)
+                        new SAS(AlgorithmType.ZHash) {Enabled = false }
                     }
                 }
             }
