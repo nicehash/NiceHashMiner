@@ -54,21 +54,8 @@ namespace MP.GMiner
 
         private static bool isSupportedVersion(int major, int minor)
         {
-            var gMinerSMSupportedVersions = new List<Version>
-            {
-                new Version(6,0),
-                new Version(6,1),
-                new Version(7,0),
-                new Version(7,5),
-                new Version(8,0),
-                new Version(8,6),
-            };
-            var cudaDevSMver = new Version(major, minor);
-            foreach (var supportedVer in gMinerSMSupportedVersions)
-            {
-                if (supportedVer == cudaDevSMver) return true;
-            }
-            return false;
+            //todo is there even a list for this?
+            return true;
         }
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
