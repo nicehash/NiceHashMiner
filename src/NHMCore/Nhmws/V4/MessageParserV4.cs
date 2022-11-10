@@ -13,8 +13,6 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Contacts;
 
 namespace NHMCore.Nhmws.V4
 {
@@ -64,7 +62,7 @@ namespace NHMCore.Nhmws.V4
             return devData.MinerName;
         }
 
-        private static (List<(string name, string unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isLogin)
+        private static (List<(string name, string? unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isLogin)
         {
             string getValue<T>(T o) => (typeof(T).Name, o) switch
             {
@@ -82,8 +80,11 @@ namespace NHMCore.Nhmws.V4
             {
                 "Miner" => $"{GetDevicePlugin(d.Uuid)}",
                 "OC profile" => $"", //TODO
+                "OC profile ID" => $"",
                 "Fan profile" => $"", //TODO
+                "Fan profile ID" => $"",
                 "ELP profile" => $"", //TODO
+                "ELP profile ID" => $"",
                 _ => null,
             };
 
@@ -101,12 +102,15 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<IVramTemp>(DeviceDynamicProperties.VramTemp,"VRAM Temperature","C"),
                 pairOrNull<ILoad>(DeviceDynamicProperties.Load,"Load","%"),
                 pairOrNull<IMemControllerLoad>(DeviceDynamicProperties.MemoryControllerLoad, "MemCtrl Load","%"),
-                pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan","%"),
-                pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power","W"),
-                pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", ""),
-                pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile", ""),
-                pairOrNull<string>(DeviceDynamicProperties.NONE, "Fan profile", ""),
-                pairOrNull<string>(DeviceDynamicProperties.NONE, "ELP profile", "")
+                pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan speed","%"),
+                pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power usage","W"),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", null),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile", null),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile ID", null),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "Fan profile", null),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "Fan profile ID", null),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "ELP profile", null),
+                pairOrNull<string>(DeviceDynamicProperties.NONE, "ELP profile ID", null),
             };
             var deviceOptionalDynamic = dynamicPropertiesWithValues
                 .Where(p => p.HasValue)
@@ -130,7 +134,7 @@ namespace NHMCore.Nhmws.V4
             {
                 if (!d.SupportedDynamicProperties.Contains(i)) deviceOptionalDynamic.RemoveAll(prop => prop.type == i);
             }
-            var optionalDynamicProperties = deviceOptionalDynamic.Select(p => (p.name, p.unit)).ToList();
+            List<(string name, string? unit)> optionalDynamicProperties = deviceOptionalDynamic.Select(p => (p.name, p.unit)).ToList();
             var values_odv = new JArray(deviceOptionalDynamic.Select(p => p.value));
             return (optionalDynamicProperties, values_odv);
         }
@@ -162,34 +166,33 @@ namespace NHMCore.Nhmws.V4
                         return string.Empty;
                     }
                 });
-                //if (d.DeviceMonitor is ITDP tdp)
+                #region OMVMaybe
+                //if (d.DeviceMonitor is ITDP tdp && d.DeviceMonitor is ITDPLimits tdpLim)
                 //{
-                //    optionalProperties.Add(valueOrNull<ITDP>(new OptionalMutablePropertyEnum //TODO is always included?
+                //    var limits = tdpLim.GetTDPLimits();
+                //    if (limits.ok)
                 //    {
-                //        PropertyID = OptionalMutableProperty.NextPropertyId(), // TODO this will eat up the ID
-                //        DisplayName = "TDP Simple",
-                //        DefaultValue = "Medium",
-                //        Range = new List<string> { "Low", "Medium", "High" },
-                //        // TODO action/setter to execute
-                //        ExecuteTask = async (object p) =>
+                //        optionalProperties.Add(valueOrNull<ITDP>(new OptionalMutablePropertyInt
                 //        {
-                //            // #1 validate JSON input
-                //            if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
-                //            // TODO do something
-                //            return Task.FromResult<object>(null);
-                //        },
-                //        GetValue = () =>
-                //        {
-                //            var ret = d.TDPSimple switch
+                //            PropertyID = OptionalMutableProperty.NextPropertyId(),
+                //            DisplayName = "Power mode",
+                //            DisplayUnit = "%",
+                //            DefaultValue = (int)limits.def,
+                //            Range = ((int)limits.min, (int)limits.max),
+                //            //ExecuteTask = async (object p) =>
+                //            //{
+                //            //    // #1 validate JSON input
+                //            //    if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
+                //            //    // TODO do something
+                //            //    return Task.FromResult<object>(null);
+                //            //},
+                //            GetValue = () =>
                 //            {
-                //                TDPSimpleType.LOW => "Low",
-                //                TDPSimpleType.MEDIUM => "Medium",
-                //                TDPSimpleType.HIGH => "High",
-                //                _ => "ERROR",
-                //            };
-                //            return ret;
-                //        }
-                //    }));
+                //                return tdp.TDPPercentage;
+                //            }
+                //        }));
+                //    }
+
                 //}
                 //if (d.DeviceMonitor is ICoreClockSet && d.DeviceMonitor is ICoreClockRange rangeCore)
                 //{
@@ -200,6 +203,7 @@ namespace NHMCore.Nhmws.V4
                 //        {
                 //            PropertyID = OptionalMutableProperty.NextPropertyId(),
                 //            DisplayName = "Core clock",
+                //            DisplayUnit = "MHz",
                 //            DefaultValue = ret.def,
                 //            Range = (ret.min, ret.max),
                 //            //ExecuteTask = async (object p) =>
@@ -208,8 +212,7 @@ namespace NHMCore.Nhmws.V4
                 //            //}
                 //            GetValue = () =>
                 //            {
-                //                //todo?
-                //                return string.Empty;
+                //                return d.CoreClock;
                 //            }
                 //        }));
                 //    }
@@ -223,6 +226,7 @@ namespace NHMCore.Nhmws.V4
                 //        {
                 //            PropertyID = OptionalMutableProperty.NextPropertyId(),
                 //            DisplayName = "Memory clock",
+                //            DisplayUnit = "MHz",
                 //            DefaultValue = ret.def,
                 //            Range = (ret.min, ret.max),
                 //            //ExecuteTask = async (object p) =>
@@ -231,12 +235,12 @@ namespace NHMCore.Nhmws.V4
                 //            //}
                 //            GetValue = () =>
                 //            {
-                //                //todo?
-                //                return string.Empty;
+                //                return d.MemoryClock;
                 //            }
                 //        }));
                 //    }
                 //}
+                #endregion
                 return optionalProperties
                     .Where(p => p != null)
                     .ToList();
@@ -255,6 +259,20 @@ namespace NHMCore.Nhmws.V4
         }
 
         private static LoginMessage _loginMessage = null;
+        public static List<List<string>> DeviceOptionalDynamicToList(List<(string name, string? unit)> properties)
+        {
+            List<List<string>> result = new List<List<string>>();
+            foreach (var property in properties)
+            {
+                if(property.unit == null)
+                {
+                    result.Add(new List<string> { property.name });
+                    continue;
+                }
+                result.Add(new List<string> { property.name, property.unit });
+            }
+            return result;
+        }
         public static LoginMessage CreateLoginMessage(string btc, string worker, string rigID, IOrderedEnumerable<ComputeDevice> devices)
         {
             var sorted = SortedDevices(devices);
@@ -271,7 +289,7 @@ namespace NHMCore.Nhmws.V4
                         { "optional", GetStaticPropertiesOptionalValues(d) },
                     },
                     Actions = CreateDefaultDeviceActions(),
-                    OptionalDynamicProperties = GetDeviceOptionalDynamic(d, true).properties,
+                    OptionalDynamicProperties = DeviceOptionalDynamicToList(GetDeviceOptionalDynamic(d, true).properties),
                     OptionalMutableProperties = GetDeviceOptionalMutable(d).properties,
                 };
             }
@@ -451,13 +469,17 @@ namespace NHMCore.Nhmws.V4
             return d.BaseDevice switch
             {
                 IGpuDevice gpu => new List<JArray>
-                        {
-                            new JArray("bus_id", $"{gpu.PCIeBusID}"),
-                            new JArray("vram", $"{gpu.GpuRam}"),
-                            new JArray("miners", FormatForOptionalValues("miners", GetMinersForDevice(d))),//todo make function
-                            //new JArray("limits", $"{GetLimitsForDevice(d)}"),
-                        },
-                _ => new List<JArray> { },
+                    {
+                        new JArray("bus_id", $"{gpu.PCIeBusID}"),
+                        new JArray("vram", $"{gpu.GpuRam}"),
+                        new JArray("miners", FormatForOptionalValues("miners", GetMinersForDevice(d))),
+                        new JArray("limits", FormatForOptionalValues("limits", GetLimitsForDevice(d))),
+                    },
+                _ => new List<JArray> 
+                    {
+                        new JArray("miners", FormatForOptionalValues("miners", GetMinersForDevice(d))),
+                        new JArray("limits", FormatForOptionalValues("limits", GetLimitsForDevice(d))),
+                    },
             };
         }
 
@@ -480,23 +502,35 @@ namespace NHMCore.Nhmws.V4
             var json = JsonConvert.SerializeObject(miners);
             return json;
         }
-        //private static string GetLimitsForDevice(ComputeDevice d)
-        //{
-        //    List<Limit> limits = new List<Limit>();
-        //    if(d.DeviceMonitor is ITDP)
-        //    {
-        //        //todo need monitor here
-        //        //if(d.DeviceMonitor.)
-        //        //limits.Add(new Limit() { Name = "Power mode", Unit = "%" });
-        //    }
-        //    if(d.DeviceMonitor is ICoreClockSet)
-        //    {
-
-        //    }
-        //    if(d.DeviceMonitor is IMemoryClockSet)
-        //    {
-
-        //    }
-        //}
+        private static string GetLimitsForDevice(ComputeDevice d)
+        {
+            List<Limit> limits = new List<Limit>();
+            if (d.DeviceMonitor is ITDP && d.DeviceMonitor is ITDPLimits tdpLim && d.CanSetPowerMode)
+            {
+                var lims = tdpLim.GetTDPLimits();
+                if (lims.ok)
+                {
+                    limits.Add(new Limit { Name = "Power mode", Unit = "%", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                }
+            }
+            if (d.DeviceMonitor is ICoreClockSet && d.DeviceMonitor is ICoreClockRange ccLim)
+            {
+                var lims = ccLim.CoreClockRange;
+                if (lims.ok)
+                {
+                    limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                }
+            }
+            if (d.DeviceMonitor is IMemoryClockSet && d.DeviceMonitor is IMemoryClockRange mcLim)
+            {
+                var lims = mcLim.MemoryClockRange;
+                if (lims.ok)
+                { 
+                    limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                }
+            }
+            var json = JsonConvert.SerializeObject(limits);
+            return json;
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace NHMCore.Nhmws.V4
     static class NHWebSocketV4
     {
         #region locking
-
+        private static readonly string _logTag = "NHWebSocketV4";
         private static readonly object _lock = new object();
         private class LockingProperty<T>
         {
@@ -701,16 +701,23 @@ namespace NHMCore.Nhmws.V4
             switch (typeOfAction)
             {
                 case SupportedAction.ActionStartMining:
+                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionStopMining:
+                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
+                    var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
+                    ExecuteProfilesBundleSet(bundle);
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
+                    ExecuteProfilesBundleReset();
                     break;
                 case SupportedAction.ActionDeviceEnable:
+                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionDeviceDisable:
+                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionOcProfileTest:
                     object jobjectOc = JsonConvert.DeserializeObject(parameters);
@@ -728,8 +735,17 @@ namespace NHMCore.Nhmws.V4
                     if (jsonObjELP.ToObject<ElpBundle>() is ElpBundle eb) ExecuteELPBundle(eb);
                     break;
                 default:
+                    NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
                     break;
             }
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteProfilesBundleSet(Bundle bundle)
+        {
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteProfilesBundleReset()
+        {
             return Task.CompletedTask;
         }
         private static Task ExecuteOCBundle(OcBundle ocBundle)

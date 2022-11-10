@@ -48,12 +48,6 @@ namespace NHMCore.Nhmws.V4
         public string RigID { get; set; } = "";
         [JsonProperty("worker")]
         public string Worker { get; set; } = "";
-        //[JsonProperty("group")]
-        //public string Group { get; set; } = "";
-
-        // "static_properties": { ... },
-
-        // "optional_dynamic_properties": [ ... ],
         [JsonProperty("optional_dynamic_properties")]
         public List<List<string>> OptionalDynamicProperties { get; set; }
         [JsonProperty("optional_mutable_properties")]
@@ -68,35 +62,6 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("miner.state")]
         public JObject MinerState { get; set; }
     }
-
-
-    //internal class LoginMessageBreak : ISendMessage
-    //{
-    //    [JsonProperty("method")]
-    //    public string Method => "loginBreak2";
-    //}
-
-
-    // new stuff
-
-    //internal class MinerBye : ISendMessage
-    //{
-    //    [JsonProperty("method")]
-    //    public string Method => "miner.bye";
-    //    [JsonProperty("params")]
-    //    public List<object> Params = new List<object>();
-    //}
-
-    //internal class ServerBye : IReceiveMessage
-    //{
-    //    [JsonProperty("method")]
-    //    public string Method => "server.bye";
-    //    [JsonProperty("params")]
-    //    public List<object> Params = new List<object>();
-    //}
-
-
-
 
     internal interface IStaticMandatoryProperty { }
 
@@ -126,18 +91,11 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("display_group")]
         public int? DisplayGroup { get; set; } = 0;
 
-        [JsonProperty("display_unit")]
-        public string DisplayUnit { get; set; }
+        [JsonProperty("display_unit", NullValueHandling = NullValueHandling.Ignore)]
+        public string? DisplayUnit { get; set; }
 
         [JsonProperty("type")]
         abstract public Type PropertyType { get; }
-
-        //[JsonProperty("default")]
-        //public T DefaultValue { get; set; }
-
-        //[JsonProperty("range")]
-        //public TR Range { get; set; }
-
         [JsonIgnore]
         public Func<object, Task<object>> ExecuteTask { get; set; }
 
@@ -365,17 +323,14 @@ namespace NHMCore.Nhmws.V4
             return action;
         }
     }
-
     internal class Device
     {
         [JsonProperty("static_properties")]
         public Dictionary<string, object> StaticProperties { get; set; }
 
         [JsonProperty("optional_dynamic_properties")]
-        [JsonConverter(typeof(Nhmws4JSONConverter))]
-        public List<(string name, string unit)> OptionalDynamicProperties { get; set; }
-
-        //
+        //[JsonConverter(typeof(Nhmws4JSONConverter))]
+        public List<List<string>> OptionalDynamicProperties { get; set; }
         [JsonProperty("optional_mutable_properties")]
         public List<OptionalMutableProperty> OptionalMutableProperties { get; set; }
 
@@ -424,10 +379,10 @@ namespace NHMCore.Nhmws.V4
     {
         [JsonProperty("display_name")]
         public string DisplayName { get; set; }
-        [JsonProperty("display_group")]
-        public int DisplayGroup { get; set; }
-        [JsonProperty("display_unit")]
-        public string DisplayUnit { get; set; }
+        [JsonProperty("display_group", NullValueHandling = NullValueHandling.Ignore)]
+        public int? DisplayGroup { get; set; }
+        [JsonProperty("display_unit", NullValueHandling = NullValueHandling.Ignore)]
+        public string? DisplayUnit { get; set; }
         [JsonProperty("type")]
         abstract public Type PropertyType { get; }
     }
@@ -580,17 +535,17 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("max_fan_speed")]
         public int MaxFanSpeed { get; set; }
     }
-    //internal class Limit
-    //{
-    //    [JsonProperty("name")]
-    //    public string Name { get; set; }
-    //    [JsonProperty("unit")]
-    //    public string Unit { get; set; }
-    //    [JsonProperty("default")]
-    //    public int def { get; set; }
-    //    [JsonProperty("range")]
-    //    [JsonConverter(typeof(Nhmws4JSONConverter))]
-    //    public (int min, int max) range { get; set; }
-    //}
+    internal class Limit
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("unit")]
+        public string Unit { get; set; }
+        [JsonProperty("default")]
+        public int Def { get; set; }
+        [JsonProperty("range")]
+        [JsonConverter(typeof(Nhmws4JSONConverter))]
+        public (int min, int max) Range { get; set; }
+    }
 
 }
