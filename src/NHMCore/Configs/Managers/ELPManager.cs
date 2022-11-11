@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
-namespace NHMCore.Utils
+namespace NHMCore.Configs.Managers
 {
     public delegate void NotifyELPChangeEventHandler(object sender, EventArgs e);
     public class ELPManager
@@ -47,7 +47,7 @@ namespace NHMCore.Utils
             defCfg.MinerName = pconf.PluginName;
             defCfg.MinerUUID = pconf.PluginUUID;
             defCfg.MinerCommands.AddRange(pconf.MinerSpecificCommands);
-            Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new(); 
+            Dictionary<string, List<(string uuid, string name)>> algorithmDevicePairs = new();
             foreach (var devAlgoPair in pconf.SupportedDevicesAlgorithms)
             {
                 foreach (var algo in devAlgoPair.Value)
@@ -56,7 +56,7 @@ namespace NHMCore.Utils
                     var devs = pconf.Devices.Where(dev => dev.deviceType.ToString().Contains(devAlgoPair.Key))?
                         .Select(dev => new { P = (dev.Uuid, dev.FullName) })?
                         .Select(p => p.P);
-                    if(devs != null) algorithmDevicePairs[algo].AddRange(devs);
+                    if (devs != null) algorithmDevicePairs[algo].AddRange(devs);
                 }
             }
             foreach (var algoPairs in algorithmDevicePairs)
@@ -103,7 +103,7 @@ namespace NHMCore.Utils
 
         public void UpdateMinerELPConfig()
         {
-            foreach(var miner in _minerELPs)
+            foreach (var miner in _minerELPs)
             {
                 var config = ConstructConfigFromMinerELPData(miner);
                 WriteConfig(config);
@@ -131,7 +131,7 @@ namespace NHMCore.Utils
         }
         public string FindAppropriateCommandForAlgoContainer(AlgorithmContainer ac)
         {
-            if(ac == null) return string.Empty;
+            if (ac == null) return string.Empty;
             return _minerELPs
                 .Where(miner => miner.UUID == ac.MinerUUID)?
                 .FirstOrDefault()?
@@ -139,7 +139,7 @@ namespace NHMCore.Utils
                 .FirstOrDefault()?
                 .AllCMDStrings.Where(x => x.uuid == ac.ComputeDevice.Uuid)?
                 .Select(x => x.command)?
-                .FirstOrDefault() ?? String.Empty;
+                .FirstOrDefault() ?? string.Empty;
         }
         public MinerELPData ConstructMinerELPDataFromConfig(MinerConfig cfg)
         {
@@ -161,12 +161,12 @@ namespace NHMCore.Utils
                     .Distinct()?
                     .ToList();
                 uniqueFlags?.ForEach(f => tempAlgo.Devices[HEADER].AddELP(f));
-                if (!uniqueFlags.Any()) tempAlgo.Devices[HEADER].ELPs.Add(new DeviceELPElement(false) { ELP = String.Empty });
+                if (!uniqueFlags.Any()) tempAlgo.Devices[HEADER].ELPs.Add(new DeviceELPElement(false) { ELP = string.Empty });
                 tempAlgo.Name = algo.AlgorithmName;
                 foreach (var dev in algo.Devices)
                 {
                     var tempELPElts = new DeviceELPElement[uniqueFlags?.Count + 1 ?? 1];
-                    tempELPElts[tempELPElts.Length - 1] = new DeviceELPElement() { ELP = String.Empty };
+                    tempELPElts[tempELPElts.Length - 1] = new DeviceELPElement() { ELP = string.Empty };
                     foreach (var arg in dev.Value.Commands)
                     {
                         if (arg.Count != 3) continue;
@@ -213,7 +213,7 @@ namespace NHMCore.Utils
                 {
                     var deviceParams = new List<List<string>>();
                     if (dev.IsDeviceDataHeader) continue;
-                    for (int i = 0; i < dev.ELPs.Count; i++)
+                    for (var i = 0; i < dev.ELPs.Count; i++)
                     {
                         if (header.ELPs[i] == null || header.ELPs[i].ELP == null) continue;
                         var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
@@ -246,47 +246,47 @@ namespace NHMCore.Utils
                     .Select((elp, index) => new { elp, index })
                     .Where(item => string.IsNullOrEmpty(item.elp.ELP.Trim()))
                     .FirstOrDefault();
-                bool shouldDelete = false;
-                if(columnToDelete != null) shouldDelete = columnToDelete.index < header.ELPs.Count - 1;
+                var shouldDelete = false;
+                if (columnToDelete != null) shouldDelete = columnToDelete.index < header.ELPs.Count - 1;
                 List<(string devUUID, List<List<string>> paramList)> devParams = new();
                 if (algo.Devices == null) algo.Devices = new();
                 foreach (var dev in algo.Devices)
                 {
                     if (dev.IsDeviceDataHeader && !string.IsNullOrEmpty(dev.ELPs?.LastOrDefault()?.ELP)) shouldAddnewColumn = true;
-                    if (shouldAddnewColumn) dev.ELPs.Add(new DeviceELPElement(!dev.IsDeviceDataHeader) { ELP = String.Empty });
+                    if (shouldAddnewColumn) dev.ELPs.Add(new DeviceELPElement(!dev.IsDeviceDataHeader) { ELP = string.Empty });
                     if (header.ELPs == null || dev.ELPs == null) continue;
                     if (columnToDelete != null && shouldDelete) dev.ELPs.RemoveAt(columnToDelete.index);
                     if (header.ELPs.Count != dev.ELPs.Count) continue;
                     List<List<string>> oneDevParams = new();
-                    for (int i = 0; i < dev.ELPs.Count; i++)
+                    for (var i = 0; i < dev.ELPs.Count; i++)
                     {
                         var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
                         if (flagAndDelim.Length != 2) continue;
-                        if (dev.ELPs[i].ELP == String.Empty) continue;
+                        if (dev.ELPs[i].ELP == string.Empty) continue;
                         oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
                     }
                     devParams.Add((dev.UUID, oneDevParams));
                     dev.ConstructedELPs = oneDevParams;
                 }
                 Dictionary<HashSet<int>, List<(string devUUID, List<List<string>> paramList)>> deviceParamsGroups = new();
-                for (int first = 1; first < devParams.Count; first++)
+                for (var first = 1; first < devParams.Count; first++)
                 {
                     var isPartOfGroup = deviceParamsGroups.Keys.Any(keys => keys.Contains(first));
                     if (isPartOfGroup) continue;
                     var group = new HashSet<int> { first };
-                    for (int second = first + 1; second < devParams.Count; second++)
+                    for (var second = first + 1; second < devParams.Count; second++)
                     {
                         if (MinerExtraParameters.CheckIfCanGroup(new List<List<List<string>>> { devParams[first].paramList, devParams[second].paramList })) group.Add(second);
                     }
                     var selectionGroup = devParams.Where((_, index) => group.Contains(index)).ToList();
-                    deviceParamsGroups.Add(group,  selectionGroup);
+                    deviceParamsGroups.Add(group, selectionGroup);
                 }
                 var parsedCommandsPerGroup = new List<(string uuid, string command)>();
                 foreach (var dev in deviceParamsGroups)
                 {
                     var uuidList = dev.Value.Select(k => k.devUUID).ToList();
                     var command = MinerExtraParameters.Parse(minerParams, algoParams, dev.Value.Select(v => v.paramList).ToList());
-                    foreach(var uuid in uuidList)
+                    foreach (var uuid in uuidList)
                     {
                         parsedCommandsPerGroup.Add((uuid, command));
                     }

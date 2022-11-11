@@ -1,7 +1,7 @@
 ﻿using NHM.Common;
 using NHM.MinerPluginToolkitV1.CommandLine;
 using NHMCore.ApplicationState;
-using NHMCore.Utils;
+using NHMCore.Configs.Managers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -2,6 +2,7 @@
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining.Grouping;
 using NHMCore.Notifications;
 using NHMCore.Schedules;

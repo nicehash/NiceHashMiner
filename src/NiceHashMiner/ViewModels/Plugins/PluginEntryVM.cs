@@ -1,6 +1,6 @@
 ﻿using NHM.Common;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining.Plugins;
-using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;

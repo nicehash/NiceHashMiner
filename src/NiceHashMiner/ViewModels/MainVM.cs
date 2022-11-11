@@ -8,6 +8,7 @@ using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.ELPDataModels;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
