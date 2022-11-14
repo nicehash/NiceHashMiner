@@ -186,9 +186,9 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock VerticalAlignment="Center" Grid.Column="0" Text="{Binding NotificationTime}" />
-                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Margin="20,0,0,0" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow"/>
-                    <Button VerticalAlignment="Center" Grid.Column="2" Margin="40,0,0,0" Style="{StaticResource ButtonNoBorder}" Content="X" Click="RemoveThisNotification_click" />
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{DynamicResource TextColorBrush}" Grid.Column="0" Text="{Binding NotificationTime}" />
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{DynamicResource TextColorBrush}" Grid.Column="1" Margin="20,0,0,0" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow"/>
+                    <Button VerticalAlignment="Center" Foreground="{DynamicResource TextColorBrush}" Grid.Column="2" Margin="40,0,0,0" Style="{StaticResource ButtonNoBorder}" Content="X" Click="RemoveThisNotification_click" />
                 </Grid>
                 <ItemsControl x:Name="ic_notificationHistory" ItemsSource="{Binding SubNotificationList}">
                     <ItemsControl.ItemTemplate>
