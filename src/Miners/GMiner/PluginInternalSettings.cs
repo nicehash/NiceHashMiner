@@ -108,10 +108,12 @@ namespace MP.GMiner
             }
         };
 
-        internal static TimeSpan DefaultTimeout = new TimeSpan(0, 1, 0);
+        internal static TimeSpan DefaultTimeout = new TimeSpan(0, 5, 0);
 
         internal static MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {
+            UseUserSettings = true,
+            Enabled = true,
             GeneralTimeout = DefaultTimeout,
         };
 

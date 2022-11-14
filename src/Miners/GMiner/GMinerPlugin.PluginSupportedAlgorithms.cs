@@ -32,9 +32,9 @@ namespace MP.GMiner
                         new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit, Enabled = false },
                         new SAS(AlgorithmType.Autolykos) {Enabled = false},
                         new SAS(AlgorithmType.KHeavyHash) { NonDefaultRAMLimit = (2UL << 29) },
-                        // new SAS(AlgorithmType.CuckooCycle),
+                        new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.ZelHash) { Enabled = false } ,
-                        // new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash) { Enabled = false }
                     }
                 },
@@ -47,9 +47,9 @@ namespace MP.GMiner
                         new SAS(AlgorithmType.KAWPOW) { NonDefaultRAMLimit = KAWPOW_RamLimit , Enabled = false},
                         //new SAS(AlgorithmType.Autolykos),
                         //new SAS(AlgorithmType.KHeavyHash),
-                        // new SAS(AlgorithmType.CuckooCycle),
+                        new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.ZelHash) { Enabled = false },
-                        // new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.GrinCuckatoo32),
                         new SAS(AlgorithmType.ZHash) {Enabled = false }
                     }
                 }
