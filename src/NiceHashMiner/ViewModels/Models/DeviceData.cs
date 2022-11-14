@@ -281,6 +281,7 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 a.ClearSpeeds();
             }
+            ConfigManager.CommitBenchmarksForDevice(Dev);
         }
 
         public void CopySettingsFromAnotherDevice(ComputeDevice source)
@@ -293,6 +294,7 @@ namespace NiceHashMiner.ViewModels.Models
                 algoDestination.SecondaryBenchmarkSpeed = algoSource.SecondaryBenchmarkSpeed;
                 algoDestination.PowerUsage = algoSource.PowerUsage;
             }
+            ConfigManager.CommitBenchmarksForDevice(Dev);
         }
 
         public void EnableBenchmarkedOnly()
