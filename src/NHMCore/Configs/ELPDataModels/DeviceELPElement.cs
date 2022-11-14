@@ -30,6 +30,7 @@ namespace NHMCore.Configs.ELPDataModels
                 {
                     _flag = split[0];
                     _delim = split[1];
+                    if (_delim == "$ws$") _delim = " ";
                     OnPropertyChanged(nameof(FLAG));
                     OnPropertyChanged(nameof(DELIM));
                 }
@@ -38,6 +39,7 @@ namespace NHMCore.Configs.ELPDataModels
         }
         public void SafeSetELP()
         {
+            if(_delim == " ") _delim = "$ws$";
             ELP = $"{_flag} {_delim}";
             OnPropertyChanged(nameof(ELP));
         }
@@ -54,10 +56,14 @@ namespace NHMCore.Configs.ELPDataModels
         private string _delim { get; set; } = string.Empty;
         public string DELIM
         {
-            get { return _delim; }
+            get
+            {
+                if (_delim == "$ws$") _delim = " ";
+                return _delim; 
+            }
             set
             {
-                _delim = value.Trim();
+                _delim = value;
                 OnPropertyChanged(nameof(DELIM));
             }
         }

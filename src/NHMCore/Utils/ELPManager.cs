@@ -262,6 +262,7 @@ namespace NHMCore.Utils
                     {
                         var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
                         if (flagAndDelim.Length != 2) continue;
+                        if (flagAndDelim[1] == "$ws$") flagAndDelim[1] = " ";
                         if (dev.ELPs[i].ELP == String.Empty) continue;
                         oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
                     }
