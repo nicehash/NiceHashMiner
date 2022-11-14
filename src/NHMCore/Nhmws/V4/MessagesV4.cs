@@ -30,9 +30,9 @@ namespace NHMCore.Nhmws.V4
         ActionOcProfileTest,
         ActionFanProfileTest,
         ActionElpProfileTest,
-
-
-
+        ActionElpProfileTestStop,
+        ActionOcProfileTestStop,
+        ActionFanProfileTestStop,
     }
     internal class LoginMessage : ISendMessage
     {
@@ -215,6 +215,19 @@ namespace NHMCore.Nhmws.V4
             ActionMap.ActionList.Add(action);
             return action;
         }
+        public static NhmwsAction ActionOcProfileTestStop()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "OC profile stop test",
+                DisplayGroup = 1,
+                Parameters = new(),
+                ActionType = SupportedAction.ActionOcProfileTestStop,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
         public static NhmwsAction ActionFanProfileTest()
         {
             var action = new NhmwsAction
@@ -244,6 +257,19 @@ namespace NHMCore.Nhmws.V4
             ActionMap.ActionList.Add(action);
             return action;
         }
+        public static NhmwsAction ActionFanProfileTestStop()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Fan profile stop test",
+                DisplayGroup = 1,
+                Parameters = new(),
+                ActionType = SupportedAction.ActionFanProfileTestStop,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
         public static NhmwsAction ActionElpProfileTest()
         {
             var action = new NhmwsAction
@@ -261,6 +287,19 @@ namespace NHMCore.Nhmws.V4
                     }
                 },
                 ActionType= SupportedAction.ActionElpProfileTest,
+            };
+            ActionMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionElpProfileTestStop()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "ELP profile stop test",
+                DisplayGroup = 1,
+                Parameters = new(),
+                ActionType= SupportedAction.ActionElpProfileTestStop,
             };
             ActionMap.ActionList.Add(action);
             return action;
@@ -477,36 +516,36 @@ namespace NHMCore.Nhmws.V4
         public string Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonProperty("oc")]
-        public List<OcBundle> OcBundles { get; set; } = new List<OcBundle>();
-        [JsonProperty("fan")]
-        public List<FanBundle> FanBundles { get; set; } = new List<FanBundle>();
-        [JsonProperty("elp")]
-        public List<ElpBundle> ElpBundles { get; set; } = new List<ElpBundle>();
+        [JsonProperty("oc", NullValueHandling = NullValueHandling.Ignore)]
+        public List<OcBundle>? OcBundles { get; set; }
+        [JsonProperty("fan", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FanBundle>? FanBundles { get; set; }
+        [JsonProperty("elp", NullValueHandling = NullValueHandling.Ignore)]
+        public List<ElpBundle>? ElpBundles { get; set; }
     }
     internal class ElpBundle
     {
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("device_name")]
-        public string DeviceName { get; set; }
-        [JsonProperty("miner_id")]
-        public string MinerId { get; set; }
-        [JsonProperty("algorithm_id")]
+        public List<string>? DeviceName { get; set; }
+        [JsonProperty("miner_id", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string>? MinerId { get; set; }
+        [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
         public string AlgoId { get; set; }
         [JsonProperty("elp")]
         public string Elp { get; set; }
     }
-    internal class OcBundle
+    public class OcBundle
     {
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("device_name")]
         public string DeviceName { get; set; }
-        [JsonProperty("miner_id")]
-        public string? MinerId { get; set; }
-        [JsonProperty("algorithm_id")]
-        public string? AlgoId { get; set; }
+        [JsonProperty("miner_id", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string>? MinerId { get; set; }
+        [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string>? AlgoId { get; set; }
         [JsonProperty("core_clock")]
         public int CoreClock { get; set; }
         [JsonProperty("memory_clock")]
@@ -520,10 +559,10 @@ namespace NHMCore.Nhmws.V4
         public string Name { get; set; }
         [JsonProperty("device_name")]
         public string DeviceName { get; set; }
-        [JsonProperty("miner_id")]
-        public string? MinerId { get; set; }
-        [JsonProperty("algorithm_id")]
-        public string? AlgoId { get; set; }
+        [JsonProperty("miner_id", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string>? MinerId { get; set; }
+        [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string>? AlgoId { get; set; }
         [JsonProperty("type")]
         public int Type { get; set; }
         [JsonProperty("fan_speed")]

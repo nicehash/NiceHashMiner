@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits
     {
         private const int RET_OK = 0;
         public static object _lock = new object();
@@ -293,6 +293,10 @@ namespace NHM.DeviceMonitoring
         public bool SetCoreClock(int coreClock)
         {
             return NVIDIA_MON.nhm_nvidia_device_set_core_clocks(BusID, coreClock) == 0 ? true : false;
+        }
+        public bool SetMemoryClock(int memoryClock)
+        {
+            return NVIDIA_MON.nhm_nvidia_device_set_memory_clocks(BusID, memoryClock) == 0 ? true : false;
         }
         public (bool ok, uint min, uint max, uint def) GetTDPLimits()
         {

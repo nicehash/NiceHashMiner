@@ -329,6 +329,11 @@ namespace NHMCore.Mining
             if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDPSimple(level);
             return false;
         }
+        public bool SetPowerModeManual(int TDP)
+        {
+            if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDPPercentage(TDP);
+            return false;
+        }
         public bool SetCoreClock(int coreClock)
         {
             if(CanSetTDP && DeviceMonitor is ICoreClockSet set) return set.SetCoreClock(coreClock);

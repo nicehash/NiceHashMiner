@@ -5,6 +5,7 @@ using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining;
 using NHMCore.Switching;
 using NHMCore.Utils;
@@ -742,6 +743,19 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task ExecuteProfilesBundleSet(Bundle bundle)
         {
+            //todo check returns!!!
+            if(bundle.OcBundles != null)
+            {
+                ExecuteOCBundles(bundle.OcBundles);
+            }
+            if(bundle.FanBundles != null)
+            {
+                ExecuteFanBundles(bundle.FanBundles);
+            }
+            if(bundle.ElpBundles != null)
+            {
+                ExecuteELPBundles(bundle.ElpBundles);
+            }
             return Task.CompletedTask;
         }
         private static Task ExecuteProfilesBundleReset()
@@ -750,10 +764,30 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task ExecuteOCBundle(OcBundle ocBundle)
         {
+            OCManager.Instance.ClearBundles();
+            OCManager.Instance.AddOCAndApply(ocBundle);
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteOCBundles(List<OcBundle> bundles)
+        {
+            foreach (var bundle in bundles)
+            {
+                //todo check returns
+                ExecuteOCBundle(bundle);
+            }
             return Task.CompletedTask;
         }
         private static Task ExecuteELPBundle(ElpBundle elpBundle)
         {
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteELPBundles(List<ElpBundle> bundles)
+        {
+            foreach (var bundle in bundles)
+            {
+                //todo check returns
+                ExecuteELPBundle(bundle);
+            }
             return Task.CompletedTask;
         }
         private static Task ExecuteFanBundle(FanBundle fanBundle)
@@ -765,6 +799,15 @@ namespace NHMCore.Nhmws.V4
                 2 => ExecuteFanBundleTargetGPUVRAMTemp(fanBundle),
                 _ => throw new RpcException($"Fan bundle type not supported for method '{fanBundle.Type}'", ErrorCode.UnableToHandleRpc),
             };
+            return Task.CompletedTask;
+        }
+        private static Task ExecuteFanBundles(List<FanBundle> bundles)
+        {
+            foreach (var bundle in bundles)
+            {
+                //todo check returns
+                ExecuteFanBundle(bundle);
+            }
             return Task.CompletedTask;
         }
         private static Task ExecuteFanBundleFixed(FanBundle fanBundle)

@@ -450,8 +450,11 @@ namespace NHMCore.Nhmws.V4
                 NhmwsAction.ActionDeviceEnable(),
                 NhmwsAction.ActionDeviceDisable(),
                 NhmwsAction.ActionOcProfileTest(),
+                NhmwsAction.ActionOcProfileTestStop(),
                 NhmwsAction.ActionFanProfileTest(),
+                NhmwsAction.ActionFanProfileTestStop(),
                 NhmwsAction.ActionElpProfileTest(),
+                NhmwsAction.ActionElpProfileTestStop(),
             };
         } 
         private static List<NhmwsAction> CreateDefaultRigActions()
