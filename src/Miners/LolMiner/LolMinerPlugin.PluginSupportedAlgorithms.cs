@@ -18,7 +18,22 @@ namespace LolMiner
                         new SAS(AlgorithmType.GrinCuckatoo31) {Enabled = enabled }
                     };
         }
-
+        internal static List<SAS> SupportedAMDAlgos()
+        {
+            return new List<SAS>
+                    {
+                        new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory},
+                        new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.CuckooCycle),
+                        new SAS(AlgorithmType.ZHash),
+                        new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
+                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
+                        new SAS(AlgorithmType.ZelHash),
+                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
+                    };
+        }
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // fixed fee
@@ -39,9 +54,9 @@ namespace LolMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
@@ -49,24 +64,11 @@ namespace LolMiner
                         new SAS(AlgorithmType.ZelHash),
                         new SAS(AlgorithmType.KHeavyHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
-                        new SAS(AlgorithmType.CuckooCycle),
                     }
                 },
                 {
                     DeviceType.AMD,
-                    new List<SAS>
-                    {
-                        new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory},
-                        new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.ZHash),
-                        new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
-                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
-                        new SAS(AlgorithmType.ZelHash),
-                        new SAS(AlgorithmType.KHeavyHash),
-                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
-                        new SAS(AlgorithmType.CuckooCycle),
-                    }
+                    SupportedAMDAlgos()
                 }
             }
         };
