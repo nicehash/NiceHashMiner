@@ -321,8 +321,8 @@ namespace NHMCore.Mining.Plugins
             {
                 listOfOldDrivers.AddRange(CheckDeviceVersionLimits(dev));
             }
-            if (listOfOldDrivers.Any(d => d.Item1 == DriverVersionLimitType.MinRequired)) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
-            if (listOfOldDrivers.Any(d => d.Item1 == DriverVersionLimitType.ProblematicVersion)) AvailableNotifications.CreateNoOptimalDrivers();
+            if (listOfOldDrivers.Any(d => d.Item3.Item1 == DriverVersionCheckType.DriverVersionObsolete)) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
+            if (listOfOldDrivers.Any(d => d.Item3.Item1 == DriverVersionCheckType.DriverVersionProblematic)) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
         }
 
         private List<(DriverVersionLimitType, BaseDevice, (DriverVersionCheckType, Version))> CheckDeviceVersionLimits(BaseDevice device)

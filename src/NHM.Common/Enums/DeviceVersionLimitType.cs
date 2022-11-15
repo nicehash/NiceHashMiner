@@ -4,6 +4,5 @@
     {
         MinRecommended,
         MinRequired,
-        ProblematicVersion
     }
 }
