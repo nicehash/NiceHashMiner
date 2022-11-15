@@ -10,22 +10,6 @@ namespace LolMiner
         const ulong AMD_8GBMemory = 7UL << 30; // 7GB but really 8GB
         const ulong AMD_6GBMemory = 5UL << 30; // 5GB but really 6GB
         const ulong AMD_3GBMemory = 3UL << 30; // 3GB but really 4GB
-        internal static List<SAS> SupportedAMDAlgos()
-        {
-            return new List<SAS>
-                    {
-                        new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory},
-                        new SAS(AlgorithmType.GrinCuckatoo32),
-                        new SAS(AlgorithmType.ZHash),
-                        new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
-                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
-                        new SAS(AlgorithmType.ZelHash),
-                        new SAS(AlgorithmType.KHeavyHash),
-                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
-                    };
-        }
-
         // NVIDIA OpenCL backend is not really that stable
         internal static List<SAS> SupportedNVIDIAOpenCLAlgos(bool enabled = false)
         {
@@ -65,11 +49,24 @@ namespace LolMiner
                         new SAS(AlgorithmType.ZelHash),
                         new SAS(AlgorithmType.KHeavyHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
+                        new SAS(AlgorithmType.CuckooCycle),
                     }
                 },
                 {
                     DeviceType.AMD,
-                    SupportedAMDAlgos()
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory},
+                        new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.ZHash),
+                        new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
+                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false },
+                        new SAS(AlgorithmType.ZelHash),
+                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false },
+                        new SAS(AlgorithmType.CuckooCycle),
+                    }
                 }
             }
         };

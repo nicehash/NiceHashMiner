@@ -149,6 +149,7 @@ namespace LolMiner
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS == new Version(526, 47)) return (DriverVersionCheckType.DriverVersionProblematic, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS == new Version(526, 86)) return (DriverVersionCheckType.DriverVersionProblematic, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
     }

@@ -30,7 +30,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                         new SAS(AlgorithmType.Autolykos),
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) , Enabled = false },
-                        new SAS(AlgorithmType.CuckooCycle)
+                        new SAS(AlgorithmType.CuckooCycle) {Enabled = false},
                     }
                 },
                 {
@@ -41,7 +41,6 @@ namespace NBMiner
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
                         new SAS(AlgorithmType.Autolykos),
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) , Enabled = false },
-                        new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.Octopus) {NonDefaultRAMLimit = 5UL << 30},
                     }
                 }
