@@ -76,5 +76,6 @@ namespace NHMCore.Utils
         public static string AVHelp => "https://www.nicehash.com/blog/post/how-to-add-nicehash-miner-folder-to-windows-defender-exclusion%253F";
         public static string LargePagesHelp => "https://www.nicehash.com/blog/post/how-to-optimize-cpu-mining-performance-for-monero-random-x?utm_source=NHM&utm_medium=referral&utm_campaign=optimize%20cpu";
         public static string VirtualMemoryHelp => "https://www.nicehash.com/blog/post/how-to-increase-virtual-memory-on-windows?utm_source=NHM&utm_medium=referral&utm_campaign=nicehash%20miner";
+        public static string NoOptimalDrivers => "https://www.nicehash.com/blog/post/psa-nvidia-driver-526-47-issues-when-mining-or-gaming?";
     }
 }

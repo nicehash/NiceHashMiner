@@ -4,6 +4,7 @@
     {
         DriverVersionObsolete = -1,
         DriverVersionOK,
-        DriverCheckNotImplementedForThisDeviceType
+        DriverCheckNotImplementedForThisDeviceType,
+        DriverVersionProblematic
     }
 }

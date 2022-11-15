@@ -22,6 +22,7 @@ namespace NHMCore.Notifications
         ActionVisitMemoryHelp,
         ActionFailedBenchmarksHelp,
         ActionCopyToClipBoard,
+        ActionNoOptimalDrivers,
     }
 
 
@@ -39,6 +40,7 @@ namespace NHMCore.Notifications
             ActionID.ActionVisitMemoryHelp => ActionVisitMemoryHelp(),
             ActionID.ActionFailedBenchmarksHelp => ActionFailedBenchmarksHelp(),
             ActionID.ActionCopyToClipBoard => ActionCopyToClipBoard(uuid),
+            ActionID.ActionNoOptimalDrivers => ActionNoOptimalDrivers(),
             _ => new NotificationAction()
         };
         public static NotificationAction ActionRunAsAdmin()
@@ -155,6 +157,15 @@ namespace NHMCore.Notifications
                 Action = () => { Clipboard.SetText(uuid); },
                 ActionID = ActionID.ActionCopyToClipBoard,
                 Extra = uuid
+            };
+        }
+        public static NotificationAction ActionNoOptimalDrivers()
+        {
+            return new NotificationAction
+            {
+                Info = Tr("Show more"),
+                Action = () => { Helpers.VisitUrlLink(Links.NoOptimalDrivers); },
+                ActionID = ActionID.ActionNoOptimalDrivers
             };
         }
     }
