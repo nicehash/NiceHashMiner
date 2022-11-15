@@ -54,7 +54,12 @@ namespace LolMiner
                 {
                     $"{AlgorithmType.KHeavyHash}",
                     $"--algo KASPA --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
-                }
+                },
+                {
+                    $"{AlgorithmType.CuckooCycle}",
+                    $"--algo C29AE --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
+
             },
             AlgorithmCommandLineSSL = new Dictionary<string, string>
             {
@@ -93,7 +98,11 @@ namespace LolMiner
                 {
                     $"{AlgorithmType.KHeavyHash}",
                     $"--algo KASPA --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
-                }
+                },
+                {
+                    $"{AlgorithmType.CuckooCycle}",
+                    $"--algo C29AE --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
+                },
             }
         };
 

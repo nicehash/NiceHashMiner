@@ -348,9 +348,9 @@ namespace NHMCore.Notifications
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateNoOptimalDrivers()
+        public static void CreateNoOptimalDrivers(Version v)
         {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NoOptimalDrivers, Tr("NVIDIA drivers used are not optimal for mining"), Tr("NVIDIA drivers version 526.47 are known to affect mining stability negatively."));
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NoOptimalDrivers, Tr("NVIDIA drivers used are not optimal for mining"), Tr($"NVIDIA drivers version {v} are known to affect mining stability negatively."));
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.NoOptimalDrivers);
             notification.Action = AvailableActions.ActionNoOptimalDrivers();
             NotificationsManager.Instance.AddNotificationToList(notification);

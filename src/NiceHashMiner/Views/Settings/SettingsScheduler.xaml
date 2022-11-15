@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NiceHashMiner.Views.Settings" xmlns:viewmodels="clr-namespace:NiceHashMiner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainVM}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
     <StackPanel>
         <Label Content="Scheduler" Style="{StaticResource FontsTypography.Heading3/Secondary}" Margin="14,16,0,0"/>
         <local:SettingsCheckBoxItem Enabled="{Binding MiningSettings.UseScheduler}"
@@ -13,7 +13,7 @@
                                         Description="{StaticResource useScheduler}"
                                         Margin="16,16,0,0"/>
         <Label Content="Schedule Slots" Style="{StaticResource FontsTypography.Heading3/Secondary}" Margin="14,46,0,0"/>
-        <TextBlock Text="No slots yet." Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" Margin="16,14,0,0" Visibility="{Binding Schedules.Count, Converter={StaticResource NumberToVisibilityConverterZero}}"/>
+        <Label Content="No slots yet." FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" Margin="16,14,0,0" Visibility="{Binding Schedules.Count, Converter={StaticResource NumberToVisibilityConverterZero}}"/>
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="16,0,0,0">
             <ItemsControl ItemsSource="{Binding Schedules}">
                 <ItemsControl.ItemTemplate>
@@ -27,7 +27,7 @@
         <StackPanel Margin="16,26,0,0">
             <WrapPanel Orientation="Horizontal" Margin="0,0,0,0">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="From" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
+                    <Label Content="From" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}"/>
                     <TextBox x:Name="textBoxSchedulerFrom" Style="{StaticResource smallInputBox}" 
                              Text="hh:mm" Margin="0,0,24,0" 
                              GotKeyboardFocus="textBoxSchedulerFrom_GotKeyboardFocus" 
@@ -38,7 +38,7 @@
                 </StackPanel>
                 <Line X1="0" Y1="38" X2="22" Y2="38" Stroke="{StaticResource Brushes.Light.Grey.Grey1}" StrokeThickness="1" />
                 <StackPanel Orientation="Vertical" Margin="24,0,0,0">
-                    <TextBlock Text="To" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"></TextBlock>
+                    <Label Content="To" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}"></Label>
                     <TextBox x:Name="textBoxSchedulerTo" Style="{StaticResource smallInputBox}" 
                              Text="hh:mm" Margin="0,0,24,0" 
                              GotKeyboardFocus="textBoxSchedulerTo_GotKeyboardFocus" 
@@ -48,7 +48,7 @@
                              TextChanged="textBoxSchedulerTo_TextChanged"/>
                 </StackPanel>
             </WrapPanel>
-            <TextBlock Text="Days" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,16,16,8"/>
+            <Label Content="Days" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,16,16,8"/>
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="cboxMon" Style="{StaticResource NHMCheckBox}" Content="Mon" Width="50"/>
                 <CheckBox x:Name="cboxTue" Style="{StaticResource NHMCheckBox}" Content="Tue" Width="50" Margin="19,0,0,0"/>

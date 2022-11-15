@@ -10,12 +10,21 @@ namespace LolMiner
         const ulong AMD_8GBMemory = 7UL << 30; // 7GB but really 8GB
         const ulong AMD_6GBMemory = 5UL << 30; // 5GB but really 6GB
         const ulong AMD_3GBMemory = 3UL << 30; // 3GB but really 4GB
+        // NVIDIA OpenCL backend is not really that stable
+        internal static List<SAS> SupportedNVIDIAOpenCLAlgos(bool enabled = false)
+        {
+            return new List<SAS>
+                    {
+                        new SAS(AlgorithmType.GrinCuckatoo31) {Enabled = enabled }
+                    };
+        }
         internal static List<SAS> SupportedAMDAlgos()
         {
             return new List<SAS>
                     {
                         new SAS(AlgorithmType.GrinCuckatoo31) { NonDefaultRAMLimit = AMD_8GBMemory},
                         new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.BeamV3) { NonDefaultRAMLimit = AMD_3GBMemory },
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
@@ -25,16 +34,6 @@ namespace LolMiner
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
                     };
         }
-
-        // NVIDIA OpenCL backend is not really that stable
-        internal static List<SAS> SupportedNVIDIAOpenCLAlgos(bool enabled = false)
-        {
-            return new List<SAS>
-                    {
-                        new SAS(AlgorithmType.GrinCuckatoo31) {Enabled = enabled }
-                    };
-        }
-
         protected override PluginSupportedAlgorithmsSettings DefaultPluginSupportedAlgorithmsSettings => new PluginSupportedAlgorithmsSettings
         {
             // fixed fee
@@ -55,9 +54,9 @@ namespace LolMiner
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-
                         new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.GrinCuckatoo32),
+                        new SAS(AlgorithmType.CuckooCycle),
                         new SAS(AlgorithmType.ZHash),
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false },
