@@ -288,7 +288,7 @@ namespace NHMCore.Nhmws.V4
                         { "name", d.Name },
                         { "optional", GetStaticPropertiesOptionalValues(d) },
                     },
-                    Actions = CreateDefaultDeviceActions(),
+                    Actions = CreateDefaultDeviceActions(d.B64Uuid),
                     OptionalDynamicProperties = DeviceOptionalDynamicToList(GetDeviceOptionalDynamic(d, true).properties),
                     OptionalMutableProperties = GetDeviceOptionalMutable(d).properties,
                 };
@@ -443,18 +443,18 @@ namespace NHMCore.Nhmws.V4
                 Devices = devices.Select(toDeviceState).ToList(),
             };
         }
-        private static List<NhmwsAction> CreateDefaultDeviceActions()
+        private static List<NhmwsAction> CreateDefaultDeviceActions(string uuid)
         {
             return new List<NhmwsAction>
             {
-                NhmwsAction.ActionDeviceEnable(),
-                NhmwsAction.ActionDeviceDisable(),
-                NhmwsAction.ActionOcProfileTest(),
-                NhmwsAction.ActionOcProfileTestStop(),
-                NhmwsAction.ActionFanProfileTest(),
-                NhmwsAction.ActionFanProfileTestStop(),
-                NhmwsAction.ActionElpProfileTest(),
-                NhmwsAction.ActionElpProfileTestStop(),
+                NhmwsAction.ActionDeviceEnable(uuid),
+                NhmwsAction.ActionDeviceDisable(uuid),
+                NhmwsAction.ActionOcProfileTest(uuid),
+                NhmwsAction.ActionOcProfileTestStop(uuid),
+                NhmwsAction.ActionFanProfileTest(uuid),
+                NhmwsAction.ActionFanProfileTestStop(uuid),
+                NhmwsAction.ActionElpProfileTest(uuid),
+                NhmwsAction.ActionElpProfileTestStop(uuid),
             };
         } 
         private static List<NhmwsAction> CreateDefaultRigActions()

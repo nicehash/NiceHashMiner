@@ -18,6 +18,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
+using Windows.Media.PlayTo;
+using Logger = NHM.Common.Logger;
 // static imports
 using NHLog = NHM.Common.Logger;
 
@@ -65,7 +67,7 @@ namespace NHMCore.Nhmws.V4
             CLOSE_WEBSOCKET = 0,
             SEND_MESSAGE_STATUS,
         }
-
+        private static readonly string _TAG = "NHWebSocketV4";
         static private bool _isNhmwsRestart = false;
 
         static private bool IsWsAlive => _webSocket?.ReadyState == WebSocketState.Open;
@@ -596,7 +598,7 @@ namespace NHMCore.Nhmws.V4
         #endregion Stop
 
         #region Actions
-    
+
         #endregion Actions
 
         private static Task<bool> SetPowerMode(string device, TDPSimpleType level)
@@ -688,17 +690,19 @@ namespace NHMCore.Nhmws.V4
                 return Task.FromResult(string.Empty);
             }
             //var typeOfParams = 
-            foreach(var param in action.Parameters)
+            var ret = string.Empty;
+            foreach (var param in action.Parameters)
             {
-                ParseAndCallAction(actionRecord.ActionType, param);
+                ret += ParseAndCallAction(action.DeviceId, action.Id, actionRecord.ActionType, param).Result;
             }
             //some switch to determine command
             //handle each param in request
             //return result
-            return Task.FromResult("");
+            return Task.FromResult(ret);
         }
-        private static Task ParseAndCallAction(SupportedAction typeOfAction, string parameters)
+        private static Task<string> ParseAndCallAction(string deviceUUID, int messageID, SupportedAction typeOfAction, string parameters)
         {
+            var result = string.Empty;
             switch (typeOfAction)
             {
                 case SupportedAction.ActionStartMining:
@@ -721,38 +725,43 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionOcProfileTest:
-                    object jobjectOc = JsonConvert.DeserializeObject(parameters);
-                    if (jobjectOc is not JObject jsonObjOC) break;
-                    if (jsonObjOC.ToObject<OcBundle>() is OcBundle ob) ExecuteOCBundle(ob);
+                    var oc = JsonConvert.DeserializeObject<OcBundle>(parameters);
+                    result = ExecuteOCTest(deviceUUID, oc).Result;
+                    break;
+                case SupportedAction.ActionOcProfileTestStop:
                     break;
                 case SupportedAction.ActionFanProfileTest:
                     object jobjectFan = JsonConvert.DeserializeObject(parameters);
                     if (jobjectFan is not JObject jsonObjFan) break;
                     if (jsonObjFan.ToObject<FanBundle>() is FanBundle fb) ExecuteFanBundle(fb);
                     break;
+                case SupportedAction.ActionFanProfileTestStop:
+                    break;
                 case SupportedAction.ActionElpProfileTest:
                     object jobjectELP = JsonConvert.DeserializeObject(parameters);
                     if (jobjectELP is not JObject jsonObjELP) break;
                     if (jsonObjELP.ToObject<ElpBundle>() is ElpBundle eb) ExecuteELPBundle(eb);
                     break;
+                case SupportedAction.ActionElpProfileTestStop:
+                    break;
                 default:
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
                     break;
             }
-            return Task.CompletedTask;
+            return Task.FromResult(result);
         }
         private static Task ExecuteProfilesBundleSet(Bundle bundle)
         {
             //todo check returns!!!
-            if(bundle.OcBundles != null)
+            if (bundle.OcBundles != null)
             {
-                ExecuteOCBundles(bundle.OcBundles);
+                ApplyOCBundle(bundle.OcBundles);
             }
-            if(bundle.FanBundles != null)
+            if (bundle.FanBundles != null)
             {
                 ExecuteFanBundles(bundle.FanBundles);
             }
-            if(bundle.ElpBundles != null)
+            if (bundle.ElpBundles != null)
             {
                 ExecuteELPBundles(bundle.ElpBundles);
             }
@@ -762,20 +771,15 @@ namespace NHMCore.Nhmws.V4
         {
             return Task.CompletedTask;
         }
-        private static Task ExecuteOCBundle(OcBundle ocBundle)
+        private static Task<string> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
         {
-            OCManager.Instance.ClearBundles();
-            OCManager.Instance.AddOCAndApply(ocBundle);
-            return Task.CompletedTask;
+            var res = OCManager.Instance.ExecuteTest(deviceUUID, ocBundle);
+            return Task.FromResult(res.Result);
         }
-        private static Task ExecuteOCBundles(List<OcBundle> bundles)
+        private static Task ApplyOCBundle(List<OcBundle> bundles)
         {
-            foreach (var bundle in bundles)
-            {
-                //todo check returns
-                ExecuteOCBundle(bundle);
-            }
-            return Task.CompletedTask;
+            var ret = OCManager.Instance.ApplyOcBundle(bundles);
+            return ret;
         }
         private static Task ExecuteELPBundle(ElpBundle elpBundle)
         {

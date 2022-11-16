@@ -170,7 +170,8 @@ namespace NHMCore.Nhmws.V4
         public SupportedAction ActionType { get; set; }
         [JsonIgnore]
         public Func<object, Task<object>> ExecuteTask { get; set; }
-        public static NhmwsAction ActionDeviceEnable()
+        public string DeviceUUID = String.Empty;
+        public static NhmwsAction ActionDeviceEnable(string uuid)
         {
             var action = new NhmwsAction
             {
@@ -178,11 +179,12 @@ namespace NHMCore.Nhmws.V4
                 DisplayName = "Device enable",
                 DisplayGroup = 0,
                 ActionType = SupportedAction.ActionDeviceEnable,
+                DeviceUUID = uuid
             };
             ActionMap.ActionList.Add(action);
             return action;
         }
-        public static NhmwsAction ActionDeviceDisable()
+        public static NhmwsAction ActionDeviceDisable(string uuid)
         {
             var action = new NhmwsAction
             {
@@ -190,11 +192,12 @@ namespace NHMCore.Nhmws.V4
                 DisplayName = "Device disable",
                 DisplayGroup = 0,
                 ActionType = SupportedAction.ActionDeviceDisable,
+                DeviceUUID = uuid
             };
             ActionMap.ActionList.Add(action);
             return action;
         }
-        public static NhmwsAction ActionOcProfileTest()
+        public static NhmwsAction ActionOcProfileTest(string uuid)
         {
             var action = new NhmwsAction
             {
@@ -211,11 +214,12 @@ namespace NHMCore.Nhmws.V4
                     }
                 },
                 ActionType = SupportedAction.ActionOcProfileTest,
+                DeviceUUID = uuid
             };
             ActionMap.ActionList.Add(action);
             return action;
         }
-        public static NhmwsAction ActionOcProfileTestStop()
+        public static NhmwsAction ActionOcProfileTestStop(string uuid)
         {
             var action = new NhmwsAction
             {
@@ -224,11 +228,12 @@ namespace NHMCore.Nhmws.V4
                 DisplayGroup = 1,
                 Parameters = new(),
                 ActionType = SupportedAction.ActionOcProfileTestStop,
+                DeviceUUID = uuid
             };
             ActionMap.ActionList.Add(action);
             return action;
         }
-        public static NhmwsAction ActionFanProfileTest()
+        public static NhmwsAction ActionFanProfileTest(string uuid)
         {
             var action = new NhmwsAction
             {
@@ -253,11 +258,12 @@ namespace NHMCore.Nhmws.V4
                     return 0;
                 },
                 ActionType = SupportedAction.ActionFanProfileTest,
+                DeviceUUID = uuid
             };
             ActionMap.ActionList.Add(action);
             return action;
         }
-        public static NhmwsAction ActionFanProfileTestStop()
+        public static NhmwsAction ActionFanProfileTestStop(string uuid)
         {
             var action = new NhmwsAction
             {
@@ -266,11 +272,12 @@ namespace NHMCore.Nhmws.V4
                 DisplayGroup = 1,
                 Parameters = new(),
                 ActionType = SupportedAction.ActionFanProfileTestStop,
+                DeviceUUID = uuid
             };
             ActionMap.ActionList.Add(action);
             return action;
         }
-        public static NhmwsAction ActionElpProfileTest()
+        public static NhmwsAction ActionElpProfileTest(string uuid)
         {
             var action = new NhmwsAction
             {
@@ -287,11 +294,12 @@ namespace NHMCore.Nhmws.V4
                     }
                 },
                 ActionType= SupportedAction.ActionElpProfileTest,
+                DeviceUUID = uuid
             };
             ActionMap.ActionList.Add(action);
             return action;
         }
-        public static NhmwsAction ActionElpProfileTestStop()
+        public static NhmwsAction ActionElpProfileTestStop(string uuid)
         {
             var action = new NhmwsAction
             {
@@ -300,6 +308,7 @@ namespace NHMCore.Nhmws.V4
                 DisplayGroup = 1,
                 Parameters = new(),
                 ActionType= SupportedAction.ActionElpProfileTestStop,
+                DeviceUUID = uuid
             };
             ActionMap.ActionList.Add(action);
             return action;
