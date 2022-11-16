@@ -94,7 +94,7 @@ namespace NiceHashMiner.Views.Settings
         private void ValidateInternalBTCAddress()
         {
             var trimmedBtcText = textBoxBTCAddress.Text.Trim();
-            if (!CredentialValidators.ValidateInternalBitcoinAddress(trimmedBtcText))
+            if (!CredentialValidators.ValidateInternalBitcoinAddress(trimmedBtcText) && invalidBTCAddressWarningIcon != null && externalAddressHelp != null)
             {
                 invalidBTCAddressWarningIcon.Visibility = Visibility.Visible;
                 externalAddressHelp.Visibility = Visibility.Visible;
