@@ -11,5 +11,6 @@ namespace NHM.Common.Enums
         Pending,
         Disabled,
         Gaming,
+        Testing,
     }
 }

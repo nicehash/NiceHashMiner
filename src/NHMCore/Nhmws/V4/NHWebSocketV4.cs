@@ -681,27 +681,26 @@ namespace NHMCore.Nhmws.V4
                 _ => throw new RpcException($"RpcMessage MinerReset operation not supported for level '{level}'", ErrorCode.UnableToHandleRpc),
             };
         }
-        private static Task<string> CallAction(MinerCallAction action)
+        private static Task<(ErrorCode err, string msg)> CallAction(MinerCallAction action)
         {
             var actionRecord = ActionMap.ActionList.Where(a => a.ActionID == action.ActionId).FirstOrDefault();
             if (actionRecord == null)
             {
                 NHM.Common.Logger.Error("NHWebSocketV4", "Action not found");
-                return Task.FromResult(string.Empty);
+                return Task.FromResult((ErrorCode.ActionNotFound, "Action not found"));
             }
-            //var typeOfParams = 
-            var ret = string.Empty;
-            foreach (var param in action.Parameters)
+            //action has single parameter anyway FOR NOW
+            //in the future return multiple actions success/partial/failiure
+            var ret = (ErrorCode.NoError, string.Empty);
+            foreach (var param in action.Parameters) 
             {
-                ret += ParseAndCallAction(action.DeviceId, action.Id, actionRecord.ActionType, param).Result;
+                ret = ParseAndCallAction(action.DeviceId, action.Id, actionRecord.ActionType, param).Result;
             }
-            //some switch to determine command
-            //handle each param in request
-            //return result
             return Task.FromResult(ret);
         }
-        private static Task<string> ParseAndCallAction(string deviceUUID, int messageID, SupportedAction typeOfAction, string parameters)
+        private static Task<(ErrorCode err, string msg)> ParseAndCallAction(string deviceUUID, int messageID, SupportedAction typeOfAction, string parameters)
         {
+            ErrorCode err = ErrorCode.NoError;
             var result = string.Empty;
             switch (typeOfAction)
             {
@@ -726,7 +725,7 @@ namespace NHMCore.Nhmws.V4
                     break;
                 case SupportedAction.ActionOcProfileTest:
                     var oc = JsonConvert.DeserializeObject<OcBundle>(parameters);
-                    result = ExecuteOCTest(deviceUUID, oc).Result;
+                    (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
                     break;
@@ -748,7 +747,7 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
                     break;
             }
-            return Task.FromResult(result);
+            return Task.FromResult((err, result));
         }
         private static Task ExecuteProfilesBundleSet(Bundle bundle)
         {
@@ -771,7 +770,7 @@ namespace NHMCore.Nhmws.V4
         {
             return Task.CompletedTask;
         }
-        private static Task<string> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
+        private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
         {
             var res = OCManager.Instance.ExecuteTest(deviceUUID, ocBundle);
             return Task.FromResult(res.Result);
@@ -832,7 +831,6 @@ namespace NHMCore.Nhmws.V4
             return Task.FromResult("");
         }
         #endregion RpcMessages
-
         static private async Task HandleRpcMessage(IReceiveRpcMessage rpcMsg)
         {
             bool success = false;
@@ -856,14 +854,25 @@ namespace NHMCore.Nhmws.V4
                     MiningStop m => await StopMining(m.Device),
                     MiningSetPowerMode m => await SetPowerMode(m.Device, (TDPSimpleType)m.PowerMode),
                     MinerReset m => await MinerReset(m.Level), // rpcAnswer
-                    MinerCallAction m => await CallAction(m), // call decision from here!!!
+                    MinerCallAction m => await CallAction(m), // call decision from here!!! //
                     MinerSetMutable m => await SetMutable(m),
                     _ => throw new RpcException($"RpcMessage operation not supported for method '{rpcMsg.Method}'", ErrorCode.UnableToHandleRpc),
                 };
-
-                string rpcAnswer = t is string rpcAnws ? rpcAnws : null;
-                if (t is bool ok) success = ok;
-                executedCall = new ExecutedCall(rpcMsg.Id, 0, rpcAnswer);
+                if (t is bool ok)
+                {
+                    success = ok;
+                    executedCall = new ExecutedCall(rpcMsg.Id, 0, string.Empty);
+                }
+                else if (t is (ErrorCode err, string msg))
+                {
+                    success = err == ErrorCode.NoError ? true : false;
+                    executedCall = new ExecutedCall(rpcMsg.Id, (int)err, msg);
+                }
+                else if (t is string answer)
+                {
+                    executedCall = new ExecutedCall(rpcMsg.Id, 0, answer);
+                }
+                else executedCall = new ExecutedCall(rpcMsg.Id, -1, "Failed to execute!");
             }
             catch (RpcException rpcEx)
             {

@@ -1,6 +1,9 @@
-﻿using NHM.Common;
+﻿//using log4net.Core;
+using NHM.Common;
+using NHM.Common.Enums;
 using NHMCore.ApplicationState;
 using NHMCore.Mining;
+using NHMCore.Nhmws;
 using NHMCore.Nhmws.V4;
 using System;
 using System.Collections.Generic;
@@ -28,36 +31,40 @@ namespace NHMCore.Configs.Managers
 
         private Task<OcReturn> SetOcForDevice(AlgorithmContainer container, OcBundle bundle)
         {
-            var setCC = bundle.CoreClock == 0 ? container.ComputeDevice.SetCoreClock(bundle.CoreClock) : false;
+            var setCC = bundle.CoreClock != 0 ? container.ComputeDevice.SetCoreClock(bundle.CoreClock) : true;
             Logger.Warn(_TAG, $"Setting core clock for device {container.ComputeDevice.Name} success: {setCC}");
-            var setMC = bundle.MemoryClock == 0 ? container.ComputeDevice.SetMemoryClock(bundle.MemoryClock) : false;
+            var setMC = bundle.MemoryClock != 0 ? container.ComputeDevice.SetMemoryClock(bundle.MemoryClock) : true;
             Logger.Warn(_TAG, $"Setting memory clock for device {container.ComputeDevice.Name} success: {setMC}");
-            var setTDP = bundle.TDP == 0 ? container.ComputeDevice.SetPowerModeManual(bundle.TDP) : false;
+            var setTDP = bundle.TDP != 0 ? container.ComputeDevice.SetPowerModeManual(bundle.TDP) : true;
             Logger.Warn(_TAG, $"Setting TDP for device {container.ComputeDevice.Name} success: {setTDP}");
-            if (setCC && setMC && setTDP) return Task.FromResult(OcReturn.Success);
-            if (!setCC && !setMC && !setTDP) return Task.FromResult(OcReturn.Fail);
-            return Task.FromResult(OcReturn.PartialSuccess);
+            var ret = OcReturn.Success;
+            if (setCC && setMC && setTDP) ret = OcReturn.Success;
+            else if (!setCC && !setMC && !setTDP) ret = OcReturn.Fail;
+            else ret = OcReturn.PartialSuccess;
+            if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess) container.ComputeDevice.State = DeviceState.Testing;
+            return Task.FromResult(ret);
         }
 
 
         //todo cleanup for many different tests if they come one after another
-        public Task<string> ExecuteTest(string uuid, OcBundle bundle)
+        //clear first?
+        public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, OcBundle bundle)
         {
             _testOcBundles.Add(bundle);
-            if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult("No devices running");
+            if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices running"));
             var allContainers = AvailableDevices.Devices
                 .Where(d => d.B64Uuid == uuid)?
                 .Where(d => d.State == NHM.Common.Enums.DeviceState.Mining || d.State == NHM.Common.Enums.DeviceState.Benchmarking)?
                 .Where(d => d.Name == bundle.DeviceName)?
                 .SelectMany(d => d.AlgorithmSettings);
             //var MiningState = AvailableDevices.Devices.Where(d => d.Name == bundle.DeviceName)?.SelectMany(d => d.AlgorithmSettings); //for testing
-            if (allContainers == null || !allContainers.Any()) return Task.FromResult("Action target mismatch");
+            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found"));
             if (bundle.AlgoId != null && bundle.MinerId != null) allContainers = allContainers.Where(d => 
                                                                                         bundle.AlgoId.Contains(d.AlgorithmName) && 
                                                                                         bundle.MinerId.Contains(d.PluginName));
             else if (bundle.AlgoId != null) allContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName));
             else if (bundle.MinerId != null) allContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName));
-            if (allContainers == null || !allContainers.Any()) return Task.FromResult("Action target mismatch, containers null");
+            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
             var distinctDevs = allContainers.DistinctBy(d => d.ComputeDevice.Uuid);
             Logger.Info(_TAG, "Applying OC Test for following containers:");
             List<OcReturn> success = new();
@@ -67,12 +74,12 @@ namespace NHMCore.Configs.Managers
                 var ret = SetOcForDevice(container, bundle);
                 if (ret.IsCompleted) success.Add(ret.Result);
             }
-            if (success.All(s => s == OcReturn.Success)) return Task.FromResult("Successfully executed test");
-            if (success.All(s => s == OcReturn.Fail)) return Task.FromResult("Failed to execute all tests");
-            return Task.FromResult("Partially executed tests");
+            if (success.All(s => s == OcReturn.Success)) return Task.FromResult((ErrorCode.NoError, "Successfully applied test"));
+            if (success.All(s => s == OcReturn.Fail)) return Task.FromResult((ErrorCode.TestApplyTotalFail, "Failed to apply test")); 
+            return Task.FromResult((ErrorCode.TestApplyPartialPartial, "Partially applied test"));
         }
         //clear first????
-        public Task ApplyOcBundle(List<OcBundle> bundles) //tdp is null? can a value be missing??????
+        public Task ApplyOcBundle(List<OcBundle> bundles)
         {
             _ocBundles.AddRange(bundles);
             List<AlgorithmContainer> processed = new();

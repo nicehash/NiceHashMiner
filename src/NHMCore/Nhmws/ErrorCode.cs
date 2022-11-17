@@ -1,7 +1,7 @@
 ﻿
 namespace NHMCore.Nhmws
 {
-    enum ErrorCode : int
+    public enum ErrorCode : int
     {
         NoError = 0,
         DisabledDevice = -7,
@@ -12,5 +12,13 @@ namespace NHMCore.Nhmws
         NonExistentDevice = -2,
         RedundantRpc = -1,
         InternalNhmError = 1,
+
+        ActionNotFound = -100,
+        ErrNoDeviceRunning = -101,
+        TargetDeviceNotFound = -102,
+        TestApplyPartialPartial = -103,
+        TestApplyTotalFail = -104,
+
+
     }
 }
