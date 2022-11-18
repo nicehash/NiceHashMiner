@@ -107,7 +107,7 @@ namespace NHMCore.ApplicationState
             // DeviceState Counts
             StoppedDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Stopped);
 #if NHMWS4
-            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming);
+            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming || dev.State == DeviceState.Testing);
 #else
             MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining);
 #endif

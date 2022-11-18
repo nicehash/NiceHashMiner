@@ -85,7 +85,11 @@ namespace NHMCore
         public static async Task<(bool stopped, string failReason)> StopAllDevicesTask()
         {
             // TODO when starting and stopping we are not taking Pending and Error states into account
+#if NHMWS4
+            var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Testing);
+#else
             var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
+#endif
             if (devicesToStop.Count() == 0)
             {
                 return (false, "No new devices to stop");
@@ -119,6 +123,9 @@ namespace NHMCore
                     return (false, $"Device {device.Uuid} already stopped");
                 case DeviceState.Mining:
                 case DeviceState.Benchmarking:
+#if NHMWS4
+                case DeviceState.Testing:
+#endif
                     await MiningManager.StopDevice(device);
                     return (true, "");
                 default:
@@ -157,14 +164,17 @@ namespace NHMCore
             return Task.WhenAll(stoptDevices);
         }
 
-        #region Updater mining state save/restore
+#region Updater mining state save/restore
         private static string _miningStateFilePath => Paths.InternalsPath("DeviceRestoreStates.json");
         private struct DeviceRestoreState
         {
             public bool IsStarted { get; set; }
             public DeviceState LastState { get; set; }
-
+#if NHMWS4
+            public bool ShouldStart() => IsStarted || LastState == DeviceState.Benchmarking || LastState == DeviceState.Mining || LastState == DeviceState.Testing;
+#else
             public bool ShouldStart() => IsStarted || LastState == DeviceState.Benchmarking || LastState == DeviceState.Mining;
+#endif
         }
         internal static void SaveMiningState()
         {
@@ -207,6 +217,6 @@ namespace NHMCore
             await Task.WhenAll(startTasks);
         }
 
-        #endregion Update state push/pop
+#endregion Update state push/pop
     }
 }

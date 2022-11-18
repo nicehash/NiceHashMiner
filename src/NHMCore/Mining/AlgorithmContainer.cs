@@ -77,7 +77,11 @@ namespace NHMCore.Mining
         {
             if (nameof(NHMCore.Mining.ComputeDevice.State) == e.PropertyName)
             {
+#if NHMWS4
+                var miningOrBenchmarking = ComputeDevice.State == DeviceState.Benchmarking || ComputeDevice.State == DeviceState.Mining || ComputeDevice.State == DeviceState.Testing;
+#else
                 var miningOrBenchmarking = ComputeDevice.State == DeviceState.Benchmarking || ComputeDevice.State == DeviceState.Mining;
+#endif
                 IsUserEditable = !miningOrBenchmarking;
                 OnPropertyChanged(nameof(IsUserEditable));
             }
@@ -121,7 +125,7 @@ namespace NHMCore.Mining
             }
         }
 
-        #region Identity
+#region Identity
 
         /// <summary>
         /// Friendly display name for this algorithm
@@ -139,10 +143,10 @@ namespace NHMCore.Mining
 
         public string MinerUUID => Algorithm?.MinerID;
         public bool IsDual => Algorithm.IDs.Count > 1;
-        #endregion
+#endregion
 
 
-        #region Mining settings
+#region Mining settings
 
         /// <summary>
         /// Hashrate in H/s set by benchmark or user
@@ -258,11 +262,11 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
         }
 
-        #endregion
+#endregion
 
-        #region Profitability
+#region Profitability
 
-        #region EstimatedProfit NOT FOR SWITCHING
+#region EstimatedProfit NOT FOR SWITCHING
 
 
         internal void UpdateEstimatedProfit(Dictionary<AlgorithmType, double> profits)
@@ -349,9 +353,9 @@ namespace NHMCore.Mining
             }
         }
 
-        #endregion EstimatedProfit NOT FOR SWITCHING
+#endregion EstimatedProfit NOT FOR SWITCHING
 
-        #region NormalizedProfit FOR SWITCHING
+#region NormalizedProfit FOR SWITCHING
         // TODO with this implementation WE ONLY SUPPORT dual algorithms
         /// <summary>
         /// Gets the averaged speed for this algorithm in H/s
@@ -370,7 +374,7 @@ namespace NHMCore.Mining
 
 
 
-        #endregion NormalizedProfit FOR SWITCHING
+#endregion NormalizedProfit FOR SWITCHING
 
 
 
@@ -394,7 +398,7 @@ namespace NHMCore.Mining
             }
         }
 
-        #endregion
+#endregion
 
         private bool _isReBenchmark = false;
         public bool IsReBenchmark
@@ -422,7 +426,7 @@ namespace NHMCore.Mining
 
 
 
-        #region Benchmark info
+#region Benchmark info
 
         private bool _benchmarkPending;
         public bool IsBenchmarkPending
@@ -471,9 +475,9 @@ namespace NHMCore.Mining
 
  
 
-        #endregion
+#endregion
 
-        #region Benchmark methods
+#region Benchmark methods
 
         public void SetBenchmarkPending()
         {
@@ -491,9 +495,9 @@ namespace NHMCore.Mining
             BenchmarkErrorMessage = message;
         }
 
-        #endregion
+#endregion
 
-        #region Profitability methods
+#region Profitability methods
 
         public virtual void UpdateCurrentNormalizedProfit(Dictionary<AlgorithmType, double> profits)
         {
@@ -526,6 +530,6 @@ namespace NHMCore.Mining
             NotifyPowerChanged();
         }
 
-        #endregion
+#endregion
     }
 }

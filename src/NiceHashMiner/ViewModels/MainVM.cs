@@ -129,10 +129,12 @@ namespace NiceHashMiner.ViewModels
         /// Elements of <see cref="MiningDevs"/> that represent actual devices (i.e. not total rows) and
         /// are in the mining state.
         /// </summary>
-        private IEnumerable<MiningData> WorkingMiningDevs =>
-            MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining);
 
-
+#if NHMWS4
+        private IEnumerable<MiningData> WorkingMiningDevs => MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining || d.Dev.State == DeviceState.Testing);
+#else
+        private IEnumerable<MiningData> WorkingMiningDevs => MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining);
+#endif
 
         #region settingsLists
 
@@ -142,14 +144,14 @@ namespace NiceHashMiner.ViewModels
         public IReadOnlyList<string> ThemeOptions => _themeList;
         private List<string> _themeList = new List<string> { "Light", "Dark" };
 
-        #endregion settingsLists
+#endregion settingsLists
 
 
         public string PerDeviceDisplayString => $"/ {_devices?.Count() ?? 0}";
 
         public DashboardViewModel Dashboard { get; } = new DashboardViewModel();
 
-        #region Exposed settings
+#region Exposed settings
         public BalanceAndExchangeRates BalanceAndExchangeRates => BalanceAndExchangeRates.Instance;
         public MiningState MiningState => MiningState.Instance;
         public CredentialsSettings CredentialsSettings => CredentialsSettings.Instance;
@@ -171,10 +173,10 @@ namespace NiceHashMiner.ViewModels
         public GPUProfileManager GPUProfileManager => GPUProfileManager.Instance;
         public SchedulesManager SchedulesManager => SchedulesManager.Instance;
         public ELPManager ELPManager => ELPManager.Instance;
-        #endregion Exposed settings
+#endregion Exposed settings
 
 
-        #region HelpNotifications
+#region HelpNotifications
         private ObservableCollection<Notification> _helpNotificationList;
         public ObservableCollection<Notification> HelpNotificationList
         {
@@ -196,13 +198,13 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        #endregion HelpNotifications
+#endregion HelpNotifications
 
         // TODO these versions here will not work
         public string LocalVersion => VersionState.Instance.ProgramVersion.ToString();
         public string OnlineVersion => VersionState.Instance.OnlineVersion?.ToString() ?? "N/A";
 
-        #region Currency-related properties
+#region Currency-related properties
 
         // TODO this section getting rather large, maybe good idea to break out into own class
 
@@ -256,9 +258,9 @@ namespace NiceHashMiner.ViewModels
         public string MinimumProfitString => $"Minimum Profit ({BalanceAndExchangeRates.Instance.SelectedFiatCurrency}/day)";
 
 
-        #endregion
+#endregion
 
-        #region MinerPlugins
+#region MinerPlugins
         private ObservableCollection<PluginEntryVM> _plugins;
         public ObservableCollection<PluginEntryVM> Plugins
         {
@@ -316,7 +318,7 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-        #endregion MinerPlugins
+#endregion MinerPlugins
 
 
         public BenchmarkViewModel BenchmarkSettings { get; } = new BenchmarkViewModel();

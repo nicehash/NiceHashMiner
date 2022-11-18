@@ -749,7 +749,11 @@ namespace NHMCore.Mining
 
             if (shouldStop && _runningMiners.Any())
             {
+#if NHMWS4
+                var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Testing );
+#else
                 var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
+#endif
                 foreach (var dev in devicesToStop) await StopDevice(dev);
                 await StopAllMinersTask();
             }

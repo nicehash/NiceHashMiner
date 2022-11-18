@@ -694,7 +694,11 @@ namespace NHMCore.Nhmws.V4
             var ret = (ErrorCode.NoError, string.Empty);
             foreach (var param in action.Parameters) 
             {
-                ret = ParseAndCallAction(action.DeviceId, action.Id, actionRecord.ActionType, param).Result;
+                ret = ParseAndCallAction(actionRecord.DeviceUUID, action.Id, actionRecord.ActionType, param).Result;
+            }
+            if (!action.Parameters.Any())
+            {
+                ret = ParseAndCallAction(actionRecord.DeviceUUID, action.Id, actionRecord.ActionType, string.Empty).Result;
             }
             return Task.FromResult(ret);
         }
@@ -773,6 +777,11 @@ namespace NHMCore.Nhmws.V4
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
         {
             var res = OCManager.Instance.ExecuteTest(deviceUUID, ocBundle);
+            return Task.FromResult(res.Result);
+        }
+        private static Task<(ErrorCode err, string msg)> StopOCTestForDevice(string deviceUUID)
+        {
+            var res = OCManager.Instance.StopTest(deviceUUID);
             return Task.FromResult(res.Result);
         }
         private static Task ApplyOCBundle(List<OcBundle> bundles)
