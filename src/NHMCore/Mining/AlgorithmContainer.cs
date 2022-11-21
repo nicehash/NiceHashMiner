@@ -7,9 +7,13 @@ using NHMCore.Configs;
 using NHMCore.Configs.ELPDataModels;
 using NHMCore.Configs.Managers;
 using NHMCore.Mining.Plugins;
+using NHMCore.Nhmws.V4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Threading.Tasks;
+using static NHMCore.Configs.Managers.OCManager;
 
 namespace NHMCore.Mining
 {
@@ -29,6 +33,7 @@ namespace NHMCore.Mining
         public DateTime IgnoreUntil { get; internal set; } = DateTime.UtcNow;
         private List<double> _powerUsageHistory = new List<double>();
         private List<double> _speedHistory = new List<double>();
+        private string _TAG = string.Empty;
 
         // status is always calculated
         public AlgorithmStatus Status
@@ -66,6 +71,7 @@ namespace NHMCore.Mining
             PluginContainer = pluginContainer;
             Algorithm = algorithm;
             ComputeDevice = computeDevice;
+            _TAG = $"AC->{pluginContainer.Name}/{algorithm.AlgorithmName}/{computeDevice.Name}";
 
             computeDevice.PropertyChanged += ComputeDevice_PropertyChanged;
             SwitchSettings.Instance.PropertyChanged += SettingsChanged;
@@ -530,6 +536,104 @@ namespace NHMCore.Mining
             NotifyPowerChanged();
         }
 
-#endregion
+        #endregion
+
+#if NHMWS4
+        #region OC
+
+        private bool _IsTesting = false;
+        public bool IsTesting
+        {
+            get
+            {
+                return _IsTesting;
+            }
+            set
+            {
+                _IsTesting = value;
+            }
+        }
+        private string _OCProfile = string.Empty;
+        public string OCProfile => _OCProfile;
+        private OcBundle _ActiveOCProfile = null;
+        public OcBundle ActiveOCProfile => ActiveOCProfile;
+        public Task<OcReturn> SetOcForDevice(OcBundle bundle)
+        {
+            var ret = OcReturn.Fail;
+            int valuesToSet = 0;
+            if (bundle.CoreClock > 0) valuesToSet++;
+            if (bundle.MemoryClock > 0) valuesToSet++;
+            if (bundle.TDP > 0) valuesToSet++;
+            if (valuesToSet == 0) return Task.FromResult(ret);
+
+            int setValues = 3;
+            var setCC = ComputeDevice.SetCoreClock(bundle.CoreClock);
+            var setMC = ComputeDevice.SetMemoryClock(bundle.MemoryClock);
+            var setTDP = ComputeDevice.SetPowerModeManual(bundle.TDP);
+
+            if (!setCC)
+            {
+                Logger.Warn(_TAG, $"Setting core clock for device {ComputeDevice.Name} success: {setCC}");
+                setValues--;
+            }
+            if (!setMC)
+            {
+                Logger.Warn(_TAG, $"Setting memory clock for device {ComputeDevice.Name} success: {setMC}");
+                setValues--;
+            }
+            if (!setTDP)
+            {
+                Logger.Warn(_TAG, $"Setting TDP for device {ComputeDevice.Name} success: {setTDP}");
+                setValues--;
+            }
+
+            if (setValues == valuesToSet) ret = OcReturn.Success;
+            else if (setValues != 0 && setValues < valuesToSet) ret = OcReturn.PartialSuccess;
+
+            ret = OcReturn.Success; // TESTING CODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            if(ret != OcReturn.Fail)
+            {
+                _IsTesting = true;
+                ComputeDevice.State = DeviceState.Testing;
+                _OCProfile = bundle.Name;
+                ComputeDevice.OCProfile = bundle.Name;
+                _ActiveOCProfile = bundle;
+            }
+            return Task.FromResult(ret);
+        }
+        public Task<OcReturn> ResetOcForDevice()
+        {
+            var defCC = ComputeDevice.CoreClockRange;
+            var defMC = ComputeDevice.MemoryClockRange;
+            var defTDP = ComputeDevice.TDPLimits;
+
+            var setCC = defCC.ok ? ComputeDevice.SetCoreClock(defCC.def) : false;
+            Logger.Warn(_TAG, $"Resetting core clock ({defCC.def}) for device {ComputeDevice.Name} success: {setCC}");
+            var setMC = defMC.ok ? ComputeDevice.SetMemoryClock(defMC.def) : false;
+            Logger.Warn(_TAG, $"Resetting memory clock ({defMC.def}) for device {ComputeDevice.Name} success: {setMC}");
+            var setTDP = defTDP.def > 0 ? ComputeDevice.SetPowerModeManual((int)defTDP.def) : false;
+            Logger.Warn(_TAG, $"Resetting TDP ({defTDP.def}) for device {ComputeDevice.Name} success: {setTDP}");
+            var ret = OcReturn.Success;
+            if (setCC && setMC && setTDP) ret = OcReturn.Success;
+            else if (!setCC && !setMC && !setTDP) ret = OcReturn.Fail;
+            else ret = OcReturn.PartialSuccess;
+
+            ret = OcReturn.Success; // TESTING CODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess)
+            {
+                IsTesting = false;
+                _ActiveOCProfile = null;
+                _OCProfile = string.Empty;
+                ComputeDevice.State = DeviceState.Mining;
+                ComputeDevice.OCProfile = string.Empty;
+            }
+
+
+            return Task.FromResult(ret);
+        }
+        #endregion
+#endif
     }
 }

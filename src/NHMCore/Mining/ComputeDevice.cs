@@ -651,5 +651,13 @@ namespace NHMCore.Mining
                 mp.PrintMemoryTimings();
             }
         }
+#if NHMWS4
+        private string _OCProfile = string.Empty;
+        public string OCProfile
+        {
+            get { return _OCProfile; }
+            set { _OCProfile = value; }
+        }
+#endif
     }
 }

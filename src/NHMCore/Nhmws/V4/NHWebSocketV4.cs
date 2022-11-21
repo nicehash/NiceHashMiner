@@ -732,6 +732,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
+                    (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
                     object jobjectFan = JsonConvert.DeserializeObject(parameters);

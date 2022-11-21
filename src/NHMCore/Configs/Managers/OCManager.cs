@@ -22,62 +22,23 @@ namespace NHMCore.Configs.Managers
         private List<OcBundle> _testOcBundles = new();
         private readonly string _TAG = "OCManager";
 
-        private enum OcReturn
+        public enum OcReturn
         {
             Success,
             PartialSuccess,
             Fail
         }
 
-        //todo if true is default its not good, as it returns partial success in case of 2 fail and one 0 (not set)
-        private Task<OcReturn> SetOcForDevice(AlgorithmContainer container, OcBundle bundle)
-        {
-            var setCC = bundle.CoreClock != 0 ? container.ComputeDevice.SetCoreClock(bundle.CoreClock) : true;
-            Logger.Warn(_TAG, $"Setting core clock for device {container.ComputeDevice.Name} success: {setCC}");
-            var setMC = bundle.MemoryClock != 0 ? container.ComputeDevice.SetMemoryClock(bundle.MemoryClock) : true;
-            Logger.Warn(_TAG, $"Setting memory clock for device {container.ComputeDevice.Name} success: {setMC}");
-            var setTDP = bundle.TDP != 0 ? container.ComputeDevice.SetPowerModeManual(bundle.TDP) : true;
-            Logger.Warn(_TAG, $"Setting TDP for device {container.ComputeDevice.Name} success: {setTDP}");
-            var ret = OcReturn.Success;
-            if (setCC && setMC && setTDP) ret = OcReturn.Success;
-            else if (!setCC && !setMC && !setTDP) ret = OcReturn.Fail;
-            else ret = OcReturn.PartialSuccess;
-            if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess) container.ComputeDevice.State = DeviceState.Testing;
-            return Task.FromResult(ret);
-        }
-        private Task<OcReturn> ResetOcForDevice(ComputeDevice dev)
-        {
-            var defCC = dev.CoreClockRange;
-            var defMC = dev.MemoryClockRange;
-            var defTDP = dev.TDPLimits;
-
-            var setCC = defCC.ok ? dev.SetCoreClock(defCC.def) : false;
-            Logger.Warn(_TAG, $"Resetting core clock ({defCC.def}) for device {dev.Name} success: {setCC}");
-            var setMC = defMC.ok ? dev.SetMemoryClock(defMC.def) : false;
-            Logger.Warn(_TAG, $"Resetting memory clock ({defMC.def}) for device {dev.Name} success: {setMC}");
-            var setTDP = defTDP.def > 0 ? dev.SetPowerModeManual((int)defTDP.def) : false;
-            Logger.Warn(_TAG, $"Resetting TDP ({defTDP.def}) for device {dev.Name} success: {setTDP}");
-            var ret = OcReturn.Success;
-            if (setCC && setMC && setTDP) ret = OcReturn.Success;
-            else if (!setCC && !setMC && !setTDP) ret = OcReturn.Fail;
-            else ret = OcReturn.PartialSuccess;
-            if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess) dev.State = DeviceState.Mining;// problem, return to benchmarking? apparently it will be disabled!!!!
-            return Task.FromResult(ret);
-        }
-
-
         //todo cleanup for many different tests if they come one after another
         //clear first?
         public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, OcBundle bundle)
         {
-            //_testOcBundles.Add(bundle);
             if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices running"));
             var allContainers = AvailableDevices.Devices
                 .Where(d => d.B64Uuid == uuid)?
                 .Where(d => d.State == NHM.Common.Enums.DeviceState.Mining || d.State == NHM.Common.Enums.DeviceState.Benchmarking)?
                 .Where(d => d.Name == bundle.DeviceName)?
                 .SelectMany(d => d.AlgorithmSettings);
-            //var MiningState = AvailableDevices.Devices.Where(d => d.Name == bundle.DeviceName)?.SelectMany(d => d.AlgorithmSettings); //for testing
             if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found"));
             if (bundle.AlgoId != null && bundle.MinerId != null) allContainers = allContainers.Where(d => 
                                                                                         bundle.AlgoId.Contains(d.AlgorithmName) && 
@@ -91,25 +52,29 @@ namespace NHMCore.Configs.Managers
             foreach (var container in distinctDevs)
             {
                 Logger.Warn(_TAG, $"\t{container.ComputeDevice.ID}-{container.ComputeDevice.Name}/{container.AlgorithmName}/{container.PluginName}");
-                var ret = SetOcForDevice(container, bundle);
+                var ret = container.SetOcForDevice(bundle);
                 if (ret.IsCompleted) success.Add(ret.Result);
             }
             if (success.All(s => s == OcReturn.Success)) return Task.FromResult((ErrorCode.NoError, "Successfully applied test"));
-            if (success.All(s => s == OcReturn.Fail)) return Task.FromResult((ErrorCode.TestApplyTotalFail, "Failed to apply test")); 
-            return Task.FromResult((ErrorCode.TestApplyPartialPartial, "Partially applied test"));
+            if (success.All(s => s == OcReturn.Fail)) return Task.FromResult((ErrorCode.TestTotalFail, "Failed to apply test")); 
+            return Task.FromResult((ErrorCode.TestPartialFail, "Partially applied test"));
         }
         public Task<(ErrorCode err, string msg)> StopTest(string uuid)
         {
-            var targetDeviceContainer = AvailableDevices.Devices.Where(d => d.B64Uuid == uuid).FirstOrDefault();
-            if(targetDeviceContainer == null)
+            var targetDeviceContainer = AvailableDevices.Devices
+                .Where(d => d.B64Uuid == uuid)?
+                .SelectMany(d => d.AlgorithmSettings)?
+                .Where(a => a.IsTesting)?
+                .FirstOrDefault();
+            if (targetDeviceContainer == null)
             {
                 Logger.Error(_TAG, "Device not found for stop OC test");
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
             }
-            var ret = ResetOcForDevice(targetDeviceContainer);
-            if(ret.Result == OcReturn.Success) return Task.FromResult((ErrorCode.NoError, "Successfully stopped test"));
-            if(ret.Result == OcReturn.Fail) return Task.FromResult((ErrorCode.TestApplyTotalFail, "Failed to stop test"));
-            return Task.FromResult((ErrorCode.TestApplyPartialPartial, "Stopped test"));
+            var ret = targetDeviceContainer.ResetOcForDevice();
+            if (ret.Result == OcReturn.Success) return Task.FromResult((ErrorCode.NoError, "Successfully stopped test"));
+            if (ret.Result == OcReturn.Fail) return Task.FromResult((ErrorCode.TestTotalFail, "Failed to stop test"));
+            return Task.FromResult((ErrorCode.TestPartialFail, "Stopped test"));
         }
         //clear first????
         public Task ApplyOcBundle(List<OcBundle> bundles)
@@ -159,7 +124,7 @@ namespace NHMCore.Configs.Managers
                 foreach (var container in current)
                 {
                     Logger.Warn(_TAG, $"\t{container.ComputeDevice.ID}-{container.ComputeDevice.Name}/{container.AlgorithmName}/{container.PluginName}");
-                    SetOcForDevice(container, bundle);
+                    container.SetOcForDevice(bundle);
                 }
             }
             return Task.CompletedTask;

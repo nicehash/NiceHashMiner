@@ -16,8 +16,8 @@ namespace NHMCore.Nhmws
         ActionNotFound = -100,
         ErrNoDeviceRunning = -101,
         TargetDeviceNotFound = -102,
-        TestApplyPartialPartial = -103,
-        TestApplyTotalFail = -104,
+        TestPartialFail = -103,
+        TestTotalFail = -104,
 
 
     }

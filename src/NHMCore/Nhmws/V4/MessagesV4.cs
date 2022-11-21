@@ -394,13 +394,13 @@ namespace NHMCore.Nhmws.V4
             [JsonProperty("mdv")]
             public JArray MandatoryDynamicValues { get; set; }
 
-            [JsonProperty("odv")]
+            [JsonProperty("odv", NullValueHandling = NullValueHandling.Ignore)]
             public JArray OptionalDynamicValues { get; set; }
 
             [JsonProperty("mmv")]
             public JArray MandatoryMutableValues { get; set; }
 
-            [JsonProperty("omv")]
+            [JsonProperty("omv", NullValueHandling = NullValueHandling.Ignore)]
             public JArray OptionalMutableValues { get; set; }
         }
 
@@ -410,13 +410,13 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("mdv")]
         public JArray MutableDynamicValues { get; set; }
 
-        [JsonProperty("odv")]
+        [JsonProperty("odv", NullValueHandling = NullValueHandling.Ignore)]
         public JArray OptionalDynamicValues { get; set; }
 
         [JsonProperty("mmv")]
         public JArray MandatoryMutableValues { get; set; }
 
-        [JsonProperty("omv")]
+        [JsonProperty("omv", NullValueHandling = NullValueHandling.Ignore)]
         public JArray OptionalMutableValues { get; set; }
 
         [JsonProperty("devices")]
@@ -515,8 +515,19 @@ namespace NHMCore.Nhmws.V4
     {
         [JsonProperty("id")]
         public string Id { get; set; }
-        [JsonProperty("algorithms")]
-        public List<string> Algos { get; set; } = new List<string>();
+        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Enabled { get; set; }
+        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+        public List<Algo>? Algos { get; set; } = new List<Algo>();//for static 
+        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)] 
+        public List<string>? AlgoList { get; set; } = new List<string>(); //for omv
+    }
+    internal class Algo
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Enabled { get; set; }
     }
 
     internal class Bundle
