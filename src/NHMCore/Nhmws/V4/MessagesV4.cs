@@ -511,16 +511,27 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("value")]
         public string Value { get; set; }
     }
-    internal class Miner
+
+    internal class MinerLogin
+    {
+        [JsonProperty("miners")]
+        public List<MinerDynamic> Miners { get; set; } = new List<MinerDynamic>();
+    }
+    internal class MinerDynamic
     {
         [JsonProperty("id")]
         public string Id { get; set; }
-        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
-        public bool? Enabled { get; set; }
-        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Algo>? Algos { get; set; } = new List<Algo>();//for static 
-        [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)] 
-        public List<string>? AlgoList { get; set; } = new List<string>(); //for omv
+        [JsonProperty("enabled")]
+        public bool Enabled { get; set; }
+        [JsonProperty("algorithms")]
+        public List<Algo> Algos { get; set; } = new List<Algo>();
+    }
+    internal class MinerStatic
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("algorithms")]
+        public List<string> AlgoList { get; set; } = new List<string>();
     }
     internal class Algo
     {

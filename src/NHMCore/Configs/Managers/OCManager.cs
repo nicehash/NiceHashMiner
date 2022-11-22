@@ -33,31 +33,99 @@ namespace NHMCore.Configs.Managers
         //clear first?
         public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, OcBundle bundle)
         {
+            //find all algo containers for device with uuid
+            //find if specific container exists
+            //  if yes
+            //      if already mining
+            //          apply benchmark
+            //          disable switch for this device
+            //      if mining something else
+            //          switch to target
+            //          disable switch for this device
+            //  if no
+            //      return error
+
+
+
             if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices running"));
             var allContainers = AvailableDevices.Devices
                 .Where(d => d.B64Uuid == uuid)?
                 .Where(d => d.State == NHM.Common.Enums.DeviceState.Mining || d.State == NHM.Common.Enums.DeviceState.Benchmarking)?
-                .Where(d => d.Name == bundle.DeviceName)?
+                //.Where(d => d.Name == bundle.DeviceName)?
                 .SelectMany(d => d.AlgorithmSettings);
-            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found"));
-            if (bundle.AlgoId != null && bundle.MinerId != null) allContainers = allContainers.Where(d => 
-                                                                                        bundle.AlgoId.Contains(d.AlgorithmName) && 
-                                                                                        bundle.MinerId.Contains(d.PluginName));
-            else if (bundle.AlgoId != null) allContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName));
-            else if (bundle.MinerId != null) allContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName));
-            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
-            var distinctDevs = allContainers.Where(c => c.IsCurrentlyMining)?.DistinctBy(d => d.ComputeDevice.Uuid) ?? new List<AlgorithmContainer>();
+            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found")); //if mine anything
+
+            List<AlgorithmContainer> specificContainers = new List<AlgorithmContainer>();
+            //in this filtering we can leave out stuff that we mine and is not in target 
+            if (bundle.AlgoId != null && bundle.MinerId != null) specificContainers = allContainers.Where(d =>
+                                                                                        bundle.AlgoId.Contains(d.AlgorithmName) &&
+                                                                                        bundle.MinerId.Contains(d.PluginName))?.ToList();//if both algo and miner
+            else if (bundle.AlgoId != null) specificContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName))?.ToList(); //if only algo
+            else if (bundle.MinerId != null) specificContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName))?.ToList(); //if only miner
+            if (specificContainers == null || !specificContainers.Any())
+            {
+                return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
+            }
+            var distinctDevs = specificContainers.Where(c => c.IsCurrentlyMining)?.DistinctBy(d => d.ComputeDevice.Uuid) ?? new List<AlgorithmContainer>();
             Logger.Info(_TAG, "Applying OC Test for following containers:");
             List<OcReturn> success = new();
-            foreach (var container in distinctDevs)
+
+            var currentlyMiningContainer = distinctDevs.Where(c => c.IsCurrentlyMining)?.FirstOrDefault();
+            if(currentlyMiningContainer != null)  //if one of target containers already mining leave it
+            {
+                var ret = currentlyMiningContainer.SetOcForDevice(bundle);
+                if (ret.IsCompleted) success.Add(ret.Result);
+                Logger.Warn(_TAG, $"\t{currentlyMiningContainer.ComputeDevice.ID}-{currentlyMiningContainer.ComputeDevice.Name}/{currentlyMiningContainer.AlgorithmName}/{currentlyMiningContainer.PluginName}");
+                //stop switching 4 this device !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            }
+            else
+            {
+                //switch to one of target
+            }
+            foreach (var container in distinctDevs) //todo run only once
             {
                 Logger.Warn(_TAG, $"\t{container.ComputeDevice.ID}-{container.ComputeDevice.Name}/{container.AlgorithmName}/{container.PluginName}");
                 var ret = container.SetOcForDevice(bundle);
-                if (ret.IsCompleted) success.Add(ret.Result);
             }
+            //if one of the target containers not mining switch to one that is
+
+
             if (success.All(s => s == OcReturn.Success)) return Task.FromResult((ErrorCode.NoError, "Successfully applied test"));
-            if (success.All(s => s == OcReturn.Fail)) return Task.FromResult((ErrorCode.TestTotalFail, "Failed to apply test")); 
+            if (success.All(s => s == OcReturn.Fail)) return Task.FromResult((ErrorCode.TestTotalFail, "Failed to apply test"));
             return Task.FromResult((ErrorCode.TestPartialFail, "Partially applied test"));
+
+
+
+            //if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices running"));
+            //var allContainersGeneral = AvailableDevices.Devices
+            //    .Where(d => d.B64Uuid == uuid)?
+            //    .Where(d => d.State == NHM.Common.Enums.DeviceState.Mining || d.State == NHM.Common.Enums.DeviceState.Benchmarking)?
+            //    //.Where(d => d.Name == bundle.DeviceName)?
+            //    .SelectMany(d => d.AlgorithmSettings);
+
+            //if (allContainersGeneral == null || !allContainersGeneral.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found")); //if mine anything
+            //List<AlgorithmContainer> allContainers = new List<AlgorithmContainer>();
+            //if (bundle.AlgoId != null && bundle.MinerId != null) allContainers = allContainersGeneral.Where(d =>  
+            //                                                                            bundle.AlgoId.Contains(d.AlgorithmName) && 
+            //                                                                            bundle.MinerId.Contains(d.PluginName))?.ToList();//if both algo and miner
+            //else if (bundle.AlgoId != null) allContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName))?.ToList(); //if only algo
+            //else if (bundle.MinerId != null) allContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName))?.ToList(); //if only miner
+            //if (allContainers == null || !allContainers.Any())
+            //{
+            //    return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
+            //}
+            //var distinctDevs = allContainers.Where(c => c.IsCurrentlyMining)?.DistinctBy(d => d.ComputeDevice.Uuid) ?? new List<AlgorithmContainer>();
+            //Logger.Info(_TAG, "Applying OC Test for following containers:");
+            //List<OcReturn> success = new();
+            //foreach (var container in distinctDevs) //todo run only once
+            //{
+            //    Logger.Warn(_TAG, $"\t{container.ComputeDevice.ID}-{container.ComputeDevice.Name}/{container.AlgorithmName}/{container.PluginName}");
+            //    var ret = container.SetOcForDevice(bundle);
+            //    if (ret.IsCompleted) success.Add(ret.Result);
+            //}
+            //if (success.All(s => s == OcReturn.Success)) return Task.FromResult((ErrorCode.NoError, "Successfully applied test"));
+            //if (success.All(s => s == OcReturn.Fail)) return Task.FromResult((ErrorCode.TestTotalFail, "Failed to apply test")); 
+            //return Task.FromResult((ErrorCode.TestPartialFail, "Partially applied test"));
         }
         public Task<(ErrorCode err, string msg)> StopTest(string uuid)
         {

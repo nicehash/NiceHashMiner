@@ -590,8 +590,6 @@ namespace NHMCore.Mining
             if (setValues == valuesToSet) ret = OcReturn.Success;
             else if (setValues != 0 && setValues < valuesToSet) ret = OcReturn.PartialSuccess;
 
-            ret = OcReturn.Success; // TESTING CODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
             if(ret != OcReturn.Fail)
             {
                 _IsTesting = true;
@@ -619,18 +617,14 @@ namespace NHMCore.Mining
             else if (!setCC && !setMC && !setTDP) ret = OcReturn.Fail;
             else ret = OcReturn.PartialSuccess;
 
-            ret = OcReturn.Success; // TESTING CODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
             if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess)
             {
                 IsTesting = false;
-                _ActiveOCProfile = null;
-                _OCProfile = string.Empty;
                 ComputeDevice.State = DeviceState.Mining;
+                _OCProfile = string.Empty;
                 ComputeDevice.OCProfile = string.Empty;
+                _ActiveOCProfile = null;
             }
-
-
             return Task.FromResult(ret);
         }
         #endregion

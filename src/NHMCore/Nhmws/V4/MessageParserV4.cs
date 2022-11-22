@@ -46,6 +46,18 @@ namespace NHMCore.Nhmws.V4
                 _ => throw new Exception($"Unable to deserialize '{jsonData}' got method '{method}'."),
             };
         }
+        internal static int NHMDeviceTypeToNHMWSDeviceType(DeviceType dt)
+        {
+            //rig manager enum
+            //const deviceClasses = ['UNKNOWN','CPU','NVIDIA','AMD','ASIC',5,6,7,8,9,'ASIC']
+            return dt switch
+            {
+                DeviceType.CPU => 1,
+                DeviceType.NVIDIA => 2,
+                DeviceType.AMD => 3,
+                _ => 0
+            };
+        }
 
         internal static IOrderedEnumerable<ComputeDevice> SortedDevices(this IEnumerable<ComputeDevice> devices)
         {
@@ -146,108 +158,34 @@ namespace NHMCore.Nhmws.V4
             OptionalMutableProperty valueOrNull<T>(OptionalMutableProperty v) => d.DeviceMonitor is T ? v : null;
             List<OptionalMutableProperty> getOptionalMutableProperties(ComputeDevice d)
             {
-                if (isLogin)
+                var optionalProperties = new List<OptionalMutableProperty>();
+                // TODO sort by type
+                optionalProperties.Add(new OptionalMutablePropertyString
                 {
-                    // TODO sort by type
-                    var optionalProperties = new List<OptionalMutableProperty>();
-                    optionalProperties.Add(new OptionalMutablePropertyString
+                    PropertyID = OptionalMutableProperty.NextPropertyId(),
+                    DisplayGroup = 0,
+                    DisplayName = "Miners settings",
+                    DefaultValue = "",
+                    Range = (2048, ""),
+                    //ExecuteTask = async (object p) =>
+                    //{
+                    //    //todo
+                    //    return null;
+                    //},
+                    GetValue = () =>
                     {
-                        PropertyID = OptionalMutableProperty.NextPropertyId(),
-                        DisplayGroup = 0,
-                        DisplayName = "Miners settings",
-                        DefaultValue = "",
-                        Range = (2048, ""),
-                        //ExecuteTask = async (object p) =>
-                        //{
-                        //    //todo
-                        //    return null;
-                        //},
-                        GetValue = () =>
+                        string ret = null;
+                        if (isLogin)
                         {
-                            //todo?
-                            return string.Empty;
+                            ret = string.Empty;
+                            ret += GetMinersForDeviceDynamic(d);
                         }
-                    });
-                    #region OMVMaybe
-                    //if (d.DeviceMonitor is ITDP tdp && d.DeviceMonitor is ITDPLimits tdpLim)
-                    //{
-                    //    var limits = tdpLim.GetTDPLimits();
-                    //    if (limits.ok)
-                    //    {
-                    //        optionalProperties.Add(valueOrNull<ITDP>(new OptionalMutablePropertyInt
-                    //        {
-                    //            PropertyID = OptionalMutableProperty.NextPropertyId(),
-                    //            DisplayName = "Power mode",
-                    //            DisplayUnit = "%",
-                    //            DefaultValue = (int)limits.def,
-                    //            Range = ((int)limits.min, (int)limits.max),
-                    //            //ExecuteTask = async (object p) =>
-                    //            //{
-                    //            //    // #1 validate JSON input
-                    //            //    if (p is string pstr && pstr is not null) return Task.FromResult<object>(null);
-                    //            //    // TODO do something
-                    //            //    return Task.FromResult<object>(null);
-                    //            //},
-                    //            GetValue = () =>
-                    //            {
-                    //                return tdp.TDPPercentage;
-                    //            }
-                    //        }));
-                    //    }
-
-                    //}
-                    //if (d.DeviceMonitor is ICoreClockSet && d.DeviceMonitor is ICoreClockRange rangeCore)
-                    //{
-                    //    var ret = rangeCore.CoreClockRange;
-                    //    if (ret.ok)
-                    //    {
-                    //        optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
-                    //        {
-                    //            PropertyID = OptionalMutableProperty.NextPropertyId(),
-                    //            DisplayName = "Core clock",
-                    //            DisplayUnit = "MHz",
-                    //            DefaultValue = ret.def,
-                    //            Range = (ret.min, ret.max),
-                    //            //ExecuteTask = async (object p) =>
-                    //            //{
-                    //            //todo
-                    //            //}
-                    //            GetValue = () =>
-                    //            {
-                    //                return d.CoreClock;
-                    //            }
-                    //        }));
-                    //    }
-                    //}
-                    //if (d.DeviceMonitor is IMemoryClockSet && d.DeviceMonitor is IMemoryClockRange rangeMem)
-                    //{
-                    //    var ret = rangeMem.MemoryClockRange;
-                    //    if (ret.ok)
-                    //    {
-                    //        optionalProperties.Add(valueOrNull<ICoreClockSet>(new OptionalMutablePropertyInt
-                    //        {
-                    //            PropertyID = OptionalMutableProperty.NextPropertyId(),
-                    //            DisplayName = "Memory clock",
-                    //            DisplayUnit = "MHz",
-                    //            DefaultValue = ret.def,
-                    //            Range = (ret.min, ret.max),
-                    //            //ExecuteTask = async (object p) =>
-                    //            //{
-                    //            //todo
-                    //            //}
-                    //            GetValue = () =>
-                    //            {
-                    //                return d.MemoryClock;
-                    //            }
-                    //        }));
-                    //    }
-                    //}
-                    #endregion
-                    return optionalProperties
-                        .Where(p => p != null)
-                        .ToList();
-                }
-                return null;
+                        return ret;
+                    }
+                });
+                return optionalProperties
+                    .Where(p => p != null)
+                    .ToList();
             }
 
             List<OptionalMutableProperty> getOptionalMutablePropertiesCached(ComputeDevice d)
@@ -257,8 +195,14 @@ namespace NHMCore.Nhmws.V4
             }
 
             var props = getOptionalMutablePropertiesCached(d);
-            var values_omv = new JArray(props.Select(p => p.GetValue()));
-
+            var selectedValues = props
+                .Where(p => p.GetValue() != null)?
+                .Select(p => p.GetValue());
+            JArray values_omv = null;
+            if (selectedValues.Any())
+            {
+                values_omv = new JArray(selectedValues);
+            }
             return (props, values_omv);
         }
 
@@ -268,7 +212,7 @@ namespace NHMCore.Nhmws.V4
             List<List<string>> result = new List<List<string>>();
             foreach (var property in properties)
             {
-                if(property.unit == null)
+                if (property.unit == null)
                 {
                     result.Add(new List<string> { property.name });
                     continue;
@@ -288,7 +232,7 @@ namespace NHMCore.Nhmws.V4
                     StaticProperties = new Dictionary<string, object>
                     {
                         { "device_id", d.B64Uuid },
-                        { "class", $"{(int)d.DeviceType}" },
+                        { "class", $"{NHMDeviceTypeToNHMWSDeviceType(d.DeviceType)}" },
                         { "name", d.Name },
                         { "optional", GetStaticPropertiesOptionalValues(d) },
                     },
@@ -462,7 +406,7 @@ namespace NHMCore.Nhmws.V4
                 NhmwsAction.ActionElpProfileTest(uuid),
                 NhmwsAction.ActionElpProfileTestStop(uuid),
             };
-        } 
+        }
         private static List<NhmwsAction> CreateDefaultRigActions()
         {
             return new List<NhmwsAction>
@@ -481,12 +425,12 @@ namespace NHMCore.Nhmws.V4
                     {
                         new JArray("bus_id", $"{gpu.PCIeBusID}"),
                         new JArray("vram", $"{gpu.GpuRam}"),
-                        new JArray("miners", FormatForOptionalValues("miners", GetMinersForDevice(d, false))),
+                        new JArray("miners", FormatForOptionalValues("miners", GetMinersForDeviceStatic(d))),
                         new JArray("limits", FormatForOptionalValues("limits", GetLimitsForDevice(d))),
                     },
-                _ => new List<JArray> 
+                _ => new List<JArray>
                     {
-                        new JArray("miners", FormatForOptionalValues("miners", GetMinersForDevice(d, false))),
+                        new JArray("miners", FormatForOptionalValues("miners", GetMinersForDeviceStatic(d))),
                         new JArray("limits", FormatForOptionalValues("limits", GetLimitsForDevice(d))),
                     },
             };
@@ -494,44 +438,42 @@ namespace NHMCore.Nhmws.V4
 
         private static string FormatForOptionalValues(string name, string content)
         {
-            return "{\""+ name +"\":" + content + "}";
+            return "{\"" + name + "\":" + content + "}";
         }
 
-        private static string GetMinersForDeviceDynamic(ComputeDevice d, bool includeEnabled)//todo  if include enabled return array of strings else return array of structs
+        private static string GetMinersForDeviceDynamic(ComputeDevice d)//todo  if include enabled return array of strings else return array of structs
         {
-            List<Miner> miners = new List<Miner>();
+            var minersObject = new MinerLogin();
             var containers = d.AlgorithmSettings;
             if (containers == null) return String.Empty;
-            var grouped =  containers.GroupBy(c => c.PluginName);
-            if(grouped == null) return String.Empty;
+            var grouped = containers.GroupBy(c => c.PluginName);
+            if (grouped == null) return String.Empty;
             foreach (var group in grouped)
             {
                 var container = group.First();
-                var miner = new Miner() { Id = group.Key };
-                if (includeEnabled) miner.Enabled = container.Enabled;
+                var miner = new MinerDynamic() { Id = group.Key, Enabled = container.Enabled };
                 var algos = new List<Algo>();
                 foreach (var algo in group)
                 {
-                    var tempAlgo = new Algo() { Id = algo.AlgorithmName };
-                    if (includeEnabled) tempAlgo.Enabled = algo.Enabled;
+                    var tempAlgo = new Algo() { Id = algo.AlgorithmName, Enabled = algo.Enabled };
                     algos.Add(tempAlgo);
                 }
                 miner.Algos = algos;
-                miners.Add(miner);
+                minersObject.Miners.Add(miner);
             }
-            var json = JsonConvert.SerializeObject(miners);
+            var json = JsonConvert.SerializeObject(minersObject);
             return json;
         }
         private static string GetMinersForDeviceStatic(ComputeDevice d)
         {
-            List<Miner> miners = new List<Miner>();
+            List<MinerStatic> miners = new List<MinerStatic>();
             var uniquePlugins = d.AlgorithmSettings?.Select(item => item.PluginName)?.Distinct()?.Where(item => !string.IsNullOrEmpty(item));
             if (uniquePlugins == null) return String.Empty;
             foreach (var plugin in uniquePlugins)
             {
                 var uniqueAlgos = d.AlgorithmSettings?.Where(item => item.PluginName == plugin)?.Select(item => item.AlgorithmName)?.Distinct();
                 if (uniqueAlgos == null) uniqueAlgos = new List<string>();
-                miners.Add(new Miner() { Id = plugin, AlgoList = uniqueAlgos.ToList() });
+                miners.Add(new MinerStatic() { Id = plugin, AlgoList = uniqueAlgos.ToList() });
             }
             var json = JsonConvert.SerializeObject(miners);
             return json;
@@ -559,7 +501,7 @@ namespace NHMCore.Nhmws.V4
             {
                 var lims = mcLim.MemoryClockRange;
                 if (lims.ok)
-                { 
+                {
                     limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
