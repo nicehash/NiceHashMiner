@@ -581,7 +581,7 @@ namespace NHMCore.Nhmws.V4
         public int CoreClock { get; set; }
         [JsonProperty("memory_clock")]
         public int MemoryClock { get; set; }
-        [JsonProperty("tdp")]
+        [JsonProperty("power_mode")]
         public int TDP { get; set; }
     }
     internal class FanBundle

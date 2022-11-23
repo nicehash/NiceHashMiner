@@ -59,12 +59,13 @@ namespace NHMCore.Configs.Managers
                 target.ForceMiningOnlyThisContainer = true;
             }
             var ret = target.SetOcForDevice(bundle);
-            if (ret.Result == OcReturn.Success) return Task.FromResult((ErrorCode.NoError, "Successfully applied test"));
             if (ret.Result == OcReturn.Fail)
             {
                 target.ForceMiningOnlyThisContainer = false;
                 return Task.FromResult((ErrorCode.TestTotalFail, "Failed to apply test"));
             }
+            MiningManager.TriggerSwitchCheck();
+            if (ret.Result == OcReturn.Success) return Task.FromResult((ErrorCode.NoError, "Successfully applied test"));
             return Task.FromResult((ErrorCode.TestPartialFail, "Partially applied test"));
         }
         public Task<(ErrorCode err, string msg)> StopTest(string uuid)
@@ -81,8 +82,9 @@ namespace NHMCore.Configs.Managers
             }
             var ret = targetDeviceContainer.ResetOcForDevice();
             targetDeviceContainer.ForceMiningOnlyThisContainer = false;
-            if (ret.Result == OcReturn.Success) return Task.FromResult((ErrorCode.NoError, "Successfully stopped test"));
+            MiningManager.TriggerSwitchCheck();
             if (ret.Result == OcReturn.Fail) return Task.FromResult((ErrorCode.TestTotalFail, "Failed to stop test"));
+            if (ret.Result == OcReturn.Success) return Task.FromResult((ErrorCode.NoError, "Successfully stopped test"));
             return Task.FromResult((ErrorCode.TestPartialFail, "Stopped test"));
         }
         public Task ApplyOcBundle(List<OcBundle> bundles)

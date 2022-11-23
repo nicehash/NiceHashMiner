@@ -55,7 +55,7 @@ namespace NHMCore.Mining
         }
 
         private record MainCommand : Command;
-
+        private record TriggerSwitchCheckCommand : MainCommand;
         private record NormalizedProfitsUpdateCommand(Dictionary<AlgorithmType, double> NormalizedProfits) : MainCommand;
 
         private record UsernameChangedCommand(string Username) : MainCommand;
@@ -116,6 +116,13 @@ namespace NHMCore.Mining
         {
             if (RunninLoops == null) return Task.CompletedTask;
             var command = new StopDeviceCommand(device);
+            _commandQueue.Enqueue(command);
+            return command.Tsc.Task;
+        }
+        public static Task TriggerSwitchCheck() // todo call this
+        {
+            if (RunninLoops == null) return Task.CompletedTask;
+            var command = new TriggerSwitchCheckCommand();
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
@@ -590,6 +597,7 @@ namespace NHMCore.Mining
             // #1 parse the command
             var commandType = command.GetType().Name;
             Logger.Debug(Tag, $"Command type {commandType}");
+
             if (command is NormalizedProfitsUpdateCommand normalizedProfitsUpdateCommand)
             {
                 _normalizedProfits = normalizedProfitsUpdateCommand.NormalizedProfits;
@@ -682,12 +690,17 @@ namespace NHMCore.Mining
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
+            else if (command is TriggerSwitchCheckCommand triggerSwitchCheckCommand)
+            {
+                Logger.Info(Tag, "Switch triggered manually");
+                bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
+                await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
+            }
             else
             {
                 ApplicationStateManager.StartMining();
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
-
             }
         }
 

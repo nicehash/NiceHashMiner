@@ -583,9 +583,9 @@ namespace NHMCore.Mining
                 return Task.FromResult(ret);
             }
             int setValues = 3;
-            var setCC = ComputeDevice.SetCoreClock(bundle.CoreClock);
-            var setMC = ComputeDevice.SetMemoryClock(bundle.MemoryClock);
-            var setTDP = ComputeDevice.SetPowerModeManual(bundle.TDP);
+            var setCC = bundle.CoreClock <= 0 ? false : ComputeDevice.SetCoreClock(bundle.CoreClock);
+            var setMC = bundle.MemoryClock <= 0 ? false : ComputeDevice.SetMemoryClock(bundle.MemoryClock);
+            var setTDP = bundle.TDP <= 0 ? false : ComputeDevice.SetPowerModeManual(bundle.TDP);
 
             if (!setCC)
             {
