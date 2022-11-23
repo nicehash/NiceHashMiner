@@ -539,6 +539,18 @@ namespace NHMCore.Mining
         #endregion
 
 #if NHMWS4
+        private bool _forceMiningOnlyThisContainer { get; set; } = false;
+        public bool ForceMiningOnlyThisContainer
+        {
+            get
+            {
+                return _forceMiningOnlyThisContainer;
+            }
+            set
+            {
+                _forceMiningOnlyThisContainer = value;
+            }
+        }
         #region OC
 
         private bool _IsTesting = false;
@@ -556,16 +568,20 @@ namespace NHMCore.Mining
         private string _OCProfile = string.Empty;
         public string OCProfile => _OCProfile;
         private OcBundle _ActiveOCProfile = null;
-        public OcBundle ActiveOCProfile => ActiveOCProfile;
+        public OcBundle ActiveOCProfile => _ActiveOCProfile;
         public Task<OcReturn> SetOcForDevice(OcBundle bundle)
         {
+            Logger.Warn(_TAG, $"Setting OC for {ComputeDevice.Name}: TDP={bundle.TDP},CC={bundle.CoreClock},MC={bundle.MemoryClock}");
             var ret = OcReturn.Fail;
             int valuesToSet = 0;
             if (bundle.CoreClock > 0) valuesToSet++;
             if (bundle.MemoryClock > 0) valuesToSet++;
             if (bundle.TDP > 0) valuesToSet++;
-            if (valuesToSet == 0) return Task.FromResult(ret);
-
+            if (valuesToSet == 0)
+            {
+                Logger.Error(_TAG, "Have no values to set");
+                return Task.FromResult(ret);
+            }
             int setValues = 3;
             var setCC = ComputeDevice.SetCoreClock(bundle.CoreClock);
             var setMC = ComputeDevice.SetMemoryClock(bundle.MemoryClock);
@@ -592,7 +608,7 @@ namespace NHMCore.Mining
 
             if(ret != OcReturn.Fail)
             {
-                _IsTesting = true;
+                _IsTesting = true;//todo not just for testing
                 ComputeDevice.State = DeviceState.Testing;
                 _OCProfile = bundle.Name;
                 ComputeDevice.OCProfile = bundle.Name;

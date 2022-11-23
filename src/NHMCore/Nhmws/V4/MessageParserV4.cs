@@ -446,12 +446,12 @@ namespace NHMCore.Nhmws.V4
             var minersObject = new MinerLogin();
             var containers = d.AlgorithmSettings;
             if (containers == null) return String.Empty;
-            var grouped = containers.GroupBy(c => c.PluginName);
+            var grouped = containers.GroupBy(c => c.PluginName).ToList();
             if (grouped == null) return String.Empty;
             foreach (var group in grouped)
             {
-                var container = group.First();
-                var miner = new MinerDynamic() { Id = group.Key, Enabled = container.Enabled };
+                var containerEnabled = group.Any(c => c.Enabled);
+                var miner = new MinerDynamic() { Id = group.Key, Enabled = containerEnabled };
                 var algos = new List<Algo>();
                 foreach (var algo in group)
                 {

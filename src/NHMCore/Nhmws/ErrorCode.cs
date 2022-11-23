@@ -18,6 +18,7 @@ namespace NHMCore.Nhmws
         TargetDeviceNotFound = -102,
         TestPartialFail = -103,
         TestTotalFail = -104,
+        TargetContainerNotFound = -105,
 
 
     }
