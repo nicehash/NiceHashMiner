@@ -40,15 +40,6 @@ namespace NanoMiner
                         new SAS(AlgorithmType.VerusHash)
                     }
                 }
-            },
-            AlgorithmNames = new Dictionary<AlgorithmType, string>
-            {
-                { AlgorithmType.KAWPOW, "Kawpow" },
-                { AlgorithmType.Octopus, "Octopus" },
-                { AlgorithmType.DaggerHashimoto, "Ethash" },
-                { AlgorithmType.Autolykos, "autolykos" },
-                { AlgorithmType.EtcHash, "Etchash" },
-                { AlgorithmType.VerusHash, "Verushash" },
             }
         };
     }
