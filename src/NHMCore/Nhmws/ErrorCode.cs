@@ -19,7 +19,6 @@ namespace NHMCore.Nhmws
         TestPartialFail = -103,
         TestTotalFail = -104,
         TargetContainerNotFound = -105,
-
-
+        ErrNotAdmin = -106,
     }
 }

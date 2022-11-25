@@ -784,11 +784,13 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
         {
+            if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
             var res = OCManager.Instance.ExecuteTest(deviceUUID, ocBundle);
             return Task.FromResult(res.Result);
         }
         private static Task<(ErrorCode err, string msg)> StopOCTestForDevice(string deviceUUID)
         {
+            if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
             var res = OCManager.Instance.StopTest(deviceUUID);
             return Task.FromResult(res.Result);
         }
