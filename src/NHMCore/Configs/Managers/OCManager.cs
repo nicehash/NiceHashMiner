@@ -20,7 +20,6 @@ namespace NHMCore.Configs.Managers
         private OCManager() { }
         public static OCManager Instance { get; } = new OCManager();
         private List<OcBundle> _ocBundles = new();
-        private List<OcBundle> _testOcBundles = new();
         private readonly string _TAG = "OCManager";
 
         public enum OcReturn
@@ -35,33 +34,33 @@ namespace NHMCore.Configs.Managers
             if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices mining"));
             var allContainers = AvailableDevices.Devices
                 .Where(d => d.B64Uuid == uuid)?
-                .Where(d => d.State == NHM.Common.Enums.DeviceState.Mining || d.State == NHM.Common.Enums.DeviceState.Benchmarking)?
+                .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
                 .SelectMany(d => d.AlgorithmSettings);
-            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found")); //if mine anything
+            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found"));
 
             List<AlgorithmContainer> specificContainers = allContainers.ToList();
             if (bundle.AlgoId != null && bundle.MinerId != null) specificContainers = allContainers.Where(d =>
                                                                                         bundle.AlgoId.Contains(d.AlgorithmName) &&
-                                                                                        bundle.MinerId.Contains(d.PluginName))?.ToList();//if both algo and miner
-            else if (bundle.AlgoId != null) specificContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName))?.ToList(); //if only algo
-            else if (bundle.MinerId != null) specificContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName))?.ToList(); //if only miner
+                                                                                        bundle.MinerId.Contains(d.PluginName))?.ToList();
+            else if (bundle.AlgoId != null) specificContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName))?.ToList();
+            else if (bundle.MinerId != null) specificContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName))?.ToList();
             if (specificContainers == null || !specificContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
             var target = specificContainers.Where(c => c.IsCurrentlyMining)?.FirstOrDefault();
-            if(target != null)
-            {
-                target.ForceMiningOnlyThisContainer = true;
-                Logger.Warn(_TAG, $"\t{target.ComputeDevice.ID}-{target.ComputeDevice.Name}/{target.AlgorithmName}/{target.PluginName}");
-            }
-            else
+            if(target == null)
             {
                 target = specificContainers.FirstOrDefault();
                 if (target == null) return Task.FromResult((ErrorCode.TargetContainerNotFound, "Failed to switch to target algorithm container"));
-                target.ForceMiningOnlyThisContainer = true;
             }
-            var ret = target.SetOcForDevice(bundle);
+            Logger.Warn(_TAG, $"\t{target.ComputeDevice.ID}-{target.ComputeDevice.Name}/{target.AlgorithmName}/{target.PluginName}");
+            AvailableDevices.Devices //if we want switching for loose options we can set true to specific containers in the future
+                .Where(d => d.B64Uuid == uuid)?
+                .SelectMany(d => d.AlgorithmSettings)?
+                .ToList()?
+                .ForEach(c => c.IsTesting = false);
+
+            var ret = target.SetOcTestForDevice(bundle);
             if (ret.Result == OcReturn.Fail)
             {
-                target.ForceMiningOnlyThisContainer = false;
                 return Task.FromResult((ErrorCode.TestTotalFail, "Failed to apply test"));
             }
             MiningManager.TriggerSwitchCheck();
@@ -80,8 +79,7 @@ namespace NHMCore.Configs.Managers
                 Logger.Error(_TAG, "Device not found for stop OC test");
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
             }
-            var ret = targetDeviceContainer.ResetOcForDevice();
-            targetDeviceContainer.ForceMiningOnlyThisContainer = false;
+            var ret = targetDeviceContainer.ResetOcTestForDevice();
             MiningManager.TriggerSwitchCheck();
             if (ret.Result == OcReturn.Fail) return Task.FromResult((ErrorCode.TestTotalFail, "Failed to stop test"));
             if (ret.Result == OcReturn.Success) return Task.FromResult((ErrorCode.NoError, "Successfully stopped test"));
@@ -134,7 +132,7 @@ namespace NHMCore.Configs.Managers
                 foreach (var container in current)
                 {
                     Logger.Warn(_TAG, $"\t{container.ComputeDevice.ID}-{container.ComputeDevice.Name}/{container.AlgorithmName}/{container.PluginName}");
-                    container.SetOcForDevice(bundle);
+                    container.SetOcTestForDevice(bundle);
                 }
             }
             return Task.CompletedTask;

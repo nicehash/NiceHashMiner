@@ -69,8 +69,18 @@ namespace NHMCore.Nhmws.V4
         {
             var data = MiningDataStats.GetDevicesMiningStats();
             var devData = data.FirstOrDefault(dev => dev.DeviceUUID == UUID);
-            if (devData == null) return "";
-
+            if (devData == null)
+            {
+                var fallback = AvailableDevices.Devices
+                    .Where(d => d.Uuid == UUID)?
+                    .Where(d => d.State == DeviceState.Mining
+                        || d.State == DeviceState.Benchmarking
+                        || d.State == DeviceState.Testing)?
+                    .SelectMany(d => d.AlgorithmSettings)?
+                    .Where(a => a.IsCurrentlyMining)?
+                    .FirstOrDefault();
+                return fallback == null ? string.Empty : fallback.PluginName;
+            }
             return devData.MinerName;
         }
 

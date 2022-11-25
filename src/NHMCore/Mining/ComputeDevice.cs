@@ -34,6 +34,9 @@ namespace NHMCore.Mining
 
         // name count is the short name for displaying in moning groups
         public string NameCount { get; private set; }
+#if NHMWS4
+        public bool IsTesting => AlgorithmSettings.Any(a => a.IsTesting);
+#endif
 
         private bool _enabled = true;
         public bool Enabled
@@ -657,6 +660,13 @@ namespace NHMCore.Mining
         {
             get { return _OCProfile; }
             set { _OCProfile = value; }
+        }
+        public void AfterStartMining()
+        {
+            if (IsTesting)
+            {
+                State = DeviceState.Testing;
+            }
         }
 #endif
     }

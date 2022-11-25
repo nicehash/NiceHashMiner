@@ -539,18 +539,6 @@ namespace NHMCore.Mining
         #endregion
 
 #if NHMWS4
-        private bool _forceMiningOnlyThisContainer { get; set; } = false;
-        public bool ForceMiningOnlyThisContainer
-        {
-            get
-            {
-                return _forceMiningOnlyThisContainer;
-            }
-            set
-            {
-                _forceMiningOnlyThisContainer = value;
-            }
-        }
         #region OC
 
         private bool _IsTesting = false;
@@ -567,9 +555,9 @@ namespace NHMCore.Mining
         }
         private string _OCProfile = string.Empty;
         public string OCProfile => _OCProfile;
-        private OcBundle _ActiveOCProfile = null;
-        public OcBundle ActiveOCProfile => _ActiveOCProfile;
-        public Task<OcReturn> SetOcForDevice(OcBundle bundle)
+        private OcBundle _ActiveOCTestProfile = null;
+        public OcBundle ActiveOCTestProfile => _ActiveOCTestProfile;
+        public Task<OcReturn> SetOcTestForDevice(OcBundle bundle, bool reset = false)
         {
             Logger.Warn(_TAG, $"Setting OC for {ComputeDevice.Name}: TDP={bundle.TDP},CC={bundle.CoreClock},MC={bundle.MemoryClock}");
             var ret = OcReturn.Fail;
@@ -606,42 +594,33 @@ namespace NHMCore.Mining
             if (setValues == valuesToSet) ret = OcReturn.Success;
             else if (setValues != 0 && setValues < valuesToSet) ret = OcReturn.PartialSuccess;
 
-            if(ret != OcReturn.Fail)
+            if(ret != OcReturn.Fail && !reset)
             {
                 _IsTesting = true;//todo not just for testing
                 ComputeDevice.State = DeviceState.Testing;
                 _OCProfile = bundle.Name;
                 ComputeDevice.OCProfile = bundle.Name;
-                _ActiveOCProfile = bundle;
+                _ActiveOCTestProfile = bundle;
             }
             return Task.FromResult(ret);
         }
-        public Task<OcReturn> ResetOcForDevice()
+        public Task<OcReturn> ResetOcTestForDevice()
         {
             var defCC = ComputeDevice.CoreClockRange;
             var defMC = ComputeDevice.MemoryClockRange;
             var defTDP = ComputeDevice.TDPLimits;
-
-            var setCC = defCC.ok ? ComputeDevice.SetCoreClock(defCC.def) : false;
-            Logger.Warn(_TAG, $"Resetting core clock ({defCC.def}) for device {ComputeDevice.Name} success: {setCC}");
-            var setMC = defMC.ok ? ComputeDevice.SetMemoryClock(defMC.def) : false;
-            Logger.Warn(_TAG, $"Resetting memory clock ({defMC.def}) for device {ComputeDevice.Name} success: {setMC}");
-            var setTDP = defTDP.def > 0 ? ComputeDevice.SetPowerModeManual((int)defTDP.def) : false;
-            Logger.Warn(_TAG, $"Resetting TDP ({defTDP.def}) for device {ComputeDevice.Name} success: {setTDP}");
-            var ret = OcReturn.Success;
-            if (setCC && setMC && setTDP) ret = OcReturn.Success;
-            else if (!setCC && !setMC && !setTDP) ret = OcReturn.Fail;
-            else ret = OcReturn.PartialSuccess;
-
-            if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess)
+            var bundle = new OcBundle() { CoreClock = defCC.def, MemoryClock = defMC.def, TDP = (int)defTDP.def };
+            var res = SetOcTestForDevice(bundle, true).Result;
+            if (res != OcReturn.Fail)
             {
+                res = OcReturn.Success; // todo temporary
                 IsTesting = false;
                 ComputeDevice.State = DeviceState.Mining;
                 _OCProfile = string.Empty;
                 ComputeDevice.OCProfile = string.Empty;
-                _ActiveOCProfile = null;
+                _ActiveOCTestProfile = null;
             }
-            return Task.FromResult(ret);
+            return Task.FromResult(res);
         }
         #endregion
 #endif

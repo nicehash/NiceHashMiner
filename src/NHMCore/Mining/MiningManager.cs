@@ -4,6 +4,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Managers;
 using NHMCore.Mining.Grouping;
+using NHMCore.Nhmws.V4;
 using NHMCore.Notifications;
 using NHMCore.Schedules;
 using NHMCore.Switching;
@@ -119,7 +120,7 @@ namespace NHMCore.Mining
             _commandQueue.Enqueue(command);
             return command.Tsc.Task;
         }
-        public static Task TriggerSwitchCheck() // todo call this
+        public static Task TriggerSwitchCheck()
         {
             if (RunninLoops == null) return Task.CompletedTask;
             var command = new TriggerSwitchCheckCommand();
@@ -665,6 +666,12 @@ namespace NHMCore.Mining
                 foreach (var miner in _runningMiners.Values) await miner.StopTask();
                 // START
                 foreach (var miner in _runningMiners.Values) await miner.StartMinerTask(_stopMiningManager, _username);
+#if NHMWS4
+                AvailableDevices.Devices
+                    .Where(d => d.State == DeviceState.Mining)?
+                    .ToList()?
+                    .ForEach(d => d.AfterStartMining());
+#endif
             }
             else if (_miningDevices.Count == 0)
             {
@@ -922,6 +929,7 @@ namespace NHMCore.Mining
             // first stop currently running
             foreach (var stopKey in toStopMinerGroupKeys)
             {
+                if (toStartMinerGroupKeys.Contains(stopKey)) continue; //solves problem of switching to itself when testing
                 var stopGroup = _runningMiners[stopKey];
                 _runningMiners.Remove(stopKey);
                 await stopGroup.StopTask();
@@ -929,6 +937,7 @@ namespace NHMCore.Mining
             // start new
             foreach (var startKey in toStartMinerGroupKeys)
             {
+                if(toStopMinerGroupKeys.Contains(startKey)) continue; //solves problem of switching to itself when testing
                 var miningPairs = newGroupedMiningPairs[startKey];
                 var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs.FirstOrDefault());
                 var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
@@ -940,6 +949,15 @@ namespace NHMCore.Mining
                 _runningMiners[startKey] = toStart;
                 await toStart.StartMinerTask(_stopMiningManager, _username);
             }
+            //after start mining
+            //all devices check 
+#if NHMWS4
+            AvailableDevices.Devices
+                .Where(d => d.State == DeviceState.Mining)?
+                .ToList()?
+                .ForEach(d => d.AfterStartMining());
+            _ = NHWebSocketV4.UpdateMinerStatus(); //todo maybe not needeed
+#endif
             // log scope
             {
                 var stopLog = toStopMinerGroupKeys.Length > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
@@ -950,34 +968,5 @@ namespace NHMCore.Mining
                 Logger.Info(Tag, $"No change : ({sameLog})");
             }
         }
-
-        // TODO check the stats calculation
-        //public static async Task MinerStatsCheck()
-        //{
-        //    await _semaphore.WaitAsync();
-        //    try
-        //    {
-        //        foreach (var m in _runningMiners.Values)
-        //        {
-        //            // skip if not running or if await already in progress
-        //            if (!m.IsRunning || m.IsUpdatingApi) continue;
-        //            var ad = m.GetSummaryAsync();
-        //        }
-        //        // Update GUI
-        //        //ApplicationStateManager.RefreshRates(); // just update the model
-        //        // now we shoud have new global/total rate display it
-        //        var kwhPriceInBtc = BalanceAndExchangeRates.Instance.GetKwhPriceInBtc();
-        //        var profitInBTC = MiningDataStats.GetProfit(kwhPriceInBtc);
-        //        ApplicationStateManager.DisplayTotalRate(profitInBTC);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Logger.Error(Tag, $"Error occured while getting mining stats: {e.Message}");
-        //    }
-        //    finally
-        //    {
-        //        _semaphore.Release();
-        //    }
-        //}
     }
 }

@@ -752,7 +752,14 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
                     break;
             }
+            _ = UpdateMinerStatus();
             return Task.FromResult((err, result));
+        }
+        internal static Task UpdateMinerStatus()
+        {
+            var minerStatusJsonStr = CreateMinerStatusMessage();
+            _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
+            return Task.CompletedTask;
         }
         private static Task ExecuteProfilesBundleSet(Bundle bundle)
         {
