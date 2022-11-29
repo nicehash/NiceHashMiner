@@ -7,6 +7,7 @@ using NHM.DeviceMonitoring.Core_clock;
 using NHM.DeviceMonitoring.Memory_clock;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.Configs;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
 using NHMCore.Utils;
@@ -102,7 +103,7 @@ namespace NHMCore.Nhmws.V4
             {
                 "Miner" => $"{GetDevicePlugin(d.Uuid)}",
                 "OC profile" => $"{d.OCProfile}",
-                "OC profile ID" => $"",
+                "OC profile ID" => $"{d.OCProfileID}",
                 "Fan profile" => $"", //TODO
                 "Fan profile ID" => $"",
                 "ELP profile" => $"", //TODO
@@ -325,8 +326,8 @@ namespace NHMCore.Nhmws.V4
             {
                 Helpers.GetElapsedSecondsSinceStart().ToString(),
                 Helpers.GetLocalIP().ToString(),
-                String.Empty, //todo
-                String.Empty
+                BundleManager.GetBundleInfo().BundleID,
+                BundleManager.GetBundleInfo().BundleName,
             };
             return list;
         }

@@ -571,6 +571,8 @@ namespace NHMCore.Nhmws.V4
     {
         [JsonProperty("name")]
         public string Name { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
         [JsonProperty("device_name")]
         public string DeviceName { get; set; }
         [JsonProperty("miner_id", NullValueHandling = NullValueHandling.Ignore)]

@@ -57,6 +57,7 @@ namespace NHMCore.Mining
 
         private record MainCommand : Command;
         private record TriggerSwitchCheckCommand : MainCommand;
+        private record IterateSwitchCommand : MainCommand;
         private record NormalizedProfitsUpdateCommand(Dictionary<AlgorithmType, double> NormalizedProfits) : MainCommand;
 
         private record UsernameChangedCommand(string Username) : MainCommand;
@@ -400,7 +401,7 @@ namespace NHMCore.Mining
                     //}
                     await CheckGroupingAndUpdateMiners(new MainCommand());
                 }
-                foreach (var startMining in startMiningCommands) startMining.Device.State = DeviceState.Mining; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
+                foreach (var startMining in startMiningCommands) startMining.Device.State = startMining.Device.AlgorithmSettings.Any(a => a.IsTesting) ? DeviceState.Testing : DeviceState.Mining; // THIS TRIGERS STATE CHANGE TODO change this at the point where we initiate the actual change
 
                 // start devices to benchmark or update existing benchmarks algorithms
                 var devicesToBenchmark = startBenchmarkingCommands.Select(c => c.Device)
@@ -667,10 +668,17 @@ namespace NHMCore.Mining
                 // START
                 foreach (var miner in _runningMiners.Values) await miner.StartMinerTask(_stopMiningManager, _username);
 #if NHMWS4
-                AvailableDevices.Devices
-                    .Where(d => d.State == DeviceState.Mining)?
-                    .ToList()?
-                    .ForEach(d => d.AfterStartMining());
+                var miningDevs =  AvailableDevices.Devices
+                    .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
+                    .ToList();
+                if (miningDevs.Any())
+                {
+                    foreach (var dev in miningDevs)
+                    {
+                        await dev.AfterStartMining();
+                    }
+                }
+                _ = NHWebSocketV4.UpdateMinerStatus(); //todo maybe not needeed
 #endif
             }
             else if (_miningDevices.Count == 0)
@@ -929,16 +937,22 @@ namespace NHMCore.Mining
             // first stop currently running
             foreach (var stopKey in toStopMinerGroupKeys)
             {
-                if (toStartMinerGroupKeys.Contains(stopKey)) continue; //solves problem of switching to itself when testing
+                //if (toStartMinerGroupKeys.Contains(stopKey)) continue; //solves problem of switching to itself when testing
                 var stopGroup = _runningMiners[stopKey];
+                //stop oc profile here
+                //try test here
+                //try bundle here
                 _runningMiners.Remove(stopKey);
                 await stopGroup.StopTask();
             }
             // start new
             foreach (var startKey in toStartMinerGroupKeys)
             {
-                if(toStopMinerGroupKeys.Contains(startKey)) continue; //solves problem of switching to itself when testing
+                //if(toStopMinerGroupKeys.Contains(startKey)) continue; //solves problem of switching to itself when testing
                 var miningPairs = newGroupedMiningPairs[startKey];
+                //start oc profile here
+                //try test here
+                //try bundle here
                 var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs.FirstOrDefault());
                 var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
                 if (toStart == null)
@@ -952,10 +966,17 @@ namespace NHMCore.Mining
             //after start mining
             //all devices check 
 #if NHMWS4
-            AvailableDevices.Devices
-                .Where(d => d.State == DeviceState.Mining)?
-                .ToList()?
-                .ForEach(d => d.AfterStartMining());
+            var miningDevs = AvailableDevices.Devices
+                .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
+                .ToList();
+            if(miningDevs.Any())
+            {
+                foreach (var dev in miningDevs)
+                {
+                    await dev.AfterStartMining();
+                }
+            }
+
             _ = NHWebSocketV4.UpdateMinerStatus(); //todo maybe not needeed
 #endif
             // log scope

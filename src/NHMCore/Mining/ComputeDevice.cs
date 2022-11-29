@@ -14,6 +14,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
+using static NHMCore.Configs.Managers.OCManager;
 
 namespace NHMCore.Mining
 {
@@ -655,17 +657,54 @@ namespace NHMCore.Mining
             }
         }
 #if NHMWS4
-        private string _OCProfile = string.Empty;
         public string OCProfile
         {
-            get { return _OCProfile; }
-            set { _OCProfile = value; }
+            get {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if(testTarget != null)
+                {
+                    return testTarget.OCProfile;
+                }
+                return string.Empty;
+            }
         }
-        public void AfterStartMining()
+        public string OCProfileID
         {
-            if (IsTesting)
+            get
             {
-                State = DeviceState.Testing;
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if(testTarget != null )
+                {
+                    return testTarget.OCProfileID;
+                }
+                return string.Empty;
+            }
+        }
+        public async Task AfterStartMining()
+        {
+            var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
+            if (testTarget == null) return;
+            if (testTarget.ActiveOCTestProfile != null)//todo if starting... if change
+            {
+                var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCTestProfile, true, false);
+                if(ret == OcReturn.Success || ret == OcReturn.PartialSuccess) State = DeviceState.Testing;
+                return;
+            }
+            if(testTarget.ActiveOCTestProfile == null && State == DeviceState.Testing)
+            {
+                var ret = await testTarget.ResetOcForDevice(true);
+                State = DeviceState.Mining;
+                return;
+            }
+            if(testTarget.ActiveOCProfile != null)
+            {
+                var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCProfile, false, false);
+                return;
+            }
+            if(testTarget.ActiveOCProfile == null)
+            {
+                var ret = await testTarget.ResetOcForDevice(false);
+                return;
             }
         }
 #endif

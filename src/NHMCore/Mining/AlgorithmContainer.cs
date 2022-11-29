@@ -101,7 +101,7 @@ namespace NHMCore.Mining
                 Algorithm = Algorithm
             };
         }
-        public DeviceELPData FindInELPTree(string deviceUUID) => ELPManager.Instance.FindDeviceNode(this, deviceUUID); 
+        public DeviceELPData FindInELPTree(string deviceUUID) => ELPManager.Instance.FindDeviceNode(this, deviceUUID);
         public void UpdateConfigVersionIfNeeded()
         {
             if ((_powerUsageHistory.Count >= 2 && _powerUsageHistory.Last() != _powerUsageHistory[_powerUsageHistory.Count - 2]) ||
@@ -131,7 +131,7 @@ namespace NHMCore.Mining
             }
         }
 
-#region Identity
+        #region Identity
 
         /// <summary>
         /// Friendly display name for this algorithm
@@ -149,10 +149,10 @@ namespace NHMCore.Mining
 
         public string MinerUUID => Algorithm?.MinerID;
         public bool IsDual => Algorithm.IDs.Count > 1;
-#endregion
+        #endregion
 
 
-#region Mining settings
+        #region Mining settings
 
         /// <summary>
         /// Hashrate in H/s set by benchmark or user
@@ -268,11 +268,11 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
         }
 
-#endregion
+        #endregion
 
-#region Profitability
+        #region Profitability
 
-#region EstimatedProfit NOT FOR SWITCHING
+        #region EstimatedProfit NOT FOR SWITCHING
 
 
         internal void UpdateEstimatedProfit(Dictionary<AlgorithmType, double> profits)
@@ -359,9 +359,9 @@ namespace NHMCore.Mining
             }
         }
 
-#endregion EstimatedProfit NOT FOR SWITCHING
+        #endregion EstimatedProfit NOT FOR SWITCHING
 
-#region NormalizedProfit FOR SWITCHING
+        #region NormalizedProfit FOR SWITCHING
         // TODO with this implementation WE ONLY SUPPORT dual algorithms
         /// <summary>
         /// Gets the averaged speed for this algorithm in H/s
@@ -380,7 +380,7 @@ namespace NHMCore.Mining
 
 
 
-#endregion NormalizedProfit FOR SWITCHING
+        #endregion NormalizedProfit FOR SWITCHING
 
 
 
@@ -404,7 +404,7 @@ namespace NHMCore.Mining
             }
         }
 
-#endregion
+        #endregion
 
         private bool _isReBenchmark = false;
         public bool IsReBenchmark
@@ -432,7 +432,7 @@ namespace NHMCore.Mining
 
 
 
-#region Benchmark info
+        #region Benchmark info
 
         private bool _benchmarkPending;
         public bool IsBenchmarkPending
@@ -479,11 +479,11 @@ namespace NHMCore.Mining
             this.Speeds = allZero;
         }
 
- 
 
-#endregion
 
-#region Benchmark methods
+        #endregion
+
+        #region Benchmark methods
 
         public void SetBenchmarkPending()
         {
@@ -501,9 +501,9 @@ namespace NHMCore.Mining
             BenchmarkErrorMessage = message;
         }
 
-#endregion
+        #endregion
 
-#region Profitability methods
+        #region Profitability methods
 
         public virtual void UpdateCurrentNormalizedProfit(Dictionary<AlgorithmType, double> profits)
         {
@@ -553,11 +553,44 @@ namespace NHMCore.Mining
                 _IsTesting = value;
             }
         }
-        private string _OCProfile = string.Empty;
-        public string OCProfile => _OCProfile;
+        public string OCProfile {
+            get
+            {
+                if (ActiveOCTestProfile != null) return ActiveOCTestProfile.Name;
+                if (ActiveOCProfile != null) return ActiveOCProfile.Name;
+                return string.Empty;
+            }
+        }
+        public string OCProfileID
+        {
+            get
+            {
+                if (ActiveOCTestProfile != null) return ActiveOCTestProfile.Id;
+                if (ActiveOCProfile != null) return ActiveOCProfile.Id;
+                return string.Empty;
+            }
+        }
         private OcBundle _ActiveOCTestProfile = null;
         public OcBundle ActiveOCTestProfile => _ActiveOCTestProfile;
-        public Task<OcReturn> SetOcTestForDevice(OcBundle bundle, bool reset = false)
+        private OcBundle TestOcProfilePrev { get; set; }
+
+        private OcBundle _ActiveOCProfile = null;
+        public OcBundle ActiveOCProfile => _ActiveOCProfile;
+        private OcBundle OcProfilePrev { get; set; }
+
+        public void SetTargetOcTestProfile(OcBundle profile)
+        {
+            IsTesting = profile == null ? false : true;
+            TestOcProfilePrev = ActiveOCTestProfile;
+            _ActiveOCTestProfile = profile;
+        }
+        public void SetTargetOcProfile(OcBundle profile)
+        {
+            OcProfilePrev = ActiveOCProfile;
+            _ActiveOCProfile = profile;
+        }
+
+        public Task<OcReturn> SetOcForDevice(OcBundle bundle, bool test = false, bool reset = false)
         {
             Logger.Warn(_TAG, $"Setting OC for {ComputeDevice.Name}: TDP={bundle.TDP},CC={bundle.CoreClock},MC={bundle.MemoryClock}");
             var ret = OcReturn.Fail;
@@ -594,33 +627,23 @@ namespace NHMCore.Mining
             if (setValues == valuesToSet) ret = OcReturn.Success;
             else if (setValues != 0 && setValues < valuesToSet) ret = OcReturn.PartialSuccess;
 
-            if(ret != OcReturn.Fail && !reset)
+            if (!reset && (ret == OcReturn.Success || ret == OcReturn.PartialSuccess))
             {
-                _IsTesting = true;//todo not just for testing
-                ComputeDevice.State = DeviceState.Testing;
-                _OCProfile = bundle.Name;
-                ComputeDevice.OCProfile = bundle.Name;
-                _ActiveOCTestProfile = bundle;
+                if (test) IsTesting = true;
+                return Task.FromResult(ret);
             }
+            if(test) IsTesting = false;
             return Task.FromResult(ret);
         }
-        public Task<OcReturn> ResetOcTestForDevice()
+
+        public Task<OcReturn> ResetOcForDevice(bool test = false)
         {
             var defCC = ComputeDevice.CoreClockRange;
             var defMC = ComputeDevice.MemoryClockRange;
             var defTDP = ComputeDevice.TDPLimits;
             var bundle = new OcBundle() { CoreClock = defCC.def, MemoryClock = defMC.def, TDP = (int)defTDP.def };
-            var res = SetOcTestForDevice(bundle, true).Result;
-            if (res != OcReturn.Fail)
-            {
-                res = OcReturn.Success; // todo temporary
-                IsTesting = false;
-                ComputeDevice.State = DeviceState.Mining;
-                _OCProfile = string.Empty;
-                ComputeDevice.OCProfile = string.Empty;
-                _ActiveOCTestProfile = null;
-            }
-            return Task.FromResult(res);
+            var res = SetOcForDevice(bundle, test, true);
+            return Task.FromResult(res.Result);
         }
         #endregion
 #endif

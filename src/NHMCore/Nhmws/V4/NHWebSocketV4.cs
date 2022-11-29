@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
@@ -735,16 +736,16 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
-                    object jobjectFan = JsonConvert.DeserializeObject(parameters);
-                    if (jobjectFan is not JObject jsonObjFan) break;
-                    if (jsonObjFan.ToObject<FanBundle>() is FanBundle fb) ExecuteFanBundle(fb);
+                    //object jobjectFan = JsonConvert.DeserializeObject(parameters);
+                    //if (jobjectFan is not JObject jsonObjFan) break;
+                    //if (jsonObjFan.ToObject<FanBundle>() is FanBundle fb) ExecuteFanBundle(fb);
                     break;
                 case SupportedAction.ActionFanProfileTestStop:
                     break;
                 case SupportedAction.ActionElpProfileTest:
-                    object jobjectELP = JsonConvert.DeserializeObject(parameters);
-                    if (jobjectELP is not JObject jsonObjELP) break;
-                    if (jsonObjELP.ToObject<ElpBundle>() is ElpBundle eb) ExecuteELPBundle(eb);
+                    //object jobjectELP = JsonConvert.DeserializeObject(parameters);
+                    //if (jobjectELP is not JObject jsonObjELP) break;
+                    //if (jsonObjELP.ToObject<ElpBundle>() is ElpBundle eb) ExecuteELPBundle(eb);
                     break;
                 case SupportedAction.ActionElpProfileTestStop:
                     break;
@@ -763,10 +764,11 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task ExecuteProfilesBundleSet(Bundle bundle)
         {
+            BundleManager.SetBundleInfo(bundle.Name, bundle.Id);
             //todo check returns!!!
             if (bundle.OcBundles != null)
             {
-                ApplyOCBundle(bundle.OcBundles);
+                var retOC = OCManager.Instance.ApplyOcBundle(bundle.OcBundles);
             }
             if (bundle.FanBundles != null)
             {
@@ -774,12 +776,14 @@ namespace NHMCore.Nhmws.V4
             }
             if (bundle.ElpBundles != null)
             {
-                ExecuteELPBundles(bundle.ElpBundles);
+                //ExecuteELPBundles(bundle.ElpBundles);
             }
             return Task.CompletedTask;
         }
         private static Task ExecuteProfilesBundleReset()
         {
+            BundleManager.ResetBundleInfo();
+            var retOC = OCManager.Instance.ResetOcBundle();
             return Task.CompletedTask;
         }
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
@@ -794,24 +798,7 @@ namespace NHMCore.Nhmws.V4
             var res = OCManager.Instance.StopTest(deviceUUID);
             return Task.FromResult(res.Result);
         }
-        private static Task ApplyOCBundle(List<OcBundle> bundles)
-        {
-            var ret = OCManager.Instance.ApplyOcBundle(bundles);
-            return ret;
-        }
-        private static Task ExecuteELPBundle(ElpBundle elpBundle)
-        {
-            return Task.CompletedTask;
-        }
-        private static Task ExecuteELPBundles(List<ElpBundle> bundles)
-        {
-            foreach (var bundle in bundles)
-            {
-                //todo check returns
-                ExecuteELPBundle(bundle);
-            }
-            return Task.CompletedTask;
-        }
+
         private static Task ExecuteFanBundle(FanBundle fanBundle)
         {
             object t = fanBundle.Type switch
