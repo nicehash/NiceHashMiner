@@ -235,7 +235,7 @@
                                         </ToggleButton>
                                         <ToggleButton x:Name="ParameterOverviewButton" Style="{StaticResource TabButton}"
                                                 Margin="24,0,0,0">
-                                                <TextBlock Text="Extra Commands" />
+                                                <TextBlock Text="Extra Parameters" />
                                         </ToggleButton>
                                     </StackPanel>
 

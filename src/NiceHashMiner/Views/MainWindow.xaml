@@ -60,7 +60,7 @@
             <TabItem Header="Plugins" Name="PluginsButton">
                 <pluginsNew:Plugins DataContext="{Binding .}" />
             </TabItem>
-            <TabItem Header="Extra commands" Name="ParameterOverviewButton">
+            <TabItem Header="Extra parameters" Name="ParameterOverviewButton">
                 <parameterOverview:ParameterOverview DataContext="{Binding .}" />
             </TabItem>
             <TabItem Header="LEFT_SETTINGS" Name="SettingsButton">
