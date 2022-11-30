@@ -295,6 +295,7 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 a.ClearSpeeds();
             }
+            ConfigManager.CommitBenchmarksForDevice(Dev);
         }
 
         public void CopySettingsFromAnotherDevice(ComputeDevice source)
@@ -307,6 +308,7 @@ namespace NiceHashMiner.ViewModels.Models
                 algoDestination.SecondaryBenchmarkSpeed = algoSource.SecondaryBenchmarkSpeed;
                 algoDestination.PowerUsage = algoSource.PowerUsage;
             }
+            ConfigManager.CommitBenchmarksForDevice(Dev);
         }
 
         public void EnableBenchmarkedOnly()
@@ -359,7 +361,7 @@ namespace NiceHashMiner.ViewModels.Models
                 algo => algo.AlgorithmName,
                 algo => algo.PluginName,
                 algo => algo.BenchmarkSpeed, // FIRST SPEED FIX only
-                algo => algo.CurrentEstimatedProfit,
+                algo => algo.CurrentEstimatedProfitPure,
                 algo => algo.Status, // TODO STATUS doesn't exist yet
                 algo => algo.Enabled,
             };

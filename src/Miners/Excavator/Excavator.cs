@@ -156,7 +156,7 @@ namespace Excavator
             var (uuids, ids) = GetUUIDsAndIDs(_miningPairs);
             var (_, cwd) = GetBinAndCwdPaths();
             var fileName = $"cmd_{string.Join("_", ids)}.json";
-            var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, uuids.ToArray());
+            var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, _algorithmType.ToString(), uuids.ToArray());
             File.WriteAllText(Path.Combine(cwd, fileName), cmdStr);
             var commandLine = $"-wp {_apiPort} -wa \"{_authToken}\" -c {fileName} -m -qx {_extraLaunchParameters}";
             return commandLine;

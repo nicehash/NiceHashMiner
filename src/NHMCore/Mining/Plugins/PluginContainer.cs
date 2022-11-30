@@ -321,22 +321,30 @@ namespace NHMCore.Mining.Plugins
             {
                 listOfOldDrivers.AddRange(CheckDeviceVersionLimits(dev));
             }
-            if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
+            if (listOfOldDrivers.Any(d => d.Item3.Item1 == DriverVersionCheckType.DriverVersionObsolete)) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
+            if (listOfOldDrivers.Any(d => d.Item3.Item1 == DriverVersionCheckType.DriverVersionProblematic))
+            {
+                var versionExample = listOfOldDrivers
+                    .Where(d => d.Item3.Item1 == DriverVersionCheckType.DriverVersionProblematic)
+                    .Select(d => d.Item3.Item2)
+                    .FirstOrDefault();
+                if (versionExample != null) AvailableNotifications.CreateNoOptimalDrivers(versionExample);
+            }
         }
 
         private List<(DriverVersionLimitType, BaseDevice, (DriverVersionCheckType, Version))> CheckDeviceVersionLimits(BaseDevice device)
         {
-            var oldDriversForDevice = new List<(DriverVersionLimitType outDatedType, BaseDevice dev,(DriverVersionCheckType checkReturnCode, Version minVersion) driverVersionCheckReturn)>();
+            var problematic = new List<(DriverVersionLimitType outDatedType, BaseDevice dev,(DriverVersionCheckType checkReturnCode, Version minVersion) driverVersionCheckReturn)>();
             if (device is AMDDevice dev && !IsAMDDriverVersionValidFormat(dev))
             {
                 AMDNonOKCodeNotification(dev);
-                return oldDriversForDevice;
+                return problematic;
             }
-            if (_plugin is IDriverIsMinimumRequired minRequired) oldDriversForDevice.Add((DriverVersionLimitType.MinRequired, device, minRequired.IsDriverMinimumRequired(device)));
-            if (_plugin is IDriverIsMinimumRecommended minRecommended) oldDriversForDevice.Add((DriverVersionLimitType.MinRecommended, device, minRecommended.IsDriverMinimumRecommended(device)));
-            if (oldDriversForDevice.Count == 0) return oldDriversForDevice;
-            oldDriversForDevice = oldDriversForDevice.Where(item => item.driverVersionCheckReturn.checkReturnCode == DriverVersionCheckType.DriverVersionObsolete).ToList();
-            return oldDriversForDevice;
+            if (_plugin is IDriverIsMinimumRequired minRequired) problematic.Add((DriverVersionLimitType.MinRequired, device, minRequired.IsDriverMinimumRequired(device)));
+            if (_plugin is IDriverIsMinimumRecommended minRecommended) problematic.Add((DriverVersionLimitType.MinRecommended, device, minRecommended.IsDriverMinimumRecommended(device)));
+
+            if (problematic.Count == 0) return problematic;
+            return problematic;
         }
 
         private static void AMDNonOKCodeNotification(AMDDevice amd)

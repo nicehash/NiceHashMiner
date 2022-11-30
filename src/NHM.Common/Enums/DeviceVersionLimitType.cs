@@ -3,6 +3,6 @@
     public enum DriverVersionLimitType
     {
         MinRecommended,
-        MinRequired
+        MinRequired,
     }
 }

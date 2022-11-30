@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHMCore.Notifications;
 using System;
 using System.Windows.Controls;
 
@@ -21,7 +22,7 @@ namespace NiceHashMiner.Views.Notifications
             {
                 foreach (var item in ic_NotificationsList.ItemsSource)
                 {
-                    if (item is NHMCore.Notifications.Notification notification)
+                    if (item is Notification notification)
                     {
                         notification.NotificationNew = false;
                     }
@@ -31,6 +32,11 @@ namespace NiceHashMiner.Views.Notifications
             {
                 Logger.Error("Notifications", ex.Message);
             }
+        }
+
+        private void ClearAllNotifications(object sender, System.Windows.RoutedEventArgs e)
+        {
+            NotificationsManager.Instance.ClearAllNotifications();
         }
     }
 }

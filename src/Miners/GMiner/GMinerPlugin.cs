@@ -9,13 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace NBMiner
+namespace MP.GMiner
 {
-    public partial class NBMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
+    public partial class GMinerPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRequired, IDriverIsMinimumRecommended
     {
-        public NBMinerPlugin()
+        public GMinerPlugin()
         {
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
@@ -24,30 +25,28 @@ namespace NBMiner
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
-            // https://github.com/NebuTech/NBMiner/releases/ 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v42.3",
-                ExePath = new List<string> { "NBMiner_Win", "nbminer.exe" },
+                BinVersion = "v3.12",
+                ExePath = new List<string> { "", "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v42.3/NBMiner_42.3_Win.zip", // original
-                    "https://dl.nbminer.com/NBMiner_42.3_Win.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/3.12/gminer_3_12_windows64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "GPU Miner for ETC mining.",
+                PluginDescription = "GPU Miner for multiple algorithms.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
-        public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
+        public override string PluginUUID => "d8ddcaf2-95c5-4f9a-b65f-c123a0d4fbc2";
 
-        public override string Name => "NBMiner";
+        public override string Name => "GMiner";
 
-        public override Version Version => new Version(19, 4);
-        
+        public override Version Version => new Version(19, 1);
+
 
         public override string Author => "info@nicehash.com";
 
@@ -66,7 +65,7 @@ namespace NBMiner
             var supportedNVIDIA_Driver = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
             if (!supportedNVIDIA_Driver)
             {
-                Logger.Error("NBMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
+                Logger.Error("GMinerPlugin", $"IsSupportedNvidiaDevice: installed NVIDIA driver is not supported. minimum {minDrivers}, installed {CUDADevice.INSTALLED_NVIDIA_DRIVERS}");
             }
 
             var gpus = devices
@@ -103,7 +102,7 @@ namespace NBMiner
 
         protected override MinerBase CreateMinerBase()
         {
-            return new NBMiner(PluginUUID, _mappedIDs);
+            return new GMiner(PluginUUID, _mappedIDs);
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
@@ -112,7 +111,7 @@ namespace NBMiner
             {
                 if (_mappedIDs.Count == 0) return;
                 var (minerBinPath, minerCwdPath) = GetBinAndCwdPaths();
-                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json --no-watchdog"); // AMD + NVIDIA
+                var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices --watchdog 0"); // AMD + NVIDIA
                 var dumpFile = $"d{DateTime.UtcNow.Ticks}.txt";
                 try
                 {
@@ -120,9 +119,9 @@ namespace NBMiner
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("NBMiner", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
+                    Logger.Error("GMiner", $"DevicesCrossReference error creating dump file ({dumpFile}): {e.Message}");
                 }
-                var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices);
+                var mappedDevs = DevicesListParser.ParseGMinerOutput(output, devices.ToList());
 
                 foreach (var (uuid, indexID) in mappedDevs.Select(kvp => (kvp.Key, kvp.Value)))
                 {
@@ -131,21 +130,15 @@ namespace NBMiner
             }
             catch (Exception ex)
             {
-                Logger.Error("NBMiner", $"Error during DevicesCrossReference: {ex.Message}");
+                Logger.Error("GMiner", $"Error during DevicesCrossReference: {ex.Message}");
             }
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var pluginRootBinsPath = GetBinAndCwdPaths().cwdPath;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe" });
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe" });
         }
-
-        //private static bool IsLHR_Ignore(CUDADevice dev)
-        //{
-        //    const ulong maxGPU_VRAM = 11UL << 30; // 11GB
-        //    return dev.Name.Contains("GeForce RTX 3080") && dev.GpuRam > maxGPU_VRAM;
-        //}
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
@@ -168,7 +161,7 @@ namespace NBMiner
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
 
-    public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
+        public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRecommended(BaseDevice device)
         {
             return DriverVersionChecker.CompareAMDDriverVersions(device, new Version(21, 5, 2));
         }
