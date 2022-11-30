@@ -610,17 +610,17 @@ namespace NHMCore.Mining
 
             if (!setCC)
             {
-                Logger.Warn(_TAG, $"Setting core clock for device {ComputeDevice.Name} success: {setCC}");
+                Logger.Warn(_TAG, $"Setting core clock success: {setCC}");
                 setValues--;
             }
             if (!setMC)
             {
-                Logger.Warn(_TAG, $"Setting memory clock for device {ComputeDevice.Name} success: {setMC}");
+                Logger.Warn(_TAG, $"Setting memory clock success: {setMC}");
                 setValues--;
             }
             if (!setTDP)
             {
-                Logger.Warn(_TAG, $"Setting TDP for device {ComputeDevice.Name} success: {setTDP}");
+                Logger.Warn(_TAG, $"Setting TDP success: {setTDP}");
                 setValues--;
             }
 
@@ -630,9 +630,11 @@ namespace NHMCore.Mining
             if (!reset && (ret == OcReturn.Success || ret == OcReturn.PartialSuccess))
             {
                 if (test) IsTesting = true;
+                Logger.Warn(_TAG, $"Setting OC is successful");
                 return Task.FromResult(ret);
             }
             if(test) IsTesting = false;
+            Logger.Warn(_TAG, $"Setting OC is unsuccessful");
             return Task.FromResult(ret);
         }
 

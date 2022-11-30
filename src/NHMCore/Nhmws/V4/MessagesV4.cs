@@ -541,7 +541,7 @@ namespace NHMCore.Nhmws.V4
         public bool? Enabled { get; set; }
     }
 
-    internal class Bundle
+    public class Bundle
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -554,7 +554,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("elp", NullValueHandling = NullValueHandling.Ignore)]
         public List<ElpBundle>? ElpBundles { get; set; }
     }
-    internal class ElpBundle
+    public class ElpBundle
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -586,7 +586,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("power_mode")]
         public int TDP { get; set; }
     }
-    internal class FanBundle
+    public class FanBundle
     {
         [JsonProperty("name")]
         public string Name { get; set; }

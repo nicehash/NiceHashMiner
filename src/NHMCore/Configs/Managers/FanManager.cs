@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Configs.Managers
 {
-    internal class FanManager
+    public class FanManager
     {
+        private FanManager() { }
+        public static FanManager Instance { get; } = new FanManager();
+        private readonly string _TAG = "FanManager";
     }
 }

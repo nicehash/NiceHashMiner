@@ -765,6 +765,7 @@ namespace NHMCore.Nhmws.V4
         private static Task ExecuteProfilesBundleSet(Bundle bundle)
         {
             BundleManager.SetBundleInfo(bundle.Name, bundle.Id);
+            _ = BundleManager.SaveBundle(bundle);
             //todo check returns!!!
             if (bundle.OcBundles != null)
             {

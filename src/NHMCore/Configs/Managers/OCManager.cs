@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NHMCore.Configs.Managers
 {
@@ -28,7 +29,6 @@ namespace NHMCore.Configs.Managers
             PartialSuccess,
             Fail
         }
-
         public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, OcBundle bundle)
         {
             if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices mining"));
@@ -79,7 +79,6 @@ namespace NHMCore.Configs.Managers
         public Task<(ErrorCode err, string msg)> ApplyOcBundle(List<OcBundle> bundles)
         {
             List<AlgorithmContainer> processed = new();
-            //if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices mining"));
             var sorted = new List<(int, OcBundle)>();
             foreach (var bundle in bundles)
             {

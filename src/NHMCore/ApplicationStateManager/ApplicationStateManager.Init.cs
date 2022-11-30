@@ -5,6 +5,7 @@ using NHM.DeviceDetection;
 using NHM.DeviceMonitoring;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
@@ -257,6 +258,7 @@ namespace NHMCore
                 }
 
                 SchedulesManager.Instance.Init();
+                BundleManager.Init();
             }
             catch (Exception e)
             {
