@@ -18,16 +18,17 @@ namespace NanoMiner
         {
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
+            MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.7.3",
-                ExePath = new List<string> { "nanominer-windows-3.7.3-cuda11", "nanominer.exe" },
+                BinVersion = "v3.7.5",
+                ExePath = new List<string> { "nanominer-windows-3.7.5-cuda11", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v3.7.3/nanominer-windows-3.7.3-cuda11.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v3.7.5/nanominer-windows-3.7.5-cuda11.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -41,7 +42,7 @@ namespace NanoMiner
 
         public override string Name => "NanoMiner";
 
-        public override Version Version => new Version(19, 2);
+        public override Version Version => new Version(19, 3);
 
         public override string Author => "info@nicehash.com";
 

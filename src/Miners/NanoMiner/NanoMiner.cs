@@ -36,7 +36,9 @@ namespace NanoMiner
 
         protected override void Init()
         {
-            // ?????
+            // separator ","
+            if (_algorithmType != AlgorithmType.VerusHash)
+                _devices = string.Join(MinerCommandLineSettings.DevicesSeparator, _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
@@ -108,46 +110,6 @@ namespace NanoMiner
             }
 
             return api;
-        }
-
-        protected override string MiningCreateCommandLine()
-        {
-            return CreateCommandLine(_username);
-        }
-
-        private string CreateCommandLine(string username)
-        {
-            _apiPort = GetAvaliablePort();
-
-            var algo = PluginSupportedAlgorithms.AlgorithmName(_algorithmType);
-
-            var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-            var(_, cwdPath) = GetBinAndCwdPaths();
-
-            var configString = "";
-            if (_extraLaunchParameters != "")
-            {
-                var arrayOfELP = _extraLaunchParameters.Split(' ');
-                foreach (var elp in arrayOfELP)
-                {
-                    configString += $"{elp}\r\n";
-                }
-            }
-
-            var devs = algo == "Verushash" ? "" : string.Join(",", _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
-            var path = algo == "Verushash" ? $"config_nh.ini" : $"config_nh_{devs}.ini";
-
-            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\nrigName=\r\npool1={url}";
-            if (devs != "") configString += $"\r\ndevices={devs}";
-            try
-            {
-                File.WriteAllText(Path.Combine(cwdPath, $"{path}"), configString);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(_logGroup, $"Unable to create config file: {e.Message}");
-            }
-            return $"{path}";
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
