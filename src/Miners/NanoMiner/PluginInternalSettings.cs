@@ -20,23 +20,23 @@ namespace NanoMiner
             {
                 {
                     $"{AlgorithmType.DaggerHashimoto}",
-                    $"-algo ethash -pool1 nicehash+tcp://{_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo ethash -pool1 {_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.KAWPOW}",
-                    $"-algo kawpow -pool1 stratum+tcp://{_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo kawpow -pool1 {_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.Octopus}",
-                    $"-algo octopus -pool1 stratum+tcp://{_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo octopus -pool1 {_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.Autolykos}",
-                    $"-algo autolykos -pool1 stratum+tcp://{_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo autolykos -pool1 {_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.EtcHash}",
-                    $"-algo etchash -pool1 nicehash+tcp://{_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo etchash -pool1 {_urlPort} -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.VerusHash}",
@@ -47,23 +47,23 @@ namespace NanoMiner
             {
                 {
                     $"{AlgorithmType.DaggerHashimoto}",
-                    $"-algo ethash -pool1 nicehash+ssl://{_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo ethash -pool1 {_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.KAWPOW}",
-                    $"-algo kawpow -pool1 stratum+ssl://{_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo kawpow -pool1 {_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.Octopus}",
-                    $"-algo octopus -pool1 stratum+ssl://{_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo octopus -pool1 {_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.Autolykos}",
-                    $"-algo autolykos -pool1 stratum+ssl://{_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo autolykos -pool1 {_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.EtcHash}",
-                    $"-algo etchash -pool1 nicehash+ssl://{_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
+                    $"-algo etchash -pool1 {_url}:443 -wallet {_username} -webport {_apiPort} -devices {_devices} -watchdog 0 {_extraLaunchParameters} -rigname"
                 },
                 {
                     $"{AlgorithmType.VerusHash}",
