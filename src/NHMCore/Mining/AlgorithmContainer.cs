@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using Windows.Media.Protection.PlayReady;
 using static NHMCore.Configs.Managers.OCManager;
 
 namespace NHMCore.Mining
@@ -240,9 +241,15 @@ namespace NHMCore.Mining
                 if (Algorithm != null) Algorithm.Enabled = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Status));
+                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
             }
         }
-
+        public void SetEnabled(bool enabled) //for enable without WS (bulk setting)
+        {
+            if (Algorithm != null) Algorithm.Enabled = enabled;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(Status));
+        }
         /// <summary>
         /// Indicates whether this algorithm requires a benchmark
         /// </summary>

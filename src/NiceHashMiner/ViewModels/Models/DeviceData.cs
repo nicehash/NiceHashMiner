@@ -6,6 +6,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
+using NHMCore.Nhmws.V4;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
@@ -76,9 +77,11 @@ namespace NiceHashMiner.ViewModels.Models
             {
                 foreach (var algo in Dev.AlgorithmSettings)
                 {
-                    algo.Enabled = value;
+                    //algo.Enabled = value;
+                    algo.SetEnabled(value);
                 }
                 OnPropertyChanged();
+                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
             }
         }
 

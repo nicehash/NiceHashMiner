@@ -682,6 +682,7 @@ namespace NHMCore.Mining
         }
         public async Task AfterStartMining()
         {
+            //TODO IF DELTA, IF ALREADY SET, IF NOT SET DONT RESTART ETC
             var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (testTarget == null) return;
             if (testTarget.ActiveOCTestProfile != null)//todo if starting... if change

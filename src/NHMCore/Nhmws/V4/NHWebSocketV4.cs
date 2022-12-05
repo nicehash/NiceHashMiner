@@ -26,7 +26,7 @@ using NHLog = NHM.Common.Logger;
 
 namespace NHMCore.Nhmws.V4
 {
-    static class NHWebSocketV4
+    public static class NHWebSocketV4
     {
         #region locking
         private static readonly string _logTag = "NHWebSocketV4";
@@ -328,7 +328,7 @@ namespace NHMCore.Nhmws.V4
 
         #region Message handling
 
-        private static string CreateMinerStatusMessage() => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices()));
+        private static string CreateMinerStatusMessage(bool stateChange = false) => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices(), stateChange));
 
         static private async Task HandleMessage(MessageEventArgs e)
         {
@@ -684,7 +684,7 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<(ErrorCode err, string msg)> CallAction(MinerCallAction action)
         {
-            var actionRecord = ActionMap.ActionList.Where(a => a.ActionID == action.ActionId).FirstOrDefault();
+            var actionRecord = ActionMutableMap.ActionList.Where(a => a.ActionID == action.ActionId).FirstOrDefault();
             if (actionRecord == null)
             {
                 NHM.Common.Logger.Error("NHWebSocketV4", "Action not found");
@@ -693,7 +693,7 @@ namespace NHMCore.Nhmws.V4
             //action has single parameter anyway FOR NOW
             //in the future return multiple actions success/partial/failiure
             var ret = (ErrorCode.NoError, string.Empty);
-            foreach (var param in action.Parameters) 
+            foreach (var param in action.Parameters)
             {
                 ret = ParseAndCallAction(actionRecord.DeviceUUID, action.Id, actionRecord.ActionType, param).Result;
             }
@@ -756,9 +756,9 @@ namespace NHMCore.Nhmws.V4
             _ = UpdateMinerStatus();
             return Task.FromResult((err, result));
         }
-        internal static Task UpdateMinerStatus()
+        public static Task UpdateMinerStatus(bool stateChange = false)
         {
-            var minerStatusJsonStr = CreateMinerStatusMessage();
+            var minerStatusJsonStr = CreateMinerStatusMessage(stateChange);
             _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
             return Task.CompletedTask;
         }
@@ -835,8 +835,49 @@ namespace NHMCore.Nhmws.V4
 
         private static Task<string> SetMutable(MinerSetMutable mutableCmd)
         {
+            //todo set mutable here
+            if (mutableCmd.Properties != null)
+            {
+
+            }
+            if (mutableCmd.Devices == null) return Task.FromResult("");
+            foreach (var device in mutableCmd.Devices)
+            {
+                if (device.Properties == null) continue;
+                foreach (var property in device.Properties)
+                {
+                    if(property is not JToken token) continue;
+                    var a = token.Cast<PropertyString>();
+                    object t = property switch
+                    {
+                        PropertyString m => ParseAndActMutableString(m),
+                        PropertyInt m => ParseAndActMutableInt(m),
+                        PropertyEnum m => ParseAndActMutableEnum(m),
+                        PropertyBool m => ParseAndActMutableBool(m),
+                        _ => throw new InvalidOperationException()
+                    };
+                }
+            }
             return Task.FromResult("");
         }
+
+        static Task ParseAndActMutableString(PropertyString m)
+        {
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableInt(PropertyInt m)
+        {
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableEnum(PropertyEnum m)
+        {
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableBool(PropertyBool m)
+        {
+            return Task.CompletedTask;
+        }
+
         #endregion RpcMessages
         static private async Task HandleRpcMessage(IReceiveRpcMessage rpcMsg)
         {

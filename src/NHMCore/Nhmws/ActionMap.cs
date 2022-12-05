@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Nhmws
 {
-    public static class ActionMap
+    public static class ActionMutableMap
     {
         public static List<NhmwsAction> ActionList = new();
+        public static List<OptionalMutableProperty> MutableList = new();
     }
 }
