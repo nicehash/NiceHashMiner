@@ -128,7 +128,7 @@ namespace NHM.DeviceMonitoring
             int ok = NVIDIA_MON.nhm_nvidia_device_set_fan_speed_percentage(BusID, percentage);
             if (ok != RET_OK)
             {
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_set_fan_speed_rpm failed with error code {ok}", _delayedLogging);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_set_fan_speed_percentage failed with error code {ok}", _delayedLogging);
                 return false;
             }
             return true;

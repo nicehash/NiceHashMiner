@@ -275,6 +275,11 @@ namespace NHMCore.Mining
             return false;
         }
 
+        public bool SetFanSpeedPercantage(int speed)
+        {
+            if (DeviceMonitor is IGetFanSpeedPercentage set) return set.SetFanSpeedPercentage(speed);
+            return false;
+        }
         #endregion
 
         #endregion DeviceMonitor

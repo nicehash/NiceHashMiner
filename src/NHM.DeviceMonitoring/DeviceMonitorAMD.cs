@@ -102,6 +102,17 @@ namespace NHM.DeviceMonitoring
             }
         }
 
+        public bool SetFanSpeedPercentage(int percentage)
+        {
+            int ok = AMD_ODN.nhm_amd_device_set_fan_speed_percentage(BusID, percentage);
+            if (ok != 0)
+            {
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_fan_speed_percentage failed with error code {ok}", _delayedLogging);
+                return false;
+            }
+            return true;
+        }
+
         // AMD tdpLimit
         private bool SetTdpADL(double percValue)
         {

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
+using NHM.DeviceMonitoring;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.CommandLine;
 using NHM.MinerPluginToolkitV1.Interfaces;
@@ -34,9 +35,12 @@ namespace NiceHashMiner.ViewModels
     public class MainVM : BaseVM
     {
         private readonly Timer _updateTimer;
+        private readonly Timer _updatePidTimer;
 
         // For syncing mining data listview collection
         private readonly object _lock = new object();
+
+        private PidController _pidController;
 
         private IEnumerable<DeviceData> _devices;
         public IEnumerable<DeviceData> Devices
@@ -328,6 +332,8 @@ namespace NiceHashMiner.ViewModels
         {
             _updateTimer = new Timer(1000);
             _updateTimer.Elapsed += UpdateTimerOnElapsed;
+            _updatePidTimer = new Timer(5000);
+            _updatePidTimer.Elapsed += UpdatePidTimerOnElapsed;
 
             VersionState.Instance.PropertyChanged += (_, e) =>
             {
@@ -397,7 +403,19 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
-
+        private void UpdatePidTimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (Devices == null) return;
+            foreach (var dev in Devices)
+            {
+                if (dev.Temp > 0)
+                {
+                    var speed = _pidController.GetOutput(dev.Temp, 60);
+                    Logger.Info("SPEED_SET", dev.Dev.Uuid + " SPEED:" + speed.ToString() + " TEMP:" + dev.Temp);
+                    //dev.SetFanSpeedPercantage((int)speed);
+                }
+            }
+        }
 
         public void ReadELPConfigsOrCreateIfMissing()
         {
@@ -480,6 +498,8 @@ namespace NiceHashMiner.ViewModels
             IdleCheckManager.StartIdleCheck();
 
             _updateTimer.Start();
+            _updatePidTimer.Start();
+            _pidController = new();
 
             ConfigManager.CreateBackup();
 

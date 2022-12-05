@@ -3,6 +3,7 @@ using NHM.Common;
 using NHM.Common.Device;
 using NHM.DeviceMonitoring.AMD;
 using NHM.DeviceMonitoring.NVIDIA;
+using NHM.DeviceMonitoring.PID;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -138,6 +139,7 @@ namespace NHM.DeviceMonitoring
                         ret.Add(new DeviceMonitorNVIDIA(nvidia.UUID, nvidia.PCIeBusID));
                     }
                 }
+                PID_CONTROLLER.nhm_pid_init();
                 addCPUs();
                 addAMDs();
                 addNVIDIAs();

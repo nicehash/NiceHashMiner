@@ -275,6 +275,10 @@ namespace NiceHashMiner.ViewModels.Models
             OnPropertyChanged(nameof(FanSpeed));
         }
 
+        public void SetFanSpeedPercantage(int speed)
+        {
+            Dev.SetFanSpeedPercantage(speed);
+        }
         public void ClearAllSpeeds()
         {
             foreach (var a in Dev.AlgorithmSettings)

@@ -100,5 +100,10 @@ namespace NHM.DeviceMonitoring
 
             return (ok, percentage);
         }
+
+        public bool SetFanSpeedPercentage(int speed)
+        {
+            return false;
+        }
     }
 }
