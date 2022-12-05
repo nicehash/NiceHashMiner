@@ -33,6 +33,8 @@ namespace NHMCore.Mining
         // name count is the short name for displaying in moning groups
         public string NameCount { get; private set; }
 
+        private PidController _pidController = new();
+
         private bool _enabled = true;
         public bool Enabled
         {
@@ -273,6 +275,12 @@ namespace NHMCore.Mining
         {
             if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDPSimple(level);
             return false;
+        }
+
+        public void SetFanSpeedWithPidController(double actual_temp, double setpoint, double speed_limit)
+        {
+            _pidController.SetOutputLimit(speed_limit);
+            var newSpeed = _pidController.GetOutput(actual_temp, setpoint);
         }
 
         public bool SetFanSpeedPercantage(int speed)
