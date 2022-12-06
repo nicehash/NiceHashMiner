@@ -10,6 +10,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Nhmws;
+using NHMCore.Nhmws.V4;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -156,6 +157,24 @@ namespace NHMCore.Mining
                     _algorithmSettings = value;
                 }
             }
+        }
+        public void ApplyNewAlgoStates(MinerAlgoState state)
+        {
+            foreach(var miner in state.Miners)
+            {
+                foreach(var algo in miner.Algos)
+                {
+                    var targets = AlgorithmSettings.Where(a => a.AlgorithmName == algo.Id && a.PluginName == miner.Id)?.ToList();
+                    if (targets == null) continue;
+                    if (!miner.Enabled)
+                    {
+                        targets.ForEach(t => t.SetEnabled((bool)false));
+                        continue;
+                    }
+                    targets.ForEach(t => t.SetEnabled((bool)algo.Enabled));
+                }
+            }
+            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus(false));
         }
 
         private List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; set; } = new List<PluginAlgorithmConfig>();

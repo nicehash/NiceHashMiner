@@ -206,7 +206,7 @@ namespace NHMCore.Nhmws
         [JsonProperty("id")]
         public int Id { get; set; }
         [JsonProperty("properties")]
-        public IEnumerable<object> Properties { get; set; }
+        public List<object> Properties { get; set; }
         [JsonProperty("devices")]
         public List<SetMutableDevice> Devices { get; set; }
     }
@@ -215,7 +215,7 @@ namespace NHMCore.Nhmws
         [JsonProperty("id")]
         public string Id { get; set; }
         [JsonProperty("properties")]
-        public IEnumerable<object> Properties { get; set; }
+        public List<object> Properties { get; set; }
     }
 
     // RPC response

@@ -248,6 +248,7 @@ namespace NHMCore.Mining
         {
             if (Algorithm != null) Algorithm.Enabled = enabled;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(Enabled));
             OnPropertyChanged(nameof(Status));
         }
         /// <summary>

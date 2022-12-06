@@ -486,46 +486,38 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("type")]
         public int Type { get; set; }
     }
-    internal interface IProperty
+    internal class Property
     {
         [JsonProperty("prop_id")]
         public int PropId { get; set; }
     }
-    internal class PropertyInt : IProperty
+    internal class PropertyInt : Property
     {
-        [JsonProperty("prop_id")]
-        public int PropId { get; set; }
         [JsonProperty("value")]
         public int Value { get; set; }
     }
-    internal class PropertyBool : IProperty
+    internal class PropertyBool : Property
     {
-        [JsonProperty("prop_id")]
-        public int PropId { get; set; }
         [JsonProperty("value")]
         public bool Value { get; set; }
     }
-    internal class PropertyEnum : IProperty
+    internal class PropertyEnum : Property
     {
-        [JsonProperty("prop_id")]
-        public int PropId { get; set; }
         [JsonProperty("value")]
         public Type Value { get; set; }
     }
-    internal class PropertyString : IProperty
+    internal class PropertyString : Property
     {
-        [JsonProperty("prop_id")]
-        public int PropId { get; set; }
         [JsonProperty("value")]
         public string Value { get; set; }
     }
 
-    internal class MinerLogin
+    public class MinerAlgoState
     {
         [JsonProperty("miners")]
         public List<MinerDynamic> Miners { get; set; } = new List<MinerDynamic>();
     }
-    internal class MinerDynamic
+    public class MinerDynamic
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -541,7 +533,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("algorithms")]
         public List<string> AlgoList { get; set; } = new List<string>();
     }
-    internal class Algo
+    public class Algo
     {
         [JsonProperty("id")]
         public string Id { get; set; }

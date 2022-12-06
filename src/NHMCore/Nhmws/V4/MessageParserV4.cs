@@ -179,12 +179,13 @@ namespace NHMCore.Nhmws.V4
                     DisplayName = "Miners settings",
                     DefaultValue = "",
                     Range = (2048, ""),
-                    //ExecuteTask = async (object p) =>
-                    //{
-                    //    //todo
-
-                    //    return null;
-                    //},
+                    ExecuteTask = async (object p) =>
+                    {
+                        if (p is not string prop) return null;
+                        var newState = JsonConvert.DeserializeObject<MinerAlgoState>(prop);
+                        d.ApplyNewAlgoStates(newState);
+                        return null;
+                    },
                     GetValue = () =>
                     {
                         string ret = null;
@@ -461,7 +462,7 @@ namespace NHMCore.Nhmws.V4
 
         private static string GetMinersForDeviceDynamic(ComputeDevice d)//todo  if include enabled return array of strings else return array of structs
         {
-            var minersObject = new MinerLogin();
+            var minersObject = new MinerAlgoState();
             var containers = d.AlgorithmSettings;
             if (containers == null) return String.Empty;
             var grouped = containers.GroupBy(c => c.PluginName).ToList();

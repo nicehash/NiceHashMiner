@@ -684,7 +684,7 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<(ErrorCode err, string msg)> CallAction(MinerCallAction action)
         {
-            var actionRecord = ActionMutableMap.ActionList.Where(a => a.ActionID == action.ActionId).FirstOrDefault();
+            var actionRecord = ActionMutableMap.FindActionOrNull(action.ActionId);
             if (actionRecord == null)
             {
                 NHM.Common.Logger.Error("NHWebSocketV4", "Action not found");
@@ -835,46 +835,60 @@ namespace NHMCore.Nhmws.V4
 
         private static Task<string> SetMutable(MinerSetMutable mutableCmd)
         {
-            //todo set mutable here
             if (mutableCmd.Properties != null)
             {
-
+                foreach(var property in mutableCmd.Properties)
+                {
+                    HandleProperty(property);
+                }
             }
-            if (mutableCmd.Devices == null) return Task.FromResult("");
+            if (mutableCmd.Devices == null) return Task.FromResult("Success");
             foreach (var device in mutableCmd.Devices)
             {
                 if (device.Properties == null) continue;
                 foreach (var property in device.Properties)
                 {
-                    if(property is not JToken token) continue;
-                    var a = token.Cast<PropertyString>();
-                    object t = property switch
-                    {
-                        PropertyString m => ParseAndActMutableString(m),
-                        PropertyInt m => ParseAndActMutableInt(m),
-                        PropertyEnum m => ParseAndActMutableEnum(m),
-                        PropertyBool m => ParseAndActMutableBool(m),
-                        _ => throw new InvalidOperationException()
-                    };
+                    HandleProperty(property);
                 }
             }
-            return Task.FromResult("");
+            return Task.FromResult("Success");
         }
-
-        static Task ParseAndActMutableString(PropertyString m)
+        private static Task HandleProperty(object property)
         {
+            if (property is not JToken token) return Task.CompletedTask;
+            var genericProperty = token.ToObject<Property>();
+            var mutable = ActionMutableMap.FindMutableOrNull(genericProperty.PropId);
+            if (mutable == null) return Task.CompletedTask;
+            object t = mutable.PropertyType switch
+            {
+                Type.String => ParseAndActMutableString(mutable, token),
+                Type.Int => ParseAndActMutableInt(mutable, token),
+                Type.Enum => ParseAndActMutableEnum(mutable, token),
+                Type.Bool => ParseAndActMutableBool(mutable, token),
+                _ => throw new InvalidOperationException()
+            };
             return Task.CompletedTask;
         }
-        static Task ParseAndActMutableInt(PropertyInt m)
+        static Task ParseAndActMutableString(OptionalMutableProperty property, JToken command)
         {
+            var mutable = command.ToObject<PropertyString>();
+            //var newState = JsonConvert.DeserializeObject<MinerAlgoState>(mutable.Value);
+            property.ExecuteTask(mutable.Value);
             return Task.CompletedTask;
         }
-        static Task ParseAndActMutableEnum(PropertyEnum m)
+        static Task ParseAndActMutableInt(OptionalMutableProperty property, JToken command)
         {
+            var mutable = command.ToObject<PropertyInt>();
             return Task.CompletedTask;
         }
-        static Task ParseAndActMutableBool(PropertyBool m)
+        static Task ParseAndActMutableEnum(OptionalMutableProperty property, JToken command)
         {
+            var mutable = command.ToObject<PropertyEnum>();
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableBool(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyBool>();
             return Task.CompletedTask;
         }
 
@@ -902,7 +916,7 @@ namespace NHMCore.Nhmws.V4
                     MiningStop m => await StopMining(m.Device),
                     MiningSetPowerMode m => await SetPowerMode(m.Device, (TDPSimpleType)m.PowerMode),
                     MinerReset m => await MinerReset(m.Level), // rpcAnswer
-                    MinerCallAction m => await CallAction(m), // call decision from here!!! //
+                    MinerCallAction m => await CallAction(m),
                     MinerSetMutable m => await SetMutable(m),
                     _ => throw new RpcException($"RpcMessage operation not supported for method '{rpcMsg.Method}'", ErrorCode.UnableToHandleRpc),
                 };
