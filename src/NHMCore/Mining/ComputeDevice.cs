@@ -702,6 +702,7 @@ namespace NHMCore.Mining
         public async Task AfterStartMining()
         {
             //TODO IF DELTA, IF ALREADY SET, IF NOT SET DONT RESTART ETC
+            //TODO NO RETURNS BC WE CAN SET MULTIPLE THINGS
             var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (testTarget == null) return;
             if (testTarget.ActiveOCTestProfile != null)//todo if starting... if change
@@ -724,6 +725,11 @@ namespace NHMCore.Mining
             if(testTarget.ActiveOCProfile == null)
             {
                 var ret = await testTarget.ResetOcForDevice(false);
+                return;
+            }
+            if(testTarget.ActiveELPTestProfile!= null)
+            {
+                var ret = await testTarget.SetELPForDevice(testTarget.ActiveELPTestProfile, true, false);
                 return;
             }
         }

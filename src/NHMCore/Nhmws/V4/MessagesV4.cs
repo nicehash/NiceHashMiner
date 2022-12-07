@@ -554,20 +554,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("elp", NullValueHandling = NullValueHandling.Ignore)]
         public List<ElpBundle>? ElpBundles { get; set; }
     }
-    public class ElpBundle
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [JsonProperty("device_name")]
-        public List<string>? DeviceName { get; set; }
-        [JsonProperty("miner_id", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string>? MinerId { get; set; }
-        [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
-        public string AlgoId { get; set; }
-        [JsonProperty("elp")]
-        public string Elp { get; set; }
-    }
-    public class OcBundle
+    public class GenericBundle
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -579,6 +566,15 @@ namespace NHMCore.Nhmws.V4
         public List<string>? MinerId { get; set; }
         [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
         public List<string>? AlgoId { get; set; }
+
+    }
+    public class ElpBundle : GenericBundle
+    {
+        [JsonProperty("elp")]
+        public string Elp { get; set; }
+    }
+    public class OcBundle : GenericBundle
+    {
         [JsonProperty("core_clock")]
         public int CoreClock { get; set; }
         [JsonProperty("memory_clock")]
@@ -586,16 +582,8 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("power_mode")]
         public int TDP { get; set; }
     }
-    public class FanBundle
+    public class FanBundle : GenericBundle
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [JsonProperty("device_name")]
-        public string DeviceName { get; set; }
-        [JsonProperty("miner_id", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string>? MinerId { get; set; }
-        [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string>? AlgoId { get; set; }
         [JsonProperty("type")]
         public int Type { get; set; }
         [JsonProperty("fan_speed")]

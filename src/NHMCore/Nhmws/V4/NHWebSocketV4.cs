@@ -743,9 +743,8 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionFanProfileTestStop:
                     break;
                 case SupportedAction.ActionElpProfileTest:
-                    //object jobjectELP = JsonConvert.DeserializeObject(parameters);
-                    //if (jobjectELP is not JObject jsonObjELP) break;
-                    //if (jsonObjELP.ToObject<ElpBundle>() is ElpBundle eb) ExecuteELPBundle(eb);
+                    var elp = JsonConvert.DeserializeObject<ElpBundle>(parameters);
+                    (err, result) = ExecuteELPTest(deviceUUID, elp).Result;
                     break;
                 case SupportedAction.ActionElpProfileTestStop:
                     break;
@@ -797,6 +796,11 @@ namespace NHMCore.Nhmws.V4
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
             var res = OCManager.Instance.StopTest(deviceUUID);
+            return Task.FromResult(res.Result);
+        }
+        private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpBundle elpBundle)
+        {
+            var res = ELPManager.Instance.ExecuteTest(deviceUUID, elpBundle);
             return Task.FromResult(res.Result);
         }
 

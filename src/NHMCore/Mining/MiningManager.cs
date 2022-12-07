@@ -969,7 +969,7 @@ namespace NHMCore.Mining
             var miningDevs = AvailableDevices.Devices
                 .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
                 .ToList();
-            if(miningDevs.Any())
+            if(miningDevs.Any())//todo if miningdev uuid is contained in both start and stop then dont do?
             {
                 foreach (var dev in miningDevs)
                 {

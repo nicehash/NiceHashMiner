@@ -560,9 +560,20 @@ namespace NHMCore.Mining
 
         #endregion
 
-#if NHMWS4
-        #region OC
 
+        internal bool IgnoreLocalELPInput //if ignore local ELPs for rig manager ones
+        {
+            get
+            {
+#if NHMWS4
+                if (ActiveELPProfile != null || ActiveELPTestProfile != null) return true;
+                return false;
+#else
+                return false;
+#endif
+            }
+        }
+#if NHMWS4
         private bool _IsTesting = false;
         public bool IsTesting
         {
@@ -575,6 +586,7 @@ namespace NHMCore.Mining
                 _IsTesting = value;
             }
         }
+        #region OC
         public string OCProfile {
             get
             {
@@ -611,7 +623,6 @@ namespace NHMCore.Mining
             OcProfilePrev = ActiveOCProfile;
             _ActiveOCProfile = profile;
         }
-
         public Task<OcReturn> SetOcForDevice(OcBundle bundle, bool test = false, bool reset = false)
         {
             Logger.Warn(_TAG, $"Setting OC for {ComputeDevice.Name}: TDP={bundle.TDP},CC={bundle.CoreClock},MC={bundle.MemoryClock}");
@@ -656,10 +667,9 @@ namespace NHMCore.Mining
                 return Task.FromResult(ret);
             }
             if(test) IsTesting = false;
-            Logger.Warn(_TAG, $"Setting OC is unsuccessful");
+            Logger.Warn(_TAG, $"OC not in test mode anymore");
             return Task.FromResult(ret);
         }
-
         public Task<OcReturn> ResetOcForDevice(bool test = false)
         {
             var defCC = ComputeDevice.CoreClockRange;
@@ -668,6 +678,67 @@ namespace NHMCore.Mining
             var bundle = new OcBundle() { CoreClock = defCC.def, MemoryClock = defMC.def, TDP = (int)defTDP.def };
             var res = SetOcForDevice(bundle, test, true);
             return Task.FromResult(res.Result);
+        }
+        #endregion
+        #region ELP
+        public string ELPProfile
+        {
+            get
+            {
+                if (ActiveOCTestProfile != null) return ActiveOCTestProfile.Name;
+                if (ActiveOCProfile != null) return ActiveOCProfile.Name;
+                return string.Empty;
+            }
+        }
+        public string ELPProfileID
+        {
+            get
+            {
+                if (ActiveOCTestProfile != null) return ActiveOCTestProfile.Id;
+                if (ActiveOCProfile != null) return ActiveOCProfile.Id;
+                return string.Empty;
+            }
+        }
+        private ElpBundle _ActiveELPTestProfile = null;
+        public ElpBundle ActiveELPTestProfile => _ActiveELPTestProfile;
+        private ElpBundle TestELPProfilePrev { get; set; }
+
+        private ElpBundle _ActiveELPProfile = null;
+        public ElpBundle ActiveELPProfile => _ActiveELPProfile;
+        private ElpBundle ELPProfilePrev { get; set; }
+        public void SetTargetElpTestProfile(ElpBundle profile)
+        {
+            IsTesting = profile == null ? false : true;
+            TestELPProfilePrev = ActiveELPTestProfile;
+            _ActiveELPTestProfile = profile;
+            OnPropertyChanged(nameof(IgnoreLocalELPInput));
+        }
+        public void SetTargetElpProfile(ElpBundle profile)
+        {
+            ELPProfilePrev = ActiveELPProfile;
+            _ActiveELPProfile = profile;
+            OnPropertyChanged(nameof(IgnoreLocalELPInput));
+        }
+        public Task<OcReturn> SetELPForDevice(ElpBundle bundle, bool test = false, bool reset = false)
+        {
+            Logger.Warn(_TAG, $"Setting ELP for {ComputeDevice.Name}: ELP={bundle.Elp}");
+            var ret = OcReturn.Success;
+
+            if (!reset)
+            {
+                if (test) IsTesting = true;
+                ELPManager.Instance.SetAlgoCMDString(this, bundle.Elp);
+                Logger.Warn(_TAG, $"Setting ELP is successful");
+                //disable input and show message
+                //restart mining
+                return Task.FromResult(ret);
+            }
+            if (test) IsTesting = false;
+            //target set to empty where uuid match to string and reiterate
+            //enable input and hide message
+            //restart mining
+            Logger.Warn(_TAG, $"ELP not in test mode anymore");
+            return Task.FromResult(ret);
         }
         #endregion
 #endif

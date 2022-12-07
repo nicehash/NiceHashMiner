@@ -1,13 +1,17 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1.CommandLine;
+using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.ELPDataModels;
 using NHMCore.Mining;
+using NHMCore.Nhmws;
+using NHMCore.Nhmws.V4;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
 namespace NHMCore.Configs.Managers
@@ -61,9 +65,9 @@ namespace NHMCore.Configs.Managers
             }
             foreach (var algoPairs in algorithmDevicePairs)
             {
-                var devicesDict = new Dictionary<string, Device>();
-                algoPairs.Value.ForEach(dev => devicesDict.TryAdd(dev.uuid, new Device() { DeviceName = dev.name, Commands = new List<List<string>>() }));
-                defCfg.Algorithms.Add(new Algo() { AlgorithmName = algoPairs.Key, Devices = devicesDict });
+                var devicesDict = new Dictionary<string, MinerConfigManager.Device>();
+                algoPairs.Value.ForEach(dev => devicesDict.TryAdd(dev.uuid, new MinerConfigManager.Device() { DeviceName = dev.name, Commands = new List<List<string>>() }));
+                defCfg.Algorithms.Add(new MinerConfigManager.Algo() { AlgorithmName = algoPairs.Key, Devices = devicesDict });
             }
             return defCfg;
         }
@@ -141,6 +145,22 @@ namespace NHMCore.Configs.Managers
                 .Select(x => x.command)?
                 .FirstOrDefault() ?? string.Empty;
         }
+        public void SetAlgoCMDString(AlgorithmContainer ac, string newCMD)
+        {
+            if (ac == null) return;
+            var target = _minerELPs
+                .Where(miner => miner.UUID == ac.MinerUUID)?
+                .FirstOrDefault()?
+                .Algos.Where(algo => algo.Name == ac.AlgorithmName)?
+                .FirstOrDefault();
+            if(target == null) return;
+
+
+            var index = target.AllCMDStrings.ToList().FindIndex(i => i.uuid == ac.ComputeDevice.Uuid);
+            if (index == -1) return;
+            target.AllCMDStrings.RemoveAt(index);
+            target.AllCMDStrings.Add((ac.ComputeDevice.Uuid, newCMD));
+        }
         public MinerELPData ConstructMinerELPDataFromConfig(MinerConfig cfg)
         {
             var minerELP = new MinerELPData();
@@ -201,7 +221,7 @@ namespace NHMCore.Configs.Managers
             miner.DoubleParams.ForEach(dbl => minerConfig.MinerCommands.Add(new List<string>() { dbl.name, dbl.value }));
             foreach (var algo in miner.Algos)
             {
-                var tempAlgo = new Algo();
+                var tempAlgo = new MinerConfigManager.Algo();
                 tempAlgo.AlgorithmName = algo.Name;
                 if (algo.SingleParams == null) algo.SingleParams = new();
                 algo.SingleParams.ForEach(single => tempAlgo.AlgoCommands.Add(new List<string>() { single }));
@@ -220,7 +240,7 @@ namespace NHMCore.Configs.Managers
                         if (flagAndDelim.Length != 2) continue;
                         deviceParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
                     }
-                    tempAlgo.Devices.Add(dev.UUID, new Device() { DeviceName = dev.DeviceName, Commands = deviceParams });
+                    tempAlgo.Devices.Add(dev.UUID, new MinerConfigManager.Device() { DeviceName = dev.DeviceName, Commands = deviceParams });
                 }
                 minerConfig.Algorithms.Add(tempAlgo);
             }
@@ -295,5 +315,39 @@ namespace NHMCore.Configs.Managers
                 algo.AllCMDStrings = new ObservableCollection<(string uuid, string command)>(parsedCommandsPerGroup);
             }
         }
+#if NHMWS4
+        public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, ElpBundle bundle)
+        {
+            if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices mining"));
+            var allContainers = AvailableDevices.Devices
+                .Where(d => d.B64Uuid == uuid)?
+                .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
+                .SelectMany(d => d.AlgorithmSettings);
+            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found"));
+
+            List<AlgorithmContainer> specificContainers = allContainers.ToList();
+            if (bundle.AlgoId != null && bundle.MinerId != null) specificContainers = allContainers.Where(d =>
+                                                                                        bundle.AlgoId.Contains(d.AlgorithmName.ToLower()) &&
+                                                                                        bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
+            else if (bundle.AlgoId != null) specificContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName.ToLower()))?.ToList();
+            else if (bundle.MinerId != null) specificContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
+            if (specificContainers == null || !specificContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
+            var target = specificContainers.Where(c => c.IsCurrentlyMining)?.FirstOrDefault();
+            if (target == null)
+            {
+                target = specificContainers.FirstOrDefault();
+                if (target == null) return Task.FromResult((ErrorCode.TargetContainerNotFound, "Failed to switch to target algorithm container"));
+            }
+            AvailableDevices.Devices //if we want switching for loose options we can set true to specific containers in the future
+                .Where(d => d.B64Uuid == uuid)?
+                .SelectMany(d => d.AlgorithmSettings)?
+                .ToList()?
+                .ForEach(c => c.IsTesting = false);
+
+            target.SetTargetElpTestProfile(bundle);
+            MiningManager.TriggerSwitchCheck();
+            return Task.FromResult((ErrorCode.NoError, "Success"));
+        }
+#endif
     }
 }
