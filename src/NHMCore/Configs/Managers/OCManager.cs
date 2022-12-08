@@ -40,10 +40,10 @@ namespace NHMCore.Configs.Managers
 
             List<AlgorithmContainer> specificContainers = allContainers.ToList();
             if (bundle.AlgoId != null && bundle.MinerId != null) specificContainers = allContainers.Where(d =>
-                                                                                        bundle.AlgoId.Contains(d.AlgorithmName) &&
-                                                                                        bundle.MinerId.Contains(d.PluginName))?.ToList();
-            else if (bundle.AlgoId != null) specificContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName))?.ToList();
-            else if (bundle.MinerId != null) specificContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName))?.ToList();
+                                                                                        bundle.AlgoId.Contains(d.AlgorithmName.ToLower()) &&
+                                                                                        bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
+            else if (bundle.AlgoId != null) specificContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName.ToLower()))?.ToList();
+            else if (bundle.MinerId != null) specificContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
             if (specificContainers == null || !specificContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
             var target = specificContainers.Where(c => c.IsCurrentlyMining)?.FirstOrDefault();
             if(target == null)
@@ -94,18 +94,18 @@ namespace NHMCore.Configs.Managers
                 if (type == 0) current = AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?
                         .SelectMany(d => d.AlgorithmSettings)?
-                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName))?
-                        .Where(c => bundle.MinerId.Contains(c.PluginName))?
+                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
+                        .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
                         .ToList();
-                else if (type == 1) current = AvailableDevices.Devices
+                else if (type == 1) AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?
                         .SelectMany(d => d.AlgorithmSettings)?
-                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName))?
+                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
                         .ToList();
-                else if (type == 2) current = AvailableDevices.Devices
+                else if (type == 2) AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?
                         .SelectMany(d => d.AlgorithmSettings)?
-                        .Where(c => bundle.MinerId.Contains(c.PluginName))?
+                        .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
                         .ToList();
                 else current = AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?

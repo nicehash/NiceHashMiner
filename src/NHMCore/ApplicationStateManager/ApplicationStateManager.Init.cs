@@ -54,6 +54,7 @@ namespace NHMCore
                     if (perc > 100) return 100;
                     return perc;
                 };
+                NotificationsManager.Instance.ReadLoggedNotifications();
                 // STEP
                 // Checking System Memory
                 loader.PrimaryProgress?.Report((Tr("Checking System Specs"), nextProgPerc()));
@@ -80,7 +81,7 @@ namespace NHMCore
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
-                if(DeviceDetection.DetectionResult.CUDADevices.Any(dev => dev.IsLHR) && !Helpers.IsElevated)
+                if(DeviceDetection.DetectionResult.CUDADevices.Any(dev => dev.IsLHR) && !Helpers.IsElevated && CUDADevice.INSTALLED_NVIDIA_DRIVERS < new Version(522, 25))
                 {
                     AvailableNotifications.CreateLHRPresentAdminRunRequired();
                 }
@@ -89,7 +90,6 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
-                OutsideProcessMonitor.Init(ExitApplication.Token);
                 // add devices
                 string getDeviceNameCount(DeviceType deviceType, int index) => 
                     deviceType switch

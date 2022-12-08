@@ -26,7 +26,7 @@ using NHLog = NHM.Common.Logger;
 
 namespace NHMCore.Nhmws.V4
 {
-    static class NHWebSocketV4
+    public static class NHWebSocketV4
     {
         #region locking
         private static readonly string _logTag = "NHWebSocketV4";
@@ -328,7 +328,7 @@ namespace NHMCore.Nhmws.V4
 
         #region Message handling
 
-        private static string CreateMinerStatusMessage() => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices()));
+        private static string CreateMinerStatusMessage(bool stateChange = false) => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices(), stateChange));
 
         static private async Task HandleMessage(MessageEventArgs e)
         {
@@ -684,7 +684,7 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<(ErrorCode err, string msg)> CallAction(MinerCallAction action)
         {
-            var actionRecord = ActionMap.ActionList.Where(a => a.ActionID == action.ActionId).FirstOrDefault();
+            var actionRecord = ActionMutableMap.FindActionOrNull(action.ActionId);
             if (actionRecord == null)
             {
                 NHM.Common.Logger.Error("NHWebSocketV4", "Action not found");
@@ -693,7 +693,7 @@ namespace NHMCore.Nhmws.V4
             //action has single parameter anyway FOR NOW
             //in the future return multiple actions success/partial/failiure
             var ret = (ErrorCode.NoError, string.Empty);
-            foreach (var param in action.Parameters) 
+            foreach (var param in action.Parameters)
             {
                 ret = ParseAndCallAction(actionRecord.DeviceUUID, action.Id, actionRecord.ActionType, param).Result;
             }
@@ -743,9 +743,8 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopFanTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionElpProfileTest:
-                    //object jobjectELP = JsonConvert.DeserializeObject(parameters);
-                    //if (jobjectELP is not JObject jsonObjELP) break;
-                    //if (jsonObjELP.ToObject<ElpBundle>() is ElpBundle eb) ExecuteELPBundle(eb);
+                    var elp = JsonConvert.DeserializeObject<ElpBundle>(parameters);
+                    (err, result) = ExecuteELPTest(deviceUUID, elp).Result;
                     break;
                 case SupportedAction.ActionElpProfileTestStop:
                     break;
@@ -756,9 +755,9 @@ namespace NHMCore.Nhmws.V4
             _ = UpdateMinerStatus();
             return Task.FromResult((err, result));
         }
-        internal static Task UpdateMinerStatus()
+        public static Task UpdateMinerStatus(bool stateChange = false)
         {
-            var minerStatusJsonStr = CreateMinerStatusMessage();
+            var minerStatusJsonStr = CreateMinerStatusMessage(stateChange);
             _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
             return Task.CompletedTask;
         }
@@ -800,6 +799,11 @@ namespace NHMCore.Nhmws.V4
             var res = OCManager.Instance.StopTest(deviceUUID);
             return Task.FromResult(res.Result);
         }
+        private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpBundle elpBundle)
+        {
+            var res = ELPManager.Instance.ExecuteTest(deviceUUID, elpBundle);
+            return Task.FromResult(res.Result);
+        }
 
         private static Task<(ErrorCode err, string msg)> ExecuteFanTest(string deviceUUID, FanBundle fanBundle)
         {
@@ -816,8 +820,63 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<string> SetMutable(MinerSetMutable mutableCmd)
         {
-            return Task.FromResult("");
+            if (mutableCmd.Properties != null)
+            {
+                foreach(var property in mutableCmd.Properties)
+                {
+                    HandleProperty(property);
+                }
+            }
+            if (mutableCmd.Devices == null) return Task.FromResult("Success");
+            foreach (var device in mutableCmd.Devices)
+            {
+                if (device.Properties == null) continue;
+                foreach (var property in device.Properties)
+                {
+                    HandleProperty(property);
+                }
+            }
+            return Task.FromResult("Success");
         }
+        private static Task HandleProperty(object property)
+        {
+            if (property is not JToken token) return Task.CompletedTask;
+            var genericProperty = token.ToObject<Property>();
+            var mutable = ActionMutableMap.FindMutableOrNull(genericProperty.PropId);
+            if (mutable == null) return Task.CompletedTask;
+            object t = mutable.PropertyType switch
+            {
+                Type.String => ParseAndActMutableString(mutable, token),
+                Type.Int => ParseAndActMutableInt(mutable, token),
+                Type.Enum => ParseAndActMutableEnum(mutable, token),
+                Type.Bool => ParseAndActMutableBool(mutable, token),
+                _ => throw new InvalidOperationException()
+            };
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableString(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyString>();
+            //var newState = JsonConvert.DeserializeObject<MinerAlgoState>(mutable.Value);
+            property.ExecuteTask(mutable.Value);
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableInt(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyInt>();
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableEnum(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyEnum>();
+            return Task.CompletedTask;
+        }
+        static Task ParseAndActMutableBool(OptionalMutableProperty property, JToken command)
+        {
+            var mutable = command.ToObject<PropertyBool>();
+            return Task.CompletedTask;
+        }
+
         #endregion RpcMessages
         static private async Task HandleRpcMessage(IReceiveRpcMessage rpcMsg)
         {
@@ -842,7 +901,7 @@ namespace NHMCore.Nhmws.V4
                     MiningStop m => await StopMining(m.Device),
                     MiningSetPowerMode m => await SetPowerMode(m.Device, (TDPSimpleType)m.PowerMode),
                     MinerReset m => await MinerReset(m.Level), // rpcAnswer
-                    MinerCallAction m => await CallAction(m), // call decision from here!!! //
+                    MinerCallAction m => await CallAction(m),
                     MinerSetMutable m => await SetMutable(m),
                     _ => throw new RpcException($"RpcMessage operation not supported for method '{rpcMsg.Method}'", ErrorCode.UnableToHandleRpc),
                 };

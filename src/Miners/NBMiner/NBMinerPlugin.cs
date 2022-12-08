@@ -46,7 +46,7 @@ namespace NBMiner
 
         public override string Name => "NBMiner";
 
-        public override Version Version => new Version(19, 1);
+        public override Version Version => new Version(19, 4);
         
 
         public override string Author => "info@nicehash.com";
@@ -55,21 +55,8 @@ namespace NBMiner
 
         private static bool isSupportedVersion(int major, int minor)
         {
-            var nbMinerSMSupportedVersions = new List<Version>
-            {
-                new Version(6,0),
-                new Version(6,1),
-                new Version(7,0),
-                new Version(7,5),
-                new Version(8,0),
-                new Version(8,6),
-            };
-            var cudaDevSMver = new Version(major, minor);
-            foreach (var supportedVer in nbMinerSMSupportedVersions)
-            {
-                if (supportedVer == cudaDevSMver) return true;
-            }
-            return false;
+            //todo is there even a list for this?
+            return true;
         }
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)

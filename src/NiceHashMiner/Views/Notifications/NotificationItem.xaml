@@ -12,6 +12,19 @@
     <UserControl.Resources>
         <localConv:NewVisibilityConverter x:Key="NewVisibilityConv" />
         <localConv:CheckVisibilityConverter x:Key="CheckVisibilityConv" />
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
         <Style TargetType="TextBlock" x:Key="local.DefaultTextBlock" >
             <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
             <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
@@ -74,6 +87,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" MinHeight="64" Height="Auto">
@@ -119,7 +134,7 @@
                         Padding="20,0,22,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        x:Name="RemoveButton" Click="RemoveNotification" Content="Remove" />
+                        x:Name="RemoveButton" Click="RemoveNotification" Content="Clear" />
                     <Button Style="{StaticResource BigButtonPrimaryNotifications}"
                         MinWidth="88"
                         Width="Auto" Height="24"
@@ -129,7 +144,7 @@
                         x:Name="ActionButton" Click="ExecuteNotificationAction" Visibility="Collapsed" Margin="16,0,0,0" />
                 </WrapPanel>
             </Grid>
-            <Grid Grid.Row="1" Width="Auto" x:Name="ActionProgress" Visibility="Collapsed" Margin="5" VerticalAlignment="Bottom">
+            <Grid Grid.Row="1" Width="Auto" x:Name="ActionProgress" Visibility="Collapsed" Margin="5,0,5,0" VerticalAlignment="Bottom">
                 <ProgressBar Width="Auto" Style="{StaticResource progressStyle}" Height="15" x:Name="ActionProgressBar" />
                 <TextBlock Width="Auto" HorizontalAlignment="Center" Text="" />
             </Grid>
@@ -146,19 +161,43 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <WrapPanel Orientation="Vertical">
-                    <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show again" Style="{StaticResource CheckBoxNormal}" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}"/>
-                    <TextBlock Text="{Binding NotificationTime, Mode=TwoWay}" />
-                    <WrapPanel Margin="0,8,0,0">
-                        <TextBlock x:Name="itemErrorContent" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow" Style="{StaticResource local.DefaultTextBlock}"/>
+                <WrapPanel Orientation="Vertical" Height="auto">
+                    <WrapPanel Margin="0,8,0,0" Visibility="{Binding NotificationUrl, Converter={StaticResource StringToVisibilityConverter}}">
                         <TextBlock x:Name="textBlockUrl">
                             <Hyperlink x:Name="notificationHyperLink" RequestNavigate="notificationHyperLink_RequestNavigate"  NavigateUri="{Binding NotificationUrl}" TextDecorations="{x:Null}">
                                 <TextBlock Text="{Binding NotificationUrl}"></TextBlock>
                             </Hyperlink>
                         </TextBlock>
                     </WrapPanel>
+                    <StackPanel Margin="0,10,0,0" Orientation="Horizontal" Visibility="{Binding NotificationUUID, Converter={StaticResource CheckVisibilityConv}}">
+                        <CheckBox x:Name="DontShowAgainCheckBox" Content="Do not show this type of notification again" Style="{StaticResource CheckBoxNormal}" />
+                        <TextBlock VerticalAlignment="Center" Style="{StaticResource local.InfoIcon}" ToolTip="Upon removal, notifications of this type will not be visible anymore. If you wish to undo this action later, you will need to manually remove this notification from the General.json file" />
+                    </StackPanel>
                 </WrapPanel>
             </Grid>
+            <StackPanel Grid.Row="3" x:Name="NotificationHistoryGrid" Visibility="{Binding IsVisible, Converter={StaticResource NulBoolToVisibilityConverter}}">
+                <Separator Margin="0,0,0,10" Background="{DynamicResource BorderColor}"/>
+                <Grid Margin="0,5,0,5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{DynamicResource TextColorBrush}" Grid.Column="0" Text="{Binding NotificationTime}" />
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource BaseUbuntuTextBlock}" Foreground="{DynamicResource TextColorBrush}" Grid.Column="1" Margin="20,0,0,0" Text="{Binding NotificationContent}" TextWrapping="WrapWithOverflow"/>
+                    <Button VerticalAlignment="Center" Foreground="{DynamicResource TextColorBrush}" Grid.Column="2" Margin="40,0,0,0" Style="{StaticResource ButtonNoBorder}" Content="X" Click="RemoveThisNotification_click" />
+                </Grid>
+                <ItemsControl x:Name="ic_notificationHistory" ItemsSource="{Binding SubNotificationList}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:NotificationHistoryItem DataContext="{Binding .}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </Grid>
     </Border>
 </UserControl>

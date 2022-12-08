@@ -38,6 +38,7 @@ namespace NHMCore.Configs.Managers
                 var bundleToApply = JsonConvert.DeserializeObject<Bundle>(content);
                 if(bundleToApply != null)
                 {
+                    SetBundleInfo(bundleToApply.Name, bundleToApply.Id);
                     ApplyBundleOnInit(bundleToApply);
                 }
             }

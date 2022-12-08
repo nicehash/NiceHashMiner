@@ -85,7 +85,7 @@ namespace NHMCore.Nhmws.V4
             return devData.MinerName;
         }
 
-        private static (List<(string name, string? unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isLogin = false)
+        private static (List<(string name, string? unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isStateChange = false, bool isLogin = false)
         {
             string getValue<T>(T o) => (typeof(T).Name, o) switch
             {
@@ -141,7 +141,7 @@ namespace NHMCore.Nhmws.V4
                 .Select(p => p.Value)
                 .ToList();
 
-            if (isLogin)
+            if (isStateChange)
             {
                 bool shouldRemoveDynamicVal((DeviceDynamicProperties type, string name, string unit, string value) dynamicVal)
                 {
@@ -151,7 +151,8 @@ namespace NHMCore.Nhmws.V4
                     return false;
                 };
                 deviceOptionalDynamic.RemoveAll(dynamVal => shouldRemoveDynamicVal(dynamVal));
-                deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
+                //deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
+                if (isLogin) deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
             }
             foreach (DeviceDynamicProperties i in Enum.GetValues(typeof(DeviceDynamicProperties)))
             {
@@ -164,7 +165,7 @@ namespace NHMCore.Nhmws.V4
 
         // we cache device properties so we persevere  property IDs
         private static readonly Dictionary<ComputeDevice, List<OptionalMutableProperty>> _cachedDevicesOptionalMutable = new Dictionary<ComputeDevice, List<OptionalMutableProperty>>();
-        private static (List<OptionalMutableProperty> properties, JArray values) GetDeviceOptionalMutable(ComputeDevice d, bool isLogin)
+        private static (List<OptionalMutableProperty> properties, JArray values) GetDeviceOptionalMutable(ComputeDevice d, bool isStateChange, bool isLogin)
         {
             OptionalMutableProperty valueOrNull<T>(OptionalMutableProperty v) => d.DeviceMonitor is T ? v : null;
             List<OptionalMutableProperty> getOptionalMutableProperties(ComputeDevice d)
@@ -178,15 +179,17 @@ namespace NHMCore.Nhmws.V4
                     DisplayName = "Miners settings",
                     DefaultValue = "",
                     Range = (2048, ""),
-                    //ExecuteTask = async (object p) =>
-                    //{
-                    //    //todo
-                    //    return null;
-                    //},
+                    ExecuteTask = async (object p) =>
+                    {
+                        if (p is not string prop) return null;
+                        var newState = JsonConvert.DeserializeObject<MinerAlgoState>(prop);
+                        d.ApplyNewAlgoStates(newState);
+                        return null;
+                    },
                     GetValue = () =>
                     {
                         string ret = null;
-                        if (isLogin)
+                        if (isStateChange)
                         {
                             ret = string.Empty;
                             ret += GetMinersForDeviceDynamic(d);
@@ -194,6 +197,7 @@ namespace NHMCore.Nhmws.V4
                         return ret;
                     }
                 });
+                if (isLogin) optionalProperties.ForEach(i => ActionMutableMap.MutableList.Add(i));
                 return optionalProperties
                     .Where(p => p != null)
                     .ToList();
@@ -216,6 +220,8 @@ namespace NHMCore.Nhmws.V4
             }
             return (props, values_omv);
         }
+
+
 
         private static LoginMessage _loginMessage = null;
         public static List<List<string>> DeviceOptionalDynamicToList(List<(string name, string? unit)> properties)
@@ -248,8 +254,8 @@ namespace NHMCore.Nhmws.V4
                         { "optional", GetStaticPropertiesOptionalValues(d) },
                     },
                     Actions = CreateDefaultDeviceActions(d.B64Uuid),
-                    OptionalDynamicProperties = DeviceOptionalDynamicToList(GetDeviceOptionalDynamic(d, true).properties),
-                    OptionalMutableProperties = GetDeviceOptionalMutable(d, true).properties,
+                    OptionalDynamicProperties = DeviceOptionalDynamicToList(GetDeviceOptionalDynamic(d, true, true).properties),
+                    OptionalMutableProperties = GetDeviceOptionalMutable(d, true, true).properties,
                 };
             }
 
@@ -341,7 +347,7 @@ namespace NHMCore.Nhmws.V4
             return list;
         }
 
-        internal static MinerState GetMinerState(string workerName, IOrderedEnumerable<ComputeDevice> devices, bool isLogin = false)
+        internal static MinerState GetMinerState(string workerName, IOrderedEnumerable<ComputeDevice> devices, bool isStateChange = false)
         {
             var rig = ApplicationStateManager.CalcRigStatus();
 
@@ -389,9 +395,9 @@ namespace NHMCore.Nhmws.V4
                 return new MinerState.DeviceState
                 {
                     MandatoryDynamicValues = mdv(d),
-                    OptionalDynamicValues = GetDeviceOptionalDynamic(d, isLogin).values, // odv
+                    OptionalDynamicValues = GetDeviceOptionalDynamic(d, isStateChange).values, // odv
                     MandatoryMutableValues = mmv(d),
-                    OptionalMutableValues = GetDeviceOptionalMutable(d, isLogin).values, // omv
+                    OptionalMutableValues = GetDeviceOptionalMutable(d, isStateChange, false).values, // omv
                 };
             }
 
@@ -404,6 +410,8 @@ namespace NHMCore.Nhmws.V4
                 Devices = devices.Select(toDeviceState).ToList(),
             };
         }
+
+
         private static List<NhmwsAction> CreateDefaultDeviceActions(string uuid)
         {
             return new List<NhmwsAction>
@@ -454,7 +462,7 @@ namespace NHMCore.Nhmws.V4
 
         private static string GetMinersForDeviceDynamic(ComputeDevice d)//todo  if include enabled return array of strings else return array of structs
         {
-            var minersObject = new MinerLogin();
+            var minersObject = new MinerAlgoState();
             var containers = d.AlgorithmSettings;
             if (containers == null) return String.Empty;
             var grouped = containers.GroupBy(c => c.PluginName).ToList();

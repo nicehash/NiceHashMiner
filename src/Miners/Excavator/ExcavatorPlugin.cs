@@ -31,11 +31,11 @@ namespace Excavator
 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.7.7.7",
-                ExePath = new List<string> { "NHQM_v0.5.5.1_RC", "excavator.exe" },
+                BinVersion = "v1.8.1.1",
+                ExePath = new List<string> { "NHQM_v0.6.1.1_RC", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.5.1_RC/NHQM_v0.5.5.1_RC.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.1.1_RC/NHQM_v0.6.1.1_RC.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -45,7 +45,7 @@ namespace Excavator
             };
         }
 
-        public override Version Version => new Version(19, 0);
+        public override Version Version => new Version(19, 2);
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";
@@ -93,12 +93,12 @@ namespace Excavator
                 .ToDictionary(p => p.gpu, p => p.algos);
         }
 
-        private void CreateExcavatorCommandTemplate(IEnumerable<string> uuids)
+        private void CreateExcavatorCommandTemplate(IEnumerable<string> uuids, string algorithmName)
         {
             try
             {
                 var templatePath = CmdConfig.CommandFileTemplatePath(PluginUUID);
-                var template = CmdConfig.CreateTemplate(uuids);
+                var template = CmdConfig.CreateTemplate(uuids, algorithmName);
                 if (!File.Exists(templatePath) && template != null)
                 {
                     File.WriteAllText(templatePath, template);
@@ -272,7 +272,7 @@ namespace Excavator
                     if (targetGpu == null) continue; 
                     _mappedDeviceIds[targetGpu.UUID] = serializedDev.uuid;
                 }
-                CreateExcavatorCommandTemplate(_mappedDeviceIds.Values);
+                CreateExcavatorCommandTemplate(_mappedDeviceIds.Values, AlgorithmName().ToLower());
             }
             catch (Exception e)
             {

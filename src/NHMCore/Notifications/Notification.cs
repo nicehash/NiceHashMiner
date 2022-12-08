@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using System;
+using System.Collections.Generic;
 using static NHMCore.Translations;
 
 namespace NHMCore.Notifications
@@ -15,6 +16,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
@@ -24,6 +26,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
@@ -34,6 +37,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
@@ -45,6 +49,7 @@ namespace NHMCore.Notifications
             NotificationContent = content;
             NotificationUrl = url;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
             //NotificationTime = DateTime.Now.ToString("dd/MM/y hh:mm tt");
         }
 
@@ -56,6 +61,7 @@ namespace NHMCore.Notifications
             Name = name;
             NotificationContent = content;
             NotificationEpochTime = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            NumericUID = (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
 
         public NotificationAction Action { get; internal set; } = null;
@@ -92,17 +98,29 @@ namespace NHMCore.Notifications
                 OnPropertyChanged(nameof(NotificationNew));
             }
         }
-
-        //private string _notificationTime { get; set; }
-        //public string NotificationTime
-        //{
-        //    get => _notificationTime;
-        //    set
-        //    {
-        //        _notificationTime = value;
-        //        OnPropertyChanged(nameof(NotificationTime));
-        //    }
-        //}
+        public List<Notification> _subNotificationList = new();
+        public List<Notification> SubNotificationList
+        {
+            get
+            {
+                return _subNotificationList;
+            }
+            set
+            {
+                _subNotificationList = value;
+                OnPropertyChanged(nameof(SubNotificationList));
+            }
+        }
+        public long _numericUID { get; internal set; } = -1;
+        public long NumericUID
+        {
+            get { return _numericUID; }
+            set
+            {
+                _numericUID = value;
+                OnPropertyChanged(nameof(NumericUID));
+            }
+        }
 
         private bool _isVisible { get; set; } = false;
         public bool IsVisible
@@ -137,7 +155,7 @@ namespace NHMCore.Notifications
             }
         }
 
-        public void UpdateNotificationTimeString()
+        public void SetTimeString()
         {
             var returnTime = "";
             DateTimeOffset dateTimeOffSet = DateTimeOffset.FromUnixTimeSeconds(NotificationEpochTime);
@@ -153,6 +171,11 @@ namespace NHMCore.Notifications
             else if (secondsDiff < 604800) returnTime = Tr("{0} at {1}", dateTimeOfNotification.DayOfWeek, dateTimeOfNotification.TimeOfDay);
             else returnTime = Tr("{0} at {1}", dateTimeOfNotification.Date.ToString("dd-MM-yyyy"), dateTimeOfNotification.TimeOfDay);
             NotificationTime = returnTime;
+        }
+        public void UpdateNotificationTimeString()
+        {
+            SetTimeString();
+            SubNotificationList.ForEach(notif => notif.SetTimeString());
         }
 
         private string _notificationContent { get; set; }

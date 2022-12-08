@@ -77,7 +77,7 @@ namespace NHMCore.Nhmws.V4
 
     internal interface IAction { }
 
-    internal abstract class OptionalMutableProperty
+    public abstract class OptionalMutableProperty
     {
         private static int _nextPropertyId = 100;
         internal static int NextPropertyId() => _nextPropertyId++;
@@ -181,7 +181,7 @@ namespace NHMCore.Nhmws.V4
                 ActionType = SupportedAction.ActionDeviceEnable,
                 DeviceUUID = uuid
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionDeviceDisable(string uuid)
@@ -194,7 +194,7 @@ namespace NHMCore.Nhmws.V4
                 ActionType = SupportedAction.ActionDeviceDisable,
                 DeviceUUID = uuid
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionOcProfileTest(string uuid)
@@ -216,7 +216,7 @@ namespace NHMCore.Nhmws.V4
                 ActionType = SupportedAction.ActionOcProfileTest,
                 DeviceUUID = uuid
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionOcProfileTestStop(string uuid)
@@ -230,7 +230,7 @@ namespace NHMCore.Nhmws.V4
                 ActionType = SupportedAction.ActionOcProfileTestStop,
                 DeviceUUID = uuid
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionFanProfileTest(string uuid)
@@ -260,7 +260,7 @@ namespace NHMCore.Nhmws.V4
                 ActionType = SupportedAction.ActionFanProfileTest,
                 DeviceUUID = uuid
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionFanProfileTestStop(string uuid)
@@ -274,7 +274,7 @@ namespace NHMCore.Nhmws.V4
                 ActionType = SupportedAction.ActionFanProfileTestStop,
                 DeviceUUID = uuid
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionElpProfileTest(string uuid)
@@ -296,7 +296,7 @@ namespace NHMCore.Nhmws.V4
                 ActionType= SupportedAction.ActionElpProfileTest,
                 DeviceUUID = uuid
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionElpProfileTestStop(string uuid)
@@ -310,7 +310,7 @@ namespace NHMCore.Nhmws.V4
                 ActionType= SupportedAction.ActionElpProfileTestStop,
                 DeviceUUID = uuid
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionStartMining()
@@ -322,7 +322,7 @@ namespace NHMCore.Nhmws.V4
                 DisplayGroup = 1,
                 ActionType = SupportedAction.ActionStartMining,
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionStopMining()
@@ -334,7 +334,7 @@ namespace NHMCore.Nhmws.V4
                 DisplayGroup = 1,
                 ActionType = SupportedAction.ActionStopMining,
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionProfilesBundleSet()
@@ -355,7 +355,7 @@ namespace NHMCore.Nhmws.V4
                 },
                 ActionType = SupportedAction.ActionProfilesBundleSet,
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
         public static NhmwsAction ActionProfilesBundleReset()
@@ -367,7 +367,7 @@ namespace NHMCore.Nhmws.V4
                 DisplayGroup = 1,
                 ActionType= SupportedAction.ActionProfilesBundleReset,
             };
-            ActionMap.ActionList.Add(action);
+            ActionMutableMap.ActionList.Add(action);
             return action;
         }
     }
@@ -512,12 +512,12 @@ namespace NHMCore.Nhmws.V4
         public string Value { get; set; }
     }
 
-    internal class MinerLogin
+    public class MinerAlgoState
     {
         [JsonProperty("miners")]
         public List<MinerDynamic> Miners { get; set; } = new List<MinerDynamic>();
     }
-    internal class MinerDynamic
+    public class MinerDynamic
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -533,7 +533,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("algorithms")]
         public List<string> AlgoList { get; set; } = new List<string>();
     }
-    internal class Algo
+    public class Algo
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -554,20 +554,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("elp", NullValueHandling = NullValueHandling.Ignore)]
         public List<ElpBundle>? ElpBundles { get; set; }
     }
-    public class ElpBundle
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [JsonProperty("device_name")]
-        public List<string>? DeviceName { get; set; }
-        [JsonProperty("miner_id", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string>? MinerId { get; set; }
-        [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
-        public string AlgoId { get; set; }
-        [JsonProperty("elp")]
-        public string Elp { get; set; }
-    }
-    public class OcBundle
+    public class GenericBundle
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -579,6 +566,15 @@ namespace NHMCore.Nhmws.V4
         public List<string>? MinerId { get; set; }
         [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
         public List<string>? AlgoId { get; set; }
+
+    }
+    public class ElpBundle : GenericBundle
+    {
+        [JsonProperty("elp")]
+        public string Elp { get; set; }
+    }
+    public class OcBundle : GenericBundle
+    {
         [JsonProperty("core_clock")]
         public int CoreClock { get; set; }
         [JsonProperty("memory_clock")]
@@ -586,16 +582,8 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("power_mode")]
         public int TDP { get; set; }
     }
-    public class FanBundle
+    public class FanBundle : GenericBundle
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-        [JsonProperty("device_name")]
-        public string DeviceName { get; set; }
-        [JsonProperty("miner_id", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string>? MinerId { get; set; }
-        [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string>? AlgoId { get; set; }
         [JsonProperty("type")]
         public int Type { get; set; }
         [JsonProperty("fan_speed")]

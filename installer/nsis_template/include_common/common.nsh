@@ -12,6 +12,7 @@ Name "${PRODUCT_NAME}"
 
 !define APP_EXECUTABLE_FILENAME "${PRODUCT_FILENAME}.exe"
 !define UNINSTALL_FILENAME "Uninstall ${PRODUCT_FILENAME}.exe"
+!define MAIN_APPLICATION_FILENAME "${APPLICATION_FILENAME}.exe"
 
 !macro check64BitAndSetRegView
   ${IfNot} ${AtLeastWin7}

@@ -35,8 +35,17 @@ namespace NHMCore.Schedules
         public void Init()
         {
             if (File.Exists(Paths.ConfigsPath("Schedule.json"))){
-                _schedules = JsonConvert.DeserializeObject<ObservableCollection<Schedule>>(File.ReadAllText(Paths.ConfigsPath("Schedule.json")));
+                var schedules = JsonConvert.DeserializeObject<ObservableCollection<ScheduleOld>>(File.ReadAllText(Paths.ConfigsPath("Schedule.json")));
+                if (schedules != null && schedules.Any(s => s.Days.Any(d => d.Value == true)))
+                {
+                    foreach (var schedule in schedules)
+                    {
+                        _schedules.Add(new Schedule().SetValues(schedule));
+                    }
+                }
+                else _schedules = JsonConvert.DeserializeObject<ObservableCollection<Schedule>>(File.ReadAllText(Paths.ConfigsPath("Schedule.json")));
                 OnPropertyChanged(nameof(Schedules));
+                ConfigManager.ScheduleConfigFileCommit();
             }
         }
 

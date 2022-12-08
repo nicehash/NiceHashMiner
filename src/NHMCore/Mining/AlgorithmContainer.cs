@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using Windows.Media.Protection.PlayReady;
 using static NHMCore.Configs.Managers.OCManager;
 
 namespace NHMCore.Mining
@@ -240,9 +241,16 @@ namespace NHMCore.Mining
                 if (Algorithm != null) Algorithm.Enabled = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Status));
+                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
             }
         }
-
+        public void SetEnabled(bool enabled) //for enable without WS (bulk setting)
+        {
+            if (Algorithm != null) Algorithm.Enabled = enabled;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(Enabled));
+            OnPropertyChanged(nameof(Status));
+        }
         /// <summary>
         /// Indicates whether this algorithm requires a benchmark
         /// </summary>
@@ -258,6 +266,7 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(AnnotatedSpeeds));
             OnPropertyChanged(nameof(BenchmarkNeeded));
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(HasBenchmark));
@@ -266,6 +275,7 @@ namespace NHMCore.Mining
         {
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
         }
 
         #endregion
@@ -291,6 +301,7 @@ namespace NHMCore.Mining
             // notify changed
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
             OnPropertyChanged(nameof(Status));
         }
 
@@ -319,11 +330,22 @@ namespace NHMCore.Mining
                         var paying = _lastEstimatedProfitSMA[speed.Algo];
                         newProfit += paying * speed.Value * Mult;
                     }
-                    // TODO estimate profit subtraction ???
                     return Math.Round(newProfit, 8);
                 }
                 // we can't calculate 
                 return -1;
+            }
+        }
+        public double CurrentEstimatedProfitPure
+        {
+            get
+            {
+                if (GUISettings.Instance.DisplayPureProfit)
+                {
+                    var power = (PowerUsage / 1000 * BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) * 24;
+                    return (CurrentEstimatedProfit - power);
+                }
+                return CurrentEstimatedProfit;
             }
         }
         public string CurrentEstimatedProfitStr
@@ -538,9 +560,20 @@ namespace NHMCore.Mining
 
         #endregion
 
-#if NHMWS4
-        #region OC
 
+        internal bool IgnoreLocalELPInput //if ignore local ELPs for rig manager ones
+        {
+            get
+            {
+#if NHMWS4
+                if (ActiveELPProfile != null || ActiveELPTestProfile != null) return true;
+                return false;
+#else
+                return false;
+#endif
+            }
+        }
+#if NHMWS4
         private bool _IsTesting = false;
         public bool IsTesting
         {
@@ -553,6 +586,7 @@ namespace NHMCore.Mining
                 _IsTesting = value;
             }
         }
+        #region OC
         public string OCProfile {
             get
             {
@@ -607,6 +641,7 @@ namespace NHMCore.Mining
             OcProfilePrev = ActiveOCProfile;
             _ActiveOCProfile = profile;
         }
+
         public void SetTargetFanTestProfile(FanBundle profile)
         {
             IsTesting = profile == null ? false : true;
@@ -664,10 +699,9 @@ namespace NHMCore.Mining
                 return Task.FromResult(ret);
             }
             if(test) IsTesting = false;
-            Logger.Warn(_TAG, $"Setting OC is unsuccessful");
+            Logger.Warn(_TAG, $"OC not in test mode anymore");
             return Task.FromResult(ret);
         }
-
         public Task<OcReturn> ResetOcForDevice(bool test = false)
         {
             var defCC = ComputeDevice.CoreClockRange;
@@ -676,6 +710,67 @@ namespace NHMCore.Mining
             var bundle = new OcBundle() { CoreClock = defCC.def, MemoryClock = defMC.def, TDP = (int)defTDP.def };
             var res = SetOcForDevice(bundle, test, true);
             return Task.FromResult(res.Result);
+        }
+        #endregion
+        #region ELP
+        public string ELPProfile
+        {
+            get
+            {
+                if (ActiveOCTestProfile != null) return ActiveOCTestProfile.Name;
+                if (ActiveOCProfile != null) return ActiveOCProfile.Name;
+                return string.Empty;
+            }
+        }
+        public string ELPProfileID
+        {
+            get
+            {
+                if (ActiveOCTestProfile != null) return ActiveOCTestProfile.Id;
+                if (ActiveOCProfile != null) return ActiveOCProfile.Id;
+                return string.Empty;
+            }
+        }
+        private ElpBundle _ActiveELPTestProfile = null;
+        public ElpBundle ActiveELPTestProfile => _ActiveELPTestProfile;
+        private ElpBundle TestELPProfilePrev { get; set; }
+
+        private ElpBundle _ActiveELPProfile = null;
+        public ElpBundle ActiveELPProfile => _ActiveELPProfile;
+        private ElpBundle ELPProfilePrev { get; set; }
+        public void SetTargetElpTestProfile(ElpBundle profile)
+        {
+            IsTesting = profile == null ? false : true;
+            TestELPProfilePrev = ActiveELPTestProfile;
+            _ActiveELPTestProfile = profile;
+            OnPropertyChanged(nameof(IgnoreLocalELPInput));
+        }
+        public void SetTargetElpProfile(ElpBundle profile)
+        {
+            ELPProfilePrev = ActiveELPProfile;
+            _ActiveELPProfile = profile;
+            OnPropertyChanged(nameof(IgnoreLocalELPInput));
+        }
+        public Task<OcReturn> SetELPForDevice(ElpBundle bundle, bool test = false, bool reset = false)
+        {
+            Logger.Warn(_TAG, $"Setting ELP for {ComputeDevice.Name}: ELP={bundle.Elp}");
+            var ret = OcReturn.Success;
+
+            if (!reset)
+            {
+                if (test) IsTesting = true;
+                ELPManager.Instance.SetAlgoCMDString(this, bundle.Elp);
+                Logger.Warn(_TAG, $"Setting ELP is successful");
+                //disable input and show message
+                //restart mining
+                return Task.FromResult(ret);
+            }
+            if (test) IsTesting = false;
+            //target set to empty where uuid match to string and reiterate
+            //enable input and hide message
+            //restart mining
+            Logger.Warn(_TAG, $"ELP not in test mode anymore");
+            return Task.FromResult(ret);
         }
         #endregion
 #endif

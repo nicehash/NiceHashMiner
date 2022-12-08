@@ -20,5 +20,6 @@ namespace NHMCore.Nhmws
         TestTotalFail = -104,
         TargetContainerNotFound = -105,
         ErrNotAdmin = -106,
+        ErrNoAlgoDataFound = -107,
     }
 }
