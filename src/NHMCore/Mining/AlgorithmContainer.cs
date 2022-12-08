@@ -570,6 +570,16 @@ namespace NHMCore.Mining
                 return string.Empty;
             }
         }
+        public string FanProfile
+        {
+            get
+            {
+                if (ActiveFanTestProfile != null) return ActiveFanTestProfile.Name;
+                if (ActiveFanProfile != null) return ActiveFanProfile.Name;
+                return string.Empty;
+            }
+        }
+
         private OcBundle _ActiveOCTestProfile = null;
         public OcBundle ActiveOCTestProfile => _ActiveOCTestProfile;
         private OcBundle TestOcProfilePrev { get; set; }
@@ -577,6 +587,14 @@ namespace NHMCore.Mining
         private OcBundle _ActiveOCProfile = null;
         public OcBundle ActiveOCProfile => _ActiveOCProfile;
         private OcBundle OcProfilePrev { get; set; }
+
+        private FanBundle _activeFanTestProfile = null;
+        public FanBundle ActiveFanTestProfile => _activeFanTestProfile;
+        private FanBundle _testFanProfilePrev { get; set; }
+        private FanBundle _activeFanProfile = null;
+        public FanBundle ActiveFanProfile => _activeFanProfile;
+        private FanBundle _fanProfilePrev { get; set; }
+
 
         public void SetTargetOcTestProfile(OcBundle profile)
         {
@@ -588,6 +606,18 @@ namespace NHMCore.Mining
         {
             OcProfilePrev = ActiveOCProfile;
             _ActiveOCProfile = profile;
+        }
+        public void SetTargetFanTestProfile(FanBundle profile)
+        {
+            IsTesting = profile == null ? false : true;
+            _testFanProfilePrev = ActiveFanTestProfile;
+            _activeFanTestProfile = profile;
+        }
+
+        public void SetTargetFanProfile(FanBundle profile)
+        {
+            _fanProfilePrev = ActiveFanProfile;
+            _activeFanProfile = profile;
         }
 
         public Task<OcReturn> SetOcForDevice(OcBundle bundle, bool test = false, bool reset = false)

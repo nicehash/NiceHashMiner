@@ -1,6 +1,7 @@
 using NHM.Common;
 using NHM.DeviceDetection;
 using NHMCore.Configs;
+using NHMCore.Mining;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
@@ -138,5 +139,25 @@ namespace NHMCore
         }
 
         #endregion InternetCheck timer
+
+        #region FanProfile timer
+        private static AppTimer _fanProfileTimer;
+
+        public static void StartFanProfileTimer()
+        {
+            if (_fanProfileTimer?.IsActive ?? false) return;
+            _fanProfileTimer = new AppTimer((object sender, ElapsedEventArgs e) =>
+            {
+                var devices = AvailableDevices.GPUs;
+                foreach (var device in devices) device.SetFanSpeedWithPidController();
+            },5000);
+            _fanProfileTimer.Start();
+        }
+
+        public static void StopFanProfileTimer()
+        {
+            _fanProfileTimer?.Stop();
+        }
+        #endregion
     }
 }

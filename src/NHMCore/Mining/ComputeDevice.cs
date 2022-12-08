@@ -10,6 +10,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Nhmws;
+using NHMCore.Nhmws.V4;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,6 +40,10 @@ namespace NHMCore.Mining
 #if NHMWS4
         public bool IsTesting => AlgorithmSettings.Any(a => a.IsTesting);
 #endif
+
+        private PidController _pidController = new();
+
+        private int _memoryControlCounter = 0;
 
         private bool _enabled = true;
         public bool Enabled
@@ -293,7 +298,7 @@ namespace NHMCore.Mining
         {
             get
             {
-                if(!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITDPLimits get)
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITDPLimits get)
                 {
                     var ret = get.GetTDPLimits();
                     return (ret.min, ret.max, ret.def);
@@ -341,17 +346,17 @@ namespace NHMCore.Mining
         }
         public bool SetCoreClock(int coreClock)
         {
-            if(CanSetTDP && DeviceMonitor is ICoreClockSet set) return set.SetCoreClock(coreClock);
+            if (CanSetTDP && DeviceMonitor is ICoreClockSet set) return set.SetCoreClock(coreClock);
             return false;
         }
         public bool SetMemoryClock(int memoryClock)
         {
-            if(CanSetTDP && DeviceMonitor is IMemoryClockSet set) return set.SetMemoryClock(memoryClock);
+            if (CanSetTDP && DeviceMonitor is IMemoryClockSet set) return set.SetMemoryClock(memoryClock);
             return false;
         }
         public bool SetFanSpeedPercentage(int percent)
         {
-            if(DeviceMonitor is ISetFanSpeedPercentage set) return set.SetFanSpeedPercentage(percent);
+            if (DeviceMonitor is ISetFanSpeedPercentage set) return set.SetFanSpeedPercentage(percent);
             return false;
         }
         public bool ResetFanSpeed()
@@ -634,7 +639,7 @@ namespace NHMCore.Mining
 
         public int TrySetMemoryTimings(string mtString)
         {
-            if(DeviceMonitor is IMemoryTimings mp)
+            if (DeviceMonitor is IMemoryTimings mp)
             {
                 return mp.SetMemoryTimings(mtString);
             }
@@ -643,7 +648,7 @@ namespace NHMCore.Mining
 
         public int TryResetMemoryTimings()
         {
-            if(DeviceMonitor is IMemoryTimings mp)
+            if (DeviceMonitor is IMemoryTimings mp)
             {
                 return mp.ResetMemoryTimings();
             }
@@ -661,7 +666,7 @@ namespace NHMCore.Mining
         {
             get {
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
-                if(testTarget != null)
+                if (testTarget != null)
                 {
                     return testTarget.OCProfile;
                 }
@@ -673,13 +678,26 @@ namespace NHMCore.Mining
             get
             {
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
-                if(testTarget != null )
+                if (testTarget != null)
                 {
                     return testTarget.OCProfileID;
                 }
                 return string.Empty;
             }
         }
+        public string FanProfile
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.FanProfile;
+                }
+                return string.Empty;
+            }
+        }
+
         public async Task AfterStartMining()
         {
             var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
@@ -687,26 +705,90 @@ namespace NHMCore.Mining
             if (testTarget.ActiveOCTestProfile != null)//todo if starting... if change
             {
                 var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCTestProfile, true, false);
-                if(ret == OcReturn.Success || ret == OcReturn.PartialSuccess) State = DeviceState.Testing;
+                if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess) State = DeviceState.Testing;
                 return;
             }
-            if(testTarget.ActiveOCTestProfile == null && State == DeviceState.Testing)
+            if (testTarget.ActiveOCTestProfile == null && State == DeviceState.Testing)
             {
                 var ret = await testTarget.ResetOcForDevice(true);
                 State = DeviceState.Mining;
                 return;
             }
-            if(testTarget.ActiveOCProfile != null)
+            if (testTarget.ActiveOCProfile != null)
             {
                 var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCProfile, false, false);
                 return;
             }
-            if(testTarget.ActiveOCProfile == null)
+            if (testTarget.ActiveOCProfile == null)
             {
                 var ret = await testTarget.ResetOcForDevice(false);
                 return;
             }
         }
+
+        public void SetFanSpeedWithPidController()
+        {
+            var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
+            if (testTarget == null) return;
+            var profile = testTarget.ActiveFanProfile ?? testTarget.ActiveFanProfile;
+            if (profile == null) profile = testTarget.ActiveFanProfile;
+            if (profile == null) return;    
+
+            switch (profile.Type)
+            {
+                case 0:
+                    SetFanSpeedPercentage(profile.FanSpeed);
+                    return;
+                case 1:
+                    SetFanSpeed(profile);
+                    return;
+                case 2:
+                    SetFanSpeed(profile);
+                    return;
+                case 3:
+                    SetFanSpeedWithLoweringMemoryClocks(profile);
+                    return;
+            }
+        }
+
+        private void SetFanSpeed(FanBundle profile)
+        {
+            if (profile.Type == 1)
+            {
+                _pidController.SetPid(10, 0.8, 1);
+                _pidController.SetOutputLimit(100);
+                var speed = _pidController.GetOutput(Temp, profile.GpuTemp);
+                SetFanSpeedPercentage((int)speed);
+            }
+            else
+            {
+                _pidController.SetPid(10, 0.8, 1);
+                _pidController.SetOutputLimit(profile.MaxFanSpeed);
+                var speed = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
+                SetFanSpeedPercentage((int)speed);
+            }
+        }
+
+        private void SetFanSpeedWithLoweringMemoryClocks(FanBundle profile)
+        {
+            _pidController.SetPid(10, 0.8, 1);
+            _pidController.SetOutputLimit(profile.MaxFanSpeed);
+            var speed = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
+            SetFanSpeedPercentage((int)speed);
+
+            var deltaTemp = Math.Max(Temp, VramTemperature) - Math.Min(profile.GpuTemp, profile.VramTemp);
+            if (deltaTemp > 5) _memoryControlCounter++;
+
+            if (_memoryControlCounter >= 5)
+            {
+                _pidController.SetPid(100, 0.8, 1);
+                _pidController.SetOutputLimits(MemoryClockRange.min, MemoryClockRange.max);
+                var memory_clock = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
+                SetMemoryClock((int)memory_clock);
+                _memoryControlCounter = 0;
+            }
+        }
+
 #endif
     }
 }
