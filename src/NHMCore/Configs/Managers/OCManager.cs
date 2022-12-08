@@ -78,6 +78,7 @@ namespace NHMCore.Configs.Managers
         }
         public Task<(ErrorCode err, string msg)> ApplyOcBundle(List<OcBundle> bundles)
         {
+            if (bundles == null) return Task.FromResult((ErrorCode.NoError, "OcBundles == null"));
             List<AlgorithmContainer> processed = new();
             var sorted = new List<(int, OcBundle)>();
             foreach (var bundle in bundles)

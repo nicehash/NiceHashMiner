@@ -74,6 +74,7 @@ namespace NHMCore.Configs.Managers
         }
         public Task<(ErrorCode err, string msg)> ApplyFanBundle(List<FanBundle> bundles)
         {
+            if (bundles == null) return Task.FromResult((ErrorCode.NoError, "FanBundles == null"));
             List<AlgorithmContainer> processed = new();
             var sorted = new List<(int, FanBundle)>();
             foreach (var bundle in bundles)
