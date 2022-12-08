@@ -613,6 +613,15 @@ namespace NHMCore.Mining
                 return string.Empty;
             }
         }
+        public string FanProfileID
+        {
+            get
+            {
+                if (ActiveFanTestProfile != null) return ActiveFanTestProfile.Id;
+                if (ActiveFanProfile != null) return ActiveFanProfile.Id;
+                return string.Empty;
+            }
+        }
 
         private OcBundle _ActiveOCTestProfile = null;
         public OcBundle ActiveOCTestProfile => _ActiveOCTestProfile;

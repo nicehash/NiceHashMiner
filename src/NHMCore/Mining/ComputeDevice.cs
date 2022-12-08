@@ -715,6 +715,18 @@ namespace NHMCore.Mining
                 return string.Empty;
             }
         }
+        public string FanProfileID
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.FanProfileID;
+                }
+                return string.Empty;
+            }
+        }
 
         public async Task AfterStartMining()
         {
