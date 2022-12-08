@@ -706,17 +706,23 @@ namespace NHMCore.Mining
         private ElpBundle _ActiveELPProfile = null;
         public ElpBundle ActiveELPProfile => _ActiveELPProfile;
         private ElpBundle ELPProfilePrev { get; set; }
+        public bool NewTestProfile = false;
+        public bool NewProfile = false;
+        public void ResetNewTestProfileStatus() { NewTestProfile = false; }
+        public void ResetNewProfileStatus() { NewProfile = false; }
         public void SetTargetElpTestProfile(ElpBundle profile)
         {
             IsTesting = profile == null ? false : true;
             TestELPProfilePrev = ActiveELPTestProfile;
             _ActiveELPTestProfile = profile;
+            NewTestProfile = true;
             OnPropertyChanged(nameof(IgnoreLocalELPInput));
         }
         public void SetTargetElpProfile(ElpBundle profile)
         {
             ELPProfilePrev = ActiveELPProfile;
             _ActiveELPProfile = profile;
+            NewProfile = true;
             OnPropertyChanged(nameof(IgnoreLocalELPInput));
         }
         public Task<OcReturn> SetELPForDevice(ElpBundle bundle, bool test = false, bool reset = false)

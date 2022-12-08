@@ -12,6 +12,7 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -930,10 +931,28 @@ namespace NHMCore.Mining
             var newGroupedMiningPairs = GroupingUtils.GetGroupedAlgorithmContainers(GetMostProfitableAlgorithmContainers());
             // check newGroupedMiningPairs and running Groups to figure out what to start/stop and keep running
             var currentRunningGroups = _runningMiners.Keys.ToArray();
+
             // check which groupMiners should be stopped and which ones should be started and which to keep running
-            var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
-            var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
-            var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToArray();
+            var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToList();
+            var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToList();
+            var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToList();
+            
+            //resetting in case of elp profile set
+            foreach(var noChangeKey in noChangeGroupMinersKeys)
+            {
+                var miningPairs = newGroupedMiningPairs[noChangeKey];
+                var miningPairsWithNewProfile = miningPairs.Where(p => p.NewProfile == true || p.NewTestProfile == true);
+                if (miningPairsWithNewProfile == null || miningPairsWithNewProfile.Count() == 0) continue;
+                foreach(var item in miningPairsWithNewProfile)
+                {
+                    item.ResetNewProfileStatus();
+                    item.ResetNewTestProfileStatus();
+                }
+                toStopMinerGroupKeys.Add(noChangeKey);
+                toStartMinerGroupKeys.Add(noChangeKey);
+            }
+
+
             // first stop currently running
             foreach (var stopKey in toStopMinerGroupKeys)
             {
@@ -981,11 +1000,11 @@ namespace NHMCore.Mining
 #endif
             // log scope
             {
-                var stopLog = toStopMinerGroupKeys.Length > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
+                var stopLog = toStopMinerGroupKeys.Count > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
                 Logger.Info(Tag, $"Stop Old Mining: ({stopLog})");
-                var startLog = toStartMinerGroupKeys.Length > 0 ? string.Join(",", toStartMinerGroupKeys) : "EMTPY";
+                var startLog = toStartMinerGroupKeys.Count > 0 ? string.Join(",", toStartMinerGroupKeys) : "EMTPY";
                 Logger.Info(Tag, $"Start New Mining : ({startLog})");
-                var sameLog = noChangeGroupMinersKeys.Length > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
+                var sameLog = noChangeGroupMinersKeys.Count > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
                 Logger.Info(Tag, $"No change : ({sameLog})");
             }
         }
