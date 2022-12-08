@@ -736,11 +736,11 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
-                    //object jobjectFan = JsonConvert.DeserializeObject(parameters);
-                    //if (jobjectFan is not JObject jsonObjFan) break;
-                    //if (jsonObjFan.ToObject<FanBundle>() is FanBundle fb) ExecuteFanBundle(fb);
+                    var fan = JsonConvert.DeserializeObject<FanBundle>(parameters);
+                    (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
                     break;
                 case SupportedAction.ActionFanProfileTestStop:
+                    (err, result) = StopFanTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionElpProfileTest:
                     //object jobjectELP = JsonConvert.DeserializeObject(parameters);
@@ -773,7 +773,7 @@ namespace NHMCore.Nhmws.V4
             }
             if (bundle.FanBundles != null)
             {
-                ExecuteFanBundles(bundle.FanBundles);
+                var retFan = FanManager.Instance.ApplyFanBundle(bundle.FanBundles);
             }
             if (bundle.ElpBundles != null)
             {
@@ -785,6 +785,7 @@ namespace NHMCore.Nhmws.V4
         {
             BundleManager.ResetBundleInfo();
             var retOC = OCManager.Instance.ResetOcBundle();
+            var retFan = FanManager.Instance.ResetFanBundle();
             return Task.CompletedTask;
         }
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
@@ -800,39 +801,19 @@ namespace NHMCore.Nhmws.V4
             return Task.FromResult(res.Result);
         }
 
-        private static Task ExecuteFanBundle(FanBundle fanBundle)
+        private static Task<(ErrorCode err, string msg)> ExecuteFanTest(string deviceUUID, FanBundle fanBundle)
         {
-            object t = fanBundle.Type switch
-            {
-                0 => ExecuteFanBundleFixed(fanBundle),
-                1 => ExecuteFanBundleTargetGPUTemp(fanBundle),
-                2 => ExecuteFanBundleTargetGPUVRAMTemp(fanBundle),
-                _ => throw new RpcException($"Fan bundle type not supported for method '{fanBundle.Type}'", ErrorCode.UnableToHandleRpc),
-            };
-            return Task.CompletedTask;
-        }
-        private static Task ExecuteFanBundles(List<FanBundle> bundles)
-        {
-            foreach (var bundle in bundles)
-            {
-                //todo check returns
-                ExecuteFanBundle(bundle);
-            }
-            return Task.CompletedTask;
-        }
-        private static Task ExecuteFanBundleFixed(FanBundle fanBundle)
-        {
-            return Task.CompletedTask;
-        }
-        private static Task ExecuteFanBundleTargetGPUTemp(FanBundle fanBundle)
-        {
-            return Task.CompletedTask;
-        }
-        private static Task ExecuteFanBundleTargetGPUVRAMTemp(FanBundle fanBundle)
-        {
-            return Task.CompletedTask;
+            if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            var res = FanManager.Instance.ExecuteTest(deviceUUID, fanBundle);
+            return Task.FromResult(res.Result);
         }
 
+        private static Task<(ErrorCode err, string msg)> StopFanTestForDevice(string deviceUUID)
+        {
+            if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            var res = FanManager.Instance.StopTest(deviceUUID);
+            return Task.FromResult(res.Result);
+        }
         private static Task<string> SetMutable(MinerSetMutable mutableCmd)
         {
             return Task.FromResult("");

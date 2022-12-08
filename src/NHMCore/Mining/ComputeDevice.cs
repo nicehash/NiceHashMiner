@@ -730,8 +730,8 @@ namespace NHMCore.Mining
         {
             var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (testTarget == null) return;
-            var profile = testTarget.ActiveFanProfile ?? testTarget.ActiveFanProfile;
-            if (profile == null) profile = testTarget.ActiveFanProfile;
+            var profile = testTarget.ActiveFanTestProfile ?? testTarget.ActiveFanTestProfile;
+            profile = testTarget.ActiveFanProfile ?? testTarget.ActiveFanProfile;
             if (profile == null) return;    
 
             switch (profile.Type)
@@ -747,6 +747,8 @@ namespace NHMCore.Mining
                     return;
                 case 3:
                     SetFanSpeedWithLoweringMemoryClocks(profile);
+                    return;
+                default:
                     return;
             }
         }
