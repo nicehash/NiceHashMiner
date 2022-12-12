@@ -19,7 +19,7 @@ namespace NHM.DeviceMonitoring.PID
         public static extern double nhm_pid_get_output(double actual_temp, double setpoint);
 
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern void nhm_set_output_limits(double fan_speed_limit);
+        public static extern void nhm_set_output_limit(double fan_speed_limit);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern void nhm_set_output_limits(double min_speed, double max_speed);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
