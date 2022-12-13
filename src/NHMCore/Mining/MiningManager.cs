@@ -956,22 +956,14 @@ namespace NHMCore.Mining
             // first stop currently running
             foreach (var stopKey in toStopMinerGroupKeys)
             {
-                //if (toStartMinerGroupKeys.Contains(stopKey)) continue; //solves problem of switching to itself when testing
                 var stopGroup = _runningMiners[stopKey];
-                //stop oc profile here
-                //try test here
-                //try bundle here
                 _runningMiners.Remove(stopKey);
                 await stopGroup.StopTask();
             }
             // start new
             foreach (var startKey in toStartMinerGroupKeys)
             {
-                //if(toStopMinerGroupKeys.Contains(startKey)) continue; //solves problem of switching to itself when testing
                 var miningPairs = newGroupedMiningPairs[startKey];
-                //start oc profile here
-                //try test here
-                //try bundle here
                 var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs.FirstOrDefault());
                 var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
                 if (toStart == null)

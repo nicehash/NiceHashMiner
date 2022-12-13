@@ -52,6 +52,7 @@ namespace NHMCore.Configs.Managers
         {
             OCManager.Instance.ApplyOcBundle(bundle.OcBundles);
             FanManager.Instance.ApplyFanBundle(bundle.FanBundles);
+            ELPManager.Instance.ApplyELPBundle(bundle.ElpBundles);
         }
         public static async Task SaveBundle(Bundle bundle)
         {

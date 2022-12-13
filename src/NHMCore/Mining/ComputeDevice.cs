@@ -727,40 +727,99 @@ namespace NHMCore.Mining
                 return string.Empty;
             }
         }
+        public string ELPProfile
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.ELPProfile;
+                }
+                return string.Empty;
+            }
+        }
+        public string ELPProfileID
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.ELPProfileID;
+                }
+                return string.Empty;
+            }
+        }
 
-        public async Task AfterStartMining()
+        public async Task AfterStartMining() //todo make a queue or something!!!!
         {
             //TODO IF DELTA, IF ALREADY SET, IF NOT SET DONT RESTART ETC
             //TODO NO RETURNS BC WE CAN SET MULTIPLE THINGS
-            var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
-            if (testTarget == null) return;
-            if (testTarget.ActiveOCTestProfile != null)//todo if starting... if change
+            var target = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
+            if (target == null) return;
+            foreach(var action in target.RigManagementActions)
             {
-                var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCTestProfile, true, false);
-                if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess) State = DeviceState.Testing;
-                return;
+                switch (action)
+                {
+                    case AlgorithmContainer.ActionQueue.ApplyOC:
+                        await target.SetOcForDevice(target.ActiveOCProfile, false, false);
+                        break;
+                    case AlgorithmContainer.ActionQueue.ApplyOcTest:
+                        var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, true, false);
+                        if (retOCTest == OcReturn.Success || retOCTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
+                        break;
+                    case AlgorithmContainer.ActionQueue.ResetOC:
+                        var resetOC = await target.ResetOcForDevice();
+                        State = DeviceState.Mining;
+                        break;
+                    //case AlgorithmContainer.ActionQueue.ApplyELP:
+                    //    break;
+                    //case AlgorithmContainer.ActionQueue.ApplyELPTest:
+                    //    break;
+                    case AlgorithmContainer.ActionQueue.ApplyFan:
+                        //await target.SetTargetFanForDevice(target.ActiveFanProfile, false, false);
+                        break;
+                    case AlgorithmContainer.ActionQueue.ApplyFanTest:
+                        //var retFanTest = await target.SetFanForDevice(target.ActiveFanTestProfile, true, false);
+                        //if (retOCTest == OcReturn.Success || retOCTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
+                        break;
+                    case AlgorithmContainer.ActionQueue.ResetFan:
+                        //var resetFan = await target.ResetFanForDevice();
+                        break;
+                }
             }
-            if (testTarget.ActiveOCTestProfile == null && State == DeviceState.Testing)
-            {
-                var ret = await testTarget.ResetOcForDevice(true);
-                State = DeviceState.Mining;
-                return;
-            }
-            if (testTarget.ActiveOCProfile != null)
-            {
-                var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCProfile, false, false);
-                return;
-            }
-            if (testTarget.ActiveOCProfile == null)
-            {
-                var ret = await testTarget.ResetOcForDevice(false);
-                return;
-            }
-            if(testTarget.ActiveELPTestProfile!= null)
-            {
-                var ret = await testTarget.SetELPForDevice(testTarget.ActiveELPTestProfile, true, false);
-                return;
-            }
+            //if(IsTesting)
+            //{
+            //    State = DeviceState.Testing;
+            //}
+            //if (testTarget.ActiveOCTestProfile != null)//todo if starting... if change
+            //{
+            //    var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCTestProfile, true, false);
+            //    if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess) State = DeviceState.Testing;
+            //    return;
+            //}
+            //if (testTarget.ActiveOCTestProfile == null && State == DeviceState.Testing) // this is a problem
+            //{
+            //    var ret = await testTarget.ResetOcForDevice(true);
+            //    State = DeviceState.Mining;
+            //    return;
+            //}
+            //if (testTarget.ActiveOCProfile != null)
+            //{
+            //    var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCProfile, false, false);
+            //    return;
+            //}
+            //if (testTarget.ActiveOCProfile == null)
+            //{
+            //    var ret = await testTarget.ResetOcForDevice(false);
+            //    return;
+            //}
+            //if(testTarget.ActiveELPTestProfile!= null) // not the place for ELP
+            //{
+            //    //var ret = await testTarget.SetELPForDevice(testTarget.ActiveELPTestProfile, true, false);
+            //    return;
+            //}
         }
 
         public void SetFanSpeedWithPidController()

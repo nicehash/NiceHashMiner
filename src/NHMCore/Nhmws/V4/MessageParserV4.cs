@@ -104,10 +104,10 @@ namespace NHMCore.Nhmws.V4
                 "Miner" => $"{GetDevicePlugin(d.Uuid)}",
                 "OC profile" => $"{d.OCProfile}",
                 "OC profile ID" => $"{d.OCProfileID}",
-                "Fan profile" => $"{d.FanProfile}", //TODO
+                "Fan profile" => $"{d.FanProfile}",
                 "Fan profile ID" => $"{d.FanProfileID}",
-                "ELP profile" => $"", //TODO
-                "ELP profile ID" => $"",
+                "ELP profile" => $"{d.ELPProfile}",
+                "ELP profile ID" => $"{d.ELPProfileID}",
                 _ => null,
             };
 

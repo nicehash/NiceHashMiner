@@ -258,7 +258,6 @@ namespace NHMCore
                 }
 
                 SchedulesManager.Instance.Init();
-                BundleManager.Init();
             }
             catch (Exception e)
             {

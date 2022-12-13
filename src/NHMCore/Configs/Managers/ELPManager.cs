@@ -21,6 +21,7 @@ namespace NHMCore.Configs.Managers
     {
         private ELPManager() { }
         public static ELPManager Instance { get; } = new ELPManager();
+        private readonly string _TAG = "ELPManager";
         public event NotifyELPChangeEventHandler ELPReiteration;
         const int HEADER = 0;
         const int FLAG = 0;
@@ -345,6 +346,81 @@ namespace NHMCore.Configs.Managers
                 .ForEach(c => c.IsTesting = false);
 
             target.SetTargetElpTestProfile(bundle);
+            MiningManager.TriggerSwitchCheck();
+            return Task.FromResult((ErrorCode.NoError, "Success"));
+        }
+        public Task<(ErrorCode err, string msg)> StopTest(string uuid)
+        {
+            var targetDeviceContainer = AvailableDevices.Devices
+                .Where(d => d.B64Uuid == uuid)?
+                .SelectMany(d => d.AlgorithmSettings)?
+                .Where(a => a.IsTesting)?
+                .FirstOrDefault();
+            if (targetDeviceContainer == null)
+            {
+                Logger.Error(_TAG, "Device not found for stop ELP test");
+                return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
+            }
+            targetDeviceContainer.SetTargetElpTestProfile(null);
+            MiningManager.TriggerSwitchCheck();
+            return Task.FromResult((ErrorCode.NoError, "Success"));
+        }
+        public Task<(ErrorCode err, string msg)> ApplyELPBundle(List<ElpBundle> bundles)
+        {
+            if (bundles == null) return Task.FromResult((ErrorCode.NoError, "ELPBundles == null"));
+            List<AlgorithmContainer> processed = new();
+            var sorted = new List<(int, ElpBundle)>();
+            foreach (var bundle in bundles)
+            {
+                if (bundle.MinerId != null && bundle.AlgoId != null) sorted.Add((0, bundle));
+                else if (bundle.MinerId == null && bundle.AlgoId != null) sorted.Add((1, bundle));
+                else if (bundle.MinerId != null && bundle.AlgoId == null) sorted.Add((2, bundle));
+                else sorted.Add((3, bundle));
+            }
+            sorted = sorted.OrderBy(item => item.Item1).ToList();
+            foreach (var (type, bundle) in sorted)
+            {
+                var current = new List<AlgorithmContainer>();
+                if (type == 0) current = AvailableDevices.Devices
+                        .Where(d => d.Name == bundle.DeviceName)?
+                        .SelectMany(d => d.AlgorithmSettings)?
+                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
+                        .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
+                        .ToList();
+                else if (type == 1) current = AvailableDevices.Devices
+                        .Where(d => d.Name == bundle.DeviceName)?
+                        .SelectMany(d => d.AlgorithmSettings)?
+                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
+                        .ToList();
+                else if (type == 2) current = AvailableDevices.Devices
+                        .Where(d => d.Name == bundle.DeviceName)?
+                        .SelectMany(d => d.AlgorithmSettings)?
+                        .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
+                        .ToList();
+                else current = AvailableDevices.Devices
+                        .Where(d => d.Name == bundle.DeviceName)?
+                        .SelectMany(d => d.AlgorithmSettings)?
+                        .ToList();
+                if (current == null) continue;
+                current = current.Where(c => !processed.Contains(c)).ToList();
+                processed.AddRange(current);
+                foreach (var container in current)
+                {
+                    Logger.Warn(_TAG, $"\t{container.ComputeDevice.ID}-{container.ComputeDevice.Name}/{container.AlgorithmName}/{container.PluginName}");
+                    container.SetTargetElpProfile(bundle);
+                }
+            }
+            MiningManager.TriggerSwitchCheck();
+            return Task.FromResult((ErrorCode.NoError, "Success"));
+        }
+
+        public Task ResetELPBundle()
+        {
+            var containers = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings);
+            foreach (var container in containers)
+            {
+                container.SetTargetElpProfile(null);
+            }
             MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }

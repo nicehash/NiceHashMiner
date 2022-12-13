@@ -489,6 +489,7 @@ namespace NiceHashMiner.ViewModels
             ELPManager.ELPReiteration += ELPReScan;
             ReadELPConfigsOrCreateIfMissing();
             ELPManager.IterateSubModelsAndConstructELPs();
+            BundleManager.Init(); //must be called after elpmanager stuff
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }

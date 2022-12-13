@@ -98,12 +98,12 @@ namespace NHMCore.Configs.Managers
                         .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
                         .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
                         .ToList();
-                else if (type == 1) AvailableDevices.Devices
+                else if (type == 1) current = AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?
                         .SelectMany(d => d.AlgorithmSettings)?
                         .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
                         .ToList();
-                else if (type == 2) AvailableDevices.Devices
+                else if (type == 2) current = AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?
                         .SelectMany(d => d.AlgorithmSettings)?
                         .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?

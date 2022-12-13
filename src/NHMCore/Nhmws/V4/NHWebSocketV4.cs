@@ -716,7 +716,7 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
-                    var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
+                    var bundle = JsonConvert.DeserializeObject<Bundle>(parameters); //parsing problem here!!!!, backend must fix it!!!!
                     ExecuteProfilesBundleSet(bundle);
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
@@ -747,6 +747,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteELPTest(deviceUUID, elp).Result;
                     break;
                 case SupportedAction.ActionElpProfileTestStop:
+                    (err, result) = StopELPTestForDevice(deviceUUID).Result;
                     break;
                 default:
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
@@ -776,7 +777,7 @@ namespace NHMCore.Nhmws.V4
             }
             if (bundle.ElpBundles != null)
             {
-                //ExecuteELPBundles(bundle.ElpBundles);
+                var retELP = ELPManager.Instance.ApplyELPBundle(bundle.ElpBundles);
             }
             return Task.CompletedTask;
         }
@@ -785,6 +786,7 @@ namespace NHMCore.Nhmws.V4
             BundleManager.ResetBundleInfo();
             var retOC = OCManager.Instance.ResetOcBundle();
             var retFan = FanManager.Instance.ResetFanBundle();
+            var retElp = ELPManager.Instance.ResetELPBundle();
             return Task.CompletedTask;
         }
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
@@ -802,6 +804,12 @@ namespace NHMCore.Nhmws.V4
         private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpBundle elpBundle)
         {
             var res = ELPManager.Instance.ExecuteTest(deviceUUID, elpBundle);
+            return Task.FromResult(res.Result);
+        }
+        private static Task<(ErrorCode err, string msg)> StopELPTestForDevice(string deviceUUID)
+        {
+            //if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            var res = ELPManager.Instance.StopTest(deviceUUID);
             return Task.FromResult(res.Result);
         }
 
