@@ -240,7 +240,7 @@ namespace NHM.DeviceMonitoring
 
         public bool SetFanSpeedPercentage(int percentage)
         {
-            var ok = AMD_ODN.nhm_amd_device_set_fan_speed_percentage(BusID, percentage);
+            var ok = percentage <= 0 ? AMD_ODN.nhm_amd_device_reset_fan_speed_percentage(BusID) : AMD_ODN.nhm_amd_device_set_fan_speed_percentage(BusID, percentage);
             if (ok == RET_OK) return true;
             Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_fan_speed_percentage failed with error code {ok}", _delayedLogging);
             return false;

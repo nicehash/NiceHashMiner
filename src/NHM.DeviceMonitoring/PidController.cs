@@ -19,7 +19,7 @@ namespace NHM.DeviceMonitoring
 
         public void SetOutputLimit(double max_fan_speed)
         {
-            PID_CONTROLLER.nhm_set_output_limits(max_fan_speed);
+            PID_CONTROLLER.nhm_set_output_limit(max_fan_speed);
         }
 
         public void SetOutputLimits(double min_speed, double max_speed)
