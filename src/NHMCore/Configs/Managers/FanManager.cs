@@ -56,19 +56,19 @@ namespace NHMCore.Configs.Managers
             MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
-        public Task<(ErrorCode err, string msg)> StopTest(string uuid)
+        public Task<(ErrorCode err, string msg)> StopTest(string uuid, bool triggerSwitch)
         {
             var targetDeviceContainer = AvailableDevices.Devices
                 .Where(d => d.B64Uuid == uuid)?
                 .SelectMany(d => d.AlgorithmSettings)?
-                .Where(a => a.IsTesting)?
+                .Where(a => a.IsTesting || a.ActiveFanTestProfile != null)?
                 .FirstOrDefault();
             if (targetDeviceContainer == null)
             {
                 Logger.Error(_TAG, "Device not found for stop OC test");
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
             }
-            targetDeviceContainer.SetTargetFanTestProfile(null);
+            if(triggerSwitch) targetDeviceContainer.SetTargetFanTestProfile(null);
             MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }

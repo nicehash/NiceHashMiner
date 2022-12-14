@@ -737,6 +737,8 @@ namespace NHMCore.Nhmws.V4
                     break;
                 case SupportedAction.ActionFanProfileTest:
                     var fan = JsonConvert.DeserializeObject<FanBundle>(parameters);
+                    StopOCTestForDevice(deviceUUID);
+                    StopELPTestForDevice(deviceUUID);
                     (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
                     break;
                 case SupportedAction.ActionFanProfileTestStop:
@@ -792,24 +794,28 @@ namespace NHMCore.Nhmws.V4
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            StopELPTestForDevice(deviceUUID, false);
+            StopFanTestForDevice(deviceUUID, false);
             var res = OCManager.Instance.ExecuteTest(deviceUUID, ocBundle);
             return Task.FromResult(res.Result);
         }
-        private static Task<(ErrorCode err, string msg)> StopOCTestForDevice(string deviceUUID)
+        private static Task<(ErrorCode err, string msg)> StopOCTestForDevice(string deviceUUID, bool triggerSwitch = true)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
-            var res = OCManager.Instance.StopTest(deviceUUID);
+            var res = OCManager.Instance.StopTest(deviceUUID, triggerSwitch);
             return Task.FromResult(res.Result);
         }
         private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpBundle elpBundle)
         {
+            StopFanTestForDevice(deviceUUID, false);
+            StopOCTestForDevice(deviceUUID, false);
             var res = ELPManager.Instance.ExecuteTest(deviceUUID, elpBundle);
             return Task.FromResult(res.Result);
         }
-        private static Task<(ErrorCode err, string msg)> StopELPTestForDevice(string deviceUUID)
+        private static Task<(ErrorCode err, string msg)> StopELPTestForDevice(string deviceUUID, bool triggerSwitch = true)
         {
             //if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
-            var res = ELPManager.Instance.StopTest(deviceUUID);
+            var res = ELPManager.Instance.StopTest(deviceUUID, triggerSwitch);
             return Task.FromResult(res.Result);
         }
 
@@ -820,10 +826,10 @@ namespace NHMCore.Nhmws.V4
             return Task.FromResult(res.Result);
         }
 
-        private static Task<(ErrorCode err, string msg)> StopFanTestForDevice(string deviceUUID)
+        private static Task<(ErrorCode err, string msg)> StopFanTestForDevice(string deviceUUID, bool triggerSwitch = true)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
-            var res = FanManager.Instance.StopTest(deviceUUID);
+            var res = FanManager.Instance.StopTest(deviceUUID, triggerSwitch);
             return Task.FromResult(res.Result);
         }
         private static Task<string> SetMutable(MinerSetMutable mutableCmd)

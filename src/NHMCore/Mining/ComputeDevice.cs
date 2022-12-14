@@ -752,31 +752,39 @@ namespace NHMCore.Mining
             }
         }
 
-        public async Task AfterStartMining() //todo make a queue or something!!!!
+        public async Task AfterStartMining()
         {
             //TODO IF DELTA, IF ALREADY SET, IF NOT SET DONT RESTART ETC
             //TODO NO RETURNS BC WE CAN SET MULTIPLE THINGS
+            //TODO THREAD SAFETY
             var target = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (target == null) return;
+
+            //if elp bundle then do a reset before applying new thing
             foreach(var action in target.RigManagementActions)
             {
                 switch (action)
                 {
                     case AlgorithmContainer.ActionQueue.ApplyOC:
-                        await target.SetOcForDevice(target.ActiveOCProfile, false, false);
+                        var retOc = await target.SetOcForDevice(target.ActiveOCProfile, false, false);
+                        if(retOc == OcReturn.Fail)
+                        {
+                            target.SwitchOCToInactive();
+                        }
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyOcTest:
                         var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, true, false);
                         if (retOCTest == OcReturn.Success || retOCTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
+                        else
+                        {
+                            target.SwitchOCTestToInactive();
+                        }
                         break;
                     case AlgorithmContainer.ActionQueue.ResetOC:
                         var resetOC = await target.ResetOcForDevice();
-                        State = DeviceState.Mining;
+                        //if not mining and reset will state be mining?
+                        State = DeviceState.Mining;//this comes after the elp set so it is a problemo!!!
                         break;
-                    //case AlgorithmContainer.ActionQueue.ApplyELP:
-                    //    break;
-                    //case AlgorithmContainer.ActionQueue.ApplyELPTest:
-                    //    break;
                     case AlgorithmContainer.ActionQueue.ApplyFan:
                         //await target.SetTargetFanForDevice(target.ActiveFanProfile, false, false);
                         break;
@@ -787,39 +795,16 @@ namespace NHMCore.Mining
                     case AlgorithmContainer.ActionQueue.ResetFan:
                         //var resetFan = await target.ResetFanForDevice();
                         break;
+                    case AlgorithmContainer.ActionQueue.ApplyELP:
+                        break;
+                    case AlgorithmContainer.ActionQueue.ApplyELPTest:
+                        State = DeviceState.Testing;
+                        break;
+                    case AlgorithmContainer.ActionQueue.ResetELP:
+                        break;
                 }
             }
-            //if(IsTesting)
-            //{
-            //    State = DeviceState.Testing;
-            //}
-            //if (testTarget.ActiveOCTestProfile != null)//todo if starting... if change
-            //{
-            //    var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCTestProfile, true, false);
-            //    if (ret == OcReturn.Success || ret == OcReturn.PartialSuccess) State = DeviceState.Testing;
-            //    return;
-            //}
-            //if (testTarget.ActiveOCTestProfile == null && State == DeviceState.Testing) // this is a problem
-            //{
-            //    var ret = await testTarget.ResetOcForDevice(true);
-            //    State = DeviceState.Mining;
-            //    return;
-            //}
-            //if (testTarget.ActiveOCProfile != null)
-            //{
-            //    var ret = await testTarget.SetOcForDevice(testTarget.ActiveOCProfile, false, false);
-            //    return;
-            //}
-            //if (testTarget.ActiveOCProfile == null)
-            //{
-            //    var ret = await testTarget.ResetOcForDevice(false);
-            //    return;
-            //}
-            //if(testTarget.ActiveELPTestProfile!= null) // not the place for ELP
-            //{
-            //    //var ret = await testTarget.SetELPForDevice(testTarget.ActiveELPTestProfile, true, false);
-            //    return;
-            //}
+            target.RigManagementActions.Clear();
         }
 
         public void SetFanSpeedWithPidController()

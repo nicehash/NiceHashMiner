@@ -349,12 +349,12 @@ namespace NHMCore.Configs.Managers
             MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
-        public Task<(ErrorCode err, string msg)> StopTest(string uuid)
+        public Task<(ErrorCode err, string msg)> StopTest(string uuid, bool triggerSwitch)
         {
             var targetDeviceContainer = AvailableDevices.Devices
                 .Where(d => d.B64Uuid == uuid)?
                 .SelectMany(d => d.AlgorithmSettings)?
-                .Where(a => a.IsTesting)?
+                .Where(a => a.IsTesting || a.ActiveELPTestProfile != null)?
                 .FirstOrDefault();
             if (targetDeviceContainer == null)
             {
@@ -362,7 +362,7 @@ namespace NHMCore.Configs.Managers
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
             }
             targetDeviceContainer.SetTargetElpTestProfile(null);
-            MiningManager.TriggerSwitchCheck();
+            if(triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
         public Task<(ErrorCode err, string msg)> ApplyELPBundle(List<ElpBundle> bundles)
