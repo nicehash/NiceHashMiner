@@ -414,14 +414,14 @@ namespace NHMCore.Configs.Managers
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
 
-        public Task ResetELPBundle()
+        public Task ResetELPBundle(bool triggerSwitch = true)
         {
             var containers = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings);
             foreach (var container in containers)
             {
                 container.SetTargetElpProfile(null);
             }
-            MiningManager.TriggerSwitchCheck();
+            if(triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
 #endif

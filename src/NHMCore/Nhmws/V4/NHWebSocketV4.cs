@@ -716,7 +716,8 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
-                    var bundle = JsonConvert.DeserializeObject<Bundle>(parameters); //parsing problem here!!!!, backend must fix it!!!!
+                    var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
+                    ExecuteProfilesBundleReset(false);
                     ExecuteProfilesBundleSet(bundle);
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
@@ -737,7 +738,7 @@ namespace NHMCore.Nhmws.V4
                     break;
                 case SupportedAction.ActionFanProfileTest:
                     var fan = JsonConvert.DeserializeObject<FanBundle>(parameters);
-                    StopOCTestForDevice(deviceUUID);
+                    StopOCTestForDevice(deviceUUID); //todo change as the others
                     StopELPTestForDevice(deviceUUID);
                     (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
                     break;
@@ -783,12 +784,12 @@ namespace NHMCore.Nhmws.V4
             }
             return Task.CompletedTask;
         }
-        private static Task ExecuteProfilesBundleReset()
+        private static Task ExecuteProfilesBundleReset(bool triggerSwitch = true)
         {
             BundleManager.ResetBundleInfo();
-            var retOC = OCManager.Instance.ResetOcBundle();
-            var retFan = FanManager.Instance.ResetFanBundle();
-            var retElp = ELPManager.Instance.ResetELPBundle();
+            var retOC = OCManager.Instance.ResetOcBundle(triggerSwitch);
+            var retFan = FanManager.Instance.ResetFanBundle(triggerSwitch);
+            var retElp = ELPManager.Instance.ResetELPBundle(triggerSwitch);
             return Task.CompletedTask;
         }
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)

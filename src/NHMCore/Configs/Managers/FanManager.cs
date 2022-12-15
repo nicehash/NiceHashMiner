@@ -121,14 +121,14 @@ namespace NHMCore.Configs.Managers
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
 
-        public Task ResetFanBundle()
+        public Task ResetFanBundle(bool triggerSwitch = true)
         {
             var containers = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings);
             foreach (var container in containers)
             {
                 container.SetTargetFanProfile(null);
             }
-            MiningManager.TriggerSwitchCheck();
+            if (triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
     }

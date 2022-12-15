@@ -125,14 +125,14 @@ namespace NHMCore.Configs.Managers
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
 
-        public Task ResetOcBundle()
+        public Task ResetOcBundle(bool triggerSwitch = true)
         {
             var containers = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings);
             foreach (var container in containers)
             {
                 container.SetTargetOcProfile(null);
             }
-            MiningManager.TriggerSwitchCheck();
+            if (triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
     }
