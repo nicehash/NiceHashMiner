@@ -19,7 +19,8 @@ namespace Excavator
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.EtcHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
-                        new SAS(AlgorithmType.KAWPOW) { Enabled = false }
+                        new SAS(AlgorithmType.KAWPOW) { Enabled = false },
+                        new SAS(AlgorithmType.NeoScrypt),
                     }
                 },
                 {
@@ -29,7 +30,8 @@ namespace Excavator
                         new SAS(AlgorithmType.DaggerHashimoto),
                         new SAS(AlgorithmType.EtcHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
-                        new SAS(AlgorithmType.KAWPOW) { Enabled = false }
+                        new SAS(AlgorithmType.KAWPOW) { Enabled = false },
+                        new SAS(AlgorithmType.NeoScrypt),
                     }
                 }
             },
@@ -38,7 +40,8 @@ namespace Excavator
                 { AlgorithmType.DaggerHashimoto, "daggerhashimoto" },
                 { AlgorithmType.EtcHash, "etchash" },
                 { AlgorithmType.Autolykos, "autolykos" },
-                { AlgorithmType.KAWPOW, "kawpow" }
+                { AlgorithmType.KAWPOW, "kawpow" },
+                { AlgorithmType.NeoScrypt, "neoscrypt" }
             }
         };
     }
