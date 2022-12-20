@@ -941,7 +941,7 @@ namespace NHMCore.Mining
             foreach(var noChangeKey in noChangeGroupMinersKeys)
             {
                 var miningPairs = newGroupedMiningPairs[noChangeKey];
-                var miningPairsWithNewProfile = miningPairs.Where(p => p.NewProfile == true || p.NewTestProfile == true);
+                var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewProfile == true && p.HasNormalProfileAndCanSet()) || (p.NewTestProfile == true && p.HasTestProfileAndCanSet()));
                 if (miningPairsWithNewProfile == null || miningPairsWithNewProfile.Count() == 0) continue;
                 foreach(var item in miningPairsWithNewProfile)
                 {
@@ -951,7 +951,7 @@ namespace NHMCore.Mining
                 toStopMinerGroupKeys.Add(noChangeKey);
                 toStartMinerGroupKeys.Add(noChangeKey);
             }
-
+            //todo logic here to add only those that SHOULD restart (new profile/new test profile)
 
             // first stop currently running
             foreach (var stopKey in toStopMinerGroupKeys)

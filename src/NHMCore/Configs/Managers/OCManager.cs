@@ -51,12 +51,12 @@ namespace NHMCore.Configs.Managers
                 target = specificContainers.FirstOrDefault();
                 if (target == null) return Task.FromResult((ErrorCode.TargetContainerNotFound, "Failed to switch to target algorithm container"));
             }
-            AvailableDevices.Devices //if we want switching for loose options we can set true to specific containers in the future
-                .Where(d => d.B64Uuid == uuid)?
-                .SelectMany(d => d.AlgorithmSettings)?
-                .ToList()?
-                .ForEach(c => c.IsTesting = false);
-            target.SetTargetOcTestProfile(bundle);
+            //AvailableDevices.Devices //if we want switching for loose options we can set true to specific containers in the future
+            //    .Where(d => d.B64Uuid == uuid)?
+            //    .SelectMany(d => d.AlgorithmSettings)?
+            //    .ToList()?
+            //    .ForEach(c => c.IsTesting = false);
+            target.SetTargetOcProfile(bundle, true);
             MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
@@ -72,7 +72,7 @@ namespace NHMCore.Configs.Managers
                 Logger.Error(_TAG, "Device not found for stop OC test");
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
             }
-            targetDeviceContainer.SetTargetOcTestProfile(null);
+            targetDeviceContainer.SetTargetOcProfile(null, true);
             if(triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
@@ -118,7 +118,7 @@ namespace NHMCore.Configs.Managers
                 foreach (var container in current)
                 {
                     Logger.Warn(_TAG, $"\t{container.ComputeDevice.ID}-{container.ComputeDevice.Name}/{container.AlgorithmName}/{container.PluginName}");
-                    container.SetTargetOcProfile(bundle);
+                    container.SetTargetOcProfile(bundle, false);
                 }
             }
             MiningManager.TriggerSwitchCheck();
@@ -130,7 +130,7 @@ namespace NHMCore.Configs.Managers
             var containers = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings);
             foreach (var container in containers)
             {
-                container.SetTargetOcProfile(null);
+                container.SetTargetOcProfile(null, false);
             }
             if (triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));

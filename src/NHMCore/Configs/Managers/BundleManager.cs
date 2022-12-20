@@ -32,9 +32,9 @@ namespace NHMCore.Configs.Managers
         {
             var path = Paths.AppRootPath("bundle.json");
             if (!File.Exists(path)) File.Create(path);
-            var content = File.ReadAllText(path);
             try
             {
+                var content = File.ReadAllText(path);
                 var bundleToApply = JsonConvert.DeserializeObject<Bundle>(content);
                 if(bundleToApply != null)
                 {

@@ -717,8 +717,8 @@ namespace NHMCore.Nhmws.V4
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
                     var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
-                    ExecuteProfilesBundleReset(false);
-                    ExecuteProfilesBundleSet(bundle);
+                    _ = ExecuteProfilesBundleReset(false);
+                    _ = ExecuteProfilesBundleSet(bundle);
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
                     ExecuteProfilesBundleReset();

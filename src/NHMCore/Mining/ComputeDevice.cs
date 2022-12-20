@@ -760,12 +760,12 @@ namespace NHMCore.Mining
 
             //this method eliminates multiple times calls
             //we can iterate if we have anything to apply later
-            foreach (var action in target.RigManagementActions)
+            foreach (var action in target.RigManagementActions) //can be added to while in here!!!!!
             {
                 switch (action)
                 {
                     case AlgorithmContainer.ActionQueue.ApplyOC:
-                        if (target.HasTestTarget() && target.ActiveOCTestProfile != null)
+                        if (target.HasTestProfileAndCanSet() && target.ActiveOCTestProfile != null)
                         {
                             var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, true, false);
                             if (retOCTest == OcReturn.Success || retOCTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
@@ -773,12 +773,9 @@ namespace NHMCore.Mining
                             break;
                         }
                         var retOc = await target.SetOcForDevice(target.ActiveOCProfile, false, false);
-                        if (retOc == OcReturn.Fail)
-                        {
-                            target.SwitchOCToInactive();
-                        }
+                        if (retOc == OcReturn.Fail) target.SwitchOCToInactive();
                         break;
-                    case AlgorithmContainer.ActionQueue.ResetOC:
+                    case AlgorithmContainer.ActionQueue.ResetOC://RESET HAS IT FROM PREVIOUS...switch isnt triggered, so here it resets 2 mining
                         var resetOC = await target.ResetOcForDevice();
                         //if not mining and reset will state be mining?
                         State = DeviceState.Mining;//this comes after the elp set so it is a problemo!!!
@@ -788,59 +785,16 @@ namespace NHMCore.Mining
                     case AlgorithmContainer.ActionQueue.ResetFan:
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyELP:
+                        if (target.HasTestProfileAndCanSet() && target.ActiveELPTestProfile != null)
+                        {
+                            State = DeviceState.Testing;
+                        }
                         break;
                     case AlgorithmContainer.ActionQueue.ResetELP:
                         break;
                 }
             }
             target.RigManagementActions.Clear();
-
-            ////this method eliminates multiple times calls
-            ////we can iterate if we have anything to apply later
-            //foreach (var action in target.RigManagementActions)
-            //{
-            //    switch (action)
-            //    {
-            //        case AlgorithmContainer.ActionQueue.ApplyOC:
-            //            var retOc = await target.SetOcForDevice(target.ActiveOCProfile, false, false);
-            //            if (retOc == OcReturn.Fail)
-            //            {
-            //                target.SwitchOCToInactive();
-            //            }
-            //            break;
-            //        case AlgorithmContainer.ActionQueue.ApplyOcTest:
-            //            var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, true, false);
-            //            if (retOCTest == OcReturn.Success || retOCTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
-            //            else
-            //            {
-            //                target.SwitchOCTestToInactive();
-            //            }
-            //            break;
-            //        case AlgorithmContainer.ActionQueue.ResetOC:
-            //            var resetOC = await target.ResetOcForDevice();
-            //            //if not mining and reset will state be mining?
-            //            State = DeviceState.Mining;//this comes after the elp set so it is a problemo!!!
-            //            break;
-            //        case AlgorithmContainer.ActionQueue.ApplyFan:
-            //            //await target.SetTargetFanForDevice(target.ActiveFanProfile, false, false);
-            //            break;
-            //        case AlgorithmContainer.ActionQueue.ApplyFanTest:
-            //            //var retFanTest = await target.SetFanForDevice(target.ActiveFanTestProfile, true, false);
-            //            //if (retOCTest == OcReturn.Success || retOCTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
-            //            break;
-            //        case AlgorithmContainer.ActionQueue.ResetFan:
-            //            //var resetFan = await target.ResetFanForDevice();
-            //            break;
-            //        case AlgorithmContainer.ActionQueue.ApplyELP:
-            //            break;
-            //        case AlgorithmContainer.ActionQueue.ApplyELPTest:
-            //            State = DeviceState.Testing;
-            //            break;
-            //        case AlgorithmContainer.ActionQueue.ResetELP:
-            //            break;
-            //    }
-            //}
-            //target.RigManagementActions.Clear();
         }
 
         public void SetFanSpeedWithPidController()
