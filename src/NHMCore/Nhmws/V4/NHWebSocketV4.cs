@@ -730,14 +730,14 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionOcProfileTest:
-                    var oc = JsonConvert.DeserializeObject<OcBundle>(parameters);
+                    var oc = JsonConvert.DeserializeObject<OcProfile>(parameters);
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
                     (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
-                    var fan = JsonConvert.DeserializeObject<FanBundle>(parameters);
+                    var fan = JsonConvert.DeserializeObject<FanProfile>(parameters);
                     StopOCTestForDevice(deviceUUID); //todo change as the others
                     StopELPTestForDevice(deviceUUID);
                     (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
@@ -746,7 +746,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopFanTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionElpProfileTest:
-                    var elp = JsonConvert.DeserializeObject<ElpBundle>(parameters);
+                    var elp = JsonConvert.DeserializeObject<ElpProfile>(parameters);
                     (err, result) = ExecuteELPTest(deviceUUID, elp).Result;
                     break;
                 case SupportedAction.ActionElpProfileTestStop:
@@ -769,7 +769,6 @@ namespace NHMCore.Nhmws.V4
         {
             BundleManager.SetBundleInfo(bundle.Name, bundle.Id);
             _ = BundleManager.SaveBundle(bundle);
-            //todo check returns!!!
             if (bundle.OcBundles != null)
             {
                 var retOC = OCManager.Instance.ApplyOcBundle(bundle.OcBundles);
@@ -792,7 +791,7 @@ namespace NHMCore.Nhmws.V4
             var retElp = ELPManager.Instance.ResetELPBundle(triggerSwitch);
             return Task.CompletedTask;
         }
-        private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcBundle ocBundle)
+        private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcProfile ocBundle)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
             StopELPTestForDevice(deviceUUID, false);
@@ -806,7 +805,7 @@ namespace NHMCore.Nhmws.V4
             var res = OCManager.Instance.StopTest(deviceUUID, triggerSwitch);
             return Task.FromResult(res.Result);
         }
-        private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpBundle elpBundle)
+        private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpProfile elpBundle)
         {
             StopFanTestForDevice(deviceUUID, false);
             StopOCTestForDevice(deviceUUID, false);
@@ -815,14 +814,15 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<(ErrorCode err, string msg)> StopELPTestForDevice(string deviceUUID, bool triggerSwitch = true)
         {
-            //if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
             var res = ELPManager.Instance.StopTest(deviceUUID, triggerSwitch);
             return Task.FromResult(res.Result);
         }
 
-        private static Task<(ErrorCode err, string msg)> ExecuteFanTest(string deviceUUID, FanBundle fanBundle)
+        private static Task<(ErrorCode err, string msg)> ExecuteFanTest(string deviceUUID, FanProfile fanBundle)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
+            StopELPTestForDevice(deviceUUID, false);
+            StopOCTestForDevice(deviceUUID, false);
             var res = FanManager.Instance.ExecuteTest(deviceUUID, fanBundle);
             return Task.FromResult(res.Result);
         }

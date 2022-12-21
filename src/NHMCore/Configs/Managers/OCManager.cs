@@ -29,7 +29,7 @@ namespace NHMCore.Configs.Managers
             PartialSuccess,
             Fail
         }
-        public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, OcBundle bundle)
+        public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, OcProfile bundle)
         {
             if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices mining"));
             var allContainers = AvailableDevices.Devices
@@ -51,11 +51,6 @@ namespace NHMCore.Configs.Managers
                 target = specificContainers.FirstOrDefault();
                 if (target == null) return Task.FromResult((ErrorCode.TargetContainerNotFound, "Failed to switch to target algorithm container"));
             }
-            //AvailableDevices.Devices //if we want switching for loose options we can set true to specific containers in the future
-            //    .Where(d => d.B64Uuid == uuid)?
-            //    .SelectMany(d => d.AlgorithmSettings)?
-            //    .ToList()?
-            //    .ForEach(c => c.IsTesting = false);
             target.SetTargetOcProfile(bundle, true);
             MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
@@ -76,11 +71,11 @@ namespace NHMCore.Configs.Managers
             if(triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
-        public Task<(ErrorCode err, string msg)> ApplyOcBundle(List<OcBundle> bundles)
+        public Task<(ErrorCode err, string msg)> ApplyOcBundle(List<OcProfile> bundles)
         {
             if (bundles == null) return Task.FromResult((ErrorCode.NoError, "OcBundles == null"));
             List<AlgorithmContainer> processed = new();
-            var sorted = new List<(int, OcBundle)>();
+            var sorted = new List<(int, OcProfile)>();
             foreach (var bundle in bundles)
             {
                 if (bundle.MinerId != null && bundle.AlgoId != null) sorted.Add((0, bundle));

@@ -31,7 +31,11 @@ namespace NHMCore.Configs.Managers
         public static void Init()
         {
             var path = Paths.AppRootPath("bundle.json");
-            if (!File.Exists(path)) File.Create(path);
+            if (!File.Exists(path))
+            {
+                File.Create(path);
+                return;
+            }
             try
             {
                 var content = File.ReadAllText(path);

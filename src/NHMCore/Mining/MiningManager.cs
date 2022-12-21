@@ -941,7 +941,8 @@ namespace NHMCore.Mining
             foreach(var noChangeKey in noChangeGroupMinersKeys)
             {
                 var miningPairs = newGroupedMiningPairs[noChangeKey];
-                var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewProfile == true && p.HasNormalProfileAndCanSet()) || (p.NewTestProfile == true && p.HasTestProfileAndCanSet()));
+                //var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewProfile == true && p.HasNormalProfileAndCanSet()) || (p.NewTestProfile == true && p.HasTestProfileAndCanSet()));
+                var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewProfile == true) || (p.NewTestProfile == true));
                 if (miningPairsWithNewProfile == null || miningPairsWithNewProfile.Count() == 0) continue;
                 foreach(var item in miningPairsWithNewProfile)
                 {

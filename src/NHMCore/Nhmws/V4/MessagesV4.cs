@@ -251,7 +251,7 @@ namespace NHMCore.Nhmws.V4
                 },
                 ExecuteTask = async (object p) =>
                 {
-                    if (p is FanBundle fb && fb is not null) //todo fan bundle call here
+                    if (p is FanProfile fb && fb is not null) //todo fan bundle call here
                     {
                         var a = 0;
                     }
@@ -548,13 +548,13 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("oc", NullValueHandling = NullValueHandling.Ignore)]
-        public List<OcBundle>? OcBundles { get; set; }
+        public List<OcProfile>? OcBundles { get; set; }
         [JsonProperty("fan", NullValueHandling = NullValueHandling.Ignore)]
-        public List<FanBundle>? FanBundles { get; set; }
+        public List<FanProfile>? FanBundles { get; set; }
         [JsonProperty("elp", NullValueHandling = NullValueHandling.Ignore)]
-        public List<ElpBundle>? ElpBundles { get; set; }
+        public List<ElpProfile>? ElpBundles { get; set; }
     }
-    public class GenericBundle
+    public class GenericProfile
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -568,12 +568,12 @@ namespace NHMCore.Nhmws.V4
         public List<string>? AlgoId { get; set; }
 
     }
-    public class ElpBundle : GenericBundle
+    public class ElpProfile : GenericProfile
     {
         [JsonProperty("elp")]
         public string Elp { get; set; }
     }
-    public class OcBundle : GenericBundle
+    public class OcProfile : GenericProfile
     {
         [JsonProperty("core_clock")]
         public int CoreClock { get; set; }
@@ -582,7 +582,7 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("power_mode")]
         public int TDP { get; set; }
     }
-    public class FanBundle : GenericBundle
+    public class FanProfile : GenericProfile
     {
         [JsonProperty("type")]
         public int Type { get; set; }

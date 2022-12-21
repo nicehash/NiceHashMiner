@@ -25,7 +25,7 @@ namespace NHMCore.Configs.Managers
             Fail
         }
 
-        public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, FanBundle bundle)
+        public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, FanProfile bundle)
         {
             if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices mining"));
             var allContainers = AvailableDevices.Devices
@@ -47,11 +47,6 @@ namespace NHMCore.Configs.Managers
                 target = specificContainers.FirstOrDefault();
                 if (target == null) return Task.FromResult((ErrorCode.TargetContainerNotFound, "Failed to switch to target algorithm container"));
             }
-            //AvailableDevices.Devices //if we want switching for loose options we can set true to specific containers in the future
-            //    .Where(d => d.B64Uuid == uuid)?
-            //    .SelectMany(d => d.AlgorithmSettings)?
-            //    .ToList()?
-            //    .ForEach(c => c.IsTesting = false);
             target.SetTargetFanProfile(bundle, true);
             MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
@@ -68,15 +63,15 @@ namespace NHMCore.Configs.Managers
                 Logger.Error(_TAG, "Device not found for stop OC test");
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
             }
-            if(triggerSwitch) targetDeviceContainer.SetTargetFanProfile(null, true);
-            MiningManager.TriggerSwitchCheck();
+            targetDeviceContainer.SetTargetFanProfile(null, true);
+            if (triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
-        public Task<(ErrorCode err, string msg)> ApplyFanBundle(List<FanBundle> bundles)
+        public Task<(ErrorCode err, string msg)> ApplyFanBundle(List<FanProfile> bundles)
         {
             if (bundles == null) return Task.FromResult((ErrorCode.NoError, "FanBundles == null"));
             List<AlgorithmContainer> processed = new();
-            var sorted = new List<(int, FanBundle)>();
+            var sorted = new List<(int, FanProfile)>();
             foreach (var bundle in bundles)
             {
                 if (bundle.MinerId != null && bundle.AlgoId != null) sorted.Add((0, bundle));
@@ -91,18 +86,18 @@ namespace NHMCore.Configs.Managers
                 if (type == 0) current = AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?
                         .SelectMany(d => d.AlgorithmSettings)?
-                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName))?
-                        .Where(c => bundle.MinerId.Contains(c.PluginName))?
+                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
+                        .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
                         .ToList();
                 else if (type == 1) current = AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?
                         .SelectMany(d => d.AlgorithmSettings)?
-                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName))?
+                        .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
                         .ToList();
                 else if (type == 2) current = AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?
                         .SelectMany(d => d.AlgorithmSettings)?
-                        .Where(c => bundle.MinerId.Contains(c.PluginName))?
+                        .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
                         .ToList();
                 else current = AvailableDevices.Devices
                         .Where(d => d.Name == bundle.DeviceName)?

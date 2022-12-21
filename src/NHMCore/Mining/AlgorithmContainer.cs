@@ -608,10 +608,16 @@ namespace NHMCore.Mining
         {
             ApplyOC,
             ResetOC,
+            ResetOCTest,
+            ApplyOCTest,
             ApplyFan,
             ResetFan,
+            ResetFanTest,
+            ApplyFanTest,
             ApplyELP,
             ResetELP,
+            ApplyELPTest,
+            ResetELPTest
         }
         private Queue<ActionQueue> _rigManagementActions = new Queue<ActionQueue>();
         public Queue<ActionQueue> RigManagementActions
@@ -653,8 +659,8 @@ namespace NHMCore.Mining
         }
 
 
-        private OcBundle _ActiveOCTestProfile = null;
-        public OcBundle ActiveOCTestProfile
+        private OcProfile _ActiveOCTestProfile = null;
+        public OcProfile ActiveOCTestProfile
         {
             get
             {
@@ -671,8 +677,8 @@ namespace NHMCore.Mining
                 }
             }
         }
-        private OcBundle _ActiveOCProfile = null;
-        public OcBundle ActiveOCProfile
+        private OcProfile _ActiveOCProfile = null;
+        public OcProfile ActiveOCProfile
         {
             get
             {
@@ -689,14 +695,18 @@ namespace NHMCore.Mining
                 }
             }
         }
-        public void SetTargetOcProfile(OcBundle profile, bool test)
+        public void SetTargetOcProfile(OcProfile profile, bool test)
         {
             if (test)
             {
                 _ActiveOCTestProfile = profile;
+                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetOCTest : ActionQueue.ApplyOCTest);
             }
-            else _ActiveOCProfile = profile;
-            RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetOC : ActionQueue.ApplyOC);
+            else
+            {
+                _ActiveOCProfile = profile;
+                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetOC : ActionQueue.ApplyOC);
+            }
         }
         public void SwitchOCTestToInactive()
         {
@@ -706,7 +716,7 @@ namespace NHMCore.Mining
         {
             _ActiveOCProfile = null;
         }
-        public Task<OcReturn> SetOcForDevice(OcBundle bundle, bool test = false, bool reset = false)
+        public Task<OcReturn> SetOcForDevice(OcProfile bundle, bool reset = false)
         {
             if (bundle != null) Logger.Warn(_TAG, $"Setting OC for {ComputeDevice.Name}: TDP={bundle.TDP},CC={bundle.CoreClock},MC={bundle.MemoryClock}");
             var ret = OcReturn.Fail;
@@ -756,8 +766,8 @@ namespace NHMCore.Mining
             var defCC = ComputeDevice.CoreClockRange;
             var defMC = ComputeDevice.MemoryClockRange;
             var defTDP = ComputeDevice.TDPLimits;
-            var bundle = new OcBundle() { CoreClock = defCC.def, MemoryClock = defMC.def, TDP = (int)defTDP.def };
-            var res = SetOcForDevice(bundle, IsTesting, true);
+            var bundle = new OcProfile() { CoreClock = defCC.def, MemoryClock = defMC.def, TDP = (int)defTDP.def };
+            var res = SetOcForDevice(bundle, true);
             return Task.FromResult(res.Result);
         }
         #endregion
@@ -781,8 +791,8 @@ namespace NHMCore.Mining
                 return string.Empty;
             }
         }
-        private ElpBundle _ActiveELPTestProfile = null;
-        public ElpBundle ActiveELPTestProfile
+        private ElpProfile _ActiveELPTestProfile = null;
+        public ElpProfile ActiveELPTestProfile
         {
             get
             {
@@ -799,8 +809,8 @@ namespace NHMCore.Mining
                 }
             }
         }
-        private ElpBundle _ActiveELPProfile = null;
-        public ElpBundle ActiveELPProfile
+        private ElpProfile _ActiveELPProfile = null;
+        public ElpProfile ActiveELPProfile
         {
             get
             {
@@ -855,25 +865,24 @@ namespace NHMCore.Mining
         }
         public void ResetNewTestProfileStatus() { NewTestProfile = false; }
         public void ResetNewProfileStatus() { NewProfile = false; }
-        public void SetTargetElpProfile(ElpBundle profile, bool test)
+        public void SetTargetElpProfile(ElpProfile profile, bool test)
         {
-            bool isTesting = profile == null ? false : true;
             if (test)
             {
                 _ActiveELPTestProfile = profile;
                 _newTestProfile = true;
+                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetELPTest : ActionQueue.ApplyELPTest);
             }
             else
             {
-                isTesting = false;
                 _ActiveELPProfile = profile;
                 _newProfile = true;
+                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetELP : ActionQueue.ApplyELP);
             }
-            SetELPForDevice(isTesting, profile == null);
-            RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetELP : ActionQueue.ApplyELP);
+            SetELPForDevice(profile == null);
             OnPropertyChanged(nameof(IgnoreLocalELPInput));
         }
-        public OcReturn SetELPForDevice(bool test = false, bool reset = false)
+        public OcReturn SetELPForDevice(bool reset = false)
         {
             var ret = OcReturn.Success;
             if (!reset)
@@ -884,7 +893,6 @@ namespace NHMCore.Mining
                 Logger.Warn(_TAG, $"Setting ELP for {ComputeDevice.Name}: ELP={cmd}");
                 ELPManager.Instance.SetAlgoCMDString(this, cmd);
                 Logger.Warn(_TAG, $"Setting ELP is successful");
-
                 return ret;
             }
             ELPManager.Instance.IterateSubModelsAndConstructELPs();
@@ -911,18 +919,38 @@ namespace NHMCore.Mining
                 return string.Empty;
             }
         }
-        private FanBundle _activeFanTestProfile = null;
-        public FanBundle ActiveFanTestProfile => _activeFanTestProfile;
-        private FanBundle _activeFanProfile = null;
-        public FanBundle ActiveFanProfile => _activeFanProfile;
-        public void SetTargetFanProfile(FanBundle profile, bool test)
+        private FanProfile _ActiveFanTestProfile = null;
+        public FanProfile ActiveFanTestProfile => _ActiveFanTestProfile;
+        private FanProfile _ActiveFanProfile = null;
+        public FanProfile ActiveFanProfile => _ActiveFanProfile;
+        public void SetTargetFanProfile(FanProfile profile, bool test)
         {
             if (test)
             {
-                _activeFanTestProfile = profile;
+                _ActiveFanTestProfile = profile;
+                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetFanTest : ActionQueue.ApplyFanTest);
             }
-            else _activeFanProfile = profile;
-            RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetFan : ActionQueue.ApplyFan);
+            else
+            {
+                _ActiveFanProfile = profile;
+                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetFan : ActionQueue.ApplyFan);
+            }
+        }
+        public Task<OcReturn> ResetFanForDevice()
+        {
+            return Task.FromResult(OcReturn.Fail);
+        }
+        public Task<OcReturn> SetFanForDevice(FanProfile bundle, bool reset = false)
+        {
+            return Task.FromResult(OcReturn.Fail);
+        }
+        public void SwitchFanTestToInactive()
+        {
+            _ActiveFanTestProfile = null;
+        }
+        public void SwitchFanToInactive()
+        {
+            _ActiveFanProfile = null;
         }
         #endregion
 #endif

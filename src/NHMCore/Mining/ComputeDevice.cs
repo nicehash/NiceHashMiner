@@ -765,32 +765,60 @@ namespace NHMCore.Mining
                 switch (action)
                 {
                     case AlgorithmContainer.ActionQueue.ApplyOC:
+                        var retOc = await target.SetOcForDevice(target.ActiveOCProfile, false);
+                        if (retOc == OcReturn.Fail) target.SwitchOCToInactive();
+                        break;
+                    case AlgorithmContainer.ActionQueue.ResetOC:
+                        if (IsTesting) break;
+                        var resetOC = await target.ResetOcForDevice();
+                        State = DeviceState.Mining;
+                        break;
+                    case AlgorithmContainer.ActionQueue.ApplyOCTest:
                         if (target.HasTestProfileAndCanSet() && target.ActiveOCTestProfile != null)
                         {
-                            var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, true, false);
+                            var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, false);
                             if (retOCTest == OcReturn.Success || retOCTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
                             else target.SwitchOCTestToInactive();
                             break;
                         }
-                        var retOc = await target.SetOcForDevice(target.ActiveOCProfile, false, false);
-                        if (retOc == OcReturn.Fail) target.SwitchOCToInactive();
                         break;
-                    case AlgorithmContainer.ActionQueue.ResetOC://RESET HAS IT FROM PREVIOUS...switch isnt triggered, so here it resets 2 mining
-                        var resetOC = await target.ResetOcForDevice();
-                        //if not mining and reset will state be mining?
-                        State = DeviceState.Mining;//this comes after the elp set so it is a problemo!!!
+                    case AlgorithmContainer.ActionQueue.ResetOCTest:
+                        var resetOCTest = await target.ResetOcForDevice();
+                        State = DeviceState.Mining;
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyFan:
+                        var retFan = await target.SetFanForDevice(target.ActiveFanProfile, false);
+                        if (retFan == OcReturn.Fail) target.SwitchFanToInactive();
                         break;
                     case AlgorithmContainer.ActionQueue.ResetFan:
+                        if (IsTesting) break;
+                        var resetFan = await target.ResetFanForDevice();
+                        State = DeviceState.Mining;
+                        break;
+                    case AlgorithmContainer.ActionQueue.ApplyFanTest:
+                        if (target.HasTestProfileAndCanSet() && target.ActiveFanTestProfile != null)
+                        {
+                            var retFanTest = await target.SetFanForDevice(target.ActiveFanTestProfile, false);
+                            if (retFanTest == OcReturn.Success || retFanTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
+                            else target.SwitchFanTestToInactive();
+                            break;
+                        }
+                        break;
+                    case AlgorithmContainer.ActionQueue.ResetFanTest:
+                        var resetFanTest = await target.ResetFanForDevice();
+                        State = DeviceState.Mining;
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyELP:
+                        break;
+                    case AlgorithmContainer.ActionQueue.ResetELP:
+                        break;
+                    case AlgorithmContainer.ActionQueue.ApplyELPTest:
                         if (target.HasTestProfileAndCanSet() && target.ActiveELPTestProfile != null)
                         {
                             State = DeviceState.Testing;
                         }
                         break;
-                    case AlgorithmContainer.ActionQueue.ResetELP:
+                    case AlgorithmContainer.ActionQueue.ResetELPTest:
                         break;
                 }
             }
@@ -824,7 +852,7 @@ namespace NHMCore.Mining
             }
         }
 
-        private void SetFanSpeed(FanBundle profile)
+        private void SetFanSpeed(FanProfile profile)
         {
             if (profile.Type == 1)
             {
@@ -842,7 +870,7 @@ namespace NHMCore.Mining
             }
         }
 
-        private void SetFanSpeedWithLoweringMemoryClocks(FanBundle profile)
+        private void SetFanSpeedWithLoweringMemoryClocks(FanProfile profile)
         {
             _pidController.SetPid(10, 0.8, 1);
             _pidController.SetOutputLimit(profile.MaxFanSpeed);
