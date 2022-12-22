@@ -699,22 +699,22 @@ namespace NHMCore.Mining
         {
             if (test)
             {
-                _ActiveOCTestProfile = profile;
+                ActiveOCTestProfile = profile;
                 RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetOCTest : ActionQueue.ApplyOCTest);
             }
             else
             {
-                _ActiveOCProfile = profile;
+                ActiveOCProfile = profile;
                 RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetOC : ActionQueue.ApplyOC);
             }
         }
         public void SwitchOCTestToInactive()
         {
-            _ActiveOCTestProfile = null;
+            ActiveOCTestProfile = null;
         }
         public void SwitchOCToInactive()
         {
-            _ActiveOCProfile = null;
+            ActiveOCProfile = null;
         }
         public Task<OcReturn> SetOcForDevice(OcProfile bundle, bool reset = false)
         {
@@ -869,18 +869,22 @@ namespace NHMCore.Mining
         {
             if (test)
             {
-                _ActiveELPTestProfile = profile;
-                _newTestProfile = true;
+                ActiveELPTestProfile = profile;
+                NewTestProfile = true;
                 RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetELPTest : ActionQueue.ApplyELPTest);
             }
             else
             {
-                _ActiveELPProfile = profile;
-                _newProfile = true;
+                ActiveELPProfile = profile;
+                NewProfile = true;
                 RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetELP : ActionQueue.ApplyELP);
             }
             SetELPForDevice(profile == null);
             OnPropertyChanged(nameof(IgnoreLocalELPInput));
+        }
+        public void TriggerELPReset()
+        {
+            NewProfile = true;
         }
         public OcReturn SetELPForDevice(bool reset = false)
         {
@@ -920,19 +924,51 @@ namespace NHMCore.Mining
             }
         }
         private FanProfile _ActiveFanTestProfile = null;
-        public FanProfile ActiveFanTestProfile => _ActiveFanTestProfile;
+        public FanProfile ActiveFanTestProfile
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _ActiveFanTestProfile;
+                }
+            }
+            set
+            {
+                lock (_lock)
+                {
+                    _ActiveFanTestProfile = value;
+                }
+            }
+        }
         private FanProfile _ActiveFanProfile = null;
-        public FanProfile ActiveFanProfile => _ActiveFanProfile;
+        public FanProfile ActiveFanProfile
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _ActiveFanProfile;
+                }
+            }
+            set
+            {
+                lock (_lock)
+                {
+                    _ActiveFanProfile = value;
+                }
+            }
+        }
         public void SetTargetFanProfile(FanProfile profile, bool test)
         {
             if (test)
             {
-                _ActiveFanTestProfile = profile;
+                ActiveFanTestProfile = profile;
                 RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetFanTest : ActionQueue.ApplyFanTest);
             }
             else
             {
-                _ActiveFanProfile = profile;
+                ActiveFanProfile = profile;
                 RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetFan : ActionQueue.ApplyFan);
             }
         }
@@ -946,11 +982,11 @@ namespace NHMCore.Mining
         }
         public void SwitchFanTestToInactive()
         {
-            _ActiveFanTestProfile = null;
+            ActiveFanTestProfile = null;
         }
         public void SwitchFanToInactive()
         {
-            _ActiveFanProfile = null;
+            ActiveFanProfile = null;
         }
         #endregion
 #endif
