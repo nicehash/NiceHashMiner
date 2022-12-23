@@ -154,7 +154,7 @@ namespace NHMCore.Configs.Managers
                 .FirstOrDefault()?
                 .Algos.Where(algo => algo.Name == ac.AlgorithmName)?
                 .FirstOrDefault();
-            if(target == null) return;
+            if (target == null) return;
 
 
             var index = target.AllCMDStrings.ToList().FindIndex(i => i.uuid == ac.ComputeDevice.Uuid);
@@ -356,7 +356,7 @@ namespace NHMCore.Configs.Managers
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
             }
             targetDeviceContainer.SetTargetElpProfile(null, true);
-            if(triggerSwitch) MiningManager.TriggerSwitchCheck();
+            if (triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
         public Task<(ErrorCode err, string msg)> ApplyELPBundle(List<ElpProfile> bundles)
@@ -415,13 +415,13 @@ namespace NHMCore.Configs.Managers
             {
                 container.SetTargetElpProfile(null, false);
             }
-            if(triggerSwitch) MiningManager.TriggerSwitchCheck();
+            if (triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
         public void RestartMiningInstance()
         {
             var containers = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings);
-            foreach(var c in containers)
+            foreach (var c in containers)
             {
                 c.TriggerELPReset();
             }

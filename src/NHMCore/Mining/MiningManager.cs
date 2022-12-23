@@ -50,7 +50,7 @@ namespace NHMCore.Mining
         private static Dictionary<string, Miner> _runningMiners = new Dictionary<string, Miner>();
         #endregion State for mining
 
-        
+
         private abstract record Command
         {
             public TaskCompletionSource<object> Tsc { get; init; } = new TaskCompletionSource<object>();
@@ -245,7 +245,7 @@ namespace NHMCore.Mining
             MiningSettings.Instance.PropertyChanged += MiningSettingsInstance_PropertyChanged;
         }
 
-       
+
         public static void StartLoops(CancellationToken stop, string username)
         {
             _username = username;
@@ -267,7 +267,7 @@ namespace NHMCore.Mining
                 nameof(MiscSettings.UseOptimizationProfiles) => UseOptimizationProfilesChanged(),
                 nameof(MiscSettings.ResolveNiceHashDomainsToIPs) => DNSQChanged(),
                 _ => Task.CompletedTask,
-            };            
+            };
         }
 
         private static void MiningProfitSettingsInstance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -316,7 +316,7 @@ namespace NHMCore.Mining
                     .Select(g => g.Select(c => c).ToArray())
                     .Select(commands => (finalCommand: commands.LastOrDefault(), redundantCommands: commands.Reverse().Skip(1)))
                     .ToArray();
-                
+
                 var redundantCommands = deviceActions
                     .SelectMany(p => p.redundantCommands)
                     .ToArray();
@@ -625,14 +625,14 @@ namespace NHMCore.Mining
             else if (command is GPUToPauseChangedCommand gpuToPauseChangedCommand)
             {
                 _deviceToPauseUuid = gpuToPauseChangedCommand.GpuUuid;
-                
+
                 // unpause device if not mining and not selected
                 var devToUnpause = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid != _deviceToPauseUuid && d.IsGaming == true);
                 if (devToUnpause != null) devToUnpause.IsGaming = false;
 
                 // set new selected gpu to true
                 var newSelectedDev = AvailableDevices.GetDeviceWithUuid(_deviceToPauseUuid);
-                if(newSelectedDev != null)
+                if (newSelectedDev != null)
                 {
                     newSelectedDev.PauseMiningWhenGamingMode = true;
                     ConfigManager.DeviceConfigFileCommit(newSelectedDev);
@@ -669,7 +669,7 @@ namespace NHMCore.Mining
                 // START
                 foreach (var miner in _runningMiners.Values) await miner.StartMinerTask(_stopMiningManager, _username);
 #if NHMWS4
-                var miningDevs =  AvailableDevices.Devices
+                var miningDevs = AvailableDevices.Devices
                     .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
                     .ToList();
                 if (miningDevs.Any())
@@ -698,7 +698,7 @@ namespace NHMCore.Mining
                 bool skipProfitsThreshold = CheckIfShouldSkipProfitsThreshold(command);
                 await SwichMostProfitableGroupUpMethodTask(_normalizedProfits, skipProfitsThreshold);
             }
-            else if(!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand)
+            else if (!_isGameRunning && _isPauseMiningWhenGamingEnabled && command is IsSteamGameRunningChangedCommand)
             {
                 AvailableNotifications.CreateGamingFinished();
                 var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == _deviceToPauseUuid);
@@ -724,7 +724,7 @@ namespace NHMCore.Mining
         private static bool CheckIfShouldSkipProfitsThreshold(MainCommand command)
         {
             return MiningProfitSettings.Instance.MineRegardlessOfProfit ||
-                command is MiningProfitSettingsChangedCommand || 
+                command is MiningProfitSettingsChangedCommand ||
                 command is MinerRestartLoopNotifyCommand;
         }
 
@@ -760,7 +760,7 @@ namespace NHMCore.Mining
         {
             _useScheduler = MiningSettings.Instance.UseScheduler;
             if (!_useScheduler) return;
-            if(!SchedulesManager.Instance.Schedules.Any()) return;
+            if (!SchedulesManager.Instance.Schedules.Any()) return;
 
             var shouldStart = false;
             var shouldStop = false;
@@ -779,7 +779,7 @@ namespace NHMCore.Mining
             if (shouldStop && _runningMiners.Any())
             {
 #if NHMWS4
-                var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Testing );
+                var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Testing);
 #else
                 var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
 #endif
@@ -936,15 +936,15 @@ namespace NHMCore.Mining
             var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToList();
             var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToList();
             var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToList();
-            
+
             //resetting in case of elp profile set
-            foreach(var noChangeKey in noChangeGroupMinersKeys)
+            foreach (var noChangeKey in noChangeGroupMinersKeys)
             {
                 var miningPairs = newGroupedMiningPairs[noChangeKey];
                 //var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewProfile == true && p.HasNormalProfileAndCanSet()) || (p.NewTestProfile == true && p.HasTestProfileAndCanSet()));
-                var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewProfile == true) || (p.NewTestProfile == true));
+                var miningPairsWithNewProfile = miningPairs.Where(p => (p.NewELPProfile == true) || (p.NewTestELPProfile == true));
                 if (miningPairsWithNewProfile == null || miningPairsWithNewProfile.Count() == 0) continue;
-                foreach(var item in miningPairsWithNewProfile)
+                foreach (var item in miningPairsWithNewProfile)
                 {
                     item.ResetNewProfileStatus();
                     item.ResetNewTestProfileStatus();
@@ -981,7 +981,7 @@ namespace NHMCore.Mining
             var miningDevs = AvailableDevices.Devices
                 .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
                 .ToList();
-            if(miningDevs.Any())//todo if miningdev uuid is contained in both start and stop then dont do?
+            if (miningDevs.Any())//todo if miningdev uuid is contained in both start and stop then dont do?
             {
                 foreach (var dev in miningDevs)
                 {
