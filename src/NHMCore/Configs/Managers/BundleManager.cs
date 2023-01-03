@@ -15,9 +15,11 @@ namespace NHMCore.Configs.Managers
         private static readonly string _TAG = "BundleManager";
         private static string BundleName = string.Empty;
         private static string BundleID = string.Empty;
+        private static string _path = Paths.AppRootPath("bundle.json");
         public static void SetBundleInfo(string name, string id)
         {
-            BundleName = name; BundleID = id;
+            BundleName = name; 
+            BundleID = id;
         }
         public static (string BundleName, string BundleID) GetBundleInfo()
         {
@@ -27,18 +29,25 @@ namespace NHMCore.Configs.Managers
         {
             BundleName = string.Empty;
             BundleID = string.Empty;
+            try
+            {
+                File.WriteAllText(_path, string.Empty);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_TAG, e.Message);
+            }
         }
         public static void Init()
         {
-            var path = Paths.AppRootPath("bundle.json");
-            if (!File.Exists(path))
+            if (!File.Exists(_path))
             {
-                File.Create(path);
+                File.Create(_path);
                 return;
             }
             try
             {
-                var content = File.ReadAllText(path);
+                var content = File.ReadAllText(_path);
                 var bundleToApply = JsonConvert.DeserializeObject<Bundle>(content);
                 if(bundleToApply != null)
                 {
@@ -49,7 +58,7 @@ namespace NHMCore.Configs.Managers
             catch(Exception e)
             {
                 Logger.Error(_TAG, e.Message);
-                File.WriteAllText(path, string.Empty);
+                File.WriteAllText(_path, string.Empty);
             }
         }
         private static void ApplyBundleOnInit(Bundle bundle)
@@ -60,9 +69,8 @@ namespace NHMCore.Configs.Managers
         }
         public static async Task SaveBundle(Bundle bundle)
         {
-            var path = Paths.AppRootPath("bundle.json");
             var text = JsonConvert.SerializeObject(bundle);
-            await File.AppendAllTextAsync(path, text);
+            await File.AppendAllTextAsync(_path, text);
         }
     }
 }
