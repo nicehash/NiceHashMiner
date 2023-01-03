@@ -25,11 +25,11 @@ namespace LolMiner
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.62",
-                ExePath = new List<string> { "1.62", "lolMiner.exe" },
+                BinVersion = "1.65",
+                ExePath = new List<string> { "1.65", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.62/lolMiner_v1.62_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.65/lolMiner_v1.65_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -39,7 +39,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(19, 4);
+        public override Version Version => new Version(19, 7);
 
         public override string Author => "info@nicehash.com";
 

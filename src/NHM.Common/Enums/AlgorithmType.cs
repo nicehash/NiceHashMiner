@@ -28,7 +28,7 @@ namespace NHM.Common.Enums
         X15 = 6,
         [Obsolete("UNUSED Algorithm", true)]
         Nist5 = 7,
-        [Obsolete("UNUSED Algorithm", true)]
+        //[Obsolete("UNUSED Algorithm", true)]
         NeoScrypt = 8,
         [Obsolete("UNUSED Algorithm", true)]
         Lyra2RE = 9,
