@@ -256,6 +256,10 @@ namespace NHMCore
                     if (MiscSettings.Instance.UseOptimizationProfiles) AvailableNotifications.CreateOptimizationProfileElevateInfo();
                     else AvailableNotifications.CreateOptimizationProfileNotEnabledInfo();
                 }
+                if (!Helpers.IsElevated)
+                {
+                    AvailableNotifications.CreateNotAdminForRigManagement();
+                }
 
                 SchedulesManager.Instance.Init();
             }

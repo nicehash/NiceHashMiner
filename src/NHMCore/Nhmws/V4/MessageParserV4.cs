@@ -183,8 +183,7 @@ namespace NHMCore.Nhmws.V4
                     {
                         if (p is not string prop) return null;
                         var newState = JsonConvert.DeserializeObject<MinerAlgoState>(prop);
-                        d.ApplyNewAlgoStates(newState);
-                        return null;
+                        return d.ApplyNewAlgoStates(newState);
                     },
                     GetValue = () =>
                     {

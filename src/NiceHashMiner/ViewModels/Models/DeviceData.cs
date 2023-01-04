@@ -318,11 +318,13 @@ namespace NiceHashMiner.ViewModels.Models
         {
             foreach (var a in Dev.AlgorithmSettings)
             {
-                a.Enabled = a.HasBenchmark;
+                a.SetEnabled(a.HasBenchmark);
             }
+            OnPropertyChanged();
+            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
         }
 
-#region AlgorithmSettingsCollection SORTING
+        #region AlgorithmSettingsCollection SORTING
         private enum SortColumn
         {
             ALGORITHM = 0,

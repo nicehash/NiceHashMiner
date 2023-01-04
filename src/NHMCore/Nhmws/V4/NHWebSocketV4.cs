@@ -853,22 +853,30 @@ namespace NHMCore.Nhmws.V4
                 }
             }
             if (mutableCmd.Devices == null) return Task.FromResult("Success");
+            string result = string.Empty;
             foreach (var device in mutableCmd.Devices)
             {
                 if (device.Properties == null) continue;
+                var deviceTarget = AvailableDevices.Devices.Where(d => d.B64Uuid == device.Id).FirstOrDefault();
+                if (deviceTarget == null) continue;
+                if (deviceTarget.IsMiningBenchingTesting)
+                {
+                    result += $"({device.Id}):Stop device first\n";
+                    continue;
+                }
                 foreach (var property in device.Properties)
                 {
                     HandleProperty(property);
                 }
             }
-            return Task.FromResult("Success");
+            return Task.FromResult(result);
         }
-        private static Task HandleProperty(object property)
+        private static Task<string> HandleProperty(object property)
         {
-            if (property is not JToken token) return Task.CompletedTask;
+            if (property is not JToken token) return Task.FromResult("Property is not Jtoken");
             var genericProperty = token.ToObject<Property>();
             var mutable = ActionMutableMap.FindMutableOrNull(genericProperty.PropId);
-            if (mutable == null) return Task.CompletedTask;
+            if (mutable == null) return Task.FromResult("Mutable is null");
             object t = mutable.PropertyType switch
             {
                 Type.String => ParseAndActMutableString(mutable, token),
@@ -877,14 +885,15 @@ namespace NHMCore.Nhmws.V4
                 Type.Bool => ParseAndActMutableBool(mutable, token),
                 _ => throw new InvalidOperationException()
             };
-            return Task.CompletedTask;
+            if (t is string retStr) return Task.FromResult(retStr);
+            return Task.FromResult("OK");
         }
-        static Task ParseAndActMutableString(OptionalMutableProperty property, JToken command)
+        static Task<string> ParseAndActMutableString(OptionalMutableProperty property, JToken command)
         {
             var mutable = command.ToObject<PropertyString>();
-            //var newState = JsonConvert.DeserializeObject<MinerAlgoState>(mutable.Value);
-            property.ExecuteTask(mutable.Value);
-            return Task.CompletedTask;
+            var res = property.ExecuteTask(mutable.Value);
+            if (res.Result is string resStr) return Task.FromResult(resStr);
+            return Task.FromResult(string.Empty);
         }
         static Task ParseAndActMutableInt(OptionalMutableProperty property, JToken command)
         {
@@ -942,7 +951,8 @@ namespace NHMCore.Nhmws.V4
                 }
                 else if (t is string answer)
                 {
-                    executedCall = new ExecutedCall(rpcMsg.Id, 0, answer);
+                    var errorCode = answer == string.Empty ? 0 : 1;
+                    executedCall = new ExecutedCall(rpcMsg.Id, errorCode, answer);
                 }
                 else executedCall = new ExecutedCall(rpcMsg.Id, -1, "Failed to execute!");
             }

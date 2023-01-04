@@ -355,5 +355,13 @@ namespace NHMCore.Notifications
             notification.Action = AvailableActions.ActionNoOptimalDrivers();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
+
+        public static void CreateNotAdminForRigManagement()
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.RigManagementElevate, Tr("NHM needs administrator privileges for rig management"), Tr($"If you want to use rig manager for OC/Fan/command settings, you must run NHM as an administrator"));
+            notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.RigManagementElevate);
+            notification.Action = AvailableActions.ActionRunAsAdmin();
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
     }
 }

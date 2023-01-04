@@ -39,6 +39,7 @@ namespace NHMCore.Mining
         public string NameCount { get; private set; }
 #if NHMWS4
         public bool IsTesting => AlgorithmSettings.Any(a => a.IsTesting);
+        public bool IsMiningBenchingTesting => State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking;
 #endif
 
         private PidController _pidController = new();
@@ -162,8 +163,9 @@ namespace NHMCore.Mining
                 }
             }
         }
-        public void ApplyNewAlgoStates(MinerAlgoState state)
+        public string ApplyNewAlgoStates(MinerAlgoState state)
         {
+            if (State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking) return "Stop mining first";
             foreach(var miner in state.Miners)
             {
                 foreach(var algo in miner.Algos)
@@ -179,6 +181,7 @@ namespace NHMCore.Mining
                 }
             }
             Task.Run(async () => NHWebSocketV4.UpdateMinerStatus(false));
+            return "New state is set";
         }
 
         private List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; set; } = new List<PluginAlgorithmConfig>();
