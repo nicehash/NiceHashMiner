@@ -1,5 +1,6 @@
 ﻿using NHM.MinerPluginToolkitV1.CommandLine;
 using NHMCore.Configs.ELPDataModels;
+using NHMCore.Configs.Managers;
 using NHMCore.Utils;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,8 +47,18 @@ namespace NHMCore.Mining.Grouping
                 var restInGroup = profitableAlgorithmContainers
                     .SkipWhile(algo => current != algo)
                     .Where(algo => !isAlreadyGrouped(algo))
-                    .Where(algo => CanGroupAlgorithmContainer(current, algo))
-                    .Where(algo => !needsToBeSeparated(algo));
+                    .Where(algo => CanGroupAlgorithmContainer(current, algo));
+                if (needsToBeSeparated(current))
+                {
+                    var currentCMD = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(current);
+                    restInGroup = restInGroup
+                        .Where(algo => needsToBeSeparated(algo))?
+                        .Where(algo => ELPManager.Instance.FindAppropriateCommandForAlgoContainer(algo) == currentCMD);
+                }
+                else
+                {
+                    restInGroup = restInGroup.Where(algo => !needsToBeSeparated(algo));
+                }
                 newGroup.AddRange(restInGroup);
                 // save newly grouped mining pairs
                 var newGroupKey = CalcGroupedDevicesKey(newGroup, current.AlgorithmStringID);

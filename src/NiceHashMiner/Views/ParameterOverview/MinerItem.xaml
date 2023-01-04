@@ -181,11 +181,11 @@
                         <TextBox Grid.Column="0" Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding SingleParamString, Mode=OneWay}" Width="auto" MinWidth="150" x:Name="SingleParameterInput"
                                  TextChanged="SingleParameterInput_TextChanged"
                                  LostFocus="SingleParameterInput_LostFocus"
-                                 IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                                 IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
                         <TextBox Grid.Column="1" Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding DoubleParamString, Mode=OneWay}" Width="auto" MinWidth="150" x:Name="DualParameterInput" 
                                  TextChanged="DualParameterInput_TextChanged" 
                                  LostFocus="DualParameterInput_LostFocus"
-                                 IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                                 IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
                     </Grid>
                     <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
                         <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xf107;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />

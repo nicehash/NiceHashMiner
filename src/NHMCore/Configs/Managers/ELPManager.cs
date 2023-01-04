@@ -418,7 +418,7 @@ namespace NHMCore.Configs.Managers
             if (triggerSwitch) MiningManager.TriggerSwitchCheck();
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
-        public void RestartMiningInstance()
+        public void RestartMiningInstance() //not specific enough, just elp?
         {
             var containers = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings);
             foreach (var c in containers)

@@ -719,9 +719,11 @@ namespace NHMCore.Nhmws.V4
                     var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
                     _ = ExecuteProfilesBundleReset(false);
                     _ = ExecuteProfilesBundleSet(bundle);
+                    MiningState.Instance.CalculateDevicesStateChange();
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
                     ExecuteProfilesBundleReset();
+                    MiningState.Instance.CalculateDevicesStateChange();
                     break;
                 case SupportedAction.ActionDeviceEnable:
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
@@ -748,9 +750,11 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionElpProfileTest:
                     var elp = JsonConvert.DeserializeObject<ElpProfile>(parameters);
                     (err, result) = ExecuteELPTest(deviceUUID, elp).Result;
+                    MiningState.Instance.CalculateDevicesStateChange();
                     break;
                 case SupportedAction.ActionElpProfileTestStop:
                     (err, result) = StopELPTestForDevice(deviceUUID).Result;
+                    MiningState.Instance.CalculateDevicesStateChange();
                     break;
                 default:
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);

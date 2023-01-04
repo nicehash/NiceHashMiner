@@ -17,6 +17,11 @@ namespace NHMCore.ApplicationState
             _intProps = new NotifyPropertyChangedHelper<int>(OnPropertyChanged);
             IsDemoMining = false;
             IsCurrentlyMining = false;
+            IsCurrentlyMiningOrELPFromRigManager = IsCurrentlyMining || 
+                AvailableDevices.Devices
+                .SelectMany(d => d.AlgorithmSettings)
+                .Any(a => a.ActiveELPProfile != null || a.ActiveELPTestProfile != null);
+            IsNotRunningOrELP = !IsCurrentlyMiningOrELPFromRigManager;
         }
 
         // auto properties don't trigger NotifyPropertyChanged so add this shitty boilerplate
@@ -64,6 +69,18 @@ namespace NHMCore.ApplicationState
         {
             get => _boolProps.Get(nameof(IsCurrentlyMining));
             private set => _boolProps.Set(nameof(IsCurrentlyMining), value);
+        }
+
+        public bool IsCurrentlyMiningOrELPFromRigManager
+        {
+            get => _boolProps.Get(nameof(IsCurrentlyMiningOrELPFromRigManager));
+            private set => _boolProps.Set(nameof(IsCurrentlyMiningOrELPFromRigManager), value);
+        }
+
+        public bool IsNotRunningOrELP
+        {
+            get => _boolProps.Get(nameof(IsNotRunningOrELP));
+            private set => _boolProps.Set(nameof(IsNotRunningOrELP), value);
         }
 
         #region DeviceState Counts
@@ -126,6 +143,11 @@ namespace NHMCore.ApplicationState
 #endif
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;
             IsCurrentlyMining = AnyDeviceRunning;
+            IsCurrentlyMiningOrELPFromRigManager = IsCurrentlyMining ||
+                AvailableDevices.Devices
+                .SelectMany(d => d.AlgorithmSettings)
+                .Any(a => a.ActiveELPProfile != null || a.ActiveELPTestProfile != null);
+            IsNotRunningOrELP = !IsCurrentlyMiningOrELPFromRigManager;
             IsDemoMining = !CredentialsSettings.Instance.IsBitcoinAddressValid && IsCurrentlyMining;
             if (IsNotBenchmarkingOrMining) MiningManuallyStarted = false;
         }

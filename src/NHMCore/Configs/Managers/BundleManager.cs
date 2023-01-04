@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
+using NHMCore.ApplicationState;
 using NHMCore.Nhmws.V4;
 using System;
 using System.Collections.Generic;
@@ -66,6 +67,7 @@ namespace NHMCore.Configs.Managers
             OCManager.Instance.ApplyOcBundle(bundle.OcBundles);
             FanManager.Instance.ApplyFanBundle(bundle.FanBundles);
             ELPManager.Instance.ApplyELPBundle(bundle.ElpBundles);
+            MiningState.Instance.CalculateDevicesStateChange();
         }
         public static async Task SaveBundle(Bundle bundle)
         {
