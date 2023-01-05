@@ -315,6 +315,15 @@ namespace NHMCore.Mining
                 return -1;
             }
         }
+
+        public int MemoryClockDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockDelta get) return get.MemoryClockDelta;
+                return -1;
+            }
+        }
         public (uint min, uint max, uint def) TDPLimits
         {
             get
@@ -886,7 +895,7 @@ namespace NHMCore.Mining
             if (_memoryControlCounter >= 5)
             {
                 _pidController.SetPid(100, 0.8, 1);
-                _pidController.SetOutputLimits(MemoryClockRange.min, MemoryClockRange.max);
+                _pidController.SetOutputLimits(MemoryClockRange.min, MemoryClockDelta);
                 var memory_clock = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
                 SetMemoryClock((int)memory_clock);
                 _memoryControlCounter = 0;

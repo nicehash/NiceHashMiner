@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits, IMemoryClockDelta
     {
         private const int RET_OK = 0;
         public static object _lock = new object();
@@ -285,6 +285,19 @@ namespace NHM.DeviceMonitoring
                 return -1;
             }
         }
+
+        public int MemoryClockDelta
+        {
+            get
+            {
+                int memoryClockDelta = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_delta(BusID, ref memoryClockDelta);
+                if (ok == RET_OK) return memoryClockDelta;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_delta failed with error code {ok}", _delayedLogging);
+                return -(1);
+            }
+        }
+
         public void PrintMemoryTimings()
         {
             NVIDIA_MON.nhm_nvidia_device_print_memory_timings(BusID);
@@ -292,11 +305,11 @@ namespace NHM.DeviceMonitoring
 
         public bool SetCoreClock(int coreClock)
         {
-            return NVIDIA_MON.nhm_nvidia_device_set_core_clocks(BusID, coreClock) == 0 ? true : false;
+            return NVIDIA_MON.nhm_nvidia_device_set_core_clocks(BusID, coreClock, false) == 0 ? true : false;
         }
         public bool SetMemoryClock(int memoryClock)
         {
-            return NVIDIA_MON.nhm_nvidia_device_set_memory_clocks(BusID, memoryClock) == 0 ? true : false;
+            return NVIDIA_MON.nhm_nvidia_device_set_memory_clocks(BusID, memoryClock, false) == 0 ? true : false;
         }
         public (bool ok, uint min, uint max, uint def) GetTDPLimits()
         {
@@ -316,7 +329,7 @@ namespace NHM.DeviceMonitoring
                 int min = 0;
                 int max = 0;
                 int def = 0;
-                var ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_min_max_default(BusID, ref min, ref max, ref def);
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_min_max_default(BusID, ref min, ref max, ref def, false);
                 if (ok == RET_OK) return (true, min, max, def);
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks_min_max_default failed with error code {ok}", _delayedLogging);
                 return (false, 0, 0, 0);
@@ -330,7 +343,7 @@ namespace NHM.DeviceMonitoring
                 int min = 0;
                 int max = 0;
                 int def = 0;
-                var ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_min_max_default(BusID, ref min, ref max, ref def);
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_min_max_default(BusID, ref min, ref max, ref def, false);
                 if (ok == RET_OK) return (true, min, max, def);
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_min_max_default failed with error code {ok}", _delayedLogging);
                 return (false, 0, 0, 0);
