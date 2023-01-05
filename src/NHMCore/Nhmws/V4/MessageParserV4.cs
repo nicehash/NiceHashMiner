@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HidSharp;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -121,8 +122,8 @@ namespace NHMCore.Nhmws.V4
             // here sort manually by type 
             var dynamicPropertiesWithValues = new List<(DeviceDynamicProperties type, string name, string unit, string value)?>
             {
-                pairOrNull<ITemp>(DeviceDynamicProperties.Temperature ,"Temperature","C"),
-                pairOrNull<IVramTemp>(DeviceDynamicProperties.VramTemp,"VRAM Temperature","C"),
+                pairOrNull<ITemp>(DeviceDynamicProperties.Temperature ,"Temperature","°C"),
+                pairOrNull<IVramTemp>(DeviceDynamicProperties.VramTemp,"VRAM Temperature","°C"),
                 pairOrNull<ILoad>(DeviceDynamicProperties.Load,"Load","%"),
                 pairOrNull<IMemControllerLoad>(DeviceDynamicProperties.MemoryControllerLoad, "MemCtrl Load","%"),
                 pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan speed","%"),
@@ -284,14 +285,30 @@ namespace NHMCore.Nhmws.V4
                         DefaultValue = btc,
                         Range = (64, String.Empty),
                     },
-                    //new OptionalMutablePropertyString
-                    //{
-                    //    PropertyID = OptionalMutableProperty.NextPropertyId(),
-                    //    DisplayGroup = 0,
-                    //    DisplayName = "Worker name",
-                    //    DefaultValue = worker,
-                    //    Range = (64, String.Empty),
-                    //},
+                    new OptionalMutablePropertyString
+                    {
+                        PropertyID = OptionalMutableProperty.NextPropertyId(),
+                        DisplayGroup = 0,
+                        DisplayName = "Worker name",
+                        DefaultValue = worker,
+                        Range = (64, String.Empty),
+                    },
+                    new OptionalMutablePropertyString
+                    {
+                        PropertyID = OptionalMutableProperty.NextPropertyId(),
+                        DisplayGroup = 0,
+                        DisplayName = "Miners settings",
+                        DefaultValue = "",
+                        Range = (65536, String.Empty),
+                    },
+                    new OptionalMutablePropertyString
+                    {
+                        PropertyID = OptionalMutableProperty.NextPropertyId(),
+                        DisplayGroup = 0,
+                        DisplayName = "Scheduler settings",
+                        DefaultValue = "",
+                        Range = (4096, String.Empty)
+                    }
                 };
         }
         private static List<List<string>> GetRigOptionalDynamicValuesLogin()
@@ -341,7 +358,9 @@ namespace NHMCore.Nhmws.V4
             var list = new List<string>
             {
                 CredentialsSettings.Instance.BitcoinAddress,
-                //CredentialsSettings.Instance.WorkerName
+                CredentialsSettings.Instance.WorkerName,
+                "",//TODO rig-wise algo settings
+                "",//TODO scheduler
             };
             return list;
         }
@@ -431,6 +450,7 @@ namespace NHMCore.Nhmws.V4
             {
                 NhmwsAction.ActionStartMining(),
                 NhmwsAction.ActionStopMining(),
+                NhmwsAction.ActionRebenchmark(),
                 NhmwsAction.ActionProfilesBundleSet(),
                 NhmwsAction.ActionProfilesBundleReset(),
             };
@@ -444,12 +464,12 @@ namespace NHMCore.Nhmws.V4
                         new JArray("bus_id", $"{gpu.PCIeBusID}"),
                         new JArray("vram", $"{gpu.GpuRam}"),
                         new JArray("miners", FormatForOptionalValues("miners", GetMinersForDeviceStatic(d))),
-                        new JArray("limits", FormatForOptionalValues("limits", GetLimitsForDevice(d))),
+                        new JArray("limits", GetLimitsForDevice(d)),
                     },
                 _ => new List<JArray>
                     {
                         new JArray("miners", FormatForOptionalValues("miners", GetMinersForDeviceStatic(d))),
-                        new JArray("limits", FormatForOptionalValues("limits", GetLimitsForDevice(d))),
+                        new JArray("limits", GetLimitsForDevice(d)),
                     },
             };
         }
@@ -498,13 +518,13 @@ namespace NHMCore.Nhmws.V4
         }
         private static string GetLimitsForDevice(ComputeDevice d)
         {
-            List<Limit> limits = new List<Limit>();
+            ComplexLimit limit = new ComplexLimit();
             if (d.DeviceMonitor is ITDP && d.DeviceMonitor is ITDPLimits tdpLim && d.CanSetPowerMode)
             {
                 var lims = tdpLim.GetTDPLimits();
                 if (lims.ok)
                 {
-                    limits.Add(new Limit { Name = "Power mode", Unit = "%", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    limit.limits.Add(new Limit { Name = "Power mode", Unit = "W", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
             if (d.DeviceMonitor is ICoreClockSet && d.DeviceMonitor is ICoreClockRange ccLim)
@@ -512,7 +532,7 @@ namespace NHMCore.Nhmws.V4
                 var lims = ccLim.CoreClockRange;
                 if (lims.ok)
                 {
-                    limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
             if (d.DeviceMonitor is IMemoryClockSet && d.DeviceMonitor is IMemoryClockRange mcLim)
@@ -520,10 +540,27 @@ namespace NHMCore.Nhmws.V4
                 var lims = mcLim.MemoryClockRange;
                 if (lims.ok)
                 {
-                    limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
-            var json = JsonConvert.SerializeObject(limits);
+            var deviceType = d.DeviceType switch
+            {
+                DeviceType.CPU => 1,
+                DeviceType.NVIDIA => 2,
+                DeviceType.AMD => 2,
+                DeviceType.INTEL => 2,
+                _ => 0
+            };
+            var deviceVendor = d.Vendor switch
+            {
+                DeviceType.INTEL => 1,
+                DeviceType.AMD => 2,
+                DeviceType.NVIDIA => 3,
+                _ => 0,
+            };
+            limit.Vendor = deviceVendor;
+            limit.Type = deviceType;
+            var json = JsonConvert.SerializeObject(limit);
             return json;
         }
     }

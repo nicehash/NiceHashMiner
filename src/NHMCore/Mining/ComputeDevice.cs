@@ -41,7 +41,16 @@ namespace NHMCore.Mining
         public bool IsTesting => AlgorithmSettings.Any(a => a.IsTesting);
         public bool IsMiningBenchingTesting => State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking;
 #endif
-
+        public DeviceType Vendor
+        {
+            get
+            {
+                if (DeviceType != DeviceType.CPU) return DeviceType;
+                if (FullName.ToLower().Contains("amd")) return DeviceType.AMD;
+                if (FullName.ToLower().Contains("intel")) return DeviceType.INTEL;
+                return DeviceType.CPU;//unknown
+            }
+        }
         private PidController _pidController = new();
 
         private int _memoryControlCounter = 0;

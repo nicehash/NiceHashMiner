@@ -33,6 +33,7 @@ namespace NHMCore.Nhmws.V4
         ActionElpProfileTestStop,
         ActionOcProfileTestStop,
         ActionFanProfileTestStop,
+        ActionRebenchmark
     }
     internal class LoginMessage : ISendMessage
     {
@@ -319,7 +320,7 @@ namespace NHMCore.Nhmws.V4
             {
                 ActionID = NhmwsAction.NextActionId(),
                 DisplayName = "Mining start",
-                DisplayGroup = 1,
+                DisplayGroup = 0,
                 ActionType = SupportedAction.ActionStartMining,
             };
             ActionMutableMap.ActionList.Add(action);
@@ -331,7 +332,7 @@ namespace NHMCore.Nhmws.V4
             {
                 ActionID = NhmwsAction.NextActionId(),
                 DisplayName = "Mining stop",
-                DisplayGroup = 1,
+                DisplayGroup = 0,
                 ActionType = SupportedAction.ActionStopMining,
             };
             ActionMutableMap.ActionList.Add(action);
@@ -366,6 +367,18 @@ namespace NHMCore.Nhmws.V4
                 DisplayName = "Profiles bundle reset",
                 DisplayGroup = 1,
                 ActionType= SupportedAction.ActionProfilesBundleReset,
+            };
+            ActionMutableMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionRebenchmark()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Rebenchmark",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionRebenchmark
             };
             ActionMutableMap.ActionList.Add(action);
             return action;
@@ -606,6 +619,17 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("range")]
         [JsonConverter(typeof(Nhmws4JSONConverter))]
         public (int min, int max) Range { get; set; }
+
+    }
+
+    internal class ComplexLimit
+    {
+        [JsonProperty("limits")]
+        public List<Limit> limits = new List<Limit>();
+        [JsonProperty("type")]
+        public int Type { get; set; }
+        [JsonProperty("vendor")]
+        public int Vendor { get; set; }
     }
 
 }
