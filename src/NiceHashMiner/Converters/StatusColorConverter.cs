@@ -16,6 +16,7 @@ namespace NiceHashMiner.Converters
             DeviceState.Mining => Application.Current.FindResource("NastyGreenBrush"),
 #if NHMWS4
             DeviceState.Benchmarking or DeviceState.Pending => Application.Current.FindResource("PrimaryColorBrush"),
+            DeviceState.Testing => Application.Current.FindResource("WarningColorBrush"),
 #else
             DeviceState.Benchmarking or DeviceState.Pending or DeviceState.Testing => Application.Current.FindResource("PrimaryColorBrush"),
 #endif
