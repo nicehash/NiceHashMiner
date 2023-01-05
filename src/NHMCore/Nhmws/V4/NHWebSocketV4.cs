@@ -740,8 +740,6 @@ namespace NHMCore.Nhmws.V4
                     break;
                 case SupportedAction.ActionFanProfileTest:
                     var fan = JsonConvert.DeserializeObject<FanProfile>(parameters);
-                    StopOCTestForDevice(deviceUUID); //todo change as the others
-                    StopELPTestForDevice(deviceUUID);
                     (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
                     break;
                 case SupportedAction.ActionFanProfileTestStop:
