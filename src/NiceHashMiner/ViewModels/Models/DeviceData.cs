@@ -81,6 +81,7 @@ namespace NiceHashMiner.ViewModels.Models
                     algo.SetEnabled(value);
                 }
                 OnPropertyChanged();
+                ConfigManager.CommitBenchmarksForDevice(Dev);
                 Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
             }
         }
@@ -321,6 +322,7 @@ namespace NiceHashMiner.ViewModels.Models
                 a.SetEnabled(a.HasBenchmark);
             }
             OnPropertyChanged();
+            ConfigManager.CommitBenchmarksForDevice(Dev);
             Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
         }
 
