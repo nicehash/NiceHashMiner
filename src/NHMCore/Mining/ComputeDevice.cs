@@ -800,33 +800,34 @@ namespace NHMCore.Mining
                             var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, false);
                             if (retOCTest == RigManagementReturn.Success || retOCTest == RigManagementReturn.PartialSuccess) State = DeviceState.Testing;
                             else target.SwitchOCTestToInactive();
-                            break;
                         }
                         break;
                     case AlgorithmContainer.ActionQueue.ResetOCTest:
                         var resetOCTest = await target.ResetOcForDevice();
                         State = DeviceState.Mining;
                         break;
-                    case AlgorithmContainer.ActionQueue.ApplyFan: //ok as whole
-                        var retFan = await target.SetFanForDevice(target.ActiveFanProfile, false); //not ok
-                        if (retFan == RigManagementReturn.Fail) target.SwitchFanToInactive();
+                    case AlgorithmContainer.ActionQueue.ApplyFan:
+                        //var retFan = await target.SetFanForDevice(target.ActiveFanProfile, false);
+                        //if (retFan == RigManagementReturn.Fail) target.SwitchFanToInactive();
                         break;
-                    case AlgorithmContainer.ActionQueue.ResetFan: //ok as whole
+                    case AlgorithmContainer.ActionQueue.ResetFan:
                         if (IsTesting) break;
-                        var resetFan = await target.ResetFanForDevice(); //not ok
+                        //var resetFan = await target.ResetFanForDevice();
+                        target.SwitchFanToInactive();
                         State = DeviceState.Mining;
                         break;
-                    case AlgorithmContainer.ActionQueue.ApplyFanTest://ok as whole
+                    case AlgorithmContainer.ActionQueue.ApplyFanTest:
                         if (target.HasTestProfileAndCanSet() && target.ActiveFanTestProfile != null) 
                         {
-                            var retFanTest = await target.SetFanForDevice(target.ActiveFanTestProfile, false); //not ok
-                            if (retFanTest == RigManagementReturn.Success || retFanTest == RigManagementReturn.PartialSuccess) State = DeviceState.Testing;
-                            else target.SwitchFanTestToInactive();
-                            break;
+                            //var retFanTest = await target.SetFanForDevice(target.ActiveFanTestProfile, false);
+                            //if (retFanTest == RigManagementReturn.Success || retFanTest == RigManagementReturn.PartialSuccess) State = DeviceState.Testing;
+                            //else target.SwitchFanTestToInactive();
+                            State = DeviceState.Testing;
                         }
                         break;
-                    case AlgorithmContainer.ActionQueue.ResetFanTest: //ok as whole
-                        var resetFanTest = await target.ResetFanForDevice();//not ok
+                    case AlgorithmContainer.ActionQueue.ResetFanTest:
+                        //var resetFanTest = await target.ResetFanForDevice();
+                        target.SwitchFanTestToInactive();
                         State = DeviceState.Mining;
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyELP:
@@ -850,8 +851,7 @@ namespace NHMCore.Mining
         {
             var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (testTarget == null) return;
-            var profile = testTarget.ActiveFanTestProfile ?? testTarget.ActiveFanTestProfile;
-            profile = testTarget.ActiveFanProfile ?? testTarget.ActiveFanProfile;
+            var profile = testTarget.ActiveFanTestProfile ?? testTarget.ActiveFanProfile ?? null;
             if (profile == null) return;    
 
             switch (profile.Type)
