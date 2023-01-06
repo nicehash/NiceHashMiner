@@ -716,10 +716,10 @@ namespace NHMCore.Mining
         {
             ActiveOCProfile = null;
         }
-        public Task<OcReturn> SetOcForDevice(OcProfile bundle, bool reset = false)
+        public Task<RigManagementReturn> SetOcForDevice(OcProfile bundle, bool reset = false)
         {
             if (bundle != null) Logger.Warn(_TAG, $"Setting OC for {ComputeDevice.Name}: TDP={bundle.TDP},CC={bundle.CoreClock},MC={bundle.MemoryClock}");
-            var ret = OcReturn.Fail;
+            var ret = RigManagementReturn.Fail;
             int valuesToSet = 0;
             if (bundle.CoreClock > 0) valuesToSet++;
             if (bundle.MemoryClock > 0) valuesToSet++;
@@ -750,10 +750,10 @@ namespace NHMCore.Mining
                 setValues--;
             }
 
-            if (setValues == valuesToSet) ret = OcReturn.Success;
-            else if (setValues != 0 && setValues < valuesToSet) ret = OcReturn.PartialSuccess;
+            if (setValues == valuesToSet) ret = RigManagementReturn.Success;
+            else if (setValues != 0 && setValues < valuesToSet) ret = RigManagementReturn.PartialSuccess;
 
-            if (!reset && (ret == OcReturn.Success || ret == OcReturn.PartialSuccess))
+            if (!reset && (ret == RigManagementReturn.Success || ret == RigManagementReturn.PartialSuccess))
             {
                 Logger.Warn(_TAG, $"Setting OC is successful");
                 return Task.FromResult(ret);
@@ -761,7 +761,7 @@ namespace NHMCore.Mining
             Logger.Warn(_TAG, $"OC not in test mode anymore");
             return Task.FromResult(ret);
         }
-        public Task<OcReturn> ResetOcForDevice()
+        public Task<RigManagementReturn> ResetOcForDevice()
         {
             var defCC = ComputeDevice.CoreClockRange;
             var defMC = ComputeDevice.MemoryClockRange;
@@ -940,9 +940,9 @@ namespace NHMCore.Mining
         {
             NewELPProfile = true;
         }
-        public OcReturn SetELPForDevice(bool reset = false)
+        public RigManagementReturn SetELPForDevice(bool reset = false)
         {
-            var ret = OcReturn.Success;
+            var ret = RigManagementReturn.Success;
             if (!reset)
             {
                 var cmd = string.Empty;
@@ -1026,13 +1026,13 @@ namespace NHMCore.Mining
                 RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetFan : ActionQueue.ApplyFan);
             }
         }
-        public Task<OcReturn> ResetFanForDevice()
+        public Task<RigManagementReturn> ResetFanForDevice()
         {
-            return Task.FromResult(OcReturn.Fail);
+            return Task.FromResult(RigManagementReturn.Fail);
         }
-        public Task<OcReturn> SetFanForDevice(FanProfile bundle, bool reset = false)
+        public Task<RigManagementReturn> SetFanForDevice(FanProfile bundle, bool reset = false)
         {
-            return Task.FromResult(OcReturn.Fail);
+            return Task.FromResult(RigManagementReturn.Fail);
         }
         public void SwitchFanTestToInactive()
         {

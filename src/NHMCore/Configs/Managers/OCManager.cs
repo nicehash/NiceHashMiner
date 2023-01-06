@@ -22,13 +22,6 @@ namespace NHMCore.Configs.Managers
         private OCManager() { }
         public static OCManager Instance { get; } = new OCManager();
         private readonly string _TAG = "OCManager";
-
-        public enum OcReturn
-        {
-            Success,
-            PartialSuccess,
-            Fail
-        }
         public Task<(ErrorCode err, string msg)> ExecuteTest(string uuid, OcProfile bundle)
         {
             if (!MiningState.Instance.AnyDeviceRunning) return Task.FromResult((ErrorCode.ErrNoDeviceRunning, "No devices mining"));

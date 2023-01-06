@@ -778,7 +778,7 @@ namespace NHMCore.Mining
                 {
                     case AlgorithmContainer.ActionQueue.ApplyOC:
                         var retOc = await target.SetOcForDevice(target.ActiveOCProfile, false);
-                        if (retOc == OcReturn.Fail) target.SwitchOCToInactive();
+                        if (retOc == RigManagementReturn.Fail) target.SwitchOCToInactive();
                         break;
                     case AlgorithmContainer.ActionQueue.ResetOC:
                         if (IsTesting) break;
@@ -789,7 +789,7 @@ namespace NHMCore.Mining
                         if (target.HasTestProfileAndCanSet() && target.ActiveOCTestProfile != null)
                         {
                             var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, false);
-                            if (retOCTest == OcReturn.Success || retOCTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
+                            if (retOCTest == RigManagementReturn.Success || retOCTest == RigManagementReturn.PartialSuccess) State = DeviceState.Testing;
                             else target.SwitchOCTestToInactive();
                             break;
                         }
@@ -798,26 +798,26 @@ namespace NHMCore.Mining
                         var resetOCTest = await target.ResetOcForDevice();
                         State = DeviceState.Mining;
                         break;
-                    case AlgorithmContainer.ActionQueue.ApplyFan:
-                        var retFan = await target.SetFanForDevice(target.ActiveFanProfile, false);
-                        if (retFan == OcReturn.Fail) target.SwitchFanToInactive();
+                    case AlgorithmContainer.ActionQueue.ApplyFan: //ok as whole
+                        var retFan = await target.SetFanForDevice(target.ActiveFanProfile, false); //not ok
+                        if (retFan == RigManagementReturn.Fail) target.SwitchFanToInactive();
                         break;
-                    case AlgorithmContainer.ActionQueue.ResetFan:
+                    case AlgorithmContainer.ActionQueue.ResetFan: //ok as whole
                         if (IsTesting) break;
-                        var resetFan = await target.ResetFanForDevice();
+                        var resetFan = await target.ResetFanForDevice(); //not ok
                         State = DeviceState.Mining;
                         break;
-                    case AlgorithmContainer.ActionQueue.ApplyFanTest:
-                        if (target.HasTestProfileAndCanSet() && target.ActiveFanTestProfile != null)
+                    case AlgorithmContainer.ActionQueue.ApplyFanTest://ok as whole
+                        if (target.HasTestProfileAndCanSet() && target.ActiveFanTestProfile != null) 
                         {
-                            var retFanTest = await target.SetFanForDevice(target.ActiveFanTestProfile, false);
-                            if (retFanTest == OcReturn.Success || retFanTest == OcReturn.PartialSuccess) State = DeviceState.Testing;
+                            var retFanTest = await target.SetFanForDevice(target.ActiveFanTestProfile, false); //not ok
+                            if (retFanTest == RigManagementReturn.Success || retFanTest == RigManagementReturn.PartialSuccess) State = DeviceState.Testing;
                             else target.SwitchFanTestToInactive();
                             break;
                         }
                         break;
-                    case AlgorithmContainer.ActionQueue.ResetFanTest:
-                        var resetFanTest = await target.ResetFanForDevice();
+                    case AlgorithmContainer.ActionQueue.ResetFanTest: //ok as whole
+                        var resetFanTest = await target.ResetFanForDevice();//not ok
                         State = DeviceState.Mining;
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyELP:
