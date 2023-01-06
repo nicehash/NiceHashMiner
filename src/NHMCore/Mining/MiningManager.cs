@@ -912,7 +912,7 @@ namespace NHMCore.Mining
             foreach (var startKey in toStartMinerGroupKeys)
             {
                 var miningPairs = newGroupedMiningPairs[startKey];
-                var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs.FirstOrDefault());
+                var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs);
                 var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
                 if (toStart == null)
                 {

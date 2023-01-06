@@ -129,18 +129,78 @@ namespace NHMCore.Utils
                 .Devices.Where(dev => dev.UUID == uuid)?
                 .FirstOrDefault();
         }
-        public string FindAppropriateCommandForAlgoContainer(AlgorithmContainer ac)
+        public string FindAppropriateCommandForAlgoContainer(List<AlgorithmContainer> miningPairs)
         {
-            if(ac == null) return string.Empty;
-            return _minerELPs
-                .Where(miner => miner.UUID == ac.MinerUUID)?
-                .FirstOrDefault()?
-                .Algos.Where(algo => algo.Name == ac.AlgorithmName)?
-                .FirstOrDefault()?
-                .AllCMDStrings.Where(x => x.uuid == ac.ComputeDevice.Uuid)?
-                .Select(x => x.command)?
-                .FirstOrDefault() ?? String.Empty;
+            if (miningPairs == null) return string.Empty;
+            var miner = _minerELPs.FirstOrDefault(m => m.UUID == miningPairs.FirstOrDefault().MinerUUID);
+            List<List<string>> minerParams = new();
+            miner.SingleParams.ForEach(single => minerParams.Add(new List<string>() { single }));
+            miner.DoubleParams.ForEach(dbl => minerParams.Add(new List<string>() { dbl.name, dbl.value }));
+            var algo = miner.Algos.FirstOrDefault(a => a.Name == miningPairs.FirstOrDefault().AlgorithmName);
+            var shouldAddnewColumn = false;
+            List<List<string>> algoParams = new();
+            if (algo.SingleParams == null) algo.SingleParams = new();
+            algo.SingleParams.ForEach(single => algoParams.Add(new List<string>() { single }));
+            if (algo.DoubleParams == null) algo.DoubleParams = new();
+            algo.DoubleParams.ForEach(dbl => algoParams.Add(new List<string>() { dbl.name, dbl.value }));
+            algo.CombinedParams = MinerExtraParameters.ParseAlgoPreview(minerParams, algoParams);
+            var header = algo.Devices.FirstOrDefault();
+            if (header == null || !header.IsDeviceDataHeader) return "";
+            var columnToDelete = header.ELPs
+                .Select((elp, index) => new { elp, index })
+                .Where(item => string.IsNullOrEmpty(item.elp.ELP.Trim()))
+                .FirstOrDefault();
+            bool shouldDelete = false;
+            if (columnToDelete != null) shouldDelete = columnToDelete.index < header.ELPs.Count - 1;
+            List<(string devUUID, List<List<string>> paramList)> devParams = new();
+            if (algo.Devices == null) algo.Devices = new();
+            foreach (var dev in algo.Devices)
+            {
+                if (dev.IsDeviceDataHeader && !string.IsNullOrEmpty(dev.ELPs?.LastOrDefault()?.ELP)) shouldAddnewColumn = true;
+                if (shouldAddnewColumn) dev.ELPs.Add(new DeviceELPElement(!dev.IsDeviceDataHeader) { ELP = String.Empty });
+                if (header.ELPs == null || dev.ELPs == null) continue;
+                if (columnToDelete != null && shouldDelete) dev.ELPs.RemoveAt(columnToDelete.index);
+                if (header.ELPs.Count != dev.ELPs.Count) continue;
+                List<List<string>> oneDevParams = new();
+                for (int i = 0; i < dev.ELPs.Count; i++)
+                {
+                    var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
+                    if (flagAndDelim.Length != 2) continue;
+                    if (flagAndDelim[1] == "$ws$") flagAndDelim[1] = " ";
+                    if (dev.ELPs[i].ELP == string.Empty) continue;
+                    oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
+                }
+                if (dev.UUID == "")
+                {
+                    devParams.Add((dev.UUID, oneDevParams));
+                    dev.ConstructedELPs = oneDevParams;
+                }
+
+                foreach (var mp in miningPairs)
+                {
+                    if (dev.UUID == mp.ComputeDevice.Uuid)
+                    {
+                        devParams.Add((dev.UUID, oneDevParams));
+                        dev.ConstructedELPs = oneDevParams;
+                    }
+                }
+            }
+            Dictionary<HashSet<int>, List<(string devUUID, List<List<string>> paramList)>> deviceParamsGroups = new();
+            for (int first = 1; first < devParams.Count; first++)
+            {
+                var isPartOfGroup = deviceParamsGroups.Keys.Any(keys => keys.Contains(first));
+                if (isPartOfGroup) continue;
+                var group = new HashSet<int> { first };
+                for (int second = first + 1; second < devParams.Count; second++)
+                {
+                    if (MinerExtraParameters.CheckIfCanGroup(new List<List<List<string>>> { devParams[first].paramList, devParams[second].paramList })) group.Add(second);
+                }
+                var selectionGroup = devParams.Where((_, index) => group.Contains(index)).ToList();
+                deviceParamsGroups.Add(group, selectionGroup);
+            }
+            return MinerExtraParameters.Parse(minerParams, algoParams, deviceParamsGroups.FirstOrDefault().Value.Select(v => v.paramList).ToList());
         }
+
         public MinerELPData ConstructMinerELPDataFromConfig(MinerConfig cfg)
         {
             var minerELP = new MinerELPData();
