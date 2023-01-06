@@ -301,14 +301,14 @@ namespace NHMCore.Nhmws.V4
                         DefaultValue = "",
                         Range = (65536, String.Empty),
                     },
-                    new OptionalMutablePropertyString
-                    {
-                        PropertyID = OptionalMutableProperty.NextPropertyId(),
-                        DisplayGroup = 0,
-                        DisplayName = "Scheduler settings",
-                        DefaultValue = "",
-                        Range = (4096, String.Empty)
-                    }
+                    //new OptionalMutablePropertyString
+                    //{
+                    //    PropertyID = OptionalMutableProperty.NextPropertyId(),
+                    //    DisplayGroup = 0,
+                    //    DisplayName = "Scheduler settings",
+                    //    DefaultValue = "",
+                    //    Range = (4096, String.Empty)
+                    //}
                 };
         }
         private static List<List<string>> GetRigOptionalDynamicValuesLogin()
@@ -360,7 +360,7 @@ namespace NHMCore.Nhmws.V4
                 CredentialsSettings.Instance.BitcoinAddress,
                 CredentialsSettings.Instance.WorkerName,
                 "",//TODO rig-wise algo settings
-                "",//TODO scheduler
+                //"",//TODO scheduler
             };
             return list;
         }
