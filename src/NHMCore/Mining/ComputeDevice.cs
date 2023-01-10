@@ -189,7 +189,7 @@ namespace NHMCore.Mining
                     targets.ForEach(t => t.SetEnabled((bool)algo.Enabled));
                 }
             }
-            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus(false));
+            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus(false));//todo not needed
             return "New state is set";
         }
 

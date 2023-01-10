@@ -97,6 +97,9 @@ namespace NHMCore.Nhmws.V4
                 (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
                 (nameof(IVramTemp), IVramTemp g) => $"{g.VramTemp}",
                 (nameof(IHotspotTemp), IHotspotTemp g) => $"{g.HotspotTemp}",
+                (nameof(ICoreClock), ICoreClock g) => $"{g.CoreClock}",
+                (nameof(IMemoryClock), IMemoryClock g) => $"{g.MemoryClock}",
+                (nameof(ITDP), ITDP g) => $"{g.TDPPercentage}",
                 (_, _) => null,
             };
 
@@ -123,11 +126,14 @@ namespace NHMCore.Nhmws.V4
             var dynamicPropertiesWithValues = new List<(DeviceDynamicProperties type, string name, string unit, string value)?>
             {
                 pairOrNull<ITemp>(DeviceDynamicProperties.Temperature ,"Temperature","°C"),
-                pairOrNull<IVramTemp>(DeviceDynamicProperties.VramTemp,"VRAM Temperature","°C"),
+                pairOrNull<IVramTemp>(DeviceDynamicProperties.VramTemp,"Memory Temperature","°C"),
                 pairOrNull<ILoad>(DeviceDynamicProperties.Load,"Load","%"),
                 pairOrNull<IMemControllerLoad>(DeviceDynamicProperties.MemoryControllerLoad, "MemCtrl Load","%"),
                 pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan speed","%"),
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power usage","W"),
+                pairOrNull<ICoreClock>(DeviceDynamicProperties.CoreClock, "Core clock", "MHz"),
+                pairOrNull<IMemoryClock>(DeviceDynamicProperties.MemClock, "Memory clock", "MHz"),
+                pairOrNull<ITDP>(DeviceDynamicProperties.TDP, "TDP", "%"),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", null),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile", null),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile ID", null),
@@ -195,7 +201,8 @@ namespace NHMCore.Nhmws.V4
                             ret += GetMinersForDeviceDynamic(d);
                         }
                         return ret;
-                    }
+                    },
+                    ComputeDev = d
                 });
                 if (isLogin) optionalProperties.ForEach(i => ActionMutableMap.MutableList.Add(i));
                 return optionalProperties
@@ -258,40 +265,52 @@ namespace NHMCore.Nhmws.V4
                     OptionalMutableProperties = GetDeviceOptionalMutable(d, true, true).properties,
                 };
             }
-
+            var DevicesProperties = devices.Select(mapComputeDevice).ToList(); //needs to execute first
             _loginMessage = new LoginMessage
             {
                 Btc = btc,
                 Worker = worker,
                 RigID = rigID,
                 Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
-                OptionalMutableProperties = GetRigOptionalMutableValuesLogin(btc, worker),
+                OptionalMutableProperties = GetRigOptionalMutableValues(true, true).properties,
                 OptionalDynamicProperties = GetRigOptionalDynamicValuesLogin(),
                 Actions = CreateDefaultRigActions(),
-                Devices = devices.Select(mapComputeDevice).ToList(),
+                Devices = DevicesProperties,
                 MinerState = GetMinerStateValues(worker, devices, true),
             };
             return _loginMessage;
         }
-        private static List<OptionalMutableProperty> GetRigOptionalMutableValuesLogin(string btc, string worker)
+        private static (List<OptionalMutableProperty> properties, JArray values) GetRigOptionalMutableValues(bool isStateChange, bool isLogin)
         {
-            return new List<OptionalMutableProperty>
+            List<OptionalMutableProperty> getOptionalMutableProperties()
+            {
+                var optionalProperties = new List<OptionalMutableProperty>()
                 {
                     new OptionalMutablePropertyString
                     {
                         PropertyID = OptionalMutableProperty.NextPropertyId(),
                         DisplayGroup = 0,
                         DisplayName = "User name",
-                        DefaultValue = btc,
+                        DefaultValue = CredentialsSettings.Instance.BitcoinAddress,
                         Range = (64, String.Empty),
+                        GetValue = () =>
+                        {
+                            if (isStateChange) return CredentialsSettings.Instance.BitcoinAddress;
+                            return null;
+                        }
                     },
                     new OptionalMutablePropertyString
                     {
                         PropertyID = OptionalMutableProperty.NextPropertyId(),
                         DisplayGroup = 0,
                         DisplayName = "Worker name",
-                        DefaultValue = worker,
+                        DefaultValue = CredentialsSettings.Instance.WorkerName,
                         Range = (64, String.Empty),
+                        GetValue = () =>
+                        {
+                            if (isStateChange) return CredentialsSettings.Instance.WorkerName;
+                            return null;
+                        }
                     },
                     new OptionalMutablePropertyString
                     {
@@ -300,16 +319,76 @@ namespace NHMCore.Nhmws.V4
                         DisplayName = "Miners settings",
                         DefaultValue = "",
                         Range = (65536, String.Empty),
+                        GetValue = () =>
+                        {
+                            string ret = null;
+                            if (isStateChange)
+                            {
+                                ret = string.Empty;
+                                var minersSettingsGlobal = new MinerAlgoStateRig();
+                                var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null);
+                                if(mutables == null || mutables.Count() <= 0) return ret;
+                                foreach (var mutable in mutables)
+                                {
+                                    if (mutable.GetValue() is not string val) continue;
+                                    minersSettingsGlobal.Miners.Add(JsonConvert.DeserializeObject<MinerAlgoState>(val));
+                                }
+                                ret += JsonConvert.SerializeObject(minersSettingsGlobal);
+                            }
+                            return ret;
+                        },
+                        ExecuteTask = async (object p) =>
+                        {
+                            if(p is not string prop) return null;
+                            var newStates = JsonConvert.DeserializeObject<MinerAlgoStateRig>(prop);
+                            //for each device thats inside apply new algo state
+                            var devices = AvailableDevices.Devices.Where(d => newStates.Miners.Any(m => m.DeviceID.Contains(d.B64Uuid)));
+                            if(devices == null) return null;
+                            var successCount = 0;
+                            foreach(var ns in newStates.Miners)
+                            {
+                                var targetDev = AvailableDevices.Devices.FirstOrDefault(d => d.B64Uuid == ns.DeviceID);
+                                if(targetDev == null) continue;
+                                targetDev.ApplyNewAlgoStates(ns);
+                                successCount++;
+                            }
+                            return $"{successCount}/{newStates.Miners.Count} operations succeded";
+                        }
+                    
                     },
-                    //new OptionalMutablePropertyString
-                    //{
-                    //    PropertyID = OptionalMutableProperty.NextPropertyId(),
-                    //    DisplayGroup = 0,
-                    //    DisplayName = "Scheduler settings",
-                    //    DefaultValue = "",
-                    //    Range = (4096, String.Empty)
-                    //}
+                //new OptionalMutablePropertyString
+                //{
+                //    PropertyID = OptionalMutableProperty.NextPropertyId(),
+                //    DisplayGroup = 0,
+                //    DisplayName = "Scheduler settings",
+                //    DefaultValue = "",
+                //    Range = (4096, String.Empty)
+                ////    todo get and set
+                //}
                 };
+                if (isLogin) optionalProperties.ForEach(i => ActionMutableMap.MutableList.Add(i));
+                return optionalProperties
+                    .Where(p => p != null)
+                    .ToList();
+
+            };
+
+            List<OptionalMutableProperty> getOptionalMutablePropertiesCached()
+            {
+                //if (_cachedDevicesOptionalMutable.TryGetValue(out var cachedProps)) return cachedProps;
+                return getOptionalMutableProperties();
+            }
+
+            var props = getOptionalMutablePropertiesCached();
+            var selectedValues = props
+                .Where(p => p.GetValue() != null)?
+                .Select(p => p.GetValue());
+            JArray values_omv = null;
+            if (selectedValues.Any())
+            {
+                values_omv = new JArray(selectedValues);
+            }
+            return (props, values_omv);
         }
         private static List<List<string>> GetRigOptionalDynamicValuesLogin()
         {
@@ -350,17 +429,6 @@ namespace NHMCore.Nhmws.V4
                 Helpers.GetLocalIP().ToString(),
                 BundleManager.GetBundleInfo().BundleID,
                 BundleManager.GetBundleInfo().BundleName,
-            };
-            return list;
-        }
-        private static List<string> GetRigOptionalMutableValues()
-        {
-            var list = new List<string>
-            {
-                CredentialsSettings.Instance.BitcoinAddress,
-                CredentialsSettings.Instance.WorkerName,
-                "",//TODO rig-wise algo settings
-                //"",//TODO scheduler
             };
             return list;
         }
@@ -424,7 +492,7 @@ namespace NHMCore.Nhmws.V4
                 MutableDynamicValues = new JArray(rigStateToInt(rig)),
                 OptionalDynamicValues = new JArray(GetRigOptionalDynamicValues()),
                 MandatoryMutableValues = new JArray(rigStateToInt(rig), workerName),
-                OptionalMutableValues = new JArray(GetRigOptionalMutableValues()),
+                OptionalMutableValues = GetRigOptionalMutableValues(isStateChange, false).values,
                 Devices = devices.Select(toDeviceState).ToList(),
             };
         }
@@ -499,6 +567,8 @@ namespace NHMCore.Nhmws.V4
                 miner.Algos = algos;
                 minersObject.Miners.Add(miner);
             }
+            minersObject.DeviceID = d.B64Uuid;
+            minersObject.DeviceName = d.Name;
             var json = JsonConvert.SerializeObject(minersObject);
             return json;
         }

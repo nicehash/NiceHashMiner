@@ -15,6 +15,9 @@ namespace NHM.Common.Enums
         FanSpeedPercentage,
         PowerUsage,
         VramTemp,
-        HotspotTemp
+        HotspotTemp,
+        CoreClock,
+        MemClock,
+        TDP
     }
 }

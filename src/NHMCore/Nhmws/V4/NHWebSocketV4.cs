@@ -873,7 +873,7 @@ namespace NHMCore.Nhmws.V4
         {
             if (property is not JToken token) return Task.FromResult("Property is not Jtoken");
             var genericProperty = token.ToObject<Property>();
-            var mutable = ActionMutableMap.FindMutableOrNull(genericProperty.PropId);
+            var mutable = ActionMutableMap.FindMutableOrNull(genericProperty.PropId);//this is null if per rig
             if (mutable == null) return Task.FromResult("Mutable is null");
             object t = mutable.PropertyType switch
             {
@@ -883,6 +883,7 @@ namespace NHMCore.Nhmws.V4
                 Type.Bool => ParseAndActMutableBool(mutable, token),
                 _ => throw new InvalidOperationException()
             };
+            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus(true));
             if (t is string retStr) return Task.FromResult(retStr);
             return Task.FromResult("OK");
         }

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -99,9 +100,10 @@ namespace NHMCore.Nhmws.V4
         abstract public Type PropertyType { get; }
         [JsonIgnore]
         public Func<object, Task<object>> ExecuteTask { get; set; }
-
         [JsonIgnore]
         public Func<object> GetValue { get; set; }
+        [JsonIgnore]
+        public ComputeDevice ComputeDev { get; set; }
     }
 
     internal class OptionalMutablePropertyInt : OptionalMutableProperty
@@ -171,6 +173,7 @@ namespace NHMCore.Nhmws.V4
         public SupportedAction ActionType { get; set; }
         [JsonIgnore]
         public Func<object, Task<object>> ExecuteTask { get; set; }
+        [JsonIgnore]
         public string DeviceUUID = String.Empty;
         public static NhmwsAction ActionDeviceEnable(string uuid)
         {
@@ -524,11 +527,19 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("value")]
         public string Value { get; set; }
     }
-
     public class MinerAlgoState
     {
         [JsonProperty("miners")]
         public List<MinerDynamic> Miners { get; set; } = new List<MinerDynamic>();
+        [JsonProperty("device_id")]
+        public string DeviceID { get; set; }
+        [JsonProperty("device_name")]
+        public string DeviceName { get; set; }
+    }
+    public class MinerAlgoStateRig
+    {
+        [JsonProperty("devices")]
+        public List<MinerAlgoState> Miners { get; set; } = new List<MinerAlgoState>();
     }
     public class MinerDynamic
     {
@@ -579,7 +590,6 @@ namespace NHMCore.Nhmws.V4
         public List<string>? MinerId { get; set; }
         [JsonProperty("algorithm_id", NullValueHandling = NullValueHandling.Ignore)]
         public List<string>? AlgoId { get; set; }
-
     }
     public class ElpProfile : GenericProfile
     {
