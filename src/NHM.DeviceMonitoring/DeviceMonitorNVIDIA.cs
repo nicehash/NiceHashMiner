@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits, IMemoryClockDelta
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits, IMemoryClockDelta, IMemoryClockRangeDelta
     {
         private const int RET_OK = 0;
         public static object _lock = new object();

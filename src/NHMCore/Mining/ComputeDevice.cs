@@ -369,6 +369,19 @@ namespace NHMCore.Mining
                 return (false, -1, -1, -1);
             }
         }
+
+        public (bool ok, int min, int max, int def) MemoryClockRangeDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockRangeDelta get)
+                {
+                    var ret = get.MemoryClockRangeDelta;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
         #endregion Getters
 
         #region Setters
@@ -904,7 +917,7 @@ namespace NHMCore.Mining
             if (_memoryControlCounter >= 5)
             {
                 _pidController.SetPid(100, 0.8, 1);
-                _pidController.SetOutputLimits(MemoryClockRange.min, MemoryClockDelta);
+                _pidController.SetOutputLimits(MemoryClockRangeDelta.min, MemoryClockDelta);
                 var memory_clock = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
                 SetMemoryClock((int)memory_clock);
                 _memoryControlCounter = 0;
