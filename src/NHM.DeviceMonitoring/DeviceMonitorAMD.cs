@@ -8,7 +8,7 @@ using System;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed
     {
         public int BusID { get; private set; }
         private const int RET_OK = 0;
@@ -243,6 +243,14 @@ namespace NHM.DeviceMonitoring
             var ok = percentage <= 0 ? AMD_ODN.nhm_amd_device_reset_fan_speed_percentage(BusID) : AMD_ODN.nhm_amd_device_set_fan_speed_percentage(BusID, percentage);
             if (ok == RET_OK) return true;
             Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_fan_speed_percentage failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+
+        public bool ResetFanSpeedPercentage()
+        {
+            var ok = AMD_ODN.nhm_amd_device_reset_fan_speed_percentage(BusID);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_reset_fan_speed_percentage failed with error code {ok}", _delayedLogging);
             return false;
         }
 

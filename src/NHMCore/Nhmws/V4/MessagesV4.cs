@@ -636,10 +636,6 @@ namespace NHMCore.Nhmws.V4
     {
         [JsonProperty("limits")]
         public List<Limit> limits = new List<Limit>();
-        [JsonProperty("type")]
-        public int Type { get; set; }
-        [JsonProperty("vendor")]
-        public int Vendor { get; set; }
     }
 
 }

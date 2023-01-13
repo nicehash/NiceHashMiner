@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits, IMemoryClockDelta
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits, IMemoryClockDelta, ICoreClockDelta, ICoreClockRangeDelta, IMemoryClockRangeDelta
     {
         private const int RET_OK = 0;
         public static object _lock = new object();
@@ -138,10 +138,10 @@ namespace NHM.DeviceMonitoring
 
         public bool ResetFanSpeedPercentage()
         {
-            int ok = NVIDIA_MON.nhm_nvidia_device_restore_fan_speed(BusID);
+            int ok = NVIDIA_MON.nhm_nvidia_device_reset_fan(BusID);
             if(ok != RET_OK)
             {
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_restore_fan_speed failed with error code {ok}", _delayedLogging);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_reset_fan failed with error code {ok}", _delayedLogging);
                 return false;
             }
             return true;
@@ -274,6 +274,18 @@ namespace NHM.DeviceMonitoring
             }
         }
 
+        public int CoreClockDelta
+        {
+            get
+            {
+                int coreClockDelta = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_delta(BusID, ref coreClockDelta);
+                if (ok == RET_OK) return coreClockDelta;
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks_delta failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
         public int MemoryClock
         {
             get
@@ -349,5 +361,9 @@ namespace NHM.DeviceMonitoring
                 return (false, 0, 0, 0);
             }
         }
+
+        public (bool ok, int min, int max, int def) CoreClockRangeDelta => throw new NotImplementedException();
+
+        public (bool ok, int min, int max, int def) MemoryClockRangeDelta => throw new NotImplementedException();
     }
 }

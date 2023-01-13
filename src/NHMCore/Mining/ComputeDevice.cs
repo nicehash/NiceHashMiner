@@ -41,16 +41,6 @@ namespace NHMCore.Mining
         public bool IsTesting => AlgorithmSettings.Any(a => a.IsTesting);
         public bool IsMiningBenchingTesting => State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking;
 #endif
-        public DeviceType Vendor
-        {
-            get
-            {
-                if (DeviceType != DeviceType.CPU) return DeviceType;
-                if (FullName.ToLower().Contains("amd")) return DeviceType.AMD;
-                if (FullName.ToLower().Contains("intel")) return DeviceType.INTEL;
-                return DeviceType.CPU;//unknown
-            }
-        }
         private PidController _pidController = new();
 
         private int _memoryControlCounter = 0;
@@ -313,6 +303,14 @@ namespace NHMCore.Mining
             get
             {
                 if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClock get) return get.CoreClock;
+                return -1;
+            }
+        }
+        public int CoreClockDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClockDelta get) return get.CoreClockDelta;
                 return -1;
             }
         }
@@ -814,6 +812,7 @@ namespace NHMCore.Mining
                         if (IsTesting) break;
                         //var resetFan = await target.ResetFanForDevice();
                         target.SwitchFanToInactive();
+                        ResetFanSpeed();
                         State = DeviceState.Mining;
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyFanTest:
@@ -828,6 +827,7 @@ namespace NHMCore.Mining
                     case AlgorithmContainer.ActionQueue.ResetFanTest:
                         //var resetFanTest = await target.ResetFanForDevice();
                         target.SwitchFanTestToInactive();
+                        ResetFanSpeed();
                         State = DeviceState.Mining;
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyELP:

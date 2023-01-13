@@ -273,7 +273,7 @@ namespace NHMCore.Nhmws.V4
                 RigID = rigID,
                 Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
                 OptionalMutableProperties = GetRigOptionalMutableValues(true, true).properties,
-                OptionalDynamicProperties = GetRigOptionalDynamicValuesLogin(),
+                OptionalDynamicProperties = GetRigOptionalDynamicValues().properties,
                 Actions = CreateDefaultRigActions(),
                 Devices = DevicesProperties,
                 MinerState = GetMinerStateValues(worker, devices, true),
@@ -390,28 +390,31 @@ namespace NHMCore.Nhmws.V4
             }
             return (props, values_omv);
         }
-        private static List<List<string>> GetRigOptionalDynamicValuesLogin()
+        private static (List<List<string>> properties, JArray values) GetRigOptionalDynamicValues()
         {
-            return new List<List<string>>
+            var dynamic = new List<(List<string> prop, string val)>
+            {
+                (new List<string>
                 {
-                    new List<string>
-                    {
-                        "Uptime",
-                        "s"
-                    },
-                    new List<string>
-                    {
-                        "IP address"
-                    },
-                    new List<string>
-                    {
-                        "Profiles bundle id"
-                    },
-                    new List<string>
-                    {
-                        "Profiles bundle name"
-                    }
-                };
+                    "Uptime",
+                    "s"
+                }, Helpers.GetElapsedSecondsSinceStart().ToString()),
+                (new List<string>
+                {
+                    "IP address"
+                }, Helpers.GetLocalIP().ToString()),
+                (new List<string>
+                {
+                    "Profiles bundle id"
+                }, BundleManager.GetBundleInfo().BundleID),
+                (new List<string>
+                {
+                    "Profiles bundle name"
+                }, BundleManager.GetBundleInfo().BundleName)
+            };
+            var props = dynamic.Select(d => d.prop).ToList();
+            var vals =  dynamic.Select(d => d.val);
+            return (props, new JArray(vals));
         }
 
         private static JObject GetMinerStateValues(string workerName, IOrderedEnumerable<ComputeDevice> devices, bool isLogin)
@@ -420,17 +423,6 @@ namespace NHMCore.Nhmws.V4
             var delProp = json.Property("method");
             delProp.Remove();
             return json;
-        }
-        private static List<string> GetRigOptionalDynamicValues()
-        {
-            var list = new List<string>
-            {
-                Helpers.GetElapsedSecondsSinceStart().ToString(),
-                Helpers.GetLocalIP().ToString(),
-                BundleManager.GetBundleInfo().BundleID,
-                BundleManager.GetBundleInfo().BundleName,
-            };
-            return list;
         }
 
         internal static MinerState GetMinerState(string workerName, IOrderedEnumerable<ComputeDevice> devices, bool isStateChange = false)
@@ -490,7 +482,7 @@ namespace NHMCore.Nhmws.V4
             return new MinerState
             {
                 MutableDynamicValues = new JArray(rigStateToInt(rig)),
-                OptionalDynamicValues = new JArray(GetRigOptionalDynamicValues()),
+                OptionalDynamicValues = GetRigOptionalDynamicValues().values,
                 MandatoryMutableValues = new JArray(rigStateToInt(rig), workerName),
                 OptionalMutableValues = GetRigOptionalMutableValues(isStateChange, false).values,
                 Devices = devices.Select(toDeviceState).ToList(),
@@ -613,23 +605,11 @@ namespace NHMCore.Nhmws.V4
                     limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
-            var deviceType = d.DeviceType switch
-            {
-                DeviceType.CPU => 1,
-                DeviceType.NVIDIA => 2,
-                DeviceType.AMD => 2,
-                DeviceType.INTEL => 2,
-                _ => 0
-            };
-            var deviceVendor = d.Vendor switch
-            {
-                DeviceType.INTEL => 1,
-                DeviceType.AMD => 2,
-                DeviceType.NVIDIA => 3,
-                _ => 0,
-            };
-            limit.Vendor = deviceVendor;
-            limit.Type = deviceType;
+            //if(d.DeviceMonitor is Imemoryc && d.DeviceMonitor is IMemoryClockRange mcLimD)
+            //{
+            //    //nvidia use only DELTAS
+            //    //here CONTINUE
+            //}
             var json = JsonConvert.SerializeObject(limit);
             return json;
         }
