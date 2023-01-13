@@ -920,7 +920,7 @@ namespace NHMCore.Mining
             if (_memoryControlCounter >= 5)
             {
                 _pidController.SetPid(100, 0.8, 1);
-                _pidController.SetOutputLimits(MemoryClockRangeDelta.min, MemoryClockDelta);
+                _pidController.SetOutputLimits(MemoryClockRange.min, MemoryClockDelta);
                 _pidController.SetReversed(false);
                 var memory_clock = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
                 SetMemoryClock((int)memory_clock);
