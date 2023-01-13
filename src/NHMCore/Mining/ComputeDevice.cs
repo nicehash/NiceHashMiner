@@ -892,6 +892,7 @@ namespace NHMCore.Mining
             {
                 _pidController.SetPid(10, 0.8, 1);
                 _pidController.SetOutputLimit(100);
+                _pidController.SetReversed(true);
                 var speed = _pidController.GetOutput(Temp, profile.GpuTemp);
                 SetFanSpeedPercentage((int)speed);
             }
@@ -899,6 +900,7 @@ namespace NHMCore.Mining
             {
                 _pidController.SetPid(10, 0.8, 1);
                 _pidController.SetOutputLimit(profile.MaxFanSpeed);
+                _pidController.SetReversed(true);
                 var speed = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
                 SetFanSpeedPercentage((int)speed);
             }
@@ -908,6 +910,7 @@ namespace NHMCore.Mining
         {
             _pidController.SetPid(10, 0.8, 1);
             _pidController.SetOutputLimit(profile.MaxFanSpeed);
+            _pidController.SetReversed(true);
             var speed = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
             SetFanSpeedPercentage((int)speed);
 
@@ -918,6 +921,7 @@ namespace NHMCore.Mining
             {
                 _pidController.SetPid(100, 0.8, 1);
                 _pidController.SetOutputLimits(MemoryClockRangeDelta.min, MemoryClockDelta);
+                _pidController.SetReversed(false);
                 var memory_clock = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
                 SetMemoryClock((int)memory_clock);
                 _memoryControlCounter = 0;
