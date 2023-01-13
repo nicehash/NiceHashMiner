@@ -36,7 +36,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_set_fan_speed_percentage(int bus_number, int set_fan_speed_percentage);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_nvidia_device_reset_fan_speed_percentage(int bus_number);
+        public static extern int nhm_nvidia_device_reset_fan(int bus_number);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_tdp_min_max_default(int bus_number, ref uint min, ref uint max, ref uint defaultV);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
