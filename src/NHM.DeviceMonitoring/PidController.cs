@@ -31,5 +31,9 @@ namespace NHM.DeviceMonitoring
         {
             PID_CONTROLLER.nhm_set_pid(p, i, d);
         }
+        public void SetReversed(bool reversed)
+        {
+            PID_CONTROLLER.nhm_set_reversed(reversed);
+        }
     }
 }

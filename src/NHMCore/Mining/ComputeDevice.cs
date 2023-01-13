@@ -367,6 +367,19 @@ namespace NHMCore.Mining
                 return (false, -1, -1, -1);
             }
         }
+
+        public (bool ok, int min, int max, int def) MemoryClockRangeDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockRangeDelta get)
+                {
+                    var ret = get.MemoryClockRangeDelta;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
         #endregion Getters
 
         #region Setters
@@ -879,6 +892,7 @@ namespace NHMCore.Mining
             {
                 _pidController.SetPid(10, 0.8, 1);
                 _pidController.SetOutputLimit(100);
+                _pidController.SetReversed(true);
                 var speed = _pidController.GetOutput(Temp, profile.GpuTemp);
                 SetFanSpeedPercentage((int)speed);
             }
@@ -886,6 +900,7 @@ namespace NHMCore.Mining
             {
                 _pidController.SetPid(10, 0.8, 1);
                 _pidController.SetOutputLimit(profile.MaxFanSpeed);
+                _pidController.SetReversed(true);
                 var speed = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
                 SetFanSpeedPercentage((int)speed);
             }
@@ -895,6 +910,7 @@ namespace NHMCore.Mining
         {
             _pidController.SetPid(10, 0.8, 1);
             _pidController.SetOutputLimit(profile.MaxFanSpeed);
+            _pidController.SetReversed(true);
             var speed = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
             SetFanSpeedPercentage((int)speed);
 
@@ -905,6 +921,7 @@ namespace NHMCore.Mining
             {
                 _pidController.SetPid(100, 0.8, 1);
                 _pidController.SetOutputLimits(MemoryClockRange.min, MemoryClockDelta);
+                _pidController.SetReversed(false);
                 var memory_clock = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
                 SetMemoryClock((int)memory_clock);
                 _memoryControlCounter = 0;

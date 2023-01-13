@@ -341,9 +341,9 @@ namespace NHM.DeviceMonitoring
                 int min = 0;
                 int max = 0;
                 int def = 0;
-                var ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_min_max_default(BusID, ref min, ref max, ref def, false);
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_core_clocks_min_max_default_delta(BusID, ref min, ref max, ref def);
                 if (ok == RET_OK) return (true, min, max, def);
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks_min_max_default failed with error code {ok}", _delayedLogging);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_core_clocks_min_max_default_absolute failed with error code {ok}", _delayedLogging);
                 return (false, 0, 0, 0);
 
             }
@@ -355,15 +355,27 @@ namespace NHM.DeviceMonitoring
                 int min = 0;
                 int max = 0;
                 int def = 0;
-                var ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_min_max_default(BusID, ref min, ref max, ref def, false);
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_min_max_default_delta(BusID, ref min, ref max, ref def);
                 if (ok == RET_OK) return (true, min, max, def);
-                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_min_max_default failed with error code {ok}", _delayedLogging);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_min_max_default_absolute failed with error code {ok}", _delayedLogging);
+                return (false, 0, 0, 0);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) MemoryClockRangeDelta
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                var ok = NVIDIA_MON.nhm_nvidia_device_get_memory_clocks_min_max_default_delta(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_clocks_min_max_default_delta failed with error code {ok}", _delayedLogging);
                 return (false, 0, 0, 0);
             }
         }
 
         public (bool ok, int min, int max, int def) CoreClockRangeDelta => throw new NotImplementedException();
-
-        public (bool ok, int min, int max, int def) MemoryClockRangeDelta => throw new NotImplementedException();
     }
 }

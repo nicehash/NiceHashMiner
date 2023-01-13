@@ -24,5 +24,7 @@ namespace NHM.DeviceMonitoring.PID
         public static extern void nhm_set_output_limits(double min_speed, double max_speed);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern void nhm_set_pid(double p, double i, double d);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern void nhm_set_reversed(bool reversed);
     }
 }
