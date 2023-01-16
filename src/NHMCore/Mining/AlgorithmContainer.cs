@@ -730,8 +730,10 @@ namespace NHMCore.Mining
                 return Task.FromResult(ret);
             }
             int setValues = 3;
-            var setCC = bundle.CoreClock <= 0 ? false : ComputeDevice.SetCoreClock(bundle.CoreClock);
-            var setMC = bundle.MemoryClock <= 0 ? false : ComputeDevice.SetMemoryClock(bundle.MemoryClock);
+            var CoreClockValue = ComputeDevice.DeviceType == DeviceType.NVIDIA ? bundle.CoreClockDelta : bundle.CoreClock;
+            var MemoryClockValue = ComputeDevice.DeviceType == DeviceType.NVIDIA ? bundle.MemoryClockDelta : bundle.MemoryClock;
+            var setCC = bundle.CoreClock <= 0 ? false : ComputeDevice.SetCoreClock(CoreClockValue);
+            var setMC = bundle.MemoryClock <= 0 ? false : ComputeDevice.SetMemoryClock(MemoryClockValue);
             var setTDP = bundle.TDP <= 0 ? false : ComputeDevice.SetPowerModeManual(bundle.TDP);
 
             if (!setCC)

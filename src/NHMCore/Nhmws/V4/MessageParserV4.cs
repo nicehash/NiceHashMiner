@@ -589,27 +589,44 @@ namespace NHMCore.Nhmws.V4
                     limit.limits.Add(new Limit { Name = "Power mode", Unit = "W", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
-            if (d.DeviceMonitor is ICoreClockSet && d.DeviceMonitor is ICoreClockRange ccLim)
+            if (d.DeviceMonitor is ICoreClockSet)
             {
-                var lims = ccLim.CoreClockRange;
-                if (lims.ok)
+                if (d.DeviceType == DeviceType.NVIDIA && d.DeviceMonitor is ICoreClockRangeDelta ccLimDelta)
                 {
-                    limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    var lims = ccLimDelta.CoreClockRangeDelta;
+                    if (lims.ok)
+                    {
+                        limit.limits.Add(new Limit { Name = "Core clock delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    }
+                }
+                if (d.DeviceType == DeviceType.AMD && d.DeviceMonitor is ICoreClockRange ccLim)
+                {
+                    var lims = ccLim.CoreClockRange;
+                    if (lims.ok)
+                    {
+                        limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    }
                 }
             }
-            if (d.DeviceMonitor is IMemoryClockSet && d.DeviceMonitor is IMemoryClockRange mcLim)
+            if (d.DeviceMonitor is IMemoryClockSet)
             {
-                var lims = mcLim.MemoryClockRange;
-                if (lims.ok)
+                if(d.DeviceType == DeviceType.NVIDIA && d.DeviceMonitor is IMemoryClockRangeDelta mcLimDelta)
                 {
-                    limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    var lims = mcLimDelta.MemoryClockRangeDelta;
+                    if (lims.ok)
+                    {
+                        limit.limits.Add(new Limit { Name = "Memory clock delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    }
+                }
+                if(d.DeviceType == DeviceType.AMD && d.DeviceMonitor is IMemoryClockRange mcLim)
+                {
+                    var lims = mcLim.MemoryClockRange;
+                    if (lims.ok)
+                    {
+                        limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    }
                 }
             }
-            //if(d.DeviceMonitor is Imemoryc && d.DeviceMonitor is IMemoryClockRange mcLimD)
-            //{
-            //    //nvidia use only DELTAS
-            //    //here CONTINUE
-            //}
             var json = JsonConvert.SerializeObject(limit);
             return json;
         }

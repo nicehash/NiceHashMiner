@@ -314,6 +314,15 @@ namespace NHMCore.Mining
                 return -1;
             }
         }
+        public int PreferredCoreClock
+        {
+            get
+            {
+                if (DeviceType == DeviceType.NVIDIA) return CoreClockDelta;
+                if (DeviceType == DeviceType.AMD) return CoreClock;
+                return -1;
+            }
+        }
         public int MemoryClock
         {
             get
@@ -328,6 +337,15 @@ namespace NHMCore.Mining
             get
             {
                 if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockDelta get) return get.MemoryClockDelta;
+                return -1;
+            }
+        }
+        public int PreferredMemoryClock
+        {
+            get
+            {
+                if (DeviceType == DeviceType.NVIDIA) return MemoryClockDelta;
+                if (DeviceType == DeviceType.AMD) return MemoryClock;
                 return -1;
             }
         }

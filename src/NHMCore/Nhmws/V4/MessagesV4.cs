@@ -253,14 +253,6 @@ namespace NHMCore.Nhmws.V4
                         Range = (1024, "")
                     }
                 },
-                ExecuteTask = async (object p) =>
-                {
-                    if (p is FanProfile fb && fb is not null) //todo fan bundle call here
-                    {
-                        var a = 0;
-                    }
-                    return 0;
-                },
                 ActionType = SupportedAction.ActionFanProfileTest,
                 DeviceUUID = uuid
             };
@@ -600,8 +592,12 @@ namespace NHMCore.Nhmws.V4
     {
         [JsonProperty("core_clock")]
         public int CoreClock { get; set; }
+        [JsonProperty("core_clock_delta")]
+        public int CoreClockDelta { get; set; }
         [JsonProperty("memory_clock")]
         public int MemoryClock { get; set; }
+        [JsonProperty("memory_clock_delta")]
+        public int MemoryClockDelta { get; set; }
         [JsonProperty("power_mode")]
         public int TDP { get; set; }
     }

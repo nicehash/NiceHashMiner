@@ -70,7 +70,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_memory_controller_load(int bus_number, ref int mem_ctrl_load);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_nvidia_device_print_memory_timings(int bus_number);
+        public static extern void nhm_nvidia_device_print_memory_timings(int bus_number);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_core_clocks_min_max_default_absolute(int bus_number, ref int min, ref int max, ref int def);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
