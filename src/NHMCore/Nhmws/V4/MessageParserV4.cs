@@ -154,7 +154,7 @@ namespace NHMCore.Nhmws.V4
                 {
                     if (dynamicVal.unit == String.Empty) return false;
                     var ok = Int32.TryParse(dynamicVal.value, out var res);
-                    if (ok && res < 0 && !dynamicVal.name.Contains("delta")) return true;
+                    if (ok && res < 0 && !dynamicVal.name.Contains("clock")) return true;
                     return false;
                 };
                 deviceOptionalDynamic.RemoveAll(dynamVal => shouldRemoveDynamicVal(dynamVal));
