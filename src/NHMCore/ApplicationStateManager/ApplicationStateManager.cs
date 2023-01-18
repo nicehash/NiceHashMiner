@@ -36,7 +36,7 @@ namespace NHMCore
             });
         }
 
-
+        public static void ReSendLoginMessage() => ResetNiceHashStatsCredentials();
         static void ResetNiceHashStatsCredentials()
         {
             if (CredentialsSettings.Instance.IsCredentialValid)

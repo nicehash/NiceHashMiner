@@ -230,7 +230,6 @@ namespace NHMCore.Nhmws.V4
 
 
 
-        private static LoginMessage _loginMessage = null;
         public static List<List<string>> DeviceOptionalDynamicToList(List<(string name, string? unit)> properties)
         {
             List<List<string>> result = new List<List<string>>();
@@ -248,7 +247,7 @@ namespace NHMCore.Nhmws.V4
         public static LoginMessage CreateLoginMessage(string btc, string worker, string rigID, IOrderedEnumerable<ComputeDevice> devices)
         {
             var sorted = SortedDevices(devices);
-            if (_loginMessage != null) return _loginMessage;
+            //if (_loginMessage != null) return _loginMessage;
             Device mapComputeDevice(ComputeDevice d)
             {
                 return new Device
@@ -266,7 +265,7 @@ namespace NHMCore.Nhmws.V4
                 };
             }
             var DevicesProperties = devices.Select(mapComputeDevice).ToList(); //needs to execute first
-            _loginMessage = new LoginMessage
+            return new LoginMessage
             {
                 Btc = btc,
                 Worker = worker,
@@ -278,7 +277,6 @@ namespace NHMCore.Nhmws.V4
                 Devices = DevicesProperties,
                 MinerState = GetMinerStateValues(worker, devices, true),
             };
-            return _loginMessage;
         }
         private static (List<OptionalMutableProperty> properties, JArray values) GetRigOptionalMutableValues(bool isStateChange, bool isLogin)
         {
