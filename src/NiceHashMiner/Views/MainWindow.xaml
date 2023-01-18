@@ -81,7 +81,8 @@
                         Grid.Column="0"
                         ToolTipText="NiceHash Miner" 
                         TrayMouseDoubleClick="TaskbarIcon_OnTrayMouseDoubleClick"
-                        IconSource="../Resources/logo.ico">
+                        IconSource="../Resources/logo.ico"
+                        x:Name="taskbarIcon">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Start All" Click="StartAllMenuItem_Click" x:Name="StartAllTaskbar" />

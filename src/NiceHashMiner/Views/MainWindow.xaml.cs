@@ -306,6 +306,7 @@ namespace NiceHashMiner.Views
             IsEnabled = false;
             //await _vm.StopMining();
             await ApplicationStateManager.BeforeExit();
+            taskbarIcon.Dispose();
             ApplicationStateManager.ExecuteApplicationExit();
             //Close();
         }
