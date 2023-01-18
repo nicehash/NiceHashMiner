@@ -110,7 +110,7 @@
             <TextBlock Visibility="Collapsed" 
                        x:Name="invalidBTCAddressWarningIcon" 
                        Style="{StaticResource AlertIcon}"
-                       ToolTip="This is an external mining wallet address. We do not recommend mining to an external address."/>
+                       ToolTip="This is an external Bitcoin wallet address, some Rig Manager functionalities might be limited."/>
         </StackPanel>
 
         <TextBlock Grid.Row="4"
