@@ -715,15 +715,20 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionStopMining:
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
+                case SupportedAction.ActionRebenchmark:
+                    (err, result) = ApplicationStateManager.StartReBenchmark().Result;
+                    break;
                 case SupportedAction.ActionProfilesBundleSet:
                     var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
                     _ = ExecuteProfilesBundleReset(false);
                     _ = ExecuteProfilesBundleSet(bundle);
                     MiningState.Instance.CalculateDevicesStateChange();
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
                     ExecuteProfilesBundleReset();
                     MiningState.Instance.CalculateDevicesStateChange();
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionDeviceEnable:
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);

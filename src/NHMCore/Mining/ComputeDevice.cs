@@ -695,6 +695,11 @@ namespace NHMCore.Mining
         }
 
         public bool AnyEnabledAlgorithmsNeedBenchmarking() => AlgorithmsForBenchmark().Any();
+        public void PrepareForRebenchmark()
+        {
+            var algosToRebenchmark = AlgorithmSettings.Where(a => a.Enabled);
+            foreach(var algo in algosToRebenchmark) algo.IsReBenchmark = true;
+        }
 
         public IEnumerable<AlgorithmContainer> AlgorithmsForBenchmark()
         {

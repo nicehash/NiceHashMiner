@@ -2,6 +2,7 @@ using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Enums;
 using NHMCore.Mining;
+using NHMCore.Nhmws;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -153,6 +154,23 @@ namespace NHMCore
                 .Select(StartDeviceTask)
                 .ToArray();
             _ = Task.WhenAll(startBenchmarkingDevices);
+        }
+        public static Task<(ErrorCode err, string msg)> StartReBenchmark()
+        {
+            //check if any exist
+            var startBenchmarkingDevices = AvailableDevices.Devices
+                .Where(device => device.State == DeviceState.Stopped)?
+                .Where(device => device.AnyAlgorithmEnabled());
+            if(startBenchmarkingDevices == null || startBenchmarkingDevices.Count() == 0)
+            {
+                return Task.FromResult((ErrorCode.ErrNoAlgoDataFound, "No targets found. Stop mining first."));
+            }
+            foreach (var device in startBenchmarkingDevices) device.PrepareForRebenchmark();
+            var completeBenchmarkDevices = startBenchmarkingDevices
+                .Select(StartDeviceTask)
+                .ToArray();
+            _ = Task.WhenAll(completeBenchmarkDevices);
+            return Task.FromResult((ErrorCode.NoError, "Success"));
         }
 
         public static Task StopBenchmark()
