@@ -2,7 +2,7 @@
   "profiles": {
     "NiceHashMiner": {
       "commandName": "Project",
-      "commandLineArgs": "-dev -updated"
+      "commandLineArgs": "-dev"
     }
   }
 }

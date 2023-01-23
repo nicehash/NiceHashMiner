@@ -236,7 +236,7 @@ namespace NiceHashMiner.Views
                 tdpWindow.Show();
             }
 
-            if (MinerPluginsManager.PluginsForEulaConfirm.Any() && !Launcher.IsUpdated)
+            if (MinerPluginsManager.PluginsForEulaConfirm.Any())
             {
                 var pluginsPopup = new Plugins.PluginsConfirmDialog();
                 pluginsPopup.DataContext = new Plugins.PluginsConfirmDialog.VM
