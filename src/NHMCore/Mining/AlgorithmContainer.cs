@@ -64,6 +64,10 @@ namespace NHMCore.Mining
         public AlgorithmContainer(Algorithm algorithm, PluginContainer pluginContainer, ComputeDevice computeDevice)
         {
             PluginContainer = pluginContainer;
+            foreach (var plugin in MinerPluginsManager.PluginsForEulaConfirm)
+            {
+                if (plugin.PluginUUID == pluginContainer.PluginUUID) algorithm.Enabled = false;
+            }
             Algorithm = algorithm;
             ComputeDevice = computeDevice;
 

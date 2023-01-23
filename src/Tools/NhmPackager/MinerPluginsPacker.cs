@@ -142,7 +142,7 @@ namespace NhmPackager
         public static readonly IReadOnlyList<string> PreInstalledPlugins = new string[]
             {
                 //"e294f620-94eb-11ea-a64d-17be303ea466", // CryptoDredge
-                //"d8ddcaf2-95c5-4f9a-b65f-c123a0d4fbc2", // GMiner
+                "d8ddcaf2-95c5-4f9a-b65f-c123a0d4fbc2", // GMiner
                 "eb75e920-94eb-11ea-a64d-17be303ea466", // LolMiner
                 //"eda6abd0-94eb-11ea-a64d-17be303ea466", // MiniZ - BROKEN
                 //"f25fee20-94eb-11ea-a64d-17be303ea466", // NanoMiner
