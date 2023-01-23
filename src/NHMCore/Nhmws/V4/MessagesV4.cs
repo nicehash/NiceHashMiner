@@ -542,6 +542,11 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("algorithms")]
         public List<Algo> Algos { get; set; } = new List<Algo>();
     }
+    internal class MinersStatic
+    {
+        [JsonProperty("miners")]
+        public List<MinerStatic> Miners { get; set; } = new List<MinerStatic>();
+    }
     internal class MinerStatic
     {
         [JsonProperty("id")]
@@ -634,4 +639,11 @@ namespace NHMCore.Nhmws.V4
         public List<Limit> limits = new List<Limit>();
     }
 
+    public class SchedulesWS4
+    {
+        [JsonProperty("enabled")]
+        public bool enabled { get; set; }
+        [JsonProperty("slots")]
+        public List<List<object>> slots = new();
+    }
 }

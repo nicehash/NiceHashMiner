@@ -8,13 +8,16 @@ using NHM.DeviceMonitoring.Core_clock;
 using NHM.DeviceMonitoring.Memory_clock;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.Configs;
+using NHMCore.Configs.Data;
 using NHMCore.Configs.Managers;
 using NHMCore.Mining;
 using NHMCore.Mining.MiningStats;
+using NHMCore.Schedules;
 using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace NHMCore.Nhmws.V4
 {
@@ -352,17 +355,37 @@ namespace NHMCore.Nhmws.V4
                             }
                             return $"{successCount}/{newStates.Miners.Count} operations succeded";
                         }
-                    
                     },
-                //new OptionalMutablePropertyString
-                //{
-                //    PropertyID = OptionalMutableProperty.NextPropertyId(),
-                //    DisplayGroup = 0,
-                //    DisplayName = "Scheduler settings",
-                //    DefaultValue = "",
-                //    Range = (4096, String.Empty)
-                ////    todo get and set
-                //}
+                    new OptionalMutablePropertyString
+                    {
+                        PropertyID = OptionalMutableProperty.NextPropertyId(),
+                        DisplayGroup = 0,
+                        DisplayName = "Scheduler settings",
+                        DefaultValue = "",
+                        Range = (4096, String.Empty),
+                        GetValue = () =>
+                        {
+                            string ret = null;
+                            if (isStateChange)
+                            {
+                                ret = SchedulesManager.Instance.ScheduleToJSON();
+                            }
+                            return ret;
+                        },
+                        ExecuteTask = async (object p) =>
+                        {
+                            if(p is not string prop) return null;
+                            var (schedulerEnabled, returnedSchedules) = SchedulesManager.Instance.ScheduleFromJSON(prop);
+                            SchedulesManager.Instance.ClearScheduleList();
+                            MiningSettings.Instance.UseScheduler = schedulerEnabled;
+                            foreach(var returnedSchedule in returnedSchedules)
+                            {
+                                SchedulesManager.Instance.AddScheduleToList(returnedSchedule);
+                            }
+                            _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
+                            return "Schedules added";
+                        }
+                    }
                 };
                 if (isLogin) optionalProperties.ForEach(i => ActionMutableMap.MutableList.Add(i));
                 return optionalProperties
@@ -411,7 +434,7 @@ namespace NHMCore.Nhmws.V4
                 }, BundleManager.GetBundleInfo().BundleName)
             };
             var props = dynamic.Select(d => d.prop).ToList();
-            var vals =  dynamic.Select(d => d.val);
+            var vals = dynamic.Select(d => d.val);
             return (props, new JArray(vals));
         }
 
@@ -521,23 +544,17 @@ namespace NHMCore.Nhmws.V4
                     {
                         new JArray("bus_id", $"{gpu.PCIeBusID}"),
                         new JArray("vram", $"{gpu.GpuRam}"),
-                        new JArray("miners", FormatForOptionalValues("miners", GetMinersForDeviceStatic(d))),
+                        new JArray("miners", GetMinersForDeviceStatic(d)),
                         new JArray("limits", GetLimitsForDevice(d)),
                     },
                 _ => new List<JArray>
                     {
-                        new JArray("miners", FormatForOptionalValues("miners", GetMinersForDeviceStatic(d))),
+                        new JArray("miners", GetMinersForDeviceStatic(d)),
                         new JArray("limits", GetLimitsForDevice(d)),
                     },
             };
         }
-
-        private static string FormatForOptionalValues(string name, string content)
-        {
-            return "{\"" + name + "\":" + content + "}";
-        }
-
-        private static string GetMinersForDeviceDynamic(ComputeDevice d)//todo  if include enabled return array of strings else return array of structs
+        private static string GetMinersForDeviceDynamic(ComputeDevice d)
         {
             var minersObject = new MinerAlgoState();
             var containers = d.AlgorithmSettings;
@@ -564,14 +581,14 @@ namespace NHMCore.Nhmws.V4
         }
         private static string GetMinersForDeviceStatic(ComputeDevice d)
         {
-            List<MinerStatic> miners = new List<MinerStatic>();
+            MinersStatic miners = new MinersStatic();
             var uniquePlugins = d.AlgorithmSettings?.Select(item => item.PluginName)?.Distinct()?.Where(item => !string.IsNullOrEmpty(item));
             if (uniquePlugins == null) return String.Empty;
             foreach (var plugin in uniquePlugins)
             {
                 var uniqueAlgos = d.AlgorithmSettings?.Where(item => item.PluginName == plugin)?.Select(item => item.AlgorithmName)?.Distinct();
                 if (uniqueAlgos == null) uniqueAlgos = new List<string>();
-                miners.Add(new MinerStatic() { Id = plugin, AlgoList = uniqueAlgos.ToList() });
+                miners.Miners.Add(new MinerStatic() { Id = plugin, AlgoList = uniqueAlgos.ToList() });
             }
             var json = JsonConvert.SerializeObject(miners);
             return json;
@@ -608,7 +625,7 @@ namespace NHMCore.Nhmws.V4
             }
             if (d.DeviceMonitor is IMemoryClockSet)
             {
-                if(d.DeviceType == DeviceType.NVIDIA && d.DeviceMonitor is IMemoryClockRangeDelta mcLimDelta)
+                if (d.DeviceType == DeviceType.NVIDIA && d.DeviceMonitor is IMemoryClockRangeDelta mcLimDelta)
                 {
                     var lims = mcLimDelta.MemoryClockRangeDelta;
                     if (lims.ok)
@@ -616,7 +633,7 @@ namespace NHMCore.Nhmws.V4
                         limit.limits.Add(new Limit { Name = "Memory clock delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                     }
                 }
-                if(d.DeviceType == DeviceType.AMD && d.DeviceMonitor is IMemoryClockRange mcLim)
+                if (d.DeviceType == DeviceType.AMD && d.DeviceMonitor is IMemoryClockRange mcLim)
                 {
                     var lims = mcLim.MemoryClockRange;
                     if (lims.ok)

@@ -177,7 +177,7 @@ namespace NHMCore
                 /////////////////////////////////////////////
                 /////// from here on we have our devices and Miners initialized
                 MiningState.Instance.CalculateDevicesStateChange();
-
+                SchedulesManager.Instance.Init();
                 // STEP
                 // connect to nhmws
                 loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
@@ -260,8 +260,7 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateNotAdminForRigManagement();
                 }
-
-                SchedulesManager.Instance.Init();
+                //SchedulesManager.Instance.Init();
             }
             catch (Exception e)
             {
