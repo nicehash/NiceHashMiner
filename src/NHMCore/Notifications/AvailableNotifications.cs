@@ -104,7 +104,7 @@ namespace NHMCore.Notifications
         public static void CreateNhmUpdateInfoDownload(bool isInstallerVersion)
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmUpdate, Tr("NiceHash Miner Update"), Tr("New version of NiceHash Miner is available."));
-            if (!Configs.UpdateSettings.Instance.AutoUpdateNiceHashMiner)
+            if (Configs.UpdateSettings.Instance.AutoUpdateNiceHashMiner)
             {
                 notification.Action = AvailableActions.ActionDownloadUpdater(isInstallerVersion, notification);
             }
@@ -116,7 +116,7 @@ namespace NHMCore.Notifications
         public static void CreateNhmUpdateInfoUpdate()
         {
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.NhmUpdate, Tr("NiceHash Miner Update"), Tr("New version of NiceHash Miner is available."));
-            if (!Configs.UpdateSettings.Instance.AutoUpdateNiceHashMiner)
+            if (Configs.UpdateSettings.Instance.AutoUpdateNiceHashMiner)
             {
                 notification.Action = AvailableActions.ActionStartUpdater();
             }
