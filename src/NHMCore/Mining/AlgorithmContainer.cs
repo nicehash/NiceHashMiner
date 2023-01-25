@@ -241,7 +241,7 @@ namespace NHMCore.Mining
                 if (Algorithm != null) Algorithm.Enabled = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Status));
-                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
+                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
             }
         }
         public void SetEnabled(bool enabled) //for enable without WS (bulk setting)

@@ -82,7 +82,7 @@ namespace NiceHashMiner.ViewModels.Models
                 }
                 OnPropertyChanged();
                 ConfigManager.CommitBenchmarksForDevice(Dev);
-                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
+                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
             }
         }
 
@@ -323,7 +323,7 @@ namespace NiceHashMiner.ViewModels.Models
             }
             OnPropertyChanged();
             ConfigManager.CommitBenchmarksForDevice(Dev);
-            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
+            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
         }
 
         #region AlgorithmSettingsCollection SORTING

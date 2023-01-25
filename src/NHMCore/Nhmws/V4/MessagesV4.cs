@@ -399,13 +399,13 @@ namespace NHMCore.Nhmws.V4
     {
         internal class DeviceState
         {
-            [JsonProperty("mdv")]
+            [JsonProperty("mdv", NullValueHandling = NullValueHandling.Ignore)]
             public JArray MandatoryDynamicValues { get; set; }
 
             [JsonProperty("odv", NullValueHandling = NullValueHandling.Ignore)]
             public JArray OptionalDynamicValues { get; set; }
 
-            [JsonProperty("mmv")]
+            [JsonProperty("mmv", NullValueHandling = NullValueHandling.Ignore)]
             public JArray MandatoryMutableValues { get; set; }
 
             [JsonProperty("omv", NullValueHandling = NullValueHandling.Ignore)]
@@ -415,19 +415,19 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("method")]
         public string Method => "miner.state";
 
-        [JsonProperty("mdv")]
+        [JsonProperty("mdv", NullValueHandling = NullValueHandling.Ignore)]
         public JArray MutableDynamicValues { get; set; }
 
         [JsonProperty("odv", NullValueHandling = NullValueHandling.Ignore)]
         public JArray OptionalDynamicValues { get; set; }
 
-        [JsonProperty("mmv")]
+        [JsonProperty("mmv", NullValueHandling = NullValueHandling.Ignore)]
         public JArray MandatoryMutableValues { get; set; }
 
         [JsonProperty("omv", NullValueHandling = NullValueHandling.Ignore)]
         public JArray OptionalMutableValues { get; set; }
 
-        [JsonProperty("devices")]
+        [JsonProperty("devices", NullValueHandling = NullValueHandling.Ignore)]
         public List<DeviceState> Devices { get; set; }
     }
 

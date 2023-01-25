@@ -382,7 +382,7 @@ namespace NHMCore.Nhmws.V4
                             {
                                 SchedulesManager.Instance.AddScheduleToList(returnedSchedule);
                             }
-                            _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
+                            _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
                             return "Schedules added";
                         }
                     }

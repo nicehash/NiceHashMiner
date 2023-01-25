@@ -64,7 +64,7 @@ namespace NHMCore.Schedules
             Schedules.Add(schedule);
             OnPropertyChanged(nameof(Schedules));
             ConfigManager.ScheduleConfigFileCommit();
-            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
+            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
         }
 
         public void DeleteScheduleFromList(Schedule schedule)
@@ -72,7 +72,7 @@ namespace NHMCore.Schedules
             Schedules.Remove(schedule);
             OnPropertyChanged(nameof(Schedules));
             ConfigManager.ScheduleConfigFileCommit();
-            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
+            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
         }
 
         public void ClearScheduleList()
@@ -80,7 +80,7 @@ namespace NHMCore.Schedules
             Schedules.Clear();
             OnPropertyChanged(nameof(Schedules));
             ConfigManager.ScheduleConfigFileCommit();
-            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus(true));
+            Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
         }
 
         public string ScheduleToJSON()

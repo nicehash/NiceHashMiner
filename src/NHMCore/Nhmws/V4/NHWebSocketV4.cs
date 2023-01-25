@@ -80,6 +80,7 @@ namespace NHMCore.Nhmws.V4
             Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
             Btc = DemoUser.BTC,
         };
+        private static MinerState CachedState = null;
 
         static private ConcurrentQueue<MessageEventArgs> _recieveQueue { get; set; } = new ConcurrentQueue<MessageEventArgs>();
         static private ConcurrentQueue<IEnumerable<(MessageType type, string msg)>> _sendQueue { get; set; } = new ConcurrentQueue<IEnumerable<(MessageType type, string msg)>>();
@@ -327,8 +328,98 @@ namespace NHMCore.Nhmws.V4
         }
 
         #region Message handling
+        private static bool AreEqual(JArray first, JArray second)
+        {
+            if (first == null && second == null) return true;
+            if (first == null || second == null) return false;
+            return JsonConvert.SerializeObject(first) == JsonConvert.SerializeObject(second);
+        }
+        private static MinerState.DeviceState GetDeviceStateDelta(MinerState.DeviceState first, MinerState.DeviceState second)
+        {
+            if (first == null || second == null) return second;
+            var devState = new MinerState.DeviceState();
+            if (!AreEqual(first.OptionalDynamicValues, second.OptionalDynamicValues))
+            {
+                devState.OptionalDynamicValues = second.OptionalDynamicValues;
+            }
+            if (!AreEqual(first.MandatoryDynamicValues, second.MandatoryDynamicValues))
+            {
+                devState.MandatoryDynamicValues = second.MandatoryDynamicValues;
+            }
+            if (!AreEqual(first.OptionalMutableValues, second.OptionalMutableValues))
+            {
+                devState.OptionalMutableValues = second.OptionalMutableValues;
+            }
+            if (!AreEqual(first.MandatoryMutableValues, second.MandatoryMutableValues))
+            {
+                devState.MandatoryMutableValues = second.MandatoryMutableValues;
+            }
+            return devState;
+        }
+        private static bool AreDeviceListsComparable(List<MinerState.DeviceState> first, List<MinerState.DeviceState> second)
+        {
+            if (first == null || second == null) return true;
+            if (first.Count != second.Count) return false;
+            return true;
+        }
 
-        private static string CreateMinerStatusMessage(bool stateChange = false) => JsonConvert.SerializeObject(MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices(), stateChange));
+        private static MinerState GetDeltaProperties(MinerState prev, MinerState next)
+        {
+            MinerState ret = new MinerState();
+            if (!AreEqual(prev.MutableDynamicValues, next.MutableDynamicValues))
+            {
+                ret.MutableDynamicValues = next.MutableDynamicValues;
+            }
+            if (!AreEqual(prev.OptionalDynamicValues, next.OptionalDynamicValues))
+            {
+                ret.OptionalDynamicValues = next.OptionalDynamicValues;
+            }
+            if (!AreEqual(prev.OptionalMutableValues, next.OptionalMutableValues))
+            {
+                ret.OptionalMutableValues = next.OptionalMutableValues;
+            }
+            if (!AreEqual(prev.MandatoryMutableValues, next.MandatoryMutableValues))
+            {
+                ret.MandatoryMutableValues = next.MandatoryMutableValues;
+            }
+
+            if (AreDeviceListsComparable(prev.Devices, next.Devices))
+            {
+                if (prev.Devices == null && next.Devices == null) return ret;
+                if(prev.Devices == null && next.Devices != null)
+                {
+                    ret.Devices = next.Devices;
+                    return ret;
+                }
+                if(prev.Devices != null && next.Devices == null)
+                {
+                    ret.Devices = null;
+                    return ret;
+                }
+                ret.Devices = new();
+                for(int i = 0; i < next.Devices.Count; i++)
+                {
+                    ret.Devices.Add(GetDeviceStateDelta(prev.Devices[i], next.Devices[i]));
+                }
+            }
+            else
+            {
+                ret.Devices = next.Devices;
+            }
+            return ret;
+        }
+        private static string CreateMinerStatusMessage()
+        {
+            var nextState = MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices());
+            var shrinkedState = new MinerState();
+            if (CachedState != null)
+            {
+                shrinkedState = GetDeltaProperties(CachedState, nextState);
+            }
+            CachedState = nextState;
+            var json = JsonConvert.SerializeObject(shrinkedState);
+            return json;
+        }
 
         static private async Task HandleMessage(MessageEventArgs e)
         {
@@ -766,9 +857,9 @@ namespace NHMCore.Nhmws.V4
             _ = UpdateMinerStatus();
             return Task.FromResult((err, result));
         }
-        public static Task UpdateMinerStatus(bool stateChange = false)
+        public static Task UpdateMinerStatus()
         {
-            var minerStatusJsonStr = CreateMinerStatusMessage(stateChange);
+            var minerStatusJsonStr = CreateMinerStatusMessage();
             _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
             return Task.CompletedTask;
         }
@@ -850,7 +941,7 @@ namespace NHMCore.Nhmws.V4
         {
             if (mutableCmd.Properties != null)
             {
-                foreach(var property in mutableCmd.Properties)
+                foreach (var property in mutableCmd.Properties)
                 {
                     HandleProperty(property);
                 }
@@ -888,7 +979,7 @@ namespace NHMCore.Nhmws.V4
                 Type.Bool => ParseAndActMutableBool(mutable, token),
                 _ => throw new InvalidOperationException()
             };
-            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus(true));
+            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());
             if (t is string retStr) return Task.FromResult(retStr);
             return Task.FromResult("OK");
         }
