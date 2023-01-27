@@ -1,4 +1,5 @@
 using NHM.Common.Enums;
+using NHM.CommonWin32;
 using NHM.UUID;
 using NHMCore.Configs;
 using NHMCore.Mining;
@@ -81,6 +82,7 @@ namespace NHMCore
             // change in memory and save changes to file
             CredentialsSettings.Instance.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
+            if (Helpers.IsElevated) NHMRegistry.Set_QM_MiningaddressFromRegistry(btc);
             await MiningManager.ChangeUsername(CreateUsername(btc, RigID()));
         }
         #endregion
