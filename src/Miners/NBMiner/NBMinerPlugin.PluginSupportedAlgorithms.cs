@@ -31,6 +31,7 @@ namespace NBMiner
                         new SAS(AlgorithmType.Autolykos),
                         new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) , Enabled = false },
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false},
+
                     }
                 },
                 {
