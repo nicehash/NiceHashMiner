@@ -5,7 +5,7 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
+using System.Reflection;
 
 namespace NHMCore.Configs.Data
 {
@@ -74,10 +74,21 @@ namespace NHMCore.Configs.Data
             set => MiningSettings.Instance.DeviceToPauseUuid = value;
         }
 
+        public bool UseScheduler
+        {
+            get => MiningSettings.Instance.UseScheduler;
+            set => MiningSettings.Instance.UseScheduler = value;
+        }
+
         public bool EnableSSLMining
         {
             get => MiningSettings.Instance.EnableSSLMining;
             set => MiningSettings.Instance.EnableSSLMining = value;
+        }
+        public bool AdvancedMode
+        {
+            get => MiscSettings.Instance.AdvancedMode;
+            set => MiscSettings.Instance.AdvancedMode = value;
         }
         #endregion MiningSettings
 
@@ -345,7 +356,7 @@ namespace NHMCore.Configs.Data
         // methods
         public void SetDefaults()
         {
-            ConfigFileVersion = new Version(Application.ProductVersion);
+            ConfigFileVersion = new Version(NHMApplication.ProductVersion);
             BitcoinAddress = "";
             WorkerName = "worker1";
             RigGroup = "";
@@ -366,6 +377,7 @@ namespace NHMCore.Configs.Data
             ShowInternetConnectionWarning = true;
             PauseMiningWhenGamingMode = false;
             DeviceToPauseUuid = "";
+            UseScheduler = false;
             EnableSSLMining = false;
             MinerAPIQueryInterval = 5;
             MinerRestartDelayMS = 500;
@@ -405,11 +417,78 @@ namespace NHMCore.Configs.Data
 
             AutoUpdateNiceHashMiner2 = false;
             AutoUpdateMinerPlugins = true;
+            AdvancedMode = false;
+        }
+
+        public void SetValues(GeneralConfigOld configOld)
+        {
+            ConfigFileVersion = new Version(NHMApplication.ProductVersion);
+            BitcoinAddress = configOld.BitcoinAddress;
+            WorkerName = configOld.WorkerName;
+            RigGroup = configOld.RigGroup;
+            Language = configOld.Language;
+            TimeUnit = configOld.TimeUnit;
+            AutoStartMining = configOld.AutoStartMining;
+            //LessThreads = 0;
+            DebugConsole = configOld.DebugConsole;
+            HideMiningWindows = configOld.HideMiningWindows;
+            MinimizeMiningWindows = configOld.MinimizeMiningWindows;
+            MinimizeToTray = configOld.MinimizeToTray;
+            AutoScaleBTCValues = configOld.AutoScaleBTCValues;
+            StartMiningWhenIdle = configOld.StartMiningWhenIdle;
+            LogToFile = configOld.LogToFile;
+            LogMaxFileSize = configOld.LogMaxFileSize;
+            ShowDriverVersionWarning = configOld.ShowDriverVersionWarning;
+            DisableWindowsErrorReporting = configOld.DisableWindowsErrorReporting;
+            ShowInternetConnectionWarning = configOld.ShowInternetConnectionWarning;
+            PauseMiningWhenGamingMode = configOld.PauseMiningWhenGamingMode;
+            DeviceToPauseUuid = configOld.DeviceToPauseUuid;
+            UseScheduler = false;
+            EnableSSLMining = configOld.EnableSSLMining;
+            MinerAPIQueryInterval = configOld.MinerAPIQueryInterval;
+            MinerRestartDelayMS = configOld.MinerRestartDelayMS;
+            SwitchProfitabilityThreshold = configOld.SwitchProfitabilityThreshold;
+            MinIdleSeconds = configOld.MinIdleSeconds;
+            DisplayCurrency = configOld.DisplayCurrency;
+            ApiBindPortPoolStart = configOld.ApiBindPortPoolStart;
+            MinimumProfit = configOld.MinimumProfit;
+            IdleWhenNoInternetAccess = configOld.IdleWhenNoInternetAccess;
+            IdleCheckType = configOld.IdleCheckType;
+            AllowMultipleInstances = configOld.AllowMultipleInstances;
+            UseIFTTT = configOld.UseIFTTT;
+            IFTTTKey = configOld.IFTTTKey;
+            CoolDownCheckEnabled = configOld.CoolDownCheckEnabled;
+            CheckForMissingGPUs = configOld.CheckForMissingGPUs;
+            RestartMachineOnLostGPU = configOld.RestartMachineOnLostGPU;
+            SwitchSmaTimeChangeSeconds = configOld.SwitchSmaTimeChangeSeconds;
+            SwitchSmaTicksStable = configOld.SwitchSmaTicksStable;
+            SwitchSmaTicksUnstable = configOld.SwitchSmaTicksUnstable;
+            ShowPowerColumns = configOld.ShowPowerColumns;
+            ShowDiagColumns = configOld.ShowDiagColumns;
+            UseOptimizationProfiles = configOld.UseOptimizationProfiles;
+            Hwid = configOld.Hwid;
+            KwhPrice = configOld.KwhPrice;
+            DisplayPureProfit = configOld.DisplayPureProfit;
+            DisplayTheme = configOld.DisplayTheme;
+            ShowGPUPCIeBusIDs = configOld.ShowGPUPCIeBusIDs;
+            ShowNotifications = configOld.ShowNotifications;
+
+            ResolveNiceHashDomainsToIPs = configOld.ResolveNiceHashDomainsToIPs;
+
+            RunAtStartup = configOld.RunAtStartup;
+            GUIWindowsAlwaysOnTop = configOld.GUIWindowsAlwaysOnTop;
+            DisableDeviceStatusMonitoring = configOld.DisableDeviceStatusMonitoring;
+            DisableDevicePowerModeSettings = configOld.DisableDevicePowerModeSettings;
+            MineRegardlessOfProfit = configOld.MineRegardlessOfProfit;
+
+            AutoUpdateNiceHashMiner2 = configOld.AutoUpdateNiceHashMiner2;
+            AutoUpdateMinerPlugins = configOld.AutoUpdateMinerPlugins;
+            AdvancedMode = false;
         }
 
         public void FixSettingBounds()
         {
-            ConfigFileVersion = new Version(Application.ProductVersion);
+            ConfigFileVersion = new Version(NHMApplication.ProductVersion);
             if (string.IsNullOrEmpty(DisplayCurrency)
                 || string.IsNullOrWhiteSpace(DisplayCurrency))
             {

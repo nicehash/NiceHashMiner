@@ -68,8 +68,19 @@ namespace NHM.DeviceDetection.CPU
                 var uuid = $"CPU-{uuidHEX}";
 
                 // plugin device
-                var bd = new BaseDevice(DeviceType.CPU, uuid, name, 0);
-                var cpu = new CPUDevice(bd, cpuCount, threadsPerCpu, cpuDetectResult.IsHyperThreadingEnabled, affinityMasks, CpuUtils.SupportedExtensions(cpuID), cpuID);
+                var cpu = new CPUDevice
+                {
+                    DeviceType = DeviceType.CPU,
+                    UUID = uuid,
+                    Name = name,
+                    ID = 0,
+                    PhysicalProcessorCount = cpuCount,
+                    ThreadsPerCPU = threadsPerCpu,
+                    SupportsHyperThreading = cpuDetectResult.IsHyperThreadingEnabled,
+                    AffinityMasks = affinityMasks,
+                    SupportedCpuExtensions = CpuUtils.SupportedExtensions(cpuID),
+                    CpuID = cpuID,
+                };
                 CPUDevice.RawDetectionOutput = cpuJSON;
                 return cpu;
             });

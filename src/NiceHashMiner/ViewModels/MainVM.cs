@@ -1,23 +1,33 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Enums;
+using NHM.MinerPluginToolkitV1;
+using NHM.MinerPluginToolkitV1.CommandLine;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.ELPDataModels;
 using NHMCore.Mining;
 using NHMCore.Mining.IdleChecking;
 using NHMCore.Mining.MiningStats;
+using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
+using NHMCore.Schedules;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
 using NiceHashMiner.ViewModels.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
+using static NHM.MinerPluginToolkitV1.CommandLine.MinerConfigManager;
 
 namespace NiceHashMiner.ViewModels
 {
@@ -41,6 +51,22 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged(nameof(PerDeviceDisplayString));
                 OnPropertyChanged(nameof(CPUs));
                 OnPropertyChanged(nameof(GPUs));
+                OnPropertyChanged(nameof(MinerELPs));
+                OnPropertyChanged(nameof(IsMining));
+                OnPropertyChanged(nameof(IsNotMining));
+            }
+        }
+
+        public Schedule Schedule { get; set; }
+
+        private IEnumerable<Schedule> _schedules;
+        public IEnumerable<Schedule> Schedules
+        {
+            get => _schedules;
+            set
+            {
+                _schedules = value;
+                OnPropertyChanged(nameof(Schedules));
             }
         }
 
@@ -76,6 +102,25 @@ namespace NiceHashMiner.ViewModels
             {
                 _miningDevs = value;
                 OnPropertyChanged();
+            }
+        }
+        public bool IsMining => MiningState.AnyDeviceRunning;
+        public bool IsNotMining => !IsMining;
+        public IEnumerable<MinerELPData> MinerELPs
+        {
+            get => ELPManager.GetMinerELPs();
+            set
+            {
+                ELPManager.SetMinerELPs(value);
+                OnPropertyChanged(nameof(MinerELPs));
+                OnPropertyChanged(nameof(MinerCount));
+            }
+        }
+        public int MinerCount
+        {
+            get
+            {
+                return ELPManager.GetMinerELPs()?.Count() ?? 0;
             }
         }
 
@@ -123,6 +168,8 @@ namespace NiceHashMiner.ViewModels
         public UpdateSettings UpdateSettings => UpdateSettings.Instance;
 
         public GPUProfileManager GPUProfileManager => GPUProfileManager.Instance;
+        public SchedulesManager SchedulesManager => SchedulesManager.Instance;
+        public ELPManager ELPManager => ELPManager.Instance;
         #endregion Exposed settings
 
 
@@ -143,7 +190,7 @@ namespace NiceHashMiner.ViewModels
             lock (_lock)
             {
                 // TODO keep it like this for now but update the collection view in the future
-                HelpNotificationList = new ObservableCollection<Notification>(NotificationsManager.Instance.Notifications);
+                HelpNotificationList = new ObservableCollection<Notification>(NotificationsManager.Instance.LatestNotifications);
                 OnPropertyChanged(nameof(HelpNotificationList));
             }
         }
@@ -221,36 +268,50 @@ namespace NiceHashMiner.ViewModels
                 OnPropertyChanged();
             }
         }
+        private ObservableCollection<PluginEntryVM> _userPlugins;
+        public ObservableCollection<PluginEntryVM> UserPlugins
+        {
+            get => _userPlugins;
+            set
+            {
+                _userPlugins = value;
+                OnPropertyChanged();
+            }
+        }
+        private void MinerPluginsManagerStateChanged(ObservableCollection<PluginEntryVM> ListOfPlugins, List<PluginPackageInfoCR> pluginPackageList)
+        {
+            if (ListOfPlugins == null || pluginPackageList == null) return;
 
+            var rankedPluginsArray = pluginPackageList.ToArray();
+            // add new
+            foreach (var plugin in rankedPluginsArray)
+            {
+                var vm = ListOfPlugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
+                if (vm != null) continue;
+                ListOfPlugins.Add(new PluginEntryVM(plugin));
+            }
+            // remove missing
+            var remove = ListOfPlugins.Where(plugin => pluginPackageList.FirstOrDefault(rankedPlugin => rankedPlugin.PluginUUID == plugin.Plugin.PluginUUID) == null).ToArray();
+            foreach (var rem in remove)
+            {
+                ListOfPlugins.Remove(rem);
+            }
+            // sort
+            var removeUUIDs = remove.Select(rem => rem.Plugin.PluginUUID);
+            var sorted = pluginPackageList.Where(rankedPlugin => !removeUUIDs.Contains(rankedPlugin.PluginUUID)).ToList();
+            var pluginsToSort = ListOfPlugins.ToList();
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                var oldIndex = pluginsToSort.FindIndex(p => p.Plugin == sorted[i]);
+                ListOfPlugins.Move(oldIndex, i);
+            }
+        }
         private void MinerPluginsManagerState_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             lock (_lock)
             {
-                if (Plugins == null) return;
-                var rankedPlugins = MinerPluginsManagerState.Instance.RankedPlugins;
-                var rankedPluginsArray = rankedPlugins.ToArray();
-                // add new
-                foreach (var plugin in rankedPluginsArray)
-                {
-                    var vm = Plugins.FirstOrDefault(pluginVM => pluginVM.Plugin.PluginUUID == plugin.PluginUUID);
-                    if (vm != null) continue;
-                    Plugins.Add(new PluginEntryVM(plugin));
-                }
-                // remove missing
-                var remove = Plugins.Where(plugin => rankedPlugins.FirstOrDefault(rankedPlugin => rankedPlugin.PluginUUID == plugin.Plugin.PluginUUID) == null).ToArray();
-                foreach (var rem in remove)
-                {
-                    Plugins.Remove(rem);
-                }
-                // sort
-                var removeUUIDs = remove.Select(rem => rem.Plugin.PluginUUID);
-                var sorted = rankedPlugins.Where(rankedPlugin => !removeUUIDs.Contains(rankedPlugin.PluginUUID)).ToList();
-                var pluginsToSort = Plugins.ToList();
-                for (int i = 0; i < sorted.Count; i++)
-                {
-                    var oldIndex = pluginsToSort.FindIndex(p => p.Plugin == sorted[i]);
-                    Plugins.Move(oldIndex, i);
-                }
+                MinerPluginsManagerStateChanged(Plugins, MinerPluginsManagerState.Instance.RankedPlugins);
+                MinerPluginsManagerStateChanged(UserPlugins, MinerPluginsManagerState.Instance.UserPlugins);
             }
         }
 
@@ -281,6 +342,7 @@ namespace NiceHashMiner.ViewModels
             //MinerPluginsManager.OnCrossReferenceInstalledWithOnlinePlugins += OnCrossReferenceInstalledWithOnlinePlugins;
             MinerPluginsManagerState.Instance.PropertyChanged += MinerPluginsManagerState_PropertyChanged;
             NotificationsManager.Instance.PropertyChanged += RefreshNotifications_PropertyChanged;
+            SchedulesManager.Instance.PropertyChanged += Schedules_PropertyChanged;
 
             OnPropertyChanged(nameof(NHMWSConnected));
             ApplicationStateManager.OnNhmwsConnectionChanged += (_, nhmwsConnected) =>
@@ -297,6 +359,26 @@ namespace NiceHashMiner.ViewModels
                     OnPropertyChanged(nameof(MinimumProfitString));
                 }
             };
+
+            MiningState.Instance.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(MiningState.AnyDeviceRunning))
+                {
+                    OnPropertyChanged(nameof(IsMining));
+                    OnPropertyChanged(nameof(IsNotMining));
+                }
+            };
+
+            OnPropertyChanged(nameof(IsMining));
+            OnPropertyChanged(nameof(IsNotMining));
+        }
+        private void Schedules_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            lock (_lock)
+            {
+                Schedules = new ObservableCollection<Schedule>(SchedulesManager.Instance.Schedules);
+                OnPropertyChanged(nameof(Schedules));
+            }
         }
 
 
@@ -315,33 +397,99 @@ namespace NiceHashMiner.ViewModels
             }
         }
 
+
+
+        public void ReadELPConfigsOrCreateIfMissing()
+        {
+            if (Plugins == null) return;
+            var minerELPs = new List<MinerELPData>();
+            var devsList = Devices
+                .Select(dev => new { P = (dev.Dev.FullName, dev.Dev.Uuid, dev.Dev.DeviceType) })
+                .Select(p => p.P)
+                .ToList();
+            foreach (var plugin in Plugins.Concat(UserPlugins))
+            {
+                if (!plugin.Plugin.Installed) continue;
+                var minerPlugin = Devices?
+                    .Select(dev => dev.AlgorithmSettingsCollection)?
+                    .SelectMany(p => p)?
+                    .Where(algoContainer => algoContainer.PluginContainer.PluginUUID == plugin.Plugin.PluginUUID)?
+                    .Select(algo => algo.PluginContainer)?
+                    .FirstOrDefault()?
+                    .GetPlugin();
+                var specificCmds = minerPlugin is IAdditionalELP additional ? additional.GetAdditionalELPs() : new List<List<string>>();
+                var pluginConfiguration = new PluginConfiguration()
+                {
+                    PluginName = plugin.Plugin.PluginName,
+                    PluginUUID = plugin.Plugin.PluginUUID,
+                    SupportedDevicesAlgorithms = plugin.Plugin.SupportedDevicesAlgorithms,
+                    Devices = devsList,
+                    MinerSpecificCommands = specificCmds
+                };
+                try
+                {
+                    MinerConfig data = MinerConfigManager.ReadConfig(plugin.Plugin.PluginName, plugin.Plugin.PluginUUID);
+                    if (data == null) throw new FileNotFoundException();
+                    var fixedData = ELPManager.FixConfigIntegrityIfNeeded(data, pluginConfiguration);
+                    if (fixedData != null)
+                    {
+                        data = fixedData;
+                        MinerConfigManager.WriteConfig(data);
+                    }
+                    minerELPs.Add(ELPManager.ConstructMinerELPDataFromConfig(data));
+                }
+                catch (Exception ex)
+                {
+                    if (ex is FileNotFoundException || ex is JsonSerializationException)
+                    {
+                        var defaultCFG = ELPManager.CreateDefaultConfig(pluginConfiguration);
+                        MinerConfigManager.WriteConfig(defaultCFG, true);
+                        minerELPs.Add(ELPManager.ConstructMinerELPDataFromConfig(defaultCFG));
+                    }
+                    else Logger.Error("MainVM", ex.Message);
+                }
+            }
+            MinerELPs = minerELPs;
+        }
+
+        public void ELPReScan(object sender, EventArgs e)
+        {
+            ReadELPConfigsOrCreateIfMissing();
+        }
+
         public async Task InitializeNhm(IStartupLoader sl)
         {
             Plugins = new ObservableCollection<PluginEntryVM>();
+            UserPlugins = new ObservableCollection<PluginEntryVM>();
             HelpNotificationList = new ObservableCollection<Notification>();
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData)d));
             DevicesTDP = new ObservableCollection<DeviceDataTDP>(AvailableDevices.Devices.Select(d => new DeviceDataTDP(d)));
             MiningDevs = new ObservableCollection<MiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
+            Schedules = new ObservableCollection<Schedule>(SchedulesManager.Schedules);
 
             // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
             BindingOperations.EnableCollectionSynchronization(Plugins, _lock);
+            BindingOperations.EnableCollectionSynchronization(UserPlugins, _lock);
             BindingOperations.EnableCollectionSynchronization(HelpNotificationList, _lock);
+            BindingOperations.EnableCollectionSynchronization(Schedules, _lock);
             MiningDataStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
 
             IdleCheckManager.StartIdleCheck();
-
-            //RefreshPlugins();
 
             _updateTimer.Start();
 
             ConfigManager.CreateBackup();
 
+            ELPManager.ELPReiteration += ELPReScan;
+            ReadELPConfigsOrCreateIfMissing();
+            ELPManager.IterateSubModelsAndConstructELPs();
             if (MiningSettings.Instance.AutoStartMining)
                 await StartMining();
         }
+
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

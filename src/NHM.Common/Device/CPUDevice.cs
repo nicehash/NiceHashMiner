@@ -6,39 +6,30 @@ namespace NHM.Common.Device
 {
     public record CpuID
     {
-        public bool AMD { get; set; }
-        public bool Intel { get; set; }
-        public bool IsZen { get; set; }
-        public int L3KB_size { get; set; }
-        public string Name { get; set; }
-        public int PhysicalProcessorCount { get; set; }
-        public bool SupportsAES_SSE42 { get; set; }
-        public bool SupportsAVX { get; set; }
-        public bool SupportsAVX2 { get; set; }
-        public bool SupportsSSE2 { get; set; }
-        public string Vendor { get; set; }
+        public bool AMD { get; init; }
+        public bool Intel { get; init; }
+        public bool IsZen { get; init; }
+        public int L3KB_size { get; init; }
+        public string Name { get; init; }
+        public int PhysicalProcessorCount { get; init; }
+        public bool SupportsAES_SSE42 { get; init; }
+        public bool SupportsAVX { get; init; }
+        public bool SupportsAVX2 { get; init; }
+        public bool SupportsSSE2 { get; init; }
+        public string Vendor { get; init; }
     }
 
     public class CPUDevice : BaseDevice
     {
         public static string RawDetectionOutput = string.Empty;
-        public CPUDevice(BaseDevice bd, int cpuCount, int threadsPerCPU, bool supportsHyperThreading, List<ulong> affinityMasks, List<CpuExtensionType> extensions, CpuID cpuID) : base(bd)
-        {
-            PhysicalProcessorCount = cpuCount;
-            ThreadsPerCPU = threadsPerCPU;
-            SupportsHyperThreading = supportsHyperThreading;
-            AffinityMasks = affinityMasks;
-            SupportedCpuExtensions = extensions;
-            CpuID = cpuID;
-        }
 
-        public IReadOnlyList<CpuExtensionType> SupportedCpuExtensions { get; }
+        public IReadOnlyList<CpuExtensionType> SupportedCpuExtensions { get; init; }
 
-        public int PhysicalProcessorCount { get; }
-        public int ThreadsPerCPU { get; }
-        public bool SupportsHyperThreading { get; }
-        public List<ulong> AffinityMasks { get; protected set; } // TODO check if this makes any sense
+        public int PhysicalProcessorCount { get; init; }
+        public int ThreadsPerCPU { get; init; }
+        public bool SupportsHyperThreading { get; init; }
+        public List<ulong> AffinityMasks { get; init; } // TODO check if this makes any sense
 
-        public CpuID CpuID { get; protected set; }
+        public CpuID CpuID { get; init; }
     }
 }

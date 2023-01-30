@@ -233,7 +233,7 @@ namespace NiceHashMiner
             var isUpdated = Environment.GetCommandLineArgs().Contains("-updated");
 
 #warning TRANSITIONAL CODE, REMOVE IN FUTURE VERSIONS (registry integration)
-            if (isUpdated)
+                if (isUpdated)
             {
                 const string GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
                 const string TOSMain = "4";

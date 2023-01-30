@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -78,6 +77,7 @@ namespace NHMCore.Mining.Plugins
         // API data
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
         private static Dictionary<string, PluginPackageInfoCR> PluginsPackagesInfosCRs { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
+        private static Dictionary<string, PluginPackageInfoCR> PluginsPackagesInternal { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
 
         //public static PluginPackageInfoCR GetPluginPackageInfoCR(string pluginUUID)
         //{
@@ -94,6 +94,15 @@ namespace NHMCore.Mining.Plugins
                     .OrderByDescending(info => info.HasNewerVersion)
                     .ThenByDescending(info => info.SupportedDeviceCount)
                     .ThenBy(info => info.PluginName);
+            }
+        }
+        public static IEnumerable<PluginPackageInfoCR> RankedUserPlugins
+        {
+            get
+            {
+                return PluginsPackagesInternal
+                    .Select(kvp => kvp.Value)
+                    .OrderBy(info => info.PluginName);
             }
         }
 
@@ -264,41 +273,30 @@ namespace NHMCore.Mining.Plugins
 
         private static class PluginInstaller
         {
-            private static readonly TrivialChannel<IPluginInstallerCommand> Channel = new TrivialChannel<IPluginInstallerCommand>();
-            private interface IPluginInstallerCommand { string PluginUUID { get; set; } };
-            private class RemoveCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } }
-            private class RemovedCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } public bool Success { get; set; } }
-            private class InstallCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } }
-            private class InstalledCommand : IPluginInstallerCommand { public string PluginUUID { get; set; } public bool Success { get; set; } }
+            private static readonly TrivialChannel<PluginInstallerCommand> Channel = new TrivialChannel<PluginInstallerCommand>();
+            private abstract record PluginInstallerCommand(string PluginUUID);
+            private record RemoveCommand(string PluginUUID) : PluginInstallerCommand(PluginUUID);
+            private record RemovedCommand(string PluginUUID, bool Success) : PluginInstallerCommand(PluginUUID);
+            private record InstallCommand(string PluginUUID) : PluginInstallerCommand(PluginUUID);
+            private record InstalledCommand(string PluginUUID, bool Success) : PluginInstallerCommand(PluginUUID);
 
-            private static bool IsRemovalCommand(IPluginInstallerCommand c) => c is RemoveCommand || c is RemovedCommand;
-            private static bool IsInstallationCommand(IPluginInstallerCommand c) => c is InstallCommand || c is InstalledCommand;
+            private static bool IsRemovalCommand(PluginInstallerCommand c) => c is RemoveCommand or RemovedCommand;
+            private static bool IsInstallationCommand(PluginInstallerCommand c) => c is InstallCommand or InstalledCommand;
 
-            public static void RemovePlugin(string pluginUUID)
-            {
-                Channel.Enqueue(new RemoveCommand { PluginUUID = pluginUUID });
-            }
+            public static void RemovePlugin(string pluginUUID) => Channel.Enqueue(new RemoveCommand(pluginUUID));
 
-            public static void RemovedPluginStatus(string pluginUUID, bool success)
-            {
-                Channel.Enqueue(new RemovedCommand { PluginUUID = pluginUUID, Success = success });
-            }
+            public static void RemovedPluginStatus(string pluginUUID, bool success) => Channel.Enqueue(new RemovedCommand(pluginUUID, success));
+            
 
-            public static void InstallPlugin(string pluginUUID)
-            {
-                Channel.Enqueue(new InstallCommand { PluginUUID = pluginUUID });
-            }
+            public static void InstallPlugin(string pluginUUID) => Channel.Enqueue(new InstallCommand(pluginUUID));
 
-            public static void InstalledPluginStatus(string pluginUUID, bool success)
-            {
-                Channel.Enqueue(new InstalledCommand { PluginUUID = pluginUUID, Success = success });
-            }
+            public static void InstalledPluginStatus(string pluginUUID, bool success) => Channel.Enqueue(new InstalledCommand(pluginUUID, success));
 
             public static async Task RestartDevicesStateLoop(CancellationToken stop)
             {
                 var lastCommandTime = DateTime.UtcNow;
                 bool checkCommandsForRestart() => (DateTime.UtcNow - lastCommandTime).TotalSeconds >= 0.5;
-                var pairedCommands = new Dictionary<string, List<IPluginInstallerCommand>>();
+                var pairedCommands = new Dictionary<string, List<PluginInstallerCommand>>();
                 var pluginsToDelete = new List<string>();
                 try
                 {
@@ -351,7 +349,7 @@ namespace NHMCore.Mining.Plugins
                         if (exceptionString != null) Logger.Error("PluginInstaller", $"Channel.ReadAsync error: {exceptionString}");
                         if (command == null) continue;
                         // handle commands
-                        if (!pairedCommands.ContainsKey(command.PluginUUID)) pairedCommands[command.PluginUUID] = new List<IPluginInstallerCommand>() { };
+                        if (!pairedCommands.ContainsKey(command.PluginUUID)) pairedCommands[command.PluginUUID] = new List<PluginInstallerCommand>() { };
                         pairedCommands[command.PluginUUID].Add(command);
                         lastCommandTime = DateTime.UtcNow;
                     }
@@ -623,37 +621,29 @@ namespace NHMCore.Mining.Plugins
                 //.Where(p => p.Enabled) // we can have installed plugins that are obsolete
                 .Where(p => !_integratedPlugins.Any(integrated => integrated.PluginUUID == p.PluginUUID)) // ignore integrated
                 .ToArray();
+            //integrated zone TODO MAKE FUNCTION
+            var integratedPlugins = PluginContainer.PluginContainers
+                .Where(p => _integratedPlugins.Any(integrated => integrated.PluginUUID == p.PluginUUID))?
+                .ToArray();
+            foreach(var integrated in integratedPlugins)
+            {
+                var (uuid, localPluginInfo) = CreateLocalPackageInfo(integrated);
+                if (PluginsPackagesInternal.ContainsKey(uuid) == false)
+                {
+                    PluginsPackagesInternal[uuid] = new PluginPackageInfoCR(uuid);
+                }
+                PluginsPackagesInternal[uuid].LocalInfo = localPluginInfo;
+            }
+            //end integrated zone
             foreach (var installed in installedPlugins)
             {
-                var uuid = installed.PluginUUID;
-                var localPluginInfo = new PluginPackageInfo
-                {
-                    PluginAuthor = installed.Author,
-                    PluginName = installed.Name,
-                    PluginUUID = uuid,
-                    PluginVersion = installed.Version,
-                    // other stuff is not inside the plugin
-                };
-                if (installed.GetPlugin() is PluginBase pb)
-                {
-                    localPluginInfo.MinerPackageURL = pb.GetMinerBinsUrlsForPlugin().FirstOrDefault();
-                    localPluginInfo.PluginDescription = ConstructLocalPluginDescription(pb);
-                    localPluginInfo.SupportedDevicesAlgorithms = new Dictionary<string, List<string>>();
-                    localPluginInfo.PackagePassword = pb.BinsPackagePassword;
-                    var supportedList = pb.SupportedDevicesAlgorithmsDict();
-                    foreach (var supported in supportedList)
-                    {
-                        var algos = supported.Value.Select(algo => Enum.GetName(typeof(AlgorithmType), algo)).ToList();
-                        localPluginInfo.SupportedDevicesAlgorithms.Add(Enum.GetName(typeof(DeviceType), supported.Key), algos);
-                    }
-                }
+                var (uuid, localPluginInfo) = CreateLocalPackageInfo(installed);
                 if (PluginsPackagesInfosCRs.ContainsKey(uuid) == false)
                 {
                     PluginsPackagesInfosCRs[uuid] = new PluginPackageInfoCR(uuid);
                 }
                 PluginsPackagesInfosCRs[uuid].LocalInfo = localPluginInfo;
             }
-
             // get online list and check what we have and what is online
             if (OnlinePlugins == null) return;
 
@@ -670,15 +660,42 @@ namespace NHMCore.Mining.Plugins
             {
                 PluginsPackagesInfosCRs[plugin.Key].SupportedDeviceCount = GetPluginDeviceRank(plugin.Value.GetInfoSource());
             }
+            MinerPluginsManagerState.Instance.UserPlugins = RankedUserPlugins.ToList();
             MinerPluginsManagerState.Instance.RankedPlugins = RankedPlugins.ToList();
+        }
+        private static (string uuid, PluginPackageInfo packageInfo) CreateLocalPackageInfo(PluginContainer pluginContainer)
+        {
+            var uuid = pluginContainer.PluginUUID;
+            var localPluginInfo = new PluginPackageInfo
+            {
+                PluginAuthor = pluginContainer.Author,
+                PluginName = pluginContainer.Name,
+                PluginUUID = uuid,
+                PluginVersion = pluginContainer.Version,
+                // other stuff is not inside the plugin
+            };
+            if (pluginContainer.GetPlugin() is PluginBase pb)
+            {
+                localPluginInfo.MinerPackageURL = pb.GetMinerBinsUrlsForPlugin().FirstOrDefault();
+                localPluginInfo.PluginDescription = ConstructLocalPluginDescription(pb);
+                localPluginInfo.SupportedDevicesAlgorithms = new Dictionary<string, List<string>>();
+                localPluginInfo.PackagePassword = pb.BinsPackagePassword;
+                var supportedList = pb.SupportedDevicesAlgorithmsDict();
+                foreach (var supported in supportedList)
+                {
+                    var algos = supported.Value.Select(algo => Enum.GetName(typeof(AlgorithmType), algo)).ToList();
+                    localPluginInfo.SupportedDevicesAlgorithms.Add(Enum.GetName(typeof(DeviceType), supported.Key), algos);
+                }
+            }
+            return (uuid,localPluginInfo);
         }
 
         private static async Task<bool> GetOnlineMinerPlugins()
         {
             async Task<List<PluginPackageInfo>> getPlugins(int version)
             {
-                using var client = new NoKeepAliveWebClient();
-                string s = await client.DownloadStringTaskAsync($"{Links.PluginsJsonApiUrl}?v={version}");
+                using var client = new NoKeepAliveHttpClient();
+                string s = await client.GetStringAsync($"{Links.PluginsJsonApiUrl}?v={version}");
                 return JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
                 {
                     NullValueHandling = NullValueHandling.Ignore,

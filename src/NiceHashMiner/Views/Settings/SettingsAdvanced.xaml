@@ -11,6 +11,18 @@
         <viewModels:MainVM />
     </UserControl.DataContext>
     <StackPanel>
+        <!-- ADVANCED -->
+        <WrapPanel Margin="24,16,24,16" Orientation="Vertical" x:Name="advancedWP">
+            <Label Content="For experts" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
+            <WrapPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" ToolTip="This feature enables advanced mode which allows users to have more control over NHM.">
+                    <local:SettingsCheckBoxItem 
+                        Enabled="{Binding MiscSettings.AdvancedMode}"
+                        Description="{StaticResource advancedMode}"
+                        Label="Advanced mode"/>
+                </StackPanel>
+            </WrapPanel>
+        </WrapPanel>
         <!--Miscellaneous-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
             <Label Content="Miscellaneous" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
@@ -95,7 +107,7 @@
                                         Description="{StaticResource debugConsole}"/>
             <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                 <StackPanel Orientation="Horizontal" ToolTip="{StaticResource maxLogSize}">
-                    <Label Content="Log Max File Size (bytes)" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                    <Label Content="Log Max File Size (bytes)" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
                 <TextBox Style="{StaticResource smallInputBox}" Text="{Binding LoggingDebugConsoleSettings.LogMaxFileSize, Mode=TwoWay}" Margin="0,0,24,0" />
@@ -114,7 +126,7 @@
             <WrapPanel Orientation="Horizontal" IsEnabled="{Binding IdleMiningSettings.StartMiningWhenIdle}">
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource Tooltip.IdleMining.IdleCheckMethod}">
-                        <Label Content="Idle Check Method" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <Label Content="Idle Check Method" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
                     <ComboBox Margin="0,0,24,0" Style="{StaticResource smallComboBox}" ItemContainerStyle="{StaticResource ItemStyle}" ItemsSource="{Binding IdleMiningSettings.IdleCheckTypes}" SelectedIndex="{Binding IdleMiningSettings.IdleCheckTypeIndex, Mode=TwoWay}" Width="218" SelectionChanged="ComboBox_SelectionChanged" />
@@ -122,7 +134,7 @@
 
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource Tooltip.IdleMining.MinIdleSeconds}">
-                        <Label Content="Minimum Idle [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <Label Content="Minimum Idle [s]:" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
                     <TextBox Style="{StaticResource smallInputBox}" Text="{Binding IdleMiningSettings.MinIdleSeconds, Mode=TwoWay}" Margin="0,0,24,0" />
@@ -134,14 +146,14 @@
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource switchMinimum}">
-                        <Label Content="Switch Minimum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <Label Content="Switch Minimum [s]:" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
                     <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSecondsLower, Mode=TwoWay}" Margin="0,0,24,0" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource switchMaximum}">
-                        <Label Content="Switch Maximum [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <Label Content="Switch Maximum [s]:" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
                     <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchSmaTimeChangeSecondsUpper, Mode=TwoWay}" Margin="0,0,24,0"/>
@@ -149,7 +161,7 @@
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                 <StackPanel Orientation="Horizontal" ToolTip="{StaticResource switchThreshold}">
-                    <Label Content="Switch Profitability Threshold:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                    <Label Content="Switch Profitability Threshold:" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
                 <TextBox Style="{StaticResource smallInputBox}" Text="{Binding SwitchSettings.SwitchProfitabilityThreshold, Mode=TwoWay}" HorizontalAlignment="Left" Margin="0,0,24,0" />
@@ -178,14 +190,14 @@
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource minerRestartDelay}">
-                        <Label Content="Miner Restart Delay [ms]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <Label Content="Miner Restart Delay [ms]:" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
                     <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.MinerRestartDelayMS, Mode=TwoWay}" Margin="0,0,24,0" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="0,16,0,0">
                     <StackPanel Orientation="Horizontal" ToolTip="{StaticResource apiBindStart}">
-                        <Label Content="API Bind port pool start:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                        <Label Content="API Bind port pool start:" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                         <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                     </StackPanel>
                     <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.ApiBindPortPoolStart, Mode=TwoWay}" Margin="0,0,24,0" />
@@ -193,7 +205,7 @@
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,16,0,16">
                 <StackPanel Orientation="Horizontal" ToolTip="{StaticResource apiQueryInterval}">
-                    <Label Content="Miner API Query Interval [s]:" Style="{StaticResource FontsTypography.SmallRegular/Active}" />
+                    <Label Content="Miner API Query Interval [s]:" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" />
                     <TextBlock HorizontalAlignment="Right" FontFamily="{StaticResource FontAwesome}" FontSize="12" Foreground="#cecdcd" FontStyle="Normal" FontStretch="Normal" FontWeight="Normal" Margin="0,5,12,0">&#xF05A;</TextBlock>
                 </StackPanel>
                 <TextBox Style="{StaticResource smallInputBox}" Text="{Binding MiningSettings.MinerAPIQueryInterval, Mode=TwoWay}" HorizontalAlignment="Left" Margin="0,0,24,0" />

@@ -19,23 +19,11 @@ namespace NiceHashMiner.Views
     /// </summary>
     public partial class DemoBTCNotice : BaseDialogWindow
     {
-        private Window _showMeHowWindow = null;
         public DemoBTCNotice()
         {
             InitializeComponent();
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             BtcTextValidation();
-            Closing += DemoBTCNotice_Closing;
-        }
-
-        private void DemoBTCNotice_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            try
-            {
-                _showMeHowWindow.Close();
-            }
-            catch
-            { }
         }
 
         private void BtcTextValidation()
@@ -45,8 +33,16 @@ namespace NiceHashMiner.Views
             SaveButton.IsEnabled = btcOK;
             if (btcOK)
             {
+                if (!CredentialValidators.ValidateInternalBitcoinAddress(trimmedBtcText))
+                {
+                    textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxBad") as Style;
+                    textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("RedDangerColorBrush");
+                    invalidBTCAddressWarningIcon.Visibility = Visibility.Visible;
+                    return;
+                }
                 textBoxBTCAddress.Style = Application.Current.FindResource("InputBoxGood") as Style;
                 textBoxBTCAddress.BorderBrush = (Brush)Application.Current.FindResource("NastyGreenBrush");
+                invalidBTCAddressWarningIcon.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -72,7 +68,7 @@ namespace NiceHashMiner.Views
 
         private void AddressHyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
+            Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
         }
 
         private void CloseDialog(object sender, RoutedEventArgs e)
@@ -100,18 +96,6 @@ namespace NiceHashMiner.Views
         private void DemoMiningButtonClicked(object sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void BaseDialogWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            var gifPath = Paths.AppRootPath("assets", "enter_BTC_manually.gif");
-            if (File.Exists(gifPath))
-            {
-                _showMeHowWindow = new ManuallyEnterBTCTutorial();
-                _showMeHowWindow.Left = this.Left + this.Width;
-                _showMeHowWindow.Top = this.Top;
-                _showMeHowWindow.Show();
-            }
         }
     }
 }

@@ -1,6 +1,7 @@
 using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.CommonWin32;
 using NHM.DeviceDetection;
 using NHM.DeviceMonitoring;
 using NHMCore.ApplicationState;
@@ -9,6 +10,7 @@ using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
+using NHMCore.Schedules;
 using NHMCore.Utils;
 using System;
 using System.Linq;
@@ -40,6 +42,9 @@ namespace NHMCore
         {
             try
             {
+                Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
+                Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
+
                 var allSteps = 14;
                 var currentStep = 0;
                 int nextProgPerc()
@@ -49,6 +54,7 @@ namespace NHMCore
                     if (perc > 100) return 100;
                     return perc;
                 };
+                NotificationsManager.Instance.ReadLoggedNotifications();
                 // STEP
                 // Checking System Memory
                 loader.PrimaryProgress?.Report((Tr("Checking System Specs"), nextProgPerc()));
@@ -75,12 +81,15 @@ namespace NHMCore
                     loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
+                if(DeviceDetection.DetectionResult.CUDADevices.Any(dev => dev.IsLHR) && !Helpers.IsElevated && CUDADevice.INSTALLED_NVIDIA_DRIVERS < new Version(522, 25))
+                {
+                    AvailableNotifications.CreateLHRPresentAdminRunRequired();
+                }
 
                 if (!DeviceMonitorManager.IsMotherboardCompatible() && Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateMotherboardNotCompatible();
                 }
-                OutsideProcessMonitor.Init(ExitApplication.Token);
                 // add devices
                 string getDeviceNameCount(DeviceType deviceType, int index) => 
                     deviceType switch
@@ -225,7 +234,7 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
-
+                if (btc != NHMRegistry.Get_QM_MiningaddressFromRegistry() && Helpers.IsElevated && CredentialValidators.ValidateBitcoinAddress(btc)) NHMRegistry.Set_QM_MiningaddressFromRegistry(btc);
                 if (AvailableDevices.HasGpuToPause)
                 {
                     var deviceToPauseUuid = AvailableDevices.Devices.FirstOrDefault(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU).Uuid;
@@ -247,6 +256,8 @@ namespace NHMCore
                     if (MiscSettings.Instance.UseOptimizationProfiles) AvailableNotifications.CreateOptimizationProfileElevateInfo();
                     else AvailableNotifications.CreateOptimizationProfileNotEnabledInfo();
                 }
+
+                SchedulesManager.Instance.Init();
             }
             catch (Exception e)
             {

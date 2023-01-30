@@ -28,7 +28,7 @@ namespace NHM.Common.Enums
         X15 = 6,
         [Obsolete("UNUSED Algorithm", true)]
         Nist5 = 7,
-        [Obsolete("UNUSED Algorithm", true)]
+        //[Obsolete("UNUSED Algorithm", true)]
         NeoScrypt = 8,
         [Obsolete("UNUSED Algorithm", true)]
         Lyra2RE = 9,
@@ -133,7 +133,11 @@ namespace NHM.Common.Enums
         [Obsolete("DISABLED Algorithm", true)]
         Kadena = 59,
         //[Obsolete("UNUSED Algorithm")]
-        EtcHash = 60
+        EtcHash = 60,
+        //[Obsolete("UNUSED Algorithm")]
+        VerusHash = 61,
+        //[Obsolete("UNUSED Algorithm")]
+        KHeavyHash = 62,
         #endregion // NiceHashAPI
     }
 

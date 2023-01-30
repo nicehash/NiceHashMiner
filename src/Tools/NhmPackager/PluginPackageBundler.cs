@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -65,18 +64,13 @@ namespace NhmPackager
         {
             try
             {
-                using (var client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("User-Agent", "NHM-Plugin-Bundler");
-                    var response = await client.GetAsync(url);
-                    var responseContent = response.Content;
-                    var content = "";
-                    using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
-                    {
-                        content = await reader.ReadToEndAsync();
-                    }
-                    return content;
-                }
+                using var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("User-Agent", "NHM-Plugin-Bundler");
+                var response = await client.GetAsync(url);
+                var responseContent = response.Content;
+                using var reader = new StreamReader(await responseContent.ReadAsStreamAsync());
+                var content = await reader.ReadToEndAsync();
+                return content;
             }
             catch (Exception e)
             {
@@ -156,11 +150,11 @@ namespace NhmPackager
                 {
                     var cachedPluginsPath = GetCachedPluginsPath(name);
                     var cachedPluginsUpdatedPath = GetCachedPluginsPath($"{name}.txt");
-                    using (WebClient wc = new WebClient())
-                    {
-                        await wc.DownloadFileTaskAsync(new Uri(url), cachedPluginsPath);
-                        File.WriteAllText(cachedPluginsUpdatedPath, lastUpdated);
-                    }
+                    using var client = new HttpClient();
+                    using var s = await client.GetStreamAsync(url);
+                    using var fs = new FileStream(cachedPluginsPath, FileMode.CreateNew);
+                    await s.CopyToAsync(fs);
+                    File.WriteAllText(cachedPluginsUpdatedPath, lastUpdated);
                     return true;
                 }
                 catch (Exception e)

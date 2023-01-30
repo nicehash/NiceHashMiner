@@ -11,7 +11,7 @@ namespace BrokenMiner
     public class BrokenMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource
     {
 
-        Version IMinerPlugin.Version => GetValueOrErrorSettings.GetValueOrError("Version", new Version(17, 0));
+        Version IMinerPlugin.Version => GetValueOrErrorSettings.GetValueOrError("Version", new Version(19, 0));
 
         string IMinerPlugin.Name => GetValueOrErrorSettings.GetValueOrError("Name", "Broken Plugin");
 

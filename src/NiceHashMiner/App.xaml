@@ -29,6 +29,8 @@
             <DrawingBrush x:Key="QrLightLogo" Drawing="{DynamicResource QrIconDefault}" />
             <DrawingBrush x:Key="QrDarkLogo" Drawing="{DynamicResource QRIcon}" />
 
+            <DrawingBrush x:Key="TrashDarkLogo" Drawing="{DynamicResource TrashLogo}" />
+            <DrawingBrush x:Key="TrashLightLogo" Drawing="{DynamicResource TrashLogoDefault}" />
 
             <DrawingBrush x:Key="LoginCircle" Drawing="{DynamicResource LoginCircleLogoLight}" />
             <DrawingBrush x:Key="LoginQRCircle" Drawing="{DynamicResource LoginQRCircleLight}" />
@@ -181,11 +183,24 @@
                 <Setter Property="HorizontalAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
+            <Style TargetType="TextBlock" x:Key="GreenCircle">
+                <Setter Property="FontFamily" Value="{StaticResource FontAwesome}" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontStyle" Value="Normal" />
+                <Setter Property="FontStretch" Value="Normal" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="Foreground" Value="{StaticResource NastyGreenBrush}" />
+                <Setter Property="Text" Value="&#xf111;" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
 
             <converters:NulBoolToVisibilityConverter x:Key="NulBoolToVisibilityConverter" />
             <converters:NulBoolToVisibilityConverterFalse x:Key="NulBoolToVisibilityConverterFalse" />
             <converters:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter" />
             <converters:NumberToVisibilityConverterZero x:Key="NumberToVisibilityConverterZero" />
+            <converters:BooleanDaysToStringConverter x:Key="BooleanDaysToStringConverter" />
+            <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
 
         </ResourceDictionary>
     </Application.Resources>

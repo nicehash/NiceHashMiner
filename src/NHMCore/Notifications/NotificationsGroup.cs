@@ -50,6 +50,9 @@ namespace NHMCore.Notifications
         MotherboardNotCompatible,
         DriverVersionProblem,
         OptimizationWithProfilesDisabled,
-        OptimizationProfilesElevate
+        OptimizationProfilesElevate,
+        RequireAdminForLHR,
+        NoPowerInfo,
+        NoOptimalDrivers
     }
 }

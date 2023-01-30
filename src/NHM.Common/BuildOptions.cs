@@ -7,13 +7,13 @@ namespace NHM.Common
     {
         public class BuildOptionSettings
         {
-            public BuildTag BUILD_TAG { get; set; } = BuildTag.PRODUCTION;
-            public bool IS_PLUGINS_TEST_SOURCE { get; set; } = false;
-            public bool CUSTOM_ENDPOINTS_ENABLED { get; set; } = false;
+            public BuildTag BUILD_TAG { get; init; } = BuildTag.PRODUCTION;
+            public bool IS_PLUGINS_TEST_SOURCE { get; init; } = false;
+            public bool CUSTOM_ENDPOINTS_ENABLED { get; init; } = false;
             // core settings
-            public bool FORCE_MINING { get; set; } = false;
-            public bool FORCE_PROFITABLE { get; set; } = false;
-            public bool SHOW_TDP_SETTINGS { get; set; } = false;
+            public bool FORCE_MINING { get; init; } = false;
+            public bool FORCE_PROFITABLE { get; init; } = false;
+            public bool SHOW_TDP_SETTINGS { get; init; } = false;
         }
 
         private static bool _initCalled = false;

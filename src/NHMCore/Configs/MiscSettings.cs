@@ -1,6 +1,5 @@
 ﻿using NHM.Common;
 using NHMCore.Mining;
-using NHMCore.Mining.Plugins;
 using NHMCore.Utils;
 using System.Collections.Generic;
 
@@ -83,6 +82,16 @@ namespace NHMCore.Configs
             {
                 StratumServiceHelpers.UseDNSQ = value;
                 OnPropertyChanged(nameof(ResolveNiceHashDomainsToIPs));
+            }
+        }
+        private bool _advancedMode = false;
+        public bool AdvancedMode
+        {
+            get => _advancedMode;
+            set
+            {
+                _advancedMode = value;
+                OnPropertyChanged(nameof(AdvancedMode));
             }
         }
     }

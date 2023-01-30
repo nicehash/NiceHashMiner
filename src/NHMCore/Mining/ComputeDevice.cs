@@ -8,12 +8,10 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Nhmws;
-using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace NHMCore.Mining
 {
@@ -375,7 +373,6 @@ namespace NHMCore.Mining
                 {
                     setAlgo.Enabled = copyFromAlgo.Enabled;
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
-                    setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
                     setAlgo.PowerUsage = copyFromAlgo.PowerUsage;
                 }
             }
@@ -466,7 +463,6 @@ namespace NHMCore.Mining
                 // set plugin algo
                 pluginAlgo.Speeds = pluginConf.Speeds;
                 pluginAlgo.Enabled = pluginConf.Enabled;
-                pluginAlgo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                 pluginAlgo.PowerUsage = pluginConf.PowerUsage;
                 pluginAlgo.ConfigVersion = pluginConf.GetVersion();
             }
@@ -512,7 +508,6 @@ namespace NHMCore.Mining
                     PluginUUID = algo.Algorithm.MinerID,
                     AlgorithmIDs = string.Join("-", algo.Algorithm.IDs.Select(id => id.ToString())),
                     Enabled = algo.Enabled,
-                    ExtraLaunchParameters = algo.ExtraLaunchParameters,
                     PluginVersion = $"{algo.ConfigVersion.Major}.{algo.ConfigVersion.Minor}",
                     PowerUsage = algo.PowerUsage,
                     Speeds = algo.Speeds

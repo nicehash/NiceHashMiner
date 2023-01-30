@@ -79,13 +79,12 @@ namespace NiceHashMiner
                     this.Shutdown();
                 });
             };
+
             var isDevelop = Environment.GetCommandLineArgs().Contains("-dev");
             var isLauncher = Environment.GetCommandLineArgs().Contains("-lc");
             var launcherPID = ParseLauncherPID();
-            Launcher.SetIsUpdated(Environment.GetCommandLineArgs().Contains("-updated"));
-            Launcher.SetIsUpdatedFailed(Environment.GetCommandLineArgs().Contains("-updateFailed"));
             Launcher.SetIsLauncher(isLauncher);
-            
+
             var (ok, rootPath, appRootPath) = GetPaths(isLauncher, isDevelop);
             if (!ok)
             {
@@ -110,8 +109,7 @@ namespace NiceHashMiner
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls |
                                                    SecurityProtocolType.Tls11 |
-                                                   SecurityProtocolType.Tls12 |
-                                                   SecurityProtocolType.Ssl3;
+                                                   SecurityProtocolType.Tls12;
 
             // Initialize config
             ConfigManager.InitializeConfig();
@@ -256,7 +254,7 @@ namespace NiceHashMiner
                 "Inner Exception:\n" + ex_inner.Message + "\n\n" + ex_inner.StackTrace;
             MessageBox.Show(msg, "Application Halted!", MessageBoxButton.OK);
             e.Handled = true;
-            Application.Current.Shutdown();
+            Current.Shutdown();
         }
     }
 }

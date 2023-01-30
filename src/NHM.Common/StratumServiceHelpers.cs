@@ -14,8 +14,8 @@ namespace NHM.Common
         {
             internal class StratumTemplateEntry
             {
-                public string Template { get; set; } = "";
-                public int Port { get; set; } = -1;
+                public string Template { get; init; } = "";
+                public int Port { get; init; } = -1;
             }
 
             public string NhmSocketAddress { get; set; } = "";
@@ -39,7 +39,7 @@ namespace NHM.Common
                     stratumTemplates[algorithmType] = new StratumTemplateEntry
                     {
                         // we get something like this "{PREFIX://}daggerhashimoto.{LOCATION}.nicehash.com{:PORT}"
-                        Template = GetAlgorithmURL(BuildOptions.BUILD_TAG, PREFIX_TEMPLATE, name, PORT_TEMPLATE),
+                        Template = GetAlgorithmURL(BuildOptions.BUILD_TAG, PREFIX_TEMPLATE, name, PORT_TEMPLATE, algorithmType),
                         Port = port // 9200 or 443
                     };
                 }
@@ -107,8 +107,10 @@ namespace NHM.Common
             };
         }
 
-        private static string GetAlgorithmURL(BuildTag buildTag, string prefix, string name, string port)
+        private static string GetAlgorithmURL(BuildTag buildTag, string prefix, string name, string port, AlgorithmType algorithmType)
         {
+            if (buildTag == BuildTag.TESTNETDEV) port = ":" + (3333 + algorithmType).ToString();
+
             return buildTag switch
             {
                 BuildTag.TESTNET => $"{prefix}{name}-test.auto.nicehash.com{port}",
@@ -131,7 +133,7 @@ namespace NHM.Common
                 }
                 
                 var (prefix, port) = GetProtocolPrefixAndPort(conectionType, BuildOptions.BUILD_TAG);
-                var ret = GetAlgorithmURL(BuildOptions.BUILD_TAG, prefix, name, $":{port}");
+                var ret = GetAlgorithmURL(BuildOptions.BUILD_TAG, prefix, name, $":{port}", algorithmType);
                 return ret;
             }
             catch (Exception e)

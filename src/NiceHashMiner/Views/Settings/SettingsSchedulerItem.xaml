@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.Settings.SettingsSchedulerItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.Settings"
+             xmlns:nhmcore="clr-namespace:NHMCore.Schedules;assembly=NHMCore"
+             xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels" d:DataContext="{d:DesignInstance Type=nhmcore:Schedule}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel>
+        <WrapPanel Orientation="Horizontal" Margin="0,8,0,0">
+            <WrapPanel Orientation="Horizontal" Width="72">
+                <TextBlock Text="{Binding From}" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
+                <TextBlock Text="-" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}" Margin="1,0,1,0"/>
+                <TextBlock Text="{Binding To}" Style="{StaticResource FontsTypography.SmallRegular/Active-TextBlock}"/>
+            </WrapPanel>
+            <TextBlock Margin="37,0,0,0" Width="210" Text="{Binding DaysFrom, Converter={StaticResource BooleanDaysToStringConverter}}" Style="{StaticResource FontsTypography.Caption-Primary}"/>
+            <ToggleButton Margin="60,0,0,0" x:Name="DeleteSchedule" Height="16" Width="14" HorizontalAlignment="Right" Style="{StaticResource QrTabButton}"
+                              Background="{StaticResource  TrashLightLogo}"
+                              Click="DeleteSchedule_Click" MouseEnter="DeleteSchedule_MouseEnter" MouseLeave="DeleteSchedule_MouseLeave" />
+        </WrapPanel>
+        <StackPanel Orientation="Horizontal">
+        </StackPanel>
+    </StackPanel>
+</UserControl>

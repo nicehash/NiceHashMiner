@@ -295,6 +295,7 @@ installer/*.zip
 installer/*.exe
 !installer/EULA.zip
 installer/miner_plugins/*
+installer/version_manager/
 
 # pre_compiled_libs
 !pre_compiled_libs/device_detection_x64/device_detection.exe
@@ -303,3 +304,4 @@ installer/miner_plugins/*
 prepare_installers.bat
 prepare_release.bat
 
+tmp*.json

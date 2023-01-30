@@ -21,16 +21,15 @@ namespace LolMiner
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "1.51a",
-                ExePath = new List<string> { "1.51a", "lolMiner.exe" },
+                BinVersion = "1.65",
+                ExePath = new List<string> { "1.65", "lolMiner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.51a/lolMiner_v1.51a_Win64.zip" // original
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.65/lolMiner_v1.65_Win64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -40,7 +39,7 @@ namespace LolMiner
             };
         }
 
-        public override Version Version => new Version(18, 1);
+        public override Version Version => new Version(19, 7);
 
         public override string Author => "info@nicehash.com";
 
@@ -149,6 +148,8 @@ namespace LolMiner
 
         public (DriverVersionCheckType ret, Version minRequired) IsDriverMinimumRequired(BaseDevice device)
         {
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS == new Version(526, 47)) return (DriverVersionCheckType.DriverVersionProblematic, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS == new Version(526, 86)) return (DriverVersionCheckType.DriverVersionProblematic, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             return DriverVersionChecker.CompareCUDADriverVersions(device, CUDADevice.INSTALLED_NVIDIA_DRIVERS, new Version(411, 31));
         }
     }

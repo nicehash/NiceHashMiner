@@ -1,0 +1,19 @@
+{
+  "MinerParameters": [
+    ["--apiport", "4109"]
+  ],
+  "AlgorithmParameters" : [
+    ["--coin", "ETH"],
+    ["--pool", "daggerhashimoto.net"]
+  ],
+  "DevicesParametersList" : [
+    [
+      ["--lhr-mode", "1", ","],
+      ["--test", "55"]
+    ],
+    [
+      ["--lhr-mode", "2", ","],
+      ["--test", "55"]
+    ]
+  ]
+}

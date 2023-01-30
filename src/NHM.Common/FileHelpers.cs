@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography;
 
 namespace NHM.Common
@@ -23,13 +23,13 @@ namespace NHM.Common
             }
         }
 
-        public static string GetURLFileSHA256Checksum(string url)
+        internal static string GetURLFileSHA256Checksum(string url)
         {
             try
             {
                 using var sha256Hash = SHA256.Create();
-                using var myWebClient = new WebClient();
-                var hash = sha256Hash.ComputeHash(myWebClient.OpenRead(url));
+                using var httpClient = new HttpClient();
+                var hash = sha256Hash.ComputeHash(httpClient.GetStreamAsync(url).Result);
                 return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
             catch (Exception e)

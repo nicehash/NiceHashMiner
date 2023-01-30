@@ -4,7 +4,9 @@ using NHM.Common.Enums;
 using NHM.MinerPlugin;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.ELPDataModels;
 using NHMCore.Mining.Plugins;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,6 +68,8 @@ namespace NHMCore.Mining
             ComputeDevice = computeDevice;
 
             computeDevice.PropertyChanged += ComputeDevice_PropertyChanged;
+            SwitchSettings.Instance.PropertyChanged += SettingsChanged;
+            GUISettings.Instance.PropertyChanged += SettingsChanged;
             OnPropertyChanged(nameof(IsUserEditable));
         }
 
@@ -87,7 +91,7 @@ namespace NHMCore.Mining
                 Algorithm = Algorithm
             };
         }
-
+        public DeviceELPData FindInELPTree(string deviceUUID) => ELPManager.Instance.FindDeviceNode(this, deviceUUID); 
         public void UpdateConfigVersionIfNeeded()
         {
             if ((_powerUsageHistory.Count >= 2 && _powerUsageHistory.Last() != _powerUsageHistory[_powerUsageHistory.Count - 2]) ||
@@ -210,22 +214,6 @@ namespace NHMCore.Mining
             }
         }
 
-        /// <summary>
-        /// String containing raw extralaunchparams entered by user
-        /// </summary>
-        public string ExtraLaunchParameters
-        {
-            get
-            {
-                if (Algorithm == null) return "";
-                return Algorithm.ExtraLaunchParameters;
-            }
-            set
-            {
-                if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
-                OnPropertyChanged(nameof(ExtraLaunchParameters));
-            }
-        }
 
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining
@@ -260,9 +248,16 @@ namespace NHMCore.Mining
             OnPropertyChanged(nameof(AnnotatedSpeeds));
             OnPropertyChanged(nameof(BenchmarkNeeded));
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
             OnPropertyChanged(nameof(Status));
             OnPropertyChanged(nameof(HasBenchmark));
+        }
+        protected void NotifyPowerChanged()
+        {
+            OnPropertyChanged(nameof(CurrentEstimatedProfit));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
         }
 
         #endregion
@@ -288,6 +283,7 @@ namespace NHMCore.Mining
             // notify changed
             OnPropertyChanged(nameof(CurrentEstimatedProfit));
             OnPropertyChanged(nameof(CurrentEstimatedProfitStr));
+            OnPropertyChanged(nameof(CurrentEstimatedProfitPure));
             OnPropertyChanged(nameof(Status));
         }
 
@@ -316,11 +312,22 @@ namespace NHMCore.Mining
                         var paying = _lastEstimatedProfitSMA[speed.Algo];
                         newProfit += paying * speed.Value * Mult;
                     }
-                    // TODO estimate profit subtraction ???
                     return Math.Round(newProfit, 8);
                 }
                 // we can't calculate 
                 return -1;
+            }
+        }
+        public double CurrentEstimatedProfitPure
+        {
+            get
+            {
+                if (GUISettings.Instance.DisplayPureProfit)
+                {
+                    var power = (PowerUsage / 1000 * BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) * 24;
+                    return (CurrentEstimatedProfit - power);
+                }
+                return CurrentEstimatedProfit;
             }
         }
         public string CurrentEstimatedProfitStr
@@ -328,6 +335,11 @@ namespace NHMCore.Mining
 
             get
             {
+                if (GUISettings.Instance.DisplayPureProfit)
+                {
+                    var power = (PowerUsage / 1000 * BalanceAndExchangeRates.Instance.GetKwhPriceInBtc()) * 24;
+                    return (CurrentEstimatedProfit - power).ToString("0.00000000");
+                }
                 var currentEstimatedProfit = CurrentEstimatedProfit;
                 // WPF or null
                 if (currentEstimatedProfit < 0) return "---";
@@ -392,6 +404,7 @@ namespace NHMCore.Mining
                 _powerUsage = value;
                 UpdateConfigVersionIfNeeded();
                 OnPropertyChanged(nameof(PowerUsage));
+                NotifyPowerChanged();
             }
         }
 
@@ -521,6 +534,10 @@ namespace NHMCore.Mining
                 // Now we subtract from profit, which may make profit negative
                 CurrentNormalizedProfit -= power;
             }
+        }
+        void SettingsChanged(object sender, EventArgs e)
+        {
+            NotifyPowerChanged();
         }
 
         #endregion

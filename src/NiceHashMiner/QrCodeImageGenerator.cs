@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ZXing;
 using ZXing.Common;
+using ZXing.QrCode;
 using ZXing.QrCode.Internal;
 using ZXing.Rendering;
 
@@ -25,38 +26,53 @@ namespace NiceHashMiner
             };
             encOptions.Hints.Add(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
 
-            var bw = new BarcodeWriter();
-            bw.Renderer = new BitmapRenderer();
-            bw.Options = encOptions;
-            bw.Format = BarcodeFormat.QR_CODE;
-
-            var bm = bw.Write(uuid);
+            var bw = new QRCodeWriter();
+            
+            var bm = bw.encode(uuid, BarcodeFormat.QR_CODE, 160, 160, encOptions.Hints);
+            var bitMap = new Bitmap(160, 160);
             try
             {
                 var overlay = new Bitmap(Properties.Resources.logoLight32);
                 if (!LightTheme)
                 {
-                    for (int j = 0; (j <= (bm.Height - 1)); j++)
+                    for (int j = 0; (j <= (bitMap.Height - 1)); j++)
                     {
-                        for (int k = 0; (k <= (bm.Width - 1)); k++)
+                        for (int k = 0; (k <= (bitMap.Width - 1)); k++)
                         {
-                            var inv = bm.GetPixel(k, j);
-                            inv = System.Drawing.Color.FromArgb(255, (255 - inv.R), (255 - inv.G), (255 - inv.B));
-                            bm.SetPixel(k, j, inv);
+                            var inv = bm[k, j];
+                            if (inv)
+                            {
+                                bitMap.SetPixel(k, j, System.Drawing.Color.FromArgb(255, 255, 255, 255));
+                            }
+                            else bitMap.SetPixel(k, j, System.Drawing.Color.FromArgb(255, 0, 0, 0));
                         }
                     }
                     overlay = new Bitmap(Properties.Resources.logoDark32);
                 }
+                else{
+                    for (int j = 0; (j <= (bitMap.Height - 1)); j++)
+                    {
+                        for (int k = 0; (k <= (bitMap.Width - 1)); k++)
+                        {
+                            var inv = bm[k, j];
+                            if (inv)
+                            {
+                                bitMap.SetPixel(k, j, System.Drawing.Color.FromArgb(255, 0, 0, 0));
+                            }
+                            else bitMap.SetPixel(k, j, System.Drawing.Color.FromArgb(255, 255, 255, 255));
+                        }
+                    }
+                }
 
-                var g = Graphics.FromImage(bm);
-                var x = (bm.Width - overlay.Width) / 2;
-                var y = (bm.Height - overlay.Height) / 2;
+                var g = Graphics.FromImage(bitMap);
+                var x = (bitMap.Width - overlay.Width) / 2;
+                var y = (bitMap.Height - overlay.Height) / 2;
                 g.FillRectangle(new SolidBrush(System.Drawing.Color.White), x, y, overlay.Width, overlay.Height);
-                g.DrawImage(overlay, new System.Drawing.Point(x, y));
+                g.DrawImage(overlay, new Point(x, y));
 
                 //bmp to bmpimg
                 using var memory = new MemoryStream();
-                bm.Save(memory, ImageFormat.Png);
+                bitMap.Save(memory, ImageFormat.Png);
                 memory.Position = 0;
                 var bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();

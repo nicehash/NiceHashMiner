@@ -11,6 +11,7 @@ using NiceHashMiner.Views.Common.NHBase;
 using NiceHashMiner.Views.TDPSettings;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,6 +19,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using Windows.ApplicationModel.VoiceCommands;
 
 namespace NiceHashMiner.Views
 {
@@ -92,10 +94,12 @@ namespace NiceHashMiner.Views
                     ShowContentAsModalDialog(nhmUpdaterDialog);
                 });
             };
-            NotificationsManager.Instance.PropertyChanged += NotificationsManagerInstance_PropertyChanged;
-            MiningState.Instance.PropertyChanged += MiningStateInstance_PropertyChanged;
             await MainWindow_OnLoadedTask();
             _vm.GUISettings.PropertyChanged += GUISettings_PropertyChanged;
+            NotificationsManager.Instance.PropertyChanged += NotificationsManagerInstance_PropertyChanged;
+            MiningState.Instance.PropertyChanged += MiningStateInstance_PropertyChanged;
+            MiscSettings.Instance.PropertyChanged += MiscSettings_PropertyChanged_HandleELPTabVisibility;
+            SetELPTabVisibilityAccordingToSettings();
             SetNotificationCount(NotificationsManager.Instance.NotificationNewCount);
 
             if (!HasWriteAccessToFolder(Paths.Root))
@@ -114,6 +118,15 @@ namespace NiceHashMiner.Views
                     ShowContentAsModalDialog(nhmNoPermissions);
                 });
             }
+        }
+        private void MiscSettings_PropertyChanged_HandleELPTabVisibility(object sender, PropertyChangedEventArgs e)
+        {
+            SetELPTabVisibilityAccordingToSettings();
+        }
+        private void SetELPTabVisibilityAccordingToSettings()
+        {
+            if (MiscSettings.Instance.AdvancedMode) EnableELPTabButton();
+            else DisableELPTabButton();
         }
 
         private void MiningStateInstance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -178,7 +191,7 @@ namespace NiceHashMiner.Views
                     };
                     nhmNoDeviceDialog.OKClick += (s, e) =>
                     {
-                        Process.Start(Links.NhmNoDevHelp);
+                        Helpers.VisitUrlLink(Links.NhmNoDevHelp);
                     };
                     nhmNoDeviceDialog.OnExit += (s, e) =>
                     {
@@ -246,7 +259,7 @@ namespace NiceHashMiner.Views
                 };
                 btcLoginDialog.OKClick += (s, e) =>
                 {
-                    if (!LoginSuccess.Value) Process.Start(Links.Login);
+                    if (!LoginSuccess.Value) Helpers.VisitUrlLink(Links.Login);
                 };
                 CustomDialogManager.ShowModalDialog(btcLoginDialog);
             }
@@ -293,6 +306,7 @@ namespace NiceHashMiner.Views
             IsEnabled = false;
             //await _vm.StopMining();
             await ApplicationStateManager.BeforeExit();
+            taskbarIcon.Dispose();
             ApplicationStateManager.ExecuteApplicationExit();
             //Close();
         }
@@ -349,7 +363,7 @@ namespace NiceHashMiner.Views
             {
                 // Attempt to get a list of security permissions from the folder. 
                 // This will raise an exception if the path is read only or do not have access to view the permissions. 
-                var ds = Directory.GetAccessControl(folderPath);
+                var ds = new DirectoryInfo(folderPath).GetAccessControl();
                 return true;
             }
             catch (UnauthorizedAccessException)

@@ -2,6 +2,7 @@
 using NHMCore.Configs;
 using NHMCore.Notifications;
 using NHMCore.Utils;
+using NiceHashMiner.ViewModels;
 using NiceHashMiner.Views.Common;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -54,13 +55,14 @@ namespace NiceHashMiner.Views.Settings
 
         private void AddressHyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
+            Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
         }
 
         private void ValidateBTCAddr()
         {
             var trimmedBtcText = textBoxBTCAddress.Text.Trim();
             var btcOK = CredentialValidators.ValidateBitcoinAddress(trimmedBtcText);
+            if (btcOK) ValidateInternalBTCAddress();
             var (style, brush) = GetStyleBrush(btcOK);
             textBoxBTCAddress.Style = style;
             textBoxBTCAddress.BorderBrush = brush;
@@ -88,6 +90,18 @@ namespace NiceHashMiner.Views.Settings
             }
             textBoxBTCAddress.Style = style;
             textBoxBTCAddress.BorderBrush = brush;
+        }
+        private void ValidateInternalBTCAddress()
+        {
+            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
+            if (!CredentialValidators.ValidateInternalBitcoinAddress(trimmedBtcText) && invalidBTCAddressWarningIcon != null && externalAddressHelp != null)
+            {
+                invalidBTCAddressWarningIcon.Visibility = Visibility.Visible;
+                externalAddressHelp.Visibility = Visibility.Visible;
+                return;
+            }
+            if (invalidBTCAddressWarningIcon != null) invalidBTCAddressWarningIcon.Visibility = Visibility.Collapsed;
+            if (externalAddressHelp != null) externalAddressHelp.Visibility = Visibility.Collapsed;
         }
 
         private void ValidateWorkername()
@@ -253,6 +267,16 @@ namespace NiceHashMiner.Views.Settings
             nhmConfirmDialog.OnExit += (s, e1) => RevertTheme();//reverts even when click ok because it exits...
 
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
+        }
+        private void NetProfitToggle_click(object sender, RoutedEventArgs e) //TODO for this to work change datacontext in xaml for this
+        {
+            if(DataContext is MainVM mvm && mvm.Devices != null)
+            {
+                foreach(var dev in mvm.Devices)
+                {
+                    dev?.OrderAlgorithmsByPaying();
+                }
+            }
         }
     }
 }

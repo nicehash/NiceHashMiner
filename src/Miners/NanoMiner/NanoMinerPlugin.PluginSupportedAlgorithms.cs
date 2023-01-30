@@ -16,31 +16,30 @@ namespace NanoMiner
                     DeviceType.AMD,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30 },
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.Autolykos),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit = (4UL << 29) + (5UL << 28) + (1UL << 26) }
+                        new SAS(AlgorithmType.KAWPOW){NonDefaultRAMLimit = 4UL << 30, Enabled = false },
+                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false},
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false},
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false }
                     }
                 },
                 {
                     DeviceType.NVIDIA,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.KAWPOW){ NonDefaultRAMLimit = (2UL << 30) + (2UL << 29) + (2UL << 28)},
-                        new SAS(AlgorithmType.Octopus),
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.Autolykos),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) }
+                        new SAS(AlgorithmType.KAWPOW){ NonDefaultRAMLimit = (2UL << 30) + (2UL << 29) + (2UL << 28), Enabled = false },
+                        new SAS(AlgorithmType.Octopus) { Enabled = false},
+                        new SAS(AlgorithmType.DaggerHashimoto) { Enabled = false},
+                        new SAS(AlgorithmType.Autolykos) { Enabled = false},
+                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26), Enabled = false }
+                    }
+                },
+                {
+                    DeviceType.CPU,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.VerusHash)
                     }
                 }
-            },
-            AlgorithmNames = new Dictionary<AlgorithmType, string>
-            {
-                { AlgorithmType.KAWPOW, "Kawpow" },
-                { AlgorithmType.Octopus, "Octopus" },
-                { AlgorithmType.DaggerHashimoto, "Ethash" },
-                { AlgorithmType.Autolykos, "autolykos" },
-                { AlgorithmType.EtcHash, "Etchash" }
             }
         };
     }

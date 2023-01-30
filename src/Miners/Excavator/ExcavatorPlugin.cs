@@ -17,42 +17,27 @@ using System.Diagnostics;
 
 namespace Excavator
 {
-#if LHR_BUILD_ON
-    public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference, IDriverIsMinimumRecommended, IDriverIsMinimumRequired
-#else
     public partial class ExcavatorPlugin : PluginBase, IDevicesCrossReference
-#endif
+
     {
         public ExcavatorPlugin()
         {
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
-#if LHR_BUILD_ON
+
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.7.7.6",
-                ExePath = new List<string> { "NHQM_v0.5.5.0", "excavator.exe" },
+                BinVersion = "v1.8.2.0",
+                ExePath = new List<string> { "NHQM_v0.6.2.0_RC", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.5.0/NHQM_v0.5.5.0.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.2.0_RC/NHQM_v0.6.2.0_RC.zip"
                 }
             };
-#else
-            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
-            {
-                BinVersion = "v1.7.6.5",
-                ExePath = new List<string> { "NHQM_v0.5.3.6", "excavator.exe" },
-                Urls = new List<string>
-                {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.5.3.6/NHQM_v0.5.3.6.zip"
-                }
-            };
-#endif
             PluginMetaInfo = new PluginMetaInfo
             {
                 PluginDescription = "Excavator NVIDIA/AMD GPU miner from NiceHash",
@@ -60,11 +45,7 @@ namespace Excavator
             };
         }
 
-#if LHR_BUILD_ON
-        public override Version Version => new Version(17, 2);
-#else
-        public override Version Version => new Version(16, 3);
-#endif
+        public override Version Version => new Version(19, 3);
 
         public override string PluginUUID => "27315fe0-3b03-11eb-b105-8d43d5bd63be";
         public override string Name => "Excavator";
@@ -112,12 +93,12 @@ namespace Excavator
                 .ToDictionary(p => p.gpu, p => p.algos);
         }
 
-        private void CreateExcavatorCommandTemplate(IEnumerable<string> uuids)
+        private void CreateExcavatorCommandTemplate(IEnumerable<string> uuids, string algorithmName)
         {
             try
             {
                 var templatePath = CmdConfig.CommandFileTemplatePath(PluginUUID);
-                var template = CmdConfig.CreateTemplate(uuids);
+                var template = CmdConfig.CreateTemplate(uuids, algorithmName);
                 if (!File.Exists(templatePath) && template != null)
                 {
                     File.WriteAllText(templatePath, template);
@@ -221,15 +202,6 @@ namespace Excavator
         {
             string result = string.Empty;
             var tempQueryPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = binPath,
-                Arguments = $"-wp {tempQueryPort}",
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-            };
             void killProcess(Process handle)
             {
                 try
@@ -246,7 +218,19 @@ namespace Excavator
                 }
             };
 
-            using var excavatorHandle = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
+            using var excavatorHandle = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = binPath,
+                    Arguments = $"-wp {tempQueryPort}",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                },
+                EnableRaisingEvents = true
+            };
             using var ct = new CancellationTokenSource(30 * 1000);
             using var client = new HttpClient();
             excavatorHandle.Start();
@@ -288,7 +272,7 @@ namespace Excavator
                     if (targetGpu == null) continue; 
                     _mappedDeviceIds[targetGpu.UUID] = serializedDev.uuid;
                 }
-                CreateExcavatorCommandTemplate(_mappedDeviceIds.Values);
+                CreateExcavatorCommandTemplate(_mappedDeviceIds.Values, AlgorithmName().ToLower());
             }
             catch (Exception e)
             {

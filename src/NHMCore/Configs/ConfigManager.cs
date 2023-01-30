@@ -3,11 +3,11 @@ using NHM.Common.Configs;
 using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
+using NHMCore.Schedules;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Windows.Forms;
 
 namespace NHMCore.Configs
 {
@@ -21,6 +21,7 @@ namespace NHMCore.Configs
         private static GeneralConfig GeneralConfig { get; set; } = new GeneralConfig();
 
         private static string GeneralConfigPath => Paths.ConfigsPath("General.json");
+        private static string ScheduleConfigPath => Paths.ConfigsPath("Schedule.json");
 
         private static object _lock = new object();
 
@@ -70,7 +71,7 @@ namespace NHMCore.Configs
             GeneralConfig.SetDefaults();
             ToSSetings.Instance.Hwid = ApplicationStateManager.RigID();
 
-            var asmVersion = new Version(Application.ProductVersion);
+            var asmVersion = new Version(NHMApplication.ProductVersion);
 
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
@@ -100,6 +101,14 @@ namespace NHMCore.Configs
             }
             else
             {
+                var fromFileInfo = InternalConfigs.ReadFileSettings<GeneralConfigOld>(GeneralConfigPath);
+                if(fromFileInfo != null)
+                {
+                    GeneralConfig.SetValues(fromFileInfo);
+                    GeneralConfig.FixSettingBounds();
+                    GeneralConfig.PropertyChanged += BalanceAndExchangeRates.Instance.GeneralConfig_PropertyChanged;
+                }
+                
                 GeneralConfigFileCommit();
             }
         }
@@ -137,6 +146,14 @@ namespace NHMCore.Configs
             {
                 InternalConfigs.WriteFileSettings(GeneralConfigPath, GeneralConfig);
                 ShowRestartRequired?.Invoke(null, IsRestartNeeded());
+            });
+        }
+
+        public static void ScheduleConfigFileCommit()
+        {
+            ApplicationStateManager.App.Dispatcher.Invoke(() =>
+            {
+                InternalConfigs.WriteFileSettings(ScheduleConfigPath, SchedulesManager.Instance.Schedules);
             });
         }
 

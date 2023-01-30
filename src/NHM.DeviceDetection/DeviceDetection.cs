@@ -24,13 +24,43 @@ namespace NHM.DeviceDetection
         {
             public bool UseUserSettings { get; set; } = false;
             public bool FakeDevices { get; set; } = false;
-            public List<BaseDevice> Devices { get; set; } = new List<BaseDevice>
+            public List<FakeDevice> Devices { get; set; } = new List<FakeDevice>
             {
-                new BaseDevice(DeviceType.CPU, "FCPU-d0e3cc7b-9455-4386-9d7c-154754ae577e", "Fake CPU", 0),
-                new BaseDevice(DeviceType.NVIDIA, "FGPU-75555d30-b049-4e10-8add-eff796028b14", "Fake NVIDIA", 0),
-                new BaseDevice(DeviceType.NVIDIA, "FGPU-da69753a-4d27-4ab2-95ba-6504be9e8a9a", "Fake NVIDIA", 1),
-                new BaseDevice(DeviceType.AMD, "FAMD-bbc36d15-61db-4342-bb0d-2c97c62fe387", "Fake AMD", 0),
-                new BaseDevice(DeviceType.AMD, "FAMD-7c779e99-4b58-47e1-825c-0a4d6c01a70d", "Fake AMD", 1),
+                new FakeDevice
+                {
+                    DeviceType = DeviceType.CPU,
+                    UUID = "FCPU-d0e3cc7b-9455-4386-9d7c-154754ae577e",
+                    Name = "Fake CPU",
+                    ID = 0,
+                },
+                new FakeDevice
+                {
+                    DeviceType = DeviceType.NVIDIA,
+                    UUID = "FGPU-75555d30-b049-4e10-8add-eff796028b14",
+                    Name = "Fake NVIDIA",
+                    ID = 0,
+                },
+                new FakeDevice
+                {
+                    DeviceType = DeviceType.NVIDIA,
+                    UUID = "FGPU-da69753a-4d27-4ab2-95ba-6504be9e8a9a",
+                    Name = "Fake NVIDIA",
+                    ID = 1,
+                },
+                new FakeDevice
+                {
+                    DeviceType = DeviceType.AMD,
+                    UUID = "FAMD-bbc36d15-61db-4342-bb0d-2c97c62fe387",
+                    Name = "Fake AMD",
+                    ID = 0,
+                },
+                new FakeDevice
+                {
+                    DeviceType = DeviceType.AMD,
+                    UUID = "FAMD-7c779e99-4b58-47e1-825c-0a4d6c01a70d",
+                    Name = "Fake AMD",
+                    ID = 1,
+                },
             };
         }
 
@@ -188,7 +218,7 @@ namespace NHM.DeviceDetection
 
         private static void DetectFAKE_Devices()
         {
-            DetectionResult.FAKEDevices = Settings.Devices.Select(bd => new FakeDevice(bd)).ToList();
+            DetectionResult.FAKEDevices = Settings.Devices;
         }
 
         public static async Task DetectDevices(IProgress<DeviceDetectionStep> progress)

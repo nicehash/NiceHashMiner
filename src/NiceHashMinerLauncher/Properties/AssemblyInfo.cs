@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -6,20 +6,9 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-#if TESTNET
-[assembly: AssemblyTitle("NiceHash Miner TESTNET")]
-[assembly: AssemblyDescription("NiceHash Miner is a simple to use mining tool")]
-[assembly: AssemblyProduct("NiceHash Miner TESTNET")]
-#elif TESTNETDEV
-[assembly: AssemblyTitle("NiceHash Miner TESTNETDEV")]
-[assembly: AssemblyDescription("NiceHash Miner is a simple to use mining tool")]
-[assembly: AssemblyProduct("NiceHash Miner TESTNETDEV")]
-#else
 [assembly: AssemblyTitle("NiceHash Miner")]
 [assembly: AssemblyDescription("NiceHash Miner is a simple to use mining tool")]
 [assembly: AssemblyProduct("NiceHash Miner")]
-#endif
-
 [assembly: AssemblyCompany("H-BIT, d.o.o.")]
 [assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2022")]
 [assembly: AssemblyConfiguration("")]
@@ -64,5 +53,5 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("3.0.9.2")]
-[assembly: AssemblyFileVersion("3.0.9.2")]
+[assembly: AssemblyVersion("3.1.0.4")]
+[assembly: AssemblyFileVersion("3.1.0.4")]

@@ -22,7 +22,6 @@ namespace MP.Joker
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -57,7 +56,7 @@ namespace MP.Joker
         private MinerSettings MinerSettings;
         PluginEngine PluginEngine;
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(19, 0);
 
         private readonly string _name;
         public override string Name => _name;

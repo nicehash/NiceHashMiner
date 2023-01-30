@@ -6,7 +6,6 @@ using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using NiceHashMiner.Views.Common.NHBase;
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,30 +17,22 @@ namespace NiceHashMiner.Views.Login
     /// </summary>
     public partial class LoginWindow : BaseDialogWindow
     {
-        private LoginBrowser _loginBrowser;
         private string _uuid;
         private bool _gotQRCode = false;
 
         public LoginWindow()
         {
             InitializeComponent();
-            Unloaded += LoginBrowser_Unloaded;
             Loaded += LoginWindow_Loaded;
+            Unloaded += LoginWindow_Unloaded;
             HideIconAndTitle = true;
             Translations.LanguageChanged += (s, e) => WindowUtils.Translate(this);
             if (GUISettings.Instance.DisplayTheme == "Dark") CheckBoxMode.IsChecked = true;
         }
 
-        private void LoginBrowser_Unloaded(object sender, RoutedEventArgs e)
+        private void LoginWindow_Unloaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (_loginBrowser != null) _loginBrowser.AllowClose = true;
-                _loginBrowser?.ForceCleanup();
-                _loginBrowser?.Close();
-            }
-            catch
-            { }
+            BtcHttpServer.Instance.Stop();
         }
 
         public bool? LoginSuccess { get; private set; } = null;
@@ -70,7 +61,7 @@ namespace NiceHashMiner.Views.Login
 
         private void Register_OnClick(object sender, RoutedEventArgs e)
         {
-            Process.Start(Links.Register);
+            Helpers.VisitUrlLink(Links.Register);
         }
 
         private void ManuallyEnterBtc_OnClick(object sender, RoutedEventArgs e)
@@ -80,28 +71,13 @@ namespace NiceHashMiner.Views.Login
 
         private void Login_OnClick(object sender, RoutedEventArgs e)
         {
-            Hide();
-            if (_loginBrowser == null) _loginBrowser = new LoginBrowser();
-            _loginBrowser.Top = this.Top;
-            _loginBrowser.Left = this.Left;
-            _loginBrowser.ShowDialog();
-            LoginSuccess = _loginBrowser.LoginSuccess;
-            this.Top = _loginBrowser.Top;
-            this.Left = _loginBrowser.Left;
-            if (!CredentialsSettings.Instance.IsBitcoinAddressValid)
-            {
-                ShowDialog();
-            }
-            else
-            {
-                Close();
-            }
+            Helpers.VisitUrlLink($"{Links.Login}?nhmv4=1");
         }
 
         private async Task InitQRCode()
         {
             // this is vaild for 10 minutes
-            _uuid = Guid.NewGuid().ToString();
+            _uuid = System.Guid.NewGuid().ToString();
             _gotQRCode = await BTC_FromQrCodeAPI.RequestNew_QR_Code(_uuid, ApplicationStateManager.RigID());
             if (_gotQRCode)
             {
@@ -130,6 +106,7 @@ namespace NiceHashMiner.Views.Login
 
         private async void Confirm_Scan_Click(object sender, RoutedEventArgs e)
         {
+            if(CredentialsSettings.Instance.IsBitcoinAddressValid) Close();
             await Confirm_Scan_ClickTask();
         }
 
@@ -166,6 +143,14 @@ namespace NiceHashMiner.Views.Login
         private async void LoginWindow_Loaded(object sender, RoutedEventArgs e)
         {
             await InitQRCode();
+            // background Task
+            BtcHttpServer.Instance.SuccessfulHTTPLogin += ConfirmLogin;
+            BtcHttpServer.Instance.RunBackgrounTask();
+        }
+
+        public void ConfirmLogin(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(() => Close());
         }
     }
 }

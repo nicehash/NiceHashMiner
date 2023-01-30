@@ -1,0 +1,55 @@
+{
+  "miner_name": "NanoMiner",
+  "miner_uuid": "dsfr43teskrtg34",
+  "miner_command": [
+    [
+      "--apiport",
+      "4802"
+    ]
+  ],
+  "algos": [
+    {
+      "algo": "Octopus",
+      "algorithm_command": [
+        [
+          "--stratum",
+          "octopus.auto.net"
+        ],
+        [
+          "--coin",
+          "RVN"
+        ]
+      ],
+      "devices": {
+        "uuid1": {
+          "device": "dev1",
+          "commands": [
+            [
+              "--test-edit",
+              "1",
+              ","
+            ],
+            [
+              "--zombie-mode",
+              "2"
+            ]
+          ]
+        },
+        "uuid2": {
+          "device": "dev2",
+          "commands": [
+            [
+              "--lhr-mode",
+              "55",
+              ","
+            ],
+            [
+              "--edit-mode",
+              "1"
+            ]
+          ]
+        }
+      }
+    }
+  ]
+}

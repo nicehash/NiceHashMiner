@@ -13,7 +13,7 @@
         WindowStyle="None"
         AllowsTransparency="False"
         Background="Transparent"
-        Loaded="BaseDialogWindow_Loaded"
+        WindowStartupLocation="CenterScreen"
         Icon="../Resources/logo.ico">
     <Window.Resources>
         <Style x:Key="local.ExitTextBlock" TargetType="TextBlock">
@@ -97,28 +97,33 @@
             <Run Text="to start earning Bitcoins." />
         </TextBlock>
 
-        <TextBox Grid.Row="3"
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBox 
                  Style="{StaticResource inputBox}"
                  x:Name="textBoxBTCAddress"
                  Text="{Binding CredentialsSettings.BitcoinAddress, Mode=OneWay}"
                  TextChanged="TextBoxBitcoinAddress_TextChanged"
                  KeyUp="TextBoxBitcoinAddress_KeyUp"
                  LostFocus="TextBoxBitcoinAddress_LostFocus"
-                 Margin="0,8,0,0"
-                 MinWidth="344"
-                 Width="Auto" />
+                 Margin="6,8,6,0"
+                 MinWidth="250"
+                 Width="400" />
+            <TextBlock Visibility="Collapsed" 
+                       x:Name="invalidBTCAddressWarningIcon" 
+                       Style="{StaticResource AlertIcon}"
+                       ToolTip="This is an external Bitcoin wallet address, some Rig Manager functionalities might be limited."/>
+        </StackPanel>
+
         <TextBlock Grid.Row="4"
                    TextWrapping="WrapWithOverflow"
                    TextAlignment="Left"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="25,8,0,0">
-            <Run  Text="Using any other Bitcoin wallet address will result in a higher 5% fee and infrequent payouts." />
-            <LineBreak/>
             <Run Text="DEMO mode will not earn Bitcoins!" />
             <LineBreak />
-            <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/general-help/account/creating-a-new-account" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
-                How to create a Wallet Address?
+            <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/mining-help/general-help/how-to-get-nicehash-mining-address" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">
+                How to create a Mining Address?
             </Hyperlink>
             <LineBreak />
             <LineBreak />

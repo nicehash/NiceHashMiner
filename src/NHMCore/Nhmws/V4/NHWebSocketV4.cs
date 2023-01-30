@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NHM.Common;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring.TDP;
@@ -16,7 +15,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using WebSocketSharp;
 // static imports
 using NHLog = NHM.Common.Logger;
@@ -74,7 +72,7 @@ namespace NHMCore.Nhmws.V4
 
         static private LoginMessage _login = new LoginMessage
         {
-            Version = new List<string> { "NHM/" + Application.ProductVersion, "NA/NA" },
+            Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", "NA/NA" },
             Btc = DemoUser.BTC,
         };
 

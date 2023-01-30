@@ -1,4 +1,4 @@
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Mining;
@@ -12,7 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
 using static NHMCore.Translations;
 
 namespace NHMCore
@@ -37,7 +37,7 @@ namespace NHMCore
         {
             get
             {
-                return $"{NHMProductInfo.Name} v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTagStr;
+                return $"{NHMProductInfo.Name} v" + NHMApplication.ProductVersion + BetaAlphaPostfixString + BuildTagStr;
             }
         }
         #endregion BuildTag
@@ -52,7 +52,7 @@ namespace NHMCore
 
         public static void ExecuteApplicationExit()
         {
-            Application.Exit();
+            NHMApplication.Exit();
             ApplicationExit?.Invoke();
         }
 
@@ -98,7 +98,7 @@ namespace NHMCore
             // TODO we can have disable multiple instances so make a helper program that "swaps"/restarts parent/child
             if (!Launcher.IsLauncher)
             {
-                Process.Start(Application.ExecutablePath);
+                Process.Start(NHMApplication.ExecutablePath);
             }
             else
             {
@@ -133,7 +133,7 @@ namespace NHMCore
             {
                 MessageBox.Show(Tr("{0} cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for {0} to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start {0}.", NHMProductInfo.Name),
                         Tr("Windows Management Instrumentation Error"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButton.OK, MessageBoxImage.Error);
 
                 return false;
             }
@@ -142,7 +142,7 @@ namespace NHMCore
             {
                 MessageBox.Show(Tr("{0} requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5", NHMProductInfo.Name),
                     Tr("Warning!"),
-                    MessageBoxButtons.OK);
+                    MessageBoxButton.OK);
 
                 return false;
             }
@@ -151,7 +151,7 @@ namespace NHMCore
             {
                 MessageBox.Show(Tr("{0} supports only x64 platforms. You will not be able to use {0} with x86", NHMProductInfo.Name),
                     Tr("Warning!"),
-                    MessageBoxButtons.OK);
+                    MessageBoxButton.OK);
 
                 return false;
             }

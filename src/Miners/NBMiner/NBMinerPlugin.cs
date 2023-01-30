@@ -21,7 +21,6 @@ namespace NBMiner
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
@@ -38,15 +37,16 @@ namespace NBMiner
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "GPU Miner for GRIN, AE and ETH mining.",
+                PluginDescription = "GPU Miner for ETC mining.",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }
 
         public override string PluginUUID => "f683f550-94eb-11ea-a64d-17be303ea466";
+
         public override string Name => "NBMiner";
 
-        public override Version Version => new Version(18, 1);
+        public override Version Version => new Version(19, 4);
         
 
         public override string Author => "info@nicehash.com";
@@ -55,21 +55,8 @@ namespace NBMiner
 
         private static bool isSupportedVersion(int major, int minor)
         {
-            var nbMinerSMSupportedVersions = new List<Version>
-            {
-                new Version(6,0),
-                new Version(6,1),
-                new Version(7,0),
-                new Version(7,5),
-                new Version(8,0),
-                new Version(8,6),
-            };
-            var cudaDevSMver = new Version(major, minor);
-            foreach (var supportedVer in nbMinerSMSupportedVersions)
-            {
-                if (supportedVer == cudaDevSMver) return true;
-            }
-            return false;
+            //todo is there even a list for this?
+            return true;
         }
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
@@ -154,12 +141,6 @@ namespace NBMiner
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe" });
         }
 
-        private static bool IsLHR(string name)
-        {
-            var nonLHR_GPUs = new string[] { "GeForce RTX 3050", "GeForce RTX 3060", "GeForce RTX 3060 Ti", "GeForce RTX 3070", "GeForce RTX 3080", "GeForce RTX 3090" };
-            return nonLHR_GPUs.Any(name.Contains);
-        }
-
         //private static bool IsLHR_Ignore(CUDADevice dev)
         //{
         //    const ulong maxGPU_VRAM = 11UL << 30; // 11GB
@@ -173,7 +154,6 @@ namespace NBMiner
                 if (ids.Count() == 0) return false;
                 if (device.DeviceType != DeviceType.NVIDIA) return false;
                 if (ids.FirstOrDefault() != AlgorithmType.DaggerHashimoto) return false;
-                if (!IsLHR(device.Name)) return false;
                 return benchmarkedPluginVersion < Version;
             }
             catch (Exception e)

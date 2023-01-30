@@ -5,3 +5,6 @@ tmp_*
 nhm_*
 cached_plugins
 log4net.xml
+Newtonsoft.Json.xml
+NhmPackager.*
+packer_bins_bundle*

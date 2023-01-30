@@ -3,7 +3,6 @@ using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
-using NHM.MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore.Notifications;
 using NHMCore.Switching;
@@ -220,7 +219,6 @@ namespace NHMCore.Mining.Plugins
                         // set plugin algo
                         algo.Speeds = pluginConf.Speeds;
                         algo.Enabled = pluginConf.Enabled;
-                        algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                         algo.PowerUsage = pluginConf.PowerUsage;
                         algo.ConfigVersion = pluginConf.GetVersion();
                         // check if re-bench is needed
@@ -323,22 +321,30 @@ namespace NHMCore.Mining.Plugins
             {
                 listOfOldDrivers.AddRange(CheckDeviceVersionLimits(dev));
             }
-            if (listOfOldDrivers.Any()) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
+            if (listOfOldDrivers.Any(d => d.Item3.Item1 == DriverVersionCheckType.DriverVersionObsolete)) AvailableNotifications.CreateOutdatedDriverWarningForPlugin(_plugin.Name, _plugin.PluginUUID, listOfOldDrivers);
+            if (listOfOldDrivers.Any(d => d.Item3.Item1 == DriverVersionCheckType.DriverVersionProblematic))
+            {
+                var versionExample = listOfOldDrivers
+                    .Where(d => d.Item3.Item1 == DriverVersionCheckType.DriverVersionProblematic)
+                    .Select(d => d.Item3.Item2)
+                    .FirstOrDefault();
+                if (versionExample != null) AvailableNotifications.CreateNoOptimalDrivers(versionExample);
+            }
         }
 
         private List<(DriverVersionLimitType, BaseDevice, (DriverVersionCheckType, Version))> CheckDeviceVersionLimits(BaseDevice device)
         {
-            var oldDriversForDevice = new List<(DriverVersionLimitType outDatedType, BaseDevice dev,(DriverVersionCheckType checkReturnCode, Version minVersion) driverVersionCheckReturn)>();
+            var problematic = new List<(DriverVersionLimitType outDatedType, BaseDevice dev,(DriverVersionCheckType checkReturnCode, Version minVersion) driverVersionCheckReturn)>();
             if (device is AMDDevice dev && !IsAMDDriverVersionValidFormat(dev))
             {
                 AMDNonOKCodeNotification(dev);
-                return oldDriversForDevice;
+                return problematic;
             }
-            if (_plugin is IDriverIsMinimumRequired minRequired) oldDriversForDevice.Add((DriverVersionLimitType.MinRequired, device, minRequired.IsDriverMinimumRequired(device)));
-            if (_plugin is IDriverIsMinimumRecommended minRecommended) oldDriversForDevice.Add((DriverVersionLimitType.MinRecommended, device, minRecommended.IsDriverMinimumRecommended(device)));
-            if (oldDriversForDevice.Count == 0) return oldDriversForDevice;
-            oldDriversForDevice = oldDriversForDevice.Where(item => item.driverVersionCheckReturn.checkReturnCode == DriverVersionCheckType.DriverVersionObsolete).ToList();
-            return oldDriversForDevice;
+            if (_plugin is IDriverIsMinimumRequired minRequired) problematic.Add((DriverVersionLimitType.MinRequired, device, minRequired.IsDriverMinimumRequired(device)));
+            if (_plugin is IDriverIsMinimumRecommended minRecommended) problematic.Add((DriverVersionLimitType.MinRecommended, device, minRecommended.IsDriverMinimumRecommended(device)));
+
+            if (problematic.Count == 0) return problematic;
+            return problematic;
         }
 
         private static void AMDNonOKCodeNotification(AMDDevice amd)
@@ -407,26 +413,6 @@ namespace NHMCore.Mining.Plugins
             return null;
         }
 
-        public MinerOptionsPackage GetMinerOptionsPackage()
-        {
-            try
-            {
-                if (_plugin is IGetMinerOptionsPackage get) return get.GetMinerOptionsPackage();
-
-                Type typecontroller = typeof(NHM.MinerPluginToolkitV1.PluginBase);
-                var propInfo = typecontroller.GetProperty("MinerOptionsPackage", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty);
-                var propInfo2 = typecontroller.GetProperty("MinerOptionsPackage");
-                if (propInfo != null)
-                {
-                    var ret = (MinerOptionsPackage)propInfo.GetValue(this._plugin);
-                    return ret;
-                }
-            }
-            catch
-            {
-            }
-            return null;
-        }
 
         // generic checker
         #region Generic Safe Checkers

@@ -11,19 +11,21 @@
         xmlns:pluginsNew="clr-namespace:NiceHashMiner.Views.Plugins"
         xmlns:settingsNew="clr-namespace:NiceHashMiner.Views.Settings"
         xmlns:notifications="clr-namespace:NiceHashMiner.Views.Notifications"
+        xmlns:parameterOverview="clr-namespace:NiceHashMiner.Views.ParameterOverview"
         xmlns:help="clr-namespace:NiceHashMiner.Views.Help"
         xmlns:local="clr-namespace:NiceHashMiner.Views"
         xmlns:eula="clr-namespace:NiceHashMiner.Views.EULA"
         xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
         mc:Ignorable="d"
         Title="MainWindowNew2" Height="600" Width="800"
-        MinHeight="500" MinWidth="540"
+        MinHeight="500" MinWidth="800"
         ResizeMode="CanResize"
         WindowStyle="None"
         AllowsTransparency="False"
         Background="Transparent"
         Loaded="MainWindow_OnLoaded"
         Closing="MainWindow_OnClosing"
+        WindowStartupLocation="CenterScreen"
         StateChanged="MainWindow_OnStateChanged">
     <nhb:BaseDialogWindow.DataContext>
         <viewModels:MainVM />
@@ -59,6 +61,9 @@
             <TabItem Header="Plugins" Name="PluginsButton">
                 <pluginsNew:Plugins DataContext="{Binding .}" />
             </TabItem>
+            <TabItem Header="Extra parameters" Name="ParameterOverviewButton">
+                <parameterOverview:ParameterOverview DataContext="{Binding .}" />
+            </TabItem>
             <TabItem Header="LEFT_SETTINGS" Name="SettingsButton">
                 <settingsNew:Settings DataContext="{Binding .}"/>
             </TabItem>
@@ -77,7 +82,8 @@
                         Grid.Column="0"
                         ToolTipText="NiceHash Miner" 
                         TrayMouseDoubleClick="TaskbarIcon_OnTrayMouseDoubleClick"
-                        IconSource="../Resources/logo.ico">
+                        IconSource="../Resources/logo.ico"
+                        x:Name="taskbarIcon">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Start All" Click="StartAllMenuItem_Click" x:Name="StartAllTaskbar" />

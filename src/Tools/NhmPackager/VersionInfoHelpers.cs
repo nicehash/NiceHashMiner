@@ -1,42 +1,36 @@
 ﻿using NHM.Common;
 using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+using Microsoft.WindowsAPICodePack.Shell;
+using System.Collections.Generic;
 
 namespace NhmPackager
 {
     internal static class VersionInfoHelpers
     {
-        internal static (string nsisFileTemplate, string version, string buildTag) GenerateVariableTemplate(string path)
+        // Disposing ShellFile under NET6 throws an error hence the static fiasco
+        static List<ShellFile> _files = new List<ShellFile>();
+
+        internal static (string nsisFileTemplate, string version) GenerateVariableTemplate(string path)
         {
-            byte[] assemblyBytes = File.ReadAllBytes(path);
-            var assembly = Assembly.Load(assemblyBytes);
-            var assemblyData = assembly.CustomAttributes;
+            ShellFile openFilePath(string path)
+            {
+                var file = ShellFile.FromFilePath(path);
+                _files.Add(file);
+                return file;
+            }
+            var file = openFilePath(path);
 
-            string VERSION = assemblyData.Where(data => data.AttributeType == typeof(AssemblyFileVersionAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
-
-
-            string BASE_NAME = assemblyData.Where(data => data.AttributeType == typeof(AssemblyTitleAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
-            string COMPANY_NAME = assemblyData.Where(data => data.AttributeType == typeof(AssemblyCompanyAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString();
-            string APP_DESCRIPTION = assemblyData.Where(data => data.AttributeType == typeof(AssemblyDescriptionAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
-            string COPYRIGHT = assemblyData.Where(data => data.AttributeType == typeof(AssemblyCopyrightAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
+            string VERSION = file.Properties.System.FileVersion.Value;
+            string BASE_NAME = file.Properties.System.FileDescription.Value;
+            string COMPANY_NAME = file.Properties.System.Company.Value;
+            string APP_DESCRIPTION = "NiceHash Miner is a simple to use mining tool";
+            string COPYRIGHT = file.Properties.System.Copyright.Value;
 
             string BASE_BRAND_NAME = "NiceHash Miner";
             string TRADEMARK = "NICEHASH ®";
 
             string APP_ID = "com.nicehash.nhm";
             string APP_GUID_ = APP_GUID.GUID;
-
-            string BuildTag = "";
-            if (BASE_NAME.Contains("TESTNETDEV"))
-            {
-                BuildTag = "_TESTNETDEV";
-            }
-            else if (BASE_NAME.Contains("TESTNET"))
-            {
-                BuildTag = "_TESTNET";
-            }
 
             string NSIS_GENERATED_FILE_TEMPLATE =
             "########################################\n" +
@@ -71,7 +65,7 @@ namespace NhmPackager
             ";--------------------------------\n" +
             "!macroend\n";
 
-            return (NSIS_GENERATED_FILE_TEMPLATE, VERSION, BuildTag);
+            return (NSIS_GENERATED_FILE_TEMPLATE, VERSION);
         }
     }
 }

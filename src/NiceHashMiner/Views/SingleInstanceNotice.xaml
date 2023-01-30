@@ -11,6 +11,7 @@
                       ResizeMode="NoResize"
                       WindowStyle="None"
                       AllowsTransparency="False"
+                      WindowStartupLocation="CenterScreen"
                       Background="{DynamicResource BackgroundColor}">
     <nhb:BaseDialogWindow.Resources>
         <Style x:Key="local.TextBlock" TargetType="TextBlock">

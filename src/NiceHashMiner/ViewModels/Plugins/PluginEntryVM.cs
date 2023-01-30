@@ -1,5 +1,6 @@
 ﻿using NHM.Common;
 using NHMCore.Mining.Plugins;
+using NHMCore.Utils;
 using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;
@@ -185,12 +186,16 @@ namespace NiceHashMiner.ViewModels.Plugins
 
         public void ShowPluginInternals()
         {
-            var pluginPath = Paths.MinerPluginsPath(Plugin.PluginUUID);
-            Process.Start(pluginPath);
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = Paths.MinerPluginsPath(Plugin.PluginUUID),
+                UseShellExecute = true
+            });
         }
 
         private void CommonInstallOnPropertyChanged()
         {
+            ELPManager.Instance.NotifyELPReiteration();
             OnPropertyChanged(nameof(InstallString));
             OnPropertyChanged(nameof(InstallButtonEnabled));
             OnPropertyChanged(nameof(ActionsButtonVisibility));

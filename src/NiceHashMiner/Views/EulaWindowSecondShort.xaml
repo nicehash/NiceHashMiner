@@ -16,7 +16,8 @@
         Icon="../Resources/logo.ico" 
         Topmost="True"
         MinWidth="500"
-        MinHeight="300" >
+        MinHeight="300" 
+        WindowStartupLocation="CenterScreen">
     <nhb:BaseDialogWindow.Resources>
         <Style TargetType="TextBlock" x:Key="Disclaimer-on-usage" BasedOn="{StaticResource FontsTypography.Body-2-Regular}">
             <Setter Property="LineHeight" Value="1.57" />

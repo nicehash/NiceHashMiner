@@ -25,16 +25,19 @@ namespace NHM.DeviceDetection
             try
             {
                 var fileName = Paths.AppRootPath("device_detection.exe");
-                var startInfo = new ProcessStartInfo
+                using var run = new Process()
                 {
-                    FileName = fileName,
-                    Arguments = args,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true,
-                    WorkingDirectory = Paths.AppRoot
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = fileName,
+                        Arguments = args,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true,
+                        WorkingDirectory = Paths.AppRoot
+                    },
+                    EnableRaisingEvents = true
                 };
-                using var run = new Process() { StartInfo = startInfo, EnableRaisingEvents = true };
                 using var ct = new CancellationTokenSource(milliseconds);
                 if (!run.Start()) throw new InvalidOperationException("Could not start process: " + run);
                 void stopProcess(string stopFrom)

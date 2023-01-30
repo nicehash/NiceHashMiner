@@ -120,7 +120,7 @@ namespace NHMCore.Utils
                 Paths.EnsureDirectoryPath(downloadRootPath);
                 var saveAsFile = isUpdater ? $"nhm_windows_updater_{VersionState.Instance.OnlineVersionStr}" : $"nhm_windows_{VersionState.Instance.OnlineVersionStr}";
                 var downloadProgress = updateNotification?.Action?.Progress ?? null;
-                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, saveAsFile, downloadProgress, ApplicationStateManager.ExitApplication.Token);
+                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileAsync(url, downloadRootPath, saveAsFile, downloadProgress, ApplicationStateManager.ExitApplication.Token);
                 if (!success)
                 {
                     if (updateNotification != null) updateNotification.NotificationContent = Translations.Tr("Download unsuccessfull");

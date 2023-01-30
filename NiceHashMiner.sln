@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32228.343
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rdParty", "3rdParty", "{A1439575-6634-4B04-A802-93E1729D932C}"
 EndProject
@@ -20,27 +20,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinerProcessCounter", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLogReport", "src\Tools\CreateLogReport\CreateLogReport.csproj", "{663285C0-8F68-4638-BEB2-4BB042868445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.MinersDownloader", "src\NHM.MinersDownloader\NHM.MinersDownloader.csproj", "{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.MinersDownloader", "src\NHM.MinersDownloader\NHM.MinersDownloader.csproj", "{6BDC0B57-E7D9-43E1-8534-55AE8A1B12ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.UUID", "src\NHM.UUID\NHM.UUID.csproj", "{EE6160CC-8C19-4AD8-BB1E-C295347203EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.UUID", "src\NHM.UUID\NHM.UUID.csproj", "{EE6160CC-8C19-4AD8-BB1E-C295347203EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.DeviceDetection", "src\NHM.DeviceDetection\NHM.DeviceDetection.csproj", "{9B4E5761-4C68-41F8-86BB-26F3382C6189}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.DeviceDetection", "src\NHM.DeviceDetection\NHM.DeviceDetection.csproj", "{9B4E5761-4C68-41F8-86BB-26F3382C6189}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.DeviceMonitoring", "src\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj", "{9C50C5CF-4F75-4533-80AA-1EA23B05377E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.DeviceMonitoring", "src\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj", "{9C50C5CF-4F75-4533-80AA-1EA23B05377E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.NanoMiner", "src\Miners\NanoMiner\MP.NanoMiner.csproj", "{1B657592-641E-42EC-BC44-ABCAE62EF1FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "runnhmasadmin", "src\Tools\runnhmasadmin\runnhmasadmin.csproj", "{3712894A-0836-4CE3-A4A9-C21A32AACBEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMiner", "src\NiceHashMiner\NiceHashMiner.csproj", "{56653651-3BF1-4A89-A20C-3178C06A29A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NiceHashMiner", "src\NiceHashMiner\NiceHashMiner.csproj", "{56653651-3BF1-4A89-A20C-3178C06A29A3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.XMRig", "src\Miners\XMRig\MP.XMRig.csproj", "{850CBE9E-AB73-4C24-AFBD-2FA4911E07B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHMCore", "src\NHMCore\NHMCore.csproj", "{43DCAF38-D0C4-4335-983D-650F78461EB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHMCore", "src\NHMCore\NHMCore.csproj", "{43DCAF38-D0C4-4335-983D-650F78461EB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLauncher", "src\NiceHashMinerLauncher\NiceHashMinerLauncher.csproj", "{674DECD6-9BC3-4BA7-B0AE-4C2EA7D74C51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhmPackager", "src\Tools\NhmPackager\NhmPackager.csproj", "{ED4101C4-C44E-4C6C-8F93-73A950388823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NhmPackager", "src\Tools\NhmPackager\NhmPackager.csproj", "{ED4101C4-C44E-4C6C-8F93-73A950388823}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MP.LolMiner", "src\Miners\LolMiner\MP.LolMiner.csproj", "{FBB69B33-8A14-4087-909C-F33791384D35}"
 EndProject
@@ -66,15 +66,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.CredentialValidators", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FFB721FA-CA35-4B5D-859E-EB744ED01138}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CredentialValidatorsTests", "src\Tests\NHM.CredentialValidatorsTests\NHM.CredentialValidatorsTests.csproj", "{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.CredentialValidatorsTests", "src\Tests\NHM.CredentialValidatorsTests\NHM.CredentialValidatorsTests.csproj", "{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.CommonWin32", "src\NHM.CommonWin32\NHM.CommonWin32.csproj", "{FF5822A1-6311-4431-9281-261A8DE0CB43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.CommonWin32", "src\NHM.CommonWin32\NHM.CommonWin32.csproj", "{FF5822A1-6311-4431-9281-261A8DE0CB43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhmSetPluginGitCommitTime", "src\Tools\NhmSetPluginGitCommitTime\NhmSetPluginGitCommitTime.csproj", "{F2069C67-6B16-408F-801E-4C51D6435FC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHMCoreTests", "src\Tests\NHMCoreTests\NHMCoreTests.csproj", "{1AFC1938-552A-4E1B-B716-07D08736F255}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHMCoreTests", "src\Tests\NHMCoreTests\NHMCoreTests.csproj", "{1AFC1938-552A-4E1B-B716-07D08736F255}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.MinerPluginToolkitV1Tests", "src\Tests\NHM.MinerPluginToolkitV1Tests\NHM.MinerPluginToolkitV1Tests.csproj", "{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.DeviceDetectionTests", "src\Tests\NHM.DeviceDetectionTests\NHM.DeviceDetectionTests.csproj", "{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NHM.DeviceDetectionTests", "src\Tests\NHM.DeviceDetectionTests\NHM.DeviceDetectionTests.csproj", "{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrowdinTranslationsConverter", "src\Tools\CrowdinTranslationsConverter\CrowdinTranslationsConverter.csproj", "{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyInfoVersionManager", "src\Tools\AssemblyInfoVersionManager\AssemblyInfoVersionManager.csproj", "{A1481D50-D481-409C-BF07-C44F9AF1DD51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MP.GMiner", "src\Miners\GMiner\MP.GMiner.csproj", "{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -308,14 +314,6 @@ Global
 		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|x64.ActiveCfg = Release|Any CPU
 		{FF5822A1-6311-4431-9281-261A8DE0CB43}.Release|x64.Build.0 = Release|Any CPU
-		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Debug|x64.Build.0 = Debug|Any CPU
-		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Release|x64.ActiveCfg = Release|Any CPU
-		{F2069C67-6B16-408F-801E-4C51D6435FC0}.Release|x64.Build.0 = Release|Any CPU
 		{1AFC1938-552A-4E1B-B716-07D08736F255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1AFC1938-552A-4E1B-B716-07D08736F255}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AFC1938-552A-4E1B-B716-07D08736F255}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -324,6 +322,14 @@ Global
 		{1AFC1938-552A-4E1B-B716-07D08736F255}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1AFC1938-552A-4E1B-B716-07D08736F255}.Release|x64.ActiveCfg = Release|Any CPU
 		{1AFC1938-552A-4E1B-B716-07D08736F255}.Release|x64.Build.0 = Release|Any CPU
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}.Debug|x64.Build.0 = Debug|Any CPU
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}.Release|Any CPU.Build.0 = Release|Any CPU
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}.Release|x64.ActiveCfg = Release|Any CPU
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631}.Release|x64.Build.0 = Release|Any CPU
 		{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -332,6 +338,30 @@ Global
 		{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9}.Release|x64.ActiveCfg = Release|Any CPU
 		{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9}.Release|x64.Build.0 = Release|Any CPU
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}.Debug|x64.Build.0 = Debug|Any CPU
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}.Release|x64.ActiveCfg = Release|Any CPU
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E}.Release|x64.Build.0 = Release|Any CPU
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51}.Debug|x64.Build.0 = Debug|Any CPU
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51}.Release|x64.ActiveCfg = Release|Any CPU
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51}.Release|x64.Build.0 = Release|Any CPU
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}.Debug|x64.Build.0 = Debug|Any CPU
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}.Release|x64.ActiveCfg = Release|Any CPU
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -352,9 +382,12 @@ Global
 		{FC2DF88E-4D80-4FCC-A4AB-88E764DB035B} = {BB931C9A-EE48-42A6-B5F3-3A193B1A051A}
 		{A23E8384-0C0B-4CF2-A2B9-46F34E32D0FB} = {F40126B4-5B3B-4085-B47D-A5EF4B51570C}
 		{05FCFB49-E05A-4BC8-833C-B4D0C84A6B9B} = {FFB721FA-CA35-4B5D-859E-EB744ED01138}
-		{F2069C67-6B16-408F-801E-4C51D6435FC0} = {BB931C9A-EE48-42A6-B5F3-3A193B1A051A}
 		{1AFC1938-552A-4E1B-B716-07D08736F255} = {FFB721FA-CA35-4B5D-859E-EB744ED01138}
+		{661CAFCC-5F68-423E-BCD9-8EFDC64AE631} = {FFB721FA-CA35-4B5D-859E-EB744ED01138}
 		{9A3162A2-1A2D-4798-BFF2-F992E1E1D0F9} = {FFB721FA-CA35-4B5D-859E-EB744ED01138}
+		{12421CA5-E51E-4837-B5FB-AFC3A5E3155E} = {BB931C9A-EE48-42A6-B5F3-3A193B1A051A}
+		{A1481D50-D481-409C-BF07-C44F9AF1DD51} = {BB931C9A-EE48-42A6-B5F3-3A193B1A051A}
+		{72746BBD-6A91-4441-87AA-8EFE4B2DA7BB} = {F40126B4-5B3B-4085-B47D-A5EF4B51570C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E8897DC-99C6-4585-A2BA-CB194F3B1AB7}

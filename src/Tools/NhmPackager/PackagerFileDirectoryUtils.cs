@@ -28,7 +28,7 @@ namespace NhmPackager
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "xcopy.exe",
-                    Arguments = $"/s /i {copyFrom} {copyTo}",
+                    Arguments = $"/s /i \"{copyFrom}\" \"{copyTo}\"",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true

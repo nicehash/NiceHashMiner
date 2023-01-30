@@ -14,7 +14,7 @@ namespace NiceHashMiner.Views.Settings
     /// </summary>
     public partial class SettingsQrLogin : System.Windows.Controls.UserControl
     {
-        private string _uuid = Guid.NewGuid().ToString();
+        private string _uuid = System.Guid.NewGuid().ToString();
         Stopwatch stopWatch;
 
         public SettingsQrLogin()
@@ -62,12 +62,6 @@ namespace NiceHashMiner.Views.Settings
                     return;
                 }
             }
-        }
-
-        [Serializable]
-        private class BtcResponse
-        {
-            public string btc { get; set; }
         }
 
         private async void btn_gen_qr_Click(object sender, RoutedEventArgs e)

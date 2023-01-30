@@ -11,5 +11,9 @@ namespace NHMCore.Utils
         }
 
         public static bool ValidateWorkerName(string workername) => NHM.CredentialValidators.CredentialValidators.ValidateWorkerName(workername);
+        public static bool ValidateInternalBitcoinAddress(string address)
+        {
+            return NHM.CredentialValidators.CredentialValidators.ValidateInternalBitcoinAddress(address, BuildOptions.BUILD_TAG == BuildTag.PRODUCTION);
+        }
     }
 }

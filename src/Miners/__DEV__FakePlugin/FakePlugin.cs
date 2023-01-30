@@ -26,7 +26,7 @@ namespace FakePlugin
         {
             name = "FakePlugin2",
             exitTimeWaitSeconds = 5,
-            version = new Version(17, 0),
+            version = new Version(19, 0),
         };
 
         private testSettingsJson GetTestSettings()
@@ -68,7 +68,6 @@ namespace FakePlugin
             // mandatory init
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings

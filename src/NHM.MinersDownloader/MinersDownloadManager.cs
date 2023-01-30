@@ -1,9 +1,8 @@
-﻿using CG.Web.MegaApiClient;
-using NHM.Common;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,24 +14,8 @@ namespace NHM.MinersDownloader
         {
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                   | SecurityProtocolType.Tls11
-                   | SecurityProtocolType.Tls12
-                   | SecurityProtocolType.Ssl3;
-        }
-
-        public static async Task<(bool success, string downloadedFilePath)> DownloadFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
-        {
-            // TODO switch for mega upload
-            if (IsMegaUpload(url))
-            {
-                return await DownlaodWithMegaAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
-            }
-            return await DownloadFileWebClientAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
-        }
-
-        internal static bool IsMegaUpload(string url)
-        {
-            return url.Contains("mega.co.nz") || url.Contains("mega.nz");
+                                                   | SecurityProtocolType.Tls11
+                                                   | SecurityProtocolType.Tls12;
         }
 
         internal static string GetFileExtension(string urlOrNameIn)
@@ -66,98 +49,45 @@ namespace NHM.MinersDownloader
             return Path.Combine(downloadFileRootPath, $"{fileNameNoExtension}.{fileExtension}");
         }
 
-        public static async Task<(bool success, string downloadedFilePath)> DownloadFileWebClientAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
+        public static async Task<(bool success, string downloadedFilePath)> DownloadFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
             var downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(url));
-            var downloadStatus = false;
-            using var client = new System.Net.WebClient();
-            client.Proxy = null;
-            client.DownloadProgressChanged += (s, e1) =>
-            {
-                progress?.Report(e1.ProgressPercentage);
-            };
-            client.DownloadFileCompleted += (s, e) =>
-            {
-                downloadStatus = !e.Cancelled && e.Error == null;
-            };
-            stop.Register(client.CancelAsync);
-            // Starts the download
-            await client.DownloadFileTaskAsync(new Uri(url), downloadFileLocation);
-            return (downloadStatus, downloadFileLocation);
+            using var file = new FileStream(downloadFileLocation, FileMode.Create, FileAccess.Write, FileShare.None);
+            using var client = new HttpClient();
+            using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            var contentLength = response.Content.Headers.ContentLength;
+            using var download = await response.Content.ReadAsStreamAsync();
+            if (!contentLength.HasValue) return (false, downloadFileLocation);
+            var progressWrapper = new Progress<int>(totalBytes => progress.Report(GetProgressPercentage(totalBytes, contentLength.Value)));
+            await download.CopyToAsync(file, 81920, progressWrapper, stop);
+
+            int GetProgressPercentage(float totalBytes, float currentBytes) => (int)((totalBytes / currentBytes) * 100f);
+
+            return (true, downloadFileLocation);
         }
 
-        #region Mega
-
-        internal static bool IsMegaURLFolder(string url)
+        static async Task CopyToAsync(this Stream source, Stream destination, int bufferSize, IProgress<int> progress = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return url.Contains("/#F!") || url.Contains("/folder");
+            if (bufferSize < 0)
+                throw new ArgumentOutOfRangeException(nameof(bufferSize));
+            if (source is null)
+                throw new ArgumentNullException(nameof(source));
+            if (!source.CanRead)
+                throw new InvalidOperationException($"'{nameof(source)}' is not readable.");
+            if (destination == null)
+                throw new ArgumentNullException(nameof(destination));
+            if (!destination.CanWrite)
+                throw new InvalidOperationException($"'{nameof(destination)}' is not writable.");
+
+            var buffer = new byte[bufferSize];
+            int totalBytesRead = 0;
+            int bytesRead;
+            while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) != 0)
+            {
+                await destination.WriteAsync(buffer, 0, bytesRead, cancellationToken).ConfigureAwait(false);
+                totalBytesRead += bytesRead;
+                progress?.Report(totalBytesRead);
+            }
         }
-        internal static Task<(bool success, string downloadedFilePath)> DownlaodWithMegaAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
-        {
-            if (IsMegaURLFolder(url))
-            {
-                return DownlaodWithMegaFromFolderAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
-            }
-            return DownlaodWithMegaFileAsync(url, downloadFileRootPath, fileNameNoExtension, progress, stop);
-        }
-
-
-        // non folder
-        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMegaFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
-        {
-            var client = new MegaApiClient();
-            var downloadFileLocation = "";
-            try
-            {
-                client.LoginAnonymous();
-                Uri fileLink = new Uri(url);
-                INodeInfo node = await client.GetNodeFromLinkAsync(fileLink);
-                Console.WriteLine($"Downloading {node.Name}");
-                var doubleProgress = new Progress<double>((p) => progress?.Report((int)p));
-                downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(node.Name));
-                await client.DownloadFileAsync(fileLink, downloadFileLocation, doubleProgress, stop);
-            }
-            catch (Exception e)
-            {
-                Logger.Error("MinersDownloadManager", $"MegaFile error: {e.Message}");
-            }
-            finally
-            {
-                client.Logout();
-            }
-
-            var success = File.Exists(downloadFileLocation);
-            return (success, downloadFileLocation);
-        }
-
-        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMegaFromFolderAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
-        {
-            var client = new MegaApiClient();
-            var downloadFileLocation = "";
-            try
-            {
-                client.LoginAnonymous();
-                var folderUrl = new Uri(url.Split('?').FirstOrDefault());
-                var nodes = await client.GetNodesFromLinkAsync(folderUrl);
-                var node = nodes.FirstOrDefault(n => url.Contains(n.Id));
-                //Console.WriteLine($"Downloading {node.Name}");
-                var doubleProgress = new Progress<double>((p) => progress?.Report((int)p));
-                downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(node.Name));
-                await client.DownloadFileAsync(node, downloadFileLocation, doubleProgress, stop);
-            }
-            catch (Exception e)
-            {
-                Logger.Error("MinersDownloadManager", $"MegaFolder error: {e.Message}");
-            }
-            finally
-            {
-                client.Logout();
-            }
-
-            var success = File.Exists(downloadFileLocation);
-            return (success, downloadFileLocation);
-        }
-        #endregion Mega 
-
     }
 }

@@ -14,13 +14,6 @@ namespace NHMCore
     {
         public static string CreateUsername(string btc, string rigID) => $"{btc}${rigID}";
 
-        public static async Task<bool> StartSingleDevicePublic(ComputeDevice device)
-        {
-            if (device.IsPendingChange) return false;
-            await StartDeviceTask(device);
-            return true;
-        }
-
         // TODO add check for any enabled algorithms
         public static async Task<(bool started, string failReason)> StartAllAvailableDevicesTask()
         {
@@ -87,13 +80,6 @@ namespace NHMCore
             }
 
             return (started, failReason);
-        }
-
-        public static async Task<bool> StopSingleDevicePublic(ComputeDevice device)
-        {
-            if (device.IsPendingChange) return false;
-            await StopDeviceTask(device);
-            return true;
         }
 
         public static async Task<(bool stopped, string failReason)> StopAllDevicesTask()

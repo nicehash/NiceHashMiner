@@ -1,6 +1,7 @@
 ﻿using NHMCore;
 using NHMCore.Configs;
 using NHMCore.Notifications;
+using NHMCore.Utils;
 using NiceHashMiner.Views.Common;
 using System;
 using System.Diagnostics;
@@ -50,7 +51,7 @@ namespace NiceHashMiner.Views.Notifications
 
         private void RemoveNotification(object sender, RoutedEventArgs e)
         {
-            _notification.RemoveNotification();
+            NotificationsManager.Instance.RemoveAllNotificationsOfThisType(_notification);
             if (!string.IsNullOrEmpty(_notification.NotificationUUID))
             {
                 MiscSettings.Instance.ShowNotifications.Remove(_notification.NotificationUUID);
@@ -95,7 +96,15 @@ namespace NiceHashMiner.Views.Notifications
 
         private void notificationHyperLink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            Process.Start(e.Uri.AbsoluteUri);
+            Helpers.VisitUrlLink(e.Uri.AbsoluteUri);
+        }
+
+        private void RemoveThisNotification_click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is Notification notification)
+            {
+                NotificationsManager.Instance.RemoveNotificationFromList(notification);
+            }
         }
     }
 }

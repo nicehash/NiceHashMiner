@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 
@@ -30,6 +31,7 @@ namespace NHM.MinerPluginToolkitV1
         /// <summary>
         /// Plugin package version. Use this to compare versions for updating or downgrading.
         /// </summary>
+        [JsonConverter(typeof(PluginVersionJSONConverter))]
         public Version PluginVersion { get; set; }
 
         /// <summary>

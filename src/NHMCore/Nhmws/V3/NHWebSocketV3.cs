@@ -16,7 +16,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using WebSocketSharp;
 // static imports
 using static NHMCore.Nhmws.V3.StatusCodes;
@@ -76,7 +75,7 @@ namespace NHMCore.Nhmws.V3
 
         static private readonly LoginMessage _login = new LoginMessage
         {
-            Version = $"NHM/{Application.ProductVersion}",
+            Version = $"NHM/{NHMApplication.ProductVersion}",
             Btc = DemoUser.BTC,
         };
 

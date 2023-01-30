@@ -1,10 +1,10 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Mining.Benchmarking;
-using NHMCore.Mining.Plugins;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
@@ -65,6 +65,8 @@ namespace NHMCore.Mining.Grouping
                 powerHelper.Start();
                 algo.ComputeDevice.State = DeviceState.Benchmarking;
                 GPUProfileManager.Instance.Start(miningPairs, stop);
+                if (miner is IExtraLaunchParameterSetter setElp) 
+                    setElp.SetExtraLaunchParameters(ELPManager.Instance.FindAppropriateCommandForAlgoContainer(new List<AlgorithmContainer> { algo }));
                 var result = await miner.StartBenchmark(stop, BenchmarkManagerState.Instance.SelectedBenchmarkType);
                 GPUProfileManager.Instance.Stop(miningPairs);
                 if (stop.IsCancellationRequested) return false;
@@ -77,6 +79,7 @@ namespace NHMCore.Mining.Grouping
                     algo.Speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.speed).ToList();
                     algo.PowerUsage = power;
                     ConfigManager.CommitBenchmarksForDevice(algo.ComputeDevice);
+                    if (power == 0) AvailableNotifications.CreateNoPowerInfo(algo.PluginName, algo.AlgorithmName, algo.ComputeDevice.FullName);
                 }
                 else
                 {

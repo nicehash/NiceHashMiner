@@ -23,7 +23,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
         {
             InitializeComponent();
             DataContextChanged += QuickActionMenu_DataContextChanged;
-            WindowUtils.Translate(this);
         }
 
 
@@ -55,18 +54,6 @@ namespace NiceHashMiner.Views.Benchmark.ComputeDeviceItem
 
             nhmConfirmDialog.OKClick += (s, e1) => { _deviceData.ClearAllSpeeds(); };
             CustomDialogManager.ShowModalDialog(nhmConfirmDialog);
-        }
-
-        private async void Button_Click_StopBenchmarking(object sender, RoutedEventArgs e)
-        {
-            TryCloseParentContextMenu();
-            await ApplicationStateManager.StopSingleDevicePublic(_deviceData.Dev);
-        }
-
-        private async void Button_Click_StartBenchmarking(object sender, RoutedEventArgs e)
-        {
-            TryCloseParentContextMenu();
-            await ApplicationStateManager.StartSingleDevicePublic(_deviceData.Dev);
         }
 
         private void Button_Click_EnablebenchmarkedOnly(object sender, RoutedEventArgs e)

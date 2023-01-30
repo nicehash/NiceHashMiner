@@ -3,13 +3,14 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Configs;
+using NHM.MinerPluginToolkitV1.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace XMRig
 {
-    public partial class XMRigPlugin : PluginBase
+    public partial class XMRigPlugin : PluginBase, IAdditionalELP
     {
         public XMRigPlugin()
         {
@@ -17,7 +18,6 @@ namespace XMRig
             InitInsideConstuctorPluginSupportedAlgorithmsSettings();
             MinerCommandLineSettings = PluginInternalSettings.MinerCommandLineSettings;
             // set default internal settings
-            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             // https://github.com/xmrig/xmrig
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
@@ -37,11 +37,24 @@ namespace XMRig
 
         public override string PluginUUID => "0e0a7320-94ec-11ea-a64d-17be303ea466";
 
-        public override Version Version => new Version(17, 0);
+        public override Version Version => new Version(19, 0);
 
         public override string Name => "XMRig";
 
         public override string Author => "info@nicehash.com";
+
+        private readonly List<List<string>> AdditionalELPs = new List<List<string>>()
+        {
+            new List<string>()
+            {
+                "--cpu-priority",
+                "0"
+            }
+        };
+        public List<List<string>> GetAdditionalELPs()
+        {
+            return AdditionalELPs;
+        }
 
         protected override MinerBase CreateMinerBase()
         {

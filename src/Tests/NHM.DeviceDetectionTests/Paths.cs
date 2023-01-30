@@ -27,7 +27,7 @@ namespace NHM.DeviceDetectionTests
             string pathAssembly = System.Reflection.Assembly.GetExecutingAssembly().Location;
             string folderAssembly = System.IO.Path.GetDirectoryName(pathAssembly);
             if (folderAssembly.EndsWith("\\") == false) folderAssembly = folderAssembly + "\\";
-            string folderProjectLevel = System.IO.Path.GetFullPath(folderAssembly + "..\\..\\");
+            string folderProjectLevel = System.IO.Path.GetFullPath(folderAssembly + "..\\..\\..\\..\\");
             return folderProjectLevel;
         }
         #endregion load data region https://stackoverflow.com/questions/23826773/how-do-i-make-a-data-file-available-to-unit-tests/53004985

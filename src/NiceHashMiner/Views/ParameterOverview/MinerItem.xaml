@@ -1,0 +1,264 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.ParameterOverview.MinerItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModels="clr-namespace:NHMCore.Configs.ELPDataModels;assembly=NHMCore"
+             xmlns:local="clr-namespace:NiceHashMiner.Views.ParameterOverview"
+             mc:Ignorable="d" 
+             d:DesignHeight="53"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:MinerELPData}">
+    <UserControl.Resources>
+        <local:PreviewContentToVisibilityConverter x:Key="PreviewContentToVisibilityConverter" />
+        <Style TargetType="Grid" x:Key="previewGrid">
+            <Setter Property="Background" Value="{DynamicResource ELPPreviewColorBG}" />
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+        <Style TargetType="StackPanel" x:Key="previewStackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="5,10,5,10" />
+        </Style>
+        <Style TargetType="TextBlock" x:Key="previewTBHeader" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter  Property="FontSize" Value="10"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxCol">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Regular}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontStretch" Value="Normal" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="LineHeight" Value="1.5" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxColDev" BasedOn="{StaticResource local.TextBoxCol}">
+            <Setter Property="Foreground" Value="{DynamicResource Gray1ColorBrush}" />
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="local.TextBoxColStatus" BasedOn="{StaticResource local.TextBoxCol}">
+            <Setter Property="FontFamily" Value="{StaticResource Ubuntu-Bold}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Normal" />
+        </Style>
+        <Style TargetType="{x:Type ToggleButton}" x:Key="TextBoxToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                </Trigger>
+
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <RotateTransform Angle="180" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+                    <Setter Property="LineHeight" Value="1.57" />
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="AlgorithmHeaderTextBoxButton" TargetType="Button" BasedOn="{StaticResource ButtonTextBlock}">
+            <Style.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="FontFamily" Value="{StaticResource UbuntuFontFamily}"/>
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="Foreground" Value="{DynamicResource TextColorBrush}" />
+                    <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                    <Setter Property="MaxWidth" Value="100" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryColorBrush}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Background="Transparent" x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid  Grid.Row="0" MinWidth="320" MinHeight="56" Margin="40,0,40,0">
+            <Border BorderThickness="1" CornerRadius="4" Background="{DynamicResource BackgroundColor}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Grid}, Path=IsMouseOver}" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource Brushes.Gradient}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=AlgorithmsGridToggleButtonHidden, Path=IsChecked}" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryColorBrush}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+            <ToggleButton Style="{StaticResource InvisibleToggleButton}" x:Name="AlgorithmsGridToggleButtonHidden" Click="DropDownAlgorithms_Button_Click"  HorizontalContentAlignment="Stretch">
+                <Grid Background="{DynamicResource ELPElementBG}"  HorizontalAlignment="Stretch" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" >
+                        <TextBlock Style="{DynamicResource local.TextBoxCol}" Text="{Binding Name}" TextWrapping="WrapWithOverflow" Margin="9,0,0,0"/>
+                        <TextBlock Visibility="{Binding HasAnyContentSet, Converter={StaticResource NulBoolToVisibilityConverter}}" 
+                                   Style="{StaticResource GreenCircle}" 
+                                   FontSize="5"
+                                   Margin="5,0,5,0"/>
+                    </WrapPanel>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding SingleParamString, Mode=OneWay}" Width="auto" MinWidth="150" x:Name="SingleParameterInput"
+                                 TextChanged="SingleParameterInput_TextChanged"
+                                 LostFocus="SingleParameterInput_LostFocus"
+                                 IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                        <TextBox Grid.Column="1" Style="{StaticResource inputBox}" Margin="0,3,10,3" Text="{Binding DoubleParamString, Mode=OneWay}" Width="auto" MinWidth="150" x:Name="DualParameterInput" 
+                                 TextChanged="DualParameterInput_TextChanged" 
+                                 LostFocus="DualParameterInput_LostFocus"
+                                 IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                    </Grid>
+                    <WrapPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
+                        <ToggleButton x:Name="AlgorithmsGridToggleButton" Content="&#xf107;" Style="{DynamicResource TextBoxToggleButton}" Click="DropDownAlgorithms_Button_Click" Margin="0,0,16,0" />
+                    </WrapPanel>
+                </Grid>
+            </ToggleButton>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="AlgorithmsGrid" Background="Transparent" Visibility="Collapsed" Width="Auto" Margin="0,20,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="40,0,40,0">
+                <Grid Grid.Row="0" Style="{StaticResource previewGrid}"
+                      Visibility="{Binding CombinedParams, Converter={StaticResource PreviewContentToVisibilityConverter}}">
+                    <StackPanel Style="{StaticResource previewStackPanel}">
+                        <TextBlock Style="{StaticResource previewTBHeader}" Text="Preview: "/>
+                        <TextBlock Style="{StaticResource local.TextBoxCol}" Text="{Binding CombinedParams}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Separator Grid.Row="1" Margin="40,0,40,20" Background="{DynamicResource BorderColor}" />
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0*"/>
+                    <ColumnDefinition Width="100*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="0" Margin="40,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="1"  Stroke="{DynamicResource BorderColor}" />
+
+                <Grid Grid.Column="1" Margin="60,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1" x:Name="headerGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" Margin="-20,0,0,0" Grid.Column="1" >
+                                <TextBlock LostFocus="SingleParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Commands without a value</TextBlock>
+                                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters without a value (--exampleFirst --exampleSecond)"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="-40,0,0,0" Grid.Column="2">
+                                <TextBlock  LostFocus="DualParameterInput_LostFocus" Style="{StaticResource StatusColumnTitle}">Commands with a value</TextBlock>
+                                <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Parameters with a value (--exampleFirst 23 --exampleSecond 11)"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                    <ItemsControl Grid.Row="2" Margin="0,0,0,20" ItemsSource="{Binding Algos}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:AlgoItem DataContext="{Binding .}" Margin="0,8,0,0" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

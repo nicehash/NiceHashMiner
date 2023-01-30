@@ -30,7 +30,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Margin="24,16,24,16">
             <Grid.ColumnDefinitions>
@@ -70,22 +69,7 @@
             <TextBlock Style="{StaticResource local.SettingDetail}" Text="The power used by this algorithm in Watts. Algorithm profits will deduct power costs when this and electricity cost are above 0." TextWrapping="Wrap"/>
             <TextBox Style="{StaticResource inputBox}" Text="{Binding PowerUsage, Mode=TwoWay}" Margin="0,16,0,0" />
         </WrapPanel>
-
-        <WrapPanel Grid.Row="5" Margin="24,16,24,16">
-            <TextBlock Style="{StaticResource local.SettingTitle}" Text="Extra Launch Parameters" />
-            <TextBlock Style="{StaticResource local.SettingDetail}" Text="Additional launch parameters when launching miner and this algorithm." TextWrapping="Wrap"/>
-            <TextBox Style="{StaticResource inputBox}" Text="{Binding ExtraLaunchParameters, Mode=TwoWay}" TextWrapping="Wrap" Margin="0,16,0,0" KeyUp="TextBox_KeyUp" Name="textBox">
-            </TextBox>
-            <Border Width="298" MaxHeight="300" BorderBrush="Black" BorderThickness="1" Visibility="Collapsed">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Name="resultStack"></StackPanel>
-                </ScrollViewer>
-            </Border>
-
-        </WrapPanel>
-
-        <!--TODO add description text "Include this alrogithm in benchmark sessions when plugin gets updated. This will ensure the best possible hash rate."-->
-        <ToggleButton Grid.Row="6" x:Name="ToggleButtonHidden" Click="ToggleClickReBenchHandler" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+        <ToggleButton Grid.Row="5" x:Name="ToggleButtonHidden" Click="ToggleClickReBenchHandler" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
             <ToggleButton.Template>
                 <ControlTemplate TargetType="{x:Type ButtonBase}">
                     <ContentPresenter />
@@ -103,7 +87,7 @@
                 <TextBlock Style="{StaticResource local.SettingDetail}" Text="{StaticResource scheduleBenchmarking}" TextWrapping="Wrap"/>
             </StackPanel>
         </ToggleButton>
-        <Button Grid.Row="7" Style="{DynamicResource BigButtonPrimary}" Content="Enable only this Algorithm" Click="EnableOnlyThisAlgorithmClick" Margin="24" Height="40" />
-        <Separator Grid.Row="8" Background="{DynamicResource BorderColor}"/>
+        <Button Grid.Row="6" Style="{DynamicResource BigButtonPrimary}" Content="Enable only this Algorithm" Click="EnableOnlyThisAlgorithmClick" Margin="24" Height="40" />
+        <Separator Grid.Row="7" Background="{DynamicResource BorderColor}"/>
     </Grid>
 </UserControl>

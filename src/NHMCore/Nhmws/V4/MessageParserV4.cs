@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace NHMCore.Nhmws.V4
 {
@@ -232,7 +231,7 @@ namespace NHMCore.Nhmws.V4
                 Btc = btc,
                 Worker = worker,
                 RigID = rigID,
-                Version = new List<string> { $"NHM/{Application.ProductVersion}", "NA/NA" },
+                Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", "NA/NA" },
                 OptionalMutableProperties = new List<OptionalMutableProperty>
                 {
                     new OptionalMutablePropertyString

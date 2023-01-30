@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="NiceHashMiner.Views.ParameterOverview.DeviceELPItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NiceHashMiner.Views.ParameterOverview"
+             xmlns:viewModels="clr-namespace:NHMCore.Configs.ELPDataModels;assembly=NHMCore"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=viewModels:DeviceELPElement}">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}" x:Key="StatusColumnTitle" BasedOn="{StaticResource BaseUbuntuTextBlock}">
+            <Setter  Property="FontSize" Value="10"/>
+            <Setter Property= "Foreground" Value="{StaticResource Gray1ColorBrush}"/>
+        </Style>
+
+        <local:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+        <Style TargetType="TextBlock" x:Key="local.InfoIcon">
+            <Setter Property="FontFamily" Value="{StaticResource FontAwesome}"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Gray2ColorBrush}"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontStretch" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="LineHeight" Value="1"/>
+            <Setter Property="Opacity" Value="0.75"/>
+            <Setter Property="Text" Value="&#xF05A;"/>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid Width="200">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="100*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Rectangle Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Left" VerticalAlignment="Stretch"  Width="1"  Stroke="{DynamicResource BorderColor}" />
+
+        <Grid Grid.Row="0" Grid.Column="1" x:Name="ValueGrid" Visibility="{Binding IsHeader, Converter={StaticResource NulBoolToVisibilityConverterFalse}}">
+            <StackPanel  Margin="0,0,10,3">
+                <StackPanel Width="160" Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource StatusColumnTitle}" Margin="-10,0,0,3" Text="Value" />
+                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Enter a value that will be used for this device with the flag above" />
+                </StackPanel>
+                <TextBox Style="{StaticResource inputBox}" x:Name="DeviceELPValueTB"
+                     TextChanged="DeviceELPValueTB_TextChanged"
+                     LostFocus="TB_LostFocus"
+                     Width="180" Text="{Binding ELP, Mode=TwoWay}"
+                     IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1" x:Name="DeviceGrid" Visibility="{Binding IsHeader, Converter={StaticResource NulBoolToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="125"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="5,0,0,3">
+                <StackPanel Width="160" Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource StatusColumnTitle}" Text="Flag" Margin="0,0,0,3" />
+                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Enter a multi-value flag here" />
+                </StackPanel>
+                <TextBox Style="{StaticResource inputBox}" x:Name="FlagInput"
+                     HorizontalAlignment="Left"
+                     Width="120"
+                     TextChanged="HeaderFlagELPValueTB_TextChanged"
+                     LostFocus="TB_LostFocus"
+                     Text="{Binding FLAG, Mode=TwoWay}"
+                     IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="10,0,0,3">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource StatusColumnTitle}" Text="Delim." Margin="0,0,0,3" />
+                    <TextBlock Style="{StaticResource local.InfoIcon}" ToolTip="Enter a delimiter used to split the multi-value flag. If the delimiter is a space, please look for alternative delimiters in the miner documentation."/>
+                </StackPanel>
+                <TextBox Style="{StaticResource inputBox}" x:Name="DelimiterInput"
+                     Width="45"
+                     TextChanged="HeaderDelimELPValueTB_TextChanged"
+                     LostFocus="TB_LostFocus"
+                     Text="{Binding DELIM, Mode=TwoWay}"
+                     IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

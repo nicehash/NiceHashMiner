@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHMCore;
 using NHMCore.ApplicationState;
@@ -23,7 +24,6 @@ namespace NiceHashMiner.ViewModels.Models
     {
         const string MISSING_INFO = "- - -";
         public ComputeDevice Dev { get; }
-
         public List<ComputeDevice> CPUs
         {
             get => AvailableDevices.Devices
@@ -109,7 +109,7 @@ namespace NiceHashMiner.ViewModels.Models
             get
             {
                 var enabledAlgos = Dev.AlgorithmSettings.Count(a => a.Enabled);
-                return $"{Dev.AlgorithmSettings.Count} / {enabledAlgos}";
+                return $"{enabledAlgos} / {Dev.AlgorithmSettings.Count}";
             }
         }
 
@@ -118,7 +118,7 @@ namespace NiceHashMiner.ViewModels.Models
             get
             {
                 var benchedAlgos = Dev.AlgorithmSettings.Count(a => !a.BenchmarkNeeded);
-                return $"{Dev.AlgorithmSettings.Count} / {benchedAlgos}";
+                return $"{benchedAlgos} / {Dev.AlgorithmSettings.Count}";
             }
         }
 
@@ -158,7 +158,6 @@ namespace NiceHashMiner.ViewModels.Models
             RefreshDiag();
 
         }
-
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -276,28 +275,13 @@ namespace NiceHashMiner.ViewModels.Models
             OnPropertyChanged(nameof(FanSpeed));
         }
 
-        public async Task StartStopClick()
-        {
-            switch (Dev.State)
-            {
-                case DeviceState.Stopped:
-                    await ApplicationStateManager.StartSingleDevicePublic(Dev);
-                    break;
-                case DeviceState.Mining:
-                case DeviceState.Benchmarking:
-                    await ApplicationStateManager.StopSingleDevicePublic(Dev);
-                    break;
-                default:
-                    break;
-            }
-        }
-
         public void ClearAllSpeeds()
         {
             foreach (var a in Dev.AlgorithmSettings)
             {
                 a.ClearSpeeds();
             }
+            ConfigManager.CommitBenchmarksForDevice(Dev);
         }
 
         public void CopySettingsFromAnotherDevice(ComputeDevice source)
@@ -309,8 +293,8 @@ namespace NiceHashMiner.ViewModels.Models
                 algoDestination.BenchmarkSpeed = algoSource.BenchmarkSpeed;
                 algoDestination.SecondaryBenchmarkSpeed = algoSource.SecondaryBenchmarkSpeed;
                 algoDestination.PowerUsage = algoSource.PowerUsage;
-                algoDestination.ExtraLaunchParameters = algoSource.ExtraLaunchParameters;
             }
+            ConfigManager.CommitBenchmarksForDevice(Dev);
         }
 
         public void EnableBenchmarkedOnly()
@@ -363,7 +347,7 @@ namespace NiceHashMiner.ViewModels.Models
                 algo => algo.AlgorithmName,
                 algo => algo.PluginName,
                 algo => algo.BenchmarkSpeed, // FIRST SPEED FIX only
-                algo => algo.CurrentEstimatedProfit,
+                algo => algo.CurrentEstimatedProfitPure,
                 algo => algo.Status, // TODO STATUS doesn't exist yet
                 algo => algo.Enabled,
             };
