@@ -365,6 +365,10 @@ namespace NHMCore.Nhmws.V4
                             MiningSettings.Instance.UseScheduler = schedulerEnabled;
                             foreach(var returnedSchedule in returnedSchedules)
                             {
+                                var from = DateTime.Parse(returnedSchedule.From).ToLocalTime().ToString("HH:mm");
+                                var to = DateTime.Parse(returnedSchedule.To).ToLocalTime().ToString("HH:mm");
+                                returnedSchedule.From = from;
+                                returnedSchedule.To = to;
                                 SchedulesManager.Instance.AddScheduleToList(returnedSchedule);
                             }
                             _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
