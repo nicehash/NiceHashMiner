@@ -778,7 +778,7 @@ namespace NHMCore.Nhmws.V4
             var actionRecord = ActionMutableMap.FindActionOrNull(action.ActionId);
             if (actionRecord == null)
             {
-                NHM.Common.Logger.Error("NHWebSocketV4", "Action not found");
+                Logger.Error("NHWebSocketV4", "Action not found");
                 return Task.FromResult((ErrorCode.ActionNotFound, "Action not found"));
             }
             //action has single parameter anyway FOR NOW
@@ -810,6 +810,11 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ApplicationStateManager.StartReBenchmark().Result;
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
                     var bundle = JsonConvert.DeserializeObject<Bundle>(parameters);
                     _ = ExecuteProfilesBundleReset(false);
                     _ = ExecuteProfilesBundleSet(bundle);
@@ -817,6 +822,11 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
                     ExecuteProfilesBundleReset();
                     MiningState.Instance.CalculateDevicesStateChange();
                     (err, result) = (ErrorCode.NoError, "OK");
@@ -828,25 +838,55 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionOcProfileTest:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
                     var oc = JsonConvert.DeserializeObject<OcProfile>(parameters);
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
                     (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
                     var fan = JsonConvert.DeserializeObject<FanProfile>(parameters);
                     (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
                     break;
                 case SupportedAction.ActionFanProfileTestStop:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
                     (err, result) = StopFanTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionElpProfileTest:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
                     var elp = JsonConvert.DeserializeObject<ElpProfile>(parameters);
                     (err, result) = ExecuteELPTest(deviceUUID, elp).Result;
                     MiningState.Instance.CalculateDevicesStateChange();
                     break;
                 case SupportedAction.ActionElpProfileTestStop:
+                    if (!Helpers.IsElevated)
+                    {
+                        (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
+                        break;
+                    }
                     (err, result) = StopELPTestForDevice(deviceUUID).Result;
                     MiningState.Instance.CalculateDevicesStateChange();
                     break;
