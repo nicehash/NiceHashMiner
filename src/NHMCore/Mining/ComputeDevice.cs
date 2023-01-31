@@ -162,9 +162,9 @@ namespace NHMCore.Mining
                 }
             }
         }
-        public string ApplyNewAlgoStates(MinerAlgoState state)
+        public int ApplyNewAlgoStates(MinerAlgoState state)
         {
-            if (State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking) return "Stop mining first";
+            if (State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking) return -1;
             foreach(var miner in state.Miners)
             {
                 foreach(var algo in miner.Algos)
@@ -180,7 +180,7 @@ namespace NHMCore.Mining
                 }
             }
             Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());
-            return "New state is set";
+            return 0;
         }
 
         private List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; set; } = new List<PluginAlgorithmConfig>();

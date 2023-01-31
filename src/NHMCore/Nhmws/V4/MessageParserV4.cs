@@ -89,7 +89,7 @@ namespace NHMCore.Nhmws.V4
             return devData.MinerName;
         }
 
-        private static (List<(string name, string? unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isStateChange = false, bool isLogin = false)
+        private static (List<(string name, string? unit)> properties, JArray values) GetDeviceOptionalDynamic(ComputeDevice d, bool isLogin = false)
         {
             string getValue<T>(T o) => (typeof(T).Name, o) switch
             {
@@ -136,7 +136,7 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power usage","W"),
                 pairOrNull<ICoreClock>(DeviceDynamicProperties.CoreClock, "Core clock", "MHz"),
                 pairOrNull<IMemoryClock>(DeviceDynamicProperties.MemClock, "Memory clock", "MHz"),
-                pairOrNull<ITDP>(DeviceDynamicProperties.TDP, "TDP", "%"),
+                pairOrNull<ITDP>(DeviceDynamicProperties.TDP, "Power Limit", "%"),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", null),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile", null),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile ID", null),
@@ -151,19 +151,16 @@ namespace NHMCore.Nhmws.V4
                 .Select(p => p.Value)
                 .ToList();
 
-            if (isStateChange)
+            bool shouldRemoveDynamicVal((DeviceDynamicProperties type, string name, string unit, string value) dynamicVal)
             {
-                bool shouldRemoveDynamicVal((DeviceDynamicProperties type, string name, string unit, string value) dynamicVal)
-                {
-                    if (dynamicVal.unit == String.Empty) return false;
-                    var ok = Int32.TryParse(dynamicVal.value, out var res);
-                    if (ok && res < 0 && !dynamicVal.name.Contains("clock")) return true;
-                    return false;
-                };
-                deviceOptionalDynamic.RemoveAll(dynamVal => shouldRemoveDynamicVal(dynamVal));
-                //deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
-                if (isLogin) deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
-            }
+                if (dynamicVal.unit == String.Empty) return false;
+                var ok = Int32.TryParse(dynamicVal.value, out var res);
+                if (ok && res < 0 && !dynamicVal.name.Contains("clock")) return true;
+                return false;
+            };
+            deviceOptionalDynamic.RemoveAll(dynamVal => shouldRemoveDynamicVal(dynamVal));
+            //deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
+            if (isLogin) deviceOptionalDynamic.ForEach(dynamVal => d.SupportedDynamicProperties.Add(dynamVal.type));
             foreach (DeviceDynamicProperties i in Enum.GetValues(typeof(DeviceDynamicProperties)))
             {
                 if (!d.SupportedDynamicProperties.Contains(i)) deviceOptionalDynamic.RemoveAll(prop => prop.type == i);
@@ -175,7 +172,7 @@ namespace NHMCore.Nhmws.V4
 
         // we cache device properties so we persevere  property IDs
         private static readonly Dictionary<ComputeDevice, List<OptionalMutableProperty>> _cachedDevicesOptionalMutable = new Dictionary<ComputeDevice, List<OptionalMutableProperty>>();
-        private static (List<OptionalMutableProperty> properties, JArray values) GetDeviceOptionalMutable(ComputeDevice d, bool isStateChange, bool isLogin)
+        private static (List<OptionalMutableProperty> properties, JArray values) GetDeviceOptionalMutable(ComputeDevice d, bool isLogin)
         {
             OptionalMutableProperty valueOrNull<T>(OptionalMutableProperty v) => d.DeviceMonitor is T ? v : null;
             List<OptionalMutableProperty> getOptionalMutableProperties(ComputeDevice d)
@@ -191,18 +188,15 @@ namespace NHMCore.Nhmws.V4
                     Range = (2048, ""),
                     ExecuteTask = async (object p) =>
                     {
-                        if (p is not string prop) return null;
+                        if (p is not string prop) return -1;
                         var newState = JsonConvert.DeserializeObject<MinerAlgoState>(prop);
                         return d.ApplyNewAlgoStates(newState);
                     },
                     GetValue = () =>
                     {
                         string ret = null;
-                        if (isStateChange)
-                        {
-                            ret = string.Empty;
-                            ret += GetMinersForDeviceDynamic(d);
-                        }
+                        ret = string.Empty;
+                        ret += GetMinersForDeviceDynamic(d);
                         return ret;
                     },
                     ComputeDev = d
@@ -263,8 +257,8 @@ namespace NHMCore.Nhmws.V4
                         { "optional", GetStaticPropertiesOptionalValues(d) },
                     },
                     Actions = CreateDefaultDeviceActions(d.B64Uuid),
-                    OptionalDynamicProperties = DeviceOptionalDynamicToList(GetDeviceOptionalDynamic(d, true, true).properties),
-                    OptionalMutableProperties = GetDeviceOptionalMutable(d, true, true).properties,
+                    OptionalDynamicProperties = DeviceOptionalDynamicToList(GetDeviceOptionalDynamic(d, true).properties),
+                    OptionalMutableProperties = GetDeviceOptionalMutable(d, true).properties,
                 };
             }
             var DevicesProperties = devices.Select(mapComputeDevice).ToList(); //needs to execute first
@@ -274,14 +268,14 @@ namespace NHMCore.Nhmws.V4
                 Worker = worker,
                 RigID = rigID,
                 Version = new List<string> { $"NHM/{NHMApplication.ProductVersion}", Environment.OSVersion.ToString() },
-                OptionalMutableProperties = GetRigOptionalMutableValues(true, true).properties,
+                OptionalMutableProperties = GetRigOptionalMutableValues(true).properties,
                 OptionalDynamicProperties = GetRigOptionalDynamicValues().properties,
                 Actions = CreateDefaultRigActions(),
                 Devices = DevicesProperties,
-                MinerState = GetMinerStateValues(worker, devices, true),
+                MinerState = GetMinerStateValues(worker, devices),
             };
         }
-        private static (List<OptionalMutableProperty> properties, JArray values) GetRigOptionalMutableValues(bool isStateChange, bool isLogin)
+        private static (List<OptionalMutableProperty> properties, JArray values) GetRigOptionalMutableValues(bool isLogin)
         {
             List<OptionalMutableProperty> getOptionalMutableProperties()
             {
@@ -296,8 +290,7 @@ namespace NHMCore.Nhmws.V4
                         Range = (64, String.Empty),
                         GetValue = () =>
                         {
-                            if (isStateChange) return CredentialsSettings.Instance.BitcoinAddress;
-                            return null;
+                            return CredentialsSettings.Instance.BitcoinAddress;
                         }
                     },
                     new OptionalMutablePropertyString
@@ -309,8 +302,7 @@ namespace NHMCore.Nhmws.V4
                         Range = (64, String.Empty),
                         GetValue = () =>
                         {
-                            if (isStateChange) return CredentialsSettings.Instance.WorkerName;
-                            return null;
+                            return CredentialsSettings.Instance.WorkerName;
                         }
                     },
                     new OptionalMutablePropertyString
@@ -322,38 +314,35 @@ namespace NHMCore.Nhmws.V4
                         Range = (65536, String.Empty),
                         GetValue = () =>
                         {
-                            string ret = null;
-                            if (isStateChange)
+                            string ret = string.Empty;
+                            var minersSettingsGlobal = new MinerAlgoStateRig();
+                            var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null);
+                            if(mutables == null || mutables.Count() <= 0) return ret;
+                            foreach (var mutable in mutables)
                             {
-                                ret = string.Empty;
-                                var minersSettingsGlobal = new MinerAlgoStateRig();
-                                var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null);
-                                if(mutables == null || mutables.Count() <= 0) return ret;
-                                foreach (var mutable in mutables)
-                                {
-                                    if (mutable.GetValue() is not string val) continue;
-                                    minersSettingsGlobal.Miners.Add(JsonConvert.DeserializeObject<MinerAlgoState>(val));
-                                }
-                                ret += JsonConvert.SerializeObject(minersSettingsGlobal);
+                                if (mutable.GetValue() is not string val) continue;
+                                minersSettingsGlobal.Miners.Add(JsonConvert.DeserializeObject<MinerAlgoState>(val));
                             }
+                            ret += JsonConvert.SerializeObject(minersSettingsGlobal);
                             return ret;
                         },
                         ExecuteTask = async (object p) =>
                         {
-                            if(p is not string prop) return null;
+                            if(p is not string prop) return -1;
                             var newStates = JsonConvert.DeserializeObject<MinerAlgoStateRig>(prop);
                             //for each device thats inside apply new algo state
                             var devices = AvailableDevices.Devices.Where(d => newStates.Miners.Any(m => m.DeviceID.Contains(d.B64Uuid)));
-                            if(devices == null) return null;
+                            if(devices == null) return -2;
                             var successCount = 0;
                             foreach(var ns in newStates.Miners)
                             {
                                 var targetDev = AvailableDevices.Devices.FirstOrDefault(d => d.B64Uuid == ns.DeviceID);
                                 if(targetDev == null) continue;
-                                targetDev.ApplyNewAlgoStates(ns);
+                                var tempRes = targetDev.ApplyNewAlgoStates(ns);
+                                if(tempRes != 0) continue;
                                 successCount++;
                             }
-                            return $"{successCount}/{newStates.Miners.Count} operations succeded";
+                            return successCount == newStates.Miners.Count ? 0 : -3;
                         }
                     },
                     new OptionalMutablePropertyString
@@ -365,11 +354,7 @@ namespace NHMCore.Nhmws.V4
                         Range = (4096, String.Empty),
                         GetValue = () =>
                         {
-                            string ret = null;
-                            if (isStateChange)
-                            {
-                                ret = SchedulesManager.Instance.ScheduleToJSON();
-                            }
+                            string ret = SchedulesManager.Instance.ScheduleToJSON();
                             return ret;
                         },
                         ExecuteTask = async (object p) =>
@@ -438,15 +423,15 @@ namespace NHMCore.Nhmws.V4
             return (props, new JArray(vals));
         }
 
-        private static JObject GetMinerStateValues(string workerName, IOrderedEnumerable<ComputeDevice> devices, bool isLogin)
+        private static JObject GetMinerStateValues(string workerName, IOrderedEnumerable<ComputeDevice> devices)
         {
-            var json = JObject.FromObject(GetMinerState(workerName, devices, isLogin));
+            var json = JObject.FromObject(GetMinerState(workerName, devices));
             var delProp = json.Property("method");
             delProp.Remove();
             return json;
         }
 
-        internal static MinerState GetMinerState(string workerName, IOrderedEnumerable<ComputeDevice> devices, bool isStateChange = false)
+        internal static MinerState GetMinerState(string workerName, IOrderedEnumerable<ComputeDevice> devices)
         {
             var rig = ApplicationStateManager.CalcRigStatus();
 
@@ -494,9 +479,9 @@ namespace NHMCore.Nhmws.V4
                 return new MinerState.DeviceState
                 {
                     MandatoryDynamicValues = mdv(d),
-                    OptionalDynamicValues = GetDeviceOptionalDynamic(d, isStateChange).values, // odv
+                    OptionalDynamicValues = GetDeviceOptionalDynamic(d).values, // odv
                     MandatoryMutableValues = mmv(d),
-                    OptionalMutableValues = GetDeviceOptionalMutable(d, isStateChange, false).values, // omv
+                    OptionalMutableValues = GetDeviceOptionalMutable(d, false).values, // omv
                 };
             }
 
@@ -505,7 +490,7 @@ namespace NHMCore.Nhmws.V4
                 MutableDynamicValues = new JArray(rigStateToInt(rig)),
                 OptionalDynamicValues = GetRigOptionalDynamicValues().values,
                 MandatoryMutableValues = new JArray(rigStateToInt(rig), workerName),
-                OptionalMutableValues = GetRigOptionalMutableValues(isStateChange, false).values,
+                OptionalMutableValues = GetRigOptionalMutableValues(false).values,
                 Devices = devices.Select(toDeviceState).ToList(),
             };
         }
@@ -601,7 +586,7 @@ namespace NHMCore.Nhmws.V4
                 var lims = tdpLim.GetTDPLimits();
                 if (lims.ok)
                 {
-                    limit.limits.Add(new Limit { Name = "Power mode", Unit = "W", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    limit.limits.Add(new Limit { Name = "Power Limit", Unit = "W", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
             if (d.DeviceMonitor is ICoreClockSet)
@@ -611,7 +596,7 @@ namespace NHMCore.Nhmws.V4
                     var lims = ccLimDelta.CoreClockRangeDelta;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Core clock delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Core Clock Delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                     }
                 }
                 if (d.DeviceType == DeviceType.AMD && d.DeviceMonitor is ICoreClockRange ccLim)
@@ -619,7 +604,7 @@ namespace NHMCore.Nhmws.V4
                     var lims = ccLim.CoreClockRange;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Core Clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                     }
                 }
             }
@@ -630,7 +615,7 @@ namespace NHMCore.Nhmws.V4
                     var lims = mcLimDelta.MemoryClockRangeDelta;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Memory clock delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Memory Clock Delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                     }
                 }
                 if (d.DeviceType == DeviceType.AMD && d.DeviceMonitor is IMemoryClockRange mcLim)
@@ -638,7 +623,7 @@ namespace NHMCore.Nhmws.V4
                     var lims = mcLim.MemoryClockRange;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Memory Clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                     }
                 }
             }

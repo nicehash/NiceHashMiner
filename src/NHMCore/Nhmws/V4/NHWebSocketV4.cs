@@ -941,12 +941,15 @@ namespace NHMCore.Nhmws.V4
         {
             if (mutableCmd.Properties != null)
             {
+                var resArray = new List<int>();
                 foreach (var property in mutableCmd.Properties)
                 {
-                    HandleProperty(property);
+                    resArray.Add(HandleProperty(property).Result);
                 }
+                if (resArray.All(r => r == 0)) return Task.FromResult(string.Empty);//this shouldn be 0 bwhile mining
+                return Task.FromResult("Stop mining first");
             }
-            if (mutableCmd.Devices == null) return Task.FromResult("Success");
+            if (mutableCmd.Devices == null) return Task.FromResult(string.Empty);
             string result = string.Empty;
             foreach (var device in mutableCmd.Devices)
             {
@@ -965,12 +968,12 @@ namespace NHMCore.Nhmws.V4
             }
             return Task.FromResult(result);
         }
-        private static Task<string> HandleProperty(object property)
+        private static Task<int> HandleProperty(object property)
         {
-            if (property is not JToken token) return Task.FromResult("Property is not Jtoken");
+            if (property is not JToken token) return Task.FromResult(-1);
             var genericProperty = token.ToObject<Property>();
             var mutable = ActionMutableMap.FindMutableOrNull(genericProperty.PropId);//this is null if per rig
-            if (mutable == null) return Task.FromResult("Mutable is null");
+            if (mutable == null) return Task.FromResult(-2);
             object t = mutable.PropertyType switch
             {
                 Type.String => ParseAndActMutableString(mutable, token),
@@ -979,16 +982,15 @@ namespace NHMCore.Nhmws.V4
                 Type.Bool => ParseAndActMutableBool(mutable, token),
                 _ => throw new InvalidOperationException()
             };
-            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());
-            if (t is string retStr) return Task.FromResult(retStr);
-            return Task.FromResult("OK");
+            if(t is Task<int> res) return Task.FromResult(res.Result);
+            return Task.FromResult(0);
         }
-        static Task<string> ParseAndActMutableString(OptionalMutableProperty property, JToken command)
+        static Task<int> ParseAndActMutableString(OptionalMutableProperty property, JToken command)
         {
             var mutable = command.ToObject<PropertyString>();
             var res = property.ExecuteTask(mutable.Value);
-            if (res.Result is string resStr) return Task.FromResult(resStr);
-            return Task.FromResult(string.Empty);
+            if (res.Result is int resInt) return Task.FromResult(resInt);
+            return Task.FromResult(-100);
         }
         static Task ParseAndActMutableInt(OptionalMutableProperty property, JToken command)
         {
