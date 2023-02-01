@@ -89,8 +89,8 @@ namespace NHMCore.Schedules
             schedules.enabled = MiningSettings.Instance.UseScheduler;
             foreach (var slot in Schedules)
             {
-                var from = TimeSpan.Parse(slot.From);
-                var to = TimeSpan.Parse(slot.To);
+                var from = TimeSpan.Parse(DateTime.Parse(slot.From).ToUniversalTime().ToString("HH:mm"));
+                var to = TimeSpan.Parse(DateTime.Parse(slot.To).ToUniversalTime().ToString("HH:mm"));
                 var days = new List<int>();
                 int counter = 1;
                 foreach (var (_, enabled) in slot.DaysFrom)
