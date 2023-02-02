@@ -363,13 +363,14 @@ namespace NHMCore.Nhmws.V4
                             var (schedulerEnabled, returnedSchedules) = SchedulesManager.Instance.ScheduleFromJSON(prop);
                             SchedulesManager.Instance.ClearScheduleList();
                             MiningSettings.Instance.UseScheduler = schedulerEnabled;
-                            foreach(var returnedSchedule in returnedSchedules)
+                            if(returnedSchedules != null)
                             {
-                                var from = DateTime.Parse(returnedSchedule.From).ToLocalTime().ToString("HH:mm");
-                                var to = DateTime.Parse(returnedSchedule.To).ToLocalTime().ToString("HH:mm");
-                                returnedSchedule.From = from;
-                                returnedSchedule.To = to;
-                                SchedulesManager.Instance.AddScheduleToList(returnedSchedule);
+                                foreach(var returnedSchedule in returnedSchedules)
+                                {
+                                    returnedSchedule.From = DateTime.Parse(returnedSchedule.From).ToLocalTime().ToString("HH:mm");
+                                    returnedSchedule.To = DateTime.Parse(returnedSchedule.To).ToLocalTime().ToString("HH:mm");
+                                    SchedulesManager.Instance.AddScheduleToList(returnedSchedule);
+                                }
                             }
                             _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
                             return "Schedules added";
@@ -506,6 +507,7 @@ namespace NHMCore.Nhmws.V4
             {
                 NhmwsAction.ActionDeviceEnable(uuid),
                 NhmwsAction.ActionDeviceDisable(uuid),
+                NhmwsAction.ActionDeviceRebenchmark(uuid),
                 NhmwsAction.ActionOcProfileTest(uuid),
                 NhmwsAction.ActionOcProfileTestStop(uuid),
                 NhmwsAction.ActionFanProfileTest(uuid),

@@ -3,6 +3,7 @@ using NHM.Common.Configs;
 using NHM.Common.Enums;
 using NHMCore.Mining;
 using NHMCore.Nhmws;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -126,6 +127,7 @@ namespace NHMCore
                 case DeviceState.Benchmarking:
 #if NHMWS4
                 case DeviceState.Testing:
+                    if(Helpers.IsElevated) device.ResetFanSpeed();
 #endif
                     await MiningManager.StopDevice(device);
                     return (true, "");
@@ -172,7 +174,23 @@ namespace NHMCore
             _ = Task.WhenAll(completeBenchmarkDevices);
             return Task.FromResult((ErrorCode.NoError, "Success"));
         }
-
+        public static Task<(ErrorCode err, string msg)> StartRebenchmarkSpecific(string deviceUUID)
+        {
+            var startBenchmarkingDevices = AvailableDevices.Devices
+                .Where(device => device.B64Uuid == deviceUUID)?
+                .Where(device => device.State == DeviceState.Stopped)?
+                .Where(device => device.AnyAlgorithmEnabled());
+            if (startBenchmarkingDevices == null || startBenchmarkingDevices.Count() == 0)
+            {
+                return Task.FromResult((ErrorCode.ErrNoAlgoDataFound, "No targets found. Stop mining first."));
+            }
+            foreach (var device in startBenchmarkingDevices) device.PrepareForRebenchmark();
+            var completeBenchmarkDevices = startBenchmarkingDevices
+                .Select(StartDeviceTask)
+                .ToArray();
+            _ = Task.WhenAll(completeBenchmarkDevices);
+            return Task.FromResult((ErrorCode.NoError, "Success"));
+        }
         public static Task StopBenchmark()
         {
             var stoptDevices = AvailableDevices.Devices

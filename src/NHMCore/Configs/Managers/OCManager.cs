@@ -58,7 +58,7 @@ namespace NHMCore.Configs.Managers
             if (targetDeviceContainer == null)
             {
                 Logger.Error(_TAG, "Device not found for stop OC test");
-                return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device not found"));
+                return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device is not in test mode"));
             }
             targetDeviceContainer.SetTargetOcProfile(null, true);
             if(triggerSwitch) MiningManager.TriggerSwitchCheck();

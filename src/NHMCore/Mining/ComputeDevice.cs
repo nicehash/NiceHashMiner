@@ -833,7 +833,11 @@ namespace NHMCore.Mining
                         {
                             var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, false);
                             if (retOCTest == RigManagementReturn.Success || retOCTest == RigManagementReturn.PartialSuccess) State = DeviceState.Testing;
-                            else target.SwitchOCTestToInactive();
+                            else
+                            {
+                                target.SwitchOCTestToInactive();
+                                State = DeviceState.Mining;
+                            }
                         }
                         break;
                     case AlgorithmContainer.ActionQueue.ResetOCTest:

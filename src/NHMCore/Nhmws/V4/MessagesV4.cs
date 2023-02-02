@@ -201,6 +201,19 @@ namespace NHMCore.Nhmws.V4
             ActionMutableMap.ActionList.Add(action);
             return action;
         }
+        public static NhmwsAction ActionDeviceRebenchmark(string uuid)
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Rebenchmark",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionRebenchmark,
+                DeviceUUID = uuid
+            };
+            ActionMutableMap.ActionList.Add(action);
+            return action;
+        }
         public static NhmwsAction ActionOcProfileTest(string uuid)
         {
             var action = new NhmwsAction

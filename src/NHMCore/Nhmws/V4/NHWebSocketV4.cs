@@ -807,7 +807,11 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionRebenchmark:
-                    (err, result) = ApplicationStateManager.StartReBenchmark().Result;
+                    if(deviceUUID == string.Empty) (err, result) = ApplicationStateManager.StartReBenchmark().Result;
+                    else
+                    {
+                        (err, result) = ApplicationStateManager.StartRebenchmarkSpecific(deviceUUID).Result;
+                    }
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
                     if (!Helpers.IsElevated)
