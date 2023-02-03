@@ -990,8 +990,8 @@ namespace NHMCore.Nhmws.V4
                 {
                     resArray.Add(HandleProperty(property).Result);
                 }
-                if (resArray.All(r => r == 0)) return Task.FromResult(string.Empty);//this shouldn be 0 bwhile mining
-                return Task.FromResult("Stop mining first");
+                if (resArray.All(r => r == 0)) return Task.FromResult(string.Empty);
+                return Task.FromResult($"SetMutable error ({string.Join(",", resArray)})");
             }
             if (mutableCmd.Devices == null) return Task.FromResult(string.Empty);
             string result = string.Empty;
@@ -1046,10 +1046,12 @@ namespace NHMCore.Nhmws.V4
             var mutable = command.ToObject<PropertyEnum>();
             return Task.CompletedTask;
         }
-        static Task ParseAndActMutableBool(OptionalMutableProperty property, JToken command)
+        static Task<int> ParseAndActMutableBool(OptionalMutableProperty property, JToken command)
         {
             var mutable = command.ToObject<PropertyBool>();
-            return Task.CompletedTask;
+            var res = property.ExecuteTask(mutable.Value);
+            if (res.Result is int resInt) return Task.FromResult(resInt);
+            return Task.FromResult(-101);
         }
 
         #endregion RpcMessages

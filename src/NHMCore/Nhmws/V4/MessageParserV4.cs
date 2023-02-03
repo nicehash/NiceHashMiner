@@ -94,7 +94,7 @@ namespace NHMCore.Nhmws.V4
             string getValue<T>(T o) => (typeof(T).Name, o) switch
             {
                 (nameof(ILoad), ILoad g) => $"{(int)g.Load}",
-                (nameof(IMemControllerLoad), IMemControllerLoad g) => $"{g.MemoryControllerLoad}",
+                //(nameof(IMemControllerLoad), IMemControllerLoad g) => $"{g.MemoryControllerLoad}",
                 (nameof(ITemp), ITemp g) => $"{g.Temp}",
                 (nameof(IGetFanSpeedPercentage), IGetFanSpeedPercentage g) => $"{g.GetFanSpeedPercentage().percentage}",
                 (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
@@ -131,7 +131,7 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<ITemp>(DeviceDynamicProperties.Temperature ,"Temperature","°C"),
                 pairOrNull<IVramTemp>(DeviceDynamicProperties.VramTemp,"Memory Temperature","°C"),
                 pairOrNull<ILoad>(DeviceDynamicProperties.Load,"Load","%"),
-                pairOrNull<IMemControllerLoad>(DeviceDynamicProperties.MemoryControllerLoad, "MemCtrl Load","%"),
+                //pairOrNull<IMemControllerLoad>(DeviceDynamicProperties.MemoryControllerLoad, "MemCtrl Load","%"),
                 pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan speed","%"),
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power usage","W"),
                 pairOrNull<ICoreClock>(DeviceDynamicProperties.CoreClock, "Core clock", "MHz"),
@@ -359,7 +359,7 @@ namespace NHMCore.Nhmws.V4
                         },
                         ExecuteTask = async (object p) =>
                         {
-                            if(p is not string prop) return null;
+                            if(p is not string prop) return -1;
                             var (schedulerEnabled, returnedSchedules) = SchedulesManager.Instance.ScheduleFromJSON(prop);
                             SchedulesManager.Instance.ClearScheduleList();
                             MiningSettings.Instance.UseScheduler = schedulerEnabled;
@@ -373,11 +373,31 @@ namespace NHMCore.Nhmws.V4
                                 }
                             }
                             _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
-                            return "Schedules added";
+                            return 0;
+                        }
+                    },
+                    new OptionalMutablePropertyBool
+                    {
+                        PropertyID = OptionalMutableProperty.NextPropertyId(),
+                        DisplayGroup = 0,
+                        DisplayName = "Auto update",
+                        DefaultValue = false,
+                        GetValue = () =>
+                        {
+                            return UpdateSettings.Instance.AutoUpdateMinerPlugins && UpdateSettings.Instance.AutoUpdateNiceHashMiner;
+                        },
+                        ExecuteTask = async (object p) =>
+                        {
+                            if(p is not bool prop) return -1;
+                            UpdateSettings.Instance.AutoUpdateMinerPlugins = prop;
+                            UpdateSettings.Instance.AutoUpdateNiceHashMiner = prop;
+                            _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
+                            return 0;
                         }
                     }
                 };
-                if (isLogin) optionalProperties.ForEach(i => ActionMutableMap.MutableList.Add(i));
+                if (isLogin)
+                    optionalProperties.ForEach(i => ActionMutableMap.MutableList.Add(i));
                 return optionalProperties
                     .Where(p => p != null)
                     .ToList();
