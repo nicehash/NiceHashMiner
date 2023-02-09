@@ -305,3 +305,4 @@ prepare_installers.bat
 prepare_release.bat
 
 tmp*.json
+sign
