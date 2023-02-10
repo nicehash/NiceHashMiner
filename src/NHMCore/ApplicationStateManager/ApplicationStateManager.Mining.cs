@@ -127,7 +127,13 @@ namespace NHMCore
                 case DeviceState.Benchmarking:
 #if NHMWS4
                 case DeviceState.Testing:
-                    if(Helpers.IsElevated) device.ResetFanSpeed();
+                    if (Helpers.IsElevated)
+                    {
+                        device.ResetFanSpeed();
+                        device.ResetCoreClock();
+                        device.ResetCoreVoltage();
+                        device.ResetMemoryClock();
+                    }
 #endif
                     await MiningManager.StopDevice(device);
                     return (true, "");

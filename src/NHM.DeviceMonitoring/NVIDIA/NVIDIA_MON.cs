@@ -79,7 +79,14 @@ namespace NHM.DeviceMonitoring.NVIDIA
         public static extern int nhm_nvidia_device_get_memory_clocks_min_max_default_absolute(int bus_number, ref int min, ref int max, ref int def);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_memory_clocks_min_max_default_delta(int bus_number, ref int min, ref int max, ref int def);
-
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_get_core_voltage(int bus_number, ref int core_voltage);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_get_core_voltage_min_max_default(int bus_number, ref int min, ref int max, ref int def);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_reset_core_voltage(int bus_number);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_set_core_voltage(int bus_number, int core_voltage);
 
     }
 }

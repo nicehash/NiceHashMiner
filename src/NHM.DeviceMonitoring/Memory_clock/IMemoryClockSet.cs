@@ -9,5 +9,6 @@ namespace NHM.DeviceMonitoring.Memory_clock
     public interface IMemoryClockSet
     {
         bool SetMemoryClock(int memoryClock);
+        bool ResetMemoryClock();
     }
 }

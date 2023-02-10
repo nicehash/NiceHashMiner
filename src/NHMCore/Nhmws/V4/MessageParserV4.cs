@@ -5,6 +5,7 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.DeviceMonitoring.Core_clock;
+using NHM.DeviceMonitoring.Core_voltage;
 using NHM.DeviceMonitoring.Memory_clock;
 using NHM.DeviceMonitoring.TDP;
 using NHMCore.Configs;
@@ -103,6 +104,7 @@ namespace NHMCore.Nhmws.V4
                 (nameof(ICoreClock), ICoreClock g) => $"{g.CoreClock}",
                 (nameof(IMemoryClock), IMemoryClock g) => $"{g.MemoryClock}",
                 (nameof(ITDP), ITDP g) => $"{g.TDPPercentage}",
+                (nameof(ICoreVoltage), ICoreVoltage g) => $"{g.CoreVoltage}",
                 (_, _) => null,
             };
 
@@ -136,6 +138,7 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power usage","W"),
                 pairOrNull<ICoreClock>(DeviceDynamicProperties.CoreClock, "Core clock", "MHz"),
                 pairOrNull<IMemoryClock>(DeviceDynamicProperties.MemClock, "Memory clock", "MHz"),
+                pairOrNull<ICoreVoltage>(DeviceDynamicProperties.CoreVoltage, "Core voltage", "mV"),
                 pairOrNull<ITDP>(DeviceDynamicProperties.TDP, "Power Limit", "%"),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", null),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile", null),
@@ -155,7 +158,7 @@ namespace NHMCore.Nhmws.V4
             {
                 if (dynamicVal.unit == String.Empty) return false;
                 var ok = Int32.TryParse(dynamicVal.value, out var res);
-                if (ok && res < 0 && !dynamicVal.name.Contains("clock")) return true;
+                if (ok && res < 0 && (!dynamicVal.name.Contains("clock") || (!dynamicVal.name.Contains("voltage")))) return true;
                 return false;
             };
             deviceOptionalDynamic.RemoveAll(dynamVal => shouldRemoveDynamicVal(dynamVal));
@@ -622,7 +625,7 @@ namespace NHMCore.Nhmws.V4
                     var lims = ccLimDelta.CoreClockRangeDelta;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Core Clock Delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Core clock delta", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
                 if (d.DeviceType == DeviceType.AMD && d.DeviceMonitor is ICoreClockRange ccLim)
@@ -630,7 +633,7 @@ namespace NHMCore.Nhmws.V4
                     var lims = ccLim.CoreClockRange;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Core Clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Core clock", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
             }
@@ -641,7 +644,7 @@ namespace NHMCore.Nhmws.V4
                     var lims = mcLimDelta.MemoryClockRangeDelta;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Memory Clock Delta", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Memory clock delta", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
                 if (d.DeviceType == DeviceType.AMD && d.DeviceMonitor is IMemoryClockRange mcLim)
@@ -649,8 +652,16 @@ namespace NHMCore.Nhmws.V4
                     var lims = mcLim.MemoryClockRange;
                     if (lims.ok)
                     {
-                        limit.limits.Add(new Limit { Name = "Memory Clock", Unit = "MHz", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Memory clock", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
+                }
+            }
+            if(d.DeviceMonitor is ICoreVoltageSet && d.DeviceMonitor is ICoreVoltageRange cvRange)
+            {
+                var lims = cvRange.CoreVoltageRange;
+                if (lims.ok && d.DeviceMonitor is ICoreVoltage cvGet)
+                {
+                    limit.limits.Add(new Limit { Name = "Core Voltage", Unit = "uV", Def = cvGet.CoreVoltage, Range = (lims.min, lims.max) });
                 }
             }
             var json = JsonConvert.SerializeObject(limit);

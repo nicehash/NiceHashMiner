@@ -3,6 +3,7 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.DeviceMonitoring.Core_clock;
+using NHM.DeviceMonitoring.Core_voltage;
 using NHM.DeviceMonitoring.Memory_clock;
 using NHM.DeviceMonitoring.TDP;
 using NHM.UUID;
@@ -349,6 +350,7 @@ namespace NHMCore.Mining
                 return -1;
             }
         }
+
         public (uint min, uint max, uint def) TDPLimits
         {
             get
@@ -361,6 +363,7 @@ namespace NHMCore.Mining
                 return (0, 0, 0);
             }
         }
+
         public (bool ok, int min, int max, int def) CoreClockRange
         {
             get
@@ -373,6 +376,7 @@ namespace NHMCore.Mining
                 return (false, -1, -1, -1);
             }
         }
+
         public (bool ok, int min, int max, int def) MemoryClockRange
         {
             get
@@ -393,6 +397,28 @@ namespace NHMCore.Mining
                 if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockRangeDelta get)
                 {
                     var ret = get.MemoryClockRangeDelta;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
+
+        public int CoreVoltage
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreVoltage get) return get.CoreVoltage;
+                return -1;
+            }
+        }
+
+        public (bool ok, int min, int max, int def) CoreVoltageRange
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreVoltageRange get)
+                {
+                    var ret = get.CoreVoltageRange;
                     return (ret.ok, ret.min, ret.max, ret.def);
                 }
                 return (false, -1, -1, -1);
@@ -430,6 +456,26 @@ namespace NHMCore.Mining
         public bool ResetFanSpeed()
         {
             if (DeviceMonitor is IResetFanSpeed set) return set.ResetFanSpeedPercentage();
+            return false;
+        }
+        public bool SetCoreVoltage(int voltage)
+        {
+            if (DeviceMonitor is ICoreVoltageSet set) return set.SetCoreVoltage(voltage);
+            return false;
+        }
+        public bool ResetCoreVoltage()
+        {
+            if(DeviceMonitor is ICoreVoltageSet set) return set.ResetCoreVoltage();
+            return false;
+        }
+        public bool ResetCoreClock()
+        {
+            if (DeviceMonitor is ICoreClockSet set) return set.ResetCoreClock();
+            return false;
+        }
+        public bool ResetMemoryClock()
+        {
+            if (DeviceMonitor is IMemoryClockSet set) return set.ResetMemoryClock();
             return false;
         }
 
@@ -811,11 +857,7 @@ namespace NHMCore.Mining
         {
             var target = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (target == null) return;
-            //if elp bundle then do a reset before applying new thing
-
-            //this method eliminates multiple times calls
-            //we can iterate if we have anything to apply later
-            foreach (var action in target.RigManagementActions) //can be added to while in here!!!!!
+            foreach (var action in target.RigManagementActions)
             {
                 switch (action)
                 {
@@ -845,12 +887,9 @@ namespace NHMCore.Mining
                         State = DeviceState.Mining;
                         break;
                     case AlgorithmContainer.ActionQueue.ApplyFan:
-                        //var retFan = await target.SetFanForDevice(target.ActiveFanProfile, false);
-                        //if (retFan == RigManagementReturn.Fail) target.SwitchFanToInactive();
                         break;
                     case AlgorithmContainer.ActionQueue.ResetFan:
                         if (IsTesting) break;
-                        //var resetFan = await target.ResetFanForDevice();
                         target.SwitchFanToInactive();
                         ResetFanSpeed();
                         State = DeviceState.Mining;
@@ -858,14 +897,10 @@ namespace NHMCore.Mining
                     case AlgorithmContainer.ActionQueue.ApplyFanTest:
                         if (target.HasTestProfileAndCanSet() && target.ActiveFanTestProfile != null) 
                         {
-                            //var retFanTest = await target.SetFanForDevice(target.ActiveFanTestProfile, false);
-                            //if (retFanTest == RigManagementReturn.Success || retFanTest == RigManagementReturn.PartialSuccess) State = DeviceState.Testing;
-                            //else target.SwitchFanTestToInactive();
                             State = DeviceState.Testing;
                         }
                         break;
                     case AlgorithmContainer.ActionQueue.ResetFanTest:
-                        //var resetFanTest = await target.ResetFanForDevice();
                         target.SwitchFanTestToInactive();
                         ResetFanSpeed();
                         State = DeviceState.Mining;

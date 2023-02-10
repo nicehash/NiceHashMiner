@@ -9,5 +9,6 @@ namespace NHM.DeviceMonitoring.Core_clock
     public interface ICoreClockSet
     {
         bool SetCoreClock(int coreClock);
+        bool ResetCoreClock();
     }
 }

@@ -609,15 +609,17 @@ namespace NHMCore.Nhmws.V4
     public class OcProfile : GenericProfile
     {
         [JsonProperty("core_clock")]
-        public int CoreClock { get; set; }
+        public int? CoreClock { get; set; }
         [JsonProperty("core_clock_delta")]
-        public int CoreClockDelta { get; set; }
+        public int? CoreClockDelta { get; set; }
         [JsonProperty("memory_clock")]
-        public int MemoryClock { get; set; }
+        public int? MemoryClock { get; set; }
         [JsonProperty("memory_clock_delta")]
-        public int MemoryClockDelta { get; set; }
-        [JsonProperty("power_mode")]
-        public int TDP { get; set; }
+        public int? MemoryClockDelta { get; set; }
+        [JsonProperty("power_limit")]
+        public int? TDP { get; set; }
+        [JsonProperty("core_voltage")]
+        public int? CoreVoltage { get; set; }
     }
     public class FanProfile : GenericProfile
     {

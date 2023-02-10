@@ -254,6 +254,16 @@ namespace NHM.DeviceMonitoring
             return false;
         }
 
+        public bool ResetCoreClock()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ResetMemoryClock()
+        {
+            throw new NotImplementedException();
+        }
+
         public int HotspotTemp
         {
             get

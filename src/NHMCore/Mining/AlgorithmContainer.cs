@@ -718,23 +718,46 @@ namespace NHMCore.Mining
         }
         public Task<RigManagementReturn> SetOcForDevice(OcProfile bundle, bool reset = false)
         {
-            if (bundle != null) Logger.Warn(_TAG, $"Setting OC for {ComputeDevice.Name}: TDP={bundle.TDP},CC={bundle.CoreClock},MC={bundle.MemoryClock}");
+            //if (bundle != null) Logger.Warn(_TAG, $"Setting OC for {ComputeDevice.Name}: TDP={bundle.TDP},CC={bundle.CoreClock},MC={bundle.MemoryClock}");
             var ret = RigManagementReturn.Fail;
             int valuesToSet = 0;
-            if (bundle.CoreClock > 0) valuesToSet++;
-            if (bundle.MemoryClock > 0) valuesToSet++;
-            if (bundle.TDP > 0) valuesToSet++;
-            if (valuesToSet == 0)
+            bool willSetCC = false;
+            bool willSetMC = false;
+            if (bundle.CoreClockDelta != null || bundle.CoreClock != null)
+            {
+                willSetCC = true;
+                valuesToSet++;
+            }
+            if (bundle.MemoryClockDelta != null || bundle.MemoryClock != null)
+            {
+                willSetMC = true;
+                valuesToSet++;
+            }
+            if (bundle.TDP != null) valuesToSet++;
+            if (bundle.CoreVoltage != null) valuesToSet++;
+
+            if (valuesToSet == 0 && !reset)
             {
                 Logger.Error(_TAG, "Have no values to set");
                 return Task.FromResult(ret);
             }
-            int setValues = 3;
-            var CoreClockValue = ComputeDevice.DeviceType == DeviceType.NVIDIA ? bundle.CoreClockDelta : bundle.CoreClock;
-            var MemoryClockValue = ComputeDevice.DeviceType == DeviceType.NVIDIA ? bundle.MemoryClockDelta : bundle.MemoryClock;
-            var setCC = bundle.CoreClock <= 0 ? false : ComputeDevice.SetCoreClock(CoreClockValue);
-            var setMC = bundle.MemoryClock <= 0 ? false : ComputeDevice.SetMemoryClock(MemoryClockValue);
-            var setTDP = bundle.TDP <= 0 ? false : ComputeDevice.SetPowerModeManual(bundle.TDP);
+
+            int? CoreClockValue = willSetCC ? (ComputeDevice.DeviceType == DeviceType.NVIDIA ? (int)bundle.CoreClockDelta : (int)bundle.CoreClock) : null;
+            int? MemoryClockValue = willSetMC ? (ComputeDevice.DeviceType == DeviceType.NVIDIA ? (int)bundle.MemoryClockDelta : (int)bundle.MemoryClock) : null;
+
+
+            int setValues = 4;
+            var setTDP = bundle.TDP == null ? false : ComputeDevice.SetPowerModeManual((int)bundle.TDP);
+            var setCC = willSetCC ? ComputeDevice.SetCoreClock((int)CoreClockValue) : false;
+            var setMC = willSetMC ? ComputeDevice.SetMemoryClock((int)MemoryClockValue) : false;
+            var setCV = bundle.CoreVoltage == null ? false : ComputeDevice.SetCoreVoltage((int)bundle.CoreVoltage);
+
+            if (reset)
+            {
+                setCV = ComputeDevice.ResetCoreVoltage();
+                setCC = ComputeDevice.ResetCoreClock();
+                setMC = ComputeDevice.ResetMemoryClock();
+            }
 
             if (!setCC)
             {
@@ -751,6 +774,11 @@ namespace NHMCore.Mining
                 Logger.Warn(_TAG, $"Setting TDP success: {setTDP}");
                 setValues--;
             }
+            if(!setCV)
+            {
+                Logger.Warn(_TAG, $"Setting voltage success: {setCV}");
+                setValues--;
+            }
 
             if (setValues == valuesToSet) ret = RigManagementReturn.Success;
             else if (setValues != 0 && setValues < valuesToSet) ret = RigManagementReturn.PartialSuccess;
@@ -765,10 +793,8 @@ namespace NHMCore.Mining
         }
         public Task<RigManagementReturn> ResetOcForDevice()
         {
-            var defCC = ComputeDevice.CoreClockRange;
-            var defMC = ComputeDevice.MemoryClockRange;
             var defTDP = ComputeDevice.TDPLimits;
-            var bundle = new OcProfile() { CoreClock = defCC.def, MemoryClock = defMC.def, TDP = (int)defTDP.def };
+            var bundle = new OcProfile() { TDP = (int)defTDP.def }; // tdp is only value without reset
             var res = SetOcForDevice(bundle, true);
             return Task.FromResult(res.Result);
         }

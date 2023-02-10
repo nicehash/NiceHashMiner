@@ -18,6 +18,7 @@ namespace NHM.Common.Enums
         HotspotTemp,
         CoreClock,
         MemClock,
-        TDP
+        TDP,
+        CoreVoltage
     }
 }

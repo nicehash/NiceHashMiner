@@ -86,7 +86,16 @@ namespace NHMCore
         }
         private static void DeviceActionsBeforeExit()
         {
-            if(Helpers.IsElevated) AvailableDevices.Devices.ToList().ForEach(d => d.ResetFanSpeed());
+            if (Helpers.IsElevated)
+            {
+                AvailableDevices.Devices.ToList().ForEach(d => {
+                    d.ResetFanSpeed();
+                    d.ResetCoreClock();
+                    d.ResetMemoryClock();
+                    d.ResetCoreVoltage();
+                });
+
+            }
         }
 
         private static bool _restartCalled = false;
