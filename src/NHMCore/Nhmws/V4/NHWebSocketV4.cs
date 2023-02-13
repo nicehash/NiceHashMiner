@@ -318,6 +318,7 @@ namespace NHMCore.Nhmws.V4
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
+            if (CachedState != null) CachedState = null;
             _login = MessageParserV4.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
             if (!string.IsNullOrEmpty(btc)) _login.Btc = btc;
             if (worker != null) _login.Worker = worker;
