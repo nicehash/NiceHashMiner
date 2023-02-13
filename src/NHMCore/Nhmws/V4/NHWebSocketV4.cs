@@ -318,6 +318,7 @@ namespace NHMCore.Nhmws.V4
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
+            ActionMutableMap.ResetArrays();
             if (CachedState != null) CachedState = null;
             _login = MessageParserV4.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
             if (!string.IsNullOrEmpty(btc)) _login.Btc = btc;
@@ -413,12 +414,17 @@ namespace NHMCore.Nhmws.V4
         {
             var nextState = MessageParserV4.GetMinerState(_login.Worker, AvailableDevices.Devices.SortedDevices());
             var shrinkedState = new MinerState();
-            if (CachedState != null)
+            var json = string.Empty;
+            if (CachedState != null) //if we have something cached
             {
                 shrinkedState = GetDeltaProperties(CachedState, nextState);
+                json = JsonConvert.SerializeObject(shrinkedState);
+            }
+            else
+            {
+                json = JsonConvert.SerializeObject(nextState);
             }
             CachedState = nextState;
-            var json = JsonConvert.SerializeObject(shrinkedState);
             return json;
         }
 

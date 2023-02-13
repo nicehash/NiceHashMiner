@@ -340,7 +340,7 @@ namespace NHMCore.Nhmws.V4
                         {
                             string ret = string.Empty;
                             var minersSettingsGlobal = new MinerAlgoStateRig();
-                            var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null);
+                            var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null && m.DisplayName == "Miners settings");
                             if(mutables == null || mutables.Count() <= 0) return ret;
                             foreach (var mutable in mutables)
                             {
@@ -430,7 +430,7 @@ namespace NHMCore.Nhmws.V4
                         {
                             var ret = string.Empty;
                             var minerSpeedsGlobal = new MinerAlgoSpeedRig();
-                            var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null);
+                            var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null && m.DisplayName == "Benchmark settings");
                             if(mutables == null || mutables.Count() <= 0) return ret;
                             foreach (var mutable in mutables)
                             {

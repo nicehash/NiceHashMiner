@@ -24,5 +24,10 @@ namespace NHMCore.Nhmws
             if (mutableRecord != null) return mutableRecord;
             return null;
         }
+        public static void ResetArrays()
+        {
+            ActionList.Clear();
+            MutableList.Clear();
+        }
     }
 }
