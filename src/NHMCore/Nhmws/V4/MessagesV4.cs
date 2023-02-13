@@ -533,6 +533,20 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("devices")]
         public List<MinerAlgoState> Miners { get; set; } = new List<MinerAlgoState>();
     }
+    public class MinerAlgoSpeed
+    {
+        [JsonProperty("miners")]
+        public List<MinerSpeedDynamic> Miners { get; set; } = new List<MinerSpeedDynamic>();
+        [JsonProperty("device_id")]
+        public string DeviceID { get; set; }
+        [JsonProperty("device_name")]
+        public string DeviceName { get; set; }
+    }
+    public class MinerAlgoSpeedRig
+    {
+        [JsonProperty("devices")]
+        public List<MinerAlgoSpeed> Miners { get; set; } = new();
+    }
     public class MinerDynamic
     {
         [JsonProperty("id")]
@@ -541,6 +555,13 @@ namespace NHMCore.Nhmws.V4
         public bool Enabled { get; set; }
         [JsonProperty("algorithms")]
         public List<Algo> Algos { get; set; } = new List<Algo>();
+    }
+    public class MinerSpeedDynamic
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("combination")]
+        public List<Combination> Combinations { get; set; } = new List<Combination>();
     }
     internal class MinersStatic
     {
@@ -560,6 +581,22 @@ namespace NHMCore.Nhmws.V4
         public string Id { get; set; }
         [JsonProperty("enabled", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled { get; set; }
+    }
+
+    public class AlgoSpeed
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("speed", NullValueHandling = NullValueHandling.Ignore)]
+        public string? Speed { get; set; }
+    }
+
+    public class Combination
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("algorithm")]
+        public List<AlgoSpeed> Algos { get; set; } = new List<AlgoSpeed>();
     }
 
     public class Bundle
