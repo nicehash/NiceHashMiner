@@ -204,6 +204,27 @@ namespace NHMCore.Nhmws.V4
                     },
                     ComputeDev = d
                 });
+                optionalProperties.Add(new OptionalMutablePropertyString
+                {
+                    PropertyID = OptionalMutableProperty.NextPropertyId(),
+                    DisplayGroup = 0,
+                    DisplayName = "Benchmark settings",
+                    DefaultValue = "",
+                    Range = (8092, ""),
+                    ExecuteTask = async (object p) =>
+                    {
+                        if (p is not string prop) return -1;
+                        var newSpeed = JsonConvert.DeserializeObject<MinerAlgoSpeed>(prop);
+                        return d.ApplyNewAlgoSpeeds(newSpeed);
+                    },
+                    GetValue = () =>
+                    {
+                        var ret = string.Empty;
+                        ret += GetMinersSpeedsForDeviceDynamic(d);
+                        return ret;
+                    },
+                    ComputeDev = d
+                });
                 if (isLogin) optionalProperties.ForEach(i => ActionMutableMap.MutableList.Add(i));
                 return optionalProperties
                     .Where(p => p != null)
@@ -354,7 +375,7 @@ namespace NHMCore.Nhmws.V4
                         DisplayGroup = 0,
                         DisplayName = "Scheduler settings",
                         DefaultValue = "",
-                        Range = (4096, String.Empty),
+                        Range = (4096, string.Empty),
                         GetValue = () =>
                         {
                             string ret = SchedulesManager.Instance.ScheduleToJSON();
@@ -396,6 +417,46 @@ namespace NHMCore.Nhmws.V4
                             UpdateSettings.Instance.AutoUpdateNiceHashMiner = prop;
                             _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
                             return 0;
+                        }
+                    },
+                    new OptionalMutablePropertyString
+                    {
+                        PropertyID = OptionalMutableProperty.NextPropertyId(),
+                        DisplayGroup = 0,
+                        DisplayName = "Benchmark settings",
+                        DefaultValue = "",
+                        Range = (8092, string.Empty),
+                        GetValue = () =>
+                        {
+                            var ret = string.Empty;
+                            var minerSpeedsGlobal = new MinerAlgoSpeedRig();
+                            var mutables = ActionMutableMap.MutableList.Where(m => m.ComputeDev != null);
+                            if(mutables == null || mutables.Count() <= 0) return ret;
+                            foreach (var mutable in mutables)
+                            {
+                                if (mutable.GetValue() is not string val) continue;
+                                minerSpeedsGlobal.Miners.Add(JsonConvert.DeserializeObject<MinerAlgoSpeed>(val));
+                            }
+                            ret += JsonConvert.SerializeObject(minerSpeedsGlobal);
+                            return ret;
+                        },
+                        ExecuteTask = async (object p) =>
+                        {
+                            if(p is not string prop) return -1;
+                            var newSpeeds = JsonConvert.DeserializeObject<MinerAlgoSpeedRig>(prop);
+                            //for each device thats inside apply new algo state
+                            var devices = AvailableDevices.Devices.Where(d => newSpeeds.Miners.Any(m => m.DeviceID.Contains(d.B64Uuid)));
+                            if(devices == null) return -2;
+                            var successCount = 0;
+                            foreach(var ns in newSpeeds.Miners)
+                            {
+                                var targetDev = AvailableDevices.Devices.FirstOrDefault(d => d.B64Uuid == ns.DeviceID);
+                                if(targetDev == null) continue;
+                                var tempRes = targetDev.ApplyNewAlgoSpeeds(ns);
+                                if(tempRes != 0) continue;
+                                successCount++;
+                            }
+                            return successCount == newSpeeds.Miners.Count ? 0 : -3;
                         }
                     }
                 };
@@ -593,6 +654,44 @@ namespace NHMCore.Nhmws.V4
             var json = JsonConvert.SerializeObject(minersObject);
             return json;
         }
+
+        private static string GetMinersSpeedsForDeviceDynamic(ComputeDevice d)
+        {
+            var minersObject = new MinerAlgoSpeed();
+            var containers = d.AlgorithmSettings;
+            if (containers == null) return string.Empty;
+            var grouped = containers.GroupBy(c => c.PluginName).ToList();
+            if (grouped == null) return string.Empty;
+            foreach (var group in grouped)
+            {
+                var combinations = new List<Combination>();
+                foreach (var algo in group)
+                {
+                    var algorithms = new List<AlgoSpeed>()
+                    {
+                        new AlgoSpeed()
+                        {
+                            Id = Convert.ToString((int)algo.IDs[0]),
+                            Speed = algo.BenchmarkSpeed.ToString()
+                        }
+                        
+                    };
+                    var combination = new Combination()
+                    {
+                        Id = algo.AlgorithmName,
+                        Algos = algorithms
+                    };
+                    combinations.Add(combination);
+                }
+                var miner = new MinerSpeedDynamic() { Id = group.Key, Combinations = combinations };
+                minersObject.Miners.Add(miner);
+            }
+            minersObject.DeviceID = d.B64Uuid;
+            minersObject.DeviceName = d.Name;
+            var json = JsonConvert.SerializeObject(minersObject);
+            return json;
+        }
+
         private static string GetMinersForDeviceStatic(ComputeDevice d)
         {
             MinersStatic miners = new MinersStatic();

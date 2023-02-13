@@ -184,6 +184,21 @@ namespace NHMCore.Mining
             return 0;
         }
 
+        public int ApplyNewAlgoSpeeds(MinerAlgoSpeed speed)
+        {
+            foreach (var miner in speed.Miners)
+            {
+                foreach (var algo in miner.Combinations)
+                {
+                    var targets = AlgorithmSettings.Where(a => a.AlgorithmName == algo.Id && a.PluginName == miner.Id)?.ToList();
+                    if (targets == null) continue;
+                    targets.ForEach(t => t.BenchmarkSpeed = Convert.ToDouble(algo.Algos.FirstOrDefault().Speed));
+                }
+            }
+            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());
+            return 0;
+        }
+
         private List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; set; } = new List<PluginAlgorithmConfig>();
 
         public double MinimumProfit { get; set; }

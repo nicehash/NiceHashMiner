@@ -174,6 +174,7 @@ namespace NHMCore.Mining
                 Algorithm.Speeds[0] = value;
                 UpdateConfigVersionIfNeeded();
                 NotifySpeedChanged();
+                Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
             }
         }
 

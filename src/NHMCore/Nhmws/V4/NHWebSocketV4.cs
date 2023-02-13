@@ -908,6 +908,7 @@ namespace NHMCore.Nhmws.V4
             _sendQueue.EnqueueParams((MessageType.SEND_MESSAGE_STATUS, minerStatusJsonStr));
             return Task.CompletedTask;
         }
+
         private static Task ExecuteProfilesBundleSet(Bundle bundle)
         {
             BundleManager.SetBundleInfo(bundle.Name, bundle.Id);
