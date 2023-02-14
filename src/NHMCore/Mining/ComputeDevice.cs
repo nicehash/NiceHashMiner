@@ -12,6 +12,7 @@ using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Nhmws;
 using NHMCore.Nhmws.V4;
+using NHMCore.Notifications;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,6 +58,9 @@ namespace NHMCore.Mining
                 StartState = false;
                 State = value ? DeviceState.Stopped : DeviceState.Disabled;
                 OnPropertyChanged();
+                if (Uuid == null || Uuid == string.Empty || Uuid == "-1") return; //initial stuff
+                var eventType = value ? EventManager.EventType.DeviceEnabled : EventManager.EventType.DeviceDisabled;
+                EventManager.Instance.AddEvent(eventType);
             }
         }
 

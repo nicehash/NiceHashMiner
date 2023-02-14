@@ -7,6 +7,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Managers;
 using NHMCore.Mining;
+using NHMCore.Notifications;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
@@ -831,6 +832,10 @@ namespace NHMCore.Nhmws.V4
                     _ = ExecuteProfilesBundleSet(bundle);
                     MiningState.Instance.CalculateDevicesStateChange();
                     (err, result) = (ErrorCode.NoError, "OK");
+                    if(err == ErrorCode.NoError)
+                    {
+                        EventManager.Instance.AddEvent(EventManager.EventType.BundleApplied);
+                    }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
                     if (!Helpers.IsElevated)
