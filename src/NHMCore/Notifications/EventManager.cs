@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
+using NHMCore.Configs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,14 +11,16 @@ using System.Threading.Tasks;
 
 namespace NHMCore.Notifications
 {
-    internal class EventManager
+    public static class EventManager
     {
-        public static EventManager Instance { get; } = new EventManager();
-        private string TAG = "EventManager";
+        private static string TAG = "EventManager";
         private static readonly object _lock = new object();
         private static readonly object _lock2 = new object();
-        private readonly string _eventFile = Paths.RootPath("logs","events.json");
-        private List<Event> _events = new List<Event>();
+        private static readonly string _eventFile = Paths.RootPath("logs","events.json");
+        private static List<Event> _events = new List<Event>();
+        private static readonly int _eventQuota = 20;
+        private static bool _init = false;
+
         public class Event
         {
             public int ID;
@@ -25,8 +28,9 @@ namespace NHMCore.Notifications
             public DateTime DateTime;
             public string Content;
         }
-        private EventManager()
+        public static void Init()
         {
+            if(_init ) return;
             try
             {
                 using StreamReader reader = new(_eventFile);
@@ -38,8 +42,9 @@ namespace NHMCore.Notifications
             {
                 Logger.Warn(TAG, e.Message);
             }
+            _init = true;
         }
-        public List<Event> Events
+        public static List<Event> Events
         {
             get
             {
@@ -56,42 +61,59 @@ namespace NHMCore.Notifications
                 }
             }
         }
-        public void AddEvent(EventType type, string content = "")
+        public static void AddEvent(EventType type, string content = "")
         {
+            if(!_init) return;
             lock (_lock2)
             {
+                if(!ApplicationStateManager.isInitFinished && 
+                    (type == EventType.DeviceEnabled || 
+                    type == EventType.DeviceDisabled ||
+                    type == EventType.AlgoEnabled || 
+                    type == EventType.AlgoDisabled))
+                {
+                    return;
+                }
                 var now = DateTime.Now;
-                Events.Add(new Event() {ID = (int)type, DateTime = now, Content = content });
-                var events = JsonConvert.SerializeObject(Events);
+                var eventText = GetEventText(type, content);
+                Events.Add(new Event() {ID = (int)type, DateTime = now, Content = eventText });
+                if(Events.Count >= _eventQuota) Events.RemoveAt(0);
+                var events = JsonConvert.SerializeObject(Events, Formatting.Indented);
                 using StreamWriter w = File.CreateText(_eventFile);
                 w.Write(events);
+                Logger.Warn(TAG, $"Event occurred {eventText}");
+                //todo send
+                //todo onpropertyChanged
             }
         }
-        public enum EventType
+
+        private static string GetEventText(EventType type, string content = "")
         {
-            Unknown = 0,
-            RigStarted = 1,
-            RigStopped = 2, 
-            DeviceEnabled = 3,
-            DeviceDisabled = 4,
-            RigRestart = 5,
-            Unknown1 = 6,
-            PluginFailiure = 7,
-            MissingFiles = 8,
-            VirtualMemory = 9,
-            GeneralConfigErr = 10,
-            Unknown2 = 11,
-            DriverCrash = 12,
-            DeviceOverheat = 13,
-            MissingDev = 14,
-            AlgoSwitch = 15,
-            AlgoEnabled = 16,
-            AlgoDisabled = 17,
-            TestOverClockApplied = 18,
-            TestOverClockFailed = 19,
-            BundleApplied = 20,
-            Unknown3 = 21,
-            BenchmarkFailed = 22,
+            string ret = type switch
+            {
+                EventType.Unknown => "",
+                EventType.RigStarted => $"Rig started mining.",
+                EventType.RigStopped => $"Rig stopped mining.",
+                EventType.DeviceEnabled => $"GPU {content} enabled.",
+                EventType.DeviceDisabled => $"GPU {content} disabled.",
+                EventType.RigRestart => $"Rebooting this rig.",
+                EventType.PluginFailiure => $"{content} failed to run successfully",
+                EventType.MissingFiles => $"Missing files. Check your antivirus software",
+                EventType.VirtualMemory => $"Virtual memory is low. Increase it",
+                EventType.GeneralConfigErr => $"Configuration error. Reinstall is suggested",
+                EventType.DriverCrash => $"GPU drivers crashed. Lower OC settings or reinstall the drivers",
+                EventType.DeviceOverheat => $"GPU(s) ({content}) are overheating.",
+                EventType.MissingDev => $"Missing devices ({content})",
+                EventType.AlgoSwitch => $"Algo switch: ({content})",
+                EventType.AlgoEnabled => $"Algorithm enabled: {content}",
+                EventType.AlgoDisabled => $"Algorithm disabled: {content}",
+                EventType.TestOverClockApplied => $"Test overclock applied on device {content}",
+                EventType.TestOverClockFailed => $"Test overclock failed on device {content}",
+                EventType.BundleApplied => $"Bundle {content} applied.",
+                EventType.BenchmarkFailed => $"Benchmark combination {content} has failed",
+                _ => ""
+            };
+            return ret;
         }
     }
 }

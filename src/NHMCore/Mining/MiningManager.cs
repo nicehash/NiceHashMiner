@@ -964,7 +964,9 @@ namespace NHMCore.Mining
             // start new
             foreach (var startKey in toStartMinerGroupKeys)
             {
+                //todo here access this device to check what is set now and what will be set?
                 var miningPairs = newGroupedMiningPairs[startKey];
+                EventManager.AddEvent(EventType.AlgoSwitch, miningPairs.FirstOrDefault().AlgorithmName);
                 var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs.FirstOrDefault());
                 var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
                 if (toStart == null)
@@ -975,8 +977,6 @@ namespace NHMCore.Mining
                 _runningMiners[startKey] = toStart;
                 await toStart.StartMinerTask(_stopMiningManager, _username);
             }
-            //after start mining
-            //all devices check 
 #if NHMWS4
             var miningDevs = AvailableDevices.Devices
                 .Where(d => d.State == DeviceState.Mining || d.State == DeviceState.Testing)?
@@ -988,7 +988,6 @@ namespace NHMCore.Mining
                     await dev.AfterStartMining();
                 }
             }
-
             _ = NHWebSocketV4.UpdateMinerStatus(); //todo maybe not needeed
 #endif
             // log scope

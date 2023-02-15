@@ -21,7 +21,7 @@ namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
-        private static bool isInitFinished = false;
+        public static bool isInitFinished = false;
 
         private class LoaderConverter : IStartupLoader
         {
@@ -54,6 +54,7 @@ namespace NHMCore
                     if (perc > 100) return 100;
                     return perc;
                 };
+                EventManager.Init();
                 NotificationsManager.Instance.ReadLoggedNotifications();
                 // STEP
                 // Checking System Memory

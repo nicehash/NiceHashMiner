@@ -75,7 +75,7 @@ namespace NHMCore
                 // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
                 // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
                 var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs();
-                if (!hasMissingGPUs) return;
+                if (!hasMissingGPUs.isMissing) return;
                 if (GlobalDeviceSettings.Instance.RestartMachineOnLostGPU)
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs will execute 'OnGPUsLost.bat'");
@@ -97,6 +97,7 @@ namespace NHMCore
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs");
                     AvailableNotifications.CreateMissingGPUsInfo();
+                    EventManager.AddEvent(EventType.MissingDev, String.Join(',',hasMissingGPUs.uuids));
                 }
             },
             5 * 60 * 1000); // check every 5 minutes

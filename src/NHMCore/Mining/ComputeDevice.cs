@@ -59,8 +59,8 @@ namespace NHMCore.Mining
                 State = value ? DeviceState.Stopped : DeviceState.Disabled;
                 OnPropertyChanged();
                 if (Uuid == null || Uuid == string.Empty || Uuid == "-1") return; //initial stuff
-                var eventType = value ? EventManager.EventType.DeviceEnabled : EventManager.EventType.DeviceDisabled;
-                EventManager.Instance.AddEvent(eventType);
+                var eventType = value ? EventType.DeviceEnabled : EventType.DeviceDisabled;
+                EventManager.AddEvent(eventType, Name);
             }
         }
 

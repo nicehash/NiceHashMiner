@@ -8,6 +8,7 @@ using NHMCore.Configs.ELPDataModels;
 using NHMCore.Configs.Managers;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws.V4;
+using NHMCore.Notifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -243,6 +244,9 @@ namespace NHMCore.Mining
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Status));
                 Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
+                if (MinerUUID == null || MinerUUID == string.Empty) return; //initial stuff
+                var notifType = value ? EventType.AlgoEnabled : EventType.AlgoDisabled;
+                EventManager.AddEvent(notifType, AlgorithmName);
             }
         }
         public void SetEnabled(bool enabled) //for enable without WS (bulk setting)

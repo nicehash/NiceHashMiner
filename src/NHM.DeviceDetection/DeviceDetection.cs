@@ -282,13 +282,13 @@ namespace NHM.DeviceDetection
         }
 
         // We check only missing from inital detection. Case like device poping back is not covered (ultra rare case)
-        public static async Task<bool> CheckIfMissingGPUs()
+        public static async Task<(bool isMissing, List<string> uuids)> CheckIfMissingGPUs()
         {
-            async Task<bool> anyMissingCUDA_Devices()
+            async Task<(bool isMissing, List<string> uuids)> anyMissingCUDA_Devices()
             {
                 try
                 {
-                    if (!DetectionResult.HasCUDADevices) return false;
+                    if (!DetectionResult.HasCUDADevices) return (false, new List<string>());
                     var cudaQueryResult = await CUDADetector.TryQueryCUDADevicesAsync();
                     var supportedCudaDevices = cudaQueryResult.parsed.CudaDevices
                         .Select(CUDADetector.Transform)
@@ -299,20 +299,20 @@ namespace NHM.DeviceDetection
                     if (missing.Any())
                     {
                         Logger.Error(Tag, $"CUDA missing devices:\n{string.Join("\n", missing.Select(dev => $"\t{dev.UUID}"))}");
-                        return true;
+                        return (true, missing.Select(dev => dev.UUID).ToList());
                     }
                 }
                 catch (Exception e)
                 {
                     Logger.Error(Tag, $"CUDA CheckIfMissingDevices error: {e}");
                 }
-                return false;
+                return (false, new List<string>());
             }
-            async Task<bool> anyMissingAMD_Devices()
+            async Task<(bool isMissing, List<string> uuids)> anyMissingAMD_Devices()
             {
                 try
                 {
-                    if (!DetectionResult.HasAMDDevices) return false;
+                    if (!DetectionResult.HasAMDDevices) return (false, new List<string>());
                     var amdDevices = await AMD.AMDDetector.TryQueryAMDDevicesAsync(DetectionResult.AvailableVideoControllers.ToList());
                     var amdDevicesUUIDs = amdDevices
                         .Select(dev => dev.UUID)
@@ -321,16 +321,22 @@ namespace NHM.DeviceDetection
                     if (missing.Any())
                     {
                         Logger.Error(Tag, $"AMD missing devices:\n{string.Join("\n", missing.Select(dev => $"\t{dev.UUID}"))}");
-                        return true;
+                        return (true, missing.Select(dev => dev.UUID).ToList());
                     }
                 }
                 catch (Exception e)
                 {
                     Logger.Error(Tag, $"AMD CheckIfMissingDevices error: {e}");
                 }
-                return false;
+                return (false, new List<string>());
             }
-            return await anyMissingCUDA_Devices() || await anyMissingAMD_Devices();
+            var amdsMissing = await anyMissingAMD_Devices();
+            var nvsMissing = await anyMissingCUDA_Devices();
+            if(!amdsMissing.isMissing && !nvsMissing.isMissing)
+            {
+                return (false, new List<string>());
+            }
+            return (true, nvsMissing.uuids.Concat(amdsMissing.uuids).ToList());
         }
     }
 }

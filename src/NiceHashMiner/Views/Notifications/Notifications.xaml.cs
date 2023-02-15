@@ -38,5 +38,17 @@ namespace NiceHashMiner.Views.Notifications
         {
             NotificationsManager.Instance.ClearAllNotifications();
         }
+
+        private void PastEvents_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (pastEventsGrid.Visibility == System.Windows.Visibility.Visible)
+            {
+                pastEventsGrid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                pastEventsGrid.Visibility = System.Windows.Visibility.Visible;
+            }
+        }
     }
 }
