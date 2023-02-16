@@ -108,7 +108,7 @@
                         </Grid.RowDefinitions>
                         <ScrollViewer Grid.Row="1" Margin="10,0,10,10">
                             <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="2">
-                                <TextBlock />
+                                <TextBlock x:Name="pastEventsTB" />
                             </Border>
                         </ScrollViewer>
                     </Grid>

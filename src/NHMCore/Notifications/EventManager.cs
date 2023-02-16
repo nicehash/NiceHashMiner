@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +21,8 @@ namespace NHMCore.Notifications
         private static List<Event> _events = new List<Event>();
         private static readonly int _eventQuota = 20;
         private static bool _init = false;
+        public static event EventHandler<string> EventAdded;
+        public static event EventHandler EventsLoaded;
 
         public class Event
         {
@@ -37,6 +40,7 @@ namespace NHMCore.Notifications
                 var text = reader.ReadToEnd();
                 var existingRecord = JsonConvert.DeserializeObject<List<Event>>(text);
                 if (existingRecord != null) Events = existingRecord;
+                EventsLoaded?.Invoke(null, null);
             }
             catch (Exception e)
             {
@@ -82,6 +86,7 @@ namespace NHMCore.Notifications
                 using StreamWriter w = File.CreateText(_eventFile);
                 w.Write(events);
                 Logger.Warn(TAG, $"Event occurred {eventText}");
+                EventAdded?.Invoke(null, $"{String.Format("{0:G}", now)} - {eventText}");
                 //todo send
                 //todo onpropertyChanged
             }

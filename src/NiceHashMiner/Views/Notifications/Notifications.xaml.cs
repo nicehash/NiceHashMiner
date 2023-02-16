@@ -13,6 +13,8 @@ namespace NiceHashMiner.Views.Notifications
         public Notifications()
         {
             InitializeComponent();
+            EventManager.EventAdded += AddToEventBox;
+            EventManager.EventsLoaded += OnLoadedEvents;
         }
 
         // TODO show icon for new notification
@@ -33,7 +35,6 @@ namespace NiceHashMiner.Views.Notifications
                 Logger.Error("Notifications", ex.Message);
             }
         }
-
         private void ClearAllNotifications(object sender, System.Windows.RoutedEventArgs e)
         {
             NotificationsManager.Instance.ClearAllNotifications();
@@ -49,6 +50,22 @@ namespace NiceHashMiner.Views.Notifications
             {
                 pastEventsGrid.Visibility = System.Windows.Visibility.Visible;
             }
+        }
+        private void OnLoadedEvents(object sender, EventArgs e)
+        {
+            var eventArr = EventManager.Events;
+            foreach (var ev in eventArr)
+            {
+                WriteToEventBox($"{String.Format("{0:G}", ev.DateTime)} - {ev.Content}");
+            }
+        }
+        private void AddToEventBox(object sender, string newEvent)
+        {
+           WriteToEventBox(newEvent);
+        }
+        private void WriteToEventBox(string content)
+        {
+            pastEventsTB.Text += $"{content}\n";
         }
     }
 }
