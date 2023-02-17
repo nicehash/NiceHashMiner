@@ -49,15 +49,27 @@ namespace NHM.DeviceMonitoring.AMD
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_set_core_clocks(int bus_number, int core_clocks);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_amd_device_reset_core_clocks(int bus_number);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_get_memory_clocks_min_max_default(int bus_number, ref int min, ref int max, ref int defaultV);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_get_memory_clocks(int bus_number, ref int memory_clocks);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_set_memory_clocks(int bus_number, int memory_clocks);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_amd_device_reset_memory_clocks(int bus_number);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_get_special_temperatures(int bus_number, ref int hotspot_temp, ref int vram_temp);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_amd_device_get_memory_controller_load(int bus_number, ref int mem_ctrl_load);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_amd_device_get_voltage_min_max_default(int bus_number, ref int min, ref int max, ref int default_v);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_amd_device_get_voltage(int bus_number, ref int voltage);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_amd_device_set_voltage(int bus_number, int voltage);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_amd_device_reset_voltage(int bus_number);
 
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
