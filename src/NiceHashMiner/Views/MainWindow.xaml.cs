@@ -236,7 +236,7 @@ namespace NiceHashMiner.Views
                 tdpWindow.Show();
             }
 
-            if (MinerPluginsManager.PluginsForEulaConfirm.Any())
+            if (MinerPluginsManager.PluginsForEulaConfirm.Any() && !Launcher.IsUpdated)
             {
                 var pluginsPopup = new Plugins.PluginsConfirmDialog();
                 pluginsPopup.DataContext = new Plugins.PluginsConfirmDialog.VM
@@ -244,6 +244,10 @@ namespace NiceHashMiner.Views
                     Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.PluginsForEulaConfirm)
                 };
                 ShowContentAsModalDialog(pluginsPopup);
+            }
+            if (MinerPluginsManager.PluginsForEulaConfirm.Any() && Launcher.IsUpdated)
+            {
+                ConfigManager.InitDeviceSettings();
             }
 
             if (LoginSuccess.HasValue)

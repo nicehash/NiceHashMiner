@@ -241,7 +241,7 @@
                         </ToggleButton>
                     </StackPanel>
 
-                    <Button Style="{Binding Plugin.Installed, Converter={StaticResource PluginItemButtonStyleConverter}}"
+                    <Button Style="{Binding Plugin, Converter={StaticResource PluginItemButtonStyleConverter}}"
                             IsEnabled="{Binding InstallButtonEnabled}"
                             Width="105" Height="24"
                             Margin="0,0,16,0"

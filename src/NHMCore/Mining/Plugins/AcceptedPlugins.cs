@@ -1,6 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Configs;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -25,11 +26,27 @@ namespace NHMCore.Mining.Plugins
         {
             if (AcceptedPluginUUIDs.Contains(pluginUUID)) return;
             AcceptedPluginUUIDs.Add(pluginUUID);
+            var plugin = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings)?.Where(p => p.PluginContainer.PluginUUID == pluginUUID);
+            if (plugin != null)
+            {
+                foreach (var p in plugin)
+                {
+                    p.PluginContainer.IsTOSAccepted = true;
+                }
+            }
             CommitToFile();
         }
         public static void Remove(string pluginUUID)
         {
             AcceptedPluginUUIDs.Remove(pluginUUID);
+            var plugin = AvailableDevices.Devices.SelectMany(d => d.AlgorithmSettings)?.Where(p => p.PluginContainer.PluginUUID == pluginUUID);
+            if (plugin != null)
+            {
+                foreach (var p in plugin)
+                {
+                    p.PluginContainer.IsTOSAccepted = false;
+                }
+            }
             CommitToFile();
         }
     }
