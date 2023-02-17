@@ -3,11 +3,13 @@ using NHM.Common.Configs;
 using NHMCore.ApplicationState;
 using NHMCore.Configs.Data;
 using NHMCore.Mining;
+using NHMCore.Mining.Plugins;
 using NHMCore.Schedules;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 
 namespace NHMCore.Configs
 {
@@ -196,6 +198,19 @@ namespace NHMCore.Configs
             {
                 var devSettingsPath = GetDeviceSettingsPath(device.Uuid);
                 var currentConfig = InternalConfigs.ReadFileSettings<DeviceConfig>(devSettingsPath);
+                if (MinerPluginsManager.PluginsForEulaConfirm.Any() && Launcher.IsUpdated)
+                {
+                    foreach (var plugin in MinerPluginsManager.PluginsForEulaConfirm)
+                    {
+                        foreach (var algo in currentConfig.PluginAlgorithmSettings)
+                        {
+                            if (algo.PluginUUID == plugin.PluginUUID)
+                            {
+                                algo.Enabled = false;
+                            }
+                        }
+                    }
+                }
                 if (currentConfig != null)
                 {
                     device.SetDeviceConfig(currentConfig);
