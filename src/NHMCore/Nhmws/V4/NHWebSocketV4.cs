@@ -7,6 +7,7 @@ using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Managers;
 using NHMCore.Mining;
+using NHMCore.Notifications;
 using NHMCore.Switching;
 using NHMCore.Utils;
 using System;
@@ -831,6 +832,10 @@ namespace NHMCore.Nhmws.V4
                     _ = ExecuteProfilesBundleSet(bundle);
                     MiningState.Instance.CalculateDevicesStateChange();
                     (err, result) = (ErrorCode.NoError, "OK");
+                    if(err == ErrorCode.NoError)
+                    {
+                        EventManager.AddEvent(EventType.BundleApplied, bundle.Name);
+                    }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
                     if (!Helpers.IsElevated)
@@ -856,6 +861,9 @@ namespace NHMCore.Nhmws.V4
                     }
                     var oc = JsonConvert.DeserializeObject<OcProfile>(parameters);
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
+                    var eventRet = err == ErrorCode.NoError ? EventType.TestOverClockApplied : EventType.TestOverClockFailed;
+                    var devName = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID)?.Name ?? "unknown";
+                    EventManager.AddEvent(eventRet, devName);
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
                     if (!Helpers.IsElevated)
