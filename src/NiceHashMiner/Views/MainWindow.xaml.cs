@@ -385,10 +385,15 @@ namespace NiceHashMiner.Views
                         {
                             Title = Translations.Tr("NHMWS not connected"),
                             Description = Translations.Tr("Not connected to NHMWS. Please check your internet connection."),
+                            OkText = Translations.Tr("Need help?"),
                             CancelVisible = Visibility.Collapsed,
-                            OkVisible = Visibility.Collapsed,
+                            OkVisible = Visibility.Visible,
                             AnimationVisible = Visibility.Collapsed,
 
+                        };
+                        dialog.OKClick += (s, e) =>
+                        {
+                            Helpers.VisitUrlLink(Links.NHMWSNotConnected);
                         };
                         CustomDialogManager.ShowModalDialog(dialog);
                     });
