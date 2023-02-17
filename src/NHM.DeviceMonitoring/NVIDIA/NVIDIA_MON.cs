@@ -30,8 +30,6 @@ namespace NHM.DeviceMonitoring.NVIDIA
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_fan_speed_rpm(int bus_number, ref int get_fan_speed_rpm);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_nvidia_device_get_fan_speed_rpm_v2(int bus_number, ref int get_fan_speed_rpm);
-        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_fan_speed_percentage(int bus_number, ref int get_fan_speed_percentage);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_set_fan_speed_percentage(int bus_number, int set_fan_speed_percentage);
@@ -59,8 +57,6 @@ namespace NHM.DeviceMonitoring.NVIDIA
         public static extern int nhm_nvidia_device_set_memory_clocks(int bus_number, int memory_clocks, bool is_absolute);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_reset_memory_clocks(int bus_number, bool is_absolute);
-        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
-        public static extern int nhm_nvidia_device_get_memory_info(int bus_number, ref ulong free, ref ulong total, ref ulong used);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_set_memory_timings(int bus_number, string memory_timings);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
