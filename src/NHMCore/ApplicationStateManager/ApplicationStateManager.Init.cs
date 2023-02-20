@@ -1,6 +1,7 @@
 using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using NHM.CommonWin32;
 using NHM.DeviceDetection;
 using NHM.DeviceMonitoring;
 using NHMCore.ApplicationState;
@@ -235,7 +236,7 @@ namespace NHMCore
                 loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes(loader);
-
+                if (btc != NHMRegistry.Get_QM_MiningaddressFromRegistry() && Helpers.IsElevated && CredentialValidators.ValidateBitcoinAddress(btc)) NHMRegistry.Set_QM_MiningaddressFromRegistry(btc);
                 if (AvailableDevices.HasGpuToPause)
                 {
                     var deviceToPauseUuid = AvailableDevices.Devices.FirstOrDefault(dev => dev.PauseMiningWhenGamingMode && dev.DeviceType != DeviceType.CPU).Uuid;

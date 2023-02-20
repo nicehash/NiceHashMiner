@@ -64,6 +64,7 @@ namespace LolMiner
                         new SAS(AlgorithmType.ZelHash),
                         new SAS(AlgorithmType.KHeavyHash),
                         new SAS(AlgorithmType.Autolykos) { Enabled = false },
+
                     }
                 },
                 {

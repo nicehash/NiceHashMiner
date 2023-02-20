@@ -218,7 +218,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <local:AlgorithmItem DataContext="{Binding .}" Margin="0,8,0,0" />
+                        <local:AlgorithmItem DataContext="{Binding .}" Margin="0,8,0,0" IsEnabled="{Binding PluginContainer.IsTOSAccepted}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

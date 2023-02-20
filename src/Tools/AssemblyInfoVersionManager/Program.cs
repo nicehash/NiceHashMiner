@@ -20,7 +20,7 @@ namespace AssemblyInfoVersionManager
             helpStr += "\t--set, -s <VERSION> -> Custom version in format \"INT.INT.INT.INT\" without brackets\n";
             Console.WriteLine(helpStr);
         }
-        static (bool ok, string[] files) ScanAssemblyInfoFiles(string path, string pattern, Regex versionRegex)
+        static (bool ok, string[] files) ScanFiles(string path, string pattern, Regex versionRegex)
         {
             List<string> fileArray = new();
             var rootPath = String.Join("\\", path.Split("\\").SkipLast(2));
@@ -30,7 +30,7 @@ namespace AssemblyInfoVersionManager
                 var ret = GetVersionFromFile(file, versionRegex);
                 if (ret.ok) fileArray.Add(file);
             }
-            Console.WriteLine($"Total assemblyinfo file count found: {files.Length}");
+            Console.WriteLine($"Total file count found: {files.Length}");
             return (fileArray.Count != 0, fileArray.ToArray());
         }
         static (bool ok, Version version) GetVersionFromFile(string file,Regex versionRule)
@@ -128,13 +128,15 @@ namespace AssemblyInfoVersionManager
             }
             if (args[0] == "--next" || args[0] == "-n")
             {
-                var foundFiles = ScanAssemblyInfoFiles(currentDir, "AssemblyInfo.cs", versionRule);
-                if (!foundFiles.ok)
+                var foundFiles1 = ScanFiles(currentDir, "AssemblyInfo.cs", versionRule);
+                var foundFiles2 = ScanFiles(currentDir, "NiceHashMiner.csproj", versionRule);
+                if (!foundFiles1.ok && !foundFiles2.ok)
                 {
                     Console.WriteLine("Error, something went wrong while reading files");
                     return;
                 }
-                var ret = GetCurrentVersionAndIncrement(foundFiles.files, versionRule);
+                var ret = GetCurrentVersionAndIncrement(foundFiles1.files, versionRule) &&
+                    GetCurrentVersionAndIncrement(foundFiles2.files, versionRule);
                 if (!ret)
                 {
                     Console.WriteLine($"Error, failed to increment versions");
@@ -147,14 +149,24 @@ namespace AssemblyInfoVersionManager
             {
                 try
                 {
-                    var foundFiles = ScanAssemblyInfoFiles(currentDir, "AssemblyInfo.cs", versionRule);
-                    if (!foundFiles.ok)
+                    var foundFiles1 = ScanFiles(currentDir, "AssemblyInfo.cs", versionRule);
+                    var foundFiles2 = ScanFiles(currentDir, "NiceHashMiner.csproj", versionRule);
+                    if (!foundFiles1.ok && !foundFiles2.ok)
                     {
                         Console.WriteLine("Error, something went wrong while reading files");
                         return;
                     }
                     Version setVersion = new Version(args[1]);
-                    foreach(var file in foundFiles.files)
+                    foreach(var file in foundFiles1.files)
+                    {
+                        var ret = SetVersion(file, versionRule, setVersion);
+                        if (!ret)
+                        {
+                            Console.WriteLine($"Error, cant set version in {file}");
+                            return;
+                        }
+                    }
+                    foreach(var file in foundFiles2.files)
                     {
                         var ret = SetVersion(file, versionRule, setVersion);
                         if (!ret)

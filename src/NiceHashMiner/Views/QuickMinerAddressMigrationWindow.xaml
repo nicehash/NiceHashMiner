@@ -13,6 +13,7 @@
         WindowStyle="None"
         AllowsTransparency="False"
         Background="Transparent"
+        WindowStartupLocation="CenterScreen"
         Icon="../Resources/logo.ico">
     <Window.Resources>
         <Style x:Key="local.ExitTextBlock" TargetType="TextBlock">

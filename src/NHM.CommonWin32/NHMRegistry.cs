@@ -91,5 +91,17 @@ namespace NHM.CommonWin32
             return null;
         }
 
+        public static void Set_QM_MiningaddressFromRegistry(string btc)
+        {
+            try
+            {
+                using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\NiceHash QuickMiner", true);
+                key.SetValue("MiningAddress", btc);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn("NHMRegistry", $"Exception Set_QM_MiningaddressFromRegistry {ex.Message}");
+            }
+        }
     }
 }

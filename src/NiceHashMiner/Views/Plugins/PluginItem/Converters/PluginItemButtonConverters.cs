@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NHMCore.Mining.Plugins;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -14,10 +15,12 @@ namespace NiceHashMiner.Views.Plugins.PluginItem.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var style = Application.Current.FindResource("ButtonPluginInstall");
-            if (value is bool installed && installed)
+            if (value is PluginPackageInfoCR pluginCR)
             {
-                return Application.Current.FindResource("ButtonPluginRemove");
+                if (pluginCR.Installed) style = Application.Current.FindResource("ButtonPluginRemove");
+                if (!AcceptedPlugins.IsAccepted(pluginCR.PluginUUID) && pluginCR.Installed) style = Application.Current.FindResource("ButtonAcceptTOS");
             }
+
             return style;
         }
 

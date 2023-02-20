@@ -33,7 +33,7 @@
                        Margin="8,0,0,0"
                        x:Name="invalidBTCAddressWarningIcon" 
                        Style="{StaticResource AlertIcon}"
-                       ToolTip="This is an external mining wallet address. We do not recommend mining to an external address."/>
+                       ToolTip="This is an external Bitcoin wallet address, some Rig Manager functionalities might be limited."/>
             </StackPanel>
 
             <TextBlock Margin="0,8,0,0">

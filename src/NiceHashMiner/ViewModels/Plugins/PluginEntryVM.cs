@@ -30,6 +30,7 @@ namespace NiceHashMiner.ViewModels.Plugins
                 }
 
                 if (Plugin.HasNewerVersion) return Tr("UPDATE");
+                if (Plugin.Installed && !AcceptedPlugins.IsAccepted(Plugin.PluginUUID)) return Tr("ACCEPT TOS");
                 if (Plugin.Installed) return Tr("INSTALLED");
                 if (Plugin.HasSupportedDevices) return Tr("INSTALL");
                 return Tr("Not Supported");
@@ -67,7 +68,8 @@ namespace NiceHashMiner.ViewModels.Plugins
         public bool InstallButtonEnabled => Plugin.HasSupportedDevices
             && !Load.IsInstalling
             && (Plugin.HasNewerVersion || !Plugin.Installed)
-            && !Plugin.NHMNeedsUpdate;
+            && !Plugin.NHMNeedsUpdate
+            || !AcceptedPlugins.IsAccepted(Plugin.PluginUUID);
 
 
         public Visibility ActionsButtonVisibility
@@ -168,8 +170,12 @@ namespace NiceHashMiner.ViewModels.Plugins
         public async Task InstallOrUpdatePlugin()
         {
             if (Load.IsInstalling) return;
-            if (Plugin.Installed && !Plugin.HasNewerVersion) return;
-            //if (Plugin.HasNewerVersion) return;
+            // if (Plugin.Installed && !Plugin.HasNewerVersion)
+            // {
+            //     CommonInstallOnPropertyChanged();
+            //     return;
+            // }
+            // if (Plugin.HasNewerVersion) return;
 
             await MinerPluginsManager.DownloadAndInstall(Plugin.PluginUUID, Progress, CancellationToken.None);
             CommonInstallOnPropertyChanged();

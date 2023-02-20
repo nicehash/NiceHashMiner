@@ -133,6 +133,12 @@
         <Setter Property="BorderThickness" Value="1" />
     </Style>
 
+    <Style TargetType="{x:Type Button}" x:Key="ButtonAcceptTOS" BasedOn="{StaticResource BigButtonWhite}">
+        <Setter Property="FontSize" Value="10" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
     <!--#region settingsSwitch-->
     <Style TargetType="{x:Type Button}" x:Key="SwitchButton">
         <Setter Property="BorderThickness" Value="0" />
