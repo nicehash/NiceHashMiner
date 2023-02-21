@@ -246,7 +246,7 @@ namespace NHMCore.Mining
                 Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
                 if (MinerUUID == null || MinerUUID == string.Empty) return; //initial stuff
                 var notifType = value ? EventType.AlgoEnabled : EventType.AlgoDisabled;
-                EventManager.AddEvent(notifType, AlgorithmName);
+                EventManager.Instance.AddEvent(notifType, AlgorithmName);
             }
         }
         public void SetEnabled(bool enabled) //for enable without WS (bulk setting)

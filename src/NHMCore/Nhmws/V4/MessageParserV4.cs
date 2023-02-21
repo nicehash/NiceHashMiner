@@ -102,7 +102,9 @@ namespace NHMCore.Nhmws.V4
                 (nameof(IVramTemp), IVramTemp g) => $"{g.VramTemp}",
                 (nameof(IHotspotTemp), IHotspotTemp g) => $"{g.HotspotTemp}",
                 (nameof(ICoreClock), ICoreClock g) => $"{g.CoreClock}",
+                (nameof(ICoreClockDelta), ICoreClockDelta g) => $"{g.CoreClockDelta}",
                 (nameof(IMemoryClock), IMemoryClock g) => $"{g.MemoryClock}",
+                (nameof(IMemoryClockDelta), IMemoryClockDelta g) => $"{g.MemoryClockDelta}",
                 (nameof(ITDP), ITDP g) => $"{g.TDPPercentage}",
                 (nameof(ICoreVoltage), ICoreVoltage g) => $"{g.CoreVoltage}",
                 (_, _) => null,
@@ -137,7 +139,9 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan speed","%"),
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power usage","W"),
                 pairOrNull<ICoreClock>(DeviceDynamicProperties.CoreClock, "Core clock", "MHz"),
+                pairOrNull<ICoreClockDelta>(DeviceDynamicProperties.CoreClockDelta, "Core clock delta", "MHz"),
                 pairOrNull<IMemoryClock>(DeviceDynamicProperties.MemClock, "Memory clock", "MHz"),
+                pairOrNull<IMemoryClockDelta>(DeviceDynamicProperties.MemClockDelta, "Memory clock", "MHz"),
                 pairOrNull<ICoreVoltage>(DeviceDynamicProperties.CoreVoltage, "Core voltage", "mV"),
                 pairOrNull<ITDP>(DeviceDynamicProperties.TDP, "Power Limit", "%"),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", null),
@@ -674,7 +678,7 @@ namespace NHMCore.Nhmws.V4
                             Id = Convert.ToString((int)algo.IDs[0]),
                             Speed = algo.BenchmarkSpeed.ToString()
                         }
-                        
+
                     };
                     var combination = new Combination()
                     {
@@ -709,7 +713,7 @@ namespace NHMCore.Nhmws.V4
         private static string GetLimitsForDevice(ComputeDevice d)
         {
             ComplexLimit limit = new ComplexLimit();
-            if (d.DeviceMonitor is ITDP && d.DeviceMonitor is ITDPLimits tdpLim && d.CanSetPowerMode)
+            if (d.DeviceMonitor is ITDP && d.DeviceMonitor is ITDPLimits tdpLim)
             {
                 var lims = tdpLim.GetTDPLimits();
                 if (lims.ok)
@@ -727,7 +731,7 @@ namespace NHMCore.Nhmws.V4
                         limit.limits.Add(new Limit { Name = "Core clock delta", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
-                if (d.DeviceType == DeviceType.AMD && d.DeviceMonitor is ICoreClockRange ccLim)
+                if (d.DeviceMonitor is ICoreClockRange ccLim)
                 {
                     var lims = ccLim.CoreClockRange;
                     if (lims.ok)
@@ -746,7 +750,7 @@ namespace NHMCore.Nhmws.V4
                         limit.limits.Add(new Limit { Name = "Memory clock delta", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
-                if (d.DeviceType == DeviceType.AMD && d.DeviceMonitor is IMemoryClockRange mcLim)
+                if (d.DeviceMonitor is IMemoryClockRange mcLim)
                 {
                     var lims = mcLim.MemoryClockRange;
                     if (lims.ok)

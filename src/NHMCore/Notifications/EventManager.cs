@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHMCore.Configs;
+using NHMCore.Switching;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,20 +10,22 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace NHMCore.Notifications
 {
-    public static class EventManager
+    public class EventManager
     {
-        private static string TAG = "EventManager";
-        private static readonly object _lock = new object();
-        private static readonly object _lock2 = new object();
-        private static readonly string _eventFile = Paths.RootPath("logs","events.json");
-        private static List<Event> _events = new List<Event>();
-        private static readonly int _eventQuota = 20;
-        private static bool _init = false;
-        public static event EventHandler<string> EventAdded;
-        public static event EventHandler EventsLoaded;
+        public static EventManager Instance { get; } = new EventManager();
+
+        private string TAG = "EventManager";
+        private readonly object _lock = new object();
+        private readonly string _eventFile = Paths.RootPath("logs", "events.json");
+        private List<Event> _events = new List<Event>();
+        private readonly int _eventQuota = 20;
+        private bool _init = false;
+        public event EventHandler<string> EventAdded;
+        public event EventHandler EventsLoaded;
 
         public class Event
         {
@@ -31,9 +34,9 @@ namespace NHMCore.Notifications
             public DateTime DateTime;
             public string Content;
         }
-        public static void Init()
+        public void Init()
         {
-            if(_init ) return;
+            if (_init) return;
             try
             {
                 using StreamReader reader = new(_eventFile);
@@ -48,7 +51,7 @@ namespace NHMCore.Notifications
             }
             _init = true;
         }
-        public static List<Event> Events
+        public List<Event> Events
         {
             get
             {
@@ -65,34 +68,32 @@ namespace NHMCore.Notifications
                 }
             }
         }
-        public static void AddEvent(EventType type, string content = "")
+        public void AddEvent(EventType type, string content = "")
         {
-            if(!_init) return;
-            lock (_lock2)
+            if (!_init) return;
+            if (!ApplicationStateManager.isInitFinished &&
+                (type == EventType.DeviceEnabled ||
+                type == EventType.DeviceDisabled ||
+                type == EventType.AlgoEnabled ||
+                type == EventType.AlgoDisabled))
             {
-                if(!ApplicationStateManager.isInitFinished && 
-                    (type == EventType.DeviceEnabled || 
-                    type == EventType.DeviceDisabled ||
-                    type == EventType.AlgoEnabled || 
-                    type == EventType.AlgoDisabled))
-                {
-                    return;
-                }
-                var now = DateTime.Now;
-                var eventText = GetEventText(type, content);
-                Events.Add(new Event() {ID = (int)type, DateTime = now, Content = eventText });
-                if(Events.Count >= _eventQuota) Events.RemoveAt(0);
-                var events = JsonConvert.SerializeObject(Events, Formatting.Indented);
-                using StreamWriter w = File.CreateText(_eventFile);
-                w.Write(events);
-                Logger.Warn(TAG, $"Event occurred {eventText}");
-                EventAdded?.Invoke(null, $"{String.Format("{0:G}", now)} - {eventText}");
-                //todo send
-                //todo onpropertyChanged
+                return;
             }
+            var now = DateTime.Now;
+            var eventText = GetEventText(type, content);
+            Events.Add(new Event() { ID = (int)type, DateTime = now, Content = eventText });
+            if (Events.Count >= _eventQuota) Events.RemoveAt(0);
+            var events = JsonConvert.SerializeObject(Events, Formatting.Indented);
+            using StreamWriter w = File.CreateText(_eventFile);
+            w.Write(events);
+            Logger.Warn(TAG, $"Event occurred {eventText}");
+            EventAdded?.Invoke(null, $"{String.Format("{0:G}", now)} - {eventText}");
+            Logger.Warn(TAG, $"REACHED HERE");//it doesnt reach here
+            //todo send
+            //todo onpropertyChanged
         }
 
-        private static string GetEventText(EventType type, string content = "")
+        private string GetEventText(EventType type, string content = "")
         {
             string ret = type switch
             {

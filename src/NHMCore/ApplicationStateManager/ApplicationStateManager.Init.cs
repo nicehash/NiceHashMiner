@@ -55,7 +55,7 @@ namespace NHMCore
                     if (perc > 100) return 100;
                     return perc;
                 };
-                EventManager.Init();
+                EventManager.Instance.Init();
                 NotificationsManager.Instance.ReadLoggedNotifications();
                 // STEP
                 // Checking System Memory

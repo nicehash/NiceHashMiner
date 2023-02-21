@@ -319,9 +319,11 @@ namespace NHMCore.Nhmws.V4
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
+            string workerToSend = worker == null ? string.Empty : worker;
+            string btcToSend = btc == null ? string.Empty : btc;
             ActionMutableMap.ResetArrays();
             if (CachedState != null) CachedState = null;
-            _login = MessageParserV4.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
+            _login = MessageParserV4.CreateLoginMessage(btcToSend, workerToSend, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
             if (!string.IsNullOrEmpty(btc)) _login.Btc = btc;
             if (worker != null) _login.Worker = worker;
             //if (group != null) _login.Group = group;
@@ -834,7 +836,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     if(err == ErrorCode.NoError)
                     {
-                        EventManager.AddEvent(EventType.BundleApplied, bundle.Name);
+                        EventManager.Instance.AddEvent(EventType.BundleApplied, bundle.Name);
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
@@ -863,7 +865,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     var eventRet = err == ErrorCode.NoError ? EventType.TestOverClockApplied : EventType.TestOverClockFailed;
                     var devName = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID)?.Name ?? "unknown";
-                    EventManager.AddEvent(eventRet, devName);
+                    EventManager.Instance.AddEvent(eventRet, devName);
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
                     if (!Helpers.IsElevated)
