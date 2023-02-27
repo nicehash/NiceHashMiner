@@ -26,7 +26,6 @@ namespace NHMCore.Utils
             _ => "https://www.nicehash.com/my/mining/rigs/{RIG_ID}?utm_source=NHM&utm_medium=ViewStatsOnline", // BuildTag.PRODUCTION
         };
 
-
         public static string Register => BuildOptions.BUILD_TAG switch
         {
             BuildTag.TESTNET => "NO_URL",
@@ -67,6 +66,7 @@ namespace NHMCore.Utils
         public static string NhmHelp => "https://github.com/nicehash/NiceHashMiner/";
         public static string NhmNoDevHelp => "https://github.com/nicehash/NiceHashMiner/blob/master/doc/Troubleshooting.md#-no-supported-devices";
         public static string FailedBenchmarkHelp => "https://www.nicehash.com/blog/post/benchmark-error-in-nicehash-miner";
+        public static string NHMWSNotConnected => "https://www.nicehash.com/support/mining-help/nicehash-miner/nhmws-not-connected-error-in-nicehash-miner";
 
         //about
         public static string About => "https://www.nicehash.com/support/general-help/nicehash-service/what-is-nicehash-and-how-it-works";
