@@ -96,6 +96,7 @@ namespace NHM.CommonWin32
             try
             {
                 using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\NiceHash QuickMiner", true);
+                if (key == null) return;
                 key.SetValue("MiningAddress", btc);
             }
             catch (Exception ex)

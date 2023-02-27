@@ -462,9 +462,19 @@ namespace NHMCore.Mining
             if (CanSetTDP && DeviceMonitor is ICoreClockSet set) return set.SetCoreClock(coreClock);
             return false;
         }
+        public bool SetCoreClockDelta(int coreClockDelta)
+        {
+            if(CanSetTDP && DeviceMonitor is ICoreClockSetDelta set) return set.SetCoreClockDelta(coreClockDelta);
+            return false;
+        }
         public bool SetMemoryClock(int memoryClock)
         {
             if (CanSetTDP && DeviceMonitor is IMemoryClockSet set) return set.SetMemoryClock(memoryClock);
+            return false;
+        }
+        public bool SetMemoryClockDelta(int memoryClockDelta)
+        {
+            if(CanSetTDP && DeviceMonitor is IMemoryClockSetDelta set) return set.SetMemoryClockDelta(memoryClockDelta);
             return false;
         }
         public bool SetFanSpeedPercentage(int percent)
@@ -495,6 +505,16 @@ namespace NHMCore.Mining
         public bool ResetMemoryClock()
         {
             if (DeviceMonitor is IMemoryClockSet set) return set.ResetMemoryClock();
+            return false;
+        }
+        public bool ResetCoreClockDelta()
+        {
+            if(DeviceMonitor is ICoreClockSetDelta set) return set.ResetCoreClockDelta();
+            return false;
+        }
+        public bool ResetMemoryClockDelta()
+        {
+            if(DeviceMonitor is IMemoryClockSetDelta set) return set.ResetMemoryClockDelta();
             return false;
         }
 

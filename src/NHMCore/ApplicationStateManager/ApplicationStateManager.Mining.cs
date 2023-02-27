@@ -134,8 +134,10 @@ namespace NHMCore
                     {
                         device.ResetFanSpeed();
                         device.ResetCoreClock();
-                        device.ResetCoreVoltage();
+                        device.ResetCoreClockDelta();
                         device.ResetMemoryClock();
+                        device.ResetMemoryClockDelta();
+                        device.ResetCoreVoltage();
                     }
 #endif
                     await MiningManager.StopDevice(device);

@@ -727,17 +727,17 @@ namespace NHMCore.Mining
             var ret = RigManagementReturn.Fail;
             int valuesToSet = 0;
             bool willSetCC = false;
+            bool willSetCCDelta = false;
             bool willSetMC = false;
-            if (bundle.CoreClockDelta != null || bundle.CoreClock != null)
-            {
-                willSetCC = true;
-                valuesToSet++;
-            }
-            if (bundle.MemoryClockDelta != null || bundle.MemoryClock != null)
-            {
-                willSetMC = true;
-                valuesToSet++;
-            }
+            bool willSetMCDelta = false;
+
+            if (bundle.CoreClockDelta != null) willSetCCDelta = true;
+            if (bundle.CoreClock != null) willSetCC = true;
+            if (bundle.MemoryClockDelta != null) willSetMCDelta = true;
+            if (bundle.MemoryClock != null) willSetMCDelta = true;
+
+            if (willSetCC || willSetCCDelta) valuesToSet++;
+            if (willSetMC || willSetMCDelta) valuesToSet++;
             if (bundle.TDP != null) valuesToSet++;
             if (bundle.CoreVoltage != null) valuesToSet++;
 
@@ -747,21 +747,26 @@ namespace NHMCore.Mining
                 return Task.FromResult(ret);
             }
 
-            int? CoreClockValue = willSetCC ? (ComputeDevice.DeviceType == DeviceType.NVIDIA ? (int)bundle.CoreClockDelta : (int)bundle.CoreClock) : null;
-            int? MemoryClockValue = willSetMC ? (ComputeDevice.DeviceType == DeviceType.NVIDIA ? (int)bundle.MemoryClockDelta : (int)bundle.MemoryClock) : null;
-
-
             int setValues = 4;
             var setTDP = bundle.TDP == null ? false : ComputeDevice.SetPowerModeManual((int)bundle.TDP);
-            var setCC = willSetCC ? ComputeDevice.SetCoreClock((int)CoreClockValue) : false;
-            var setMC = willSetMC ? ComputeDevice.SetMemoryClock((int)MemoryClockValue) : false;
+            var setCCabs = willSetCC ? ComputeDevice.SetCoreClock((int)bundle.CoreClock) : false;
+            var setCCdelta = willSetCCDelta ? ComputeDevice.SetCoreClockDelta((int)bundle.CoreClockDelta) : false;
+            var setMCabs = willSetMC ? ComputeDevice.SetMemoryClock((int)bundle.MemoryClock) : false;
+            var setMCdelta = willSetMCDelta ? ComputeDevice.SetMemoryClockDelta((int)bundle.MemoryClockDelta) : false;
             var setCV = bundle.CoreVoltage == null ? false : ComputeDevice.SetCoreVoltage((int)bundle.CoreVoltage);
+
+            var setCC = setCCabs || setCCdelta;
+            var setMC = setMCabs || setMCdelta;
 
             if (reset)
             {
                 setCV = ComputeDevice.ResetCoreVoltage();
-                setCC = ComputeDevice.ResetCoreClock();
-                setMC = ComputeDevice.ResetMemoryClock();
+                bool setCC1 = ComputeDevice.ResetCoreClock();
+                bool setCC2 = ComputeDevice.ResetCoreClockDelta();
+                bool setMC1 = ComputeDevice.ResetMemoryClock();
+                bool setMC2 = ComputeDevice.ResetMemoryClockDelta();
+                setCC = setCC1 || setCC2;
+                setMC = setMC1 || setMC2;
             }
 
             if (!setCC)
