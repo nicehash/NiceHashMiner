@@ -53,7 +53,7 @@ namespace NHMCore.Mining
                 if (Speeds.Sum() == 0) return AlgorithmStatus.NoBenchmark;
                 if (IsReBenchmark) return AlgorithmStatus.ReBenchmark;
 
-                if (0 >= CurrentEstimatedProfit) return AlgorithmStatus.Unprofitable;
+                if (0 >= CurrentEstimatedProfit || 0>= CurrentEstimatedProfitPure) return AlgorithmStatus.Unprofitable;
 
                 if (IgnoreUntil > DateTime.UtcNow) return AlgorithmStatus.Unstable;
 
