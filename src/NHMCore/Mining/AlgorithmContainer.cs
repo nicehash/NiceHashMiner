@@ -734,7 +734,7 @@ namespace NHMCore.Mining
             if (bundle.CoreClockDelta != null) willSetCCDelta = true;
             if (bundle.CoreClock != null) willSetCC = true;
             if (bundle.MemoryClockDelta != null) willSetMCDelta = true;
-            if (bundle.MemoryClock != null) willSetMCDelta = true;
+            if (bundle.MemoryClock != null) willSetMC = true;
 
             if (willSetCC || willSetCCDelta) valuesToSet++;
             if (willSetMC || willSetMCDelta) valuesToSet++;
