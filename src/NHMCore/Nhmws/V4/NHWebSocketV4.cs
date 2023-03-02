@@ -325,7 +325,9 @@ namespace NHMCore.Nhmws.V4
             if (CachedState != null) CachedState = null;
             _login = MessageParserV4.CreateLoginMessage(btcToSend, workerToSend, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
             if (!string.IsNullOrEmpty(btc)) _login.Btc = btc;
-            if (worker != null) _login.Worker = worker;
+            else _login.Btc = CredentialsSettings.Instance.BitcoinAddress;
+            if (!string.IsNullOrEmpty(worker)) _login.Worker = worker;
+            else _login.Worker = CredentialsSettings.Instance.WorkerName;
             //if (group != null) _login.Group = group;
             // on credentials change always send close websocket message
             var closeMsg = (MessageType.CLOSE_WEBSOCKET, $"Credentials change reconnecting {ApplicationStateManager.Title}.");
@@ -943,6 +945,13 @@ namespace NHMCore.Nhmws.V4
             }
             return Task.CompletedTask;
         }
+        private static Task StopTestsForDevice(string deviceUUID)
+        {
+            StopOCTestForDevice(deviceUUID, false);
+            StopFanTestForDevice(deviceUUID, false);
+            StopELPTestForDevice(deviceUUID, false);
+            return Task.CompletedTask;
+        }
         private static Task ExecuteProfilesBundleReset(bool triggerSwitch = true)
         {
             BundleManager.ResetBundleInfo();
@@ -954,8 +963,7 @@ namespace NHMCore.Nhmws.V4
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcProfile ocBundle)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
-            StopELPTestForDevice(deviceUUID, false);
-            StopFanTestForDevice(deviceUUID, false);
+            StopTestsForDevice(deviceUUID);
             ELPManager.Instance.RestartMiningInstanceIfNeeded();
             var res = OCManager.Instance.ExecuteTest(deviceUUID, ocBundle);
             return Task.FromResult(res.Result);
@@ -969,8 +977,7 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpProfile elpBundle)
         {
-            StopFanTestForDevice(deviceUUID, false);
-            StopOCTestForDevice(deviceUUID, false);
+            StopTestsForDevice(deviceUUID);
             ELPManager.Instance.RestartMiningInstanceIfNeeded();
             var res = ELPManager.Instance.ExecuteTest(deviceUUID, elpBundle);
             return Task.FromResult(res.Result);
@@ -985,8 +992,7 @@ namespace NHMCore.Nhmws.V4
         private static Task<(ErrorCode err, string msg)> ExecuteFanTest(string deviceUUID, FanProfile fanBundle)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
-            StopELPTestForDevice(deviceUUID, false);
-            StopOCTestForDevice(deviceUUID, false);
+            StopTestsForDevice(deviceUUID);
             ELPManager.Instance.RestartMiningInstanceIfNeeded();
             var res = FanManager.Instance.ExecuteTest(deviceUUID, fanBundle);
             return Task.FromResult(res.Result);

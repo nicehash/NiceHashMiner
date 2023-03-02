@@ -215,7 +215,7 @@ namespace NHM.DeviceMonitoring
 
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
-            Logger.Info(LogTag, $"SetTDPPercentage {execRet}.");
+            Logger.Info(LogTag, $"SetTDPPercentage returned {execRet}.");
             return execRet == RET_OK;
         }
 

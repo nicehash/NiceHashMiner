@@ -609,36 +609,57 @@ namespace NHMCore.Mining
         {
             return GetTargetProfileType() == ProfileType.Normal && HasNormalProfileToSet();
         }
-        public enum ActionQueue
-        {
-            ApplyOC,
-            ResetOC,
-            ResetOCTest,
-            ApplyOCTest,
-            ApplyFan,
-            ResetFan,
-            ResetFanTest,
-            ApplyFanTest,
-            ApplyELP,
-            ResetELP,
-            ApplyELPTest,
-            ResetELPTest
-        }
-        private Queue<ActionQueue> _rigManagementActions = new Queue<ActionQueue>();
-        public Queue<ActionQueue> RigManagementActions
+        private OcProfile _runningOCProfile = null;
+        public OcProfile RunningOcProfile
         {
             get
             {
                 lock (_lock)
                 {
-                    return _rigManagementActions;
+                    return _runningOCProfile;
                 }
             }
             set
             {
                 lock (_lock)
                 {
-                    _rigManagementActions = value;
+                    _runningOCProfile = value;
+                }
+            }
+        }
+        private ElpProfile _runningELPProfile = null;
+        public ElpProfile RunningELPProfile
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _runningELPProfile;
+                }
+            }
+            set
+            {
+                lock (_lock)
+                {
+                    _runningELPProfile = value;
+                }
+            }
+        }
+        public FanProfile _runningFanProfile = null;
+        public FanProfile RunningFanProfile
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _runningFanProfile;
+                }
+            }
+            set
+            {
+                lock (_lock)
+                {
+                    _runningFanProfile = value;
                 }
             }
         }
@@ -705,21 +726,11 @@ namespace NHMCore.Mining
             if (test)
             {
                 ActiveOCTestProfile = profile;
-                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetOCTest : ActionQueue.ApplyOCTest);
             }
             else
             {
                 ActiveOCProfile = profile;
-                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetOC : ActionQueue.ApplyOC);
             }
-        }
-        public void SwitchOCTestToInactive()
-        {
-            ActiveOCTestProfile = null;
-        }
-        public void SwitchOCToInactive()
-        {
-            ActiveOCProfile = null;
         }
         public Task<RigManagementReturn> SetOcForDevice(OcProfile bundle, bool reset = false)
         {
@@ -748,47 +759,57 @@ namespace NHMCore.Mining
             }
 
             int setValues = 4;
-            var setTDP = bundle.TDP == null ? false : ComputeDevice.SetPowerModeManual((int)bundle.TDP);
-            var setCCabs = willSetCC ? ComputeDevice.SetCoreClock((int)bundle.CoreClock) : false;
-            var setCCdelta = willSetCCDelta ? ComputeDevice.SetCoreClockDelta((int)bundle.CoreClockDelta) : false;
-            var setMCabs = willSetMC ? ComputeDevice.SetMemoryClock((int)bundle.MemoryClock) : false;
-            var setMCdelta = willSetMCDelta ? ComputeDevice.SetMemoryClockDelta((int)bundle.MemoryClockDelta) : false;
-            var setCV = bundle.CoreVoltage == null ? false : ComputeDevice.SetCoreVoltage((int)bundle.CoreVoltage);
+            bool setTDP = false;
+            bool setCCabs = false;
+            bool setCCdelta = false;
+            bool setMCabs = false;
+            bool setMCdelta = false;
+            bool setCV = false;
 
-            var setCC = setCCabs || setCCdelta;
-            var setMC = setMCabs || setMCdelta;
+            bool setCC;
+            bool setMC;
 
             if (reset)
             {
-                setCV = ComputeDevice.ResetCoreVoltage();
-                bool setCC1 = ComputeDevice.ResetCoreClock();
-                bool setCC2 = ComputeDevice.ResetCoreClockDelta();
-                bool setMC1 = ComputeDevice.ResetMemoryClock();
-                bool setMC2 = ComputeDevice.ResetMemoryClockDelta();
-                setCC = setCC1 || setCC2;
-                setMC = setMC1 || setMC2;
+                ComputeDevice.SetPowerModeManual((int)bundle.TDP);
+                ComputeDevice.ResetCoreVoltage();
+                ComputeDevice.ResetCoreClock();
+                ComputeDevice.ResetCoreClockDelta();
+                ComputeDevice.ResetMemoryClock();
+                ComputeDevice.ResetMemoryClockDelta();
             }
 
-            if (!setCC)
+
+            if (ComputeDevice.DeviceType == DeviceType.AMD)
             {
-                Logger.Warn(_TAG, $"Setting core clock success: {setCC}");
-                setValues--;
+                setTDP = bundle.TDP == null ? false : ComputeDevice.SetPowerModeManual((int)bundle.TDP);
+                setCCabs = willSetCC ? ComputeDevice.SetCoreClock((int)bundle.CoreClock) : false;
+                setCV = bundle.CoreVoltage == null ? false : ComputeDevice.SetCoreVoltage((int)bundle.CoreVoltage);
+                setMCabs = willSetMC ? ComputeDevice.SetMemoryClock((int)bundle.MemoryClock) : false;
+                setCC = setCCabs;
+                setMC = setMCabs;
             }
-            if (!setMC)
+            else
             {
-                Logger.Warn(_TAG, $"Setting memory clock success: {setMC}");
-                setValues--;
+                setTDP = bundle.TDP == null ? false : ComputeDevice.SetPowerModeManual((int)bundle.TDP);
+                setCCabs = willSetCC ? ComputeDevice.SetCoreClock((int)bundle.CoreClock) : false;
+                setCCdelta = willSetCCDelta ? ComputeDevice.SetCoreClockDelta((int)bundle.CoreClockDelta) : false;
+                setMCabs = willSetMC ? ComputeDevice.SetMemoryClock((int)bundle.MemoryClock) : false;
+                setMCdelta = willSetMCDelta ? ComputeDevice.SetMemoryClockDelta((int)bundle.MemoryClockDelta) : false;
+                setCV = bundle.CoreVoltage == null ? false : ComputeDevice.SetCoreVoltage((int)bundle.CoreVoltage);
+                setCC = setCCabs || setCCdelta;
+                setMC = setMCabs || setMCdelta;
             }
-            if (!setTDP)
-            {
-                Logger.Warn(_TAG, $"Setting TDP success: {setTDP}");
-                setValues--;
-            }
-            if(!setCV)
-            {
-                Logger.Warn(_TAG, $"Setting voltage success: {setCV}");
-                setValues--;
-            }
+
+            if (!setCC) setValues--;
+            if (!setMC) setValues--;
+            if (!setTDP) setValues--;
+            if (!setCV) setValues--;
+
+            Logger.Warn(_TAG, $"[{ComputeDevice.BaseDevice.ID}] Setting core clock success: {setCC}");
+            Logger.Warn(_TAG, $"[{ComputeDevice.BaseDevice.ID}] Setting memory clock success: {setMC}");
+            Logger.Warn(_TAG, $"[{ComputeDevice.BaseDevice.ID}] Setting TDP success: {setTDP}");
+            Logger.Warn(_TAG, $"[{ComputeDevice.BaseDevice.ID}] Setting voltage success: {setCV}");
 
             if (setValues == valuesToSet) ret = RigManagementReturn.Success;
             else if (setValues != 0 && setValues < valuesToSet) ret = RigManagementReturn.PartialSuccess;
@@ -963,13 +984,11 @@ namespace NHMCore.Mining
             {
                 ActiveELPTestProfile = profile;
                 NewTestELPProfile = true;
-                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetELPTest : ActionQueue.ApplyELPTest);
             }
             else
             {
                 ActiveELPProfile = profile;
                 NewELPProfile = true;
-                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetELP : ActionQueue.ApplyELP);
             }
             SetELPForDevice(profile == null);
             OnPropertyChanged(nameof(IgnoreLocalELPInput));
@@ -1056,29 +1075,11 @@ namespace NHMCore.Mining
             if (test)
             {
                 ActiveFanTestProfile = profile;
-                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetFanTest : ActionQueue.ApplyFanTest);
             }
             else
             {
                 ActiveFanProfile = profile;
-                RigManagementActions.Enqueue(profile == null ? ActionQueue.ResetFan : ActionQueue.ApplyFan);
             }
-        }
-        public Task<RigManagementReturn> ResetFanForDevice()
-        {
-            return Task.FromResult(RigManagementReturn.Fail);
-        }
-        public Task<RigManagementReturn> SetFanForDevice(FanProfile bundle, bool reset = false)
-        {
-            return Task.FromResult(RigManagementReturn.Fail);
-        }
-        public void SwitchFanTestToInactive()
-        {
-            ActiveFanTestProfile = null;
-        }
-        public void SwitchFanToInactive()
-        {
-            ActiveFanProfile = null;
         }
         #endregion
 #endif

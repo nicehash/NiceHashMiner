@@ -88,7 +88,6 @@ namespace NHMCore.Notifications
             w.Write(events);
             Logger.Warn(TAG, $"Event occurred {eventText}");
             EventAdded?.Invoke(null, $"{String.Format("{0:G}", now)} - {eventText}");
-            Logger.Warn(TAG, $"REACHED HERE");//it doesnt reach here
             //todo send
             //todo onpropertyChanged
         }

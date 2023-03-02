@@ -55,5 +55,6 @@ namespace NHMCore.Notifications
         NoPowerInfo,
         NoOptimalDrivers,
         RigManagementElevate,
+        OverclockingIsOff
     }
 }

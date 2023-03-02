@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
@@ -18,7 +19,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using static NHMCore.Configs.Managers.OCManager;
 
 namespace NHMCore.Mining
 {
@@ -138,7 +138,8 @@ namespace NHMCore.Mining
                 //CPU - 1
                 //GPU - 2 // NVIDIA
                 //AMD - 3
-                int type = DeviceType switch {
+                int type = DeviceType switch
+                {
                     DeviceType.CPU => 1,
                     DeviceType.NVIDIA => 2,
                     DeviceType.AMD => 3,
@@ -170,9 +171,9 @@ namespace NHMCore.Mining
         public int ApplyNewAlgoStates(MinerAlgoState state)
         {
             if (State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking) return -1;
-            foreach(var miner in state.Miners)
+            foreach (var miner in state.Miners)
             {
-                foreach(var algo in miner.Algos)
+                foreach (var algo in miner.Algos)
                 {
                     var targets = AlgorithmSettings.Where(a => a.AlgorithmName == algo.Id && a.PluginName == miner.Id)?.ToList();
                     if (targets == null) continue;
@@ -822,7 +823,8 @@ namespace NHMCore.Mining
 #if NHMWS4
         public string OCProfile
         {
-            get {
+            get
+            {
                 var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
                 if (testTarget != null)
                 {
@@ -891,82 +893,117 @@ namespace NHMCore.Mining
                 return string.Empty;
             }
         }
+        private bool HasNewTestItem(AlgorithmContainer target, string runningOC, string runningELP, string runningFAN)
+        {
+            return JsonConvert.SerializeObject(target.ActiveOCTestProfile) != runningOC ||
+                    JsonConvert.SerializeObject(target.ActiveELPTestProfile) != runningELP ||
+                    JsonConvert.SerializeObject(target.ActiveFanTestProfile) != runningFAN;
+        }
+        private bool HasNewItem(AlgorithmContainer target, string runningOC, string runningELP, string runningFAN)
+        {
+            return JsonConvert.SerializeObject(target.ActiveOCProfile) != runningOC ||
+                    JsonConvert.SerializeObject(target.ActiveELPProfile) != runningELP ||
+                    JsonConvert.SerializeObject(target.ActiveFanProfile) != runningFAN;
+        }
 
         public async Task AfterStartMining()
         {
             var target = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (target == null) return;
-            foreach (var action in target.RigManagementActions)
+            var serializedRunningOC = JsonConvert.SerializeObject(target.RunningOcProfile);
+            var serializedRunningELP = JsonConvert.SerializeObject(target.RunningELPProfile);
+            var serializedRunningFan = JsonConvert.SerializeObject(target.RunningFanProfile);
+            if (target.HasTestProfileAndCanSet())
             {
-                switch (action)
+                if(HasNewTestItem(target, serializedRunningOC, serializedRunningELP, serializedRunningFan))
                 {
-                    case AlgorithmContainer.ActionQueue.ApplyOC:
-                        var retOc = await target.SetOcForDevice(target.ActiveOCProfile, false);
-                        if (retOc == RigManagementReturn.Fail) target.SwitchOCToInactive();
-                        break;
-                    case AlgorithmContainer.ActionQueue.ResetOC:
-                        if (IsTesting) break;
-                        var resetOC = await target.ResetOcForDevice();
-                        State = DeviceState.Mining;
-                        break;
-                    case AlgorithmContainer.ActionQueue.ApplyOCTest:
-                        if (target.HasTestProfileAndCanSet() && target.ActiveOCTestProfile != null)
-                        {
-                            var retOCTest = await target.SetOcForDevice(target.ActiveOCTestProfile, false);
-                            if (retOCTest == RigManagementReturn.Success || retOCTest == RigManagementReturn.PartialSuccess) State = DeviceState.Testing;
-                            else
-                            {
-                                target.SwitchOCTestToInactive();
-                                State = DeviceState.Mining;
-                            }
-                        }
-                        break;
-                    case AlgorithmContainer.ActionQueue.ResetOCTest:
-                        var resetOCTest = await target.ResetOcForDevice();
-                        State = DeviceState.Mining;
-                        break;
-                    case AlgorithmContainer.ActionQueue.ApplyFan:
-                        break;
-                    case AlgorithmContainer.ActionQueue.ResetFan:
-                        if (IsTesting) break;
-                        target.SwitchFanToInactive();
-                        ResetFanSpeed();
-                        State = DeviceState.Mining;
-                        break;
-                    case AlgorithmContainer.ActionQueue.ApplyFanTest:
-                        if (target.HasTestProfileAndCanSet() && target.ActiveFanTestProfile != null) 
-                        {
-                            State = DeviceState.Testing;
-                        }
-                        break;
-                    case AlgorithmContainer.ActionQueue.ResetFanTest:
-                        target.SwitchFanTestToInactive();
-                        ResetFanSpeed();
-                        State = DeviceState.Mining;
-                        break;
-                    case AlgorithmContainer.ActionQueue.ApplyELP:
-                        break;
-                    case AlgorithmContainer.ActionQueue.ResetELP:
-                        break;
-                    case AlgorithmContainer.ActionQueue.ApplyELPTest:
-                        if (target.HasTestProfileAndCanSet() && target.ActiveELPTestProfile != null)
-                        {
-                            State = DeviceState.Testing;
-                        }
-                        break;
-                    case AlgorithmContainer.ActionQueue.ResetELPTest:
-                        break;
+                    ResetFanSpeed();
+                    await target.ResetOcForDevice();
+                    target.RunningOcProfile = null;
+                    target.RunningFanProfile = null;
+                    target.RunningELPProfile = null;
+                }
+
+                if (target.ActiveOCTestProfile != null)
+                {
+                    await target.SetOcForDevice(target.ActiveOCTestProfile, false);
+                    target.RunningOcProfile = target.ActiveOCTestProfile;
+                    State = DeviceState.Testing;
+                    return;
+                }
+                if (target.ActiveELPTestProfile != null)
+                {
+                    State = DeviceState.Testing;
+                    target.RunningELPProfile = target.ActiveELPTestProfile;
+                    return;
+                }
+                if (target.ActiveFanTestProfile != null)
+                {
+                    State = DeviceState.Testing;
+                    target.RunningFanProfile = target.ActiveFanTestProfile;
+                    return;
                 }
             }
-            target.RigManagementActions.Clear();
+            if (target.HasNormalProfileAndCanSet() && !target.HasTestProfileAndCanSet())
+            {
+                if (HasNewItem(target, serializedRunningOC, serializedRunningELP, serializedRunningFan))
+                {
+                    ResetFanSpeed();
+                    await target.ResetOcForDevice();
+                    target.RunningOcProfile = null;
+                    target.RunningELPProfile = null;
+                    target.RunningFanProfile = null;
+                }
+                if (target.ActiveOCProfile != null)
+                {
+                    await target.SetOcForDevice(target.ActiveOCProfile, false);
+                    target.RunningOcProfile = target.ActiveOCProfile;
+                }
+                else
+                {
+                    target.RunningOcProfile = null;
+                }
+                if (target.ActiveFanProfile != null)
+                {
+                    target.RunningFanProfile = target.ActiveFanProfile;
+                }
+                else
+                {
+                    target.RunningFanProfile = null;
+                }
+                if (target.ActiveELPProfile != null)
+                {
+                    target.RunningELPProfile = target.ActiveELPProfile;
+                }
+                else
+                {
+                    target.RunningELPProfile = null;
+                }
+                State = DeviceState.Mining;
+                return;
+            }
+            if(!target.HasTestProfileAndCanSet() && !target.HasNormalProfileAndCanSet())
+            {
+                if (HasNewItem(target, serializedRunningOC, serializedRunningELP, serializedRunningFan) ||
+                    HasNewTestItem(target, serializedRunningOC, serializedRunningELP, serializedRunningFan)) //IF HAS NEW ITEM
+                {
+                    ResetFanSpeed();
+                    await target.ResetOcForDevice();
+                    target.RunningOcProfile = null;
+                    target.RunningFanProfile = null;
+                    target.RunningELPProfile = null;
+                }
+                State = DeviceState.Mining;
+                return;
+            }
+            State = DeviceState.Mining;
         }
-
         public void SetFanSpeedWithPidController()
         {
             var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
             if (testTarget == null) return;
             var profile = testTarget.ActiveFanTestProfile ?? testTarget.ActiveFanProfile ?? null;
-            if (profile == null) return;    
+            if (profile == null) return;
 
             switch (profile.Type)
             {

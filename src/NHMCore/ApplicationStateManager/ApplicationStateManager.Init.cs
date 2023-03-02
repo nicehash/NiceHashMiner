@@ -154,6 +154,10 @@ namespace NHMCore
                 {
                     AvailableNotifications.CreateDeviceMonitoringNvidiaElevateInfo();
                 }
+                if (Helpers.IsElevated && !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                {
+                    AvailableNotifications.CreateRigOverclockingTurnedOff();
+                }
                 //// TODO add check and only show if not enabled
                 //if (AvailableDevices.HasCpu)
                 //{

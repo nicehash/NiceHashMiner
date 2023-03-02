@@ -203,7 +203,18 @@ namespace NHMCore.Configs.Managers
                 var selectionGroup = devParams.Where((_, index) => group.Contains(index)).ToList();
                 deviceParamsGroups.Add(group, selectionGroup);
             }
-            return MinerExtraParameters.Parse(minerParams, algoParams, deviceParamsGroups.FirstOrDefault().Value.Select(v => v.paramList).ToList());
+            var localPart = MinerExtraParameters.Parse(minerParams, algoParams, deviceParamsGroups.FirstOrDefault().Value.Select(v => v.paramList).ToList());
+            var rigManagerPart = string.Empty;
+            var targetMP = miningPairs.FirstOrDefault();
+            if (targetMP.ActiveELPTestProfile != null)
+            {
+                rigManagerPart = targetMP.ActiveELPTestProfile.Elp;
+            }
+            if(!targetMP.HasTestProfileAndCanSet() && targetMP.ActiveELPProfile != null)
+            {
+                rigManagerPart = targetMP.ActiveELPProfile.Elp;
+            }
+            return $"{localPart} {rigManagerPart}".Trim();
         }
         public void SetAlgoCMDString(AlgorithmContainer ac, string newCMD)
         {
@@ -385,17 +396,16 @@ namespace NHMCore.Configs.Managers
                 .SelectMany(d => d.AlgorithmSettings);
             if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found"));
 
-            List<AlgorithmContainer> specificContainers = allContainers.ToList();
-            if (bundle.AlgoId != null && bundle.MinerId != null) specificContainers = allContainers.Where(d =>
+            if (bundle.AlgoId != null && bundle.MinerId != null) allContainers = allContainers.Where(d =>
                                                                                         bundle.AlgoId.Contains(d.AlgorithmName.ToLower()) &&
                                                                                         bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
-            else if (bundle.AlgoId != null) specificContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName.ToLower()))?.ToList();
-            else if (bundle.MinerId != null) specificContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
-            if (specificContainers == null || !specificContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
-            var target = specificContainers.Where(c => c.IsCurrentlyMining)?.FirstOrDefault();
+            else if (bundle.AlgoId != null) allContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName.ToLower()))?.ToList();
+            else if (bundle.MinerId != null) allContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
+            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
+            var target = allContainers.Where(c => c.IsCurrentlyMining)?.FirstOrDefault();
             if (target == null)
             {
-                target = specificContainers.FirstOrDefault();
+                target = allContainers.Where(c => c.Enabled)?.FirstOrDefault();
                 if (target == null) return Task.FromResult((ErrorCode.TargetContainerNotFound, "Failed to switch to target algorithm container"));
             }
             target.SetTargetElpProfile(bundle, true);
