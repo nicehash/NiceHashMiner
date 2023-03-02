@@ -826,6 +826,11 @@ namespace NHMCore.Nhmws.V4
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -842,6 +847,11 @@ namespace NHMCore.Nhmws.V4
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -858,6 +868,11 @@ namespace NHMCore.Nhmws.V4
                     NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
                     break;
                 case SupportedAction.ActionOcProfileTest:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -870,6 +885,11 @@ namespace NHMCore.Nhmws.V4
                     EventManager.Instance.AddEvent(eventRet, devName);
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -878,6 +898,11 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -887,6 +912,11 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
                     break;
                 case SupportedAction.ActionFanProfileTestStop:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
