@@ -626,34 +626,6 @@ namespace NHMCore.Nhmws.V4
             }
             return true;
         }
-
-        private static async Task<bool> startMiningOnDeviceWithUuid(string uuid)
-        {
-            string errMsgForUuid = $"Cannot start device with uuid {uuid}";
-            // get device with uuid if it exists, devs can be single device uuid
-            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
-            if (deviceWithUUID == null)
-            {
-                throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCode.NonExistentDevice);
-            }
-            if (deviceWithUUID.IsDisabled)
-            {
-                throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCode.DisabledDevice);
-            }
-            var (success, msg) = await ApplicationStateManager.StartDeviceTask(deviceWithUUID);
-            if (!success)
-            {
-                // TODO this can also be an error
-                throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCode.RedundantRpc);
-            }
-            return true;
-        }
-
-        private static Task<bool> StartMining(string devs)
-        {
-            if (devs == "*") return startMiningAllDevices();
-            return startMiningOnDeviceWithUuid(devs);
-        }
         #endregion Start
 
         #region Stop
@@ -670,34 +642,6 @@ namespace NHMCore.Nhmws.V4
                 throw new RpcException(msg, ErrorCode.RedundantRpc);
             }
             return success;
-        }
-
-        private static async Task<bool> stopMiningOnDeviceWithUuid(string uuid)
-        {
-            string errMsgForUuid = $"Cannot stop device with uuid {uuid}";
-            // get device with uuid if it exists, devs can be single device uuid
-            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
-            if (deviceWithUUID == null)
-            {
-                throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCode.NonExistentDevice);
-            }
-            if (deviceWithUUID.IsDisabled)
-            {
-                throw new RpcException($"{errMsgForUuid}. Device is disabled.", ErrorCode.DisabledDevice);
-            }
-            var (success, msg) = await ApplicationStateManager.StopDeviceTask(deviceWithUUID);
-            if (!success)
-            {
-                // TODO this can also be an error
-                throw new RpcException($"{errMsgForUuid}. {msg}.", ErrorCode.RedundantRpc);
-            }
-            return success;
-        }
-
-        private static Task<bool> StopMining(string devs)
-        {
-            if (devs == "*") return stopMiningAllDevices();
-            return stopMiningOnDeviceWithUuid(devs);
         }
         #endregion Stop
 
@@ -813,10 +757,12 @@ namespace NHMCore.Nhmws.V4
             switch (typeOfAction)
             {
                 case SupportedAction.ActionStartMining:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = startMiningAllDevices();
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionStopMining:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = stopMiningAllDevices();
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionRebenchmark:
                     if(deviceUUID == string.Empty) (err, result) = ApplicationStateManager.StartReBenchmark().Result;
@@ -862,10 +808,12 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionDeviceEnable:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = SetDevicesEnabled(deviceUUID, true);
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionDeviceDisable:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = SetDevicesEnabled(deviceUUID, false);
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionOcProfileTest:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
@@ -1128,8 +1076,6 @@ namespace NHMCore.Nhmws.V4
                     MiningSetGroup m => await miningSetGroup(m.Group),
                     MiningEnable m => await SetDevicesEnabled(m.Device, true),
                     MiningDisable m => await SetDevicesEnabled(m.Device, false),
-                    MiningStart m => await StartMining(m.Device),
-                    MiningStop m => await StopMining(m.Device),
                     MiningSetPowerMode m => await SetPowerMode(m.Device, (TDPSimpleType)m.PowerMode),
                     MinerReset m => await MinerReset(m.Level), // rpcAnswer
                     MinerCallAction m => await CallAction(m),
