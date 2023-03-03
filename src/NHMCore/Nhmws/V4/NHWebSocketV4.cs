@@ -828,7 +828,7 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionProfilesBundleSet:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
                     {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
                         break;
                     }
                     if (!Helpers.IsElevated)
@@ -849,7 +849,7 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionProfilesBundleReset:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
                     {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
                         break;
                     }
                     if (!Helpers.IsElevated)
@@ -870,7 +870,7 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionOcProfileTest:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
                     {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
                         break;
                     }
                     if (!Helpers.IsElevated)
@@ -887,7 +887,7 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionOcProfileTestStop:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
                     {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
                         break;
                     }
                     if (!Helpers.IsElevated)
@@ -900,7 +900,7 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionFanProfileTest:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
                     {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
                         break;
                     }
                     if (!Helpers.IsElevated)
@@ -914,7 +914,7 @@ namespace NHMCore.Nhmws.V4
                 case SupportedAction.ActionFanProfileTestStop:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
                     {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Power mode disabled");
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
                         break;
                     }
                     if (!Helpers.IsElevated)

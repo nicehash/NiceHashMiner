@@ -718,7 +718,7 @@ namespace NHMCore.Nhmws.V4
                 var lims = tdpLim.GetTDPLimits();
                 if (lims.ok)
                 {
-                    limit.limits.Add(new Limit { Name = "Power Limit", Unit = "W", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    limit.limits.Add(new Limit { Name = "Power Limit", Unit = "%", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
             if (d.DeviceMonitor is ICoreClockSet)
@@ -764,7 +764,7 @@ namespace NHMCore.Nhmws.V4
                 var lims = cvRange.CoreVoltageRange;
                 if (lims.ok && d.DeviceMonitor is ICoreVoltage cvGet)
                 {
-                    limit.limits.Add(new Limit { Name = "Core Voltage", Unit = "uV", Def = cvGet.CoreVoltage, Range = (lims.min, lims.max) });
+                    limit.limits.Add(new Limit { Name = "Core Voltage", Unit = "mV", Def = cvGet.CoreVoltage, Range = (lims.min, lims.max) });
                 }
             }
             var json = JsonConvert.SerializeObject(limit);
