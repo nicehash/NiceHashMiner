@@ -813,10 +813,12 @@ namespace NHMCore.Nhmws.V4
             switch (typeOfAction)
             {
                 case SupportedAction.ActionStartMining:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = startMiningAllDevices();
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionStopMining:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = stopMiningAllDevices();
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionRebenchmark:
                     if(deviceUUID == string.Empty) (err, result) = ApplicationStateManager.StartReBenchmark().Result;
@@ -862,10 +864,12 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionDeviceEnable:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = SetDevicesEnabled(deviceUUID, true);
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionDeviceDisable:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = SetDevicesEnabled(deviceUUID, false);
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionOcProfileTest:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
