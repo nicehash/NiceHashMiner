@@ -371,7 +371,7 @@ namespace NHMCore.Mining
             }
         }
 
-        public (uint min, uint max, uint def) TDPLimits
+        public (int min, int max, int def) TDPLimits
         {
             get
             {

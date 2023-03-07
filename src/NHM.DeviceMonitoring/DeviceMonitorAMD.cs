@@ -9,7 +9,7 @@ using System;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ICoreVoltageRange, ICoreVoltage, ICoreVoltageSet
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ICoreVoltageRange, ICoreVoltage, ICoreVoltageSet, ITDPLimits
     {
         public int BusID { get; private set; }
         private const int RET_OK = 0;
@@ -285,6 +285,17 @@ namespace NHM.DeviceMonitoring
             if (ok == RET_OK) return true;
             Logger.InfoDelayed(LogTag, $"nhm_amd_device_reset_voltage failed with error code {ok}", _delayedLogging);
             return false;
+        }
+
+        public (bool ok, int min, int max, int def) GetTDPLimits()
+        {
+            int min = -1;
+            int max = -1;
+            int def = -1;
+            var ok = AMD_ODN.nhm_amd_device_get_tdp_min_max_default(BusID, ref min, ref max, ref def);
+            if (ok == RET_OK) return (true, min, max, def);
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_min_max_default failed with error code {ok}", _delayedLogging);
+            return (false, -1, -1, -1);
         }
 
         public int HotspotTemp

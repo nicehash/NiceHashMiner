@@ -343,13 +343,13 @@ namespace NHM.DeviceMonitoring
         {
             return NVIDIA_MON.nhm_nvidia_device_set_memory_clocks(BusID, memoryClockDelta, false) == 0;
         }
-        public (bool ok, uint min, uint max, uint def) GetTDPLimits()
+        public (bool ok, int min, int max, int def) GetTDPLimits()
         {
             uint min = 0;
             uint max = 0;
             uint def = 0;
             var ok = NVIDIA_MON.nhm_nvidia_device_get_tdp_min_max_default(BusID, ref min, ref max, ref def);
-            if (ok == RET_OK) return (true, min, max, def);
+            if (ok == RET_OK) return (true, (int)min, (int)max, (int)def);
             Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp_min_max_default failed with error code {ok}", _delayedLogging);
             return (false, 0, 0, 0);
         }

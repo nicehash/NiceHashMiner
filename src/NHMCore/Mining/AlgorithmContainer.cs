@@ -771,26 +771,41 @@ namespace NHMCore.Mining
 
             if (reset)
             {
-                ComputeDevice.SetPowerModeManual((int)bundle.TDP);
-                ComputeDevice.ResetCoreVoltage();
-                ComputeDevice.ResetCoreClock();
-                ComputeDevice.ResetCoreClockDelta();
-                ComputeDevice.ResetMemoryClock();
-                ComputeDevice.ResetMemoryClockDelta();
+                Logger.Warn(_TAG, $"Resetting device {ComputeDevice.ID}");
+                Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset TDP: {ComputeDevice.SetPowerModeManual(ComputeDevice.TDPLimits.def)}");
+                Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset CC: {ComputeDevice.ResetCoreClock()}");
+                Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset CCD: {ComputeDevice.ResetCoreClockDelta()}");
+                Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset MC: {ComputeDevice.ResetMemoryClock()}");
+                Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset MCD: {ComputeDevice.ResetMemoryClockDelta()}");
+                Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset CV: {ComputeDevice.ResetCoreVoltage()}");
             }
 
 
             if (ComputeDevice.DeviceType == DeviceType.AMD)
             {
+                Logger.Warn(_TAG, $"Setting AMD device {ComputeDevice.ID}");
+                if (bundle.TDP != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] TDP to set: {(int)bundle.TDP}");
+                if (bundle.CoreClock != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] CoreClock to set: {(int)bundle.CoreClock}");
+                if (bundle.MemoryClock != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] MemoryClock to set: {(int)bundle.MemoryClock}");
+                if (bundle.CoreVoltage != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] CoreVoltage to set: {(int)bundle.CoreVoltage}");
+
                 setTDP = bundle.TDP == null ? false : ComputeDevice.SetPowerModeManual((int)bundle.TDP);
                 setCCabs = willSetCC ? ComputeDevice.SetCoreClock((int)bundle.CoreClock) : false;
-                setCV = bundle.CoreVoltage == null ? false : ComputeDevice.SetCoreVoltage((int)bundle.CoreVoltage);
                 setMCabs = willSetMC ? ComputeDevice.SetMemoryClock((int)bundle.MemoryClock) : false;
+                setCV = bundle.CoreVoltage == null ? false : ComputeDevice.SetCoreVoltage((int)bundle.CoreVoltage);
                 setCC = setCCabs;
                 setMC = setMCabs;
             }
             else
             {
+                Logger.Warn(_TAG, $"Setting NVIDIA device {ComputeDevice.ID}");
+                if (bundle.TDP != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] TDP to set: {(int)bundle.TDP}");
+                if (bundle.CoreClock != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] CoreClock to set: {(int)bundle.CoreClock}");
+                if (bundle.CoreClockDelta != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] CoreClockDelta to set: {(int)bundle.CoreClockDelta}");
+                if (bundle.MemoryClock != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] MemoryClock to set: {(int)bundle.MemoryClock}");
+                if (bundle.MemoryClockDelta != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] MemoryClockDelta to set: {(int)bundle.MemoryClockDelta}");
+                if (bundle.CoreVoltage != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] CoreVoltage to set: {(int)bundle.CoreVoltage}");
+
                 setTDP = bundle.TDP == null ? false : ComputeDevice.SetPowerModeManual((int)bundle.TDP);
                 setCCabs = willSetCC ? ComputeDevice.SetCoreClock((int)bundle.CoreClock) : false;
                 setCCdelta = willSetCCDelta ? ComputeDevice.SetCoreClockDelta((int)bundle.CoreClockDelta) : false;
@@ -824,9 +839,7 @@ namespace NHMCore.Mining
         }
         public Task<RigManagementReturn> ResetOcForDevice()
         {
-            var defTDP = ComputeDevice.TDPLimits;
-            var bundle = new OcProfile() { TDP = (int)defTDP.def }; // tdp is only value without reset
-            var res = SetOcForDevice(bundle, true);
+            var res = SetOcForDevice(new OcProfile(), true);
             return Task.FromResult(res.Result);
         }
         #endregion

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHMCore.ApplicationState;
+using NHMCore.Mining;
 using NHMCore.Nhmws.V4;
 using System;
 using System.Collections.Generic;
@@ -71,8 +72,47 @@ namespace NHMCore.Configs.Managers
         }
         public static async Task SaveBundle(Bundle bundle)
         {
-            var text = JsonConvert.SerializeObject(bundle);
+            var text = JsonConvert.SerializeObject(bundle);//todo not saving
             await File.AppendAllTextAsync(_path, text);
+        }
+        public static List<string> FindTargetGPUNames(string bundleGPU)
+        {
+            var retGPU = bundleGPU;
+            var potentialTargets = AvailableDevices.Devices.Where(d => d.Name.ToLower().Contains(retGPU.ToLower()));
+            if (potentialTargets == null) return new() { bundleGPU };
+            //order matters
+            if (bundleGPU.ToLower().Contains("laptop gpu"))
+            {
+                return potentialTargets.Where(d => d.Name.ToLower().Contains("laptop gpu")).Select(d => d.Name.ToLower())?.ToList();
+            }
+            if (bundleGPU.ToLower().Contains("ti"))
+            {
+                return potentialTargets.Where(d => d.Name.ToLower().Contains("ti")).Select(d => d.Name.ToLower())?.ToList();
+            }
+            if (bundleGPU.ToLower().Contains("super"))
+            {
+                return potentialTargets.Where(d => d.Name.ToLower().Contains("super")).Select(d => d.Name.ToLower())?.ToList();
+            }
+            if (bundleGPU.ToLower().Contains("xtx"))
+            {
+                return potentialTargets.Where(d => d.Name.ToLower().Contains("xtx")).Select(d => d.Name.ToLower())?.ToList();
+            }
+            if (bundleGPU.ToLower().Contains("xt"))
+            {
+                return potentialTargets.Where(d => d.Name.ToLower().Contains("xt")).Select(d => d.Name.ToLower())?.ToList();
+            }
+            if(bundleGPU.ToLower().Contains("collectors edition"))
+            {
+                return potentialTargets.Where(d => d.Name.ToLower().Contains("collectors edition")).Select(d => d.Name.ToLower())?.ToList();
+            }
+            return potentialTargets.Where(d => !d.Name.ToLower().Contains("laptop gpu") &&
+                                               !d.Name.ToLower().Contains("ti") &&
+                                               !d.Name.ToLower().Contains("super") &&
+                                               !d.Name.ToLower().Contains("xtx") &&
+                                               !d.Name.ToLower().Contains("xt") &&
+                                               !d.Name.ToLower().Contains("collectors edition"))
+                                            .Select(d => d.Name.ToLower())?
+                                            .ToList();
         }
     }
 }
