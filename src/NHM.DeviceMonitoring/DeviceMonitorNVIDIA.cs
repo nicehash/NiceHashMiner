@@ -194,7 +194,7 @@ namespace NHM.DeviceMonitoring
                 percentage = PowerLevelToTDPPercentage(level);
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
-            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage);
+            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
             if (execRet == RET_OK) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet == RET_OK;
@@ -214,7 +214,7 @@ namespace NHM.DeviceMonitoring
             }
 
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
-            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
+            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage);
             Logger.Info(LogTag, $"SetTDPPercentage returned {execRet}.");
             return execRet == RET_OK;
         }
