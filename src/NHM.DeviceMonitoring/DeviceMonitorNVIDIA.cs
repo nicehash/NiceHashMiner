@@ -214,12 +214,16 @@ namespace NHM.DeviceMonitoring
             }
 
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
+#if NHMWS4
+            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage);
+#else
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
+#endif
             Logger.Info(LogTag, $"SetTDPPercentage returned {execRet}.");
             return execRet == RET_OK;
         }
 
-        #endregion ITDP
+#endregion ITDP
         public int SetMemoryTimings(string mt)
         {
             return NVIDIA_MON.nhm_nvidia_device_set_memory_timings(BusID, mt);
