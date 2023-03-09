@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
+using NHM.Common.Enums;
 using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace NHM.CommonWin32
 {
@@ -96,6 +98,7 @@ namespace NHM.CommonWin32
         {
             try
             {
+                if (BuildOptions.BUILD_TAG != BuildTag.PRODUCTION) return;
                 var key = Registry.LocalMachine.OpenSubKey(QM_SUBKEY, true);
                 if (key == null)
                 {
