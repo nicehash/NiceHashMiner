@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using NHM.Common;
 using NHMCore.Configs;
+using NHMCore.Nhmws.V4;
 using NHMCore.Switching;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace NHMCore.Notifications
                 }
             }
         }
-        public void AddEvent(EventType type, string content = "")
+        public void AddEvent(EventType type, string content = "", string deviceID = null)
         {
             if (!_init) return;
             if (!ApplicationStateManager.isInitFinished &&
@@ -86,9 +87,11 @@ namespace NHMCore.Notifications
             var events = JsonConvert.SerializeObject(Events, Formatting.Indented);
             using StreamWriter w = File.CreateText(_eventFile);
             w.Write(events);
-            Logger.Warn(TAG, $"Event occurred {eventText}");
+            Logger.Warn(TAG, $"Event occurred: {eventText}");
             EventAdded?.Invoke(null, $"{String.Format("{0:G}", now)} - {eventText}");
-            //todo send
+#if NHMWS4
+            NHWebSocketV4.SendEvent(type, deviceID, content);
+#endif
             //todo onpropertyChanged
         }
 

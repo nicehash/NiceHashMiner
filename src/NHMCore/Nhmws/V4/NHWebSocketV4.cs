@@ -68,6 +68,7 @@ namespace NHMCore.Nhmws.V4
         {
             CLOSE_WEBSOCKET = 0,
             SEND_MESSAGE_STATUS,
+            SEND_MESSAGE_EVENT
         }
         private static readonly string _TAG = "NHWebSocketV4";
         static private bool _isNhmwsRestart = false;
@@ -271,6 +272,7 @@ namespace NHMCore.Nhmws.V4
                         _isNhmwsRestart = true;
                         break;
                     case MessageType.SEND_MESSAGE_STATUS:
+                    case MessageType.SEND_MESSAGE_EVENT:
                         Send(data);
                         _lastSendMinerStatusTimestamp.Value = DateTime.UtcNow;
                         break;
@@ -332,6 +334,21 @@ namespace NHMCore.Nhmws.V4
             // on credentials change always send close websocket message
             var closeMsg = (MessageType.CLOSE_WEBSOCKET, $"Credentials change reconnecting {ApplicationStateManager.Title}.");
             _sendQueue.EnqueueParams(closeMsg);
+        }
+
+        public static void SendEvent(EventType id, string? deviceID, string message)
+        {
+            DateTimeOffset now = new DateTimeOffset(DateTime.UtcNow);
+            var unixTime = now.ToUnixTimeSeconds();
+            var newEvent = new NhmwsEvent()
+            {
+                EventID = (int)id,
+                Time = unixTime,
+                DeviceID = deviceID,
+                Message = message
+            };
+            var eventMSG = (MessageType.SEND_MESSAGE_EVENT, JsonConvert.SerializeObject(newEvent));
+            _sendQueue.EnqueueParams(eventMSG);
         }
 
         #region Message handling
@@ -886,7 +903,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     var eventRet = err == ErrorCode.NoError ? EventType.TestOverClockApplied : EventType.TestOverClockFailed;
                     var devName = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID)?.Name ?? "unknown";
-                    EventManager.Instance.AddEvent(eventRet, devName);
+                    EventManager.Instance.AddEvent(eventRet, string.Empty, deviceUUID);
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
                     if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
@@ -953,6 +970,13 @@ namespace NHMCore.Nhmws.V4
             }
             _ = UpdateMinerStatus();
             return Task.FromResult((err, result));
+        }
+        public static async Task<(ErrorCode err, string msg)> CreateAndUploadCoreDump()
+        {
+            var (success, uuid, _) = await Helpers.CreateAndUploadLogReport();
+            AvailableNotifications.CreateLogUploadResultInfo(success, uuid);
+            if (success) return (ErrorCode.NoError, "System dump upload successful");
+            return (ErrorCode.ErrFailedSystemDump, "System dump upload failed");
         }
         public static Task UpdateMinerStatus()
         {

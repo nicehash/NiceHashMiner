@@ -22,5 +22,6 @@ namespace NHMCore.Nhmws
         ErrNotAdmin = -106,
         ErrNoAlgoDataFound = -107,
         ErrPowerModeDisabled = -108,
+        ErrFailedSystemDump = -109
     }
 }

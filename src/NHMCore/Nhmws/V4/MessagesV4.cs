@@ -698,4 +698,18 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("slots")]
         public List<List<object>> slots = new();
     }
+
+    public class NhmwsEvent : ISendMessage
+    {
+        [JsonProperty("method")]
+        public string Method => "miner.event";
+        [JsonProperty("event_id")]
+        public int EventID { get; set; }
+        [JsonProperty("time")]
+        public long Time { get; set; }
+        [JsonProperty("device_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string DeviceID { get; set; }
+        [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
+        public string Message { get; set; }
+    }
 }
