@@ -967,9 +967,11 @@ namespace NHMCore.Nhmws.V4
                     break;
                 case SupportedAction.ActionRestart:
                     _ = RestartRig();
+                    (err, result) = (ErrorCode.NoError, "Restarting rig");
                     break;
                 case SupportedAction.ActionShutdown:
                     _ = ShutdownRig();
+                    (err, result) = (ErrorCode.NoError, "Shutting down rig");
                     break;
                 default:
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
