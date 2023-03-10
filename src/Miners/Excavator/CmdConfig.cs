@@ -41,7 +41,7 @@ namespace Excavator
             ObjectCreationHandling = ObjectCreationHandling.Replace
         };
 
-        public static string CreateTemplate(IEnumerable<string> gpuUuids, string algorithmName)
+        public static string CreateTemplate(IEnumerable<int> gpuUuids, string algorithmName)
         {
             return CreateDefaultTemplateAndCreateCMD("__SUBSCRIBE_PARAM_LOCATION__", "__SUBSCRIBE_PARAM_USERNAME__", gpuUuids, algorithmName);
         }
@@ -51,18 +51,22 @@ namespace Excavator
             return Paths.MinerPluginsPath(pluginUUID, "internals", "CommandLineTemplate.json");
         }
 
-        private static List<Command> CreateInitialCommands(string subscribeLocation, string subscribeUsername, IEnumerable<string> gpuUuids, string algorithmName)
+        private static List<Command> CreateInitialCommands(string subscribeLocation, string subscribeUsername, IEnumerable<int> gpuUuids, string algorithmName)
         {
             var initialCommands = new List<Command>
                 {
                     new Command { Id = 1, Method = "subscribe", Params = new List<string>{ subscribeLocation, subscribeUsername } },
                     new Command { Id = 2, Method = "algorithm.add", Params = new List<string>{ algorithmName.ToLower() } },
                 };
-            initialCommands.AddRange(gpuUuids.Select((gpu, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName.ToLower(), gpu } }));
+            if (algorithmName == "randomx")
+            {
+                initialCommands.AddRange(gpuUuids.Select((gpu, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName, gpu.ToString(), "NTHREADS=0", "HIGHPRIORITY=0", "USELARGEPAGE=0", "USEMSR=1" } }));
+            }
+            else initialCommands.AddRange(gpuUuids.Select((gpu, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName.ToLower(), gpu.ToString() } }));
             return initialCommands;
         }
 
-        private static string CreateDefaultTemplateAndCreateCMD(string subscribeLocation, string subscribeUsername, IEnumerable<string> gpuUuids, string algorithmName)
+        private static string CreateDefaultTemplateAndCreateCMD(string subscribeLocation, string subscribeUsername, IEnumerable<int> gpuUuids, string algorithmName)
         {
             try
             {
@@ -88,7 +92,7 @@ namespace Excavator
             }
         }
         private static string[] _invalidTemplateMethods = new string[] { "subscribe", "algorithm.add", "worker.add" };
-        private static string ParseTemplateFileAndCreateCMD(string templateFilePath, IEnumerable<string> gpuUuids, string subscribeLocation, string subscribeUsername, string algorithmName)
+        private static string ParseTemplateFileAndCreateCMD(string templateFilePath, IEnumerable<int> gpuUuids, string subscribeLocation, string subscribeUsername, string algorithmName)
         {
             if (!File.Exists(templateFilePath)) return null;
             try
@@ -96,7 +100,7 @@ namespace Excavator
                 var template = JsonConvert.DeserializeObject<List<CommandList>>(File.ReadAllText(templateFilePath), _jsonSettings);
                 var validCmds = template
                     .Where(cmd => cmd.Commands.All(c => !_invalidTemplateMethods.Contains(c.Method)))
-                    .Select(cmd => (cmd, commands: cmd.Commands.Where(c => IsValidSessionCommand(c, gpuUuids)).ToList()))
+                    .Select(cmd => (cmd, commands: cmd.Commands.ToList()))
                     .Where(p => p.commands.Any())
                     .ToArray();
                 foreach (var (cmd, commands) in validCmds)
@@ -121,15 +125,7 @@ namespace Excavator
             }
         }
 
-        private static bool IsValidSessionCommand(Command command, IEnumerable<string> gpuUuids)
-        {
-            var anyMissingGpuUuidParams = command.Params
-                .Where(p => p.StartsWith("GPU"))
-                .Any(pGpu => !gpuUuids.Contains(pGpu));
-            return !anyMissingGpuUuidParams;
-        }
-
-        private static string CreateCommandWithTemplate(string subscribeLocation, string subscribeUsername, IEnumerable<string> gpuUuids, string templateFilePath, string algorithmName)
+        private static string CreateCommandWithTemplate(string subscribeLocation, string subscribeUsername, IEnumerable<int> gpuUuids, string templateFilePath, string algorithmName)
         {
             var template = ParseTemplateFileAndCreateCMD(templateFilePath, gpuUuids, subscribeLocation, subscribeUsername, algorithmName);
             if (template == null)
@@ -147,7 +143,7 @@ namespace Excavator
             return $"nhmp.auto.nicehash.com:443";
         }
 
-        public static string CmdJSONString(string pluginUUID, string _miningLocation, string username, string algorithmName, params string[] uuids) { 
+        public static string CmdJSONString(string pluginUUID, string _miningLocation, string username, string algorithmName, params int[] uuids) { 
             var miningLocation = GetMiningLocation(_miningLocation);
             var templatePath = CommandFileTemplatePath(pluginUUID);
             var miningServiceLocation = GetServiceLocation(miningLocation);
