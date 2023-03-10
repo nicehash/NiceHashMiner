@@ -613,6 +613,8 @@ namespace NHMCore.Nhmws.V4
                 NhmwsAction.ActionRebenchmark(),
                 NhmwsAction.ActionProfilesBundleSet(),
                 NhmwsAction.ActionProfilesBundleReset(),
+                NhmwsAction.ActionRigShutdown(),
+                NhmwsAction.ActionRigRestart(),
             };
         }
         private static List<JArray> GetStaticPropertiesOptionalValues(ComputeDevice d)

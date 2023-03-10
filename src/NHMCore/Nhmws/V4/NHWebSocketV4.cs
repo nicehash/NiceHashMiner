@@ -19,6 +19,7 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using WebSocketSharp;
 using Windows.Media.PlayTo;
 using Logger = NHM.Common.Logger;
@@ -964,6 +965,12 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopELPTestForDevice(deviceUUID).Result;
                     MiningState.Instance.CalculateDevicesStateChange();
                     break;
+                case SupportedAction.ActionRestart:
+                    _ = RestartRig();
+                    break;
+                case SupportedAction.ActionShutdown:
+                    _ = ShutdownRig();
+                    break;
                 default:
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
                     break;
@@ -971,6 +978,55 @@ namespace NHMCore.Nhmws.V4
             _ = UpdateMinerStatus();
             return Task.FromResult((err, result));
         }
+        private static async Task ShutdownRig()
+        {
+            try
+            {
+                if (AvailableDevices.Devices.Any(d => d.IsMiningBenchingTesting))
+                {
+                    var res = await stopMiningAllDevices();
+                }
+                if (!MiscSettings.Instance.RunAtStartup)
+                {
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        MiscSettings.Instance.RunAtStartup = true;
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logTag, e.Message);
+            }
+            Logger.Warn(_logTag, "Rig shutdown called remotely, shutdown in 5 seconds");
+            Process.Start("shutdown", "/s /t 5");
+        }
+
+        private static async Task RestartRig()
+        {
+
+            try
+            {
+                if(AvailableDevices.Devices.Any(d => d.IsMiningBenchingTesting))
+                {
+                    var res = await stopMiningAllDevices();
+                }
+                if (!MiscSettings.Instance.RunAtStartup)
+                {
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        MiscSettings.Instance.RunAtStartup = true;
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logTag, e.Message);
+            }
+            Logger.Warn(_logTag, "Rig restart called remotely, shutdown in 5 seconds");
+            Process.Start("shutdown", "/r /t 5");
+        }
+
         public static async Task<(ErrorCode err, string msg)> CreateAndUploadCoreDump()
         {
             var (success, uuid, _) = await Helpers.CreateAndUploadLogReport();

@@ -34,7 +34,9 @@ namespace NHMCore.Nhmws.V4
         ActionElpProfileTestStop,
         ActionOcProfileTestStop,
         ActionFanProfileTestStop,
-        ActionRebenchmark
+        ActionRebenchmark,
+        ActionRestart,
+        ActionShutdown,
     }
     internal class LoginMessage : ISendMessage
     {
@@ -387,6 +389,30 @@ namespace NHMCore.Nhmws.V4
                 DisplayName = "Rebenchmark",
                 DisplayGroup = 0,
                 ActionType = SupportedAction.ActionRebenchmark
+            };
+            ActionMutableMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionRigShutdown()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Rig shutdown",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionShutdown,
+            };
+            ActionMutableMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionRigRestart()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Rig restart",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionRestart,
             };
             ActionMutableMap.ActionList.Add(action);
             return action;
