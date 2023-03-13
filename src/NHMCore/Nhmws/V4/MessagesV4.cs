@@ -37,6 +37,7 @@ namespace NHMCore.Nhmws.V4
         ActionRebenchmark,
         ActionRestart,
         ActionShutdown,
+        ActionSystemDump,
     }
     internal class LoginMessage : ISendMessage
     {
@@ -413,6 +414,18 @@ namespace NHMCore.Nhmws.V4
                 DisplayName = "Rig restart",
                 DisplayGroup = 0,
                 ActionType = SupportedAction.ActionRestart,
+            };
+            ActionMutableMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionSystemDump()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "System dump",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionSystemDump,
             };
             ActionMutableMap.ActionList.Add(action);
             return action;

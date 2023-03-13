@@ -615,6 +615,7 @@ namespace NHMCore.Nhmws.V4
                 NhmwsAction.ActionProfilesBundleReset(),
                 NhmwsAction.ActionRigShutdown(),
                 NhmwsAction.ActionRigRestart(),
+                NhmwsAction.ActionSystemDump(),
             };
         }
         private static List<JArray> GetStaticPropertiesOptionalValues(ComputeDevice d)

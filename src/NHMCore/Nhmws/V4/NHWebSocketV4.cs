@@ -973,6 +973,9 @@ namespace NHMCore.Nhmws.V4
                     _ = ShutdownRig();
                     (err, result) = (ErrorCode.NoError, "Shutting down rig");
                     break;
+                case SupportedAction.ActionSystemDump:
+                    (err, result) = CreateAndUploadSystemDump().Result;
+                    break;
                 default:
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
                     break;
@@ -1029,7 +1032,7 @@ namespace NHMCore.Nhmws.V4
             Process.Start("shutdown", "/r /t 5");
         }
 
-        public static async Task<(ErrorCode err, string msg)> CreateAndUploadCoreDump()
+        public static async Task<(ErrorCode err, string msg)> CreateAndUploadSystemDump()
         {
             var (success, uuid, _) = await Helpers.CreateAndUploadLogReport();
             AvailableNotifications.CreateLogUploadResultInfo(success, uuid);
