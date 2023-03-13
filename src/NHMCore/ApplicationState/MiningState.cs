@@ -100,6 +100,7 @@ namespace NHMCore.ApplicationState
         #endregion DeviceState Counts
 
         public bool MiningManuallyStarted { get; set; }
+        public bool MiningStoppedByToggle { get; set; } = false;
 
         // poor mans way
         public void CalculateDevicesStateChange()
