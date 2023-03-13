@@ -51,7 +51,14 @@
     <PackageReference Include="WebSocketSharp.Standard" Version="1.0.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Miners\LolMiner\MP.LolMiner.csproj" />
     <ProjectReference Include="..\Miners\MP.Joker\MP.Joker.csproj" />
+    <ProjectReference Include="..\Miners\NanoMiner\MP.NanoMiner.csproj" />
+    <ProjectReference Include="..\Miners\NBMiner\MP.NBMiner.csproj" />
+    <ProjectReference Include="..\Miners\XMRig\MP.XMRig.csproj" />
+    <ProjectReference Include="..\Miners\__DEV__BrokenMiner\MP.__DEV__BrokenMiner.csproj" />
+    <ProjectReference Include="..\Miners\__DEV__ExamplePlugin\MP.__DEV__ExamplePlugin.csproj" />
+    <ProjectReference Include="..\Miners\__DEV__FakePlugin\MP.__DEV__FakePlugin.csproj" />
     <ProjectReference Include="..\NHM.CommonWin32\NHM.CommonWin32.csproj" />
     <ProjectReference Include="..\NHM.CredentialValidators\NHM.CredentialValidators.csproj" />
     <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj" />
