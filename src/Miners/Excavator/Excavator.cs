@@ -112,14 +112,14 @@ namespace Excavator
                 var response = await ExecuteCommand(speeds, stop);
                 ad.ApiResponse = response;
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(response);
-                var gpus = _miningPairs.Select(pair => _mappedDeviceIds[pair.Device.UUID]);
+                var devs = _miningPairs.Select(pair => _mappedDeviceIds[pair.Device.UUID]);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<(AlgorithmType type, double speed)>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
-                foreach (var gpu in gpus)
+                foreach (var dev in devs)
                 {
-                    var nhmGPUuuid = _mappedDeviceIds.Where(uuid => uuid.Value == gpu).Select(item => item.Key).FirstOrDefault();
-                    var speed = summary.workers.Where(w => w.device_id == gpu).SelectMany(w => w.algorithms.Select(a => a.speed)).Sum();
-                    perDeviceSpeedInfo.Add(nhmGPUuuid, new List<(AlgorithmType type, double speed)>() { (_algorithmType, speed) });
+                    var nhmDevUuid = _mappedDeviceIds.Where(uuid => uuid.Value == dev).Select(item => item.Key).FirstOrDefault();
+                    var speed = summary.workers.Where(w => w.device_id == dev).SelectMany(w => w.algorithms.Select(a => a.speed)).Sum();
+                    perDeviceSpeedInfo.Add(nhmDevUuid, new List<(AlgorithmType type, double speed)>() { (_algorithmType, speed) });
                 }
                 ad.PowerUsageTotal = 0;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
@@ -140,9 +140,9 @@ namespace Excavator
                 .Select(p => p.Device);
             if (devices.Any())
             {
-                var uuids = devices.Select(gpu => _mappedDeviceIds[gpu.UUID]);
+                var excavatorIds = devices.Select(dev => _mappedDeviceIds[dev.UUID]);
                 var ids = devices.Select(dev => dev.ID);
-                return (uuids, ids);
+                return (excavatorIds, ids);
             }
             return (Enumerable.Empty<int>(), Enumerable.Empty<int>());
         }
@@ -152,10 +152,10 @@ namespace Excavator
             Logger.Info("TEST", "MiningCreateCommandLine");
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
-            var (uuids, ids) = GetUUIDsAndIDs(_miningPairs);
+            var (excavatorIds, ids) = GetUUIDsAndIDs(_miningPairs);
             var (_, cwd) = GetBinAndCwdPaths();
-            var fileName = $"cmd_{string.Join("_", ids)}.json";
-            var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, AlgorithmName(_algorithmType), uuids.ToArray());
+            var fileName = $"cmd_{string.Join("_", excavatorIds)}.json";
+            var cmdStr = CmdConfig.CmdJSONString(_uuid, _miningLocation, _username, AlgorithmName(_algorithmType), excavatorIds.ToArray());
             File.WriteAllText(Path.Combine(cwd, fileName), cmdStr);
             var commandLine = $"-wp {_apiPort} -wa \"{_authToken}\" -c {fileName} -m -qx {_extraLaunchParameters}";
             return commandLine;
