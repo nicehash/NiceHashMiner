@@ -1,4 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using BrokenMiner;
+using Example;
+using FakePlugin;
+using LolMiner;
+using NanoMiner;
+using NBMiner;
+using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Enums;
@@ -19,6 +25,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using XMRig;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -35,7 +42,7 @@ namespace NHMCore.Mining.Plugins
                 new BrokenMiner.BrokenMinerPlugin(),
 #endif
 #if INTEGRATE_ExamplePlugin_PLUGIN
-                new Example.ExamplePlugin(),
+                new ExampleMiner.ExamplePlugin(),
 #endif
 #if INTEGRATE_FakePlugin_PLUGIN
                 new FakePlugin.FakePlugin(),
@@ -43,23 +50,23 @@ namespace NHMCore.Mining.Plugins
 
 // real miners
 #if INTEGRATE_NBMiner_PLUGIN
-                new NBMiner.NBMinerPlugin(),
+                new NBMinerPlugin(),
 #endif
 #if INTEGRATE_NanoMiner_PLUGIN
-                new NanoMiner.NanoMinerPlugin(),
+                new NanoMinerPlugin(),
 #endif
 #if INTEGRATE_LolMiner_PLUGIN
-                new LolMiner.LolMinerPlugin(),
+                new LolMinerPlugin(),
 #endif
 #if INTEGRATE_XMRig_PLUGIN
-                new XMRig.XMRigPlugin(),
+                new XMRigPlugin(),
 #endif
 
 #if INTEGRATE_ALL_PLUGINS
-                new NBMiner.NBMinerPlugin(),
-                new NanoMiner.NanoMinerPlugin(),
-                new LolMiner.LolMinerPlugin(),
-                new XMRig.XMRigPlugin(),
+                new NBMinerPlugin(),
+                new NanoMinerPlugin(),
+                new LolMinerPlugin(),
+                new XMRigPlugin(),
 #endif
 
             };
