@@ -13,8 +13,8 @@ namespace NiceHashMiner.Views.Notifications
         public Notifications()
         {
             InitializeComponent();
-            EventManager.EventAdded += AddToEventBox;
-            EventManager.EventsLoaded += OnLoadedEvents;
+            EventManager.Instance.EventAdded += AddToEventBox;
+            EventManager.Instance.EventsLoaded += OnLoadedEvents;
         }
 
         // TODO show icon for new notification
@@ -53,7 +53,7 @@ namespace NiceHashMiner.Views.Notifications
         }
         private void OnLoadedEvents(object sender, EventArgs e)
         {
-            var eventArr = EventManager.Events;
+            var eventArr = EventManager.Instance.Events;
             foreach (var ev in eventArr)
             {
                 WriteToEventBox($"{String.Format("{0:G}", ev.DateTime)} - {ev.Content}");
@@ -65,7 +65,10 @@ namespace NiceHashMiner.Views.Notifications
         }
         private void WriteToEventBox(string content)
         {
-            pastEventsTB.Text += $"{content}\n";
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                pastEventsTB.Text += $"{content}\n";
+            }));
         }
     }
 }

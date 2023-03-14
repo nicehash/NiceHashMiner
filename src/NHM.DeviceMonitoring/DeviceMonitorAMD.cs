@@ -9,7 +9,7 @@ using System;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ICoreVoltageRange, ICoreVoltage, ICoreVoltageSet
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ICoreVoltageRange, ICoreVoltage, ICoreVoltageSet, ITDPLimits
     {
         public int BusID { get; private set; }
         private const int RET_OK = 0;
@@ -118,7 +118,15 @@ namespace NHM.DeviceMonitoring
                 Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_ranges failed with error code {ok}", _delayedLogging);
                 return false;
             }
-
+#if NHMWS4
+            int ok2 = AMD_ODN.nhm_amd_device_set_tdp(BusID, (int)percValue);
+            if (ok2 != 0)
+            {
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_tdp failed with error code {ok}", _delayedLogging);
+                return false;
+            }
+            return true;
+#else
             // We limit 100% to the default as max
             var limit = 0.0d;
             if (percValue > 1)
@@ -133,13 +141,14 @@ namespace NHM.DeviceMonitoring
             int ok2 = AMD_ODN.nhm_amd_device_set_tdp(BusID, (int)limit);
             if (ok2 != 0)
             {
-                Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_tdp failed with error code {ok}", _delayedLogging);
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_tdp failed with error code {ok2}", _delayedLogging);
                 return false;
             }
             return true;
+#endif
         }
 
-        #region ITDP
+#region ITDP
         public TDPSettingType SettingType { get; set; } = TDPSettingType.SIMPLE;
 
         public double TDPPercentage
@@ -175,11 +184,11 @@ namespace NHM.DeviceMonitoring
                 Logger.InfoDelayed(LogTag, $"SetTDPPercentage Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
                 return false;
             }
-            if (percentage < 0.0d)
-            {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
-                percentage = 0.0d;
-            }
+            //if (percentage < 0.0d)
+            //{
+            //    Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
+            //    percentage = 0.0d;
+            //}
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
             return SetTdpADL(percentage);
         }
@@ -212,7 +221,7 @@ namespace NHM.DeviceMonitoring
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet;
         }
-        #endregion ITDP
+#endregion ITDP
         private (int vramTemp, int hotspotTemp) GetSpecialTemperatures()
         {
             int vramT = 0;
@@ -285,6 +294,17 @@ namespace NHM.DeviceMonitoring
             if (ok == RET_OK) return true;
             Logger.InfoDelayed(LogTag, $"nhm_amd_device_reset_voltage failed with error code {ok}", _delayedLogging);
             return false;
+        }
+
+        public (bool ok, int min, int max, int def) GetTDPLimits()
+        {
+            int min = -1;
+            int max = -1;
+            int def = -1;
+            var ok = AMD_ODN.nhm_amd_device_get_tdp_min_max_default(BusID, ref min, ref max, ref def);
+            if (ok == RET_OK) return (true, min, max, def);
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_min_max_default failed with error code {ok}", _delayedLogging);
+            return (false, -1, -1, -1);
         }
 
         public int HotspotTemp

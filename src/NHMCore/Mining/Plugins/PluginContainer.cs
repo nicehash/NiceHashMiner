@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace NHMCore.Mining.Plugins
 {
     // interfaces were used only to implement the container methods
-    public class PluginContainer /*: IMinerPlugin , IGetApiMaxTimeout, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IInitInternals*/
+    public class PluginContainer : NotifyChangedBase /*: IMinerPlugin , IGetApiMaxTimeout, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IInitInternals*/
     {
         private static List<PluginContainer> _pluginContainers = new List<PluginContainer>();
         private static List<PluginContainer> _brokenPluginContainers = new List<PluginContainer>();
@@ -114,6 +114,16 @@ namespace NHMCore.Mining.Plugins
         public bool IsBroken { get; private set; } = false;
         public bool IsCompatible { get; private set; } = false;
         public bool IsInitialized { get; private set; } = false;
+        private bool _isTOSAccecpted = false;
+        public bool IsTOSAccepted
+        {
+            get => _isTOSAccecpted;
+            set
+            {
+                _isTOSAccecpted = value;
+                OnPropertyChanged(nameof(IsTOSAccepted));
+            }
+        }
         // algos from and for the plugin
         private Dictionary<BaseDevice, IReadOnlyList<Algorithm>> _cachedAlgorithms { get; } = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
         // algos for NiceHashMiner Client
@@ -170,6 +180,8 @@ namespace NHMCore.Mining.Plugins
                 }
                 // dependencies and services are considered compatible or if we have algorithms on any device
                 IsCompatible = (_plugin is IBackgroundService) || hasDeviceWithSupportedAlgos;
+                IsTOSAccepted = AcceptedPlugins.IsAccepted(PluginUUID);
+                
                 if (!IsCompatible) return false;
 
                 // transform 

@@ -17,7 +17,7 @@
         xmlns:eula="clr-namespace:NiceHashMiner.Views.EULA"
         xmlns:viewModels="clr-namespace:NiceHashMiner.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindowNew2" Height="600" Width="750"
+        Title="MainWindowNew2" Height="600" Width="800"
         MinHeight="500" MinWidth="800"
         ResizeMode="CanResize"
         WindowStyle="None"
@@ -25,6 +25,7 @@
         Background="Transparent"
         Loaded="MainWindow_OnLoaded"
         Closing="MainWindow_OnClosing"
+        WindowStartupLocation="CenterScreen"
         StateChanged="MainWindow_OnStateChanged">
     <nhb:BaseDialogWindow.DataContext>
         <viewModels:MainVM />
@@ -81,7 +82,8 @@
                         Grid.Column="0"
                         ToolTipText="NiceHash Miner" 
                         TrayMouseDoubleClick="TaskbarIcon_OnTrayMouseDoubleClick"
-                        IconSource="../Resources/logo.ico">
+                        IconSource="../Resources/logo.ico"
+                        x:Name="taskbarIcon">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Start All" Click="StartAllMenuItem_Click" x:Name="StartAllTaskbar" />

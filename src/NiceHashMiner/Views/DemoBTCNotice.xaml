@@ -13,6 +13,7 @@
         WindowStyle="None"
         AllowsTransparency="False"
         Background="Transparent"
+        WindowStartupLocation="CenterScreen"
         Icon="../Resources/logo.ico">
     <Window.Resources>
         <Style x:Key="local.ExitTextBlock" TargetType="TextBlock">
@@ -110,7 +111,7 @@
             <TextBlock Visibility="Collapsed" 
                        x:Name="invalidBTCAddressWarningIcon" 
                        Style="{StaticResource AlertIcon}"
-                       ToolTip="This is an external mining wallet address. We do not recommend mining to an external address."/>
+                       ToolTip="This is an external Bitcoin wallet address, some Rig Manager functionalities might be limited."/>
         </StackPanel>
 
         <TextBlock Grid.Row="4"
@@ -119,10 +120,6 @@
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Left"
                    Margin="25,8,0,0">
-            <Run  Text="Using any other Bitcoin wallet address will result in a higher 5% fee and infrequent payouts." />
-            <Hyperlink RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/mining-help/earnings-and-payments/can-i-get-paid-to-an-external-wallet-address?utm_source=nhm%26utm_medium=onboarding%26utm_campaign=externalWallet" >Read more here</Hyperlink>
-            <LineBreak/>
-            <LineBreak />
             <Run Text="DEMO mode will not earn Bitcoins!" />
             <LineBreak />
             <Hyperlink x:Name="addressHyperlink" RequestNavigate="AddressHyperlink_RequestNavigate" NavigateUri="https://www.nicehash.com/support/mining-help/general-help/how-to-get-nicehash-mining-address" TextDecorations="{x:Null}" Foreground="{StaticResource Brushes.Light.Basic.NoticeColor}">

@@ -134,17 +134,87 @@ namespace NHMCore.Configs.Managers
                 .Devices.Where(dev => dev.UUID == uuid)?
                 .FirstOrDefault();
         }
-        public string FindAppropriateCommandForAlgoContainer(AlgorithmContainer ac)
+        public string FindAppropriateCommandForAlgoContainer(List<AlgorithmContainer> miningPairs)
         {
-            if (ac == null) return string.Empty;
-            return _minerELPs
-                .Where(miner => miner.UUID == ac.MinerUUID)?
-                .FirstOrDefault()?
-                .Algos.Where(algo => algo.Name == ac.AlgorithmName)?
-                .FirstOrDefault()?
-                .AllCMDStrings.Where(x => x.uuid == ac.ComputeDevice.Uuid)?
-                .Select(x => x.command)?
-                .FirstOrDefault() ?? string.Empty;
+            if (miningPairs == null) return string.Empty;
+            var miner = _minerELPs.FirstOrDefault(m => m.UUID == miningPairs.FirstOrDefault().MinerUUID);
+            List<List<string>> minerParams = new();
+            miner.SingleParams.ForEach(single => minerParams.Add(new List<string>() { single }));
+            miner.DoubleParams.ForEach(dbl => minerParams.Add(new List<string>() { dbl.name, dbl.value }));
+            var algo = miner.Algos.FirstOrDefault(a => a.Name == miningPairs.FirstOrDefault().AlgorithmName);
+            var shouldAddnewColumn = false;
+            List<List<string>> algoParams = new();
+            if (algo.SingleParams == null) algo.SingleParams = new();
+            algo.SingleParams.ForEach(single => algoParams.Add(new List<string>() { single }));
+            if (algo.DoubleParams == null) algo.DoubleParams = new();
+            algo.DoubleParams.ForEach(dbl => algoParams.Add(new List<string>() { dbl.name, dbl.value }));
+            algo.CombinedParams = MinerExtraParameters.ParseAlgoPreview(minerParams, algoParams);
+            var header = algo.Devices.FirstOrDefault();
+            if (header == null || !header.IsDeviceDataHeader) return "";
+            var columnToDelete = header.ELPs
+                .Select((elp, index) => new { elp, index })
+                .Where(item => string.IsNullOrEmpty(item.elp.ELP.Trim()))
+                .FirstOrDefault();
+            bool shouldDelete = false;
+            if (columnToDelete != null) shouldDelete = columnToDelete.index < header.ELPs.Count - 1;
+            List<(string devUUID, List<List<string>> paramList)> devParams = new();
+            if (algo.Devices == null) algo.Devices = new();
+            foreach (var dev in algo.Devices)
+            {
+                if (dev.IsDeviceDataHeader && !string.IsNullOrEmpty(dev.ELPs?.LastOrDefault()?.ELP)) shouldAddnewColumn = true;
+                if (shouldAddnewColumn) dev.ELPs.Add(new DeviceELPElement(!dev.IsDeviceDataHeader) { ELP = String.Empty });
+                if (header.ELPs == null || dev.ELPs == null) continue;
+                if (columnToDelete != null && shouldDelete) dev.ELPs.RemoveAt(columnToDelete.index);
+                if (header.ELPs.Count != dev.ELPs.Count) continue;
+                List<List<string>> oneDevParams = new();
+                for (int i = 0; i < dev.ELPs.Count; i++)
+                {
+                    var flagAndDelim = header.ELPs[i].ELP.Trim().Split(' ');
+                    if (flagAndDelim.Length != 2) continue;
+                    if (flagAndDelim[1] == "$ws$") flagAndDelim[1] = " ";
+                    if (dev.ELPs[i].ELP == string.Empty) continue;
+                    oneDevParams.Add(new List<string> { flagAndDelim[0], dev.ELPs[i].ELP, flagAndDelim[1] });
+                }
+                if (dev.UUID == "")
+                {
+                    devParams.Add((dev.UUID, oneDevParams));
+                    dev.ConstructedELPs = oneDevParams;
+                }
+
+                foreach (var mp in miningPairs)
+                {
+                    if (dev.UUID == mp.ComputeDevice.Uuid)
+                    {
+                        devParams.Add((dev.UUID, oneDevParams));
+                        dev.ConstructedELPs = oneDevParams;
+                    }
+                }
+            }
+            Dictionary<HashSet<int>, List<(string devUUID, List<List<string>> paramList)>> deviceParamsGroups = new();
+            for (int first = 1; first < devParams.Count; first++)
+            {
+                var isPartOfGroup = deviceParamsGroups.Keys.Any(keys => keys.Contains(first));
+                if (isPartOfGroup) continue;
+                var group = new HashSet<int> { first };
+                for (int second = first + 1; second < devParams.Count; second++)
+                {
+                    if (MinerExtraParameters.CheckIfCanGroup(new List<List<List<string>>> { devParams[first].paramList, devParams[second].paramList })) group.Add(second);
+                }
+                var selectionGroup = devParams.Where((_, index) => group.Contains(index)).ToList();
+                deviceParamsGroups.Add(group, selectionGroup);
+            }
+            var localPart = MinerExtraParameters.Parse(minerParams, algoParams, deviceParamsGroups.FirstOrDefault().Value.Select(v => v.paramList).ToList());
+            var rigManagerPart = string.Empty;
+            var targetMP = miningPairs.FirstOrDefault();
+            if (targetMP.ActiveELPTestProfile != null)
+            {
+                rigManagerPart = targetMP.ActiveELPTestProfile.Elp;
+            }
+            if(!targetMP.HasTestProfileAndCanSet() && targetMP.ActiveELPProfile != null)
+            {
+                rigManagerPart = targetMP.ActiveELPProfile.Elp;
+            }
+            return $"{localPart} {rigManagerPart}".Trim();
         }
         public void SetAlgoCMDString(AlgorithmContainer ac, string newCMD)
         {
@@ -326,17 +396,16 @@ namespace NHMCore.Configs.Managers
                 .SelectMany(d => d.AlgorithmSettings);
             if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "No targets found"));
 
-            List<AlgorithmContainer> specificContainers = allContainers.ToList();
-            if (bundle.AlgoId != null && bundle.MinerId != null) specificContainers = allContainers.Where(d =>
+            if (bundle.AlgoId != null && bundle.MinerId != null) allContainers = allContainers.Where(d =>
                                                                                         bundle.AlgoId.Contains(d.AlgorithmName.ToLower()) &&
                                                                                         bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
-            else if (bundle.AlgoId != null) specificContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName.ToLower()))?.ToList();
-            else if (bundle.MinerId != null) specificContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
-            if (specificContainers == null || !specificContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
-            var target = specificContainers.Where(c => c.IsCurrentlyMining)?.FirstOrDefault();
+            else if (bundle.AlgoId != null) allContainers = allContainers.Where(d => bundle.AlgoId.Contains(d.AlgorithmName.ToLower()))?.ToList();
+            else if (bundle.MinerId != null) allContainers = allContainers.Where(d => bundle.MinerId.Contains(d.PluginName.ToLower()))?.ToList();
+            if (allContainers == null || !allContainers.Any()) return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Action target mismatch, containers null"));
+            var target = allContainers.Where(c => c.IsCurrentlyMining)?.FirstOrDefault();
             if (target == null)
             {
-                target = specificContainers.FirstOrDefault();
+                target = allContainers.Where(c => c.Enabled)?.FirstOrDefault();
                 if (target == null) return Task.FromResult((ErrorCode.TargetContainerNotFound, "Failed to switch to target algorithm container"));
             }
             target.SetTargetElpProfile(bundle, true);
@@ -374,25 +443,27 @@ namespace NHMCore.Configs.Managers
             sorted = sorted.OrderBy(item => item.Item1).ToList();
             foreach (var (type, bundle) in sorted)
             {
+                var targetList = BundleManager.FindTargetGPUNames(bundle.DeviceName);
+                if (targetList == null) continue;
                 var current = new List<AlgorithmContainer>();
                 if (type == 0) current = AvailableDevices.Devices
-                        .Where(d => d.Name == bundle.DeviceName)?
+                        .Where(d => targetList.Contains(d.Name.ToLower()))?
                         .SelectMany(d => d.AlgorithmSettings)?
                         .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
                         .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
                         .ToList();
                 else if (type == 1) current = AvailableDevices.Devices
-                        .Where(d => d.Name == bundle.DeviceName)?
+                        .Where(d => targetList.Contains(d.Name.ToLower()))?
                         .SelectMany(d => d.AlgorithmSettings)?
                         .Where(c => bundle.AlgoId.Contains(c.AlgorithmName.ToLower()))?
                         .ToList();
                 else if (type == 2) current = AvailableDevices.Devices
-                        .Where(d => d.Name == bundle.DeviceName)?
+                        .Where(d => targetList.Contains(d.Name.ToLower()))?
                         .SelectMany(d => d.AlgorithmSettings)?
                         .Where(c => bundle.MinerId.Contains(c.PluginName.ToLower()))?
                         .ToList();
                 else current = AvailableDevices.Devices
-                        .Where(d => d.Name == bundle.DeviceName)?
+                        .Where(d => targetList.Contains(d.Name.ToLower()))?
                         .SelectMany(d => d.AlgorithmSettings)?
                         .ToList();
                 if (current == null) continue;

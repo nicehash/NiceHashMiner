@@ -19,6 +19,7 @@ using System.Reflection;
 using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using WebSocketSharp;
 using Windows.Media.PlayTo;
 using Logger = NHM.Common.Logger;
@@ -68,6 +69,7 @@ namespace NHMCore.Nhmws.V4
         {
             CLOSE_WEBSOCKET = 0,
             SEND_MESSAGE_STATUS,
+            SEND_MESSAGE_EVENT
         }
         private static readonly string _TAG = "NHWebSocketV4";
         static private bool _isNhmwsRestart = false;
@@ -271,6 +273,7 @@ namespace NHMCore.Nhmws.V4
                         _isNhmwsRestart = true;
                         break;
                     case MessageType.SEND_MESSAGE_STATUS:
+                    case MessageType.SEND_MESSAGE_EVENT:
                         Send(data);
                         _lastSendMinerStatusTimestamp.Value = DateTime.UtcNow;
                         break;
@@ -319,15 +322,34 @@ namespace NHMCore.Nhmws.V4
 
         static public void SetCredentials(string btc = null, string worker = null, string group = null)
         {
+            string workerToSend = worker == null ? string.Empty : worker;
+            string btcToSend = btc == null ? string.Empty : btc;
             ActionMutableMap.ResetArrays();
             if (CachedState != null) CachedState = null;
-            _login = MessageParserV4.CreateLoginMessage(btc, worker, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
+            _login = MessageParserV4.CreateLoginMessage(btcToSend, workerToSend, ApplicationStateManager.RigID(), AvailableDevices.Devices.SortedDevices());
             if (!string.IsNullOrEmpty(btc)) _login.Btc = btc;
-            if (worker != null) _login.Worker = worker;
+            else _login.Btc = CredentialsSettings.Instance.BitcoinAddress;
+            if (!string.IsNullOrEmpty(worker)) _login.Worker = worker;
+            else _login.Worker = CredentialsSettings.Instance.WorkerName;
             //if (group != null) _login.Group = group;
             // on credentials change always send close websocket message
             var closeMsg = (MessageType.CLOSE_WEBSOCKET, $"Credentials change reconnecting {ApplicationStateManager.Title}.");
             _sendQueue.EnqueueParams(closeMsg);
+        }
+
+        public static void SendEvent(EventType id, string? deviceID, string message)
+        {
+            DateTimeOffset now = new DateTimeOffset(DateTime.UtcNow);
+            var unixTime = now.ToUnixTimeSeconds();
+            var newEvent = new NhmwsEvent()
+            {
+                EventID = (int)id,
+                Time = unixTime,
+                DeviceID = deviceID,
+                Message = message
+            };
+            var eventMSG = (MessageType.SEND_MESSAGE_EVENT, JsonConvert.SerializeObject(newEvent));
+            _sendQueue.EnqueueParams(eventMSG);
         }
 
         #region Message handling
@@ -809,10 +831,12 @@ namespace NHMCore.Nhmws.V4
             switch (typeOfAction)
             {
                 case SupportedAction.ActionStartMining:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = startMiningAllDevices();
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionStopMining:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = stopMiningAllDevices();
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionRebenchmark:
                     if(deviceUUID == string.Empty) (err, result) = ApplicationStateManager.StartReBenchmark().Result;
@@ -822,6 +846,11 @@ namespace NHMCore.Nhmws.V4
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -834,10 +863,15 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     if(err == ErrorCode.NoError)
                     {
-                        EventManager.AddEvent(EventType.BundleApplied, bundle.Name);
+                        EventManager.Instance.AddEvent(EventType.BundleApplied, bundle.Name);
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -848,12 +882,19 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionDeviceEnable:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = SetDevicesEnabled(deviceUUID, true);
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionDeviceDisable:
-                    NHLog.Warn(_logTag, "This type of action is handled through old protocol: " + typeOfAction);
+                    _ = SetDevicesEnabled(deviceUUID, false);
+                    (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionOcProfileTest:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -863,9 +904,14 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     var eventRet = err == ErrorCode.NoError ? EventType.TestOverClockApplied : EventType.TestOverClockFailed;
                     var devName = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID)?.Name ?? "unknown";
-                    EventManager.AddEvent(eventRet, devName);
+                    EventManager.Instance.AddEvent(eventRet, string.Empty, deviceUUID);
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -874,6 +920,11 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -883,6 +934,11 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
                     break;
                 case SupportedAction.ActionFanProfileTestStop:
+                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
+                    {
+                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
+                        break;
+                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -909,12 +965,79 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopELPTestForDevice(deviceUUID).Result;
                     MiningState.Instance.CalculateDevicesStateChange();
                     break;
+                case SupportedAction.ActionRestart:
+                    _ = RestartRig();
+                    (err, result) = (ErrorCode.NoError, "Restarting rig");
+                    break;
+                case SupportedAction.ActionShutdown:
+                    _ = ShutdownRig();
+                    (err, result) = (ErrorCode.NoError, "Shutting down rig");
+                    break;
+                case SupportedAction.ActionSystemDump:
+                    (err, result) = CreateAndUploadSystemDump().Result;
+                    break;
                 default:
                     NHLog.Warn(_logTag, "This type of action is unsupported: " + typeOfAction);
                     break;
             }
             _ = UpdateMinerStatus();
             return Task.FromResult((err, result));
+        }
+        private static async Task ShutdownRig()
+        {
+            try
+            {
+                if (AvailableDevices.Devices.Any(d => d.IsMiningBenchingTesting))
+                {
+                    var res = await stopMiningAllDevices();
+                }
+                if (!MiscSettings.Instance.RunAtStartup)
+                {
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        MiscSettings.Instance.RunAtStartup = true;
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logTag, e.Message);
+            }
+            Logger.Warn(_logTag, "Rig shutdown called remotely, shutdown in 5 seconds");
+            Process.Start("shutdown", "/s /t 5");
+        }
+
+        private static async Task RestartRig()
+        {
+
+            try
+            {
+                if(AvailableDevices.Devices.Any(d => d.IsMiningBenchingTesting))
+                {
+                    var res = await stopMiningAllDevices();
+                }
+                if (!MiscSettings.Instance.RunAtStartup)
+                {
+                    Dispatcher.CurrentDispatcher.Invoke(() =>
+                    {
+                        MiscSettings.Instance.RunAtStartup = true;
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logTag, e.Message);
+            }
+            Logger.Warn(_logTag, "Rig restart called remotely, shutdown in 5 seconds");
+            Process.Start("shutdown", "/r /t 5");
+        }
+
+        public static async Task<(ErrorCode err, string msg)> CreateAndUploadSystemDump()
+        {
+            var (success, uuid, _) = await Helpers.CreateAndUploadLogReport();
+            AvailableNotifications.CreateLogUploadResultInfo(success, uuid);
+            if (success) return (ErrorCode.NoError, "System dump upload successful");
+            return (ErrorCode.ErrFailedSystemDump, "System dump upload failed");
         }
         public static Task UpdateMinerStatus()
         {
@@ -941,6 +1064,13 @@ namespace NHMCore.Nhmws.V4
             }
             return Task.CompletedTask;
         }
+        private static Task StopTestsForDevice(string deviceUUID)
+        {
+            StopOCTestForDevice(deviceUUID, false);
+            StopFanTestForDevice(deviceUUID, false);
+            StopELPTestForDevice(deviceUUID, false);
+            return Task.CompletedTask;
+        }
         private static Task ExecuteProfilesBundleReset(bool triggerSwitch = true)
         {
             BundleManager.ResetBundleInfo();
@@ -952,8 +1082,7 @@ namespace NHMCore.Nhmws.V4
         private static Task<(ErrorCode err, string msg)> ExecuteOCTest(string deviceUUID, OcProfile ocBundle)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
-            StopELPTestForDevice(deviceUUID, false);
-            StopFanTestForDevice(deviceUUID, false);
+            StopTestsForDevice(deviceUUID);
             ELPManager.Instance.RestartMiningInstanceIfNeeded();
             var res = OCManager.Instance.ExecuteTest(deviceUUID, ocBundle);
             return Task.FromResult(res.Result);
@@ -967,8 +1096,7 @@ namespace NHMCore.Nhmws.V4
         }
         private static Task<(ErrorCode err, string msg)> ExecuteELPTest(string deviceUUID, ElpProfile elpBundle)
         {
-            StopFanTestForDevice(deviceUUID, false);
-            StopOCTestForDevice(deviceUUID, false);
+            StopTestsForDevice(deviceUUID);
             ELPManager.Instance.RestartMiningInstanceIfNeeded();
             var res = ELPManager.Instance.ExecuteTest(deviceUUID, elpBundle);
             return Task.FromResult(res.Result);
@@ -983,8 +1111,7 @@ namespace NHMCore.Nhmws.V4
         private static Task<(ErrorCode err, string msg)> ExecuteFanTest(string deviceUUID, FanProfile fanBundle)
         {
             if (!Helpers.IsElevated) return Task.FromResult((ErrorCode.ErrNotAdmin, "No administrator privileges"));
-            StopELPTestForDevice(deviceUUID, false);
-            StopOCTestForDevice(deviceUUID, false);
+            StopTestsForDevice(deviceUUID);
             ELPManager.Instance.RestartMiningInstanceIfNeeded();
             var res = FanManager.Instance.ExecuteTest(deviceUUID, fanBundle);
             return Task.FromResult(res.Result);

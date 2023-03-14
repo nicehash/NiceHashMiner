@@ -19,6 +19,8 @@ namespace NHM.Common.Enums
         CoreClock,
         MemClock,
         TDP,
-        CoreVoltage
+        CoreVoltage,
+        CoreClockDelta,
+        MemClockDelta
     }
 }

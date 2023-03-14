@@ -23,6 +23,7 @@ namespace NHMCore.Configs
         public void SetBitcoinAddress(string btc)
         {
             BitcoinAddress = btc;
+            if (Helpers.IsElevated) NHMRegistry.Set_QM_MiningaddressFromRegistry(btc);
         }
 
         public string BitcoinAddress

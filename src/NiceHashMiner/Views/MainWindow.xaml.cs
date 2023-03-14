@@ -236,7 +236,7 @@ namespace NiceHashMiner.Views
                 tdpWindow.Show();
             }
 
-            if (MinerPluginsManager.PluginsForEulaConfirm.Any())
+            if (MinerPluginsManager.PluginsForEulaConfirm.Any() && !Launcher.IsUpdated)
             {
                 var pluginsPopup = new Plugins.PluginsConfirmDialog();
                 pluginsPopup.DataContext = new Plugins.PluginsConfirmDialog.VM
@@ -244,6 +244,10 @@ namespace NiceHashMiner.Views
                     Plugins = new ObservableCollection<PluginPackageInfoCR>(MinerPluginsManager.PluginsForEulaConfirm)
                 };
                 ShowContentAsModalDialog(pluginsPopup);
+            }
+            if (MinerPluginsManager.PluginsForEulaConfirm.Any() && Launcher.IsUpdated)
+            {
+                ConfigManager.InitDeviceSettings();
             }
 
             if (LoginSuccess.HasValue)
@@ -306,6 +310,7 @@ namespace NiceHashMiner.Views
             IsEnabled = false;
             //await _vm.StopMining();
             await ApplicationStateManager.BeforeExit();
+            taskbarIcon.Dispose();
             ApplicationStateManager.ExecuteApplicationExit();
             //Close();
         }
@@ -384,10 +389,15 @@ namespace NiceHashMiner.Views
                         {
                             Title = Translations.Tr("NHMWS not connected"),
                             Description = Translations.Tr("Not connected to NHMWS. Please check your internet connection."),
+                            OkText = Translations.Tr("Need help?"),
                             CancelVisible = Visibility.Collapsed,
-                            OkVisible = Visibility.Collapsed,
+                            OkVisible = Visibility.Visible,
                             AnimationVisible = Visibility.Collapsed,
 
+                        };
+                        dialog.OKClick += (s, e) =>
+                        {
+                            Helpers.VisitUrlLink(Links.NHMWSNotConnected);
                         };
                         CustomDialogManager.ShowModalDialog(dialog);
                     });

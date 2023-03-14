@@ -9,8 +9,44 @@ namespace NHMCore.Nhmws
 {
     public static class ActionMutableMap
     {
-        public static List<NhmwsAction> ActionList = new();
-        public static List<OptionalMutableProperty> MutableList = new();
+        private static List<NhmwsAction> _actionList = new();
+        private static List<OptionalMutableProperty> _mutableList = new();
+        private static readonly object _lock = new object();
+
+        public static List<NhmwsAction> ActionList
+        {
+            get
+            {
+                lock(_lock )
+                {
+                    return _actionList;
+                }
+            }
+            set
+            {
+                lock(_lock )
+                {
+                    _actionList = value;
+                }
+            }
+        }
+        public static List<OptionalMutableProperty> MutableList
+        {
+            get
+            {
+                lock(_lock )
+                {
+                    return _mutableList;
+                }
+            }
+            set
+            {
+                lock(_lock )
+                {
+                    _mutableList = value;
+                }
+            }
+        }
 
         public static NhmwsAction FindActionOrNull(int actionID)
         {

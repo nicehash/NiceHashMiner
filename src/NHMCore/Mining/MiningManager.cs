@@ -966,8 +966,8 @@ namespace NHMCore.Mining
             {
                 //todo here access this device to check what is set now and what will be set?
                 var miningPairs = newGroupedMiningPairs[startKey];
-                EventManager.AddEvent(EventType.AlgoSwitch, miningPairs.FirstOrDefault().AlgorithmName);
-                var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs.FirstOrDefault());
+                EventManager.Instance.AddEvent(EventType.AlgoSwitch, miningPairs.FirstOrDefault().AlgorithmName, miningPairs.FirstOrDefault().ComputeDevice.B64Uuid);
+                var cmd = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(miningPairs);
                 var toStart = Miner.CreateMinerForMining(miningPairs, startKey, cmd);
                 if (toStart == null)
                 {

@@ -50,10 +50,10 @@ namespace NHMCore.Mining.Grouping
                     .Where(algo => CanGroupAlgorithmContainer(current, algo));
                 if (needsToBeSeparated(current))
                 {
-                    var currentCMD = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(current);
+                    var currentCMD = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(new List<AlgorithmContainer> { current });
                     restInGroup = restInGroup
                         .Where(algo => needsToBeSeparated(algo))?
-                        .Where(algo => ELPManager.Instance.FindAppropriateCommandForAlgoContainer(algo) == currentCMD);
+                        .Where(algo => ELPManager.Instance.FindAppropriateCommandForAlgoContainer(new List<AlgorithmContainer> { algo }) == currentCMD);
                 }
                 else
                 {

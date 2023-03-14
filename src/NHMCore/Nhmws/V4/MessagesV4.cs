@@ -34,7 +34,10 @@ namespace NHMCore.Nhmws.V4
         ActionElpProfileTestStop,
         ActionOcProfileTestStop,
         ActionFanProfileTestStop,
-        ActionRebenchmark
+        ActionRebenchmark,
+        ActionRestart,
+        ActionShutdown,
+        ActionSystemDump,
     }
     internal class LoginMessage : ISendMessage
     {
@@ -391,6 +394,42 @@ namespace NHMCore.Nhmws.V4
             ActionMutableMap.ActionList.Add(action);
             return action;
         }
+        public static NhmwsAction ActionRigShutdown()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Rig shutdown",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionShutdown,
+            };
+            ActionMutableMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionRigRestart()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "Rig restart",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionRestart,
+            };
+            ActionMutableMap.ActionList.Add(action);
+            return action;
+        }
+        public static NhmwsAction ActionSystemDump()
+        {
+            var action = new NhmwsAction
+            {
+                ActionID = NhmwsAction.NextActionId(),
+                DisplayName = "System dump",
+                DisplayGroup = 0,
+                ActionType = SupportedAction.ActionSystemDump,
+            };
+            ActionMutableMap.ActionList.Add(action);
+            return action;
+        }
     }
     internal class Device
     {
@@ -697,5 +736,19 @@ namespace NHMCore.Nhmws.V4
         public bool enabled { get; set; }
         [JsonProperty("slots")]
         public List<List<object>> slots = new();
+    }
+
+    public class NhmwsEvent : ISendMessage
+    {
+        [JsonProperty("method")]
+        public string Method => "miner.event";
+        [JsonProperty("event_id")]
+        public int EventID { get; set; }
+        [JsonProperty("time")]
+        public long Time { get; set; }
+        [JsonProperty("device_id", NullValueHandling = NullValueHandling.Ignore)]
+        public string DeviceID { get; set; }
+        [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
+        public string Message { get; set; }
     }
 }

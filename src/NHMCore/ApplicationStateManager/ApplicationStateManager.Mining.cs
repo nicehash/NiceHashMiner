@@ -20,7 +20,7 @@ namespace NHMCore
         // TODO add check for any enabled algorithms
         public static async Task<(bool started, string failReason)> StartAllAvailableDevicesTask()
         {
-            EventManager.AddEvent(EventType.RigStarted);
+            EventManager.Instance.AddEvent(EventType.RigStarted);
             // TODO consider trying to start the error state devices as well
             var devicesToStart = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Stopped);
             if (devicesToStart.Count() == 0)
@@ -88,7 +88,7 @@ namespace NHMCore
 
         public static async Task<(bool stopped, string failReason)> StopAllDevicesTask()
         {
-            EventManager.AddEvent(EventType.RigStopped);
+            EventManager.Instance.AddEvent(EventType.RigStopped);
             // TODO when starting and stopping we are not taking Pending and Error states into account
 #if NHMWS4
             var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Testing);
@@ -134,8 +134,10 @@ namespace NHMCore
                     {
                         device.ResetFanSpeed();
                         device.ResetCoreClock();
-                        device.ResetCoreVoltage();
+                        device.ResetCoreClockDelta();
                         device.ResetMemoryClock();
+                        device.ResetMemoryClockDelta();
+                        device.ResetCoreVoltage();
                     }
 #endif
                     await MiningManager.StopDevice(device);
