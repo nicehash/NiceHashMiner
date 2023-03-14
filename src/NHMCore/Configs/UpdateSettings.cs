@@ -28,7 +28,9 @@ namespace NHMCore.Configs
                     _autoUpdateNiceHashMiner = value;
                 }
                 OnPropertyChanged(nameof(AutoUpdateNiceHashMiner));
+#if NHMWS4
                 _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
+#endif
             }
         }
 
@@ -49,7 +51,9 @@ namespace NHMCore.Configs
                     _autoUpdateMinerPlugins = value;
                 }
                 OnPropertyChanged(nameof(AutoUpdateMinerPlugins));
+#if NHMWS4
                 _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
+#endif
             }
         }
     }

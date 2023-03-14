@@ -160,7 +160,9 @@ namespace NHMCore
         {
             StartComputeDevicesCheckTimer();
             StartInternetCheckTimer();
+#if NHMWS4
             StartFanProfileTimer();
+#endif
             return true;
         }
 
@@ -168,7 +170,9 @@ namespace NHMCore
         {
             StopComputeDevicesCheckTimer();
             StopInternetCheckTimer();
+#if NHMWS4
             StopFanProfileTimer();
+#endif
             DisplayNoInternetConnection(false); // hide warning
             DisplayMiningProfitable(true); // hide warning
         }

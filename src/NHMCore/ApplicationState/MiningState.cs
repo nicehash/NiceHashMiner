@@ -70,7 +70,7 @@ namespace NHMCore.ApplicationState
             get => _boolProps.Get(nameof(IsCurrentlyMining));
             private set => _boolProps.Set(nameof(IsCurrentlyMining), value);
         }
-
+#if NHMWS4
         public bool IsCurrentlyMiningOrELPFromRigManager
         {
             get => _boolProps.Get(nameof(IsCurrentlyMiningOrELPFromRigManager));
@@ -82,7 +82,7 @@ namespace NHMCore.ApplicationState
             get => _boolProps.Get(nameof(IsNotRunningOrELP));
             private set => _boolProps.Set(nameof(IsNotRunningOrELP), value);
         }
-
+#endif
         #region DeviceState Counts
         public int StoppedDeviceStateCount
         {
@@ -143,11 +143,13 @@ namespace NHMCore.ApplicationState
 #endif
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;
             IsCurrentlyMining = AnyDeviceRunning;
+#if NHMWS4
             IsCurrentlyMiningOrELPFromRigManager = IsCurrentlyMining ||
                 AvailableDevices.Devices
                 .SelectMany(d => d.AlgorithmSettings)
                 .Any(a => a.ActiveELPProfile != null || a.ActiveELPTestProfile != null);
             IsNotRunningOrELP = !IsCurrentlyMiningOrELPFromRigManager;
+#endif
             IsDemoMining = !CredentialsSettings.Instance.IsBitcoinAddressValid && IsCurrentlyMining;
             if (IsNotBenchmarkingOrMining) MiningManuallyStarted = false;
         }

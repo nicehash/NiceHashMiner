@@ -175,7 +175,9 @@ namespace NHMCore.Mining
                 Algorithm.Speeds[0] = value;
                 UpdateConfigVersionIfNeeded();
                 NotifySpeedChanged();
+#if NHMWS4
                 Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
+#endif
             }
         }
 
@@ -243,7 +245,9 @@ namespace NHMCore.Mining
                 if (Algorithm != null) Algorithm.Enabled = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(Status));
+#if NHMWS4
                 Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
+#endif
                 if (MinerUUID == null || MinerUUID == string.Empty) return; //initial stuff
                 var notifType = value ? EventType.AlgoEnabled : EventType.AlgoDisabled;
                 EventManager.Instance.AddEvent(notifType, AlgorithmName);

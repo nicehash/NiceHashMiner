@@ -592,7 +592,9 @@ namespace NHMCore.Mining.Plugins
             finally
             {
                 PluginInstaller.RemovedPluginStatus(pluginUUID, true);
+#if NHMWS4
                 ApplicationStateManager.ReSendLoginMessage();
+#endif
                 await Task.CompletedTask;
             }
         }
@@ -858,7 +860,9 @@ namespace NHMCore.Mining.Plugins
 
 
                 AvailableNotifications.CreatePluginUpdateInfo(PluginsPackagesInfosCRs[pluginUUID].PluginName, installSuccess);
+#if NHMWS4
                 ApplicationStateManager.ReSendLoginMessage();
+#endif
             }
         }
 

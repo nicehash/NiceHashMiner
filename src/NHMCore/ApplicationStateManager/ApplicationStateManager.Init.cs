@@ -55,7 +55,9 @@ namespace NHMCore
                     if (perc > 100) return 100;
                     return perc;
                 };
+#if NHMWS4
                 EventManager.Instance.Init();
+#endif
                 NotificationsManager.Instance.ReadLoggedNotifications();
                 // STEP
                 // Checking System Memory
@@ -262,10 +264,12 @@ namespace NHMCore
                     if (MiscSettings.Instance.UseOptimizationProfiles) AvailableNotifications.CreateOptimizationProfileElevateInfo();
                     else AvailableNotifications.CreateOptimizationProfileNotEnabledInfo();
                 }
+#if NHMWS4
                 if (!Helpers.IsElevated)
                 {
                     AvailableNotifications.CreateNotAdminForRigManagement();
                 }
+#endif
                 //SchedulesManager.Instance.Init();
             }
             catch (Exception e)

@@ -42,8 +42,8 @@ namespace NHMCore.Mining
 #if NHMWS4
         public bool IsTesting => AlgorithmSettings.Any(a => a.IsTesting);
         public bool IsMiningBenchingTesting => State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking;
-#endif
         private PidController _pidController = new();
+#endif
 
         private int _memoryControlCounter = 0;
 

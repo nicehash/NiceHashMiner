@@ -103,7 +103,9 @@ namespace NHMCore.Configs
             {
                 _useScheduler = value;
                 OnPropertyChanged(nameof(UseScheduler));
+#if NHMWS4
                 _ = Task.Run(async () => await NHWebSocketV4.UpdateMinerStatus());
+#endif
             }
         }
 

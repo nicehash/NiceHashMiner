@@ -936,7 +936,7 @@ namespace NHMCore.Mining
             var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToList();
             var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToList();
             var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToList();
-
+#if NHMWS4
             //resetting in case of elp profile set
             foreach (var noChangeKey in noChangeGroupMinersKeys)
             {
@@ -952,6 +952,7 @@ namespace NHMCore.Mining
                 toStopMinerGroupKeys.Add(noChangeKey);
                 toStartMinerGroupKeys.Add(noChangeKey);
             }
+#endif
             //todo logic here to add only those that SHOULD restart (new profile/new test profile)
 
             // first stop currently running
