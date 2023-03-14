@@ -1,6 +1,7 @@
 using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Mining;
 using NHMCore.Nhmws;
 using NHMCore.Notifications;
@@ -21,6 +22,7 @@ namespace NHMCore
         public static async Task<(bool started, string failReason)> StartAllAvailableDevicesTask()
         {
             EventManager.Instance.AddEvent(EventType.RigStarted);
+            MiningState.Instance.MiningStoppedByToggle = false;
             // TODO consider trying to start the error state devices as well
             var devicesToStart = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Stopped);
             if (devicesToStart.Count() == 0)
