@@ -1,6 +1,7 @@
 using NHM.Common;
 using NHM.Common.Configs;
 using NHM.Common.Enums;
+using NHMCore.ApplicationState;
 using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace NHMCore
         // TODO add check for any enabled algorithms
         public static async Task<(bool started, string failReason)> StartAllAvailableDevicesTask()
         {
+            MiningState.Instance.MiningStoppedByToggle = false;
             // TODO consider trying to start the error state devices as well
             var devicesToStart = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Stopped);
             if (devicesToStart.Count() == 0)
