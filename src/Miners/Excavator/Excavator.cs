@@ -149,7 +149,6 @@ namespace Excavator
 
         protected override string MiningCreateCommandLine()
         {
-            Logger.Info("TEST", "MiningCreateCommandLine");
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var (excavatorIds, ids) = GetUUIDsAndIDs(_miningPairs);
