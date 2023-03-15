@@ -49,7 +49,7 @@ namespace NiceHashMiner.Views.Dashboard
         {
             try
             {
-                StartStopToggleButton.IsEnabled = false;
+                BenchmarkManagerState.Instance.StartEnabled = false;
                 // IF ANY MINING execute STOP
                 if (MiningState.Instance.AnyDeviceRunning)
                 {
@@ -66,7 +66,7 @@ namespace NiceHashMiner.Views.Dashboard
             }
             finally
             {
-                StartStopToggleButton.IsEnabled = true;
+                BenchmarkManagerState.Instance.StartEnabled = true;
             }
         }
 
