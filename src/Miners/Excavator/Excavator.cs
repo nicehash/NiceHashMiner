@@ -267,6 +267,7 @@ namespace Excavator
             // determine benchmark time 
             // settup times
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 40, 60 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+            if (_algorithmType == AlgorithmType.RandomXmonero) benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 80, 100 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
             var maxTicks = MinerBenchmarkTimeSettings.ParseBenchmarkTicks(new List<int> { 1, 3, 9 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType);
             var maxTicksEnabled = MinerBenchmarkTimeSettings.MaxTicksEnabled;
 

@@ -31,16 +31,16 @@ namespace Excavator
 
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v1.8.2.0",
-                ExePath = new List<string> { "NHQM_v0.6.2.0_RC", "excavator.exe" },
+                BinVersion = "v1.8.3.0",
+                ExePath = new List<string> { "NHQM_v0.6.3.0_RC", "excavator.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.2.0_RC/NHQM_v0.6.2.0_RC.zip"
+                    "https://github.com/nicehash/NiceHashQuickMiner/releases/download/v0.6.3.0_RC/NHQM_v0.6.3.0_RC.zip"
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
             {
-                PluginDescription = "Excavator NVIDIA/AMD GPU miner from NiceHash",
+                PluginDescription = "Excavator NVIDIA/AMD GPU and CPU miner from NiceHash",
                 SupportedDevicesAlgorithms = SupportedDevicesAlgorithmsDict()
             };
         }

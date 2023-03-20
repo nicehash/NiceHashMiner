@@ -60,7 +60,7 @@ namespace Excavator
                 };
             if (algorithmName == "randomx")
             {
-                initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName, dev.ToString(), "NTHREADS=0", "HIGHPRIORITY=0", "USELARGEPAGE=0", "USEMSR=1" } }));
+                initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName, dev.ToString(), "NTHREADS=0", "HIGHPRIORITY=0", "USELARGEPAGE=1", "USEMSR=1" } }));
             }
             else initialCommands.AddRange(excavatorIds.Select((dev, index) => new Command { Id = index + 3, Method = "worker.add", Params = new List<string> { algorithmName.ToLower(), dev.ToString() } }));
             return initialCommands;
