@@ -17,7 +17,7 @@ namespace XMRig
                     DeviceType.CPU,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.RandomXmonero),
+                        new SAS(AlgorithmType.RandomXmonero) { Enabled = false },
                     }
                 }
             }
