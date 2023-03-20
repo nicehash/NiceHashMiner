@@ -33,6 +33,13 @@ namespace Excavator
                         new SAS(AlgorithmType.KAWPOW) { Enabled = false },
                         new SAS(AlgorithmType.NeoScrypt),
                     }
+                },
+                {
+                    DeviceType.CPU,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.RandomXmonero)
+                    }
                 }
             },
             AlgorithmNames = new Dictionary<AlgorithmType, string>
@@ -41,7 +48,8 @@ namespace Excavator
                 { AlgorithmType.EtcHash, "etchash" },
                 { AlgorithmType.Autolykos, "autolykos" },
                 { AlgorithmType.KAWPOW, "kawpow" },
-                { AlgorithmType.NeoScrypt, "neoscrypt" }
+                { AlgorithmType.NeoScrypt, "neoscrypt" },
+                { AlgorithmType.RandomXmonero, "randomx" }
             }
         };
     }
