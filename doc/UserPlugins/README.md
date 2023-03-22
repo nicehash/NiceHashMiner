@@ -45,7 +45,7 @@ Change the `"bin_path"` to the miner executable name. Do not use any specific pa
 
 ### 4. Navigate to NiceHash Miner\configs\AcceptedPlugins.json
 
-Add the name of the algorithm you added to the `"UserMinerPlugins.json"` file.
+Add the name of the algorithm you added in the `"UserMinerPlugins.json"` to the last line.
 <img src="08.png" />
 <br />
 
