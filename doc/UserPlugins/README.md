@@ -45,9 +45,16 @@ Change the `"bin_path"` to the miner executable name. Do not use any specific pa
 
 ### 4. Navigate to NiceHash Miner\configs\AcceptedPlugins.json
 
-Add the name of the algorithm you added in the `"UserMinerPlugins.json"` to the last line.
+Add the name of the plugin you added in the `"UserMinerPlugins.json"` to the last line.
 <img src="09.png" />
 <br />
+
+### 5. Navigate to NiceHash Miner\miner_plugins\ExamplePlugin\PluginSupportedAlgorithmsSettings.json
+
+Add the target algorithms to target device groups, default is DaggerHashimoto and RandomXmonero (for example we configured to add DaggerHashimoto algo in the MinersSettings.json earlier):
+<img src="10.png" />
+<br />
+
 
 # Additional information
 Navigate to `NiceHash Miner\miner_plugins\ExamplePlugin\internals` and check the included files. There are other customizations possible through these files. Including adding extra launch parameters and supported algorithms. All of the settings are self-explanatory to advanced users.
