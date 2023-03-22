@@ -362,7 +362,7 @@ namespace NHMCore.Nhmws.V4
                     {
                         DisplayName = "Bundle profiles",
                         DefaultValue = "",
-                        Range = (4096, "")
+                        Range = (8192, "")
                     }
                 },
                 ActionType = SupportedAction.ActionProfilesBundleSet,
