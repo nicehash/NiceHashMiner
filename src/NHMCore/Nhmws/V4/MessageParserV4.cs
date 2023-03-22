@@ -429,7 +429,7 @@ namespace NHMCore.Nhmws.V4
                         DisplayGroup = 0,
                         DisplayName = "Benchmark settings",
                         DefaultValue = "",
-                        Range = (8092, string.Empty),
+                        Range = (65536, ""),
                         GetValue = () =>
                         {
                             var ret = string.Empty;
