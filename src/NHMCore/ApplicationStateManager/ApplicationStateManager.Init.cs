@@ -76,6 +76,7 @@ namespace NHMCore
                         DeviceDetectionStep.CPU => Tr("Checking CPU Info"),
                         DeviceDetectionStep.NVIDIA_CUDA => Tr("Querying CUDA devices"),
                         DeviceDetectionStep.AMD_OpenCL => Tr("Checking AMD OpenCL GPUs"),
+                        DeviceDetectionStep.INTEL_GPU => Tr("Checking Intel GPUs"),
                         _ => Tr("Checking Windows Video Controllers"), //DeviceDetectionStep.WMIWMIVideoControllers
                     };
                 };
@@ -101,6 +102,7 @@ namespace NHMCore
                         DeviceType.CPU => $"CPU#{index}",
                         DeviceType.AMD => $"AMD#{index}",
                         DeviceType.NVIDIA => $"GPU#{index}",
+                        DeviceType.INTEL => $"GPU#{index}",
                         _ => $"UNKNOWN#{index}",
                     };
 
@@ -113,7 +115,7 @@ namespace NHMCore
 
                 AvailableDevices.UncheckCpuIfGpu();
 
-                var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
+                var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam, AvailableDevices.AvailIntelGpuRam);
                 if (!ramCheckOK)
                 {
                     AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
