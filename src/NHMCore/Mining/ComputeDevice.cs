@@ -143,6 +143,7 @@ namespace NHMCore.Mining
                     DeviceType.CPU => 1,
                     DeviceType.NVIDIA => 2,
                     DeviceType.AMD => 3,
+                    DeviceType.INTEL => 4,
                     _ => throw new Exception($"Unknown DeviceType {(int)DeviceType}"),
                 };
                 var b64Web = UUID.GetB64UUID(Uuid);

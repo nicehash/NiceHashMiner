@@ -102,7 +102,7 @@ namespace NHMCore
                         DeviceType.CPU => $"CPU#{index}",
                         DeviceType.AMD => $"AMD#{index}",
                         DeviceType.NVIDIA => $"GPU#{index}",
-                        DeviceType.INTEL => $"GPU#{index}",
+                        DeviceType.INTEL => $"INTEL#{index}",
                         _ => $"UNKNOWN#{index}",
                     };
 

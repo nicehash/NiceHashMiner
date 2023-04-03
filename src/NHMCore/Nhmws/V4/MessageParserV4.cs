@@ -61,6 +61,7 @@ namespace NHMCore.Nhmws.V4
                 DeviceType.CPU => 1,
                 DeviceType.NVIDIA => 2,
                 DeviceType.AMD => 3,
+                DeviceType.INTEL => 4, 
                 _ => 0
             };
         }
