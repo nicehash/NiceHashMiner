@@ -12,9 +12,9 @@ namespace NHM.DeviceDetection.IntelGPU
         internal record Device
         {
             public int VendorId { get; set; }
-            public int pciSubSystemId { get; set; }
-            public int pciDeviceId { get; set; }
-            public int pciBusID { get; set; }
+            public int PciSubSystemId { get; set; }
+            public int PciDeviceId { get; set; }
+            public int PciBusID { get; set; }
             public string DeviceName { get; set; }
             public string DriverVersion { get; set; }
             public ulong DeviceMemory { get; set; }

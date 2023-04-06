@@ -58,7 +58,7 @@ namespace NHM.DeviceDetection.IntelGPU
             // if no nvml loaded fallback ID
             if (string.IsNullOrEmpty(uuid))
             {
-                var infoToHashed = $"{igclDevice.pciDeviceId}--{DeviceType.INTEL}--{igclDevice.DeviceName}--{igclDevice.pciBusID}";
+                var infoToHashed = $"{igclDevice.PciDeviceId}--{DeviceType.INTEL}--{igclDevice.DeviceName}--{igclDevice.PciBusID}";
                 var uuidHEX = UUID.UUID.GetHexUUID(infoToHashed);
                 uuid = $"GPU-{uuidHEX}";
             }
@@ -67,8 +67,8 @@ namespace NHM.DeviceDetection.IntelGPU
                 DeviceType = DeviceType.INTEL,
                 UUID = uuid,
                 Name = igclDevice.DeviceName,
-                ID = igclDevice.pciDeviceId,
-                PCIeBusID = igclDevice.pciBusID,
+                ID = igclDevice.PciDeviceId,
+                PCIeBusID = igclDevice.PciBusID,
                 GpuRam = igclDevice.DeviceMemory,
                 RawDeviceData = JsonConvert.SerializeObject(igclDevice),
             };

@@ -24,11 +24,11 @@ namespace NanoMiner
             // https://github.com/nanopool/nanominer/releases
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.7.5",
-                ExePath = new List<string> { "nanominer-windows-3.7.5-cuda11", "nanominer.exe" },
+                BinVersion = "v3.7.7",
+                ExePath = new List<string> { "nanominer-windows-3.7.7-cuda11", "nanominer.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v3.7.5/nanominer-windows-3.7.5-cuda11.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v3.7.7/nanominer-windows-3.7.7-cuda11.zip", // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
@@ -43,7 +43,7 @@ namespace NanoMiner
         public override string Name => "NanoMiner";
 
 
-        public override Version Version => new Version(19, 3);
+        public override Version Version => new Version(19, 4);
 
         public override string Author => "info@nicehash.com";
 
