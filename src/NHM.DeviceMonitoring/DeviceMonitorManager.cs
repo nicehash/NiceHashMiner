@@ -16,7 +16,6 @@ namespace NHM.DeviceMonitoring
     public static class DeviceMonitorManager
     {
         public static bool DisableDeviceStatusMonitoring { get; set; } = false;
-        public static bool DisableDevicePowerModeSettings { get; set; } = true;
 
         internal static readonly bool IsElevated;
 

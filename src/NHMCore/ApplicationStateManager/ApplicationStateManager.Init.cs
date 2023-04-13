@@ -154,13 +154,9 @@ namespace NHMCore
                 // now init device settings
                 ConfigManager.InitDeviceSettings();
 
-                if (!Helpers.IsElevated && !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && AvailableDevices.HasNvidia)
+                if (!Helpers.IsElevated && AvailableDevices.HasNvidia)
                 {
                     AvailableNotifications.CreateDeviceMonitoringNvidiaElevateInfo();
-                }
-                if (Helpers.IsElevated && GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
-                {
-                    AvailableNotifications.CreateRigOverclockingTurnedOff();
                 }
                 //// TODO add check and only show if not enabled
                 //if (AvailableDevices.HasCpu)

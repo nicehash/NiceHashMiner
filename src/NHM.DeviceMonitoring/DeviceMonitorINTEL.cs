@@ -227,11 +227,6 @@ namespace NHM.DeviceMonitoring
 
         public bool SetTDPPercentage(double percentage)
         {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
-            {
-                Logger.InfoDelayed(LogTag, $"SetTDPPercentage Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
             if (percentage < 0.0d)
             {
                 Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
@@ -246,11 +241,6 @@ namespace NHM.DeviceMonitoring
         }
         public bool SetTDPSimple(TDPSimpleType level)
         {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
-            {
-                Logger.InfoDelayed(LogTag, $"SetTDPSimple Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
             var percentage = PowerLevelToTDPPercentage(level);
             if (!percentage.HasValue)
             {

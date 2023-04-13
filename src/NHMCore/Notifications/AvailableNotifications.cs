@@ -365,12 +365,5 @@ namespace NHMCore.Notifications
             notification.Action = AvailableActions.ActionRunAsAdmin();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
-
-        public static void CreateRigOverclockingTurnedOff()
-        {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.OverclockingIsOff, Tr("Overclocking is disabled"), Tr("Overclocking is disabled by default. Turn it on by unchecking 'Disable Device Overclocking' in Advanced settings"));
-            notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.OverclockingIsOff);
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
     }
 }
