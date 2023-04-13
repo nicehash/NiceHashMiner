@@ -342,6 +342,7 @@ namespace NHMCore.Mining
             {
                 if (DeviceType == DeviceType.NVIDIA) return CoreClockDelta;
                 if (DeviceType == DeviceType.AMD) return CoreClock;
+                if (DeviceType == DeviceType.INTEL) return CoreClockDelta;
                 return -1;
             }
         }
@@ -368,6 +369,7 @@ namespace NHMCore.Mining
             {
                 if (DeviceType == DeviceType.NVIDIA) return MemoryClockDelta;
                 if (DeviceType == DeviceType.AMD) return MemoryClock;
+                if (DeviceType == DeviceType.INTEL) return MemoryClockDelta;
                 return -1;
             }
         }

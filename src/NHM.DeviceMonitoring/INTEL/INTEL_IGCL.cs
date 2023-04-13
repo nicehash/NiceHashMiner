@@ -72,6 +72,8 @@ namespace NHM.DeviceMonitoring.INTEL
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_intel_device_get_power_usage(int bus_number, ref int get_power_usage);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_intel_device_get_power_limit(int bus_number, ref int get_power_limit);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_intel_device_set_power_limit(int bus_number, int set_power_limit);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_intel_device_reset_power_limit(int bus_number);

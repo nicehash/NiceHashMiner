@@ -274,12 +274,16 @@ namespace NiceHashMiner.ViewModels.Models
         public float Temp { get; private set; } = -1;
 
         public int _fanSpeed = -1;
+
+        private bool _isRPM = false;
+
         public string FanSpeed
         {
             get
             {
                 if (_fanSpeed < 0) return MISSING_INFO;
-                return $"{_fanSpeed}%";
+                if(!_isRPM) return $"{_fanSpeed}%";
+                return $"{_fanSpeed}RPM";
             }
         }
 
@@ -287,7 +291,8 @@ namespace NiceHashMiner.ViewModels.Models
         {
             Load = Dev.Load;
             Temp = Dev.Temp;
-            _fanSpeed = Dev.FanSpeed;
+            _isRPM = -1 == Dev.FanSpeed;
+            _fanSpeed = _isRPM ? Dev.FanSpeedRPM : Dev.FanSpeed;
             OnPropertyChanged(nameof(Load));
             OnPropertyChanged(nameof(Temp));
             OnPropertyChanged(nameof(FanSpeed));
