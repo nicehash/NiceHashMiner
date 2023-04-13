@@ -34,15 +34,6 @@ namespace NanoMiner
                     }
                 },
                 {
-                    DeviceType.INTEL,
-                    new List<SAS>
-                    {
-                        new SAS(AlgorithmType.KAWPOW){ NonDefaultRAMLimit = (2UL << 30) + (2UL << 29) + (2UL << 28) },
-                        new SAS(AlgorithmType.DaggerHashimoto),
-                        new SAS(AlgorithmType.EtcHash) {NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26) },
-                    }
-                },
-                {
                     DeviceType.CPU,
                     new List<SAS>
                     {

@@ -21,7 +21,7 @@ namespace NHM.DeviceMonitoring
 
         private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(0.5);
 
-        private string LogTag => $"DeviceMonitorAMD-uuid({UUID})-busid({BusID})";
+        private string LogTag => $"DeviceMonitorINTEL-uuid({UUID})-busid({BusID})";
 
         internal DeviceMonitorINTEL(string uuid, int busID)
         {

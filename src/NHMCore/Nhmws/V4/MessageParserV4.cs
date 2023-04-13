@@ -106,7 +106,7 @@ namespace NHMCore.Nhmws.V4
                 //(nameof(ICoreClockDelta), ICoreClockDelta g) => $"{g.CoreClockDelta}",
                 (nameof(IMemoryClock), IMemoryClock g) => $"{g.MemoryClock}",
                 //(nameof(IMemoryClockDelta), IMemoryClockDelta g) => $"{g.MemoryClockDelta}",
-                (nameof(ITDP), ITDP g) => $"{g.TDPPercentage}",
+                (nameof(ITDP), ITDP g) => $"{g.TDPPercentage * 100}",
                 (nameof(ICoreVoltage), ICoreVoltage g) => $"{g.CoreVoltage}",
                 (_, _) => null,
             };

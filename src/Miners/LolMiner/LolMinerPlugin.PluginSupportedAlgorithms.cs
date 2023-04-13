@@ -75,7 +75,6 @@ namespace LolMiner
                     DeviceType.INTEL,
                     new List<SAS>
                     {
-                        new SAS(AlgorithmType.EtcHash){NonDefaultRAMLimit =  (4UL << 29) + (5UL << 28) + (1UL << 26)},
                         new SAS(AlgorithmType.KHeavyHash),
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.Autolykos),
