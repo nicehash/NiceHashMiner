@@ -21,6 +21,7 @@ namespace NHM.Common.Enums
         TDP,
         CoreVoltage,
         CoreClockDelta,
-        MemClockDelta
+        MemClockDelta,
+        FanSpeedRPM
     }
 }
