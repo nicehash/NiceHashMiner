@@ -139,7 +139,7 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<ILoad>(DeviceDynamicProperties.Load,"Load","%"),
                 //pairOrNull<IMemControllerLoad>(DeviceDynamicProperties.MemoryControllerLoad, "MemCtrl Load","%"),
                 pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan speed","%"),
-                pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedRPM, "Fan speed","RPM"),
+                pairOrNull<IFanSpeedRPM>(DeviceDynamicProperties.FanSpeedRPM, "Fan speed","RPM"),
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power usage","W"),
                 pairOrNull<ICoreClock>(DeviceDynamicProperties.CoreClock, "Core clock", "MHz"),
                 //pairOrNull<ICoreClockDelta>(DeviceDynamicProperties.CoreClockDelta, "Core clock delta", "MHz"),
