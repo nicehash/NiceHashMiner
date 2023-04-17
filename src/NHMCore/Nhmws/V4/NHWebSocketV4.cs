@@ -856,7 +856,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     if(err == ErrorCode.NoError)
                     {
-                        EventManager.Instance.AddEvent(EventType.BundleApplied, bundle.Name);
+                        EventManager.Instance.AddEvent(EventType.BundleApplied, bundle.Name, "", false);
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
@@ -887,7 +887,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     var eventRet = err == ErrorCode.NoError ? EventType.TestOverClockApplied : EventType.TestOverClockFailed;
                     var devName = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID)?.Name ?? "unknown";
-                    EventManager.Instance.AddEvent(eventRet, string.Empty, deviceUUID);
+                    EventManager.Instance.AddEvent(eventRet, string.Empty, deviceUUID, false);
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
                     if (!Helpers.IsElevated)
