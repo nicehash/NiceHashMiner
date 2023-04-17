@@ -40,16 +40,6 @@ namespace NHMCore.Configs
             }
         }
 
-        public bool DisableDevicePowerModeSettings
-        {
-            get => DeviceMonitorManager.DisableDevicePowerModeSettings;
-            set
-            {
-                DeviceMonitorManager.DisableDevicePowerModeSettings = value;
-                OnPropertyChanged(nameof(DisableDevicePowerModeSettings));
-            }
-        }
-
         private bool _showGPUPCIeBusIDs = false;
         public bool ShowGPUPCIeBusIDs
         {

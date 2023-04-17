@@ -179,7 +179,7 @@ namespace NHMCore.Notifications
 
         public static void CreateFailedBenchmarksInfo(ComputeDevice device)
         {
-            EventManager.Instance.AddEvent(EventType.BenchmarkFailed, string.Empty, device.B64Uuid);
+            EventManager.Instance.AddEvent(EventType.BenchmarkFailed, string.Empty, device.Uuid, false);
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info.", device.Name));
             notification.Action = AvailableActions.ActionFailedBenchmarksHelp();
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.FailedBenchmarks);
@@ -363,13 +363,6 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.RigManagementElevate, Tr("NHM needs administrator privileges for rig management"), Tr($"If you want to use rig manager for OC/Fan/command settings, you must run NHM as an administrator"));
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.RigManagementElevate);
             notification.Action = AvailableActions.ActionRunAsAdmin();
-            NotificationsManager.Instance.AddNotificationToList(notification);
-        }
-
-        public static void CreateRigOverclockingTurnedOff()
-        {
-            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.OverclockingIsOff, Tr("Overclocking is disabled"), Tr("Overclocking is disabled by default. Turn it on by unchecking 'Disable Device Overclocking' in Advanced settings"));
-            notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.OverclockingIsOff);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

@@ -328,11 +328,6 @@ namespace NHMCore.Configs.Data
             get => GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring;
             set => GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring = value;
         }
-        public bool DisableDevicePowerModeSettings
-        {
-            get => GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings;
-            set => GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings = value;
-        }
         public bool ShowGPUPCIeBusIDs
         {
             get => GlobalDeviceSettings.Instance.ShowGPUPCIeBusIDs;
@@ -412,7 +407,6 @@ namespace NHMCore.Configs.Data
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;
             DisableDeviceStatusMonitoring = false;
-            DisableDevicePowerModeSettings = true;
             MineRegardlessOfProfit = true;
 
             AutoUpdateNiceHashMiner2 = false;
@@ -478,7 +472,6 @@ namespace NHMCore.Configs.Data
             RunAtStartup = configOld.RunAtStartup;
             GUIWindowsAlwaysOnTop = configOld.GUIWindowsAlwaysOnTop;
             DisableDeviceStatusMonitoring = configOld.DisableDeviceStatusMonitoring;
-            DisableDevicePowerModeSettings = configOld.DisableDevicePowerModeSettings;
             MineRegardlessOfProfit = configOld.MineRegardlessOfProfit;
 
             AutoUpdateNiceHashMiner2 = configOld.AutoUpdateNiceHashMiner2;

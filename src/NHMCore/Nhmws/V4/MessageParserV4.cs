@@ -64,6 +64,7 @@ namespace NHMCore.Nhmws.V4
                 DeviceType.CPU => 1,
                 DeviceType.NVIDIA => 2,
                 DeviceType.AMD => 3,
+                DeviceType.INTEL => 4, 
                 _ => 0
             };
         }
@@ -101,6 +102,7 @@ namespace NHMCore.Nhmws.V4
                 //(nameof(IMemControllerLoad), IMemControllerLoad g) => $"{g.MemoryControllerLoad}",
                 (nameof(ITemp), ITemp g) => $"{g.Temp}",
                 (nameof(IGetFanSpeedPercentage), IGetFanSpeedPercentage g) => $"{g.GetFanSpeedPercentage().percentage}",
+                (nameof(IFanSpeedRPM), IFanSpeedRPM g) => $"{g.FanSpeedRPM}",
                 (nameof(IPowerUsage), IPowerUsage g) => $"{g.PowerUsage}",
                 (nameof(IVramTemp), IVramTemp g) => $"{g.VramTemp}",
                 (nameof(IHotspotTemp), IHotspotTemp g) => $"{g.HotspotTemp}",
@@ -108,7 +110,7 @@ namespace NHMCore.Nhmws.V4
                 //(nameof(ICoreClockDelta), ICoreClockDelta g) => $"{g.CoreClockDelta}",
                 (nameof(IMemoryClock), IMemoryClock g) => $"{g.MemoryClock}",
                 //(nameof(IMemoryClockDelta), IMemoryClockDelta g) => $"{g.MemoryClockDelta}",
-                (nameof(ITDP), ITDP g) => $"{g.TDPPercentage}",
+                (nameof(ITDP), ITDP g) => $"{g.TDPPercentage * 100}",
                 (nameof(ICoreVoltage), ICoreVoltage g) => $"{g.CoreVoltage}",
                 (_, _) => null,
             };
@@ -140,6 +142,7 @@ namespace NHMCore.Nhmws.V4
                 pairOrNull<ILoad>(DeviceDynamicProperties.Load,"Load","%"),
                 //pairOrNull<IMemControllerLoad>(DeviceDynamicProperties.MemoryControllerLoad, "MemCtrl Load","%"),
                 pairOrNull<IGetFanSpeedPercentage>(DeviceDynamicProperties.FanSpeedPercentage, "Fan speed","%"),
+                pairOrNull<IFanSpeedRPM>(DeviceDynamicProperties.FanSpeedRPM, "Fan speed","RPM"),
                 pairOrNull<IPowerUsage>(DeviceDynamicProperties.PowerUsage, "Power usage","W"),
                 pairOrNull<ICoreClock>(DeviceDynamicProperties.CoreClock, "Core clock", "MHz"),
                 //pairOrNull<ICoreClockDelta>(DeviceDynamicProperties.CoreClockDelta, "Core clock delta", "MHz"),

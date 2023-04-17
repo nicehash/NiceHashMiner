@@ -50,13 +50,13 @@
             </WrapPanel>
             <Label Content="Days" FontSize="13" Style="{StaticResource FontsTypography.Heading3/Secondary}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,16,16,8"/>
             <StackPanel Orientation="Horizontal">
-                <CheckBox x:Name="cboxMon" Style="{StaticResource NHMCheckBox}" Content="Mon" Width="50"/>
-                <CheckBox x:Name="cboxTue" Style="{StaticResource NHMCheckBox}" Content="Tue" Width="50" Margin="19,0,0,0"/>
-                <CheckBox x:Name="cboxWed" Style="{StaticResource NHMCheckBox}" Content="Wed" Width="50" Margin="19,0,0,0"/>
-                <CheckBox x:Name="cboxThu" Style="{StaticResource NHMCheckBox}" Content="Thu" Width="50" Margin="19,0,0,0"/>
-                <CheckBox x:Name="cboxFri" Style="{StaticResource NHMCheckBox}" Content="Fri" Width="50" Margin="19,0,0,0"/>
-                <CheckBox x:Name="cboxSat" Style="{StaticResource NHMCheckBox}" Content="Sat" Width="50" Margin="19,0,0,0"/>
-                <CheckBox x:Name="cboxSun" Style="{StaticResource NHMCheckBox}" Content="Sun" Width="50" Margin="19,0,0,0"/>
+                <CheckBox x:Name="cboxMon" Style="{StaticResource NHMCheckBox}" Content="Mon" Width="50" IsChecked="True"/>
+                <CheckBox x:Name="cboxTue" Style="{StaticResource NHMCheckBox}" Content="Tue" Width="50" Margin="19,0,0,0" IsChecked="True"/>
+                <CheckBox x:Name="cboxWed" Style="{StaticResource NHMCheckBox}" Content="Wed" Width="50" Margin="19,0,0,0" IsChecked="True"/>
+                <CheckBox x:Name="cboxThu" Style="{StaticResource NHMCheckBox}" Content="Thu" Width="50" Margin="19,0,0,0" IsChecked="True"/>
+                <CheckBox x:Name="cboxFri" Style="{StaticResource NHMCheckBox}" Content="Fri" Width="50" Margin="19,0,0,0" IsChecked="True"/>
+                <CheckBox x:Name="cboxSat" Style="{StaticResource NHMCheckBox}" Content="Sat" Width="50" Margin="19,0,0,0" IsChecked="True"/>
+                <CheckBox x:Name="cboxSun" Style="{StaticResource NHMCheckBox}" Content="Sun" Width="50" Margin="19,0,0,0" IsChecked="True"/>
             </StackPanel>
         </StackPanel>
         <Button

@@ -31,7 +31,7 @@ namespace NHMCore.Notifications
         public class Event
         {
             public int ID;
-            public int? DeviceID;
+            public string? DeviceID;
             public DateTime DateTime;
             public string Content;
         }
@@ -69,7 +69,7 @@ namespace NHMCore.Notifications
                 }
             }
         }
-        public void AddEvent(EventType type, string content = "", string deviceID = null)
+        public void AddEvent(EventType type, string content = "", string deviceID = null, bool send = true)
         {
             if (!_init) return;
             if (!ApplicationStateManager.isInitFinished &&
@@ -82,7 +82,7 @@ namespace NHMCore.Notifications
             }
             var now = DateTime.Now;
             var eventText = GetEventText(type, content);
-            Events.Add(new Event() { ID = (int)type, DateTime = now, Content = eventText });
+            Events.Add(new Event() { ID = (int)type, DateTime = now, Content = eventText, DeviceID = deviceID});
             if (Events.Count >= _eventQuota) Events.RemoveAt(0);
             var events = JsonConvert.SerializeObject(Events, Formatting.Indented);
             using StreamWriter w = File.CreateText(_eventFile);
@@ -90,7 +90,7 @@ namespace NHMCore.Notifications
             Logger.Warn(TAG, $"Event occurred: {eventText}");
             EventAdded?.Invoke(null, $"{String.Format("{0:G}", now)} - {eventText}");
 #if NHMWS4
-            NHWebSocketV4.SendEvent(type, deviceID, content);
+            if (send) NHWebSocketV4.SendEvent(type, deviceID, content);
 #endif
             //todo onpropertyChanged
         }
@@ -110,7 +110,6 @@ namespace NHMCore.Notifications
                 EventType.VirtualMemory => $"Virtual memory is low. Increase it",
                 EventType.GeneralConfigErr => $"Configuration error. Reinstall is suggested",
                 EventType.DriverCrash => $"GPU drivers crashed. Lower OC settings or reinstall the drivers",
-                EventType.DeviceOverheat => $"GPU(s) ({content}) are overheating.",
                 EventType.MissingDev => $"Missing devices ({content})",
                 EventType.AlgoSwitch => $"Algo switch: ({content})",
                 EventType.AlgoEnabled => $"Algorithm enabled: {content}",
@@ -119,6 +118,7 @@ namespace NHMCore.Notifications
                 EventType.TestOverClockFailed => $"Test overclock failed on device {content}",
                 EventType.BundleApplied => $"Bundle {content} applied.",
                 EventType.BenchmarkFailed => $"Benchmark combination {content} has failed",
+                EventType.BenchmarkStarted => $"Benchmark started for {content}",
                 _ => ""
             };
             return ret;
