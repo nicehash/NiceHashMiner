@@ -421,7 +421,7 @@ namespace NHMCore.Configs.Managers
                 .FirstOrDefault();
             if (targetDeviceContainer == null)
             {
-                Logger.Error(_TAG, "Device not found for stop ELP test");
+                Logger.Warn(_TAG, "Device not found for stop ELP test");
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device is not in test mode"));
             }
             targetDeviceContainer.SetTargetElpProfile(null, true);

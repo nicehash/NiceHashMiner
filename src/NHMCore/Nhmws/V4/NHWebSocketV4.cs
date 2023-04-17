@@ -391,10 +391,11 @@ namespace NHMCore.Nhmws.V4
         private static MinerState GetDeltaProperties(MinerState prev, MinerState next)
         {
             MinerState ret = new MinerState();
-            if (!AreEqual(prev.MutableDynamicValues, next.MutableDynamicValues))
-            {
-                ret.MutableDynamicValues = next.MutableDynamicValues;
-            }
+            //if (!AreEqual(prev.MutableDynamicValues, next.MutableDynamicValues))
+            //{
+            //    ret.MutableDynamicValues = next.MutableDynamicValues;
+            //}
+            ret.MutableDynamicValues = next.MutableDynamicValues;
             if (!AreEqual(prev.OptionalDynamicValues, next.OptionalDynamicValues))
             {
                 ret.OptionalDynamicValues = next.OptionalDynamicValues;

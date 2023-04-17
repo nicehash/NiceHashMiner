@@ -1,6 +1,7 @@
 ﻿using HidSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
@@ -19,11 +20,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace NHMCore.Nhmws.V4
 {
     static class MessageParserV4
     {
+        private static readonly string _TAG = "MessageParserV4";
         internal static IMethod ParseMessage(string jsonData)
         {
             var method = MessageParser.ParseMessageData(jsonData);
@@ -319,7 +322,18 @@ namespace NHMCore.Nhmws.V4
                         GetValue = () =>
                         {
                             return CredentialsSettings.Instance.BitcoinAddress;
-                        }
+                        },
+                        //ExecuteTask = (object p) =>
+                        //{
+                        //    var userSetResult = await ApplicationStateManager.SetBTCIfValidOrDifferent(btc, true);
+                        //    return userSetResult switch
+                        //    {
+                        //        NhmwsSetResult.CHANGED => true, // we return executed
+                        //        NhmwsSetResult.INVALID => throw new RpcException("Mining address invalid", ErrorCode.InvalidUsername),
+                        //        NhmwsSetResult.NOTHING_TO_CHANGE => throw new RpcException($"Nothing to change btc \"{btc}\" already set", ErrorCode.RedundantRpc),
+                        //        _ => throw new RpcException($"", ErrorCode.InternalNhmError),
+                        //    };
+                        //}
                     },
                     new OptionalMutablePropertyString
                     {
@@ -331,7 +345,18 @@ namespace NHMCore.Nhmws.V4
                         GetValue = () =>
                         {
                             return CredentialsSettings.Instance.WorkerName;
-                        }
+                        },
+                        //ExecuteTask = (object p) =>
+                        //{
+                        //    var workerSetResult = ApplicationStateManager.SetWorkerIfValidOrDifferent(worker, true);
+                        //    return workerSetResult switch
+                        //    {
+                        //        NhmwsSetResult.CHANGED => Task.FromResult(true), // we return executed
+                        //        NhmwsSetResult.INVALID => throw new RpcException("Worker name invalid", ErrorCode.InvalidWorker),
+                        //        NhmwsSetResult.NOTHING_TO_CHANGE => throw new RpcException($"Nothing to change worker name \"{worker}\" already set", ErrorCode.RedundantRpc),
+                        //        _ => throw new RpcException($"", ErrorCode.InternalNhmError),
+                        //    };
+                        //}
                     },
                     new OptionalMutablePropertyString
                     {
@@ -577,7 +602,7 @@ namespace NHMCore.Nhmws.V4
                     OptionalMutableValues = GetDeviceOptionalMutable(d, false).values, // omv
                 };
             }
-
+            Logger.Warn(_TAG, $"Miner state (rigstatus):{rig} -- converted (int):{rigStateToInt(rig)}");
             return new MinerState
             {
                 MutableDynamicValues = new JArray(rigStateToInt(rig)),
@@ -721,7 +746,8 @@ namespace NHMCore.Nhmws.V4
                 var lims = tdpLim.GetTDPLimits();
                 if (lims.ok)
                 {
-                    limit.limits.Add(new Limit { Name = "Power Limit", Unit = "%", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    //limit.limits.Add(new Limit { Name = "Power Limit", Unit = "%", Def = (int)lims.def, Range = ((int)lims.min, (int)lims.max) });
+                    limit.limits.Add(new Limit { Name = "Power Limit", Unit = "%", Def = 80, Range = ((int)lims.min, (int)lims.max) });
                 }
             }
             if (d.DeviceMonitor is ICoreClockSet)

@@ -185,7 +185,7 @@ namespace NHMCore.Nhmws
         public string Level { get; set; }
     }
 
-    internal class MinerCallAction : IReceiveRpcMessage //todo in progress
+    internal class MinerCallAction : IReceiveRpcMessage
     {
         [JsonProperty("method")]
         public string Method => "miner.call.action";
@@ -199,7 +199,7 @@ namespace NHMCore.Nhmws
         public List<string> Parameters { get; set; }
     }
 
-    internal class MinerSetMutable : IReceiveRpcMessage //todo in progress
+    internal class MinerSetMutable : IReceiveRpcMessage
     {
         [JsonProperty("method")]
         public string Method => "miner.set.mutable";

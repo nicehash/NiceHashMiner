@@ -56,7 +56,7 @@ namespace NHMCore.Configs.Managers
                 .FirstOrDefault();
             if (targetDeviceContainer == null)
             {
-                Logger.Error(_TAG, "Device not found for stop OC test");
+                Logger.Warn(_TAG, "Device not found for stop OC test");
                 return Task.FromResult((ErrorCode.TargetDeviceNotFound, "Device is not in test mode"));
             }
             targetDeviceContainer.SetTargetOcProfile(null, true);
