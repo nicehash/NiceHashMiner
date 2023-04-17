@@ -14,6 +14,7 @@ using NHMCore.Notifications;
 using NHMCore.Schedules;
 using NHMCore.Utils;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static NHMCore.Translations;
@@ -268,6 +269,13 @@ namespace NHMCore
                     AvailableNotifications.CreateNotAdminForRigManagement();
                 }
 #endif
+                var backupPath = Paths.ConfigsPath("runOnStartup.txt");
+                if (File.Exists(backupPath))
+                {
+                    var value = Helpers.GetRunOnStartupBackupValue();
+                    MiscSettings.Instance.RunAtStartup = value;
+                    File.Delete(backupPath);
+                }
                 //SchedulesManager.Instance.Init();
             }
             catch (Exception e)

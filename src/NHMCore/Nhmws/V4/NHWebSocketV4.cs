@@ -984,6 +984,7 @@ namespace NHMCore.Nhmws.V4
                 {
                     var res = await stopMiningAllDevices();
                 }
+                Helpers.CreateRunOnStartupBackup();
                 if (!MiscSettings.Instance.RunAtStartup)
                 {
                     Dispatcher.CurrentDispatcher.Invoke(() =>

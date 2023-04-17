@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using NHM.Common;
 using NHM.Common.Enums;
+using NHMCore.Configs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -293,6 +294,41 @@ namespace NHMCore.Utils
         public static IPAddress GetLocalIP()
         {
             return IPAddress.Parse(Dns.GetHostEntry(Dns.GetHostName()).AddressList[1].ToString()) ?? IPAddress.None;
+        }
+
+        public static void CreateRunOnStartupBackup()
+        {
+            try
+            {
+                var backupPath = Paths.ConfigsPath("runOnStartup.txt");
+                using (var writer = new StreamWriter(backupPath))
+                {
+                    writer.Write(MiscSettings.Instance.RunAtStartup.ToString());
+                }
+
+                Logger.Info("RunOnStartupBackup", $"Created RunOnStartupBackup file");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("RunOnStartupBackup", $"Unable to create RunOnStartupBackup file: {ex.Message}");
+            }
+        }
+
+        public static bool GetRunOnStartupBackupValue()
+        {
+            try
+            {
+                var backupPath = Paths.ConfigsPath("runOnStartup.txt");
+                using (var reader = new StreamReader(backupPath))
+                {
+                   return Convert.ToBoolean(reader.ReadToEnd());
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("GetRunOnStartupBackup", $"Unable to read RunOnStartupBackup file: {ex.Message}");
+                return false;
+            }
         }
     }
 }
