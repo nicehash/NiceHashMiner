@@ -74,9 +74,9 @@ namespace NHMCore.Notifications
             if (!_init) return;
             if (!ApplicationStateManager.isInitFinished &&
                 (type == EventType.DeviceEnabled ||
-                type == EventType.DeviceDisabled)) //||
-                //type == EventType.AlgoEnabled ||
-                //type == EventType.AlgoDisabled))
+                type == EventType.DeviceDisabled ||
+                type == EventType.AlgoEnabled ||
+                type == EventType.AlgoDisabled))
             {
                 return;
             }
