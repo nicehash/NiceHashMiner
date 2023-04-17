@@ -24,7 +24,9 @@ namespace NHMCore.Mining
         public static int AvailNVGpus => GetCountForType(DeviceType.NVIDIA);
         public static int AvailAmdGpus => GetCountForType(DeviceType.AMD);
 
-        public static int AvailGpus => AvailAmdGpus + AvailNVGpus;
+        public static int AvailIntelGpus => GetCountForType(DeviceType.INTEL);
+
+        public static int AvailGpus => AvailAmdGpus + AvailNVGpus + AvailIntelGpus;
 
         public static ulong AvailNvidiaGpuRam
         {
@@ -52,6 +54,21 @@ namespace NHMCore.Mining
                     .Cast<IGpuDevice>()
                     .Select(gpu => gpu.GpuRam);
                 foreach (var ram in gpuRams) ramSum += ram;
+                return ramSum;
+            }
+        }
+
+        public static ulong AvailIntelGpuRam
+        {
+            get
+            {
+                var ramSum = 0ul;
+                var gpuRams = _devices
+                    .Where(dev => dev.BaseDevice is IntelDevice)
+                    .Select (dev => dev.BaseDevice)
+                    .Cast<IGpuDevice>()
+                    .Select(gpu => gpu.GpuRam);
+                foreach(var ram in gpuRams) ramSum += ram;
                 return ramSum;
             }
         }

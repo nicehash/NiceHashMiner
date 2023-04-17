@@ -725,8 +725,6 @@ namespace NHMCore.Nhmws.V4
 
         private static Task<bool> SetPowerMode(string device, TDPSimpleType level)
         {
-            if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings) throw new RpcException("Not able to set Power Mode: Device Power Mode Settings Disabled", ErrorCode.UnableToHandleRpc);
-
             var devs = device == "*" ?
                 AvailableDevices.Devices :
                 AvailableDevices.Devices.Where(d => d.B64Uuid == device);
@@ -846,11 +844,6 @@ namespace NHMCore.Nhmws.V4
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleSet:
-                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
-                    {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
-                        break;
-                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -863,15 +856,10 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     if(err == ErrorCode.NoError)
                     {
-                        EventManager.Instance.AddEvent(EventType.BundleApplied, bundle.Name);
+                        EventManager.Instance.AddEvent(EventType.BundleApplied, bundle.Name, "", false);
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
-                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
-                    {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
-                        break;
-                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -890,11 +878,6 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     break;
                 case SupportedAction.ActionOcProfileTest:
-                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
-                    {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
-                        break;
-                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -904,14 +887,9 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
                     var eventRet = err == ErrorCode.NoError ? EventType.TestOverClockApplied : EventType.TestOverClockFailed;
                     var devName = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID)?.Name ?? "unknown";
-                    EventManager.Instance.AddEvent(eventRet, string.Empty, deviceUUID);
+                    EventManager.Instance.AddEvent(eventRet, string.Empty, deviceUUID, false);
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
-                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
-                    {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
-                        break;
-                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -920,11 +898,6 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = StopOCTestForDevice(deviceUUID).Result;
                     break;
                 case SupportedAction.ActionFanProfileTest:
-                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
-                    {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
-                        break;
-                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -934,11 +907,6 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = ExecuteFanTest(deviceUUID, fan).Result;
                     break;
                 case SupportedAction.ActionFanProfileTestStop:
-                    if (GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings)
-                    {
-                        (err, result) = (ErrorCode.ErrPowerModeDisabled, "Overclocking disabled");
-                        break;
-                    }
                     if (!Helpers.IsElevated)
                     {
                         (err, result) = (ErrorCode.ErrNotAdmin, "No admin privileges");
@@ -1016,6 +984,7 @@ namespace NHMCore.Nhmws.V4
                 {
                     var res = await stopMiningAllDevices();
                 }
+                Helpers.CreateRunOnStartupBackup();
                 if (!MiscSettings.Instance.RunAtStartup)
                 {
                     Dispatcher.CurrentDispatcher.Invoke(() =>

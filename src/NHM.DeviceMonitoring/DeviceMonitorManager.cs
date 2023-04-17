@@ -2,6 +2,7 @@
 using NHM.Common;
 using NHM.Common.Device;
 using NHM.DeviceMonitoring.AMD;
+using NHM.DeviceMonitoring.INTEL;
 using NHM.DeviceMonitoring.NVIDIA;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ namespace NHM.DeviceMonitoring
     public static class DeviceMonitorManager
     {
         public static bool DisableDeviceStatusMonitoring { get; set; } = false;
-        public static bool DisableDevicePowerModeSettings { get; set; } = true;
 
         internal static readonly bool IsElevated;
 
@@ -40,6 +40,7 @@ namespace NHM.DeviceMonitoring
             }
             _amdDebugLogLevel = customLogSettings("AMD_ODN_LOG.txt");
             _nvidiaDebugLogLevel = customLogSettings("NVIDIA_MON_LOG.txt");
+            _intelDebugLogLevel = customLogSettings("INTEL_IGCL_LOG.txt");
 
             try
             {
@@ -67,6 +68,13 @@ namespace NHM.DeviceMonitoring
         private static void LogNvidia_MON(string logStr)
         {
             Logger.InfoDelayed("NVIDIA_MON", logStr, TimeSpan.FromSeconds(10));
+        }
+
+        private static int _intelDebugLogLevel = 0;
+        private static readonly INTEL_IGCL.log_cb _intelLog= new INTEL_IGCL.log_cb(LogIntel_IGCL);
+        private static void LogIntel_IGCL(string logStr)
+        {
+            Logger.InfoDelayed("INTEL_IGCL", logStr, TimeSpan.FromSeconds(10));
         }
 
         private static T[] GetDeviceTypes<T>(this IEnumerable<BaseDevice> devices) where T : BaseDevice
@@ -138,9 +146,29 @@ namespace NHM.DeviceMonitoring
                         ret.Add(new DeviceMonitorNVIDIA(nvidia.UUID, nvidia.PCIeBusID));
                     }
                 }
+                void addINTELs()
+                {
+                    var intels = devices.GetDeviceTypes<IntelDevice>();
+                    if (!intels.Any()) return;
+
+                    INTEL_IGCL.nhm_intel_set_debug_log_level(_intelDebugLogLevel);
+                    INTEL_IGCL.nhm_intel_reg_log_cb(_intelLog);
+                    var intelInit = INTEL_IGCL.nhm_intel_init();
+                    if (0 != intelInit)
+                    {
+                        Logger.Info("DeviceMonitorManager", $"INTEL nhm_intel_init {intelInit}");
+                        return;
+                    }
+
+                    foreach( var intel in intels)
+                    { 
+                        ret.Add(new DeviceMonitorINTEL(intel.UUID, intel.PCIeBusID));
+                    }
+                }
                 addCPUs();
                 addAMDs();
                 addNVIDIAs();
+                addINTELs();
                 return ret;
             });
         }

@@ -60,7 +60,7 @@ namespace NHMCore.Mining
                 OnPropertyChanged();
                 if (Uuid == null || Uuid == string.Empty || Uuid == "-1") return; //initial stuff
                 var eventType = value ? EventType.DeviceEnabled : EventType.DeviceDisabled;
-                EventManager.Instance.AddEvent(eventType, "Device toggled", B64Uuid);
+                EventManager.Instance.AddEvent(eventType, "Device toggled", Uuid);
             }
         }
 
@@ -143,6 +143,7 @@ namespace NHMCore.Mining
                     DeviceType.CPU => 1,
                     DeviceType.NVIDIA => 2,
                     DeviceType.AMD => 3,
+                    DeviceType.INTEL => 4,
                     _ => throw new Exception($"Unknown DeviceType {(int)DeviceType}"),
                 };
                 var b64Web = UUID.GetB64UUID(Uuid);
@@ -221,7 +222,7 @@ namespace NHMCore.Mining
 
         private bool CanMonitorStatus => !GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null;
 
-        private bool CanSetTDP => !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null;
+        private bool CanSetTDP => DeviceMonitor != null;
 
         public uint PowerTarget
         {
@@ -341,6 +342,7 @@ namespace NHMCore.Mining
             {
                 if (DeviceType == DeviceType.NVIDIA) return CoreClockDelta;
                 if (DeviceType == DeviceType.AMD) return CoreClock;
+                if (DeviceType == DeviceType.INTEL) return CoreClockDelta;
                 return -1;
             }
         }
@@ -367,6 +369,7 @@ namespace NHMCore.Mining
             {
                 if (DeviceType == DeviceType.NVIDIA) return MemoryClockDelta;
                 if (DeviceType == DeviceType.AMD) return MemoryClock;
+                if (DeviceType == DeviceType.INTEL) return MemoryClockDelta;
                 return -1;
             }
         }
@@ -650,48 +653,45 @@ namespace NHMCore.Mining
             Enabled = config.Enabled;
             MinimumProfit = config.MinimumProfit;
             PauseMiningWhenGamingMode = config.PauseMiningWhenGamingMode;
-
-            if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
+           
+            var tdpSimpleDefault = TDPSimpleType.HIGH;
+            var tdpSettings = config.TDPSettings;
+            if (tdpSettings != null && DeviceMonitor is ITDP tdp)
             {
-                var tdpSimpleDefault = TDPSimpleType.HIGH;
-                var tdpSettings = config.TDPSettings;
-                if (tdpSettings != null && DeviceMonitor is ITDP tdp)
+                tdp.SettingType = config.TDPSettings.SettingType;
+                switch (config.TDPSettings.SettingType)
                 {
-                    tdp.SettingType = config.TDPSettings.SettingType;
-                    switch (config.TDPSettings.SettingType)
-                    {
-                        case TDPSettingType.PERCENTAGE:
-                            if (config.TDPSettings.Percentage.HasValue)
-                            {
-                                // config values are from 0.0% to 100.0%
-                                tdp.SetTDPPercentage(config.TDPSettings.Percentage.Value / 100);
-                            }
-                            else
-                            {
-                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                            }
-                            break;
-                        // here we decide to not allow per GPU disable state, default fallback is SIMPLE setting
-                        case TDPSettingType.UNSUPPORTED:
-                        case TDPSettingType.DISABLED:
-                        case TDPSettingType.SIMPLE:
-                        default:
-                            tdp.SettingType = TDPSettingType.SIMPLE;
-                            if (config.TDPSettings.Simple.HasValue)
-                            {
-                                tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
-                            }
-                            else
-                            {
-                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                            }
-                            break;
-                    }
+                    case TDPSettingType.PERCENTAGE:
+                        if (config.TDPSettings.Percentage.HasValue)
+                        {
+                            // config values are from 0.0% to 100.0%
+                            tdp.SetTDPPercentage(config.TDPSettings.Percentage.Value / 100);
+                        }
+                        else
+                        {
+                            tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                        }
+                        break;
+                    // here we decide to not allow per GPU disable state, default fallback is SIMPLE setting
+                    case TDPSettingType.UNSUPPORTED:
+                    case TDPSettingType.DISABLED:
+                    case TDPSettingType.SIMPLE:
+                    default:
+                        tdp.SettingType = TDPSettingType.SIMPLE;
+                        if (config.TDPSettings.Simple.HasValue)
+                        {
+                            tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
+                        }
+                        else
+                        {
+                            tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                        }
+                        break;
                 }
-                else if (DeviceMonitor is ITDP tdpDefault)
-                {
-                    tdpDefault.SetTDPSimple(tdpSimpleDefault); // set default high
-                }
+            }
+            else if (DeviceMonitor is ITDP tdpDefault)
+            {
+                tdpDefault.SetTDPSimple(tdpSimpleDefault); // set default high
             }
 
             if (config.PluginAlgorithmSettings == null) return;
@@ -717,21 +717,14 @@ namespace NHMCore.Mining
             var TDPSettings = new DeviceTDPSettings { SettingType = TDPSettingType.UNSUPPORTED };
             if (DeviceMonitor is ITDP tdp)
             {
-                if (DeviceMonitorManager.DisableDevicePowerModeSettings)
+                TDPSettings.SettingType = tdp.SettingType;
+                if (TDPSettings.SettingType == TDPSettingType.SIMPLE)
                 {
-                    TDPSettings.SettingType = TDPSettingType.DISABLED;
+                    TDPSettings.Simple = tdp.TDPSimple;
                 }
-                else
+                if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
                 {
-                    TDPSettings.SettingType = tdp.SettingType;
-                    if (TDPSettings.SettingType == TDPSettingType.SIMPLE)
-                    {
-                        TDPSettings.Simple = tdp.TDPSimple;
-                    }
-                    if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
-                    {
-                        TDPSettings.Percentage = tdp.TDPPercentage * 100;
-                    }
+                    TDPSettings.Percentage = tdp.TDPPercentage * 100;
                 }
             }
             var ret = new DeviceConfig

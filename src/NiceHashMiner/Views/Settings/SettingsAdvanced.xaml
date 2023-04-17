@@ -92,9 +92,6 @@
             <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.DisableDeviceStatusMonitoring}"
                                         Label="Disable Device Status Monitoring"
                                         Description="{StaticResource disableDeviceStatus}" />
-            <local:SettingsCheckBoxItem Enabled="{Binding GlobalDeviceSettings.DisableDevicePowerModeSettings}"
-                                        Label="Disable Device Overclocking"
-                                        Description="{StaticResource disableDevicePowerMode}"/>
         </WrapPanel>
         <!--Logging-->
         <WrapPanel Margin="24,16,24,16" Orientation="Vertical">
