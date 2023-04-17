@@ -269,7 +269,7 @@ namespace NHMCore
                     AvailableNotifications.CreateNotAdminForRigManagement();
                 }
 #endif
-                var backupPath = Paths.ConfigsPath("runOnStartup.txt");
+                var backupPath = Paths.ConfigsPath(".runOnStartup.txt");
                 if (File.Exists(backupPath))
                 {
                     var value = Helpers.GetRunOnStartupBackupValue();

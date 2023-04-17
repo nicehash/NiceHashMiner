@@ -300,7 +300,7 @@ namespace NHMCore.Utils
         {
             try
             {
-                var backupPath = Paths.ConfigsPath("runOnStartup.txt");
+                var backupPath = Paths.ConfigsPath(".runOnStartup.txt");
                 using (var writer = new StreamWriter(backupPath))
                 {
                     writer.Write(MiscSettings.Instance.RunAtStartup.ToString());
@@ -318,7 +318,7 @@ namespace NHMCore.Utils
         {
             try
             {
-                var backupPath = Paths.ConfigsPath("runOnStartup.txt");
+                var backupPath = Paths.ConfigsPath(".runOnStartup.txt");
                 using (var reader = new StreamReader(backupPath))
                 {
                    return Convert.ToBoolean(reader.ReadToEnd());
