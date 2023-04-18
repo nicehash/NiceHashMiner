@@ -250,7 +250,7 @@ namespace NHMCore.Mining
 #endif
                 if (MinerUUID == null || MinerUUID == string.Empty) return; //initial stuff
                 var notifType = value ? EventType.AlgoEnabled : EventType.AlgoDisabled;
-                EventManager.Instance.AddEvent(notifType, AlgorithmName, "", false);
+                EventManager.Instance.AddEvent(notifType, AlgorithmName, null, false);
             }
         }
         public void SetEnabled(bool enabled) //for enable without WS (bulk setting)

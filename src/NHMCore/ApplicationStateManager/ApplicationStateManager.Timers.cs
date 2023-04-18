@@ -97,7 +97,7 @@ namespace NHMCore
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs");
                     AvailableNotifications.CreateMissingGPUsInfo();
-                    EventManager.Instance.AddEvent(EventType.MissingDev, String.Join(',',hasMissingGPUs.uuids), "",false);
+                    EventManager.Instance.AddEvent(EventType.MissingDev, String.Join(',',hasMissingGPUs.uuids), null, false);
                 }
             },
             5 * 60 * 1000); // check every 5 minutes

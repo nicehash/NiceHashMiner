@@ -595,7 +595,7 @@ namespace NHMCore.Nhmws.V4
                 {
                     return new JArray(deviceStateToInt(d.State));
                 }
-
+                Logger.Warn(_TAG, $"\t(deviceState):{d.State} -- converted (int):{deviceStateToInt(d.State)}");
 
                 return new MinerState.DeviceState
                 {
