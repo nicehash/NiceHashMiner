@@ -154,7 +154,7 @@ namespace NHM.DeviceMonitoring
                     return -1;
                 }
                 // We limit 100% to the default as max
-                var tdpPerc = RangeCalculator.CalculatePercentage(tdpRaw, min, defaultValue);
+                var tdpPerc = RangeCalculator.CalculatePercentage(tdpRaw, min, max);
                 return tdpPerc; // 0.0d - 1.0d
             }
         }
@@ -235,7 +235,14 @@ namespace NHM.DeviceMonitoring
 
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
 
-            var execRet = INTEL_IGCL.nhm_intel_device_set_power_limit(BusID, (int)percentage);
+            int min = -1;
+            int max = -1;
+            int def = -1;
+            var ok = INTEL_IGCL.nhm_intel_device_get_power_limit_min_max_default(BusID, ref min, ref max, ref def);
+
+            var value = (max * percentage) / 100 ;
+
+            var execRet = INTEL_IGCL.nhm_intel_device_set_power_limit(BusID, (int)value);
             Logger.Info(LogTag, $"SetTDPPercentage returned {execRet}.");
             return execRet == RET_OK;
         }
