@@ -138,6 +138,8 @@ namespace NHM.Common.Enums
         VerusHash = 61,
         //[Obsolete("UNUSED Algorithm")]
         KHeavyHash = 62,
+        //[Obsolete("UNUSED Algorithm")]
+        Nexa = 63,
         #endregion // NiceHashAPI
     }
 
