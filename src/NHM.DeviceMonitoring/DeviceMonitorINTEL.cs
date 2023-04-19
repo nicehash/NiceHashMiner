@@ -232,15 +232,13 @@ namespace NHM.DeviceMonitoring
                 Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
                 percentage = 0.0d;
             }
-
-            Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
-
             int min = -1;
             int max = -1;
             int def = -1;
             var ok = INTEL_IGCL.nhm_intel_device_get_power_limit_min_max_default(BusID, ref min, ref max, ref def);
 
             var value = (max * percentage) / 100 ;
+            Logger.Info(LogTag, $"SetTDPPercentage setting to {value}.");
 
             var execRet = INTEL_IGCL.nhm_intel_device_set_power_limit(BusID, (int)value);
             Logger.Info(LogTag, $"SetTDPPercentage returned {execRet}.");
