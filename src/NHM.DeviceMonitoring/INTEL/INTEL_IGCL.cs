@@ -45,7 +45,6 @@ namespace NHM.DeviceMonitoring.INTEL
         public static extern int nhm_intel_device_reset_locked_core_clocks(int bus_number);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_intel_device_reset_core_clocks_delta(int bus_number);
-
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_intel_device_get_memory_clocks_min_max_default_delta(int bus_number, ref int min, ref int max, ref int def);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
@@ -56,7 +55,6 @@ namespace NHM.DeviceMonitoring.INTEL
         public static extern int nhm_intel_device_set_memory_clocks_delta(int bus_number, int set_memory_clock_delta);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_intel_device_reset_memory_clocks_delta(int bus_number);
-
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_intel_device_get_core_voltage_min_max_default_delta(int bus_number, ref int min, ref int max, ref int def);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]

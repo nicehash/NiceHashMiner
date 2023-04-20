@@ -250,7 +250,7 @@ namespace NHMCore.Mining
 #endif
                 if (MinerUUID == null || MinerUUID == string.Empty) return; //initial stuff
                 var notifType = value ? EventType.AlgoEnabled : EventType.AlgoDisabled;
-                EventManager.Instance.AddEvent(notifType, AlgorithmName, "", false);
+                EventManager.Instance.AddEvent(notifType, AlgorithmName, null, false);
             }
         }
         public void SetEnabled(bool enabled) //for enable without WS (bulk setting)
@@ -776,7 +776,8 @@ namespace NHMCore.Mining
             if (reset)
             {
                 Logger.Warn(_TAG, $"Resetting device {ComputeDevice.ID}");
-                Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset TDP: {ComputeDevice.SetPowerModeManual(ComputeDevice.TDPLimits.def)}");
+                if(ComputeDevice.DeviceType == DeviceType.INTEL) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset TDP: {ComputeDevice.SetPowerModeManual(80)}");
+                else Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset TDP: {ComputeDevice.SetPowerModeManual(ComputeDevice.TDPLimits.def)}");
                 Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset CC: {ComputeDevice.ResetCoreClock()}");
                 Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset CCD: {ComputeDevice.ResetCoreClockDelta()}");
                 Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset MC: {ComputeDevice.ResetMemoryClock()}");
@@ -802,7 +803,7 @@ namespace NHMCore.Mining
             }
             else
             {
-                Logger.Warn(_TAG, $"Setting NVIDIA device {ComputeDevice.ID}");
+                Logger.Warn(_TAG, $"Setting {ComputeDevice.DeviceType} device {ComputeDevice.ID}");
                 if (bundle.TDP != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] TDP to set: {(int)bundle.TDP}");
                 if (bundle.CoreClock != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] CoreClock to set: {(int)bundle.CoreClock}");
                 if (bundle.CoreClockDelta != null) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] CoreClockDelta to set: {(int)bundle.CoreClockDelta}");
