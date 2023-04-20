@@ -130,7 +130,7 @@ namespace NHMCore.Mining.Grouping
                     try
                     {
                         var nextAlgo = benchAlgos.Dequeue();
-                        EventManager.Instance.AddEvent(EventType.BenchmarkStarted, @$"{nextAlgo.PluginName}\{nextAlgo.AlgorithmName}", nextAlgo.ComputeDevice.Uuid, false);
+                        EventManager.Instance.AddEvent(EventType.BenchmarkStarted, @$"{nextAlgo.PluginName}\{nextAlgo.AlgorithmName}", nextAlgo.ComputeDevice.B64Uuid, false);
                         var benchmark = BenchmarkAlgorithm(nextAlgo, _stopCurrentAlgorithmBenchmark.Token);
                         var firstFinished = await Task.WhenAny(new Task<object>[] { commandTask, benchmark });
                         var ret = await firstFinished;
