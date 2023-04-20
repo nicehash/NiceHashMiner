@@ -177,7 +177,7 @@ namespace NHM.DeviceMonitoring
 
         public TDPSimpleType TDPSimple { get; private set; } = TDPSimpleType.HIGH;
 
-        public bool SetTDPPercentage(double percentage)
+        public bool SetTDP(double percentage)
         {
             //if (percentage < 0.0d)
             //{

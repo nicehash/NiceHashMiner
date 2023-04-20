@@ -458,7 +458,7 @@ namespace NHMCore.Mining
         }
         public bool SetPowerModeManual(int TDP)
         {
-            if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDPPercentage(TDP);
+            if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDP(TDP);
             return false;
         }
         public bool SetCoreClock(int coreClock)
@@ -665,7 +665,7 @@ namespace NHMCore.Mining
                         if (config.TDPSettings.Percentage.HasValue)
                         {
                             // config values are from 0.0% to 100.0%
-                            tdp.SetTDPPercentage(config.TDPSettings.Percentage.Value / 100);
+                            tdp.SetTDP(config.TDPSettings.Percentage.Value / 100);
                         }
                         else
                         {

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorINTEL : DeviceMonitor, IFanSpeedRPM, ILoad, IPowerUsage, ITemp, ISpecialTemps, ITDP, ICoreClock, IMemoryClock, ICoreClockSet, ICoreClockRange, ICoreVoltageRange, ICoreVoltage, ICoreVoltageSet, ITDPLimits
+    internal class DeviceMonitorINTEL : DeviceMonitor, IFanSpeedRPM, ILoad, IPowerUsage, ITemp, ISpecialTemps, ITDP, ITDPWatts, ICoreClock, IMemoryClock, ICoreClockSet, ICoreClockRange, ICoreVoltageRange, ICoreVoltage, ICoreVoltageSet, ITDPLimits
     {
         public int BusID { get; private set; }
         private const int RET_OK = 0;
@@ -135,6 +135,21 @@ namespace NHM.DeviceMonitoring
 
         public TDPSettingType SettingType { get; set; } = TDPSettingType.SIMPLE;
 
+       public int TDPWatts
+        {
+            get
+            {
+                int tdpRaw = 0;
+                int ok = INTEL_IGCL.nhm_intel_device_get_power_limit(BusID, ref tdpRaw);
+                if (ok != 0)
+                {
+                    Logger.InfoDelayed(LogTag, $"nhm_intel_device_get_power_limit failed with error code {ok}", _delayedLogging);
+                    return -1;
+                }
+                return tdpRaw;
+            }
+        }
+
         public double TDPPercentage
         {
             get
@@ -225,25 +240,18 @@ namespace NHM.DeviceMonitoring
             return false;
         }
 
-        public bool SetTDPPercentage(double percentage)
+        public bool SetTDP(double watts)
         {
-            if (percentage < 0.0d)
+            if (watts < 0.0d)
             {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
-                percentage = 0.0d;
+                Logger.Error(LogTag, $"SetTDP {watts} out of bounds. Setting to 0.0d");
+                watts = 0.0d;
             }
 
-            Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
+            Logger.Info(LogTag, $"SetTDP setting to {watts}.");
 
-            int min = -1;
-            int max = -1;
-            int def = -1;
-            var ok = INTEL_IGCL.nhm_intel_device_get_power_limit_min_max_default(BusID, ref min, ref max, ref def);
-
-            var value = (max * percentage) / 100 ;
-
-            var execRet = INTEL_IGCL.nhm_intel_device_set_power_limit(BusID, (int)value);
-            Logger.Info(LogTag, $"SetTDPPercentage returned {execRet}.");
+            var execRet = INTEL_IGCL.nhm_intel_device_set_power_limit(BusID, (int)watts);
+            Logger.Info(LogTag, $"SetTDP returned {execRet}.");
             return execRet == RET_OK;
         }
         public bool SetTDPSimple(TDPSimpleType level)
