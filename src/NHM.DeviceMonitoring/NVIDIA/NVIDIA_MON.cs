@@ -38,7 +38,11 @@ namespace NHM.DeviceMonitoring.NVIDIA
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_tdp_min_max_default(int bus_number, ref uint min, ref uint max, ref uint defaultV);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_get_tdp_min_max_default_perc(int bus_number, ref uint min, ref uint max, ref uint def);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_get_tdp(int bus_number, ref int get_tdp);
+        [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
+        public static extern int nhm_nvidia_device_get_tdp_watt(int bus_number, ref int get_tdp);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]
         public static extern int nhm_nvidia_device_set_tdp(int bus_number, int set_tdp);
         [DllImport(dll, CallingConvention = CallingConvention.StdCall)]

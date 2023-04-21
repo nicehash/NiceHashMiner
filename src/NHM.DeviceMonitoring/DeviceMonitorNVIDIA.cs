@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits, IMemoryClockDelta, ICoreClockDelta, ICoreClockRangeDelta, IMemoryClockRangeDelta, ICoreVoltage, ICoreVoltageRange, ICoreVoltageSet, ICoreClockSetDelta, IMemoryClockSetDelta
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, ITDPWatts, IMemoryTimings, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ITDPLimits, IMemoryClockDelta, ICoreClockDelta, ICoreClockRangeDelta, IMemoryClockRangeDelta, ICoreVoltage, ICoreVoltageRange, ICoreVoltageSet, ICoreClockSetDelta, IMemoryClockSetDelta
     {
         private const int RET_OK = 0;
         public static object _lock = new object();
@@ -154,6 +154,21 @@ namespace NHM.DeviceMonitoring
 
         public TDPSimpleType TDPSimple { get; private set; } = TDPSimpleType.HIGH;
 
+        public int TDPWatts
+        {
+            get
+            {
+                int tdpRaw = 0;
+                int ok = NVIDIA_MON.nhm_nvidia_device_get_tdp_watt(BusID, ref tdpRaw);
+                if (ok != RET_OK)
+                {
+                    Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_tdp_watt failed with error code {ok}", _delayedLogging);
+                    return -1;
+                }
+                return tdpRaw;
+            }
+        }
+
         public double TDPPercentage
         {
             get
@@ -195,21 +210,23 @@ namespace NHM.DeviceMonitoring
             return execRet == RET_OK;
         }
 
-        public bool SetTDPPercentage(double percentage)
+        public bool SetTDP(double watts)
         {
-            if (percentage < 0.0d)
+            if (watts < 0.0d)
             {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
-                percentage = 0.0d;
+                Logger.Error(LogTag, $"SetTDP {watts} out of bounds. Setting to 0.0d");
+                watts = 0.0d;
             }
 
-            Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
+            Logger.Info(LogTag, $"SetTDP setting to {watts}.");
 #if NHMWS4
-            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage);
+
+
+            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)watts);
 #else
             var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)percentage*100);
 #endif
-            Logger.Info(LogTag, $"SetTDPPercentage returned {execRet}.");
+            Logger.Info(LogTag, $"SetTDP returned {execRet}.");
             return execRet == RET_OK;
         }
 

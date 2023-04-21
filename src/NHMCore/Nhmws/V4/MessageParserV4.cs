@@ -111,6 +111,7 @@ namespace NHMCore.Nhmws.V4
                 (nameof(IMemoryClock), IMemoryClock g) => $"{g.MemoryClock}",
                 //(nameof(IMemoryClockDelta), IMemoryClockDelta g) => $"{g.MemoryClockDelta}",
                 (nameof(ITDP), ITDP g) => $"{g.TDPPercentage * 100}",
+                (nameof(ITDPWatts), ITDPWatts g) => $"{g.TDPWatts}",
                 (nameof(ICoreVoltage), ICoreVoltage g) => $"{g.CoreVoltage}",
                 (_, _) => null,
             };
@@ -150,6 +151,7 @@ namespace NHMCore.Nhmws.V4
                 //pairOrNull<IMemoryClockDelta>(DeviceDynamicProperties.MemClockDelta, "Memory clock", "MHz"),
                 pairOrNull<ICoreVoltage>(DeviceDynamicProperties.CoreVoltage, "Core voltage", "mV"),
                 pairOrNull<ITDP>(DeviceDynamicProperties.TDP, "Power Limit", "%"),
+                pairOrNull<ITDPWatts>(DeviceDynamicProperties.TDPWatts, "Power Limit", "W"),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "Miner", null),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile", null),
                 pairOrNull<string>(DeviceDynamicProperties.NONE, "OC profile ID", null),
@@ -749,15 +751,13 @@ namespace NHMCore.Nhmws.V4
                 var lims = tdpLim.GetTDPLimits();
                 if (lims.ok)
                 {
-                    if(d.DeviceType == DeviceType.INTEL)
+                    if(d.DeviceType == DeviceType.AMD)
                     {
-                        var def = (lims.def * 100) / lims.max;
-                        var min = (lims.min * 100) / lims.max;
-                        limit.limits.Add(new Limit { Name = "Power Limit", Unit = "%", Def = def, Range = ((int)min, (int)100) });
+                        limit.limits.Add(new Limit { Name = "Power Limit", Unit = "%", Def = lims.def, Range = ((int)lims.min, (int)lims.max) });
                     }
                     else
                     {
-                        limit.limits.Add(new Limit { Name = "Power Limit", Unit = "%", Def = 80, Range = ((int)lims.min, (int)lims.max) });
+                        limit.limits.Add(new Limit { Name = "Power Limit", Unit = "W", Def = lims.def, Range = ((int)lims.min, (int)lims.max) });
                     }
                 }
             }
