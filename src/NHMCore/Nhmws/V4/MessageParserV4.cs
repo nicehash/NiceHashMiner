@@ -595,7 +595,7 @@ namespace NHMCore.Nhmws.V4
                 {
                     return new JArray(deviceStateToInt(d.State));
                 }
-                Logger.Warn(_TAG, $"\t(deviceState):{d.State} -- converted (int):{deviceStateToInt(d.State)}");
+                Logger.Warn(_TAG, $"\t[{d.BaseDevice.Name}](deviceState):{d.State} -- converted (int):{deviceStateToInt(d.State)}");
 
                 return new MinerState.DeviceState
                 {
@@ -771,7 +771,7 @@ namespace NHMCore.Nhmws.V4
                         limit.limits.Add(new Limit { Name = "Core clock delta", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
-                if (d.DeviceMonitor is ICoreClockRange ccLim)
+                if (d.DeviceMonitor is ICoreClockRange ccLim && !d.IsNvidiaAndSub2KSeries())
                 {
                     var lims = ccLim.CoreClockRange;
                     if (lims.ok)
@@ -790,7 +790,7 @@ namespace NHMCore.Nhmws.V4
                         limit.limits.Add(new Limit { Name = "Memory clock delta", Unit = "MHz", Def = lims.def, Range = (lims.min, lims.max) });
                     }
                 }
-                if (d.DeviceMonitor is IMemoryClockRange mcLim)
+                if (d.DeviceMonitor is IMemoryClockRange mcLim && !d.IsNvidiaAndSub2KSeries())
                 {
                     var lims = mcLim.MemoryClockRange;
                     if (lims.ok)

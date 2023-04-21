@@ -367,10 +367,11 @@ namespace NHMCore.Nhmws.V4
             {
                 devState.OptionalDynamicValues = second.OptionalDynamicValues;
             }
-            if (!AreEqual(first.MandatoryDynamicValues, second.MandatoryDynamicValues))
-            {
-                devState.MandatoryDynamicValues = second.MandatoryDynamicValues;
-            }
+            //if (!AreEqual(first.MandatoryDynamicValues, second.MandatoryDynamicValues))
+            //{
+            //    devState.MandatoryDynamicValues = second.MandatoryDynamicValues;
+            //}
+            devState.MandatoryDynamicValues = second.MandatoryDynamicValues;
             if (!AreEqual(first.OptionalMutableValues, second.OptionalMutableValues))
             {
                 devState.OptionalMutableValues = second.OptionalMutableValues;
@@ -1108,7 +1109,8 @@ namespace NHMCore.Nhmws.V4
                     resArray.Add(HandleProperty(property).Result);
                 }
                 if (resArray.All(r => r == 0)) return Task.FromResult(string.Empty);
-                return Task.FromResult($"SetMutable error ({string.Join(",", resArray)})");
+                var appendix = resArray.Contains(-3) ? "Have you stopped mining?" : string.Empty;
+                return Task.FromResult($"SetMutable error ({string.Join(",", resArray)}) {appendix}");
             }
             if (mutableCmd.Devices == null) return Task.FromResult(string.Empty);
             string result = string.Empty;
@@ -1211,7 +1213,7 @@ namespace NHMCore.Nhmws.V4
                 }
                 else if (t is string answer)
                 {
-                    var errorCode = answer == string.Empty ? 0 : 1;
+                    var errorCode = answer == string.Empty ? 0 : -1;
                     executedCall = new ExecutedCall(rpcMsg.Id, errorCode, answer);
                 }
                 else executedCall = new ExecutedCall(rpcMsg.Id, -1, "Failed to execute!");

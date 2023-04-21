@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NHMCore.Mining
@@ -44,7 +45,17 @@ namespace NHMCore.Mining
         public bool IsMiningBenchingTesting => State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking;
         private PidController _pidController = new();
 #endif
-
+        private bool IsLessThan2KSeries(string name)
+        {
+            string pattern = @"\b(1[0-9]{3}|[1-9][0-9]{2})\b";
+            Regex regex = new Regex(pattern);
+            Match match = regex.Match(name);
+            return match.Success;
+        }
+        public bool IsNvidiaAndSub2KSeries()
+        {
+            return DeviceType == DeviceType.NVIDIA && IsLessThan2KSeries(Name);
+        }
         private int _memoryControlCounter = 0;
 
         private bool _enabled = true;
