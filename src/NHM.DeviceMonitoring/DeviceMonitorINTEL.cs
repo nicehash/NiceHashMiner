@@ -242,15 +242,19 @@ namespace NHM.DeviceMonitoring
 
         public bool SetTDP(double watts)
         {
-            if (watts < 0.0d)
+            var value = watts;
+            if (value <= 1.0d)
             {
-                Logger.Error(LogTag, $"SetTDP {watts} out of bounds. Setting to 0.0d");
-                watts = 0.0d;
+                int min = -1;
+                int max = -1;
+                int def = -1;
+                var ok = INTEL_IGCL.nhm_intel_device_get_power_limit_min_max_default(BusID, ref min, ref max, ref def);
+                value = watts * def;
             }
 
-            Logger.Info(LogTag, $"SetTDP setting to {watts}.");
+            Logger.Info(LogTag, $"SetTDP setting to {value}.");
 
-            var execRet = INTEL_IGCL.nhm_intel_device_set_power_limit(BusID, (int)watts);
+            var execRet = INTEL_IGCL.nhm_intel_device_set_power_limit(BusID, (int)value);
             Logger.Info(LogTag, $"SetTDP returned {execRet}.");
             return execRet == RET_OK;
         }
@@ -264,7 +268,13 @@ namespace NHM.DeviceMonitoring
                 percentage = PowerLevelToTDPPercentage(level);
             }
             Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
-            var execRet = NVIDIA_MON.nhm_nvidia_device_set_tdp(BusID, (int)(percentage * 100));
+            int min = -1;
+            int max = -1;
+            int def = -1;
+            var ok = INTEL_IGCL.nhm_intel_device_get_power_limit_min_max_default(BusID, ref min, ref max, ref def);
+            var watts = percentage * def;
+
+            var execRet = INTEL_IGCL.nhm_intel_device_set_power_limit(BusID, (int)watts);
             if (execRet == RET_OK) TDPSimple = level;
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet == RET_OK;
