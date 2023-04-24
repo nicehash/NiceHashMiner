@@ -1,5 +1,4 @@
-﻿using log4net.Core;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.DeviceMonitoring.Core_clock;
 using NHM.DeviceMonitoring.Core_voltage;
 using NHM.DeviceMonitoring.Memory_clock;
