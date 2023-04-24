@@ -776,8 +776,7 @@ namespace NHMCore.Mining
             if (reset)
             {
                 Logger.Warn(_TAG, $"Resetting device {ComputeDevice.ID}");
-                if(ComputeDevice.DeviceType == DeviceType.INTEL) Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset TDP: {ComputeDevice.SetPowerModeManual(80)}");
-                else Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset TDP: {ComputeDevice.SetPowerModeManual(ComputeDevice.TDPLimits.def)}");
+                Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset TDP: {ComputeDevice.SetPowerModeManual(ComputeDevice.TDPLimits.def)}");
                 Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset CC: {ComputeDevice.ResetCoreClock()}");
                 Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset CCD: {ComputeDevice.ResetCoreClockDelta()}");
                 Logger.Warn(_TAG, $"[{ComputeDevice.ID}] reset MC: {ComputeDevice.ResetMemoryClock()}");
