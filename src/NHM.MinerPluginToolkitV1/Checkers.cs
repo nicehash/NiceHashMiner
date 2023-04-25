@@ -70,6 +70,7 @@ namespace NHM.MinerPluginToolkitV1
             "01177a50-94ec-11ea-a64d-17be303ea466",
             "fa369d10-94eb-11ea-a64d-17be303ea466",
             "e7a58030-94eb-11ea-a64d-17be303ea466",
+            "fd45fff0-94eb-11ea-a64d-17be303ea466",
         };
     }
 }
