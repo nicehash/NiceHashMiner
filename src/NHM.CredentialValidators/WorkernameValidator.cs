@@ -6,7 +6,7 @@ namespace NHM.CredentialValidators
     {
         private static Regex _IsAlphaNumeric = new Regex(@"^[a-zA-Z0-9\s,]*$");
         private static bool IsAlphaNumeric(string strToCheck) => _IsAlphaNumeric.IsMatch(strToCheck);
-        private const int MAX_WORKERNAME_LENGTH = 15;
+        private const int MAX_WORKERNAME_LENGTH = 24;
 
         internal static bool ValidateWorkerName(string workername)
         {
