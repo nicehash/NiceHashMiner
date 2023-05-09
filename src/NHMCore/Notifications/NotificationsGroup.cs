@@ -53,6 +53,8 @@ namespace NHMCore.Notifications
         OptimizationProfilesElevate,
         RequireAdminForLHR,
         NoPowerInfo,
-        NoOptimalDrivers
+        NoOptimalDrivers,
+        RigManagementElevate,
+        OverclockingIsOff
     }
 }

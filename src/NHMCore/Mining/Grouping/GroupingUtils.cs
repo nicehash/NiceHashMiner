@@ -1,5 +1,6 @@
 ﻿using NHM.MinerPluginToolkitV1.CommandLine;
 using NHMCore.Configs.ELPDataModels;
+using NHMCore.Configs.Managers;
 using NHMCore.Utils;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace NHMCore.Mining.Grouping
             var elpNodeA = a.FindInELPTree(a.ComputeDevice.Uuid) ?? new DeviceELPData();//state?
             var elpNodeB = b.FindInELPTree(b.ComputeDevice.Uuid) ?? new DeviceELPData();
 
-            return a.PluginContainer.CanGroupAlgorithmContainer(a, b) && 
+            return a.PluginContainer.CanGroupAlgorithmContainer(a, b) &&
                 MinerExtraParameters.CheckIfCanGroup(new List<List<List<string>>> { elpNodeA.ConstructedELPs, elpNodeB.ConstructedELPs });
         }
 
@@ -38,23 +39,31 @@ namespace NHMCore.Mining.Grouping
             var groupedAlgorithms = new Dictionary<string, List<AlgorithmContainer>>();
             bool isCurrentWithinGroup(AlgorithmContainer current, List<AlgorithmContainer> group) => group.Any(p => p.ComputeDevice.Uuid == current.ComputeDevice.Uuid);
             bool isAlreadyGrouped(AlgorithmContainer current) => groupedAlgorithms.Values.Any(group => isCurrentWithinGroup(current, group));
-
+            bool needsToBeSeparated(AlgorithmContainer current) => (current.ELPChange || current.ELPTestChange); //todo if has something to set to?
             foreach (var current in profitableAlgorithmContainers)
             {
                 if (isAlreadyGrouped(current)) continue;
-
                 var newGroup = new List<AlgorithmContainer>() { current };
                 var restInGroup = profitableAlgorithmContainers
                     .SkipWhile(algo => current != algo)
                     .Where(algo => !isAlreadyGrouped(algo))
                     .Where(algo => CanGroupAlgorithmContainer(current, algo));
+                if (needsToBeSeparated(current))
+                {
+                    var currentCMD = ELPManager.Instance.FindAppropriateCommandForAlgoContainer(new List<AlgorithmContainer> { current });
+                    restInGroup = restInGroup
+                        .Where(algo => needsToBeSeparated(algo))?
+                        .Where(algo => ELPManager.Instance.FindAppropriateCommandForAlgoContainer(new List<AlgorithmContainer> { algo }) == currentCMD);
+                }
+                else
+                {
+                    restInGroup = restInGroup.Where(algo => !needsToBeSeparated(algo));
+                }
                 newGroup.AddRange(restInGroup);
-
                 // save newly grouped mining pairs
                 var newGroupKey = CalcGroupedDevicesKey(newGroup, current.AlgorithmStringID);
                 groupedAlgorithms[newGroupKey] = newGroup;
             }
-
             return groupedAlgorithms;
         }
     }

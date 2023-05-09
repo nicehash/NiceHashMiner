@@ -123,7 +123,6 @@ namespace NHMCore.Configs
                 LogToFile = LoggingDebugConsoleSettings.Instance.LogToFile,
                 LogMaxFileSize = LoggingDebugConsoleSettings.Instance.LogMaxFileSize,
                 DisableWindowsErrorReporting = WarningSettings.Instance.DisableWindowsErrorReporting,
-                DisableDevicePowerModeSettings = GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings,
             };
             _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
             foreach (var cDev in AvailableDevices.Devices)
@@ -138,8 +137,7 @@ namespace NHMCore.Configs
             return LoggingDebugConsoleSettings.Instance.DebugConsole != _generalConfigBackup.DebugConsole
                    || LoggingDebugConsoleSettings.Instance.LogToFile != _generalConfigBackup.LogToFile
                    || LoggingDebugConsoleSettings.Instance.LogMaxFileSize != _generalConfigBackup.LogMaxFileSize
-                   || WarningSettings.Instance.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
-                   || GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings != _generalConfigBackup.DisableDevicePowerModeSettings;
+                   || WarningSettings.Instance.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting;
         }
 
         public static void GeneralConfigFileCommit()

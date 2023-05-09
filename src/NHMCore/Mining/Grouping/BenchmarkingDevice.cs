@@ -1,9 +1,11 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NHM.MinerPlugin;
+using NHM.MinerPluginToolkitV1;
 using NHM.MinerPluginToolkitV1.Interfaces;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining.Benchmarking;
 using NHMCore.Notifications;
 using NHMCore.Utils;
@@ -128,6 +130,7 @@ namespace NHMCore.Mining.Grouping
                     try
                     {
                         var nextAlgo = benchAlgos.Dequeue();
+                        //EventManager.Instance.AddEvent(EventType.BenchmarkStarted, @$"{nextAlgo.PluginName}\{nextAlgo.AlgorithmName}", nextAlgo.ComputeDevice.B64Uuid, false); //causes only 1 device to benchmark
                         var benchmark = BenchmarkAlgorithm(nextAlgo, _stopCurrentAlgorithmBenchmark.Token);
                         var firstFinished = await Task.WhenAny(new Task<object>[] { commandTask, benchmark });
                         var ret = await firstFinished;

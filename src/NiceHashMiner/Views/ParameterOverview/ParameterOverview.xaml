@@ -47,12 +47,35 @@
         </Grid.RowDefinitions>
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <StackPanel>
-                <TextBlock Style="{StaticResource local.WalletSubHeader}"  
-                           HorizontalAlignment="Left" 
-                           Margin="40, 25, 10, 25"
-                           FontSize="15" 
-                           Text="Editing Extra Parameters is not possible when mining or benchmarking."
-                           Visibility="{Binding MiningState.AnyDeviceRunning, Converter={StaticResource BoolVisibilityConverter}}"/>
+                <StackPanel 
+                    Visibility="{Binding MiningState.IsCurrentlyMiningOrELPFromRigManager, Converter={StaticResource BoolVisibilityConverter}}"
+                    HorizontalAlignment="Center" >
+                    <TextBlock Style="{StaticResource local.WalletSubHeader}"  
+                               TextWrapping="Wrap"
+                               Margin="40, 25, 10, 0"
+                               FontSize="15" 
+                               HorizontalAlignment="Left"
+                               Text="Editing Extra Parameters is not possible when:"/>                    
+                    <TextBlock Style="{StaticResource local.WalletSubHeader}"  
+                               TextWrapping="Wrap"
+                               Margin="60,0,10,0"
+                               FontSize="13" 
+                               HorizontalAlignment="Left"
+                               Text="- Any GPU/CPU is active"/>                    
+                    <TextBlock Style="{StaticResource local.WalletSubHeader}"  
+                               TextWrapping="Wrap"
+                               Margin="60,0,10,0"
+                               FontSize="13" 
+                               HorizontalAlignment="Left"
+                               Text="- There are active ELP tests set through rig manager"/>                    
+                    <TextBlock Style="{StaticResource local.WalletSubHeader}"  
+                               TextWrapping="Wrap"
+                               Margin="60,0,10,10"
+                               FontSize="13" 
+                               HorizontalAlignment="Left"
+                               Text="- There are active ELP bundles set"/>
+                </StackPanel>
+
                 <StackPanel>
                     <Grid >
                         <Grid.ColumnDefinitions>

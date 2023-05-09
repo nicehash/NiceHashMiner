@@ -11,6 +11,7 @@ namespace NHM.Common.Enums
         Disabled,
 #if NHMWS4
         Gaming,
+        Testing
 #endif
         // TODO Extra states, NotProfitable
     }

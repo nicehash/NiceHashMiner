@@ -70,6 +70,17 @@ namespace LolMiner
                 {
                     DeviceType.AMD,
                     SupportedAMDAlgos()
+                },
+                {
+                    DeviceType.INTEL,
+                    new List<SAS>
+                    {
+                        new SAS(AlgorithmType.KHeavyHash),
+                        new SAS(AlgorithmType.BeamV3),
+                        new SAS(AlgorithmType.Autolykos),
+                        new SAS(AlgorithmType.ZelHash),
+                        new SAS(AlgorithmType.ZHash)
+                    }
                 }
             }
         };

@@ -1,4 +1,5 @@
-﻿using NHMCore.Utils;
+﻿using NHMCore.Configs.Managers;
+using NHMCore.Utils;
 using NiceHashMiner.ViewModels;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
 ﻿using NHM.Common.Enums;
 using NHMCore.Configs.ELPDataModels;
-using NHMCore.Utils;
+using NHMCore.Configs.Managers;
 using NiceHashMiner.ViewModels.Models;
 using System;
 using System.Collections.Generic;

@@ -17,6 +17,11 @@ namespace NHMCore.ApplicationState
             _intProps = new NotifyPropertyChangedHelper<int>(OnPropertyChanged);
             IsDemoMining = false;
             IsCurrentlyMining = false;
+            IsCurrentlyMiningOrELPFromRigManager = IsCurrentlyMining || 
+                AvailableDevices.Devices
+                .SelectMany(d => d.AlgorithmSettings)
+                .Any(a => a.ActiveELPProfile != null || a.ActiveELPTestProfile != null);
+            IsNotRunningOrELP = !IsCurrentlyMiningOrELPFromRigManager;
         }
 
         // auto properties don't trigger NotifyPropertyChanged so add this shitty boilerplate
@@ -65,7 +70,19 @@ namespace NHMCore.ApplicationState
             get => _boolProps.Get(nameof(IsCurrentlyMining));
             private set => _boolProps.Set(nameof(IsCurrentlyMining), value);
         }
+#if NHMWS4
+        public bool IsCurrentlyMiningOrELPFromRigManager
+        {
+            get => _boolProps.Get(nameof(IsCurrentlyMiningOrELPFromRigManager));
+            private set => _boolProps.Set(nameof(IsCurrentlyMiningOrELPFromRigManager), value);
+        }
 
+        public bool IsNotRunningOrELP
+        {
+            get => _boolProps.Get(nameof(IsNotRunningOrELP));
+            private set => _boolProps.Set(nameof(IsNotRunningOrELP), value);
+        }
+#endif
         #region DeviceState Counts
         public int StoppedDeviceStateCount
         {
@@ -108,7 +125,7 @@ namespace NHMCore.ApplicationState
             // DeviceState Counts
             StoppedDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Stopped);
 #if NHMWS4
-            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming);
+            MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming || dev.State == DeviceState.Testing);
 #else
             MiningDeviceStateCount = AvailableDevices.Devices.Count(dev => dev.State == DeviceState.Mining);
 #endif
@@ -121,12 +138,19 @@ namespace NHMCore.ApplicationState
             AnyDeviceEnabled = AvailableDevices.Devices.Any(dev => dev.Enabled);
             AnyDeviceStopped = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Stopped && (dev.State != DeviceState.Disabled));
 #if NHMWS4
-            AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Gaming);
+            AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Gaming || dev.State == DeviceState.Testing);
 #else
             AnyDeviceRunning = AvailableDevices.Devices.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
 #endif
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;
             IsCurrentlyMining = AnyDeviceRunning;
+#if NHMWS4
+            IsCurrentlyMiningOrELPFromRigManager = IsCurrentlyMining ||
+                AvailableDevices.Devices
+                .SelectMany(d => d.AlgorithmSettings)
+                .Any(a => a.ActiveELPProfile != null || a.ActiveELPTestProfile != null);
+            IsNotRunningOrELP = !IsCurrentlyMiningOrELPFromRigManager;
+#endif
             IsDemoMining = !CredentialsSettings.Instance.IsBitcoinAddressValid && IsCurrentlyMining;
             if (IsNotBenchmarkingOrMining) MiningManuallyStarted = false;
         }

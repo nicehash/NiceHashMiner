@@ -37,7 +37,7 @@ namespace NHMCore
             });
         }
 
-
+        public static void ReSendLoginMessage() => ResetNiceHashStatsCredentials();
         static void ResetNiceHashStatsCredentials()
         {
             if (CredentialsSettings.Instance.IsCredentialValid)
@@ -160,6 +160,9 @@ namespace NHMCore
         {
             StartComputeDevicesCheckTimer();
             StartInternetCheckTimer();
+#if NHMWS4
+            StartFanProfileTimer();
+#endif
             return true;
         }
 
@@ -167,6 +170,9 @@ namespace NHMCore
         {
             StopComputeDevicesCheckTimer();
             StopInternetCheckTimer();
+#if NHMWS4
+            StopFanProfileTimer();
+#endif
             DisplayNoInternetConnection(false); // hide warning
             DisplayMiningProfitable(true); // hide warning
         }
@@ -196,7 +202,7 @@ namespace NHMCore
                 rigState = RigStatus.Stopped;
             }
 #if NHMWS4
-            var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming);
+            var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Gaming || dev.State == DeviceState.Testing);
 #else
             var anyMining = allDevs.Any(dev => dev.State == DeviceState.Mining);
 #endif
@@ -230,6 +236,8 @@ namespace NHMCore
                 RigStatus.Error => "ERROR",
                 RigStatus.Pending => "PENDING",
                 RigStatus.Disabled => "DISABLED",
+                RigStatus.Gaming => "GAMING",
+                RigStatus.Testing => "TESTING",
                 _ => "UNKNOWN",
             };
         }

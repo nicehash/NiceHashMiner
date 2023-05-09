@@ -6,6 +6,7 @@ using NHM.DeviceDetection;
 using NHM.DeviceMonitoring;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
+using NHMCore.Configs.Managers;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Nhmws;
@@ -13,6 +14,7 @@ using NHMCore.Notifications;
 using NHMCore.Schedules;
 using NHMCore.Utils;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using static NHMCore.Translations;
@@ -21,7 +23,7 @@ namespace NHMCore
 {
     static partial class ApplicationStateManager
     {
-        private static bool isInitFinished = false;
+        public static bool isInitFinished = false;
 
         private class LoaderConverter : IStartupLoader
         {
@@ -54,6 +56,9 @@ namespace NHMCore
                     if (perc > 100) return 100;
                     return perc;
                 };
+#if NHMWS4
+                EventManager.Instance.Init();
+#endif
                 NotificationsManager.Instance.ReadLoggedNotifications();
                 // STEP
                 // Checking System Memory
@@ -72,6 +77,7 @@ namespace NHMCore
                         DeviceDetectionStep.CPU => Tr("Checking CPU Info"),
                         DeviceDetectionStep.NVIDIA_CUDA => Tr("Querying CUDA devices"),
                         DeviceDetectionStep.AMD_OpenCL => Tr("Checking AMD OpenCL GPUs"),
+                        DeviceDetectionStep.INTEL_GPU => Tr("Checking Intel GPUs"),
                         _ => Tr("Checking Windows Video Controllers"), //DeviceDetectionStep.WMIWMIVideoControllers
                     };
                 };
@@ -97,6 +103,7 @@ namespace NHMCore
                         DeviceType.CPU => $"CPU#{index}",
                         DeviceType.AMD => $"AMD#{index}",
                         DeviceType.NVIDIA => $"GPU#{index}",
+                        DeviceType.INTEL => $"INTEL#{index}",
                         _ => $"UNKNOWN#{index}",
                     };
 
@@ -109,7 +116,7 @@ namespace NHMCore
 
                 AvailableDevices.UncheckCpuIfGpu();
 
-                var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
+                var ramCheckOK = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam, AvailableDevices.AvailIntelGpuRam);
                 if (!ramCheckOK)
                 {
                     AvailableNotifications.CreateIncreaseVirtualMemoryInfo();
@@ -148,7 +155,7 @@ namespace NHMCore
                 // now init device settings
                 ConfigManager.InitDeviceSettings();
 
-                if (!Helpers.IsElevated && !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && AvailableDevices.HasNvidia)
+                if (!Helpers.IsElevated && AvailableDevices.HasNvidia)
                 {
                     AvailableNotifications.CreateDeviceMonitoringNvidiaElevateInfo();
                 }
@@ -177,7 +184,7 @@ namespace NHMCore
                 /////////////////////////////////////////////
                 /////// from here on we have our devices and Miners initialized
                 MiningState.Instance.CalculateDevicesStateChange();
-
+                SchedulesManager.Instance.Init();
                 // STEP
                 // connect to nhmws
                 loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
@@ -256,8 +263,20 @@ namespace NHMCore
                     if (MiscSettings.Instance.UseOptimizationProfiles) AvailableNotifications.CreateOptimizationProfileElevateInfo();
                     else AvailableNotifications.CreateOptimizationProfileNotEnabledInfo();
                 }
-
-                SchedulesManager.Instance.Init();
+#if NHMWS4
+                if (!Helpers.IsElevated)
+                {
+                    AvailableNotifications.CreateNotAdminForRigManagement();
+                }
+#endif
+                var backupPath = Paths.ConfigsPath(".runOnStartup.txt");
+                if (File.Exists(backupPath))
+                {
+                    var value = Helpers.GetRunOnStartupBackupValue();
+                    MiscSettings.Instance.RunAtStartup = value;
+                    File.Delete(backupPath);
+                }
+                //SchedulesManager.Instance.Init();
             }
             catch (Exception e)
             {

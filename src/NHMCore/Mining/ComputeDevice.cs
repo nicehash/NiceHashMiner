@@ -1,17 +1,25 @@
-﻿using NHM.Common;
+﻿using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
+using NHM.DeviceMonitoring.Core_clock;
+using NHM.DeviceMonitoring.Core_voltage;
+using NHM.DeviceMonitoring.Memory_clock;
 using NHM.DeviceMonitoring.TDP;
 using NHM.UUID;
 using NHMCore.ApplicationState;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using NHMCore.Nhmws;
+using NHMCore.Nhmws.V4;
+using NHMCore.Notifications;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace NHMCore.Mining
 {
@@ -32,6 +40,23 @@ namespace NHMCore.Mining
 
         // name count is the short name for displaying in moning groups
         public string NameCount { get; private set; }
+#if NHMWS4
+        public bool IsTesting => AlgorithmSettings.Any(a => a.IsTesting);
+        public bool IsMiningBenchingTesting => State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking;
+        private PidController _pidController = new();
+#endif
+        private bool IsLessThan2KSeries(string name)
+        {
+            string pattern = @"\b(1[0-9]{3}|[1-9][0-9]{2})\b";
+            Regex regex = new Regex(pattern);
+            Match match = regex.Match(name);
+            return match.Success;
+        }
+        public bool IsNvidiaAndSub2KSeries()
+        {
+            return DeviceType == DeviceType.NVIDIA && IsLessThan2KSeries(Name);
+        }
+        private int _memoryControlCounter = 0;
 
         private bool _enabled = true;
         public bool Enabled
@@ -44,6 +69,9 @@ namespace NHMCore.Mining
                 StartState = false;
                 State = value ? DeviceState.Stopped : DeviceState.Disabled;
                 OnPropertyChanged();
+                if (B64Uuid == null || B64Uuid == string.Empty || B64Uuid == "-1") return; //initial stuff
+                var eventType = value ? EventType.DeviceEnabled : EventType.DeviceDisabled;
+                EventManager.Instance.AddEvent(eventType, "Device toggled", B64Uuid);
             }
         }
 
@@ -58,6 +86,7 @@ namespace NHMCore.Mining
                 OnPropertyChanged();
             }
         }
+        public List<DeviceDynamicProperties> SupportedDynamicProperties { get; set; } = new();
 
         // disabled state check
         public bool IsDisabled => (!Enabled || State == DeviceState.Disabled);
@@ -120,10 +149,12 @@ namespace NHMCore.Mining
                 //CPU - 1
                 //GPU - 2 // NVIDIA
                 //AMD - 3
-                int type = DeviceType switch {
+                int type = DeviceType switch
+                {
                     DeviceType.CPU => 1,
                     DeviceType.NVIDIA => 2,
                     DeviceType.AMD => 3,
+                    DeviceType.INTEL => 4,
                     _ => throw new Exception($"Unknown DeviceType {(int)DeviceType}"),
                 };
                 var b64Web = UUID.GetB64UUID(Uuid);
@@ -149,6 +180,41 @@ namespace NHMCore.Mining
                 }
             }
         }
+        public int ApplyNewAlgoStates(MinerAlgoState state)
+        {
+            if (State == DeviceState.Mining || State == DeviceState.Testing || State == DeviceState.Benchmarking) return -1;
+            foreach (var miner in state.Miners)
+            {
+                foreach (var algo in miner.Algos)
+                {
+                    var targets = AlgorithmSettings.Where(a => a.AlgorithmName == algo.Id && a.PluginName == miner.Id)?.ToList();
+                    if (targets == null) continue;
+                    if (!miner.Enabled)
+                    {
+                        targets.ForEach(t => t.SetEnabled((bool)false));
+                        continue;
+                    }
+                    targets.ForEach(t => t.SetEnabled((bool)algo.Enabled));
+                }
+            }
+            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());
+            return 0;
+        }
+
+        public int ApplyNewAlgoSpeeds(MinerAlgoSpeed speed)
+        {
+            foreach (var miner in speed.Miners)
+            {
+                foreach (var algo in miner.Combinations)
+                {
+                    var targets = AlgorithmSettings.Where(a => a.AlgorithmName == algo.Id && a.PluginName == miner.Id)?.ToList();
+                    if (targets == null) continue;
+                    targets.ForEach(t => t.BenchmarkSpeed = Convert.ToDouble(algo.Algos.FirstOrDefault().Speed));
+                }
+            }
+            Task.Run(async () => NHWebSocketV4.UpdateMinerStatus());
+            return 0;
+        }
 
         private List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; set; } = new List<PluginAlgorithmConfig>();
 
@@ -167,7 +233,7 @@ namespace NHMCore.Mining
 
         private bool CanMonitorStatus => !GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null;
 
-        private bool CanSetTDP => !GlobalDeviceSettings.Instance.DisableDevicePowerModeSettings && DeviceMonitor != null;
+        private bool CanSetTDP => DeviceMonitor != null;
 
         public uint PowerTarget
         {
@@ -265,6 +331,133 @@ namespace NHMCore.Mining
                 return -1;
             }
         }
+        public int CoreClock
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClock get) return get.CoreClock;
+                return -1;
+            }
+        }
+        public int CoreClockDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClockDelta get) return get.CoreClockDelta;
+                return -1;
+            }
+        }
+        public int PreferredCoreClock
+        {
+            get
+            {
+                if (DeviceType == DeviceType.NVIDIA) return CoreClockDelta;
+                if (DeviceType == DeviceType.AMD) return CoreClock;
+                if (DeviceType == DeviceType.INTEL) return CoreClockDelta;
+                return -1;
+            }
+        }
+        public int MemoryClock
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClock get) return get.MemoryClock;
+                return -1;
+            }
+        }
+
+        public int MemoryClockDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockDelta get) return get.MemoryClockDelta;
+                return -1;
+            }
+        }
+        public int PreferredMemoryClock
+        {
+            get
+            {
+                if (DeviceType == DeviceType.NVIDIA) return MemoryClockDelta;
+                if (DeviceType == DeviceType.AMD) return MemoryClock;
+                if (DeviceType == DeviceType.INTEL) return MemoryClockDelta;
+                return -1;
+            }
+        }
+
+        public (int min, int max, int def) TDPLimits
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITDPLimits get)
+                {
+                    var ret = get.GetTDPLimits();
+                    return (ret.min, ret.max, ret.def);
+                }
+                return (0, 0, 0);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) CoreClockRange
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreClockRange get)
+                {
+                    var ret = get.CoreClockRange;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) MemoryClockRange
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockRange get)
+                {
+                    var ret = get.MemoryClockRange;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) MemoryClockRangeDelta
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IMemoryClockRangeDelta get)
+                {
+                    var ret = get.MemoryClockRangeDelta;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
+
+        public int CoreVoltage
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreVoltage get) return get.CoreVoltage;
+                return -1;
+            }
+        }
+
+        public (bool ok, int min, int max, int def) CoreVoltageRange
+        {
+            get
+            {
+                if (!GlobalDeviceSettings.Instance.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ICoreVoltageRange get)
+                {
+                    var ret = get.CoreVoltageRange;
+                    return (ret.ok, ret.min, ret.max, ret.def);
+                }
+                return (false, -1, -1, -1);
+            }
+        }
         #endregion Getters
 
         #region Setters
@@ -272,6 +465,71 @@ namespace NHMCore.Mining
         public bool SetPowerMode(TDPSimpleType level)
         {
             if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDPSimple(level);
+            return false;
+        }
+        public bool SetPowerModeManual(int TDP)
+        {
+            if (CanSetTDP && DeviceMonitor is ITDP set) return set.SetTDP(TDP);
+            return false;
+        }
+        public bool SetCoreClock(int coreClock)
+        {
+            if (CanSetTDP && DeviceMonitor is ICoreClockSet set) return set.SetCoreClock(coreClock);
+            return false;
+        }
+        public bool SetCoreClockDelta(int coreClockDelta)
+        {
+            if(CanSetTDP && DeviceMonitor is ICoreClockSetDelta set) return set.SetCoreClockDelta(coreClockDelta);
+            return false;
+        }
+        public bool SetMemoryClock(int memoryClock)
+        {
+            if (CanSetTDP && DeviceMonitor is IMemoryClockSet set) return set.SetMemoryClock(memoryClock);
+            return false;
+        }
+        public bool SetMemoryClockDelta(int memoryClockDelta)
+        {
+            if(CanSetTDP && DeviceMonitor is IMemoryClockSetDelta set) return set.SetMemoryClockDelta(memoryClockDelta);
+            return false;
+        }
+        public bool SetFanSpeedPercentage(int percent)
+        {
+            if (DeviceMonitor is ISetFanSpeedPercentage set) return set.SetFanSpeedPercentage(percent);
+            return false;
+        }
+        public bool ResetFanSpeed()
+        {
+            if (DeviceMonitor is IResetFanSpeed set) return set.ResetFanSpeedPercentage();
+            return false;
+        }
+        public bool SetCoreVoltage(int voltage)
+        {
+            if (DeviceMonitor is ICoreVoltageSet set) return set.SetCoreVoltage(voltage);
+            return false;
+        }
+        public bool ResetCoreVoltage()
+        {
+            if(DeviceMonitor is ICoreVoltageSet set) return set.ResetCoreVoltage();
+            return false;
+        }
+        public bool ResetCoreClock()
+        {
+            if (DeviceMonitor is ICoreClockSet set) return set.ResetCoreClock();
+            return false;
+        }
+        public bool ResetMemoryClock()
+        {
+            if (DeviceMonitor is IMemoryClockSet set) return set.ResetMemoryClock();
+            return false;
+        }
+        public bool ResetCoreClockDelta()
+        {
+            if(DeviceMonitor is ICoreClockSetDelta set) return set.ResetCoreClockDelta();
+            return false;
+        }
+        public bool ResetMemoryClockDelta()
+        {
+            if(DeviceMonitor is IMemoryClockSetDelta set) return set.ResetMemoryClockDelta();
             return false;
         }
 
@@ -406,48 +664,45 @@ namespace NHMCore.Mining
             Enabled = config.Enabled;
             MinimumProfit = config.MinimumProfit;
             PauseMiningWhenGamingMode = config.PauseMiningWhenGamingMode;
-
-            if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
+           
+            var tdpSimpleDefault = TDPSimpleType.HIGH;
+            var tdpSettings = config.TDPSettings;
+            if (tdpSettings != null && DeviceMonitor is ITDP tdp)
             {
-                var tdpSimpleDefault = TDPSimpleType.HIGH;
-                var tdpSettings = config.TDPSettings;
-                if (tdpSettings != null && DeviceMonitor is ITDP tdp)
+                tdp.SettingType = config.TDPSettings.SettingType;
+                switch (config.TDPSettings.SettingType)
                 {
-                    tdp.SettingType = config.TDPSettings.SettingType;
-                    switch (config.TDPSettings.SettingType)
-                    {
-                        case TDPSettingType.PERCENTAGE:
-                            if (config.TDPSettings.Percentage.HasValue)
-                            {
-                                // config values are from 0.0% to 100.0%
-                                tdp.SetTDPPercentage(config.TDPSettings.Percentage.Value / 100);
-                            }
-                            else
-                            {
-                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                            }
-                            break;
-                        // here we decide to not allow per GPU disable state, default fallback is SIMPLE setting
-                        case TDPSettingType.UNSUPPORTED:
-                        case TDPSettingType.DISABLED:
-                        case TDPSettingType.SIMPLE:
-                        default:
-                            tdp.SettingType = TDPSettingType.SIMPLE;
-                            if (config.TDPSettings.Simple.HasValue)
-                            {
-                                tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
-                            }
-                            else
-                            {
-                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                            }
-                            break;
-                    }
+                    case TDPSettingType.PERCENTAGE:
+                        if (config.TDPSettings.Percentage.HasValue)
+                        {
+                            // config values are from 0.0% to 100.0%
+                            tdp.SetTDP(config.TDPSettings.Percentage.Value / 100);
+                        }
+                        else
+                        {
+                            tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                        }
+                        break;
+                    // here we decide to not allow per GPU disable state, default fallback is SIMPLE setting
+                    case TDPSettingType.UNSUPPORTED:
+                    case TDPSettingType.DISABLED:
+                    case TDPSettingType.SIMPLE:
+                    default:
+                        tdp.SettingType = TDPSettingType.SIMPLE;
+                        if (config.TDPSettings.Simple.HasValue)
+                        {
+                            tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
+                        }
+                        else
+                        {
+                            tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                        }
+                        break;
                 }
-                else if (DeviceMonitor is ITDP tdpDefault)
-                {
-                    tdpDefault.SetTDPSimple(tdpSimpleDefault); // set default high
-                }
+            }
+            else if (DeviceMonitor is ITDP tdpDefault)
+            {
+                tdpDefault.SetTDPSimple(tdpSimpleDefault); // set default high
             }
 
             if (config.PluginAlgorithmSettings == null) return;
@@ -473,21 +728,14 @@ namespace NHMCore.Mining
             var TDPSettings = new DeviceTDPSettings { SettingType = TDPSettingType.UNSUPPORTED };
             if (DeviceMonitor is ITDP tdp)
             {
-                if (DeviceMonitorManager.DisableDevicePowerModeSettings)
+                TDPSettings.SettingType = tdp.SettingType;
+                if (TDPSettings.SettingType == TDPSettingType.SIMPLE)
                 {
-                    TDPSettings.SettingType = TDPSettingType.DISABLED;
+                    TDPSettings.Simple = tdp.TDPSimple;
                 }
-                else
+                if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
                 {
-                    TDPSettings.SettingType = tdp.SettingType;
-                    if (TDPSettings.SettingType == TDPSettingType.SIMPLE)
-                    {
-                        TDPSettings.Simple = tdp.TDPSimple;
-                    }
-                    if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
-                    {
-                        TDPSettings.Percentage = tdp.TDPPercentage * 100;
-                    }
+                    TDPSettings.Percentage = tdp.TDPPercentage * 100;
                 }
             }
             var ret = new DeviceConfig
@@ -537,6 +785,11 @@ namespace NHMCore.Mining
         }
 
         public bool AnyEnabledAlgorithmsNeedBenchmarking() => AlgorithmsForBenchmark().Any();
+        public void PrepareForRebenchmark()
+        {
+            var algosToRebenchmark = AlgorithmSettings.Where(a => a.Enabled);
+            foreach(var algo in algosToRebenchmark) algo.IsReBenchmark = true;
+        }
 
         public IEnumerable<AlgorithmContainer> AlgorithmsForBenchmark()
         {
@@ -549,7 +802,7 @@ namespace NHMCore.Mining
 
         public int TrySetMemoryTimings(string mtString)
         {
-            if(DeviceMonitor is IMemoryTimings mp)
+            if (DeviceMonitor is IMemoryTimings mp)
             {
                 return mp.SetMemoryTimings(mtString);
             }
@@ -558,7 +811,7 @@ namespace NHMCore.Mining
 
         public int TryResetMemoryTimings()
         {
-            if(DeviceMonitor is IMemoryTimings mp)
+            if (DeviceMonitor is IMemoryTimings mp)
             {
                 return mp.ResetMemoryTimings();
             }
@@ -571,5 +824,252 @@ namespace NHMCore.Mining
                 mp.PrintMemoryTimings();
             }
         }
+#if NHMWS4
+        public string OCProfile
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.OCProfile;
+                }
+                return string.Empty;
+            }
+        }
+        public string OCProfileID
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.OCProfileID;
+                }
+                return string.Empty;
+            }
+        }
+        public string FanProfile
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.FanProfile;
+                }
+                return string.Empty;
+            }
+        }
+        public string FanProfileID
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.FanProfileID;
+                }
+                return string.Empty;
+            }
+        }
+        public string ELPProfile
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.ELPProfile;
+                }
+                return string.Empty;
+            }
+        }
+        public string ELPProfileID
+        {
+            get
+            {
+                var testTarget = AlgorithmSettings.FirstOrDefault(a => a.IsCurrentlyMining);
+                if (testTarget != null)
+                {
+                    return testTarget.ELPProfileID;
+                }
+                return string.Empty;
+            }
+        }
+        private bool HasNewTestItem(AlgorithmContainer target, string runningOC, string runningELP, string runningFAN)
+        {
+            return JsonConvert.SerializeObject(target.ActiveOCTestProfile) != runningOC ||
+                    JsonConvert.SerializeObject(target.ActiveELPTestProfile) != runningELP ||
+                    JsonConvert.SerializeObject(target.ActiveFanTestProfile) != runningFAN;
+        }
+        private bool HasNewItem(AlgorithmContainer target, string runningOC, string runningELP, string runningFAN)
+        {
+            return JsonConvert.SerializeObject(target.ActiveOCProfile) != runningOC ||
+                    JsonConvert.SerializeObject(target.ActiveELPProfile) != runningELP ||
+                    JsonConvert.SerializeObject(target.ActiveFanProfile) != runningFAN;
+        }
+
+        public async Task AfterStartMining()
+        {
+            var target = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
+            if (target == null) return;
+            var serializedRunningOC = JsonConvert.SerializeObject(target.RunningOcProfile);
+            var serializedRunningELP = JsonConvert.SerializeObject(target.RunningELPProfile);
+            var serializedRunningFan = JsonConvert.SerializeObject(target.RunningFanProfile);
+            if (target.HasTestProfileAndCanSet())
+            {
+                if(HasNewTestItem(target, serializedRunningOC, serializedRunningELP, serializedRunningFan))
+                {
+                    ResetFanSpeed();
+                    await target.ResetOcForDevice();
+                    target.RunningOcProfile = null;
+                    target.RunningFanProfile = null;
+                    target.RunningELPProfile = null;
+                }
+
+                if (target.ActiveOCTestProfile != null)
+                {
+                    await target.SetOcForDevice(target.ActiveOCTestProfile, false);
+                    target.RunningOcProfile = target.ActiveOCTestProfile;
+                    State = DeviceState.Testing;
+                    return;
+                }
+                if (target.ActiveELPTestProfile != null)
+                {
+                    State = DeviceState.Testing;
+                    target.RunningELPProfile = target.ActiveELPTestProfile;
+                    return;
+                }
+                if (target.ActiveFanTestProfile != null)
+                {
+                    State = DeviceState.Testing;
+                    target.RunningFanProfile = target.ActiveFanTestProfile;
+                    return;
+                }
+            }
+            if (target.HasNormalProfileAndCanSet() && !target.HasTestProfileAndCanSet())
+            {
+                if (HasNewItem(target, serializedRunningOC, serializedRunningELP, serializedRunningFan))
+                {
+                    ResetFanSpeed();
+                    await target.ResetOcForDevice();
+                    target.RunningOcProfile = null;
+                    target.RunningELPProfile = null;
+                    target.RunningFanProfile = null;
+                }
+                if (target.ActiveOCProfile != null)
+                {
+                    await target.SetOcForDevice(target.ActiveOCProfile, false);
+                    target.RunningOcProfile = target.ActiveOCProfile;
+                }
+                else
+                {
+                    target.RunningOcProfile = null;
+                }
+                if (target.ActiveFanProfile != null)
+                {
+                    target.RunningFanProfile = target.ActiveFanProfile;
+                }
+                else
+                {
+                    target.RunningFanProfile = null;
+                }
+                if (target.ActiveELPProfile != null)
+                {
+                    target.RunningELPProfile = target.ActiveELPProfile;
+                }
+                else
+                {
+                    target.RunningELPProfile = null;
+                }
+                State = DeviceState.Mining;
+                return;
+            }
+            if(!target.HasTestProfileAndCanSet() && !target.HasNormalProfileAndCanSet())
+            {
+                if (HasNewItem(target, serializedRunningOC, serializedRunningELP, serializedRunningFan) ||
+                    HasNewTestItem(target, serializedRunningOC, serializedRunningELP, serializedRunningFan)) //IF HAS NEW ITEM
+                {
+                    ResetFanSpeed();
+                    await target.ResetOcForDevice();
+                    target.RunningOcProfile = null;
+                    target.RunningFanProfile = null;
+                    target.RunningELPProfile = null;
+                }
+                State = DeviceState.Mining;
+                return;
+            }
+            State = DeviceState.Mining;
+        }
+        public void SetFanSpeedWithPidController()
+        {
+            var testTarget = AlgorithmSettings.Where(a => a.IsCurrentlyMining)?.FirstOrDefault();
+            if (testTarget == null) return;
+            var profile = testTarget.ActiveFanTestProfile ?? testTarget.ActiveFanProfile ?? null;
+            if (profile == null) return;
+
+            switch (profile.Type)
+            {
+                case 0:
+                    SetFanSpeedPercentage(profile.FanSpeed);
+                    return;
+                case 1:
+                    SetFanSpeed(profile);
+                    return;
+                case 2:
+                    SetFanSpeed(profile);
+                    return;
+                case 3:
+                    SetFanSpeedWithLoweringMemoryClocks(profile);
+                    return;
+                default:
+                    return;
+            }
+        }
+
+        private void SetFanSpeed(FanProfile profile)
+        {
+            if (profile.Type == 1)
+            {
+                _pidController.SetPid(10, 0.8, 1);
+                _pidController.SetOutputLimit(100);
+                _pidController.SetReversed(true);
+                var speed = _pidController.GetOutput(Temp, profile.GpuTemp);
+                SetFanSpeedPercentage((int)speed);
+            }
+            else
+            {
+                _pidController.SetPid(10, 0.8, 1);
+                _pidController.SetOutputLimit(profile.MaxFanSpeed);
+                _pidController.SetReversed(true);
+                var speed = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
+                SetFanSpeedPercentage((int)speed);
+            }
+        }
+
+        private void SetFanSpeedWithLoweringMemoryClocks(FanProfile profile)
+        {
+            _pidController.SetPid(10, 0.8, 1);
+            _pidController.SetOutputLimit(profile.MaxFanSpeed);
+            _pidController.SetReversed(true);
+            var speed = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
+            SetFanSpeedPercentage((int)speed);
+
+            var deltaTemp = Math.Max(Temp, VramTemperature) - Math.Min(profile.GpuTemp, profile.VramTemp);
+            if (deltaTemp > 5) _memoryControlCounter++;
+
+            if (_memoryControlCounter >= 5)
+            {
+                _pidController.SetPid(100, 0.8, 1);
+                _pidController.SetOutputLimits(MemoryClockRange.min, MemoryClockDelta);
+                _pidController.SetReversed(false);
+                var memory_clock = _pidController.GetOutput(Temp, Math.Min(profile.GpuTemp, profile.VramTemp));
+                SetMemoryClock((int)memory_clock);
+                _memoryControlCounter = 0;
+            }
+        }
+
+#endif
     }
 }

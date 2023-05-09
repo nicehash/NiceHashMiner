@@ -170,6 +170,7 @@ namespace NHMCore.Notifications
 
         public static void CreateIncreaseVirtualMemoryInfo()
         {
+            EventManager.Instance.AddEvent(EventType.VirtualMemory);
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.VirtualMemory, Tr("Increase virtual memory"), Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine. Would you like to increase virtual memory?"));
             notification.Action = AvailableActions.ActionVisitMemoryHelp();
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.VirtualMemory);
@@ -178,6 +179,7 @@ namespace NHMCore.Notifications
 
         public static void CreateFailedBenchmarksInfo(ComputeDevice device)
         {
+            EventManager.Instance.AddEvent(EventType.BenchmarkFailed, string.Empty, device.B64Uuid, false);
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info.", device.Name));
             notification.Action = AvailableActions.ActionFailedBenchmarksHelp();
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.FailedBenchmarks);
@@ -353,6 +355,14 @@ namespace NHMCore.Notifications
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.NoOptimalDrivers, Tr("NVIDIA drivers used are not optimal for mining"), Tr($"NVIDIA drivers version {v} are known to affect mining stability negatively."));
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.NoOptimalDrivers);
             notification.Action = AvailableActions.ActionNoOptimalDrivers();
+            NotificationsManager.Instance.AddNotificationToList(notification);
+        }
+
+        public static void CreateNotAdminForRigManagement()
+        {
+            var notification = new Notification(NotificationsType.Warning, NotificationsGroup.RigManagementElevate, Tr("NHM needs administrator privileges for rig management"), Tr($"If you want to use rig manager for OC/Fan/command settings, you must run NHM as an administrator"));
+            notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.RigManagementElevate);
+            notification.Action = AvailableActions.ActionRunAsAdmin();
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
     }

@@ -1,6 +1,7 @@
 using NHM.Common;
 using NHM.DeviceDetection;
 using NHMCore.Configs;
+using NHMCore.Mining;
 using NHMCore.Notifications;
 using NHMCore.Utils;
 using System;
@@ -74,7 +75,7 @@ namespace NHMCore
                 // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
                 // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
                 var hasMissingGPUs = await DeviceDetection.CheckIfMissingGPUs();
-                if (!hasMissingGPUs) return;
+                if (!hasMissingGPUs.isMissing) return;
                 if (GlobalDeviceSettings.Instance.RestartMachineOnLostGPU)
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs will execute 'OnGPUsLost.bat'");
@@ -96,6 +97,7 @@ namespace NHMCore
                 {
                     Logger.Info("ApplicationStateManager.Timers", $"Detected missing GPUs");
                     AvailableNotifications.CreateMissingGPUsInfo();
+                    EventManager.Instance.AddEvent(EventType.MissingDev, String.Join(',',hasMissingGPUs.uuids), null, false);
                 }
             },
             5 * 60 * 1000); // check every 5 minutes
@@ -138,5 +140,25 @@ namespace NHMCore
         }
 
         #endregion InternetCheck timer
+
+        #region FanProfile timer
+        private static AppTimer _fanProfileTimer;
+
+        public static void StartFanProfileTimer()
+        {
+            if (_fanProfileTimer?.IsActive ?? false) return;
+            _fanProfileTimer = new AppTimer((object sender, ElapsedEventArgs e) =>
+            {
+                var devices = AvailableDevices.GPUs;
+                foreach (var device in devices) device.SetFanSpeedWithPidController();
+            },5000);
+            _fanProfileTimer.Start();
+        }
+
+        public static void StopFanProfileTimer()
+        {
+            _fanProfileTimer?.Stop();
+        }
+        #endregion
     }
 }

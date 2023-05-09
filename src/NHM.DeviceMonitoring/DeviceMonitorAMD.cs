@@ -1,13 +1,19 @@
 ﻿using NHM.Common;
 using NHM.DeviceMonitoring.AMD;
+using NHM.DeviceMonitoring.Core_clock;
+using NHM.DeviceMonitoring.Core_voltage;
+using NHM.DeviceMonitoring.Memory_clock;
+using NHM.DeviceMonitoring.NVIDIA;
 using NHM.DeviceMonitoring.TDP;
 using System;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, IGetFanSpeedPercentage, ILoad, IPowerUsage, ITemp, ITDP, IMemControllerLoad, ISpecialTemps, ICoreClock, IMemoryClock, ICoreClockSet, IMemoryClockSet, IMemoryClockRange, ICoreClockRange, ISetFanSpeedPercentage, IResetFanSpeed, ICoreVoltageRange, ICoreVoltage, ICoreVoltageSet, ITDPLimits
     {
         public int BusID { get; private set; }
+        private const int RET_OK = 0;
+
 
         private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(0.5);
 
@@ -112,7 +118,15 @@ namespace NHM.DeviceMonitoring
                 Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_ranges failed with error code {ok}", _delayedLogging);
                 return false;
             }
-
+#if NHMWS4
+            int ok2 = AMD_ODN.nhm_amd_device_set_tdp(BusID, (int)percValue);
+            if (ok2 != 0)
+            {
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_tdp failed with error code {ok}", _delayedLogging);
+                return false;
+            }
+            return true;
+#else
             // We limit 100% to the default as max
             var limit = 0.0d;
             if (percValue > 1)
@@ -127,13 +141,14 @@ namespace NHM.DeviceMonitoring
             int ok2 = AMD_ODN.nhm_amd_device_set_tdp(BusID, (int)limit);
             if (ok2 != 0)
             {
-                Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_tdp failed with error code {ok}", _delayedLogging);
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_tdp failed with error code {ok2}", _delayedLogging);
                 return false;
             }
             return true;
+#endif
         }
 
-        #region ITDP
+#region ITDP
         public TDPSettingType SettingType { get; set; } = TDPSettingType.SIMPLE;
 
         public double TDPPercentage
@@ -162,18 +177,13 @@ namespace NHM.DeviceMonitoring
 
         public TDPSimpleType TDPSimple { get; private set; } = TDPSimpleType.HIGH;
 
-        public bool SetTDPPercentage(double percentage)
+        public bool SetTDP(double percentage)
         {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
-            {
-                Logger.InfoDelayed(LogTag, $"SetTDPPercentage Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
-            if (percentage < 0.0d)
-            {
-                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
-                percentage = 0.0d;
-            }
+            //if (percentage < 0.0d)
+            //{
+            //    Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
+            //    percentage = 0.0d;
+            //}
             Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
             return SetTdpADL(percentage);
         }
@@ -188,11 +198,6 @@ namespace NHM.DeviceMonitoring
 
         public bool SetTDPSimple(TDPSimpleType level)
         {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
-            {
-                Logger.InfoDelayed(LogTag, $"SetTDPSimple Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
             var percentage = PowerLevelToTDPPercentage(level);
             if (!percentage.HasValue)
             {
@@ -206,7 +211,7 @@ namespace NHM.DeviceMonitoring
             Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
             return execRet;
         }
-        #endregion ITDP
+#endregion ITDP
         private (int vramTemp, int hotspotTemp) GetSpecialTemperatures()
         {
             int vramT = 0;
@@ -215,6 +220,81 @@ namespace NHM.DeviceMonitoring
             if (ok == 0) return (vramT, hotspotT);
             Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_special_temperatures failed with error code {ok}", _delayedLogging);
             return (-1, -1);
+        }
+
+        public bool SetMemoryClock(int memoryClock)
+        {
+            var ok = AMD_ODN.nhm_amd_device_set_memory_clocks(BusID, memoryClock);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_memory_clocks failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+
+        public bool SetCoreClock(int coreClock)
+        {
+            var ok = AMD_ODN.nhm_amd_device_set_core_clocks(BusID, coreClock);
+            if(ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_core_clocks failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+
+        public bool SetCoreVoltage(int coreVoltage)
+        {
+            var ok = AMD_ODN.nhm_amd_device_set_voltage(BusID, coreVoltage);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_voltage failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+
+        public bool SetFanSpeedPercentage(int percentage)
+        {
+            var ok = percentage <= 0 ? AMD_ODN.nhm_amd_device_reset_fan_speed_percentage(BusID) : AMD_ODN.nhm_amd_device_set_fan_speed_percentage(BusID, percentage);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_set_fan_speed_percentage failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+
+        public bool ResetFanSpeedPercentage()
+        {
+            var ok = AMD_ODN.nhm_amd_device_reset_fan_speed_percentage(BusID);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_reset_fan_speed_percentage failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+
+        public bool ResetCoreClock()
+        {
+            var ok = AMD_ODN.nhm_amd_device_reset_core_clocks(BusID);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_reset_core_clocks failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+
+        public bool ResetMemoryClock()
+        {
+            var ok = AMD_ODN.nhm_amd_device_reset_memory_clocks(BusID);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_reset_memory_clocks failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+        
+        public bool ResetCoreVoltage()
+        {
+            var ok = AMD_ODN.nhm_amd_device_reset_voltage(BusID);
+            if (ok == RET_OK) return true;
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_reset_voltage failed with error code {ok}", _delayedLogging);
+            return false;
+        }
+
+        public (bool ok, int min, int max, int def) GetTDPLimits()
+        {
+            int min = -1;
+            int max = -1;
+            int def = -1;
+            var ok = AMD_ODN.nhm_amd_device_get_tdp_min_max_default(BusID, ref min, ref max, ref def);
+            if (ok == RET_OK) return (true, min, max, def);
+            Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_tdp_min_max_default failed with error code {ok}", _delayedLogging);
+            return (false, -1, -1, -1);
         }
 
         public int HotspotTemp
@@ -240,6 +320,84 @@ namespace NHM.DeviceMonitoring
                 if (ok == 0) return (memCtrlLoad);
                 Logger.InfoDelayed(LogTag, $"nhm_nvidia_device_get_memory_controller_load failed with error code {ok}", _delayedLogging);
                 return -1;
+            }
+        }
+
+        public int MemoryClock
+        {
+            get
+            {
+                int memoryClock = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_memory_clocks(BusID, ref memoryClock);
+                if (ok == RET_OK) return memoryClock;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_memory_clocks failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
+        public int CoreClock
+        {
+            get
+            {
+                int coreClock = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_core_clocks(BusID, ref coreClock);
+                if (ok == RET_OK) return coreClock;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_core_clocks failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
+        public int CoreVoltage
+        {
+            get
+            {
+                int coreVoltage = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_voltage(BusID, ref coreVoltage);
+                if (ok == RET_OK) return coreVoltage;
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_voltage failed with error code {ok}", _delayedLogging);
+                return -1;
+            }
+        }
+
+        public (bool ok, int min, int max, int def) MemoryClockRange
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_memory_clocks_min_max_default(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_memory_clocks_min_max_default failed with error code {ok}", _delayedLogging);
+                return (false, -1, -1, -1);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) CoreClockRange
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_core_clocks_min_max_default(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_core_clocks_min_max_default failed with error code {ok}", _delayedLogging);
+                return (false, -1, -1, -1);
+            }
+        }
+
+        public (bool ok, int min, int max, int def) CoreVoltageRange
+        {
+            get
+            {
+                int min = 0;
+                int max = 0;
+                int def = 0;
+                int ok = AMD_ODN.nhm_amd_device_get_voltage_min_max_default(BusID, ref min, ref max, ref def);
+                if (ok == RET_OK) return (true, min, max, def);
+                Logger.InfoDelayed(LogTag, $"nhm_amd_device_get_voltage_min_max_default failed with error code {ok}", _delayedLogging);
+                return (false, -1, -1, -1);
             }
         }
     }

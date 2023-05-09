@@ -3,6 +3,9 @@ using NHM.Common.Configs;
 using NHM.Common.Enums;
 using NHMCore.ApplicationState;
 using NHMCore.Mining;
+using NHMCore.Nhmws;
+using NHMCore.Notifications;
+using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +21,7 @@ namespace NHMCore
         // TODO add check for any enabled algorithms
         public static async Task<(bool started, string failReason)> StartAllAvailableDevicesTask()
         {
+            EventManager.Instance.AddEvent(EventType.RigStarted);
             MiningState.Instance.MiningStoppedByToggle = false;
             // TODO consider trying to start the error state devices as well
             var devicesToStart = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Stopped);
@@ -86,8 +90,13 @@ namespace NHMCore
 
         public static async Task<(bool stopped, string failReason)> StopAllDevicesTask()
         {
+            EventManager.Instance.AddEvent(EventType.RigStopped);
             // TODO when starting and stopping we are not taking Pending and Error states into account
+#if NHMWS4
+            var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Testing);
+#else
             var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
+#endif
             if (devicesToStop.Count() == 0)
             {
                 return (false, "No new devices to stop");
@@ -121,6 +130,18 @@ namespace NHMCore
                     return (false, $"Device {device.Uuid} already stopped");
                 case DeviceState.Mining:
                 case DeviceState.Benchmarking:
+#if NHMWS4
+                case DeviceState.Testing:
+                    if (Helpers.IsElevated)
+                    {
+                        device.ResetFanSpeed();
+                        device.ResetCoreClock();
+                        device.ResetCoreClockDelta();
+                        device.ResetMemoryClock();
+                        device.ResetMemoryClockDelta();
+                        device.ResetCoreVoltage();
+                    }
+#endif
                     await MiningManager.StopDevice(device);
                     return (true, "");
                 default:
@@ -149,7 +170,40 @@ namespace NHMCore
                 .ToArray();
             _ = Task.WhenAll(startBenchmarkingDevices);
         }
-
+        public static Task<(ErrorCode err, string msg)> StartReBenchmark()
+        {
+            //check if any exist
+            var startBenchmarkingDevices = AvailableDevices.Devices
+                .Where(device => device.State == DeviceState.Stopped)?
+                .Where(device => device.AnyAlgorithmEnabled());
+            if(startBenchmarkingDevices == null || startBenchmarkingDevices.Count() == 0)
+            {
+                return Task.FromResult((ErrorCode.ErrNoAlgoDataFound, "No targets found. Stop mining first."));
+            }
+            foreach (var device in startBenchmarkingDevices) device.PrepareForRebenchmark();
+            var completeBenchmarkDevices = startBenchmarkingDevices
+                .Select(StartDeviceTask)
+                .ToArray();
+            _ = Task.WhenAll(completeBenchmarkDevices);
+            return Task.FromResult((ErrorCode.NoError, "Success"));
+        }
+        public static Task<(ErrorCode err, string msg)> StartRebenchmarkSpecific(string deviceUUID)
+        {
+            var startBenchmarkingDevices = AvailableDevices.Devices
+                .Where(device => device.B64Uuid == deviceUUID)?
+                .Where(device => device.State == DeviceState.Stopped)?
+                .Where(device => device.AnyAlgorithmEnabled());
+            if (startBenchmarkingDevices == null || startBenchmarkingDevices.Count() == 0)
+            {
+                return Task.FromResult((ErrorCode.ErrNoAlgoDataFound, "No targets found. Stop mining first."));
+            }
+            foreach (var device in startBenchmarkingDevices) device.PrepareForRebenchmark();
+            var completeBenchmarkDevices = startBenchmarkingDevices
+                .Select(StartDeviceTask)
+                .ToArray();
+            _ = Task.WhenAll(completeBenchmarkDevices);
+            return Task.FromResult((ErrorCode.NoError, "Success"));
+        }
         public static Task StopBenchmark()
         {
             var stoptDevices = AvailableDevices.Devices
@@ -159,14 +213,17 @@ namespace NHMCore
             return Task.WhenAll(stoptDevices);
         }
 
-        #region Updater mining state save/restore
+#region Updater mining state save/restore
         private static string _miningStateFilePath => Paths.InternalsPath("DeviceRestoreStates.json");
         private struct DeviceRestoreState
         {
             public bool IsStarted { get; set; }
             public DeviceState LastState { get; set; }
-
+#if NHMWS4
+            public bool ShouldStart() => IsStarted || LastState == DeviceState.Benchmarking || LastState == DeviceState.Mining || LastState == DeviceState.Testing;
+#else
             public bool ShouldStart() => IsStarted || LastState == DeviceState.Benchmarking || LastState == DeviceState.Mining;
+#endif
         }
         internal static void SaveMiningState()
         {
@@ -209,6 +266,6 @@ namespace NHMCore
             await Task.WhenAll(startTasks);
         }
 
-        #endregion Update state push/pop
+#endregion Update state push/pop
     }
 }

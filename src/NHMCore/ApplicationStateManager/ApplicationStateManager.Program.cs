@@ -65,6 +65,7 @@ namespace NHMCore
             _beforeExitCalled = true;
             try
             {
+                DeviceActionsBeforeExit();
                 // should close websocket  
                 ExitApplication.Cancel();
                 ConfigManager.GeneralConfigFileCommit();
@@ -81,6 +82,21 @@ namespace NHMCore
             }
             finally
             {
+            }
+        }
+        private static void DeviceActionsBeforeExit()
+        {
+            if (Helpers.IsElevated)
+            {
+                AvailableDevices.Devices.ToList().ForEach(d => {
+                    d.ResetFanSpeed();
+                    d.ResetCoreClock();
+                    d.ResetCoreClockDelta();
+                    d.ResetMemoryClock();
+                    d.ResetMemoryClockDelta();
+                    d.ResetCoreVoltage();
+                });
+
             }
         }
 

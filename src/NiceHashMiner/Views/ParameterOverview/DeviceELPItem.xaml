@@ -52,7 +52,7 @@
                      TextChanged="DeviceELPValueTB_TextChanged"
                      LostFocus="TB_LostFocus"
                      Width="180" Text="{Binding ELP, Mode=TwoWay}"
-                     IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                     IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="1" x:Name="DeviceGrid" Visibility="{Binding IsHeader, Converter={StaticResource NulBoolToVisibilityConverter}}">
@@ -71,7 +71,7 @@
                      TextChanged="HeaderFlagELPValueTB_TextChanged"
                      LostFocus="TB_LostFocus"
                      Text="{Binding FLAG, Mode=TwoWay}"
-                     IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                     IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Margin="10,0,0,3">
                 <StackPanel Orientation="Horizontal">
@@ -83,7 +83,7 @@
                      TextChanged="HeaderDelimELPValueTB_TextChanged"
                      LostFocus="TB_LostFocus"
                      Text="{Binding DELIM, Mode=TwoWay}"
-                     IsEnabled="{Binding MiningState.IsNotBenchmarkingOrMining}"/>
+                     IsEnabled="{Binding MiningState.IsNotRunningOrELP}"/>
             </StackPanel>
         </Grid>
     </Grid>

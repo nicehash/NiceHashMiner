@@ -83,10 +83,10 @@ namespace NHMCore.Utils
             Logger.Info(Tag, $"PageFileSize = {PageFileSize}, {PageFileSize / 1024} MB");
         }
 
-        public static bool CheckRam(int gpuCount, ulong nvRamSum, ulong amdRamSum)
+        public static bool CheckRam(int gpuCount, ulong nvRamSum, ulong amdRamSum, ulong intelRamSum)
         {
             // Make gpu ram needed not larger than 4GB per GPU
-            var totalGpuRam = Math.Min((ulong)((nvRamSum + amdRamSum) * 0.6 / 1024),
+            var totalGpuRam = Math.Min((ulong)((nvRamSum + amdRamSum + intelRamSum) * 0.6 / 1024),
                 (ulong)gpuCount * 4 * 1024 * 1024);
             var totalSysRam = FreePhysicalMemory + FreeVirtualMemory;
 
