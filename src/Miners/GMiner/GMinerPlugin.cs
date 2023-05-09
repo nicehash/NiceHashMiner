@@ -27,11 +27,11 @@ namespace MP.GMiner
             MinerBenchmarkTimeSettings = PluginInternalSettings.BenchmarkTimeSettings;
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
-                BinVersion = "v3.31",
+                BinVersion = "v3.39",
                 ExePath = new List<string> { "", "miner.exe" },
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/3.31/gminer_3_31_windows64.zip" // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/3.39/gminer_3_39_windows64.zip" // original
                 }
             };
             PluginMetaInfo = new PluginMetaInfo
