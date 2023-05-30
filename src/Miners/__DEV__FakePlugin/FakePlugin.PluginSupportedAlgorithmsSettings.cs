@@ -23,7 +23,6 @@ namespace FakePlugin
                     new List<SAS>
                     {
                         new SAS(AlgorithmType.ZHash),
-                        new SAS(AlgorithmType.GrinCuckatoo31),
                         new SAS(AlgorithmType.CuckooCycle) {Enabled = false },
                         new SAS(AlgorithmType.BeamV3),
                         new SAS(AlgorithmType.KAWPOW),
