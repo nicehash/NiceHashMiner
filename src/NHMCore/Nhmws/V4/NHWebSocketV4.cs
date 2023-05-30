@@ -337,7 +337,7 @@ namespace NHMCore.Nhmws.V4
             _sendQueue.EnqueueParams(closeMsg);
         }
 
-        public static void SendEvent(EventType id, string? deviceID, string message)
+        public static void SendEvent(EventType id, NhmwsEvent ev)
         {
             DateTimeOffset now = new DateTimeOffset(DateTime.UtcNow);
             var unixTime = now.ToUnixTimeSeconds();
@@ -345,8 +345,8 @@ namespace NHMCore.Nhmws.V4
             {
                 EventID = (int)id,
                 Time = unixTime,
-                DeviceID = deviceID,
-                Message = message
+                DeviceID = ev.DeviceID,
+                Message = ev.Message
             };
             var eventMSG = (MessageType.SEND_MESSAGE_EVENT, JsonConvert.SerializeObject(newEvent));
             _sendQueue.EnqueueParams(eventMSG);
@@ -858,7 +858,7 @@ namespace NHMCore.Nhmws.V4
                     (err, result) = (ErrorCode.NoError, "OK");
                     if(err == ErrorCode.NoError)
                     {
-                        EventManager.Instance.AddEvent(EventType.BundleApplied, bundle.Name, null, false);
+                        EventManager.Instance.AddEventBundleApplied(true, bundle.Name);
                     }
                     break;
                 case SupportedAction.ActionProfilesBundleReset:
@@ -887,12 +887,12 @@ namespace NHMCore.Nhmws.V4
                     }
                     var oc = JsonConvert.DeserializeObject<OcProfile>(parameters);
                     (err, result) = ExecuteOCTest(deviceUUID, oc).Result;
-                    var eventRet = err == ErrorCode.NoError ? EventType.TestOverClockApplied : EventType.TestOverClockFailed;
-                    //var devName = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID)?.Name ?? "unknown";
+                    var eventRet = err == ErrorCode.NoError ? EventType.TestOCApplied : EventType.TestOCFailed;
                     var dev = AvailableDevices.Devices.FirstOrDefault(dev => dev.B64Uuid == deviceUUID);
                     if (dev != null)
                     {
-                        EventManager.Instance.AddEvent(eventRet, string.Empty, dev.B64Uuid, false);
+                        if (eventRet == EventType.TestOCApplied) EventManager.Instance.AddEventTestOCApplied(true, dev.Name, dev.B64Uuid);
+                        else EventManager.Instance.AddEventTestOCFailed(true, dev.Name, dev.B64Uuid);
                     }
                     break;
                 case SupportedAction.ActionOcProfileTestStop:
@@ -940,6 +940,7 @@ namespace NHMCore.Nhmws.V4
                     MiningState.Instance.CalculateDevicesStateChange();
                     break;
                 case SupportedAction.ActionRestart:
+                    EventManager.Instance.AddEventRigRestart(true);
                     _ = RestartRig();
                     (err, result) = (ErrorCode.NoError, "Restarting rig");
                     break;

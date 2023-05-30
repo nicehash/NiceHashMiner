@@ -751,4 +751,21 @@ namespace NHMCore.Nhmws.V4
         [JsonProperty("message", NullValueHandling = NullValueHandling.Ignore)]
         public string Message { get; set; }
     }
+    public class NhmwsEventContent
+    {
+        [JsonProperty("rig_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string RigName { get; set; }
+        [JsonProperty("gpu_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string GpuName { get; set; }
+        [JsonProperty("plugin_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string PluginName { get; set; }
+        [JsonProperty("algo_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string AlgoName { get; set; }
+        [JsonProperty("algo_name_old", NullValueHandling = NullValueHandling.Ignore)]
+        public string AlgoNameOld { get; set; }
+        [JsonProperty("algo_name_new", NullValueHandling = NullValueHandling.Ignore)]
+        public string AlgoNameNew { get; set; }
+        [JsonProperty("bundle_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string BundleName { get; set; }
+    }
 }

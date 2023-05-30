@@ -154,6 +154,7 @@ namespace NHMCore.Notifications
 
         public static void CreateMissingMinerBinsInfo(string pluginName)
         {
+            EventManager.Instance.AddEventMissingFiles(true);
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.MissingMinerBins, Tr("Missing miner binaries"), Tr("Some of the {0} binaries are missing from the installation folder. Please make sure that the files are accessible and that your anti-virus is not blocking the application.", pluginName));
             notification.Action = AvailableActions.ActionVisitAVHelp();
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.MissingMinerBins);
@@ -170,16 +171,16 @@ namespace NHMCore.Notifications
 
         public static void CreateIncreaseVirtualMemoryInfo()
         {
-            EventManager.Instance.AddEvent(EventType.VirtualMemory);
+            EventManager.Instance.AddEventVirtualMemInsufficient(true);
             var notification = new Notification(NotificationsType.Warning, NotificationsGroup.VirtualMemory, Tr("Increase virtual memory"), Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine. Would you like to increase virtual memory?"));
             notification.Action = AvailableActions.ActionVisitMemoryHelp();
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.VirtualMemory);
             NotificationsManager.Instance.AddNotificationToList(notification);
         }
 
-        public static void CreateFailedBenchmarksInfo(ComputeDevice device)
+        public static void CreateFailedBenchmarksInfo(ComputeDevice device, string algo, string plugin)
         {
-            EventManager.Instance.AddEvent(EventType.BenchmarkFailed, string.Empty, device.B64Uuid, false);
+            EventManager.Instance.AddEventBenchmarkFailed(true, plugin, algo, device.Name, device.B64Uuid);
             var notification = new Notification(NotificationsType.Info, NotificationsGroup.FailedBenchmarks, Tr("Failed benchmarks"), Tr("Some benchmarks for {0} failed to execute. Check benchmark tab for more info.", device.Name));
             notification.Action = AvailableActions.ActionFailedBenchmarksHelp();
             notification.NotificationUUID = Enum.GetName(typeof(NotificationsGroup), NotificationsGroup.FailedBenchmarks);

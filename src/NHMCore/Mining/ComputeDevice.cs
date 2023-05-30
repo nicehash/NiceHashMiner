@@ -71,7 +71,8 @@ namespace NHMCore.Mining
                 OnPropertyChanged();
                 if (B64Uuid == null || B64Uuid == string.Empty || B64Uuid == "-1") return; //initial stuff
                 var eventType = value ? EventType.DeviceEnabled : EventType.DeviceDisabled;
-                EventManager.Instance.AddEvent(eventType, "Device toggled", B64Uuid);
+                if (value) EventManager.Instance.AddEventDevEnabled(true, Name, B64Uuid);
+                else EventManager.Instance.AddEventDevDisabled(true, Name, B64Uuid);
             }
         }
 
