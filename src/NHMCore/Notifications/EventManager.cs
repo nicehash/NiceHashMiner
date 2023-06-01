@@ -262,7 +262,7 @@ namespace NHMCore.Notifications
 #if NHMWS4
             if (send)
             {
-                NHWebSocketV4.SendEvent(type, ev);
+                NHWebSocketV4.SendEvent(ev);
             }
 #endif
         }
