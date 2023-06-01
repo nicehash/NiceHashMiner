@@ -24,10 +24,6 @@ namespace LolMiner
                     $"--coin AUTO144_5 --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 },
                 {
-                    $"{AlgorithmType.GrinCuckatoo31}",
-                    $"--algo C31 --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
-                },
-                {
                     $"{AlgorithmType.GrinCuckatoo32}",
                     $"--algo C32 --pool {_urlPort} --user {_username} --tls 0 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 },
@@ -66,10 +62,6 @@ namespace LolMiner
                 {
                     $"{AlgorithmType.ZHash}",
                     $"--coin AUTO144_5 --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
-                },
-                {
-                    $"{AlgorithmType.GrinCuckatoo31}",
-                    $"--algo C31 --pool {_url}:443 --user {_username} --tls 1 --apiport {_apiPort} --disablewatchdog 1 --devices {_devices} {_extraLaunchParameters}"
                 },
                 {
                     $"{AlgorithmType.GrinCuckatoo32}",
