@@ -212,7 +212,7 @@ namespace NHMCore.Notifications
             var type = EventType.TestOCFailed;
             var worker = CredentialsSettings.Instance.GetCredentials().worker;
             var content = JsonConvert.SerializeObject(new NhmwsEventContent { GpuName = devName, RigName = worker });
-            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content };
+            var ev = new NhmwsEvent() { EventID = (int)type, Time = GetUnixNow(), Message = content, DeviceID = devID };
             AddEvent(type, ev, send);
         }
         public void AddEventBundleApplied(bool send = true, string bundle = "")

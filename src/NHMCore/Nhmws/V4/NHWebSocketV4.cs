@@ -337,18 +337,18 @@ namespace NHMCore.Nhmws.V4
             _sendQueue.EnqueueParams(closeMsg);
         }
 
-        public static void SendEvent(EventType id, NhmwsEvent ev)
+        public static void SendEvent(NhmwsEvent ev)
         {
-            DateTimeOffset now = new DateTimeOffset(DateTime.UtcNow);
-            var unixTime = now.ToUnixTimeSeconds();
-            var newEvent = new NhmwsEvent()
-            {
-                EventID = (int)id,
-                Time = unixTime,
-                DeviceID = ev.DeviceID,
-                Message = ev.Message
-            };
-            var eventMSG = (MessageType.SEND_MESSAGE_EVENT, JsonConvert.SerializeObject(newEvent));
+            //DateTimeOffset now = new DateTimeOffset(DateTime.UtcNow);
+            //var unixTime = now.ToUnixTimeSeconds();
+            //var newEvent = new NhmwsEvent()
+            //{
+            //    EventID = (int)id,
+            //    Time = unixTime,
+            //    DeviceID = ev.DeviceID,
+            //    Message = ev.Message
+            //};
+            var eventMSG = (MessageType.SEND_MESSAGE_EVENT, JsonConvert.SerializeObject(ev));
             _sendQueue.EnqueueParams(eventMSG);
         }
 
